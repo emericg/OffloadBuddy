@@ -71,6 +71,13 @@ bool DeviceManager::scanFilesystems()
             continue;
         }
 
+        // Path in QFileSystemWatcher? bail early
+        if (m_watcher.directories().contains(storage.rootPath()))
+        {
+            //qDebug() << "> skipping '" << storage.rootPath() << "', already handled";
+            continue;
+        }
+
         if (storage.isValid() && storage.isReady())
         {
             QString deviceRootpath = storage.rootPath();
@@ -371,6 +378,12 @@ void DeviceManager::addDevice(const QString &path, const gopro_version_20 *infos
             // fusioooooooon
             d->addSecondaryDevice(path);
             d->scanSecondaryDevice();
+
+            if (m_watcher.addPath(path) == false)
+                qDebug() << "FILE WATCHER FAILZD";
+
+            emit devicesUpdated();
+            emit devicesAdded();
         }
         else
         {
@@ -382,7 +395,8 @@ void DeviceManager::addDevice(const QString &path, const gopro_version_20 *infos
                 m_devices.push_back(d);
                 d->scanFiles();
 
-                m_watcher.addPath(path);
+                if (m_watcher.addPath(path) == false)
+                    qDebug() << "FILE WATCHER FAILZD";
 
                 emit devicesUpdated();
                 emit devicesAdded();
@@ -401,8 +415,8 @@ void DeviceManager::removeDevice(const QString &path)
     QList<QObject *>::iterator it = m_devices.begin();
     while (it != m_devices.end())
     {
-        Device *dd = qobject_cast<Device*>(*it);
-        if (dd && dd->getRootPath() == path)
+        Device *d = qobject_cast<Device*>(*it);
+        if (d && (d->getRootPath() == path || d->getSecondayRootPath() == path))
             it = m_devices.erase(it);
         else
             ++it;
@@ -418,8 +432,8 @@ void DeviceManager::somethingsUp(const QString &path)
 {
     qDebug() << "QFileSystemWatcher::directoryChanged()" << path;
 
-    QDir d(path);
-    if (d.exists() == false)
+    QDir dir(path);
+    if (dir.exists() == false)
     {
         removeDevice(path);
     }

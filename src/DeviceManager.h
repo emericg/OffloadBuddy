@@ -58,8 +58,8 @@ class DeviceManager: public QObject
     QFileSystemWatcher m_watcher;
 
 Q_SIGNALS:
-    void devicesUpdated();
     void devicesAdded();
+    void devicesUpdated();
     void devicesRemoved();
 
 public:
@@ -75,8 +75,8 @@ public slots:
     void removeDevice(const QString &path);
     void somethingsUp(const QString &path);
 
-    QVariant getDevices() const { if (m_devices.size() > 0) { return QVariant::fromValue(m_devices); } return QVariant(); }
     QVariant getFirstDevice() const { if (m_devices.size() > 0) { return QVariant::fromValue(m_devices.at(0)); } return QVariant(); }
+    QVariant getDevices() const { if (m_devices.size() > 0) { return QVariant::fromValue(m_devices); } return QVariant(); }
 };
 
 #endif // DEVICE_MANAGER_H

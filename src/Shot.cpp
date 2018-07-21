@@ -71,40 +71,70 @@ void Shot::addFile(QString &file)
     QFileInfo fi(file);
     if (fi.exists() && fi.isReadable())
     {
-        if (m_file_name.isEmpty())
+        // Fusion "first file" hack...
+        if (fi.fileName().startsWith("GPFR") || fi.fileName().startsWith("GPBK"))
+        {
             m_file_name = fi.baseName();
-
-        if (!m_file_date.isValid())
             m_file_date = fi.birthTime();
 
-        if (file.endsWith("JPG", Qt::CaseInsensitive))
-        {
-            m_jpg.push_back(file);
-        }
-        else if (file.endsWith("MP4", Qt::CaseInsensitive))
-        {
-            m_mp4.push_back(file);
-        }
-        else if (file.endsWith("LRV", Qt::CaseInsensitive))
-        {
-            m_lrv.push_back(file);
-        }
-        else if (file.endsWith("THM", Qt::CaseInsensitive))
-        {
-            m_thm.push_back(file);
-        }
-        else if (file.endsWith("WAV", Qt::CaseInsensitive))
-        {
-            m_wav.push_back(file);
+            if (file.endsWith("JPG", Qt::CaseInsensitive))
+            {
+                m_jpg.push_front(file);
+            }
+            else if (file.endsWith("MP4", Qt::CaseInsensitive))
+            {
+                m_mp4.push_front(file);
+            }
+            else if (file.endsWith("LRV", Qt::CaseInsensitive))
+            {
+                m_lrv.push_front(file);
+            }
+            else if (file.endsWith("THM", Qt::CaseInsensitive))
+            {
+                m_thm.push_front(file);
+            }
+            else if (file.endsWith("WAV", Qt::CaseInsensitive))
+            {
+                m_wav.push_front(file);
+            }
+            else
+            {
+                qWarning() << "Shot::addFile(" << file << ") UNKNOWN FORMAT";
+            }
         }
         else
         {
-            qWarning() << "Shot::addFile(" << file << ") UNKNOWN FORMAT";
-        }
+            if (m_file_name.isEmpty())
+                m_file_name = fi.baseName();
 
-        // Fusion hack:
-        if (fi.fileName().startsWith("GPFR") || fi.fileName().startsWith("GPBK"))
-            m_file_name = fi.baseName();
+            if (!m_file_date.isValid())
+                m_file_date = fi.birthTime();
+
+            if (file.endsWith("JPG", Qt::CaseInsensitive))
+            {
+                m_jpg.push_back(file);
+            }
+            else if (file.endsWith("MP4", Qt::CaseInsensitive))
+            {
+                m_mp4.push_back(file);
+            }
+            else if (file.endsWith("LRV", Qt::CaseInsensitive))
+            {
+                m_lrv.push_back(file);
+            }
+            else if (file.endsWith("THM", Qt::CaseInsensitive))
+            {
+                m_thm.push_back(file);
+            }
+            else if (file.endsWith("WAV", Qt::CaseInsensitive))
+            {
+                m_wav.push_back(file);
+            }
+            else
+            {
+                qWarning() << "Shot::addFile(" << file << ") UNKNOWN FORMAT";
+            }
+        }
     }
     else
     {

@@ -163,7 +163,6 @@ Q_SIGNALS:
     void scanningFinished();
     void deviceUpdated();
     void shotsUpdated();
-    void availableUpdated();
     void spaceUpdated();
 
 public:

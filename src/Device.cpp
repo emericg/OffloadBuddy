@@ -58,6 +58,8 @@ Device::Device(const QString path, const gopro_version_20 *infos)
         else
         {
             qDebug() << "* device storage invalid? '" << m_storage->displayName() << "'";
+            m_root_path.clear();
+            delete m_storage;
         }
     }
 
@@ -100,12 +102,13 @@ bool Device::addSecondaryDevice(const QString &path)
 
         if (m_secondary_storage && m_secondary_storage->isValid() && m_secondary_storage->isReady())
         {
-            // yas
             return true;
         }
         else
         {
-            qDebug() << "* device storage invalid? '" << m_secondary_storage->displayName() << "'";
+            qDebug() << "* device secondary storage invalid? '" << m_secondary_storage->displayName() << "'";
+            m_secondary_root_path.clear();
+            delete m_secondary_storage;
         }
     }
 
@@ -249,16 +252,15 @@ bool Device::scanFiles(const QString &path)
             }
 
             int file_id = (file_type == Shared::SHOT_VIDEO) ? file_number : group_number;
-            qWarning() << "file id" << file_id;
             Shot *s = findShot(file_type, file_id, camera_id);
             if (s)
             {
-                qWarning() << "Adding file:" << file_name << "to an existing shot";
+                //qWarning() << "Adding file:" << file_name << "to an existing shot";
                 s->addFile(file_path);
             }
             else
             {
-                qWarning() << "file:" << file_name << "is a new shot";
+                //qWarning() << "file:" << file_name << "is a new shot";
                 Shot *s = new Shot(file_type);
                 if (s)
                 {
@@ -305,7 +307,7 @@ Shot * Device::findShot(Shared::ShotType type, int file_id, int camera_id) const
             }
         }
 
-        qDebug() << "No shot found for id" << file_id;
+        //qDebug() << "No shot found for id" << file_id;
     }
 
     return nullptr;
