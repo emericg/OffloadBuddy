@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/themes.qml</file>
+        <file>qml/main.qml</file>
+        <file>qml/ScreenMedias.qml</file>
+        <file>qml/ScreenDevice.qml</file>
+        <file>qml/ScreenSettings.qml</file>
+        <file>qml/ItemDeviceMenu.qml</file>
+        <file>qml/ItemMediaDirectory.qml</file>
+        <file>qml/ScreenAbout.qml</file>
+        <file>qml/ItemShot.qml</file>
+        <file>qml/SpaceUtils.js</file>
+    </qresource>
+</RCC>

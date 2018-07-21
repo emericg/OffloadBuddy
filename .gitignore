@@ -1,0 +1,19 @@
+# Binaries and build artifacts
+build/*
+bin/*
+*.o
+qrc_resources.cpp
+
+# QtCreator temporary project files
+OffloadBuddy.config
+OffloadBuddy.creator*
+OffloadBuddy.files
+OffloadBuddy.includes
+
+# QMake temporary project files
+OffloadBuddy.pro.*
+Makefile
+.qmake.stash
+
+# Others
+stash/*
