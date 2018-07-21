@@ -55,22 +55,6 @@ Rectangle {
             }
         }
 
-        Text {
-            id: textHeader
-            width: 200
-            height: 40
-            color: ThemeEngine.colorHeaderTitle
-            text: qsTr("DEVICE")
-            anchors.left: parent.left
-            anchors.leftMargin: 16
-            anchors.top: parent.top
-            anchors.topMargin: 16
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignLeft
-            font.bold: true
-            font.pixelSize: 30
-        }
-
         Image {
             id: deviceImage
             x: 16
@@ -94,10 +78,11 @@ Rectangle {
             text: "GoPro HERO"
             anchors.right: deviceImage.left
             anchors.rightMargin: 16
-            font.bold: true
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignRight
-            font.pixelSize: 20
+            color: ThemeEngine.colorHeaderTitle
+            font.bold: true
+            font.pixelSize: 28
         }
 
         Text {
@@ -111,7 +96,7 @@ Rectangle {
             anchors.top: deviceModelText.bottom
             anchors.topMargin: 8
             verticalAlignment: Text.AlignVCenter
-            font.pixelSize: 14
+            font.pixelSize: 15
         }
 
         ProgressBar {
@@ -127,30 +112,33 @@ Rectangle {
 
         Rectangle {
             id: rectangleTransfer
+            y: 16
             width: 256
             height: 40
-            color: ThemeEngine.colorDoIt
-            anchors.top: parent.top
-            anchors.topMargin: 16
-            anchors.left: textHeader.right
+            color: "#00000000"
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 16
+            anchors.left: parent.left
             anchors.leftMargin: 16
+
+            Rectangle {
+                id: rectangleTransferDecorated
+                color: ThemeEngine.colorDoIt
+                width: parent.width
+                height: parent.height
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+            }
 
             MouseArea {
                 anchors.fill: parent
-
                 onPressed: {
-                    rectangleTransfer.anchors.bottomMargin = rectangleTransfer.anchors.bottomMargin + 4
-                    rectangleTransfer.anchors.leftMargin = rectangleTransfer.anchors.leftMargin + 4
-                    rectangleTransfer.anchors.rightMargin = rectangleTransfer.anchors.rightMargin + 4
-                    rectangleTransfer.width = rectangleTransfer.width - 8
-                    rectangleTransfer.height = rectangleTransfer.height - 8
+                    rectangleTransferDecorated.width = rectangleTransferDecorated.width - 8
+                    rectangleTransferDecorated.height = rectangleTransferDecorated.height - 8
                 }
                 onReleased: {
-                    rectangleTransfer.anchors.bottomMargin = rectangleTransfer.anchors.bottomMargin - 4
-                    rectangleTransfer.anchors.leftMargin = rectangleTransfer.anchors.leftMargin - 4
-                    rectangleTransfer.anchors.rightMargin = rectangleTransfer.anchors.rightMargin - 4
-                    rectangleTransfer.width = rectangleTransfer.width + 8
-                    rectangleTransfer.height = rectangleTransfer.height + 8
+                    rectangleTransferDecorated.width = rectangleTransferDecorated.width + 8
+                    rectangleTransferDecorated.height = rectangleTransferDecorated.height + 8
                 }
                 onClicked: {
                     // TODO offload func
@@ -158,33 +146,41 @@ Rectangle {
             }
 
             Text {
-                id: text1
-                color: ThemeEngine.colorButtonText
-                text: qsTr("Offload content")
-                font.bold: true
+                id: textTransfer
+                anchors.fill: parent
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
-                anchors.fill: parent
+                text: qsTr("Offload content")
+                color: ThemeEngine.colorButtonText
+                font.bold: true
                 font.pixelSize: 16
             }
+
         }
 
         Rectangle {
             id: rectangleDelete
             x: 4
+            y: 79
             width: 256
             height: 40
-            color: ThemeEngine.colorDangerZone
-            anchors.leftMargin: 16
+            color: "#00000000"
             anchors.left: rectangleTransfer.right
+            anchors.leftMargin: 16
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 16
 
             property bool weAreBlinking: false
+            property double startTime: 0
 
             function startTheBlink() {
                 if (weAreBlinking === true) {
-                    // TODO func to delete stuff
-                    stopTheBlink();
+                    if ((new Date().getTime() - startTime) > 500) {
+                        stopTheBlink();
+                        // TODO func to actually delete stuff
+                    }
                 } else {
+                    startTime = new Date().getTime()
                     weAreBlinking = true;
                     timerReset.start();
                     blinkReset.start();
@@ -196,18 +192,25 @@ Rectangle {
                 timerReset.stop();
                 blinkReset.stop();
                 textReset.text = qsTr("Delete ALL content!");
-                rectangleDelete.color = ThemeEngine.colorDangerZone;
+                rectangleDeleteDecorated.color = ThemeEngine.colorDangerZone;
             }
 
-            SequentialAnimation on color {
-                id: blinkReset
-                running: false
-                loops: Animation.Infinite
-                ColorAnimation { from: ThemeEngine.colorDangerZone; to: "#ff0000"; duration: 1000 }
-                ColorAnimation { from: "#ff0000"; to: ThemeEngine.colorDangerZone; duration: 1000 }
+            Rectangle {
+                id: rectangleDeleteDecorated
+                color: ThemeEngine.colorDangerZone
+                width: parent.width
+                height: parent.height
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+
+                SequentialAnimation on color {
+                    id: blinkReset
+                    running: false
+                    loops: Animation.Infinite
+                    ColorAnimation { from: ThemeEngine.colorDangerZone; to: "#ff0000"; duration: 1000 }
+                    ColorAnimation { from: "#ff0000"; to: ThemeEngine.colorDangerZone; duration: 1000 }
+                }
             }
-            anchors.top: parent.top
-            anchors.topMargin: 16
 
             Timer {
                 id: timerReset
@@ -223,18 +226,12 @@ Rectangle {
                 anchors.fill: parent
 
                 onPressed: {
-                    rectangleDelete.anchors.bottomMargin = rectangleDelete.anchors.bottomMargin + 4
-                    rectangleDelete.anchors.leftMargin = rectangleDelete.anchors.leftMargin + 4
-                    rectangleDelete.anchors.rightMargin = rectangleDelete.anchors.rightMargin + 4
-                    rectangleDelete.width = rectangleDelete.width - 8
-                    rectangleDelete.height = rectangleDelete.height - 8
+                    rectangleDeleteDecorated.width = rectangleDeleteDecorated.width - 8
+                    rectangleDeleteDecorated.height = rectangleDeleteDecorated.height - 8
                 }
                 onReleased: {
-                    rectangleDelete.anchors.bottomMargin = rectangleDelete.anchors.bottomMargin - 4
-                    rectangleDelete.anchors.leftMargin = rectangleDelete.anchors.leftMargin - 4
-                    rectangleDelete.anchors.rightMargin = rectangleDelete.anchors.rightMargin - 4
-                    rectangleDelete.width = rectangleDelete.width + 8
-                    rectangleDelete.height = rectangleDelete.height + 8
+                    rectangleDeleteDecorated.width = rectangleDeleteDecorated.width + 8
+                    rectangleDeleteDecorated.height = rectangleDeleteDecorated.height + 8
                 }
                 onClicked: {
                     rectangleDelete.startTheBlink()
@@ -256,11 +253,10 @@ Rectangle {
 
         ComboBox {
             id: comboBox_filterby
-            y: 74
             width: 256
             height: 40
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 16
+            anchors.top: parent.top
+            anchors.topMargin: 16
             anchors.left: parent.left
             anchors.leftMargin: 16
             displayText: "Filter by:"
@@ -271,6 +267,7 @@ Rectangle {
             y: 72
             width: 200
             height: 40
+            anchors.verticalCenter: comboBox_filterby.verticalCenter
             anchors.left: textZoom.right
             anchors.leftMargin: 16
             stepSize: 1
@@ -294,12 +291,14 @@ Rectangle {
             y: 72
             height: 40
             text: qsTr("Zoom:")
+            anchors.verticalCenter: comboBox_filterby.verticalCenter
             anchors.left: comboBox_filterby.right
             anchors.leftMargin: 16
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
             font.pixelSize: 16
         }
+
     }
 
     Rectangle {
@@ -370,7 +369,7 @@ Rectangle {
                 interactive: true
                 model: myDevice.shotModel
                 delegate: ItemShot { width: shotsview.cellSize }
-/*
+                /*
                 model: myDevice.shotsList
                 delegate: ItemShot { shot: modelData;
                                      width: shotsview.cellSize }

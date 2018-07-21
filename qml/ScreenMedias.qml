@@ -23,26 +23,27 @@ Rectangle {
             width: 200
             height: 40
             color: ThemeEngine.colorHeaderTitle
-            text: qsTr("MEDIAS")
-            anchors.left: parent.left
-            anchors.leftMargin: 16
+            text: qsTr("MEDIAS GALLERY")
+            anchors.right: parent.right
+            anchors.rightMargin: 16
             anchors.top: parent.top
             anchors.topMargin: 16
             verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignLeft
+            horizontalAlignment: Text.AlignRight
             font.bold: true
             font.pixelSize: 30
         }
 
         ComboBox {
             id: comboBox_directories
+            y: 16
             width: 300
             height: 40
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 16
+            anchors.right: parent.right
+            anchors.rightMargin: 16
             displayText: "Show ALL media directories"
-            anchors.top: parent.top
-            anchors.topMargin: 16
-            anchors.left: textHeader.right
-            anchors.leftMargin: 16
 
             model: ListModel {
                 id: cbMediaDirectories
@@ -50,31 +51,15 @@ Rectangle {
             }
         }
 
-        Text {
-            id: text1
-            x: 1117
-            width: 143
-            height: 40
-            text: qsTr("x elements")
-            anchors.top: parent.top
-            anchors.topMargin: 16
-            anchors.right: parent.right
-            anchors.rightMargin: 16
-            horizontalAlignment: Text.AlignRight
-            verticalAlignment: Text.AlignVCenter
-            font.pixelSize: 16
-        }
-
         ComboBox {
             id: comboBox_filterby
-            y: 72
             width: 256
+            anchors.top: parent.top
+            anchors.topMargin: 16
             displayText: "Filter by:"
             textRole: "text"
             anchors.left: parent.left
             anchors.leftMargin: 16
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 16
 
             model: ListModel {
                 id: cbMediaFilters
@@ -96,13 +81,12 @@ Rectangle {
             id: sliderZoom
             y: 72
             width: 200
+            anchors.verticalCenter: comboBox_filterby.verticalCenter
             anchors.left: textZoom.right
             anchors.leftMargin: 16
             stepSize: 1
             to: 3
             from: 1
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 16
             value: 2
         }
 
@@ -111,6 +95,7 @@ Rectangle {
             y: 72
             height: 40
             text: qsTr("Zoom:")
+            anchors.verticalCenter: comboBox_filterby.verticalCenter
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             anchors.left: comboBox_filterby.right

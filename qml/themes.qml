@@ -16,7 +16,7 @@ Item {
     readonly property string colorSidebar: "#4E596E"
 
     readonly property string colorHeaderBackground: "#eef0f1"
-    readonly property string colorHeaderTitle: "#9199a1"
+    readonly property string colorHeaderTitle: "#353637"
     readonly property string colorHeaderText: "#ffffff"
 
     readonly property string colorContentBackground: "#ffffff"
