@@ -61,6 +61,7 @@ Shot::Shot(const Shot &other)
     m_mp4 = other.m_mp4;
     m_lrv = other.m_lrv;
     m_thm = other.m_thm;
+    m_wav = other.m_wav;
 }
 
 /* ************************************************************************** */
@@ -92,10 +93,18 @@ void Shot::addFile(QString &file)
         {
             m_thm.push_back(file);
         }
+        else if (file.endsWith("WAV", Qt::CaseInsensitive))
+        {
+            m_wav.push_back(file);
+        }
         else
         {
             qWarning() << "Shot::addFile(" << file << ") UNKNOWN FORMAT";
         }
+
+        // Fusion hack:
+        if (fi.fileName().startsWith("GPFR") || fi.fileName().startsWith("GPBK"))
+            m_file_name = fi.baseName();
     }
     else
     {
@@ -115,6 +124,7 @@ bool Shot::isValid()
 unsigned Shot::getType() const
 {
 /*
+    // Fusion hack:
     if (m_type == Shared::SHOT_PICTURE_MULTI && m_jpg.size() == 1)
     {
         m_type = Shared::SHOT_PICTURE;

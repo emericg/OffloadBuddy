@@ -91,10 +91,40 @@ bool Device::isValid()
 /* ************************************************************************** */
 
 //https://gopro.com/help/articles/question_answer/GoPro-Camera-File-Naming-Convention
+bool Device::addSecondaryDevice(const QString &path)
+{
+    if (!path.isEmpty())
+    {
+        m_secondary_root_path = path;
+        m_secondary_storage = new QStorageInfo(m_secondary_root_path);
+
+        if (m_secondary_storage && m_secondary_storage->isValid() && m_secondary_storage->isReady())
+        {
+            // yas
+            return true;
+        }
+        else
+        {
+            qDebug() << "* device storage invalid? '" << m_secondary_storage->displayName() << "'";
+        }
+    }
+
+    return false;
+}
+
 
 bool Device::scanFiles()
 {
-    QString dcim_path = m_root_path + QDir::separator() + "DCIM";
+    return scanFiles(m_root_path);
+}
+bool Device::scanSecondaryDevice()
+{
+    return scanFiles(m_secondary_root_path);
+}
+
+bool Device::scanFiles(const QString &path)
+{
+    QString dcim_path = path + QDir::separator() + "DCIM";
 
     qDebug() << "> SCANNING STARTED";
     qDebug() << "DCIM:" << dcim_path;
@@ -114,6 +144,8 @@ bool Device::scanFiles()
 
             Shared::ShotType file_type = Shared::SHOT_UNKNOWN;
             QString file_ext = file_name.right(3).toLower();
+
+            int camera_id = 0; // for multi camera system
             int file_number = file_name.mid(4, 4).toInt();
             QString group_string;
             int group_number = 0;
@@ -134,6 +166,23 @@ bool Device::scanFiles()
                     file_type = Shared::SHOT_VIDEO;
                 }
             }
+            else if (file_name.startsWith("GPBK") ||
+                     file_name.startsWith("GPFR"))
+            {
+                // Fusion Video
+                if (file_ext == "jpg")
+                {
+                    file_type = Shared::SHOT_PICTURE;
+                }
+                else if (file_ext == "mp4" || file_ext == "lrv" ||
+                         file_ext == "thm"  || file_ext == "wav")
+                {
+                    file_type = Shared::SHOT_VIDEO;
+                }
+
+                if (file_name.startsWith("GPBK"))
+                    camera_id = 1;
+            }
             else if (file_name.startsWith("GP"))
             {
                 // Chaptered Video
@@ -150,35 +199,6 @@ bool Device::scanFiles()
                 group_string = file_name.mid(2, 2);
                 group_number = group_string.toInt();
             }
-            else if (file_name.startsWith("G"))
-            {
-                if (file_ext == "jpg")
-                {
-                    // Burst or Time-Lapse Photo
-                    file_type = Shared::SHOT_PICTURE_MULTI;
-                }
-                else if (file_ext == "mp4")
-                {
-                    // Looping Video
-                    file_type = Shared::SHOT_VIDEO;
-                }
-
-                group_string = file_name.mid(1, 3);
-                group_number = group_string.toInt();
-            }
-            else if (file_name.startsWith("GPBK") ||
-                     file_name.startsWith("GPFR"))
-            {
-                // Fusion Video
-                if (file_ext == "jpg")
-                {
-                    file_type = Shared::SHOT_PICTURE;
-                }
-                else if (file_ext == "mp4")
-                {
-                    file_type = Shared::SHOT_VIDEO;
-                }
-            }
             else if (file_name.startsWith("GB") ||
                      file_name.startsWith("GF"))
             {
@@ -191,39 +211,63 @@ bool Device::scanFiles()
                 {
                     file_type = Shared::SHOT_PICTURE_MULTI;
                 }
-                else if (file_ext == "mp4")
+                else if (file_ext == "mp4" || file_ext == "lrv" ||
+                         file_ext == "thm"  || file_ext == "wav")
                 {
                     file_type = Shared::SHOT_VIDEO;
                 }
+
+                if (file_name.startsWith("GB"))
+                    camera_id = 1;
+            }
+            else if (file_name.startsWith("G"))
+            {
+                if (file_ext == "jpg")
+                {
+                    // Burst or Time-Lapse Photo
+                    file_type = Shared::SHOT_PICTURE_MULTI;
+                }
+                else if (file_ext == "mp4" || file_ext == "lrv" ||
+                         file_ext == "thm"  || file_ext == "wav")
+                {
+                    // Looping Video
+                    file_type = Shared::SHOT_VIDEO;
+                }
+
+                group_string = file_name.mid(1, 3);
+                group_number = group_string.toInt();
             }
             else if (file_name.startsWith("3D_"))
             {
+                // 3D Recording Video
+                //file_type = Shared::SHOT_VIDEO_3D;
                 qWarning() << "Unhandled file name format:" << file_name;
             }
             else
             {
-                // 3D Recording Video
-                //file_type = Shared::SHOT_VIDEO_3D;
                 qWarning() << "Unknown file name format:" << file_name;
             }
 
-            int id = (file_type == Shared::SHOT_VIDEO) ? file_number : group_number;
-            Shot *s = findShot(file_type, id);
+            int file_id = (file_type == Shared::SHOT_VIDEO) ? file_number : group_number;
+            qWarning() << "file id" << file_id;
+            Shot *s = findShot(file_type, file_id, camera_id);
             if (s)
             {
+                qWarning() << "Adding file:" << file_name << "to an existing shot";
                 s->addFile(file_path);
             }
             else
             {
+                qWarning() << "file:" << file_name << "is a new shot";
                 Shot *s = new Shot(file_type);
                 if (s)
                 {
                     s->addFile(file_path);
-                    s->setFileId(id);
+                    s->setFileId(file_id);
+                    s->setCameraId(camera_id);
                     if (s->isValid())
                     {
                         m_shotModel->addShot(s);
-                        //m_shots.push_back(s);
                     }
                 }
             }
@@ -244,7 +288,7 @@ bool Device::scanFiles()
     return false;
 }
 
-Shot * Device::findShot(Shared::ShotType type, int file_id) const
+Shot * Device::findShot(Shared::ShotType type, int file_id, int camera_id) const
 {
     if (m_shotModel->getShotList()->size() > 0 && file_id > 0)
     {
@@ -253,22 +297,18 @@ Shot * Device::findShot(Shared::ShotType type, int file_id) const
             Shot *search = qobject_cast<Shot*>(m_shotModel->getShotList()->at(i));
             if (search && search->getType() == type)
             {
-                if (search->getFileNumber() == file_id)
+                if (search->getFileId() == file_id &&
+                    search->getCameraId() == camera_id)
                 {
                     return search;
                 }
             }
         }
 
-        //qDebug() << "No shot found for id" << file_id;
+        qDebug() << "No shot found for id" << file_id;
     }
 
     return nullptr;
-}
-
-bool Device::isAvailable()
-{
-    return m_available;
 }
 
 /* ************************************************************************** */
@@ -318,36 +358,53 @@ QString Device::getRootPath() const
     return m_root_path;
 }
 
+QString Device::getSecondayRootPath() const
+{
+    return m_secondary_root_path;
+}
+
 int64_t Device::getSpaceTotal()
 {
-    if (m_storage)
-        return m_storage->bytesTotal();
+    int64_t s = 0;
 
-    return 0;
+    if (m_storage)
+        s += m_storage->bytesTotal();
+    if (m_secondary_storage)
+        s += m_secondary_storage->bytesTotal();
+
+    return s;
 }
 
 int64_t Device::getSpaceUsed()
 {
-    if (m_storage)
-        return (m_storage->bytesTotal() - m_storage->bytesAvailable());
+    int64_t s = 0;
 
-    return 0;
+    if (m_storage)
+        s += (m_storage->bytesTotal() - m_storage->bytesAvailable());
+    if (m_secondary_storage)
+        s += (m_storage->bytesTotal() - m_storage->bytesAvailable());
+
+    return s;
 }
 
 double Device::getSpaceUsed_percent()
 {
-    if (m_storage)
-        return static_cast<double>(getSpaceUsed()) / static_cast<double>(m_storage->bytesTotal());
+    if (getSpaceTotal() > 0)
+        return static_cast<double>(getSpaceUsed()) / static_cast<double>(getSpaceTotal());
 
     return 0.0;
 }
 
 int64_t Device::getSpaceAvailable()
 {
-    if (m_storage)
-        return m_storage->bytesAvailable();
+    int64_t s = 0;
 
-    return 0;
+    if (m_storage)
+        s += m_storage->bytesAvailable();
+    if (m_secondary_storage)
+        s += m_secondary_storage->bytesAvailable();
+
+    return s;
 }
 
 int64_t Device::getSpaceAvailable_withrefresh()

@@ -336,36 +336,62 @@ bool DeviceManager::parseGoProVersionFile(const QString &path, gopro_version_20 
 
 void DeviceManager::addDevice(const QString &path, const gopro_version_20 *infos)
 {
+    Device *d = nullptr;
     bool deviceExists = false;
-    for (auto d: m_devices)
+    bool deviceMerge = false;
+
+    for (auto dd: m_devices)
     {
-        Device *dd = qobject_cast<Device*>(d);
-        if (dd && dd->getRootPath() == path)
+        d = qobject_cast<Device*>(dd);
+        if (d)
         {
-            deviceExists = true;
-            break;
+            if (d->getSerial() == infos->camera_serial_number &&
+                (d->getRootPath() == path || d->getSecondayRootPath() == path))
+            {
+                deviceExists = true;
+                break;
+            }
+            else if (d->getModel() == "FUSION" &&
+                     d->getSerial() == infos->camera_serial_number &&
+                     d->getRootPath() != path)
+            {
+                // we only want to merge two SD cards from a same FUSION device
+                deviceMerge = true;
+                break;
+            }
         }
     }
 
     if (deviceExists == false)
     {
-        Device *d = new Device(path, infos);
-        if (d->isValid())
+        if (deviceMerge == true)
         {
-            qDebug() << ">>>> ADDING DEVICE";
+            qDebug() << ">>>> MERGING DEVICE";
 
-            m_devices.push_back(d);
-            d->scanFiles();
-
-            m_watcher.addPath(path);
-
-            emit devicesUpdated();
-            emit devicesAdded();
+            // fusioooooooon
+            d->addSecondaryDevice(path);
+            d->scanSecondaryDevice();
         }
         else
         {
-            qDebug() << "> INVALID DEVICE";
-            delete d;
+            d = new Device(path, infos);
+            if (d->isValid())
+            {
+                qDebug() << ">>>> ADDING DEVICE";
+
+                m_devices.push_back(d);
+                d->scanFiles();
+
+                m_watcher.addPath(path);
+
+                emit devicesUpdated();
+                emit devicesAdded();
+            }
+            else
+            {
+                qDebug() << "> INVALID DEVICE";
+                delete d;
+            }
         }
     }
 }

@@ -82,6 +82,8 @@ public:
 
     QDateTime m_date_shot;
 
+    int m_camera_id = 0; // for multi camera systems
+
     //QList <HighLight> m_highlights;
 
     // PICTURES
@@ -93,6 +95,7 @@ public:
     QList <QString> m_mp4;
     QList <QString> m_lrv;
     QList <QString> m_thm;
+    QList <QString> m_wav;
 
     QList <QString> m_gpx;
     QList <QString> m_json;
@@ -121,8 +124,10 @@ public slots:
 
     unsigned getHighlightCount() const { return 0; }
 
-    void setFileId(int number) { m_file_number = number; }
-    int getFileNumber() const { return m_file_number; }
+    int getFileId() const { return m_file_number; }
+    void setFileId(int id) { m_file_number = id; }
+    int getCameraId() const { return m_camera_id; }
+    void setCameraId(int id) { m_camera_id = id; }
 
     //QString getCamera() const { return m_camera; }
 };

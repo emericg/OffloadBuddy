@@ -124,14 +124,12 @@ class Device: public QObject
     Q_PROPERTY(QString serial READ getSerial NOTIFY deviceUpdated)
     Q_PROPERTY(QString firmware READ getFirmware NOTIFY deviceUpdated)
     //Q_PROPERTY(int directoryContent READ getContent NOTIFY deviceUpdated)
-    Q_PROPERTY(bool available READ isAvailable NOTIFY availableUpdated)
 
     Q_PROPERTY(qint64 spaceTotal READ getSpaceTotal NOTIFY spaceUpdated)
     Q_PROPERTY(qint64 spaceUsed READ getSpaceUsed NOTIFY spaceUpdated)
     Q_PROPERTY(double spaceUsedPercent READ getSpaceUsed_percent NOTIFY spaceUpdated)
     Q_PROPERTY(qint64 spaceAvailable READ getSpaceAvailable NOTIFY spaceUpdated)
 
-    //Q_PROPERTY(QVariant shotsList READ getShots NOTIFY shotsUpdated)
     Q_PROPERTY(ShotModel* shotModel READ getShotModel NOTIFY shotsUpdated)
 
     // Generic
@@ -146,15 +144,19 @@ class Device: public QObject
     // Filesystem
     QString m_root_path;
     QStorageInfo *m_storage = nullptr;
-    bool m_available = false;
+
+    // Fusion dual filesystem
+    QString m_secondary_root_path;
+    QStorageInfo *m_secondary_storage = nullptr;
+    bool m_secondary_available = false;
+
     QTimer m_updateTimer;
 
     // Files and shots
     //QList <QString> m_files;
-    //QList <QObject *> m_shots;
     ShotModel *m_shotModel = nullptr;
 
-    Shot *findShot(Shared::ShotType type, int file_id) const;
+    Shot *findShot(Shared::ShotType type, int file_id, int camera_id) const;
 
 Q_SIGNALS:
     void scanningStarted();
@@ -171,7 +173,10 @@ public:
 
     bool isValid();
     bool scanFiles();
-    bool scanFilesFinished();
+    bool scanSecondaryDevice();
+    bool scanFiles(const QString &path);
+
+    bool addSecondaryDevice(const QString &path);
 
 public slots:
     QString getBrand() const { return m_brand; }
@@ -179,12 +184,10 @@ public slots:
     QString getSerial() const { return m_serial; }
     QString getFirmware() const { return m_firmware; }
 
-    //QVariant getShots() const { return QVariant::fromValue(m_shots); }
     ShotModel *getShotModel() const { return m_shotModel; }
 
-    bool isAvailable();
-
     QString getRootPath() const;
+    QString getSecondayRootPath() const;
 
     int64_t getSpaceTotal();
     int64_t getSpaceUsed();
