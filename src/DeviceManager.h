@@ -37,7 +37,7 @@
 #include <libmtp.h>
 #endif
 
-#define SCANNING_TIMER 17500
+#define SCANNING_TIMER 10000
 
 /* ************************************************************************** */
 

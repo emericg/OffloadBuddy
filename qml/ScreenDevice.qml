@@ -38,7 +38,7 @@ Rectangle {
                 myDevice.model.includes("HERO4")) {
                 deviceImage.source = "qrc:/cameras/H4.svg"
             }
-            else if (myDevice.model.includes("SESSION")) {
+            else if (myDevice.model.includes("Session")) {
                 deviceImage.source = "qrc:/cameras/session.svg"
             }
             else if (myDevice.model.includes("FUSION")) {
