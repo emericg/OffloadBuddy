@@ -85,7 +85,24 @@ Rectangle {
         }
 
         CheckBox {
-            id: checkMergeVideo
+            id: checkIgnoreAudio
+            y: 72
+            width: 350
+            height: 40
+            text: qsTr("Ignore HD audio files")
+            anchors.left: checkIgnoreJunk.right
+            anchors.leftMargin: 16
+            anchors.verticalCenter: checkIgnoreJunk.verticalCenter
+
+            checked: mySettings.ignorehdaudio
+            onCheckStateChanged: {
+                mySettings.ignorehdaudio = checked
+            }
+        }
+
+
+        CheckBox {
+            id: checkAutoMerge
             width: 350
             height: 40
             text: qsTr("Automatically merge video chapters")
@@ -101,19 +118,35 @@ Rectangle {
         }
 
         CheckBox {
-            id: checkExtractMetadatas
+            id: checkAutoMetadatas
             x: 7
             y: 128
             width: 350
             height: 40
             text: qsTr("Automatically extract metadatas")
-            anchors.verticalCenter: checkMergeVideo.verticalCenter
-            anchors.left: checkMergeVideo.right
+            anchors.verticalCenter: checkAutoMerge.verticalCenter
+            anchors.left: checkAutoMerge.right
             anchors.leftMargin: 16
 
             checked: mySettings.autometadata
             onCheckStateChanged: {
                 mySettings.autometadata = checked
+            }
+        }
+
+        CheckBox {
+            id: checkAutoDelete
+            y: 128
+            width: 350
+            height: 40
+            text: qsTr("Automatically delete imported medias")
+            anchors.left: checkAutoMetadatas.right
+            anchors.leftMargin: 16
+            anchors.verticalCenter: checkAutoMetadatas.verticalCenter
+
+            checked: mySettings.autodelete
+            onCheckStateChanged: {
+                mySettings.autodelete = checked
             }
         }
 
@@ -150,18 +183,12 @@ Rectangle {
                 anchors.left: textMediasTitle.right
                 anchors.leftMargin: 16
                 anchors.verticalCenter: textMediasTitle.verticalCenter
-
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        fileDialogAdd.open()
-                    }
-                }
+                onClicked: fileDialogAdd.open()
             }
 
             FileDialog {
                 id: fileDialogAdd
-                title: "Please choose a destination directory!"
+                title: qsTr("Please choose a destination directory!")
                 sidebarVisible: true
                 selectExisting: true
                 selectMultiple: false
@@ -205,9 +232,9 @@ Rectangle {
 
             model: ListModel {
                 id: cbItemsContentHierarchy
-                ListElement { text: "date"; }
-                ListElement { text: "model > date"; }
-                ListElement { text: "brand > model > date"; }
+                ListElement { text: qsTr("date"); }
+                ListElement { text: qsTr("model > date"); }
+                ListElement { text: qsTr("brand > model > date"); }
             }
             Component.onCompleted: {
                 currentIndex = mySettings.contenthierarchy;
@@ -227,24 +254,13 @@ Rectangle {
             width: 150
             height: 40
             text: qsTr("Import hierarchy:")
-            anchors.top: checkMergeVideo.bottom
+            anchors.top: checkAutoMerge.bottom
             anchors.topMargin: 16
             anchors.left: parent.left
             anchors.leftMargin: 24
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignLeft
             font.pixelSize: 14
-        }
-
-        CheckBox {
-            id: checkAutoDelete
-            y: 72
-            width: 350
-            height: 40
-            text: qsTr("Automatically delete imported medias")
-            anchors.left: checkIgnoreJunk.right
-            anchors.leftMargin: 16
-            anchors.verticalCenter: checkIgnoreJunk.verticalCenter
         }
     }
 }

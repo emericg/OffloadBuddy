@@ -119,6 +119,7 @@ class SettingsManager: public QObject
     Q_PROPERTY(bool autometadata READ getAutoMetadata WRITE setAutoMetadata NOTIFY autoMetadataChanged)
     Q_PROPERTY(bool autodelete READ getAutoDelete WRITE setAutoDelete NOTIFY autoDeleteChanged)
     Q_PROPERTY(bool ignorejunk READ getIgnoreJunk WRITE setIgnoreJunk NOTIFY ignoreJunkChanged)
+    Q_PROPERTY(bool ignorehdaudio READ getIgnoreHdAudio WRITE setIgnoreHdAudio NOTIFY ignoreHdAudioChanged)
     Q_PROPERTY(uint contenthierarchy READ getContentHierarchy WRITE setContentHierarchy NOTIFY contentHierarchyChanged)
 
     Q_PROPERTY(QVariant directoriesList READ getDirectories NOTIFY directoriesUpdated)
@@ -126,9 +127,10 @@ class SettingsManager: public QObject
     bool readSettings();
     bool writeSettings();
 
-    // global
+    // Global
     bool m_autoLaunch = false;
     bool m_ignoreJunk = true;
+    bool m_ignoreHdAudio = false;
     bool m_autoMerge = true;
     bool m_autoMetadata = true;
     bool m_autoDelete = false;
@@ -137,7 +139,7 @@ class SettingsManager: public QObject
     // Media directories
     QList <QObject *> m_mediaDirectories;
 
-    // singleton
+    // Singleton
     static SettingsManager *instance;
     SettingsManager();
     ~SettingsManager();
@@ -148,6 +150,7 @@ Q_SIGNALS:
     void autoMetadataChanged();
     void autoDeleteChanged();
     void ignoreJunkChanged();
+    void ignoreHdAudioChanged();
     void contentHierarchyChanged();
     void directoriesUpdated();
 
@@ -157,9 +160,6 @@ public:
     bool getAutoLaunch() const { return m_autoLaunch; }
     void setAutoLaunch(bool value) { m_autoLaunch = value; writeSettings(); }
 
-    bool getIgnoreJunk() const { return m_ignoreJunk; }
-    void setIgnoreJunk(bool value) { m_ignoreJunk = value; writeSettings(); }
-
     bool getAutoMerge() const { return m_autoMerge; }
     void setAutoMerge(bool value) { m_autoMerge = value; writeSettings(); }
 
@@ -168,6 +168,12 @@ public:
 
     bool getAutoDelete() const { return m_autoDelete; }
     void setAutoDelete(bool value) { m_autoDelete = value; writeSettings(); }
+
+    bool getIgnoreJunk() const { return m_ignoreJunk; }
+    void setIgnoreJunk(bool value) { m_ignoreJunk = value; writeSettings(); }
+
+    bool getIgnoreHdAudio() const { return m_ignoreHdAudio; }
+    void setIgnoreHdAudio(bool value) { m_ignoreHdAudio = value; writeSettings(); }
 
     unsigned getContentHierarchy() const { return m_contentHierarchy; }
     void setContentHierarchy(unsigned value) { m_contentHierarchy = value; writeSettings(); }

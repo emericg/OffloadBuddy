@@ -81,6 +81,9 @@ bool SettingsManager::readSettings()
         if (settings.contains("global/ignoreJunk"))
             m_ignoreJunk = settings.value("global/ignoreJunk").toBool();
 
+        if (settings.contains("global/ignoreHdAudio"))
+            m_ignoreHdAudio = settings.value("global/ignoreHdAudio").toBool();
+
         if (settings.contains("global/contentHierarchy"))
             m_contentHierarchy = settings.value("global/contentHierarchy").toUInt();
 
@@ -92,7 +95,7 @@ bool SettingsManager::readSettings()
             if (settings.contains(p) && settings.contains(t))
             {
                 QString pp = settings.value(p).toString();
-                unsigned tt = settings.value(t).toInt();
+                int tt = settings.value(t).toInt();
 
                 MediaDirectory *d = new MediaDirectory(pp, tt);
                 m_mediaDirectories.push_back(d);
@@ -131,6 +134,7 @@ bool SettingsManager::writeSettings()
         settings.setValue("global/autoMetadata", m_autoMetadata);
         settings.setValue("global/autoDelete", m_autoDelete);
         settings.setValue("global/ignoreJunk", m_ignoreJunk);
+        settings.setValue("global/ignoreHdAudio", m_ignoreHdAudio);
         settings.setValue("global/contentHierarchy", m_contentHierarchy);
         settings.sync();
 
@@ -204,7 +208,6 @@ void SettingsManager::deleteDirectory(QString path)
 void SettingsManager::directoryModified()
 {
     writeSettings();
-
 }
 
 /* ************************************************************************** */
