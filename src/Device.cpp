@@ -43,7 +43,6 @@ Device::Device(const QString path, const gopro_version_20 *infos)
         m_model = infos->camera_type;
         m_firmware = infos->firmware_version;
         m_serial = infos->camera_serial_number;
-        m_wifi_mac = infos->wifi_mac;
     }
 
     if (!path.isEmpty())
@@ -335,17 +334,18 @@ void Device::refreshDevice()
             QFile::Permissions  e = fi.permissions();
             if (!e.testFlag(QFileDevice::WriteUser))
             {
-                m_available = false;
-                emit availableUpdated();
+                //
             }
 #endif // __linux
         }
 */
     }
-    else
+
+    if (m_secondary_storage &&
+        m_secondary_storage->isValid() && m_secondary_storage->isReady())
     {
-        //m_available = false;
-        //emit availableUpdated();
+        m_secondary_storage->refresh();
+        emit spaceUpdated();
     }
 }
 

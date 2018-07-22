@@ -4,6 +4,8 @@
         <file>qml/main.qml</file>
         <file>qml/ScreenMedias.qml</file>
         <file>qml/ScreenDevice.qml</file>
+        <file>qml/ScreenDeviceShots.qml</file>
+        <file>qml/ScreenDeviceShotDetails.qml</file>
         <file>qml/ScreenSettings.qml</file>
         <file>qml/ItemDeviceMenu.qml</file>
         <file>qml/ItemMediaDirectory.qml</file>

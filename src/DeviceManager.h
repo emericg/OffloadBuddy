@@ -77,6 +77,7 @@ public slots:
 
     QVariant getFirstDevice() const { if (m_devices.size() > 0) { return QVariant::fromValue(m_devices.at(0)); } return QVariant(); }
     QVariant getDevices() const { if (m_devices.size() > 0) { return QVariant::fromValue(m_devices); } return QVariant(); }
+    QVariant getDevice(int index) const { if (m_devices.size() > index) { return QVariant::fromValue(m_devices.at(index)); } return QVariant(); }
 };
 
 #endif // DEVICE_MANAGER_H

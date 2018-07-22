@@ -4,14 +4,15 @@ VERSION = 0.1.0
 CONFIG += c++14
 QT     += core gui svg
 QT     += quick quickcontrols2
+QT     += charts location
 
 # Features
 #DEFINES += ENABLE_LIBMTP
 #DEFINES += ENABLE_FFMPEG
 
 # Validate Qt version
-if (lessThan(QT_MAJOR_VERSION, 5) | lessThan(QT_MINOR_VERSION, 7)) {
-    error("You need Qt 5.7 to build $${TARGET}...")
+if (lessThan(QT_MAJOR_VERSION, 5) | lessThan(QT_MINOR_VERSION, 10)) {
+    error("You need Qt 5.10 to build $${TARGET}...")
 }
 
 # Build artifacts

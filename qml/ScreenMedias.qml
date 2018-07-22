@@ -43,11 +43,11 @@ Rectangle {
             anchors.bottomMargin: 16
             anchors.right: parent.right
             anchors.rightMargin: 16
-            displayText: "Show ALL media directories"
+            displayText: qsTr("Show ALL media directories")
 
             model: ListModel {
                 id: cbMediaDirectories
-                ListElement { text: "ALL media directories"; }
+                ListElement { text: qsTr("ALL media directories"); }
             }
         }
 
@@ -63,16 +63,16 @@ Rectangle {
 
             model: ListModel {
                 id: cbMediaFilters
-                ListElement { text: "Shot types"; }
-                ListElement { text: "Camera models"; }
+                ListElement { text: qsTr("Shot types"); }
+                ListElement { text: qsTr("Camera models"); }
             }
-/*
+            /*
             model: ListModel {
                 id: cbMediaOrders
-                ListElement { text: "Date"; }
-                ListElement { text: "Duration"; }
-                ListElement { text: "GPS location"; }
-                ListElement { text: "Camera model"; }
+                ListElement { text: qsTr("Date"); }
+                ListElement { text: qsTr("Duration"); }
+                ListElement { text: qsTr("GPS location"); }
+                ListElement { text: qsTr("Camera model"); }
             }
 */
         }
@@ -116,10 +116,29 @@ Rectangle {
         anchors.leftMargin: 0
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0
+
+        Rectangle {
+            id: circleEmpty
+            x: 474
+            y: 130
+            width: 366
+            height: 366
+            color: "#f9f9f9"
+            radius: width*0.5
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            Image {
+                id: imageEmpty
+                x: 38
+                y: 38
+                width: 256
+                height: 256
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                fillMode: Image.PreserveAspectFit
+                source: "qrc:/icons/disk.svg"
+            }
+        }
     }
 }
-
-/*##^## Designer {
-    D{i:3;anchors_height:40;anchors_y:16}D{i:5;anchors_x:16}D{i:6;anchors_x:260}D{i:8;anchors_x:278}
-}
- ##^##*/

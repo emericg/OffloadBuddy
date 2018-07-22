@@ -9,12 +9,12 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="24"
-   height="24"
+   width="32"
+   height="32"
    id="svg4159"
    version="1.1"
    inkscape:version="0.92.2 2405546, 2018-03-11"
-   viewBox="0 0 24 24"
+   viewBox="0 0 32 32"
    sodipodi:docname="picture.svg">
   <defs
      id="defs4161" />
@@ -25,9 +25,9 @@
      borderopacity="1"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="22.627417"
-     inkscape:cx="5.2772018"
-     inkscape:cy="9.0655121"
+     inkscape:zoom="11.313709"
+     inkscape:cx="4.3195424"
+     inkscape:cy="21.817181"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:grid-bbox="true"
@@ -86,10 +86,10 @@
      id="layer1"
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     transform="translate(0,8)">
+     transform="translate(0,16)">
     <path
        style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.74988651;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       d="M 0,-6.4015844 V 14.595238 H 2.999546 23.996369 V 11.595692 -6.4015844 H 20.996822 2.999546 Z m 2.999546,2.9995461 H 20.996822 V 10.122282 L 14.997731,2.9251292 9.4936804,9.5305746 5.9990921,6.0359869 2.999546,9.0355325 Z m 4.4993192,2.99954609 c -0.8283018,0 -1.4997731,0.67147133 -1.4997731,1.49977301 0,0.8283018 0.6714713,1.499773 1.4997731,1.499773 0.8283016,0 1.4997729,-0.6714712 1.4997729,-1.499773 0,-0.82830168 -0.6714713,-1.49977301 -1.4997729,-1.49977301 z"
+       d="M 0,-14 V 13.999546 H 3.9999351 31.999482 V 9.9996109 -14 H 27.999546 3.9999351 Z m 3.9999351,3.999935 H 27.999546 V 8.0347988 L 19.999677,-1.5627016 12.659951,7.245749 7.9998703,2.5856691 3.9999351,6.5856037 Z m 5.9999029,3.9999353 c -1.1045517,0 -1.9999677,0.8954161 -1.9999677,1.9999676 0,1.1045516 0.895416,1.9999675 1.9999677,1.9999675 1.104551,0 1.999967,-0.8954159 1.999967,-1.9999675 0,-1.1045515 -0.895416,-1.9999676 -1.999967,-1.9999676 z"
        id="rect4136"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccccccccccccccsssss" />

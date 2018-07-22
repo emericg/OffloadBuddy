@@ -252,6 +252,7 @@ ApplicationWindow {
                 PropertyChanges {
                     target: screenDevice
                     visible: true
+                    state: "shotsview"
                 }
                 PropertyChanges {
                     target: screenSettings

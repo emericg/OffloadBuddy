@@ -70,7 +70,7 @@ Rectangle {
             text_top.visible = !text_top.visible
         }
         onClicked: shotsview.currentIndex = index
-        //onDoubleClicked: shotsview.state =
+        onDoubleClicked: screenDevice.state = "shotdetails"
     }
 
     Text {

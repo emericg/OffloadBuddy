@@ -9,12 +9,12 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="16"
-   height="16"
+   width="32"
+   height="32"
    id="svg4159"
    version="1.1"
    inkscape:version="0.92.2 2405546, 2018-03-11"
-   viewBox="0 0 16 16"
+   viewBox="0 0 32 32"
    sodipodi:docname="bookmark.svg">
   <title
      id="title814">Highlight</title>
@@ -27,9 +27,9 @@
      borderopacity="1"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="44.395604"
-     inkscape:cx="-2.6598762"
-     inkscape:cy="7.1665051"
+     inkscape:zoom="15.696216"
+     inkscape:cx="18.023614"
+     inkscape:cy="7.7422584"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:grid-bbox="true"
@@ -90,10 +90,11 @@
   <g
      id="layer1"
      inkscape:label="Layer 1"
-     inkscape:groupmode="layer">
+     inkscape:groupmode="layer"
+     transform="translate(0,16)">
     <path
        style="opacity:1;fill:#f6e686;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.5;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 2,1 v 12 l 6,2 6,-2 V 1 L 8,3 Z"
+       d="m 4,-14 v 24 l 12,4 12,-4 v -24 l -12,4 z"
        id="rect4136"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="ccccccc" />

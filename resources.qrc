@@ -12,6 +12,10 @@
         <file>resources/minicons/video.svg</file>
         <file>resources/other/placeholder.png</file>
     </qresource>
+    <qresource prefix="/icons">
+        <file alias="disk.svg">resources/icons/disk.svg</file>
+        <file alias="card.svg">resources/icons/card.svg</file>
+    </qresource>
     <qresource prefix="/cameras">
         <file alias="generic.svg">resources/cameras/generic.svg</file>
         <file alias="H4.svg">resources/cameras/H4.svg</file>

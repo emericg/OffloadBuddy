@@ -132,20 +132,18 @@ class Device: public QObject
 
     Q_PROPERTY(ShotModel* shotModel READ getShotModel NOTIFY shotsUpdated)
 
-    // Generic
+    // Generic infos
+    device_e m_device = DEVICE_UNKNOWN;
     QString m_brand;
     QString m_model;
     QString m_serial;
     QString m_firmware;
 
-    // GoPro
-    QString m_wifi_mac;
-
     // Filesystem
     QString m_root_path;
     QStorageInfo *m_storage = nullptr;
 
-    // Fusion dual filesystem
+    // Secondary filesystem (Fusion or other multi camera system)
     QString m_secondary_root_path;
     QStorageInfo *m_secondary_storage = nullptr;
     bool m_secondary_available = false;
@@ -157,6 +155,9 @@ class Device: public QObject
     ShotModel *m_shotModel = nullptr;
 
     Shot *findShot(Shared::ShotType type, int file_id, int camera_id) const;
+
+private slots:
+    void refreshDevice();
 
 Q_SIGNALS:
     void scanningStarted();
@@ -178,15 +179,11 @@ public:
     bool addSecondaryDevice(const QString &path);
 
 public slots:
+    //
     QString getBrand() const { return m_brand; }
     QString getModel() const { return m_model; }
     QString getSerial() const { return m_serial; }
     QString getFirmware() const { return m_firmware; }
-
-    ShotModel *getShotModel() const { return m_shotModel; }
-
-    QString getRootPath() const;
-    QString getSecondayRootPath() const;
 
     int64_t getSpaceTotal();
     int64_t getSpaceUsed();
@@ -194,8 +191,12 @@ public slots:
     int64_t getSpaceAvailable();
     int64_t getSpaceAvailable_withrefresh();
 
-private slots:
-    void refreshDevice();
+    //
+    ShotModel *getShotModel() const { return m_shotModel; }
+    QVariant getShot(int index) const { if (index >= 0 && index < m_shotModel->getShotList()->size()) { return QVariant::fromValue(m_shotModel->getShotList()->at(index)); } return QVariant(); }
+
+    QString getRootPath() const;
+    QString getSecondayRootPath() const;
 };
 
 /* ************************************************************************** */
