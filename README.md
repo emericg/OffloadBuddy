@@ -1,6 +1,8 @@
 OffloadBuddy
 ============
 
+[![Travis](https://img.shields.io/travis/emericg/OffloadBuddy.svg?style=flat-square)](https://travis-ci.org/emericg/OffloadBuddy)
+[![AppVeyor](https://img.shields.io/appveyor/ci/emericg/OffloadBuddy.svg?style=flat-square)](https://ci.appveyor.com/project/emericg/offloadbuddy)
 [![License: GPL v3](https://img.shields.io/badge/license-GPL%20v3-blue.svg&style=flat-square)](http://www.gnu.org/licenses/gpl-3.0)
 
 
@@ -18,7 +20,7 @@ OffloadBuddy remove the hassle of handling and transfering the many videos and p
 
 ### Dependencies
 
-You will need a C++14 capable compiler and Qt 5.7+
+You will need a C++14 capable compiler and Qt 5.10+
 
 
 ### Building OffloadBuddy
