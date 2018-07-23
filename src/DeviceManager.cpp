@@ -22,7 +22,9 @@
 #include "DeviceManager.h"
 #include "Device.h"
 
+#ifdef Q_OS_UNIX
 #include <unistd.h>
+#endif
 
 #include <QFile>
 #include <QDir>

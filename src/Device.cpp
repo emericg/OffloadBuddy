@@ -52,7 +52,24 @@ Device::Device(const QString path, const gopro_version_20 *infos)
 
         if (m_storage && m_storage->isValid() && m_storage->isReady())
         {
-            // yas
+            // basic checks
+            if (m_storage->bytesAvailable() > 128*1024*1024 &&
+                m_storage->isReadOnly() == false)
+            {
+                m_writable = true;
+#if __linux
+/*
+                // adanced permission checks
+                QFileInfo fi(m_path);
+                QFile::Permissions  e = fi.permissions();
+                if (!e.testFlag(QFileDevice::WriteUser))
+                {
+                    m_writable = false;
+                    qDebug() << "PERMS error on device:" << e << (unsigned)e;
+                }
+*/
+#endif // __linux
+            }
         }
         else
         {
@@ -91,7 +108,6 @@ bool Device::isValid()
 
 /* ************************************************************************** */
 
-//https://gopro.com/help/articles/question_answer/GoPro-Camera-File-Naming-Convention
 bool Device::addSecondaryDevice(const QString &path)
 {
     if (!path.isEmpty())
@@ -154,6 +170,8 @@ bool Device::scanFiles(const QString &path)
 
             if (file_name.size() != 12)
                 qWarning() << "This filename is not 12 chars... Probably not a GoPro file...";
+
+            //https://gopro.com/help/articles/question_answer/GoPro-Camera-File-Naming-Convention
 
             if (file_name.startsWith("GOPR"))
             {
@@ -323,22 +341,15 @@ void Device::refreshDevice()
     {
         m_storage->refresh();
         emit spaceUpdated();
-/*
-        // basic checks
-        if (m_storage->bytesAvailable() > 128*1024*1024 &&
-            m_storage->isReadOnly() == false)
+
+        // Check if writable and some space is available // For firmware upates
+        if (m_storage->isReadOnly() == false &&
+            m_storage->bytesAvailable() > 128*1024*1024)
         {
-#if __linux
-            // adanced permission checks
-            QFileInfo fi(m_path);
-            QFile::Permissions  e = fi.permissions();
-            if (!e.testFlag(QFileDevice::WriteUser))
-            {
-                //
-            }
-#endif // __linux
+            m_writable = true;
         }
-*/
+        else
+            m_writable = false;
     }
 
     if (m_secondary_storage &&
@@ -346,6 +357,13 @@ void Device::refreshDevice()
     {
         m_secondary_storage->refresh();
         emit spaceUpdated();
+
+        // Check if writable and some space is available // For firmware upates
+        if (m_secondary_storage->isReadOnly() == true &&
+            m_secondary_storage->bytesAvailable() < 128*1024*1024)
+        {
+            m_writable = false;
+        }
     }
 }
 

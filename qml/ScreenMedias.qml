@@ -66,7 +66,7 @@ Rectangle {
                 ListElement { text: qsTr("Shot types"); }
                 ListElement { text: qsTr("Camera models"); }
             }
-            /*
+/*
             model: ListModel {
                 id: cbMediaOrders
                 ListElement { text: qsTr("Date"); }

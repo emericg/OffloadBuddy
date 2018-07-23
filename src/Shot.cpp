@@ -29,7 +29,7 @@
 
 /* ************************************************************************** */
 
-Shot::Shot(QObject *parent)
+Shot::Shot(QObject *parent) : QObject(parent)
 {
     //
 }
@@ -44,20 +44,23 @@ Shot::~Shot()
     //
 }
 
-Shot::Shot(const Shot &other)
+Shot::Shot(const Shot &other) : QObject()
 {
+    m_onCamera = other.m_onCamera;
+
     m_type = other.m_type;
     m_camera_source = other.m_camera_source;
+    m_camera_id = other.m_camera_id;
+    m_file_id = other.m_file_id;
 
-    m_file_name = other.m_file_name;
-    m_file_date = other.m_file_date;
-    m_file_number = other.m_file_number;
-
+    m_name = other.m_name;
+    m_date_file = other.m_date_file;
     m_date_shot = other.m_date_shot;
+    m_duration = other.m_duration;
+    m_highlights = other.m_highlights;
 
     m_jpg = other.m_jpg;
 
-    m_duration = other.m_duration;
     m_mp4 = other.m_mp4;
     m_lrv = other.m_lrv;
     m_thm = other.m_thm;
@@ -74,8 +77,8 @@ void Shot::addFile(QString &file)
         // Fusion "first file" hack...
         if (fi.fileName().startsWith("GPFR") || fi.fileName().startsWith("GPBK"))
         {
-            m_file_name = fi.baseName();
-            m_file_date = fi.birthTime();
+            m_name = fi.baseName();
+            m_date_file = fi.birthTime();
 
             if (file.endsWith("JPG", Qt::CaseInsensitive))
             {
@@ -104,11 +107,11 @@ void Shot::addFile(QString &file)
         }
         else
         {
-            if (m_file_name.isEmpty())
-                m_file_name = fi.baseName();
+            if (m_name.isEmpty())
+                m_name = fi.baseName();
 
-            if (!m_file_date.isValid())
-                m_file_date = fi.birthTime();
+            if (!m_date_file.isValid())
+                m_date_file = fi.birthTime();
 
             if (file.endsWith("JPG", Qt::CaseInsensitive))
             {
@@ -197,6 +200,7 @@ ShotModel::ShotModel(QObject *parent)
 }
 
 ShotModel::ShotModel(const ShotModel &other)
+    : QAbstractListModel()
 {
     m_shots = other.m_shots;
 }

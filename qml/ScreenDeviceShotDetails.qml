@@ -12,7 +12,6 @@ Rectangle {
     id: screenDeviceShotDetails
     width: 1280
     height: 720
-    color: "#ffffff"
     anchors.fill: parent
 
     property Shot shot

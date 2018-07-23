@@ -65,44 +65,36 @@ class Shot: public QObject
 
     Q_PROPERTY(QString preview READ getPreview NOTIFY shotUpdated)
 
-    Q_PROPERTY(unsigned highlightCount READ getHighlightCount NOTIFY shotUpdated)
+    Q_PROPERTY(int highlightCount READ getHighlightCount NOTIFY shotUpdated)
 
     Q_PROPERTY(qint64 duration READ getDuration NOTIFY shotUpdated)
     //Q_PROPERTY(QString dateFile READ getDate NOTIFY shotUpdated)
     //Q_PROPERTY(QString dateShot READ getDate NOTIFY shotUpdated)
     //Q_PROPERTY(QString gps READ getGPS NOTIFY shotUpdated)
 
-public:
+    bool m_onCamera = false;        //!< Shot datas currently located on a device
+
     Shared::ShotType m_type;
-    QString m_camera_source;
+    QString m_camera_source;        //!< Model of the camera that produced the shot
 
-    QString m_file_name;
-    QDateTime m_file_date;
-    int m_file_number;
+    int m_camera_id = 0;            //!< Shot is part of a multi camera systems
+    int m_file_id = -1;
 
+    QString m_name;
+    QDateTime m_date_file;
     QDateTime m_date_shot;
+    qint64 m_duration = 0;
 
-    int m_camera_id = 0; // for multi camera systems
+    QList <QTime> m_highlights;
 
-    //QList <HighLight> m_highlights;
-
-    // PICTURES
+    // PICTURES files
     QList <QString> m_jpg;
 
-    // VIDEOS
-    qint64 m_duration;
-
+    // VIDEOS files
     QList <QString> m_mp4;
     QList <QString> m_lrv;
     QList <QString> m_thm;
     QList <QString> m_wav;
-
-    QList <QString> m_gpx;
-    QList <QString> m_json;
-
-Q_SIGNALS:
-    void shotUpdated();
-    void spaceUpdated();
 
 public:
     Shot(QObject *parent = nullptr);
@@ -116,20 +108,21 @@ public:
 
 public slots:
     unsigned getType() const;
+    QString getName() const { return m_name; }
     unsigned getSize() const;
-    QString getName() const { return m_file_name; }
-    QString getCameraSource() const { return m_camera_source; }
     qint64 getDuration() const;
     QString getPreview() const;
+    QString getCameraSource() const { return m_camera_source; }
 
-    unsigned getHighlightCount() const { return 0; }
+    int getHighlightCount() const { return m_highlights.size(); }
 
-    int getFileId() const { return m_file_number; }
-    void setFileId(int id) { m_file_number = id; }
+    int getFileId() const { return m_file_id; }
+    void setFileId(int id) { m_file_id = id; }
     int getCameraId() const { return m_camera_id; }
     void setCameraId(int id) { m_camera_id = id; }
 
-    //QString getCamera() const { return m_camera; }
+Q_SIGNALS:
+    void shotUpdated();
 };
 
 //Q_DECLARE_METATYPE(Shot*);

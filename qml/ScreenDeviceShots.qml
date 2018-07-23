@@ -5,10 +5,9 @@ import com.offloadbuddy.style 1.0
 import "SpaceUtils.js" as SpaceUtils
 
 Rectangle {
+    id: screenDeviceShots
     width: 1280
     height: 720
-
-    id: screenDeviceShots
     anchors.fill: parent
 
     property int selectedItem : shotsview.currentIndex

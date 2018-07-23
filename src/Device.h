@@ -123,7 +123,6 @@ class Device: public QObject
     Q_PROPERTY(QString model READ getModel NOTIFY deviceUpdated)
     Q_PROPERTY(QString serial READ getSerial NOTIFY deviceUpdated)
     Q_PROPERTY(QString firmware READ getFirmware NOTIFY deviceUpdated)
-    //Q_PROPERTY(int directoryContent READ getContent NOTIFY deviceUpdated)
 
     Q_PROPERTY(qint64 spaceTotal READ getSpaceTotal NOTIFY spaceUpdated)
     Q_PROPERTY(qint64 spaceUsed READ getSpaceUsed NOTIFY spaceUpdated)
@@ -142,12 +141,11 @@ class Device: public QObject
     // Filesystem
     QString m_root_path;
     QStorageInfo *m_storage = nullptr;
-
-    // Secondary filesystem (Fusion or other multi camera system)
+    // Secondary filesystem (for multi camera systems)
     QString m_secondary_root_path;
     QStorageInfo *m_secondary_storage = nullptr;
-    bool m_secondary_available = false;
 
+    bool m_writable = false;
     QTimer m_updateTimer;
 
     // Files and shots
