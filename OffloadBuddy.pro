@@ -69,3 +69,45 @@ QML_IMPORT_PATH = qml/
 QML_DESIGNER_IMPORT_PATH = qml/
 
 # Deploy #######################################################################
+
+# Application deployment and installation steps
+linux {
+    TARGET = $$lower($${TARGET})
+
+    # Application packaging
+    #system(linuxdeployqt $${OUT_PWD}/$${DESTDIR}/ -qmldir=qml/) # needs linuxdeployqt installed
+
+    # Installation
+    #isEmpty(PREFIX) { PREFIX = /usr/local }
+    #target_app.files   += $${OUT_PWD}/$${DESTDIR}/$$lower($${TARGET})
+    #target_app.path     = $${PREFIX}/bin/
+    #target_icon.files  += $${OUT_PWD}/assets/app/$$lower($${TARGET}).svg
+    #target_icon.path    = $${PREFIX}/share/pixmaps/
+    #target_appentry.files  += $${OUT_PWD}/assets/app/$$lower($${TARGET}).desktop
+    #target_appentry.path    = $${PREFIX}/share/applications
+    #target_appdata.files   += $${OUT_PWD}/assets/app/$$lower($${TARGET}).appdata.xml
+    #target_appdata.path     = $${PREFIX}/share/appdata
+    #INSTALLS += target_app target_icon target_appentry target_appdata
+}
+
+macx {
+    # Automatic bundle packaging
+    deploy.commands = macdeployqt $${OUT_PWD}/$${DESTDIR}/$${TARGET}.app
+    install.depends = deploy
+    QMAKE_EXTRA_TARGETS += install deploy
+
+    # Installation
+    target.files += $${OUT_PWD}/${DESTDIR}/${TARGET}.app
+    target.path = $$(HOME)/Applications
+    INSTALLS += target
+
+    # Clean bin/ directory
+    QMAKE_DISTCLEAN += -r $${OUT_PWD}/${DESTDIR}/${TARGET}.app
+}
+
+win32 {
+    # Automatic application packaging
+    deploy.commands = $$quote(windeployqt $${OUT_PWD}/$${DESTDIR}/ --qmldir qml/)
+    install.depends = deploy
+    QMAKE_EXTRA_TARGETS += install deploy
+}
