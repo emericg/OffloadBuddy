@@ -1,0 +1,19 @@
+language: cpp
+compiler: gcc
+
+os: linux
+dist: xenial
+
+before_install:
+  - sudo apt-add-repository ppa:beineri/opt-qt-5.11.1-xenial -y
+  - sudo apt-get update -q
+
+install:
+  - sudo apt-get install qt511base qt511quickcontrols2 qt511imageformats qt511tools qt511charts-no-lgpl qt511location -y
+
+before_script:
+  - source /opt/qt511/bin/qt511-env.sh
+  - qmake
+
+script:
+   - make
