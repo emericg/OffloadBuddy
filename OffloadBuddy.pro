@@ -42,8 +42,8 @@ include(src/thirdparty/SingleApplication/singleapplication.pri)
 DEFINES += QAPPLICATION_CLASS=QApplication
 
 # OS icons (macOS and Windows)
-ICON        = resources/app/$$lower($${TARGET}).icns
-RC_ICONS    = resources/app/$$lower($${TARGET}).ico
+#ICON        = resources/app/$$lower($${TARGET}).icns
+#RC_ICONS    = resources/app/$$lower($${TARGET}).ico
 
 # Build ########################################################################
 
