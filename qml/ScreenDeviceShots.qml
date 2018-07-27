@@ -30,6 +30,14 @@ Rectangle {
         } else {
             deviceImage.source = "qrc:/cameras/generic.svg"
         }
+
+        shotsview.currentIndex = -1
+        if (shotsview.count > 0)
+            circleEmpty.visible = false;
+        else
+            circleEmpty.visible = true;
+
+        rectangleDelete.stopTheBlink();
     }
 
     Rectangle {
@@ -319,8 +327,20 @@ Rectangle {
                 color: "#00000000"
                 border.width : 4
                 border.color: ThemeEngine.colorDoIt
-                x: shotsview.currentItem.x
-                y: shotsview.currentItem.y
+                x: {
+                    if (shotsview.currentItem.x) {
+                        x = shotsview.currentItem.x
+                    } else {
+                        x = 0
+                    }
+                }
+                y: {
+                    if (shotsview.currentItem.y) {
+                        y = shotsview.currentItem.y
+                    } else {
+                        y = 0
+                    }
+                }
                 z: 1
             }
         }

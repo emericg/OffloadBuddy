@@ -163,7 +163,7 @@ Rectangle {
                     console.log("fileDialog.folder: " + fileDialogChange.folder)
                     console.log("textField_path.text: " + textField_path.text)
 
-                    fileDialogChange.folder =  "file://" + textField_path.text
+                    fileDialogChange.folder =  "file:///" + textField_path.text
                     fileDialogChange.open()
                 }
             }

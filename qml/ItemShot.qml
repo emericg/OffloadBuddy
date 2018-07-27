@@ -15,7 +15,7 @@ Rectangle {
 
     Component.onCompleted: {
 
-        image.source = "file://" + preview
+        image.source = "file:///" + preview + ""
 
         text_top.text = name
         text_top.visible = false
