@@ -153,6 +153,10 @@ bool Device::scanFiles(const QString &path)
     {
         qDebug() << "Scanning subdir:" << subdir_name;
 
+        // ex:  100GOPRO
+        //      100ANDRO
+        //      1000GP
+
         QDir subdir;
         subdir.setPath(dcim_path + QDir::separator() + subdir_name);
 

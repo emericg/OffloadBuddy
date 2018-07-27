@@ -25,6 +25,10 @@
 
 #include "Shot.h"
 
+#ifdef ENABLE_LIBMTP
+#include <libmtp.h>
+#endif
+
 #include <QObject>
 #include <QVariant>
 #include <QList>
@@ -131,12 +135,16 @@ class Device: public QObject
 
     Q_PROPERTY(ShotModel* shotModel READ getShotModel NOTIFY shotsUpdated)
 
-    // Generic infos
     device_e m_device = DEVICE_UNKNOWN;
+
+    // Generic infos
     QString m_brand;
     QString m_model;
     QString m_serial;
     QString m_firmware;
+
+    // HW infos
+    //double battery = -1.0;
 
     // Filesystem
     QString m_root_path;
@@ -147,6 +155,12 @@ class Device: public QObject
 
     bool m_writable = false;
     QTimer m_updateTimer;
+
+#ifdef ENABLE_LIBMTP
+    // MTP
+    LIBMTP_mtpdevice_t *device = nullptr;
+    LIBMTP_devicestorage_t *storage = nullptr;
+#endif
 
     // Files and shots
     //QList <QString> m_files;

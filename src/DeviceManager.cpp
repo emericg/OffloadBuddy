@@ -39,7 +39,7 @@ DeviceManager::DeviceManager()
     qDebug() << "libmtp enabled, version:" << LIBMTP_VERSION_STRING;
 #endif
 
-    m_updateTimer.setInterval(SCANNING_TIMER);
+    m_updateTimer.setInterval(SCANNING_INTERVAL);
     connect(&m_updateTimer, &QTimer::timeout, this, &DeviceManager::searchDevices);
     m_updateTimer.start();
 
@@ -93,10 +93,23 @@ bool DeviceManager::scanFilesystems()
                 {
                     qDebug() << "Scanning MTP subdir:" << subdir_device;
 
-                    deviceRootpath = storage.rootPath() + "/gvfs/" + subdir_device + "/GoPro MTP Client Disk Volume";
+                    // detect every other cameras / phones devces
+                    QDir gvfsSubDirectory(gvfsDirectory.path() + "/" + subdir_device);
+                    foreach (QString subsubdir, gvfsSubDirectory.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
+                    {
+                        qDebug() << "Scanning MTP subsubdir:" << subsubdir;
+
+                        deviceRootpath = gvfsSubDirectory.path() + "/" + subsubdir;
+                        QDir dcim(deviceRootpath + "/DCIM");
+                        if (dcim.exists())
+                        {
+                            addDevice(deviceRootpath);
+                        }
+                    }
+
+                    deviceRootpath = gvfsDirectory.path() + "/" + subdir_device + "/GoPro MTP Client Disk Volume";
                     QFile getstarted(deviceRootpath + "/Get_started_with_GoPro.url");
                     QDir dcim(deviceRootpath + "/DCIM");
-
                     if (getstarted.exists() && dcim.exists())
                     {
                         addDevice(deviceRootpath);
@@ -121,39 +134,72 @@ bool DeviceManager::scanFilesystems()
     return status;
 }
 
+bool DeviceManager::getMtpDevices(const uint32_t busNum, const uint32_t devNum,
+                                  QString &brand, QString &device)
+{
+#ifdef ENABLE_LIBMTP
+
+    int numrawdevices;
+    LIBMTP_raw_device_t *rawdevices;
+    LIBMTP_error_number_t err;
+
+    err = LIBMTP_Detect_Raw_Devices(&rawdevices, &numrawdevices);
+    if (err == LIBMTP_ERROR_NONE)
+    {
+        for (int i = 0; i < numrawdevices; i++)
+        {
+            if (rawdevices[i].bus_location == busNum && rawdevices[i].devnum == devNum)
+            {
+                if (rawdevices[i].device_entry.vendor != nullptr ||
+                    rawdevices[i].device_entry.product != nullptr)
+                {
+                    brand = rawdevices[i].device_entry.vendor;
+                    device = rawdevices[i].device_entry.product;
+                    return true;
+                }
+            }
+        }
+    }
+
+    free(rawdevices);
+
+#endif // ENABLE_LIBMTP
+
+    return false;
+}
+
 bool DeviceManager::scanMtpDevices()
 {
     bool status = false;
 
 #ifdef ENABLE_LIBMTP
 
-    qDebug() << "Listing raw device(s)"; ///////////////////////////////////////
+    LIBMTP_raw_device_t *rawdevices = nullptr;
+    int numrawdevices = 0;
 
-    LIBMTP_raw_device_t *rawdevices;
-    int numrawdevices;
-    LIBMTP_error_number_t err;
-
-    err = LIBMTP_Detect_Raw_Devices(&rawdevices, &numrawdevices);
-    switch(err)
+    LIBMTP_error_number_t err = LIBMTP_Detect_Raw_Devices(&rawdevices, &numrawdevices);
+    switch (err)
     {
     case LIBMTP_ERROR_NO_DEVICE_ATTACHED:
-        qDebug() << "Detect: No raw devices found.";
+        qDebug() << "MTP: No raw devices found.";
         status = true;
         break;
     case LIBMTP_ERROR_CONNECTING:
-        qDebug() << "Detect: There has been an error connecting. Exiting";
+        qDebug() << "MTP: There has been an error connecting. Exiting";
         break;
     case LIBMTP_ERROR_MEMORY_ALLOCATION:
-        qDebug() << "Detect: Encountered a Memory Allocation Error. Exiting";
+        qDebug() << "MTP: Encountered a Memory Allocation Error. Exiting";
         break;
 
     case LIBMTP_ERROR_NONE:
-    {        
-        qDebug() << "  Found %d device(s):" <<  numrawdevices;
+    {
+        qDebug() << "MTP: Found %d device(s):" <<  numrawdevices;
+        status = true;
+
         for (int i = 0; i < numrawdevices; i++)
         {
-            if (rawdevices[i].device_entry.vendor != NULL ||
-                rawdevices[i].device_entry.product != NULL)
+            if (rawdevices[i].device_entry.vendor != nullptr ||
+                rawdevices[i].device_entry.product != nullptr)
             {
                 qDebug() << "  MTP:" << rawdevices[i].device_entry.vendor << rawdevices[i].device_entry.product \
                          << ":" << rawdevices[i].device_entry.vendor_id \
@@ -171,74 +217,48 @@ bool DeviceManager::scanMtpDevices()
 */
             }
         }
-        status = true;
-    }
-    break;
+    } break;
 
     case LIBMTP_ERROR_GENERAL:
     default:
-        qDebug() << "Unknown connection error.";
+        qDebug() << "MTP: Unknown connection error.";
         break;
     }
 
-    qDebug() << "Attempting to connect device(s)"; /////////////////////////////
-
     for (int i = 0; i < numrawdevices; i++)
     {
-        LIBMTP_mtpdevice_t *device;
-        LIBMTP_devicestorage_t *storage;
-        char *friendlyname;
-        char *syncpartner;
-        char *sectime;
-        char *devcert;
-        uint16_t *filetypes;
-        uint16_t filetypes_len;
-        uint8_t maxbattlevel;
-        uint8_t currbattlevel;
-        int ret;
-
-        //device = LIBMTP_Open_Raw_Device_Uncached(&rawdevices[i]);
-        device = LIBMTP_Open_Raw_Device(&rawdevices[i]);
+        LIBMTP_mtpdevice_t *device = LIBMTP_Open_Raw_Device_Uncached(&rawdevices[i]);
         if (device == nullptr)
         {
-            qDebug() << "Unable to open raw device #" << i;
+            qDebug() << "MTP: Unable to open raw device #" << i;
             continue;
         }
-
+/*
         LIBMTP_Dump_Errorstack(device);
         LIBMTP_Clear_Errorstack(device);
         LIBMTP_Dump_Device_Info(device);
-
-        qDebug() << "MTP-specific device properties:";
-
-        // The friendly name
-        friendlyname = LIBMTP_Get_Friendlyname(device);
-        if (friendlyname == NULL)
-        {
-            qDebug() << "   Friendly name: (NULL)";
-        }
-        else
-        {
-            qDebug() << "   Friendly name:" << friendlyname;
-            free(friendlyname);
-        }
-        syncpartner = LIBMTP_Get_Syncpartner(device);
-        if (syncpartner == NULL)
-        {
-            qDebug() << "   Synchronization partner: (NULL)";
-        }
-        else
+*/
+        // Synchronization partner
+        char *syncpartner = LIBMTP_Get_Syncpartner(device);
+        if (syncpartner != nullptr)
         {
             qDebug() << "   Synchronization partner:" << syncpartner;
             free(syncpartner);
         }
 
-        // Some battery info
-        ret = LIBMTP_Get_Batterylevel(device, &maxbattlevel, &currbattlevel);
+        // Device infos
+        char *version = LIBMTP_Get_Deviceversion(device);
+        char *serial = LIBMTP_Get_Serialnumber(device);
+        rawdevices[i].device_entry.vendor;
+        rawdevices[i].device_entry.product;
+
+        // Battery infos
+        uint8_t maxbattlevel, currbattlevel;
+        int ret = LIBMTP_Get_Batterylevel(device, &maxbattlevel, &currbattlevel);
         if (ret == 0)
         {
-            qDebug() << "   Battery level" << currbattlevel << "of" << maxbattlevel \
-                     << "(" << (int) ((float) currbattlevel/ (float) maxbattlevel * 100.0) << "%)";
+            qDebug() << "MTP Battery level" << currbattlevel << "of" << maxbattlevel \
+                     << "(" << ((double)currbattlevel/ (double)maxbattlevel * 100.0) << "%)";
         }
         else
         {
@@ -246,25 +266,43 @@ bool DeviceManager::scanMtpDevices()
             LIBMTP_Clear_Errorstack(device);
         }
 
-        ret = LIBMTP_Get_Supported_Filetypes(device, &filetypes, &filetypes_len);
-        if (ret == 0)
+        // Storage infos
+        for (LIBMTP_devicestorage_t *storage = device->storage; storage != nullptr; storage = storage->next)
         {
-            qDebug() << "libmtp supported (playable) filetypes:";
-            for (uint16_t j = 0; j < filetypes_len; j++)
+            //storage->AccessCapability // 0x0000 read/write
+            //storage->FreeSpaceInBytes
+            //storage->MaxCapacity
+
+            // Get file listing for the root directory, no other dirs
+            LIBMTP_file_t *files = LIBMTP_Get_Files_And_Folders(device, storage->id, LIBMTP_FILES_AND_FOLDERS_ROOT);
+            if (files != nullptr)
             {
-                qDebug() << "   " << QString::fromLocal8Bit(LIBMTP_Get_Filetype_Description((LIBMTP_filetype_t)filetypes[j]));
+                qDebug() << "MTP FILES:";
+
+                LIBMTP_file_t *file, *tmp;
+                file = files;
+                while (file != nullptr)
+                {
+                    qDebug() << "-" << file->filename;
+
+                    if (!strcmp(file->filename, "WMPInfo.xml") ||
+                        !strcmp(file->filename, "WMPinfo.xml") ||
+                        !strcmp(file->filename, "default-capabilities.xml"))
+                    {
+                        if (file->item_id != 0)
+                        {
+                        }
+                    }
+
+                    tmp = file;
+                    file = file->next;
+                    LIBMTP_destroy_file_t(tmp);
+                }
             }
         }
-        else
-        {
-            LIBMTP_Dump_Errorstack(device);
-            LIBMTP_Clear_Errorstack(device);
-        }
-
-        // TODO
 
         LIBMTP_Release_Device(device);
-    } /* End For Loop */
+    }
 
     free(rawdevices);
 
@@ -349,20 +387,23 @@ void DeviceManager::addDevice(const QString &path, const gopro_version_20 *infos
     bool deviceExists = false;
     bool deviceMerge = false;
 
+    if (m_devices.size() >= MAX_DEVICES)
+        return;
+
     for (auto dd: m_devices)
     {
         d = qobject_cast<Device*>(dd);
         if (d)
         {
-            if (d->getSerial() == infos->camera_serial_number &&
-                (d->getRootPath() == path || d->getSecondayRootPath() == path))
+            if ((d->getRootPath() == path || d->getSecondayRootPath() == path) &&
+                (!infos || (infos && d->getSerial() == infos->camera_serial_number)))
             {
                 deviceExists = true;
                 break;
             }
             else if (d->getModel() == "FUSION" &&
-                     d->getSerial() == infos->camera_serial_number &&
-                     d->getRootPath() != path)
+                     d->getRootPath() != path &&
+                     (!infos || (infos && d->getSerial() == infos->camera_serial_number)))
             {
                 // we only want to merge two SD cards from a same FUSION device
                 deviceMerge = true;

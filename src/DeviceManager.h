@@ -25,6 +25,10 @@
 
 #include "Device.h"
 
+#ifdef ENABLE_LIBMTP
+#include <libmtp.h>
+#endif
+
 #include <QObject>
 #include <QVariant>
 #include <QList>
@@ -33,11 +37,8 @@
 #include <QStorageInfo>
 #include <QFileSystemWatcher>
 
-#ifdef ENABLE_LIBMTP
-#include <libmtp.h>
-#endif
-
-#define SCANNING_TIMER 10000
+#define MAX_DEVICES         8
+#define SCANNING_INTERVAL   10000
 
 /* ************************************************************************** */
 
@@ -70,6 +71,8 @@ public slots:
     bool searchDevices();
         bool scanFilesystems();
         bool scanMtpDevices();
+        bool getMtpDevices(const uint32_t busNum, const uint32_t devNum,
+                           QString &brand, QString &device);
 
     void addDevice(const QString &path, const gopro_version_20 *infos = nullptr);
     void removeDevice(const QString &path);
