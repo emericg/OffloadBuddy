@@ -27,14 +27,15 @@ Rectangle {
             y: 20
             width: 223
             height: 40
-            color: ThemeEngine.colorHeaderTitle
-            text: qsTr("SETTINGS")
-            verticalAlignment: Text.AlignVCenter
             anchors.left: parent.left
             anchors.leftMargin: 16
             anchors.verticalCenter: parent.verticalCenter
+
+            text: qsTr("SETTINGS")
+            verticalAlignment: Text.AlignVCenter
             font.bold: true
-            font.pixelSize: 30
+            font.pixelSize: ThemeEngine.fontSizeHeaderTitle
+            color: ThemeEngine.colorHeaderTitle
         }
     }
 
@@ -168,12 +169,14 @@ Rectangle {
                 y: 10
                 width: 300
                 height: 40
-                text: qsTr("Media directories")
-                font.bold: true
-                verticalAlignment: Text.AlignVCenter
                 anchors.left: parent.left
                 anchors.leftMargin: 16
-                font.pixelSize: 24
+
+                text: qsTr("Media directories")
+                verticalAlignment: Text.AlignVCenter
+                font.bold: true
+                font.pixelSize: ThemeEngine.fontSizeContentTitle
+                color: ThemeEngine.colorContentTitle
             }
 
             Button {

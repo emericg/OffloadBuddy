@@ -28,4 +28,7 @@
         <file alias="offloadbuddy.svg">resources/app/offloadbuddy.svg</file>
         <file alias="offloadbuddy.png">resources/app/offloadbuddy.png</file>
     </qresource>
+    <qresource prefix="/authors">
+        <file alias="emeric.jpg">resources/authors/emeric.jpg</file>
+    </qresource>
 </RCC>

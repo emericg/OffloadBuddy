@@ -1,5 +1,6 @@
-import QtQuick 2.0
+import QtQuick 2.10
 import QtQuick.Controls 2.3
+import QtGraphicalEffects 1.0
 
 import com.offloadbuddy.style 1.0
 
@@ -21,16 +22,17 @@ Rectangle {
         Text {
             id: textHeader
             y: 20
-            width: 223
+            width: 512
             height: 40
-            color: ThemeEngine.colorHeaderTitle
-            text: qsTr("ABOUT")
-            verticalAlignment: Text.AlignVCenter
             anchors.left: parent.left
             anchors.leftMargin: 16
             anchors.verticalCenter: parent.verticalCenter
+
+            text: qsTr("ABOUT")
+            verticalAlignment: Text.AlignVCenter
             font.bold: true
-            font.pixelSize: 30
+            font.pixelSize: ThemeEngine.fontSizeHeaderTitle
+            color: ThemeEngine.colorHeaderTitle
         }
     }
 
@@ -51,6 +53,7 @@ Rectangle {
             id: rectangleProject
             height: 256
             color: ThemeEngine.colorContentBox
+            radius: 16
             anchors.top: parent.top
             anchors.topMargin: 16
             anchors.right: parent.right
@@ -58,64 +61,161 @@ Rectangle {
             anchors.left: parent.left
             anchors.leftMargin: 16
 
+            Image {
+                id: image
+                width: 200
+                height: 160
+                anchors.right: parent.right
+                anchors.rightMargin: 8
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 8
+                fillMode: Image.PreserveAspectFit
+                source: "qrc:/appicons/offloadbuddy.png"
+            }
+
             Text {
                 id: text_title
                 y: 10
                 width: 300
                 height: 40
-                text: qsTr("Project")
-                font.bold: true
-                verticalAlignment: Text.AlignVCenter
                 anchors.left: parent.left
                 anchors.leftMargin: 16
-                font.pixelSize: 24
+                text: "OffloadBuddy"
+                verticalAlignment: Text.AlignVCenter
+                font.bold: true
+                font.pixelSize: ThemeEngine.fontSizeContentTitle
+                color: ThemeEngine.colorContentTitle
             }
-            /*
-            ListView {
-                id: mediadirectoriesview
-                width: parent.width
-                clip: true
-                model: settingManager.devicesList
 
-                spacing: 16
-                anchors.top: header.bottom
-                anchors.topMargin: 16
-                anchors.bottom: rectangleMenu.top
+            TextArea {
+                id: textArea
+                anchors.top: text_title.bottom
+                anchors.topMargin: 8
+                anchors.bottom: parent.bottom
                 anchors.bottomMargin: 16
                 anchors.left: parent.left
-                anchors.leftMargin: 16
+                anchors.leftMargin: 8
                 anchors.right: parent.right
                 anchors.rightMargin: 16
 
-                delegate: DeviceBox { myDevice: modelData }
+                readOnly: true
+                text: qsTr("OffloadBuddy remove the hassle of handling and transfering the many videos and pictures file from your action cameras.")
             }
-*/
         }
 
         Rectangle {
             id: rectangleAuthors
-            x: -8
-            y: -7
             height: 256
-            color: ThemeEngine.colorContentBox
-            Text {
-                id: text_title1
-                y: 10
-                width: 300
-                height: 40
-                text: qsTr("Authors")
-                font.bold: true
-                verticalAlignment: Text.AlignVCenter
-                anchors.leftMargin: 16
-                font.pixelSize: 24
-                anchors.left: parent.left
-            }
+            radius: 16
             anchors.topMargin: 16
             anchors.leftMargin: 16
             anchors.top: rectangleProject.bottom
             anchors.right: parent.right
             anchors.rightMargin: 16
             anchors.left: parent.left
+            color: ThemeEngine.colorContentBox
+
+            Text {
+                id: text_title1
+                y: 10
+                width: 300
+                height: 40
+                anchors.left: parent.left
+                anchors.leftMargin: 16
+
+                text: qsTr("Authors")
+                verticalAlignment: Text.AlignVCenter
+                font.bold: true
+                font.pixelSize: ThemeEngine.fontSizeContentTitle
+                color: ThemeEngine.colorContentTitle
+            }
+
+            Rectangle {
+                id: rectangleAuthor
+                x: 16
+                y: 64
+                width: 512
+                height: 128
+                color: "#f4f4f4"
+                radius: 8
+
+                Rectangle {
+                    id: backImg
+                    y: 24
+                    width: 100
+                    height: 100
+                    radius: 50
+                    anchors.left: parent.left
+                    anchors.leftMargin: 8
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    Rectangle {
+                        id: maskImg
+                        width: 100
+                        height: 100
+                        radius: 50
+                        visible: false
+                        anchors.fill: parent
+                        //source: "qrc:/authors/mask.png"
+                    }
+
+                    Image {
+                        id: authorImg
+                        anchors.fill: parent
+                        sourceSize.height: 256
+                        sourceSize.width: 256
+                        fillMode: Image.PreserveAspectCrop
+                        source: "qrc:/authors/emeric.jpg"
+                        visible: false
+                    }
+
+                    OpacityMask {
+                        id: whatever
+                        source: authorImg
+                        maskSource: maskImg
+                        anchors.fill: parent
+                        anchors.rightMargin: 5
+                        anchors.leftMargin: 5
+                        anchors.bottomMargin: 5
+                        anchors.topMargin: 5
+                    }
+                }
+
+                Text {
+                    id: textName
+                    height: 24
+                    anchors.top: parent.top
+                    anchors.topMargin: 20
+                    anchors.left: backImg.right
+                    anchors.leftMargin: 12
+                    anchors.right: parent.right
+                    anchors.rightMargin: 8
+
+                    text: qsTr("Emeric")
+                    horizontalAlignment: Text.AlignLeft
+                    verticalAlignment: Text.AlignVCenter
+                    font.bold: true
+                    font.pixelSize: 20
+                }
+
+               TextArea {
+                   id: textArea1
+                   anchors.top: textName.bottom
+                   anchors.topMargin: 4
+                   anchors.bottom: parent.bottom
+                   anchors.bottomMargin: 4
+                   anchors.left: backImg.right
+                   anchors.leftMargin: 4
+                   anchors.right: parent.right
+                   anchors.rightMargin: 4
+
+                   readOnly: true
+                   text: qsTr("Main developer. Likes animals and flowers.")
+                   wrapMode: Text.WordWrap
+                   verticalAlignment: Text.AlignTop
+                   horizontalAlignment: Text.AlignLeft
+               }
+            }
         }
     }
 }
