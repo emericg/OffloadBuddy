@@ -11,6 +11,6 @@
         <file>qml/ItemMediaDirectory.qml</file>
         <file>qml/ScreenAbout.qml</file>
         <file>qml/ItemShot.qml</file>
-        <file>qml/SpaceUtils.js</file>
+        <file>qml/StringUtils.js</file>
     </qresource>
 </RCC>

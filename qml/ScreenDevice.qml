@@ -2,7 +2,7 @@ import QtQuick 2.10
 import QtQuick.Controls 2.4
 
 import com.offloadbuddy.style 1.0
-import "SpaceUtils.js" as SpaceUtils
+import "StringUtils.js" as StringUtils
 
 Rectangle {
     id: screenDevice

@@ -3,7 +3,7 @@ import QtQuick.Controls 2.3
 import QtQuick.Dialogs 1.1
 
 import com.offloadbuddy.style 1.0
-import "SpaceUtils.js" as SpaceUtils
+import "StringUtils.js" as StringUtils
 
 Rectangle {
     width: 1280
@@ -196,7 +196,7 @@ Rectangle {
                 folder: shortcuts.home
 
                 onAccepted: {
-                    mySettings.addDirectory(SpaceUtils.urlToPath(fileDialogAdd.fileUrl.toString()))
+                    mySettings.addDirectory(StringUtils.urlToPath(fileDialogAdd.fileUrl.toString()))
                 }
             }
 

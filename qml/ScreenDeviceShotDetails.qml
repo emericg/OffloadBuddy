@@ -6,7 +6,7 @@ import QtPositioning 5.10
 
 import com.offloadbuddy.style 1.0
 import com.offloadbuddy.shared 1.0
-import "SpaceUtils.js" as SpaceUtils
+import "StringUtils.js" as StringUtils
 
 Rectangle {
     id: screenDeviceShotDetails

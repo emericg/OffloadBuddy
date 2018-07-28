@@ -3,6 +3,7 @@ import QtQuick.Controls 2.3
 
 import com.offloadbuddy.style 1.0
 import com.offloadbuddy.shared 1.0
+import "StringUtils.js" as StringUtils
 
 Rectangle {
     id: itemShot
@@ -22,14 +23,11 @@ Rectangle {
 
         if (type === Shared.SHOT_VIDEO ||
             type === Shared.SHOT_VIDEO_LOOPING ||
-            type === Shared.SHOT_VIDEO_TIMELAPSE)
-        {
+            type === Shared.SHOT_VIDEO_TIMELAPSE) {
             icon_left.source = "qrc:/resources/minicons/video.svg"
             text_left.visible = true
-            text_left.text = "00:0x"
-        }
-        else
-        {
+            text_left.text = StringUtils.durationToString_short(duration)
+        } else {
             if (type === Shared.SHOT_PICTURE_MULTI) {
                 icon_left.source = "qrc:/resources/minicons/picture_multi.svg"
                 text_left.visible = true
@@ -163,5 +161,4 @@ Rectangle {
             anchors.rightMargin: 8
         }
     }
-
 }

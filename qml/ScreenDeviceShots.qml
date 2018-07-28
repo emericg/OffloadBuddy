@@ -2,7 +2,7 @@ import QtQuick 2.10
 import QtQuick.Controls 2.4
 
 import com.offloadbuddy.style 1.0
-import "SpaceUtils.js" as SpaceUtils
+import "StringUtils.js" as StringUtils
 
 Rectangle {
     id: screenDeviceShots
@@ -14,7 +14,7 @@ Rectangle {
 
     function updateDevice() {
         deviceModelText.text = myDevice.brand + " " + myDevice.model;
-        deviceSpaceText.text = SpaceUtils.bytesToString(myDevice.spaceUsed) + " used of " + SpaceUtils.bytesToString(myDevice.spaceTotal)
+        deviceSpaceText.text = StringUtils.bytesToString_short(myDevice.spaceUsed) + " used of " + StringUtils.bytesToString_short(myDevice.spaceTotal)
         deviceSpaceBar.value = myDevice.spaceUsedPercent
 
         if (myDevice.model.includes("HERO3") || myDevice.model.includes("HERO4")) {
