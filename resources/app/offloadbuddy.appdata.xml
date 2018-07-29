@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2018 Emeric Grange <emeric.grange@gmail.com> -->
+<component type="desktop">
+ <id>offloadbuddy.desktop</id>
+ <metadata_license>CC0-1.0</metadata_license>
+ <project_license>GPL-3.0+</project_license>
+ <name>OffloadBuddy</name>
+ <summary>Helps you offload and handle the many videos and pictures file from your camera devices.</summary>
+ <description>
+   <p>
+   OffloadBuddy remove the hassle of handling and transfering the many videos and pictures file from your action cameras.
+   </p>
+ </description>
+ <screenshots>
+  <screenshot type="default">
+   <image>https://i.imgur.com/2w9V8uA.png</image>
+   <caption>Device screen</caption>
+  </screenshot>
+ </screenshots>
+ <url type="homepage">https://github.com/emericg/OffloadBuddy</url>
+ <updatecontact>emeric.grange@gmail.com</updatecontact>
+ <keywords>
+   <keyword>media</keyword>
+   <keyword>media transfer</keyword>
+   <keyword>mass storage</keyword>
+   <keyword>MTP</keyword>
+   <keyword>offloading</keyword>
+   <keyword>GoPro</keyword>
+ </keywords>
+</component>

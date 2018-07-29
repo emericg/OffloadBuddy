@@ -1,20 +1,64 @@
 language: cpp
-compiler: gcc
-
-os: linux
 dist: xenial
+osx_image: xcode8.3
+
+os:
+  - linux
+  - osx
 
 before_install:
-  - sudo apt-add-repository ppa:beineri/opt-qt-5.11.1-xenial -y
-  - sudo apt-get update -q
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+      sudo apt-add-repository ppa:beineri/opt-qt-5.11.1-xenial -y;
+      sudo apt-get update -q;
+    fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      brew update;
+    fi
+
 
 install:
-  - sudo apt-get install qt511base qt511quickcontrols2 qt511svg qt511imageformats qt511tools qt511charts-no-lgpl qt511location -y
-  - sudo apt-get install libgl1-mesa-dev -y
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+      sudo apt-get install qt511base qt511quickcontrols2 qt511svg qt511imageformats qt511tools qt511charts-no-lgpl qt511location -y;
+      sudo apt-get install libgl1-mesa-dev -y;
+      sudo apt-get install libmtp-dev -y;
+    fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      brew install qt;
+      brew install libmtp;
+    fi
 
 before_script:
-  - source /opt/qt511/bin/qt511-env.sh
-  - qmake
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then source /opt/qt511/bin/qt511-env; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export PATH=$PATH:/usr/local/opt/qt5/bin:/usr/local/bin; fi
+  - cd OffloadBuddy/
+  - qmake CONFIG+=release PREFIX=/usr
 
 script:
-   - make
+  - |-
+  - make -j$(nproc)
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+      make INSTALL_ROOT=appdir -j$(nproc) install; find appdir/;
+      wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage";
+      chmod a+x linuxdeployqt-continuous-x86_64.AppImage;
+      unset QTDIR; unset QT_PLUGIN_PATH; unset LD_LIBRARY_PATH;
+      export VERSION=$(git rev-parse --short HEAD);
+      mkdir -p appdir/usr/plugins/imageformats/ appdir/usr/plugins/iconengines/;
+      cp /opt/qt511/plugins/imageformats/libqsvg.so appdir/usr/plugins/imageformats/;
+      cp /opt/qt511/plugins/iconengines/libqsvgicon.so appdir/usr/plugins/iconengines/;
+      ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/*.desktop -qmldir=qml/ -bundle-non-qt-libs -extra-plugins=imageformats/libqsvg.so,iconengines/libqsvgicon.so;
+      ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/*.desktop -qmldir=qml/ -appimage;
+    fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      make install;
+    fi
+
+after_success:
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+      find appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq;
+      curl --upload-file OffloadBuddy*.AppImage https://transfer.sh/OffloadBuddy-git.$(git rev-parse --short HEAD)-linux64.AppImage;
+    fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      cd bin/;
+      zip -r -X OffloadBuddy.zip OffloadBuddy.app;
+      curl --upload-file OffloadBuddy*.zip https://transfer.sh/OffloadBuddy-git.$(git rev-parse --short HEAD)-macOS.zip;
+    fi

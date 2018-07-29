@@ -6,9 +6,11 @@ QT     += core gui svg
 QT     += quick quickcontrols2
 QT     += charts location
 
-# Features
-#DEFINES += ENABLE_LIBMTP
-#DEFINES += ENABLE_FFMPEG
+# Enables or disable optional features
+unix {
+    DEFINES += ENABLE_LIBMTP
+    #DEFINES += ENABLE_FFMPEG
+}
 
 # Validate Qt version
 if (lessThan(QT_MAJOR_VERSION, 5) | lessThan(QT_MINOR_VERSION, 10)) {
@@ -41,9 +43,10 @@ RESOURCES += qml.qrc \
 include(src/thirdparty/SingleApplication/singleapplication.pri)
 DEFINES += QAPPLICATION_CLASS=QApplication
 
-# OS icons (macOS and Windows)
-#ICON        = resources/app/$$lower($${TARGET}).icns
-#RC_ICONS    = resources/app/$$lower($${TARGET}).ico
+# macOS icon
+ICON = resources/app/$$lower($${TARGET}).icns
+# Windows icon
+RC_ICONS = resources/app/$$lower($${TARGET}).ico
 
 # Build ########################################################################
 
@@ -75,19 +78,19 @@ linux {
     TARGET = $$lower($${TARGET})
 
     # Application packaging
-    #system(linuxdeployqt $${OUT_PWD}/$${DESTDIR}/ -qmldir=qml/) # needs linuxdeployqt installed
+    system(linuxdeployqt $${OUT_PWD}/$${DESTDIR}/ -qmldir=qml/) # needs linuxdeployqt installed
 
     # Installation
-    #isEmpty(PREFIX) { PREFIX = /usr/local }
-    #target_app.files   += $${OUT_PWD}/$${DESTDIR}/$$lower($${TARGET})
-    #target_app.path     = $${PREFIX}/bin/
-    #target_icon.files  += $${OUT_PWD}/assets/app/$$lower($${TARGET}).svg
-    #target_icon.path    = $${PREFIX}/share/pixmaps/
-    #target_appentry.files  += $${OUT_PWD}/assets/app/$$lower($${TARGET}).desktop
-    #target_appentry.path    = $${PREFIX}/share/applications
-    #target_appdata.files   += $${OUT_PWD}/assets/app/$$lower($${TARGET}).appdata.xml
-    #target_appdata.path     = $${PREFIX}/share/appdata
-    #INSTALLS += target_app target_icon target_appentry target_appdata
+    isEmpty(PREFIX) { PREFIX = /usr/local }
+    target_app.files   += $${OUT_PWD}/$${DESTDIR}/$$lower($${TARGET})
+    target_app.path     = $${PREFIX}/bin/
+    target_icon.files  += $${OUT_PWD}/assets/app/$$lower($${TARGET}).svg
+    target_icon.path    = $${PREFIX}/share/pixmaps/
+    target_appentry.files  += $${OUT_PWD}/assets/app/$$lower($${TARGET}).desktop
+    target_appentry.path    = $${PREFIX}/share/applications
+    target_appdata.files   += $${OUT_PWD}/assets/app/$$lower($${TARGET}).appdata.xml
+    target_appdata.path     = $${PREFIX}/share/appdata
+    INSTALLS += target_app target_icon target_appentry target_appdata
 }
 
 macx {
