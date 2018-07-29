@@ -26,6 +26,11 @@
 #include <QDir>
 #include <QDebug>
 
+#ifndef LIBMTP_FILES_AND_FOLDERS_ROOT
+// Hack for older versions of libmtp (<=1.10?)
+#define LIBMTP_FILES_AND_FOLDERS_ROOT 0xffffffff
+#endif
+
 /* ************************************************************************** */
 
 Device::Device(const QString &brand, const QString &model,

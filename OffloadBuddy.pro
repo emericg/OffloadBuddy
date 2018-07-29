@@ -77,8 +77,10 @@ QML_DESIGNER_IMPORT_PATH = qml/
 linux {
     TARGET = $$lower($${TARGET})
 
-    # Application packaging
-    system(linuxdeployqt $${OUT_PWD}/$${DESTDIR}/ -qmldir=qml/) # needs linuxdeployqt installed
+    # Application packaging # Needs linuxdeployqt installed
+    #deploy.commands = $${OUT_PWD}/$${DESTDIR}/ -qmldir=qml/
+    #install.depends = deploy
+    #QMAKE_EXTRA_TARGETS += install deploy
 
     # Installation
     isEmpty(PREFIX) { PREFIX = /usr/local }
