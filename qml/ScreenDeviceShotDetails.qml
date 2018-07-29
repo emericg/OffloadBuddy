@@ -20,7 +20,10 @@ Rectangle {
         if (shot){
             //console.log("onShotChanged()" + shot);
             textShotName.text = shot.name
-            image.source = "file:///" + shot.preview
+
+            if (shot.preview) {
+                image.source = "file:///" + shot.preview
+            }
         }
     }
 

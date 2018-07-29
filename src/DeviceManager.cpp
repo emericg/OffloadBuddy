@@ -455,28 +455,39 @@ void DeviceManager::addDevice(const QString &path, const gopro_version_20 *infos
 
 void DeviceManager::removeDevice(const QString &path)
 {
+    if (path.isEmpty())
+        return;
+
     QList<QObject *>::iterator it = m_devices.begin();
     while (it != m_devices.end())
     {
         Device *d = qobject_cast<Device*>(*it);
         if (d && (d->getRootPath() == path || d->getSecondayRootPath() == path))
+        {
             it = m_devices.erase(it);
+            m_watcherFilesystem.removePath(path);
+
+            emit devicesUpdated();
+            emit devicesRemoved();
+            emit deviceRemoved(d);
+
+            return;
+        }
         else
             ++it;
     }
-
-    m_watcher.removePath(path);
-
-    emit devicesUpdated();
-    emit devicesRemoved();
 }
 
 void DeviceManager::somethingsUp(const QString &path)
 {
+    if (path.isEmpty())
+        return;
+
     qDebug() << "QFileSystemWatcher::directoryChanged()" << path;
 
-    QDir dir(path);
-    if (dir.exists() == false)
+    // FIXME virtual filesystem sometimes still exists after physical removal
+    //QDir dir(path);
+    //if (dir.exists() == false)
     {
         removeDevice(path);
     }

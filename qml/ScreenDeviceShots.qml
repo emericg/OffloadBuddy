@@ -12,7 +12,7 @@ Rectangle {
 
     property int selectedItem : shotsview.currentIndex
 
-    function updateDevice() {
+    function updateDeviceHeader() {
         deviceModelText.text = myDevice.brand + " " + myDevice.model;
         deviceSpaceText.text = StringUtils.bytesToString_short(myDevice.spaceUsed) + " used of " + StringUtils.bytesToString_short(myDevice.spaceTotal)
         deviceSpaceBar.value = myDevice.spaceUsedPercent
@@ -31,13 +31,21 @@ Rectangle {
             deviceImage.source = "qrc:/cameras/generic.svg"
         }
 
-        shotsview.currentIndex = -1
-        if (shotsview.count > 0)
-            circleEmpty.visible = false;
-        else
-            circleEmpty.visible = true;
-
         rectangleDelete.stopTheBlink();
+    }
+
+    function updateGridViewStuff() {
+        if (shotsview.count > 0) {
+            circleEmpty.visible = false;
+        } else {
+            shotsview.currentIndex = -1
+
+            if (myDevice && myDevice.deviceType === 0)
+                imageEmpty.source = "qrc:/icons/card.svg"
+            else
+                imageEmpty.source = "qrc:/icons/usb.svg"
+            circleEmpty.visible = true;
+        }
     }
 
     Rectangle {
@@ -154,7 +162,6 @@ Rectangle {
                 font.bold: true
                 font.pixelSize: 16
             }
-
         }
 
         Rectangle {
@@ -347,10 +354,10 @@ Rectangle {
 
         Rectangle {
             id: circleEmpty
-            width: 366
-            height: 366
-            color: "#f9f9f9"
+            width: 350
+            height: 350
             radius: width*0.5
+            color: ThemeEngine.colorHeaderBackground
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
 
@@ -375,18 +382,13 @@ Rectangle {
             GridView {
                 id: shotsview
 
-                Component.onCompleted: {
-                    shotsview.currentIndex = -1
-
-                    if (shotsview.count > 0)
-                        circleEmpty.visible = false;
-                    else
-                        circleEmpty.visible = true;
-
-                    //console.log("parent.width:" +width)
-                    //console.log("cellMargin:" +cellMargin)
+                onCountChanged: {
+                    updateGridViewStuff()
                 }
-                //property int cellMargin: (parent.width%cellSize) / Math.floor(parent.width/cellSize);
+
+                Component.onCompleted: {
+                    updateGridViewStuff()
+                }
 
                 flickableChildren: MouseArea {
                     anchors.fill: parent
@@ -395,6 +397,7 @@ Rectangle {
 
                 property int cellSize: 256
                 property int cellMargin: 16
+                //property int cellMargin: (parent.width%cellSize) / Math.floor(parent.width/cellSize);
                 cellWidth: cellSize + cellMargin
                 cellHeight: cellSize + 16
 

@@ -13,7 +13,8 @@ Rectangle {
     property var myDevice
 
     onMyDeviceChanged: {
-        screenDeviceShots.updateDevice();
+        screenDeviceShots.updateDeviceHeader();
+        state = "shotsview"
     }
 
     ScreenDeviceShots {

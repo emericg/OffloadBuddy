@@ -69,7 +69,7 @@ Rectangle {
                 anchors.rightMargin: 8
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 8
-                fillMode: Image.PreserveAspectFit
+                fillMode: Image.PreserveAspectCrop
                 source: "qrc:/appicons/offloadbuddy.png"
             }
 
@@ -92,21 +92,28 @@ Rectangle {
                 anchors.top: text_title.bottom
                 anchors.topMargin: 8
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: 16
+                anchors.bottomMargin: 8
                 anchors.left: parent.left
                 anchors.leftMargin: 8
                 anchors.right: parent.right
-                anchors.rightMargin: 16
+                anchors.rightMargin: 8
 
                 readOnly: true
-                text: qsTr("OffloadBuddy remove the hassle of handling and transfering the many videos and pictures file from your action cameras.")
+                font.pixelSize: ThemeEngine.fontSizeContentText
+                text: qsTr("OffloadBuddy remove the hassle of handling and transfering the many videos and pictures file from your actioncams, cameras or phones.
+
+It also helps with many other convenient things like:
+- merging chaptered files
+- video cliping and reencoding
+- extracting many metadatas")
             }
         }
 
         Rectangle {
             id: rectangleAuthors
-            height: 256
             radius: 16
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 16
             anchors.topMargin: 16
             anchors.leftMargin: 16
             anchors.top: rectangleProject.bottom
@@ -136,7 +143,7 @@ Rectangle {
                 y: 64
                 width: 512
                 height: 128
-                color: "#f4f4f4"
+                color: ThemeEngine.colorHeaderBackground
                 radius: 8
 
                 Rectangle {
@@ -185,7 +192,7 @@ Rectangle {
                     id: textName
                     height: 24
                     anchors.top: parent.top
-                    anchors.topMargin: 20
+                    anchors.topMargin: 24
                     anchors.left: backImg.right
                     anchors.leftMargin: 12
                     anchors.right: parent.right
@@ -198,23 +205,24 @@ Rectangle {
                     font.pixelSize: 20
                 }
 
-               TextArea {
-                   id: textArea1
-                   anchors.top: textName.bottom
-                   anchors.topMargin: 4
-                   anchors.bottom: parent.bottom
-                   anchors.bottomMargin: 4
-                   anchors.left: backImg.right
-                   anchors.leftMargin: 4
-                   anchors.right: parent.right
-                   anchors.rightMargin: 4
+                TextArea {
+                    id: textArea1
+                    anchors.top: textName.bottom
+                    anchors.topMargin: 4
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: 4
+                    anchors.left: backImg.right
+                    anchors.leftMargin: 4
+                    anchors.right: parent.right
+                    anchors.rightMargin: 4
 
-                   readOnly: true
-                   text: qsTr("Main developer. Likes animals and flowers.")
-                   wrapMode: Text.WordWrap
-                   verticalAlignment: Text.AlignTop
-                   horizontalAlignment: Text.AlignLeft
-               }
+                    readOnly: true
+                    text: qsTr("Main developer. Likes animals and flowers. Also, ponies. Yes I needed two lines here...")
+                    font.pixelSize: ThemeEngine.fontSizeContentText
+                    wrapMode: Text.WordWrap
+                    verticalAlignment: Text.AlignTop
+                    horizontalAlignment: Text.AlignLeft
+                }
             }
         }
     }

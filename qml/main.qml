@@ -14,6 +14,8 @@ ApplicationWindow {
     minimumWidth: 1280
     minimumHeight: 720
 
+    property var currentDevicePtr
+
     visible: true
 /*
     menuBar: MenuBar {
@@ -174,6 +176,18 @@ ApplicationWindow {
                 //console.log(devicePtr + ' component was triggered')
                 content.state = "device"
                 screenDevice.myDevice = devicePtr
+                currentDevicePtr = devicePtr // save current device
+            }
+        }
+
+        Connections {
+            target: deviceManager
+            signal deviceRemoved(var devicePtr)
+            onDeviceRemoved: {
+                //console.log("deviceRemoved(" + devicePtr + ") and currentDevice(" + currentDevicePtr + ")")
+                if (typeof devicePtr !== "undefined")
+                    if (devicePtr === currentDevicePtr)
+                        content.state = "medias"
             }
         }
     }
@@ -200,7 +214,6 @@ ApplicationWindow {
             anchors.fill: parent
             id: screenDevice
             mySettings: settingsManager
-            myDevice: deviceManager.getFirstDevice()
         }
         ScreenSettings {
             anchors.fill: parent
@@ -252,7 +265,6 @@ ApplicationWindow {
                 PropertyChanges {
                     target: screenDevice
                     visible: true
-                    state: "shotsview"
                 }
                 PropertyChanges {
                     target: screenSettings

@@ -62,6 +62,7 @@ Q_SIGNALS:
     void devicesAdded();
     void devicesUpdated();
     void devicesRemoved();
+    void deviceRemoved(Device *devicePtr);
 
 public:
     DeviceManager();
@@ -79,8 +80,8 @@ public slots:
     void somethingsUp(const QString &path);
 
     QVariant getFirstDevice() const { if (m_devices.size() > 0) { return QVariant::fromValue(m_devices.at(0)); } return QVariant(); }
+    QVariant getDevice(int index) const { if (index >= 0 && index < m_devices.size()) { return QVariant::fromValue(m_devices.at(index)); } return QVariant(); }
     QVariant getDevices() const { if (m_devices.size() > 0) { return QVariant::fromValue(m_devices); } return QVariant(); }
-    QVariant getDevice(int index) const { if (m_devices.size() > index) { return QVariant::fromValue(m_devices.at(index)); } return QVariant(); }
 };
 
 #endif // DEVICE_MANAGER_H

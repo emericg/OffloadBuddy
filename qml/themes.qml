@@ -26,5 +26,5 @@ Item {
     // Fonts (sizes in pixel)
     readonly property int fontSizeHeaderTitle: 30
     readonly property int fontSizeContentTitle: 24
-    readonly property int fontSizeContentText: 20
+    readonly property int fontSizeContentText: 16
 }

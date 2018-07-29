@@ -22,12 +22,13 @@ Rectangle {
             id: textHeader
             width: 200
             height: 40
-            color: ThemeEngine.colorHeaderTitle
-            text: qsTr("MEDIAS GALLERY")
             anchors.right: parent.right
             anchors.rightMargin: 16
             anchors.top: parent.top
             anchors.topMargin: 16
+
+            color: ThemeEngine.colorHeaderTitle
+            text: qsTr("MEDIAS GALLERY")
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignRight
             font.bold: true
@@ -121,10 +122,10 @@ Rectangle {
             id: circleEmpty
             x: 474
             y: 130
-            width: 366
-            height: 366
-            color: "#f9f9f9"
+            width: 350
+            height: 350
             radius: width*0.5
+            color: ThemeEngine.colorHeaderBackground
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
 

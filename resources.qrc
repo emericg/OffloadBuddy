@@ -15,6 +15,7 @@
     <qresource prefix="/icons">
         <file alias="disk.svg">resources/icons/disk.svg</file>
         <file alias="card.svg">resources/icons/card.svg</file>
+        <file alias="usb.svg">resources/icons/usb.svg</file>
     </qresource>
     <qresource prefix="/cameras">
         <file alias="generic.svg">resources/cameras/generic.svg</file>
