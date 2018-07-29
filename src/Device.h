@@ -27,6 +27,9 @@
 
 #ifdef ENABLE_LIBMTP
 #include <libmtp.h>
+#else
+typedef void LIBMTP_mtpdevice_t;
+typedef void LIBMTP_devicestorage_t;
 #endif
 
 #include <QObject>
@@ -59,11 +62,28 @@ typedef struct gopro_version_20
 
 } gopro_version_20;
 
-typedef enum device_e
+typedef struct gopro_version
+{
+    QString camera_type;            // ex: "HERO6 Black", "FUSION", "Hero3-Black Edition"
+    QString firmware_version;       // ex: "HD6.01.02.01.00"
+    QString wifi_mac;               // ex: "0441693db024"
+
+    //QString info_version;         // "1.1",
+    QString wifi_version;           // ex: "3.4.2.9"
+    QString wifi_bootloader_version;// ex: "0.2.2"
+
+    //QString info_version;         // "2.0",
+    QString camera_serial_number;   // ex: "C3221324521518"
+
+} gopro_version;
+
+typedef enum deviceModel_e
 {
     DEVICE_UNKNOWN = 0,
 
     DEVICE_COMPUTER = 1,
+    DEVICE_CAMERA   = 2,
+    DEVICE_PHONE    = 3,
 
     DEVICE_GOPRO = 128,
         DEVICE_HERO2,
@@ -112,9 +132,34 @@ typedef enum device_e
         DEVICE_YI_4K,
         DEVICE_YI_4Kp,
 
-} device_e;
+} deviceModel_e;
+
+typedef enum deviceType_e
+{
+    DEVICE_FILESYSTEM = 0,
+    DEVICE_MTP = 1,
+
+} deviceType_e;
 
 /* ************************************************************************** */
+
+class StorageFilesystem
+{
+public:
+    QString m_path;
+    // QStrin gm_dcim_path?
+    QStorageInfo m_storage;
+    bool m_writable = false;
+};
+
+class StorageMtp
+{
+public:
+    unsigned m_dcim_id = 0;
+    LIBMTP_mtpdevice_t *m_device = nullptr;
+    LIBMTP_devicestorage_t *m_storage;
+    bool m_writable = false;
+};
 
 /*!
  * \brief The Device class
@@ -122,6 +167,8 @@ typedef enum device_e
 class Device: public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(int deviceModel READ getDeviceModel NOTIFY deviceUpdated)
+    Q_PROPERTY(int deviceType READ getDeviceType NOTIFY deviceUpdated)
 
     Q_PROPERTY(QString brand READ getBrand NOTIFY deviceUpdated)
     Q_PROPERTY(QString model READ getModel NOTIFY deviceUpdated)
@@ -135,37 +182,28 @@ class Device: public QObject
 
     Q_PROPERTY(ShotModel* shotModel READ getShotModel NOTIFY shotsUpdated)
 
-    device_e m_device = DEVICE_UNKNOWN;
+    deviceModel_e m_deviceModel = DEVICE_UNKNOWN;
+    deviceType_e m_deviceType = DEVICE_FILESYSTEM;
 
     // Generic infos
-    QString m_brand;
-    QString m_model;
+    QString m_brand = "GoPro";
+    QString m_model = "HERO?";
     QString m_serial;
     QString m_firmware;
 
     // HW infos
-    //double battery = -1.0;
+    double m_battery = 0.0;
 
-    // Filesystem
-    QString m_root_path;
-    QStorageInfo *m_storage = nullptr;
-    // Secondary filesystem (for multi camera systems)
-    QString m_secondary_root_path;
-    QStorageInfo *m_secondary_storage = nullptr;
-
-    bool m_writable = false;
+    // Storage(s)
     QTimer m_updateTimer;
 
-#ifdef ENABLE_LIBMTP
-    // MTP
-    LIBMTP_mtpdevice_t *device = nullptr;
-    LIBMTP_devicestorage_t *storage = nullptr;
-#endif
+    QList <StorageFilesystem *> m_filesystemStorages;
+    //QList <LIBMTP_devicestorage_t *> m_mtpStorages;
+    QList <StorageMtp *> m_mtpStorages;
+    LIBMTP_mtpdevice_t *m_mtpDevice = nullptr;
 
-    // Files and shots
-    //QList <QString> m_files;
+    // Shot(s)
     ShotModel *m_shotModel = nullptr;
-
     Shot *findShot(Shared::ShotType type, int file_id, int camera_id) const;
 
 private slots:
@@ -179,24 +217,29 @@ Q_SIGNALS:
     void spaceUpdated();
 
 public:
-    Device();
-    Device(const QString path, const gopro_version_20 *infos = nullptr);
+    Device(const QString &brand, const QString &model,
+           const QString &serial, const QString &version);
     ~Device();
 
     bool isValid();
-    bool scanFiles();
-    bool scanSecondaryDevice();
-    bool scanFiles(const QString &path);
+    bool scanFilesystem(const QString &path);
+    bool scanMtpDevices();
 
-    bool addSecondaryDevice(const QString &path);
+    bool addStorage_filesystem(const QString &path);
+    bool addStorage_mtp(LIBMTP_mtpdevice_t *m_mtpDevice);
+        void mtpFileRec(LIBMTP_mtpdevice_t *device, uint32_t storageid, uint32_t leaf);
 
 public slots:
     //
+    int getDeviceModel() const { return m_deviceModel; }
+    int getDeviceType() const { return m_deviceType; }
     QString getBrand() const { return m_brand; }
     QString getModel() const { return m_model; }
     QString getSerial() const { return m_serial; }
     QString getFirmware() const { return m_firmware; }
 
+    //
+    QString getPath(int index = 0) const;
     int64_t getSpaceTotal();
     int64_t getSpaceUsed();
     double getSpaceUsed_percent();
@@ -206,9 +249,6 @@ public slots:
     //
     ShotModel *getShotModel() const { return m_shotModel; }
     QVariant getShot(int index) const { if (index >= 0 && index < m_shotModel->getShotList()->size()) { return QVariant::fromValue(m_shotModel->getShotList()->at(index)); } return QVariant(); }
-
-    QString getRootPath() const;
-    QString getSecondayRootPath() const;
 };
 
 /* ************************************************************************** */

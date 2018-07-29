@@ -23,6 +23,10 @@
 #define SHOT_H
 /* ************************************************************************** */
 
+#ifdef ENABLE_LIBMTP
+#include <libmtp.h>
+#endif
+
 #include <QObject>
 #include <QMetaType>
 #include <QDateTime>
@@ -87,14 +91,19 @@ class Shot: public QObject
 
     QList <QTime> m_highlights;
 
+#ifdef ENABLE_LIBMTP
+    LIBMTP_mtpdevice_t *m_mtpDevice = nullptr;
+    LIBMTP_devicestorage_t *m_mtpStorage = nullptr;
+#endif
+
     // PICTURES files
-    QList <QString> m_jpg;
+    QList <std::pair<QString, uint32_t>> m_jpg;
 
     // VIDEOS files
-    QList <QString> m_mp4;
-    QList <QString> m_lrv;
-    QList <QString> m_thm;
-    QList <QString> m_wav;
+    QList <std::pair<QString, uint32_t>> m_mp4;
+    QList <std::pair<QString, uint32_t>> m_lrv;
+    QList <std::pair<QString, uint32_t>> m_thm;
+    QList <std::pair<QString, uint32_t>> m_wav;
 
 public:
     Shot(QObject *parent = nullptr);
@@ -104,7 +113,10 @@ public:
     Shot(const Shot &other);
 
     bool isValid();
-    void addFile(QString &file);
+    void addFile(QString &file, uint32_t objectid = 0);
+#ifdef ENABLE_LIBMTP
+    void attachMtpStorage(LIBMTP_mtpdevice_t *device, LIBMTP_devicestorage_t *storage);
+#endif
 
 public slots:
     unsigned getType() const;

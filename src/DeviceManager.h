@@ -56,7 +56,9 @@ class DeviceManager: public QObject
     QList <QObject *> m_devices;
 
     QTimer m_updateTimer;
-    QFileSystemWatcher m_watcher;
+
+    QFileSystemWatcher m_watcherFilesystem;
+    QList <std::pair<unsigned, unsigned>> m_watcherMtp;
 
 Q_SIGNALS:
     void devicesAdded();

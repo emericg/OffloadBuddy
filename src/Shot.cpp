@@ -69,10 +69,12 @@ Shot::Shot(const Shot &other) : QObject()
 
 /* ************************************************************************** */
 
-void Shot::addFile(QString &file)
+void Shot::addFile(QString &file, uint32_t objectid)
 {
+    std::pair<QString, uint32_t> fp = std::make_pair(file, objectid);
+
     QFileInfo fi(file);
-    if (fi.exists() && fi.isReadable())
+    if (objectid || (fi.exists() && fi.isReadable()))
     {
         // Fusion "first file" hack...
         if (fi.fileName().startsWith("GPFR") || fi.fileName().startsWith("GPBK"))
@@ -82,23 +84,23 @@ void Shot::addFile(QString &file)
 
             if (file.endsWith("JPG", Qt::CaseInsensitive))
             {
-                m_jpg.push_front(file);
+                m_jpg.push_front(std::make_pair(file, objectid));
             }
             else if (file.endsWith("MP4", Qt::CaseInsensitive))
             {
-                m_mp4.push_front(file);
+                m_mp4.push_front(std::make_pair(file, objectid));
             }
             else if (file.endsWith("LRV", Qt::CaseInsensitive))
             {
-                m_lrv.push_front(file);
+                m_lrv.push_front(std::make_pair(file, objectid));
             }
             else if (file.endsWith("THM", Qt::CaseInsensitive))
             {
-                m_thm.push_front(file);
+                m_thm.push_front(std::make_pair(file, objectid));
             }
             else if (file.endsWith("WAV", Qt::CaseInsensitive))
             {
-                m_wav.push_front(file);
+                m_wav.push_front(std::make_pair(file, objectid));
             }
             else
             {
@@ -115,23 +117,23 @@ void Shot::addFile(QString &file)
 
             if (file.endsWith("JPG", Qt::CaseInsensitive))
             {
-                m_jpg.push_back(file);
+                m_jpg.push_back(std::make_pair(file, objectid));
             }
             else if (file.endsWith("MP4", Qt::CaseInsensitive))
             {
-                m_mp4.push_back(file);
+                m_mp4.push_back(std::make_pair(file, objectid));
             }
             else if (file.endsWith("LRV", Qt::CaseInsensitive))
             {
-                m_lrv.push_back(file);
+                m_lrv.push_back(std::make_pair(file, objectid));
             }
             else if (file.endsWith("THM", Qt::CaseInsensitive))
             {
-                m_thm.push_back(file);
+                m_thm.push_back(std::make_pair(file, objectid));
             }
             else if (file.endsWith("WAV", Qt::CaseInsensitive))
             {
-                m_wav.push_back(file);
+                m_wav.push_back(std::make_pair(file, objectid));
             }
             else
             {
@@ -144,6 +146,14 @@ void Shot::addFile(QString &file)
         qWarning() << "Shot::addFile(" << file << ") UNREADABLE";
     }
 }
+
+#ifdef ENABLE_LIBMTP
+void Shot::attachMtpStorage(LIBMTP_mtpdevice_t *device, LIBMTP_devicestorage_t *storage)
+{
+    m_mtpDevice = device;
+    m_mtpStorage = storage;
+}
+#endif
 
 /* ************************************************************************** */
 
@@ -174,10 +184,16 @@ unsigned Shot::getSize() const
 
 QString Shot::getPreview() const
 {
-    if (m_jpg.size() > 0)
-        return m_jpg.at(0);
-    else if (m_thm.size() > 0)
-        return m_thm.at(0);
+    if (m_jpg.size() > 0 &&
+        m_jpg.at(0).second == 0)
+    {
+        return m_jpg.at(0).first;
+    }
+    else if (m_thm.size() > 0 &&
+             m_thm.at(0).second == 0)
+    {
+        return m_thm.at(0).first;
+    }
 
     return QString();
 }
@@ -226,7 +242,7 @@ int ShotModel::rowCount(const QModelIndex & parent) const
 
 QVariant ShotModel::data(const QModelIndex & index, int role) const
 {
-    if (index.row() < 0 || index.row() >= m_shots.count())
+    if (index.row() < 0 || index.row() >= m_shots.size())
         return QVariant();
 
     Shot *shot = m_shots[index.row()];
