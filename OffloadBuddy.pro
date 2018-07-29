@@ -110,7 +110,7 @@ linux {
 
 macx {
     # Automatic bundle packaging
-    deploy.commands = macdeployqt $${OUT_PWD}/$${DESTDIR}/$${TARGET}.app --qmldir qml/
+    deploy.commands = macdeployqt $${OUT_PWD}/$${DESTDIR}/$${TARGET}.app
     install.depends = deploy
     QMAKE_EXTRA_TARGETS += install deploy
 
