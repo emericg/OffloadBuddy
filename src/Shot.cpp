@@ -41,7 +41,17 @@ Shot::Shot(Shared::ShotType type)
 
 Shot::~Shot()
 {
-    //
+    qDeleteAll(m_jpg);
+    m_jpg.clear();
+
+    qDeleteAll(m_mp4);
+    m_mp4.clear();
+    qDeleteAll(m_lrv);
+    m_lrv.clear();
+    qDeleteAll(m_thm);
+    m_thm.clear();
+    qDeleteAll(m_wav);
+    m_wav.clear();
 }
 
 Shot::Shot(const Shot &other) : QObject()
@@ -51,11 +61,10 @@ Shot::Shot(const Shot &other) : QObject()
     m_type = other.m_type;
     m_camera_source = other.m_camera_source;
     m_camera_id = other.m_camera_id;
-    m_file_id = other.m_file_id;
+    m_shot_id = other.m_shot_id;
 
     m_name = other.m_name;
-    m_date_file = other.m_date_file;
-    m_date_shot = other.m_date_shot;
+    m_date = other.m_date;
     m_duration = other.m_duration;
     m_highlights = other.m_highlights;
 
@@ -69,81 +78,78 @@ Shot::Shot(const Shot &other) : QObject()
 
 /* ************************************************************************** */
 
-void Shot::addFile(QString &file, uint32_t objectid)
+void Shot::addFile(ofb_file *file)
 {
-    std::pair<QString, uint32_t> fp = std::make_pair(file, objectid);
-
-    QFileInfo fi(file);
-    if (objectid || (fi.exists() && fi.isReadable()))
+    if (file)
     {
         // Fusion "first file" hack...
-        if (fi.fileName().startsWith("GPFR") || fi.fileName().startsWith("GPBK"))
+        if (file->name.startsWith("GPFR") || file->name.startsWith("GPBK"))
         {
-            m_name = fi.baseName();
-            m_date_file = fi.birthTime();
+            m_name = file->name;
+            m_date = file->creation_date;
 
-            if (file.endsWith("JPG", Qt::CaseInsensitive))
+            if (file->extension == "jpg")
             {
-                m_jpg.push_front(std::make_pair(file, objectid));
+                m_jpg.push_front(file);
             }
-            else if (file.endsWith("MP4", Qt::CaseInsensitive))
+            else if (file->extension == "mp4")
             {
-                m_mp4.push_front(std::make_pair(file, objectid));
+                m_mp4.push_front(file);
             }
-            else if (file.endsWith("LRV", Qt::CaseInsensitive))
+            else if (file->extension == "lrv")
             {
-                m_lrv.push_front(std::make_pair(file, objectid));
+                m_lrv.push_front(file);
             }
-            else if (file.endsWith("THM", Qt::CaseInsensitive))
+            else if (file->extension == "thm")
             {
-                m_thm.push_front(std::make_pair(file, objectid));
+                m_thm.push_front(file);
             }
-            else if (file.endsWith("WAV", Qt::CaseInsensitive))
+            else if (file->extension == "wav")
             {
-                m_wav.push_front(std::make_pair(file, objectid));
+                m_wav.push_front(file);
             }
             else
             {
-                qWarning() << "Shot::addFile(" << file << ") UNKNOWN FORMAT";
+                qWarning() << "Shot::addFile(" << file->extension << ") UNKNOWN FORMAT";
             }
         }
         else
         {
             if (m_name.isEmpty())
-                m_name = fi.baseName();
+                m_name = file->name;
 
-            if (!m_date_file.isValid())
-                m_date_file = fi.birthTime();
+            if (!file->creation_date.isValid())
+                m_date = file->creation_date;
 
-            if (file.endsWith("JPG", Qt::CaseInsensitive))
+            if (file->extension == "jpg")
             {
-                m_jpg.push_back(std::make_pair(file, objectid));
+                m_jpg.push_back(file);
             }
-            else if (file.endsWith("MP4", Qt::CaseInsensitive))
+            else if (file->extension == "mp4")
             {
-                m_mp4.push_back(std::make_pair(file, objectid));
+                m_mp4.push_back(file);
             }
-            else if (file.endsWith("LRV", Qt::CaseInsensitive))
+            else if (file->extension == "lrv")
             {
-                m_lrv.push_back(std::make_pair(file, objectid));
+                m_lrv.push_back(file);
             }
-            else if (file.endsWith("THM", Qt::CaseInsensitive))
+            else if (file->extension == "thm")
             {
-                m_thm.push_back(std::make_pair(file, objectid));
+                m_thm.push_back(file);
             }
-            else if (file.endsWith("WAV", Qt::CaseInsensitive))
+            else if (file->extension == "wav")
             {
-                m_wav.push_back(std::make_pair(file, objectid));
+                m_wav.push_back(file);
             }
             else
             {
-                qWarning() << "Shot::addFile(" << file << ") UNKNOWN FORMAT";
+                qWarning() << "Shot::addFile(" << file->extension << ") UNKNOWN FORMAT";
             }
         }
     }
     else
     {
-        qWarning() << "Shot::addFile(" << file << ") UNREADABLE";
+        qWarning() << "Shot::addFile(" << file << ") nullptr";
     }
 }
 
@@ -184,15 +190,13 @@ unsigned Shot::getSize() const
 
 QString Shot::getPreview() const
 {
-    if (m_jpg.size() > 0 &&
-        m_jpg.at(0).second == 0)
+    if (m_jpg.size() > 0 && !m_jpg.at(0)->filesystemPath.isEmpty())
     {
-        return m_jpg.at(0).first;
+        return m_jpg.at(0)->filesystemPath;
     }
-    else if (m_thm.size() > 0 &&
-             m_thm.at(0).second == 0)
+    else if (m_thm.size() > 0 && !m_thm.at(0)->filesystemPath.isEmpty())
     {
-        return m_thm.at(0).first;
+        return m_thm.at(0)->filesystemPath;
     }
 
     return QString();
@@ -282,102 +286,3 @@ QHash<int, QByteArray> ShotModel::roleNames() const
 
     return roles;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-void ShotModel::appendRow(ListItem *item)
-{
-  appendRows(QList<ListItem*>() << item);
-}
-
-void ShotModel::appendRows(const QList<ListItem *> &items)
-{
-  beginInsertRows(QModelIndex(), rowCount(), rowCount()+items.size()-1);
-  foreach(ListItem *item, items) {
-    connect(item, SIGNAL(dataChanged()), SLOT(handleItemChange()));
-    m_list.append(item);
-  }
-  endInsertRows();
-}
-
-void ShotModel::insertRow(int row, ListItem *item)
-{
-  beginInsertRows(QModelIndex(), row, row);
-  connect(item, SIGNAL(dataChanged()), SLOT(handleItemChange()));
-  m_list.insert(row, item);
-  endInsertRows();
-}
-
-void ShotModel::handleItemChange()
-{
-  ListItem* item = static_cast<ListItem*>(sender());
-  QModelIndex index = indexFromItem(item);
-  if(index.isValid())
-    emit dataChanged(index, index);
-}
-
-ListItem * ShotModel::find(const QString &id) const
-{
-  foreach(ListItem* item, m_list) {
-    if(item->id() == id) return item;
-  }
-  return 0;
-}
-
-QModelIndex ShotModel::indexFromItem(const ListItem *item) const
-{
-  Q_ASSERT(item);
-  for(int row=0; row<m_list.size(); ++row) {
-    if(m_list.at(row) == item) return index(row);
-  }
-  return QModelIndex();
-}
-
-void ShotModel::clear()
-{
-  qDeleteAll(m_list);
-  m_list.clear();
-}
-
-bool ShotModel::removeRow(int row, const QModelIndex &parent)
-{
-  Q_UNUSED(parent);
-  if(row < 0 || row >= m_list.size()) return false;
-  beginRemoveRows(QModelIndex(), row, row);
-  delete m_list.takeAt(row);
-  endRemoveRows();
-  return true;
-}
-
-bool ShotModel::removeRows(int row, int count, const QModelIndex &parent)
-{
-  Q_UNUSED(parent);
-  if(row < 0 || (row+count) >= m_list.size()) return false;
-  beginRemoveRows(QModelIndex(), row, row+count-1);
-  for(int i=0; i<count; ++i) {
-    delete m_list.takeAt(row);
-  }
-  endRemoveRows();
-  return true;
-}
-
-ListItem * ShotModel::takeRow(int row)
-{
-  beginRemoveRows(QModelIndex(), row, row);
-  ListItem* item = m_list.takeAt(row);
-  endRemoveRows();
-  return item;
-}
-*/

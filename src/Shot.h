@@ -56,6 +56,24 @@ namespace Shared
 
 /* ************************************************************************** */
 
+struct ofb_file
+{
+    QString name;
+    QString extension;
+
+    uint64_t size;
+    QDateTime creation_date;
+    QDateTime modification_date;
+
+    QString filesystemPath;
+
+#ifdef ENABLE_LIBMTP
+    LIBMTP_mtpdevice_t *mtpDevice = nullptr;
+    LIBMTP_devicestorage_t *mtpStorage = nullptr;
+    uint32_t mtpObjectId = 0;
+#endif
+};
+
 /*!
  * \brief The Shot class
  */
@@ -72,8 +90,7 @@ class Shot: public QObject
     Q_PROPERTY(int highlightCount READ getHighlightCount NOTIFY shotUpdated)
 
     Q_PROPERTY(qint64 duration READ getDuration NOTIFY shotUpdated)
-    //Q_PROPERTY(QString dateFile READ getDate NOTIFY shotUpdated)
-    //Q_PROPERTY(QString dateShot READ getDate NOTIFY shotUpdated)
+    Q_PROPERTY(QDateTime date READ getDate NOTIFY shotUpdated)
     //Q_PROPERTY(QString gps READ getGPS NOTIFY shotUpdated)
 
     bool m_onCamera = false;        //!< Shot datas currently located on a device
@@ -81,12 +98,11 @@ class Shot: public QObject
     Shared::ShotType m_type;
     QString m_camera_source;        //!< Model of the camera that produced the shot
 
+    int m_shot_id = -1;
     int m_camera_id = 0;            //!< Shot is part of a multi camera systems
-    int m_file_id = -1;
 
     QString m_name;
-    QDateTime m_date_file;
-    QDateTime m_date_shot;
+    QDateTime m_date;
     qint64 m_duration = 0;
 
     QList <QTime> m_highlights;
@@ -97,13 +113,13 @@ class Shot: public QObject
 #endif
 
     // PICTURES files
-    QList <std::pair<QString, uint32_t>> m_jpg;
+    QList <ofb_file *> m_jpg;
 
     // VIDEOS files
-    QList <std::pair<QString, uint32_t>> m_mp4;
-    QList <std::pair<QString, uint32_t>> m_lrv;
-    QList <std::pair<QString, uint32_t>> m_thm;
-    QList <std::pair<QString, uint32_t>> m_wav;
+    QList <ofb_file *> m_mp4;
+    QList <ofb_file *> m_lrv;
+    QList <ofb_file *> m_thm;
+    QList <ofb_file *> m_wav;
 
 public:
     Shot(QObject *parent = nullptr);
@@ -113,7 +129,7 @@ public:
     Shot(const Shot &other);
 
     bool isValid();
-    void addFile(QString &file, uint32_t objectid = 0);
+    void addFile(ofb_file *file);
 #ifdef ENABLE_LIBMTP
     void attachMtpStorage(LIBMTP_mtpdevice_t *device, LIBMTP_devicestorage_t *storage);
 #endif
@@ -123,13 +139,14 @@ public slots:
     QString getName() const { return m_name; }
     unsigned getSize() const;
     qint64 getDuration() const;
+    QDateTime getDate() const { return m_date; }
     QString getPreview() const;
     QString getCameraSource() const { return m_camera_source; }
 
     int getHighlightCount() const { return m_highlights.size(); }
 
-    int getFileId() const { return m_file_id; }
-    void setFileId(int id) { m_file_id = id; }
+    int getFileId() const { return m_shot_id; }
+    void setFileId(int id) { m_shot_id = id; }
     int getCameraId() const { return m_camera_id; }
     void setCameraId(int id) { m_camera_id = id; }
 

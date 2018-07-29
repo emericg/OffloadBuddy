@@ -20,6 +20,7 @@
  */
 
 #include "Device.h"
+#include "GoProFileModel.h"
 
 #include <QStorageInfo>
 #include <QFile>
@@ -81,130 +82,6 @@ bool Device::isValid()
 
 /* ************************************************************************** */
 
-static bool getGoProShotInfos(const QString &file_name,
-                               const QString &file_ext,
-                               int &camera_id,
-                               Shared::ShotType &file_type, int &file_number,
-                               QString &group_string, int &group_number)
-{
-    bool status = true;
-
-    //https://gopro.com/help/articles/question_answer/GoPro-Camera-File-Naming-Convention
-
-    if (file_name.size() != 12)
-        qWarning() << "This filename is not 12 chars... Probably not a GoPro file...";
-    if (file_name.startsWith("G") == false)
-        qWarning() << "This filename doesn't start by 'G'... Probably not a GoPro file...";
-
-    file_number = file_name.mid(4, 4).toInt();
-
-    if (file_name.startsWith("GOPR"))
-    {
-        if (file_ext == "jpg")
-        {
-            // Single Photo
-            file_type = Shared::SHOT_PICTURE;
-        }
-        else if (file_ext == "mp4")
-        {
-            // Single Video
-            file_type = Shared::SHOT_VIDEO;
-        }
-    }
-    else if (file_name.startsWith("GPBK") ||
-             file_name.startsWith("GPFR"))
-    {
-        // Fusion Video
-        if (file_ext == "jpg")
-        {
-            file_type = Shared::SHOT_PICTURE;
-        }
-        else if (file_ext == "mp4" || file_ext == "lrv" ||
-                 file_ext == "thm"  || file_ext == "wav")
-        {
-            file_type = Shared::SHOT_VIDEO;
-        }
-
-        if (file_name.startsWith("GPBK"))
-            camera_id = 1;
-    }
-    else if (file_name.startsWith("GP"))
-    {
-        // Chaptered Video
-        file_type = Shared::SHOT_VIDEO;
-        group_string = file_name.mid(2, 2);
-        group_number = group_string.toInt();
-    }
-    else if (file_name.startsWith("GH") ||
-             file_name.startsWith("GX") ||
-             file_name.startsWith("GL"))
-    {
-        // HERO6 Video
-        file_type = Shared::SHOT_VIDEO;
-        group_string = file_name.mid(2, 2);
-        group_number = group_string.toInt();
-    }
-    else if (file_name.startsWith("GB") ||
-             file_name.startsWith("GF"))
-    {
-        // Chaptered Fusion Video
-        file_type = Shared::SHOT_VIDEO;
-        group_string = file_name.mid(2, 2);
-        group_number = group_string.toInt();
-
-        if (file_ext == "jpg")
-        {
-            file_type = Shared::SHOT_PICTURE_MULTI;
-        }
-        else if (file_ext == "mp4" || file_ext == "lrv" ||
-                 file_ext == "thm"  || file_ext == "wav")
-        {
-            file_type = Shared::SHOT_VIDEO;
-        }
-
-        if (file_name.startsWith("GB"))
-            camera_id = 1;
-    }
-    else if (file_name.startsWith("G"))
-    {
-        if (file_ext == "jpg")
-        {
-            // Burst or Time-Lapse Photo
-            file_type = Shared::SHOT_PICTURE_MULTI;
-        }
-        else if (file_ext == "mp4" || file_ext == "lrv" ||
-                 file_ext == "thm"  || file_ext == "wav")
-        {
-            // Looping Video
-            file_type = Shared::SHOT_VIDEO;
-        }
-
-        group_string = file_name.mid(1, 3);
-        group_number = group_string.toInt();
-    }
-    else if (file_name.startsWith("3D_"))
-    {
-        // 3D Recording Video
-        //file_type = Shared::SHOT_VIDEO_3D;
-        qWarning() << "Unhandled file name format:" << file_name;
-        status = false;
-    }
-    else
-    {
-        qWarning() << "Unknown file name format:" << file_name;
-        status = false;
-    }
-/*
-    qDebug() << "* " << file_path;
-    qDebug() << "- " << file_name;
-    qDebug() << "- " << file_ext;
-    qDebug() << "- " << file_type;
-    qDebug() << "- " << group_number;
-    qDebug() << "- " << file_number;
-*/
-    return  status;
-}
-
 bool Device::scanFilesystem(const QString &path)
 {
     QString dcim_path = path + QDir::separator() + "DCIM";
@@ -228,44 +105,50 @@ bool Device::scanFilesystem(const QString &path)
 
         foreach (QString file_name, subdir.entryList(QDir::Files| QDir::NoDotAndDotDot))
         {
-            QString file_path = dcim_path + QDir::separator() + subdir_name + QDir::separator() + file_name;
-
-            Shared::ShotType file_type = Shared::SHOT_UNKNOWN;
-            QString file_ext = file_name.right(3).toLower();
-
-            int camera_id = 0; // for multi camera system
-            int file_number = 0;
-            QString group_string;
-            int group_number = 0;
-
-            getGoProShotInfos(file_name,
-                              file_ext,
-                              camera_id,
-                              file_type, file_number,
-                              group_string, group_number);
-
-            int file_id = (file_type == Shared::SHOT_VIDEO) ? file_number : group_number;
-            Shot *s = findShot(file_type, file_id, camera_id);
-            if (s)
+            QFileInfo fi(dcim_path + QDir::separator() + subdir_name + QDir::separator() + file_name);
+            if (fi.exists() && fi.isReadable())
             {
-                //qWarning() << "Adding file:" << file_name << "to an existing shot";
-                s->addFile(file_path);
-            }
-            else
-            {
-                //qWarning() << "file:" << file_name << "is a new shot";
-                Shot *s = new Shot(file_type);
+                ofb_file *f = new ofb_file;
+                {
+                    f->name = fi.fileName();
+                    f->extension = fi.suffix().toLower();
+                    f->size = static_cast<uint64_t>(fi.size());
+                    f->creation_date = fi.birthTime();
+                    f->modification_date = fi.lastModified();
+
+                    f->filesystemPath = fi.filePath();
+                }
+
+                Shared::ShotType file_type = Shared::SHOT_UNKNOWN;
+                int file_number = 0;
+                int group_number = 0;
+                int camera_id = 0; // for multi camera system
+
+                getGoProShotInfos(f->name, f->extension,
+                                  file_type, file_number, group_number, camera_id);
+
+                int file_id = (file_type == Shared::SHOT_VIDEO) ? file_number : group_number;
+                Shot *s = findShot(file_type, file_id, camera_id);
                 if (s)
                 {
-                    s->addFile(file_path);
-                    s->setFileId(file_id);
-                    s->setCameraId(camera_id);
-                    if (s->isValid())
+                    //qWarning() << "Adding file:" << file_name << "to an existing shot";
+                    s->addFile(f);
+                }
+                else
+                {
+                    //qWarning() << "file:" << file_name << "is a new shot";
+                    Shot *s = new Shot(file_type);
+                    if (s)
                     {
-                        m_shotModel->addShot(s);
+                        s->addFile(f);
+                        s->setFileId(file_id);
+                        s->setCameraId(camera_id);
+                        if (s->isValid())
+                        {
+                            m_shotModel->addShot(s);
+                        }
                     }
                 }
-            }
 /*
             qDebug() << "    * " << file_path;
             qDebug() << "    - " << file_name;
@@ -274,6 +157,7 @@ bool Device::scanFilesystem(const QString &path)
             qDebug() << "    - " << group_number;
             qDebug() << "    - " << file_number;
 */
+            }
         }
     }
 
@@ -491,52 +375,59 @@ bool Device::addStorage_mtp(LIBMTP_mtpdevice_t *mtpDevice)
 #ifdef ENABLE_LIBMTP
 void Device::mtpFileRec(LIBMTP_mtpdevice_t *device, uint32_t storageid, uint32_t leaf)
 {
-    LIBMTP_file_t *files;
+    LIBMTP_file_t *mtpFiles;
 
     // Get file listing
-    files = LIBMTP_Get_Files_And_Folders(device, storageid, leaf);
+    mtpFiles = LIBMTP_Get_Files_And_Folders(device, storageid, leaf);
 
-    if (files == nullptr)
+    if (mtpFiles == nullptr)
     {
         LIBMTP_Dump_Errorstack(device);
         LIBMTP_Clear_Errorstack(device);
     }
     else
     {
-        LIBMTP_file_t *file, *tmp;
-        file = files;
+        LIBMTP_file_t *mtpFile, *tmp;
+        mtpFile = mtpFiles;
 
-        while (file != nullptr)
+        while (mtpFile != nullptr)
         {
-            if (file->filetype == LIBMTP_FILETYPE_FOLDER)
+            if (mtpFile->filetype == LIBMTP_FILETYPE_FOLDER)
             {
-                mtpFileRec(device, storageid, file->item_id);
+                mtpFileRec(device, storageid, mtpFile->item_id);
             }
             else //if (file->filetype == LIBMTP_FILETYPE_ALBUM)
             {
                 //qDebug() << "-" << file->filename << "(" << file->filesize;
-
-                Shared::ShotType file_type = Shared::SHOT_UNKNOWN;
-                QString file_name = file->filename;
+                QString file_name = mtpFile->filename;
                 QString file_ext = file_name.right(3).toLower();
 
-                int camera_id = 0; // for multi camera system
+                ofb_file *f = new ofb_file;
+                {
+                    f->name = mtpFile->filename;
+                    f->extension = file_name.right(3).toLower();
+                    f->size = mtpFile->filesize;
+                    f->creation_date = f->modification_date = QDateTime::fromTime_t(mtpFile->modificationdate);
+
+                    f->mtpDevice = device;
+                    //f->mtpStorage = mtpFile->storage_id;
+                    f->mtpObjectId = mtpFile->item_id;
+                }
+
+                Shared::ShotType file_type = Shared::SHOT_UNKNOWN;
                 int file_number = 0;
-                QString group_string;
                 int group_number = 0;
+                int camera_id = 0; // for multi camera system
 
-                getGoProShotInfos(file_name,
-                                  file_ext,
-                                  camera_id,
-                                  file_type, file_number,
-                                  group_string, group_number);
+                getGoProShotInfos(file_name, file_ext,
+                                  file_type, file_number, group_number, camera_id);
 
-                int file_id = (file_type == Shared::SHOT_VIDEO) ? file_number : group_number;
-                Shot *s = findShot(file_type, file_id, camera_id);
+                int shot_id = (file_type == Shared::SHOT_VIDEO) ? file_number : group_number;
+                Shot *s = findShot(file_type, shot_id, camera_id);
                 if (s)
                 {
                     //qWarning() << "Adding file:" << file_name << "to an existing shot";
-                    s->addFile(file_name, file->item_id);
+                    s->addFile(f);
                 }
                 else
                 {
@@ -544,10 +435,8 @@ void Device::mtpFileRec(LIBMTP_mtpdevice_t *device, uint32_t storageid, uint32_t
                     Shot *s = new Shot(file_type);
                     if (s)
                     {
-                        //s->attachMtpStorage(file_id);
-
-                        s->addFile(file_name, file->item_id);
-                        s->setFileId(file_id);
+                        s->addFile(f);
+                        s->setFileId(shot_id);
                         s->setCameraId(camera_id);
                         if (s->isValid())
                         {
@@ -565,8 +454,8 @@ void Device::mtpFileRec(LIBMTP_mtpdevice_t *device, uint32_t storageid, uint32_t
 */
             }
 
-            tmp = file;
-            file = file->next;
+            tmp = mtpFile;
+            mtpFile = mtpFile->next;
             LIBMTP_destroy_file_t(tmp);
         }
     }

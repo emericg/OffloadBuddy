@@ -28,14 +28,20 @@ DESTDIR     = bin/
 
 SOURCES  += src/main.cpp \
             src/SettingsManager.cpp \
+            src/JobManager.cpp \
+            src/MediaManager.cpp \
             src/DeviceManager.cpp \
             src/Device.cpp \
-            src/Shot.cpp
+            src/Shot.cpp \
+            src/GoProFileModel.cpp
 
 HEADERS  += src/SettingsManager.h \
+            src/JobManager.h \
+            src/MediaManager.h \
             src/DeviceManager.h \
             src/Device.h \
-            src/Shot.h
+            src/Shot.h \
+            src/GoProFileModel.h
 
 RESOURCES += qml.qrc \
              resources.qrc
@@ -51,6 +57,10 @@ RC_ICONS = resources/app/$$lower($${TARGET}).ico
 # Build ########################################################################
 
 unix {
+    # Enables AddressSanitizer
+    #QMAKE_CXXFLAGS += -fsanitize=address,undefined
+    #QMAKE_LFLAGS += -fsanitize=address,undefined
+
     contains(DEFINES, ENABLE_LIBMTP) {
         CONFIG += link_pkgconfig
         PKGCONFIG += libusb-1.0 libmtp
@@ -86,18 +96,21 @@ linux {
     isEmpty(PREFIX) { PREFIX = /usr/local }
     target_app.files   += $${OUT_PWD}/$${DESTDIR}/$$lower($${TARGET})
     target_app.path     = $${PREFIX}/bin/
-    target_icon.files  += $${OUT_PWD}/assets/app/$$lower($${TARGET}).svg
+    target_icon.files  += $${OUT_PWD}/resources/app/$$lower($${TARGET}).svg
     target_icon.path    = $${PREFIX}/share/pixmaps/
     target_appentry.files  += $${OUT_PWD}/resources/app/$$lower($${TARGET}).desktop
     target_appentry.path    = $${PREFIX}/share/applications
     target_appdata.files   += $${OUT_PWD}/resources/app/$$lower($${TARGET}).appdata.xml
     target_appdata.path     = $${PREFIX}/share/appdata
     INSTALLS += target_app target_icon target_appentry target_appdata
+
+    # Clean bin/ directory
+    #QMAKE_CLEAN += $${OUT_PWD}/$${DESTDIR}/$$lower($${TARGET})
 }
 
 macx {
     # Automatic bundle packaging
-    deploy.commands = macdeployqt $${OUT_PWD}/$${DESTDIR}/$${TARGET}.app
+    deploy.commands = macdeployqt $${OUT_PWD}/$${DESTDIR}/$${TARGET}.app --qmldir qml/
     install.depends = deploy
     QMAKE_EXTRA_TARGETS += install deploy
 
