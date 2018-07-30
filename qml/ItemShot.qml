@@ -17,7 +17,7 @@ Rectangle {
     Component.onCompleted: {
 
         if (preview) {
-            image.source = "file:///" + preview + ""
+            image.source = "file:///" + preview
         }
 
         text_top.text = name

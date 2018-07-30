@@ -41,41 +41,21 @@ typedef void LIBMTP_devicestorage_t;
 
 /* ************************************************************************** */
 
-typedef struct gopro_version_11
+typedef struct gopro_info_version
 {
-    //QString info_version;         // ex: "1.1",
-    QString firmware_version;       // ex: "HD3.03.02.39"
-    QString wifi_version;           // ex: "3.4.2.9"
-    QString wifi_bootloader_version;// ex: "0.2.2"
-    QString wifi_mac;               // ex: "d89685292066"
-    QString camera_type;            // ex: "Hero3-Black Edition"
-
-} gopro_version_11;
-
-typedef struct gopro_version_20
-{
-    //QString info_version;         // ex: "2.0",
+    //QString info_version;         // "1.0",
+    QString camera_type;            // ex: "HERO6 Black", "FUSION", "Hero3-Black Edition", "HD2"
     QString firmware_version;       // ex: "HD6.01.02.01.00"
-    QString wifi_mac;               // ex: "0441693db024"
-    QString camera_type;            // ex: "HERO6 Black"
-    QString camera_serial_number;   // ex: "C3221324521518"
-
-} gopro_version_20;
-
-typedef struct gopro_version
-{
-    QString camera_type;            // ex: "HERO6 Black", "FUSION", "Hero3-Black Edition"
-    QString firmware_version;       // ex: "HD6.01.02.01.00"
-    QString wifi_mac;               // ex: "0441693db024"
 
     //QString info_version;         // "1.1",
+    QString wifi_mac;               // ex: "0441693db024"
     QString wifi_version;           // ex: "3.4.2.9"
     QString wifi_bootloader_version;// ex: "0.2.2"
 
     //QString info_version;         // "2.0",
     QString camera_serial_number;   // ex: "C3221324521518"
 
-} gopro_version;
+} gopro_info_version;
 
 typedef enum deviceModel_e
 {

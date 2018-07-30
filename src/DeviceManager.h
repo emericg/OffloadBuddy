@@ -51,7 +51,7 @@ class DeviceManager: public QObject
 
     Q_PROPERTY(QVariant devicesList READ getDevices NOTIFY devicesUpdated)
 
-    bool parseGoProVersionFile(const QString &path, gopro_version_20 &infos);
+    bool parseGoProVersionFile(const QString &path, gopro_info_version &infos);
 
     QList <QObject *> m_devices;
 
@@ -73,11 +73,12 @@ public:
 public slots:
     bool searchDevices();
         bool scanFilesystems();
+        bool scanVirtualFilesystems();
         bool scanMtpDevices();
         bool getMtpDevices(const uint32_t busNum, const uint32_t devNum,
-                           QString &brand, QString &device);
+                           QString &brand, QString &model);
 
-    void addDevice(const QString &path, const gopro_version_20 *infos = nullptr);
+    void addDevice(const QString &path, const gopro_info_version &infos);
     void removeDevice(const QString &path);
     void somethingsUp(const QString &path);
 
