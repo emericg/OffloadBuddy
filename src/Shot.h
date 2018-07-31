@@ -52,20 +52,31 @@ namespace Shared
         //SHOT_PICTURE_TIMELAPSE,
     };
     Q_ENUM_NS(ShotType)
+
+    enum ShotState
+    {
+        SHOT_STATE_DEFAULT = 0,
+        SHOT_STATE_QUEUED,
+        SHOT_STATE_WORKING,
+
+        SHOT_STATE_COPYING,
+        SHOT_STATE_COPIED,
+    };
+    Q_ENUM_NS(ShotState)
 }
 
 /* ************************************************************************** */
 
 struct ofb_file
 {
-    QString name;
-    QString extension;
+    QString name;                   //!< File base name only, no extension
+    QString extension;              //!< Extension only, lowercase, no dot or anything
 
-    uint64_t size;
+    uint64_t size = 0;              //!< Size in bytes
     QDateTime creation_date;
     QDateTime modification_date;
 
-    QString filesystemPath;
+    QString filesystemPath;         //!< Absolute file path, if available
 
 #ifdef ENABLE_LIBMTP
     LIBMTP_mtpdevice_t *mtpDevice = nullptr;
@@ -82,8 +93,10 @@ class Shot: public QObject
     Q_OBJECT
 
     Q_PROPERTY(unsigned type READ getType NOTIFY shotUpdated)
+    Q_PROPERTY(unsigned state READ getState NOTIFY shotUpdated)
     Q_PROPERTY(QString name READ getName NOTIFY shotUpdated)
     Q_PROPERTY(QString camera READ getCameraSource NOTIFY shotUpdated)
+    Q_PROPERTY(qint64 size READ getSize NOTIFY shotUpdated)
 
     Q_PROPERTY(QString preview READ getPreview NOTIFY shotUpdated)
 
@@ -96,6 +109,7 @@ class Shot: public QObject
     bool m_onCamera = false;        //!< Shot datas currently located on a device
 
     Shared::ShotType m_type;
+    Shared::ShotState m_state;
     QString m_camera_source;        //!< Model of the camera that produced the shot
 
     int m_shot_id = -1;
@@ -134,10 +148,15 @@ public:
     void attachMtpStorage(LIBMTP_mtpdevice_t *device, LIBMTP_devicestorage_t *storage);
 #endif
 
+    QStringList getFiles() const;
+
 public slots:
-    unsigned getType() const;
+    unsigned getType() const { return m_type; }
+    unsigned getState() const { return m_state; }
+    void setState(Shared::ShotState state) { m_state = state; }
+
     QString getName() const { return m_name; }
-    unsigned getSize() const;
+    qint64 getSize() const;
     qint64 getDuration() const;
     QDateTime getDate() const { return m_date; }
     QString getPreview() const;
@@ -155,48 +174,6 @@ Q_SIGNALS:
 };
 
 //Q_DECLARE_METATYPE(Shot*);
-
-/* ************************************************************************** */
-
-class ShotModel : public QAbstractListModel
-{
-    Q_OBJECT
-    Q_ENUMS(ShotRoles)
-
-    QList<Shot *> m_shots;
-
-public:
-    enum ShotRoles {
-        NameRole = Qt::UserRole+1,
-        TypeRole,
-        PreviewRole,
-        SizeRole,
-        DurationRole,
-        DateFileRole,
-        DateShotRole,
-        GpsRole,
-        CameraRole,
-
-        PointerRole,
-    };
-
-    ShotModel(QObject *parent = nullptr);
-    ShotModel(const ShotModel &other);
-    ~ShotModel();
-
-    const QList<Shot *> * getShotList() { return &m_shots; }
-
-    void addShot(Shot *shot);
-
-    int rowCount(const QModelIndex & parent = QModelIndex()) const;
-
-    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-
-protected:
-    QHash<int, QByteArray> roleNames() const;
-};
-
-//Q_DECLARE_METATYPE(ShotModel*)
 
 /* ************************************************************************** */
 #endif // SHOT_H

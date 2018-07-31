@@ -20,6 +20,9 @@ Rectangle {
         if (shot){
             //console.log("onShotChanged()" + shot);
             textShotName.text = shot.name
+            duration.text = shot.duration
+            date.text = shot.date
+            datasize.text = StringUtils.bytesToString_short(shot.size)
 
             if (shot.preview) {
                 image.source = "file:///" + shot.preview
@@ -220,6 +223,14 @@ Rectangle {
             text: qsTr("Data size:")
             verticalAlignment: Text.AlignVCenter
             font.pixelSize: 16
+
+            Text {
+                id: datasize
+                x: 102
+                y: 9
+                text: qsTr("Text")
+                font.pixelSize: 12
+            }
         }
 
         Text {
@@ -308,6 +319,22 @@ Rectangle {
             text: qsTr("Chapters:")
             verticalAlignment: Text.AlignVCenter
             font.pixelSize: 16
+        }
+
+        Text {
+            id: duration
+            x: 167
+            y: 50
+            text: qsTr("Text")
+            font.pixelSize: 12
+        }
+
+        Text {
+            id: date
+            x: 168
+            y: 88
+            text: qsTr("Text")
+            font.pixelSize: 12
         }
     }
 }

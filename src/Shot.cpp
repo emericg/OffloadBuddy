@@ -86,7 +86,10 @@ void Shot::addFile(ofb_file *file)
         if (file->name.startsWith("GPFR") || file->name.startsWith("GPBK"))
         {
             m_name = file->name;
-            m_date = file->creation_date;
+            if (file->creation_date.isValid())
+                m_date = file->creation_date;
+            else
+                m_date = file->modification_date;
 
             if (file->extension == "jpg")
             {
@@ -118,8 +121,13 @@ void Shot::addFile(ofb_file *file)
             if (m_name.isEmpty())
                 m_name = file->name;
 
-            if (!file->creation_date.isValid())
-                m_date = file->creation_date;
+            if (!m_date.isValid())
+            {
+                if (file->creation_date.isValid())
+                    m_date = file->creation_date;
+                else
+                    m_date = file->modification_date;
+            }
 
             if (file->extension == "jpg")
             {
@@ -169,23 +177,44 @@ bool Shot::isValid()
 
     return status;
 }
-
+/*
 unsigned Shot::getType() const
 {
-/*
     // Fusion hack:
     if (m_type == Shared::SHOT_PICTURE_MULTI && m_jpg.size() == 1)
     {
         m_type = Shared::SHOT_PICTURE;
         emit shotUpdated();
     }
-*/
     return m_type;
 }
-
-unsigned Shot::getSize() const
+*/
+qint64 Shot::getSize() const
 {
-    return 0;
+    qint64 size = 0;
+
+    for (auto f: m_jpg)
+    {
+        size += f->size;
+    }
+    for (auto f: m_mp4)
+    {
+        size += f->size;
+    }
+    for (auto f: m_thm)
+    {
+        size += f->size;
+    }
+    for (auto f: m_wav)
+    {
+        size += f->size;
+    }
+    for (auto f: m_lrv)
+    {
+        size += f->size;
+    }
+
+    return size;
 }
 
 QString Shot::getPreview() const
@@ -210,79 +239,20 @@ qint64 Shot::getDuration() const
         return m_jpg.count();
 }
 
-/* ************************************************************************** */
-/* ************************************************************************** */
-
-ShotModel::ShotModel(QObject *parent)
-    : QAbstractListModel(parent)
+QStringList Shot::getFiles() const
 {
-    //
-}
+    QStringList list;
 
-ShotModel::ShotModel(const ShotModel &other)
-    : QAbstractListModel()
-{
-    m_shots = other.m_shots;
-}
+    for (auto f: m_jpg)
+        list += f->filesystemPath;
+    for (auto f: m_mp4)
+        list += f->filesystemPath;
+    for (auto f: m_thm)
+        list += f->filesystemPath;
+    for (auto f: m_wav)
+        list += f->filesystemPath;
+    for (auto f: m_lrv)
+        list += f->filesystemPath;
 
-ShotModel::~ShotModel()
-{
-    qDeleteAll(m_shots);
-    m_shots.clear();
-}
-
-void ShotModel::addShot(Shot *shot)
-{
-    beginInsertRows(QModelIndex(), rowCount(), rowCount());
-    m_shots.push_back(shot);
-    endInsertRows();
-}
-
-int ShotModel::rowCount(const QModelIndex & parent) const
-{
-    Q_UNUSED(parent);
-    return m_shots.count();
-}
-
-QVariant ShotModel::data(const QModelIndex & index, int role) const
-{
-    if (index.row() < 0 || index.row() >= m_shots.size())
-        return QVariant();
-
-    Shot *shot = m_shots[index.row()];
-    if (role == NameRole)
-        return shot->getName();
-    else if (role == TypeRole)
-        return shot->getType();
-    else if (role == PreviewRole)
-        return shot->getPreview();
-    else if (role == SizeRole)
-        return shot->getSize();
-    else if (role == DurationRole)
-        return shot->getDuration();
-    else if (role == PointerRole)
-        return QVariant::fromValue(shot);
-    else
-        qDebug() << "Oups missing ShotModel role !!!";
-
-    return QVariant();
-}
-
-QHash<int, QByteArray> ShotModel::roleNames() const
-{
-    QHash<int, QByteArray> roles;
-
-    roles[NameRole] = "name";
-    roles[TypeRole] = "type";
-    roles[PreviewRole] = "preview";
-    roles[DurationRole] = "duration";
-    roles[SizeRole] = "size";
-    roles[DateFileRole] = "datefile";
-    roles[DateShotRole] = "dateshot";
-    roles[GpsRole] = "gps";
-    roles[CameraRole] = "camera";
-
-    roles[PointerRole] = "pointer";
-
-    return roles;
+    return list;
 }

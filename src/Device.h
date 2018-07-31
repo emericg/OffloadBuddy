@@ -24,6 +24,7 @@
 /* ************************************************************************** */
 
 #include "Shot.h"
+#include "ShotModel.h"
 
 #ifdef ENABLE_LIBMTP
 #include <libmtp.h>
@@ -117,9 +118,18 @@ typedef enum deviceModel_e
 typedef enum deviceType_e
 {
     DEVICE_FILESYSTEM = 0,
+    //DEVICE_VIRTUAL_FILESYSTEM = ?,
     DEVICE_MTP = 1,
 
 } deviceType_e;
+
+typedef enum deviceState_e
+{
+    DEVICE_STATE_IDLE = 0,
+    DEVICE_STATE_SCANNING = 1,
+    //DEVICE_STATE_JobInProgress = ?,
+
+} deviceState_e;
 
 /* ************************************************************************** */
 
@@ -164,6 +174,7 @@ class Device: public QObject
 
     deviceModel_e m_deviceModel = DEVICE_UNKNOWN;
     deviceType_e m_deviceType = DEVICE_FILESYSTEM;
+    deviceState_e m_deviceState = DEVICE_STATE_IDLE;
 
     // Generic infos
     QString m_brand = "GoPro";
@@ -225,6 +236,14 @@ public slots:
     double getSpaceUsed_percent();
     int64_t getSpaceAvailable();
     int64_t getSpaceAvailable_withrefresh();
+
+    //
+    void offloadAll();
+    void deleteAll();
+
+    //
+    //void addShot(Shot *shot);
+    //void deleteShot(Shot *shot);
 
     //
     ShotModel *getShotModel() const { return m_shotModel; }

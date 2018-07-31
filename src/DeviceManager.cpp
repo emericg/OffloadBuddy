@@ -131,7 +131,7 @@ bool DeviceManager::scanVirtualFilesystems()
             QDir gvfsDirectory(storage.rootPath() + "/gvfs");
             foreach (QString subdir_device, gvfsDirectory.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
             {
-                qDebug() << "Scanning MTP subdir_device:" << subdir_device;
+                //qDebug() << "Scanning MTP subdir_device:" << subdir_device;
 
                 int bus = -1, dev = -1;
                 std::pair<uint32_t, uint32_t> currentMtpDevice;
@@ -154,7 +154,7 @@ bool DeviceManager::scanVirtualFilesystems()
                     currentMtpDevice = std::make_pair(bus, dev);
                     if (m_watcherMtp.contains(currentMtpDevice))
                     {
-                        qDebug() << "> skipping device @ bus" << currentMtpDevice.first << ", dev" << currentMtpDevice.second << ", already handled";
+                        //qDebug() << "> skipping device @ bus" << currentMtpDevice.first << ", dev" << currentMtpDevice.second << ", already handled";
                         continue;
                     }
 
@@ -272,8 +272,8 @@ bool DeviceManager::scanMtpDevices()
 
 #ifdef ENABLE_LIBMTP
 
-    int numrawdevices;
-    LIBMTP_raw_device_t *rawdevices;
+    int numrawdevices = 0;
+    LIBMTP_raw_device_t *rawdevices = nullptr;
 
     // use this to get *already* connected devices? ??
     //LIBMTP_Get_Connected_Devices(LIBMTP_mtpdevice_t **device_list)
@@ -307,15 +307,16 @@ bool DeviceManager::scanMtpDevices()
 
     for (int i = 0; i < numrawdevices; i++)
     {
+/*
         qDebug() << "> MTP DEVICE(" << rawdevices[i].device_entry.vendor << rawdevices[i].device_entry.product \
                  << ") [" << rawdevices[i].device_entry.vendor_id << ":" << rawdevices[i].device_entry.product_id \
                  << "] @ bus" << rawdevices[i].bus_location << ", dev" << rawdevices[i].devnum;
-
+*/
         // Device in watch list? bail early!
         auto currentMtpDevice = std::make_pair(rawdevices[i].bus_location, rawdevices[i].devnum);
         if (m_watcherMtp.contains(currentMtpDevice))
         {
-            qDebug() << "> skipping device @ bus" << currentMtpDevice.first << ", dev" << currentMtpDevice.second << ", already handled";
+            //qDebug() << "> skipping device @ bus" << currentMtpDevice.first << ", dev" << currentMtpDevice.second << ", already handled";
             continue;
         }
 

@@ -25,10 +25,69 @@
 
 #include "Device.h"
 #include "Shot.h"
+#include "SettingsManager.h"
 
 #include <QObject>
 #include <QVariant>
 #include <QList>
+
+/* ************************************************************************** */
+
+typedef enum JobType
+{
+    JOB_METADATAS = 0,
+
+    JOB_FORMAT,
+    JOB_DELETE,
+    JOB_COPY,
+    JOB_MERGE,
+    JOB_CLIP,
+
+    JOB_TIMELAPSE_TO_VIDEO,
+
+    JOB_REENCODE,
+    JOB_STAB,
+
+    JOB_FIRMWARE_DOWNLOAD,
+    JOB_FIRMWARE_UPLOAD,
+
+} JobType;
+
+/* ************************************************************************** */
+
+class Job: public QObject
+{
+    Q_OBJECT
+
+    JobType m_type;
+
+public:
+    Job() {}
+    virtual~Job() {}
+};
+
+class CopyJob: public Job
+{
+    std::list<Shot *>m_shots;
+    MediaDirectory *m_dest = nullptr;
+
+public:
+    CopyJob() {}
+    ~CopyJob() {}
+
+    virtual void work();
+};
+
+class DeleteJob: public Job
+{
+    std::list<Shot *> m_shots;
+
+public:
+    DeleteJob() {}
+    ~DeleteJob() {}
+
+    virtual void work();
+};
 
 /* ************************************************************************** */
 
@@ -39,17 +98,31 @@ class JobManager: public QObject
 {
     Q_OBJECT
 
-    QList <QObject *> m_jobs;
+    QList <QObject *> m_job_queue_1;
+    QList <QObject *> m_job_queue_2;
+    QList <QObject *> m_job_queue_3;
+    QList <QObject *> m_job_queue_4;
 
-Q_SIGNALS:
-    void jobAdded();
-
-public:
+    // Singleton
+    static JobManager *instance;
     JobManager();
     ~JobManager();
 
+    //bool getAutoDestination(Shot &s, QString &destination)
+    MediaDirectory * getAutoDestination(Shot *s);
+
+Q_SIGNALS:
+    void jobAdded();
+    void jobCanceled();
+    void jobFinished();
+
+public:
+    static JobManager *getInstance();
+    bool addJob(JobType type, Device *d, Shot *s, MediaDirectory *m = nullptr);
+    bool addJobs(JobType type, Device *d, QList<Shot *> list, MediaDirectory *m = nullptr);
+
 public slots:
-    QVariant getJob(int index) const { if (m_jobs.size() > index) { return QVariant::fromValue(m_jobs.at(index)); } return QVariant(); }
+    QVariant getJob(int index) const { if (m_job_queue_1.size() > index) { return QVariant::fromValue(m_job_queue_1.at(index)); } return QVariant(); }
 };
 
 #endif // JOB_MANAGER_H

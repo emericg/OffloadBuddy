@@ -87,7 +87,7 @@ Rectangle {
             y: 26
             width: 256
             height: 30
-            text: "GoPro HERO"
+            text: "Camera brand & model"
             anchors.right: deviceImage.left
             anchors.rightMargin: 16
             verticalAlignment: Text.AlignVCenter
@@ -153,7 +153,7 @@ Rectangle {
                     rectangleTransferDecorated.height = rectangleTransferDecorated.height + 8
                 }
                 onClicked: {
-                    // TODO offload func
+                    myDevice.offloadAll();
                 }
             }
 
@@ -188,7 +188,7 @@ Rectangle {
                 if (weAreBlinking === true) {
                     if ((new Date().getTime() - startTime) > 500) {
                         stopTheBlink();
-                        // TODO func to actually delete stuff
+                        myDevice.deleteAll();
                     }
                 } else {
                     startTime = new Date().getTime()
@@ -218,8 +218,8 @@ Rectangle {
                     id: blinkReset
                     running: false
                     loops: Animation.Infinite
-                    ColorAnimation { from: ThemeEngine.colorDangerZone; to: "#ff0000"; duration: 1000 }
-                    ColorAnimation { from: "#ff0000"; to: ThemeEngine.colorDangerZone; duration: 1000 }
+                    ColorAnimation { from: ThemeEngine.colorDangerZone; to: ThemeEngine.colorRed; duration: 1000 }
+                    ColorAnimation { from: ThemeEngine.colorRed; to: ThemeEngine.colorDangerZone; duration: 1000 }
                 }
             }
 

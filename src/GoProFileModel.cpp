@@ -31,8 +31,8 @@ bool getGoProShotInfos(const QString &file_name, const QString &file_ext,
     bool status = true;
     QString group_string;
 
-    if (file_name.size() != 12)
-        qWarning() << "This filename is not 12 chars... Probably not a GoPro file...";
+    if (file_name.size() != 8)
+        qWarning() << "This filename is not 8 chars... Probably not a GoPro file...";
     if (file_name.startsWith("G") == false)
         qWarning() << "This filename doesn't start by 'G'... Probably not a GoPro file...";
 

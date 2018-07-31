@@ -21,6 +21,7 @@
 
 #include "Device.h"
 #include "GoProFileModel.h"
+#include "JobManager.h"
 
 #include <QStorageInfo>
 #include <QFile>
@@ -66,6 +67,7 @@ Device::~Device()
 }
 
 /* ************************************************************************** */
+/* ************************************************************************** */
 
 bool Device::isValid()
 {
@@ -85,6 +87,9 @@ bool Device::isValid()
 bool Device::scanFilesystem(const QString &path)
 {
     QString dcim_path = path + QDir::separator() + "DCIM";
+
+    emit scanningStarted();
+    m_deviceState = DEVICE_STATE_SCANNING;
 
     qDebug() << "> SCANNING STARTED (filesystem)";
     qDebug() << "  * DCIM:" << dcim_path;
@@ -110,7 +115,7 @@ bool Device::scanFilesystem(const QString &path)
             {
                 ofb_file *f = new ofb_file;
                 {
-                    f->name = fi.fileName();
+                    f->name = fi.baseName();
                     f->extension = fi.suffix().toLower();
                     f->size = static_cast<uint64_t>(fi.size());
                     f->creation_date = fi.birthTime();
@@ -164,6 +169,9 @@ bool Device::scanFilesystem(const QString &path)
     qDebug() << "  -" << m_shotModel->getShotList()->size() << "shots found";
     qDebug() << "> SCANNING FINISHED";
 
+    emit scanningFinished();
+    m_deviceState = DEVICE_STATE_IDLE;
+
     return true;
 }
 
@@ -172,6 +180,9 @@ bool Device::scanMtpDevices()
     bool status = true;
 
 #ifdef ENABLE_LIBMTP
+
+    emit scanningStarted();
+    m_deviceState = DEVICE_STATE_SCANNING;
 
     qDebug() << "> SCANNING STARTED (MTP device)";
 
@@ -184,6 +195,9 @@ bool Device::scanMtpDevices()
 
     qDebug() << "  -" << m_shotModel->getShotList()->size() << "shots found";
     qDebug() << "> SCANNING FINISHED";
+
+    emit scanningFinished();
+    m_deviceState = DEVICE_STATE_IDLE;
 
 #endif // ENABLE_LIBMTP
 
@@ -587,4 +601,18 @@ int64_t Device::getSpaceAvailable()
 
     return s;
 }
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+void Device::offloadAll()
+{
+    qDebug() << "offloadAll()";
+}
+
+void Device::deleteAll()
+{
+    qDebug() << "deleteAll()";
+}
+
 /* ************************************************************************** */

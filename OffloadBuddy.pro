@@ -33,6 +33,7 @@ SOURCES  += src/main.cpp \
             src/DeviceManager.cpp \
             src/Device.cpp \
             src/Shot.cpp \
+            src/ShotModel.cpp \
             src/GoProFileModel.cpp
 
 HEADERS  += src/SettingsManager.h \
@@ -41,6 +42,7 @@ HEADERS  += src/SettingsManager.h \
             src/DeviceManager.h \
             src/Device.h \
             src/Shot.h \
+            src/ShotModel.h \
             src/GoProFileModel.h
 
 RESOURCES += qml.qrc \
