@@ -19,6 +19,8 @@
    sodipodi:docname="H4.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    style="display:inline">
+  <title
+     id="title909">HERO4</title>
   <defs
      id="defs4">
     <linearGradient
@@ -598,9 +600,9 @@
      borderopacity="1"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="64"
-     inkscape:cx="-0.5314742"
-     inkscape:cy="101.70254"
+     inkscape:zoom="8"
+     inkscape:cx="44.63845"
+     inkscape:cy="42.803"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -623,31 +625,6 @@
      inkscape:snap-smooth-nodes="true"
      inkscape:snap-midpoints="true"
      inkscape:snap-global="true">
-    <sodipodi:guide
-       orientation="1,0"
-       position="0,112"
-       id="guide2383"
-       inkscape:locked="false" />
-    <sodipodi:guide
-       orientation="0,1"
-       position="26.278146,128"
-       id="guide2385"
-       inkscape:locked="false" />
-    <sodipodi:guide
-       orientation="1,0"
-       position="128,54.082119"
-       id="guide2387"
-       inkscape:locked="false" />
-    <sodipodi:guide
-       orientation="0,1"
-       position="78.156291,0"
-       id="guide2389"
-       inkscape:locked="false" />
-    <sodipodi:guide
-       orientation="0,1"
-       position="60.863576,64.084768"
-       id="guide2391"
-       inkscape:locked="false" />
     <inkscape:grid
        type="xygrid"
        id="grid3672"
@@ -664,8 +641,25 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title>HERO4</dc:title>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-sa/4.0/" />
       </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-sa/4.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#ShareAlike" />
+      </cc:License>
     </rdf:RDF>
   </metadata>
   <g
@@ -676,7 +670,7 @@
      transform="translate(0,106)">
     <path
        style="display:inline;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:7.93701458"
-       d="m 8,-86 c -4,0 -7,3 -7,7 v 74 c 0,4 3,7 7,7 h 112 c 4,0 7,-3 7,-6.9995789 V -79 c 0,-4 -3,-7 -7,-7 z"
+       d="m 7.96875,-85.65625 c -4,0 -7,3 -7,7 v 74 c 0,4 3,7 7,7 h 112 c 4,0 7,-3 7,-6.9995789 V -78.65625 c 0,-4 -3,-7 -7,-7 z"
        id="rect2915"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="csssssscc" />
@@ -694,5 +688,11 @@
        x="8"
        y="-79"
        ry="3.6473224" />
+    <circle
+       style="opacity:1;fill:#a8a8a8;fill-opacity:1;stroke:none;stroke-width:10;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path903"
+       cx="28"
+       cy="-22"
+       r="12" />
   </g>
 </svg>

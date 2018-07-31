@@ -19,6 +19,8 @@
    sodipodi:docname="fusion.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    style="display:inline">
+  <title
+     id="title904">fusion</title>
   <defs
      id="defs4">
     <linearGradient
@@ -599,7 +601,7 @@
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
      inkscape:zoom="8.0044495"
-     inkscape:cx="45.820816"
+     inkscape:cx="16.712006"
      inkscape:cy="91.68654"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -660,8 +662,25 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title>fusion</dc:title>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-sa/4.0/" />
       </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-sa/4.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#ShareAlike" />
+      </cc:License>
     </rdf:RDF>
   </metadata>
   <g

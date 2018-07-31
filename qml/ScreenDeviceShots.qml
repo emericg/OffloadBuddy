@@ -17,16 +17,21 @@ Rectangle {
         deviceSpaceText.text = StringUtils.bytesToString_short(myDevice.spaceUsed) + " used of " + StringUtils.bytesToString_short(myDevice.spaceTotal)
         deviceSpaceBar.value = myDevice.spaceUsedPercent
 
-        if (myDevice.model.includes("HERO3") || myDevice.model.includes("HERO4")) {
-            deviceImage.source = "qrc:/cameras/H4.svg"
-        } else if (myDevice.model.includes("Session")) {
-            deviceImage.source = "qrc:/cameras/session.svg"
-        } else if (myDevice.model.includes("FUSION")) {
-            deviceImage.source = "qrc:/cameras/fusion.svg"
+        if (myDevice.model.includes("HERO6")) {
+            deviceImage.source = "qrc:/cameras/H6.svg"
         } else if (myDevice.model.includes("HERO5")) {
             deviceImage.source = "qrc:/cameras/H5.svg"
-        } else if (myDevice.model.includes("HERO6")) {
-            deviceImage.source = "qrc:/cameras/H6.svg"
+        } else if (myDevice.model.includes("Session")) {
+            deviceImage.source = "qrc:/cameras/session.svg"
+        } else if (myDevice.model.includes("HERO4")) {
+            deviceImage.source = "qrc:/cameras/H4.svg"
+        } else if (myDevice.model.includes("HERO3") ||
+                   myDevice.model.includes("Hero3")) {
+            deviceImage.source = "qrc:/cameras/H3.svg"
+        } else if (myDevice.model.includes("FUSION")) {
+            deviceImage.source = "qrc:/cameras/fusion.svg"
+        } else if (myDevice.model.includes("HD2")) {
+            deviceImage.source = "qrc:/cameras/H2.svg"
         } else {
             deviceImage.source = "qrc:/cameras/generic.svg"
         }

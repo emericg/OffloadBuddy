@@ -15,15 +15,20 @@
     <qresource prefix="/icons">
         <file alias="disk.svg">resources/icons/disk.svg</file>
         <file alias="card.svg">resources/icons/card.svg</file>
+        <file alias="phone.svg">resources/icons/card.svg</file>
         <file alias="usb.svg">resources/icons/usb.svg</file>
     </qresource>
     <qresource prefix="/cameras">
-        <file alias="generic.svg">resources/cameras/generic.svg</file>
+        <file alias="generic_actioncam.svg">resources/cameras/generic_actioncam.svg</file>
+        <file alias="generic_camera.svg">resources/cameras/generic_camera.svg</file>
+        <file alias="generic_smartphone.svg">resources/cameras/generic_smartphone.svg</file>
+        <file alias="H6.svg">resources/cameras/H6.svg</file>
+        <file alias="H5.svg">resources/cameras/H5.svg</file>
         <file alias="H4.svg">resources/cameras/H4.svg</file>
+        <file alias="H3.svg">resources/cameras/H3.svg</file>
+        <file alias="H2.svg">resources/cameras/H2.svg</file>
         <file alias="session.svg">resources/cameras/session.svg</file>
         <file alias="fusion.svg">resources/cameras/fusion.svg</file>
-        <file alias="H5.svg">resources/cameras/H5.svg</file>
-        <file alias="H6.svg">resources/cameras/H6.svg</file>
     </qresource>
     <qresource prefix="/appicons">
         <file alias="offloadbuddy.svg">resources/app/offloadbuddy.svg</file>

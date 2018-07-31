@@ -16,11 +16,9 @@
    sodipodi:version="0.32"
    inkscape:version="0.92.2 2405546, 2018-03-11"
    version="1.0"
-   sodipodi:docname="H6.svg"
+   sodipodi:docname="generic_actioncam.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    style="display:inline">
-  <title
-     id="title902">HERO6</title>
   <defs
      id="defs4">
     <linearGradient
@@ -600,29 +598,50 @@
      borderopacity="1"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="8.0044495"
-     inkscape:cx="46.197116"
-     inkscape:cy="92.516621"
+     inkscape:zoom="5.6600005"
+     inkscape:cx="42.329372"
+     inkscape:cy="30.631585"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:showpageshadow="false"
-     showguides="true"
+     showguides="false"
      inkscape:guide-bbox="true"
      inkscape:window-width="1920"
-     inkscape:window-height="1056"
-     inkscape:window-x="0"
+     inkscape:window-height="1016"
+     inkscape:window-x="1920"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:pagecheckerboard="true"
      borderlayer="true"
-     inkscape:snap-bbox="false"
+     inkscape:snap-bbox="true"
      inkscape:snap-nodes="false"
-     inkscape:bbox-nodes="true"
-     inkscape:snap-global="true"
-     inkscape:snap-object-midpoints="true"
-     inkscape:snap-center="true"
-     inkscape:snap-grids="false">
+     inkscape:bbox-nodes="true">
+    <sodipodi:guide
+       orientation="1,0"
+       position="0,112"
+       id="guide2383"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="26.278146,128"
+       id="guide2385"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="128,54.082119"
+       id="guide2387"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="78.156291,0"
+       id="guide2389"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="60.863576,64.084768"
+       id="guide2391"
+       inkscape:locked="false" />
     <inkscape:grid
        type="xygrid"
        id="grid3672"
@@ -639,7 +658,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title>HERO6</dc:title>
+        <dc:title></dc:title>
         <cc:license
            rdf:resource="http://creativecommons.org/licenses/by-sa/4.0/" />
       </cc:Work>
@@ -667,41 +686,10 @@
      style="display:inline"
      transform="translate(0,106)">
     <path
-       style="display:inline;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:7.69274044"
-       d="m 9.75,-83.994938 c -4.2934998,0 -7.75,2.92116 -7.75,6.681415 V -6.6814163 C 2,-2.9211601 5.4565002,0 9.75,0 H 118.25001 C 122.5435,0 126,-2.9211601 126,-6.6814163 V -77.313523 c 0,-3.760255 -3.4565,-6.681415 -7.74999,-6.681415 z"
+       style="display:inline;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:1"
+       d="m 17.500001,-90 v 7.750001 H 9.75 c -4.2935,0 -7.75,2.964808 -7.75,6.78125 v 71.6874989 c 0,3.8164416 3.4565,6.7812512 7.75,6.7812512 h 108.49999 c 4.2935,0 7.75,-2.9648096 7.75,-6.7812512 V -75.468749 c 0,-3.816442 -3.4565,-6.78125 -7.75,-6.78125 H 40.750001 V -90 Z m 0,15.500001 h 23.25 V -66.75 h -23.25 z M 87.249992,-66.75 c 17.120828,0 30.999998,13.879173 30.999998,31 0,17.120829 -13.87917,31 -30.999998,31 -17.120827,0 -30.999997,-13.879171 -30.999997,-31 0,-17.120827 13.87917,-31 30.999997,-31 z m 0,15.500001 c -8.560409,0 -15.499999,6.93959 -15.499999,15.499999 0,8.56041 6.93959,15.500001 15.499999,15.500001 8.560411,0 15.499998,-6.939591 15.499998,-15.500001 0,-8.560409 -6.939587,-15.499999 -15.499998,-15.499999 z"
        id="rect2915"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="csssssscc" />
-    <path
-       style="display:inline;fill:#898989;fill-opacity:1;stroke:none;stroke-width:11.82635784"
-       d="m 67.13466,-80.996578 c -2.864013,0 -5.169697,1.983848 -5.169697,4.537554 v 41.956481 c 0,2.553705 2.305684,4.537557 5.169697,4.537557 h 50.69565 c 2.864,0 5.16969,-1.983852 5.16969,-4.537557 v -41.956481 c 0,-2.553706 -2.30569,-4.537554 -5.16969,-4.537554 z"
-       id="rect2915-3"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="csssssscc" />
-    <g
-       id="g906"
-       transform="translate(-1.076364,0.80089906)">
-      <circle
-         r="20.231438"
-         cy="-56.281681"
-         cx="93.558846"
-         id="path910"
-         style="display:inline;opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:8.61046028;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-      <circle
-         r="10.115719"
-         cy="-56.281681"
-         cx="93.558846"
-         id="path912"
-         style="display:inline;opacity:1;fill:#7f7f7f;fill-opacity:1;stroke:none;stroke-width:2.03030753;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-    </g>
-    <rect
-       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.98645669;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="rect4626"
-       width="32"
-       height="36"
-       x="16"
-       y="-66"
-       ry="3.64732"
-       rx="3.64732" />
+       sodipodi:nodetypes="ccssssssssccccccccssssssssss" />
   </g>
 </svg>

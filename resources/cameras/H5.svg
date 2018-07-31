@@ -16,9 +16,11 @@
    sodipodi:version="0.32"
    inkscape:version="0.92.2 2405546, 2018-03-11"
    version="1.0"
-   sodipodi:docname="H6.svg"
+   sodipodi:docname="H5.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    style="display:inline">
+  <title
+     id="title902">HERO5</title>
   <defs
      id="defs4">
     <linearGradient
@@ -598,9 +600,9 @@
      borderopacity="1"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="8.0044495"
-     inkscape:cx="75.305926"
-     inkscape:cy="92.516621"
+     inkscape:zoom="11.320001"
+     inkscape:cx="30.890978"
+     inkscape:cy="99.725904"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -621,11 +623,6 @@
      inkscape:snap-object-midpoints="true"
      inkscape:snap-center="true"
      inkscape:snap-grids="false">
-    <sodipodi:guide
-       orientation="0,1"
-       position="134,78"
-       id="guide2391"
-       inkscape:locked="false" />
     <inkscape:grid
        type="xygrid"
        id="grid3672"
@@ -642,8 +639,25 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title>HERO5</dc:title>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-sa/4.0/" />
       </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-sa/4.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#ShareAlike" />
+      </cc:License>
     </rdf:RDF>
   </metadata>
   <g

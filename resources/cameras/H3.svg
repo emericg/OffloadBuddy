@@ -16,9 +16,11 @@
    sodipodi:version="0.32"
    inkscape:version="0.92.2 2405546, 2018-03-11"
    version="1.0"
-   sodipodi:docname="generic.svg"
+   sodipodi:docname="H3.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    style="display:inline">
+  <title
+     id="title909">HERO3</title>
   <defs
      id="defs4">
     <linearGradient
@@ -598,14 +600,14 @@
      borderopacity="1"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.6600005"
-     inkscape:cx="12.647396"
-     inkscape:cy="54.129816"
+     inkscape:zoom="5.6568543"
+     inkscape:cx="105.60278"
+     inkscape:cy="56.550783"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:showpageshadow="false"
-     showguides="false"
+     showguides="true"
      inkscape:guide-bbox="true"
      inkscape:window-width="1920"
      inkscape:window-height="1056"
@@ -615,33 +617,14 @@
      inkscape:pagecheckerboard="true"
      borderlayer="true"
      inkscape:snap-bbox="true"
-     inkscape:snap-nodes="false"
-     inkscape:bbox-nodes="true">
-    <sodipodi:guide
-       orientation="1,0"
-       position="0,112"
-       id="guide2383"
-       inkscape:locked="false" />
-    <sodipodi:guide
-       orientation="0,1"
-       position="26.278146,128"
-       id="guide2385"
-       inkscape:locked="false" />
-    <sodipodi:guide
-       orientation="1,0"
-       position="128,54.082119"
-       id="guide2387"
-       inkscape:locked="false" />
-    <sodipodi:guide
-       orientation="0,1"
-       position="78.156291,0"
-       id="guide2389"
-       inkscape:locked="false" />
-    <sodipodi:guide
-       orientation="0,1"
-       position="60.863576,64.084768"
-       id="guide2391"
-       inkscape:locked="false" />
+     inkscape:snap-nodes="true"
+     inkscape:bbox-nodes="true"
+     inkscape:snap-bbox-edge-midpoints="false"
+     inkscape:snap-intersection-paths="true"
+     inkscape:object-paths="true"
+     inkscape:snap-smooth-nodes="true"
+     inkscape:snap-midpoints="true"
+     inkscape:snap-global="true">
     <inkscape:grid
        type="xygrid"
        id="grid3672"
@@ -658,8 +641,25 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title>HERO3</dc:title>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-sa/4.0/" />
       </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-sa/4.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#ShareAlike" />
+      </cc:License>
     </rdf:RDF>
   </metadata>
   <g
@@ -669,10 +669,42 @@
      style="display:inline"
      transform="translate(0,106)">
     <path
-       style="display:inline;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:1"
-       d="m 17.500001,-90 v 7.750001 H 9.75 c -4.2935,0 -7.75,2.964808 -7.75,6.78125 v 71.6874989 c 0,3.8164416 3.4565,6.7812512 7.75,6.7812512 h 108.49999 c 4.2935,0 7.75,-2.9648096 7.75,-6.7812512 V -75.468749 c 0,-3.816442 -3.4565,-6.78125 -7.75,-6.78125 H 40.750001 V -90 Z m 0,15.500001 h 23.25 V -66.75 h -23.25 z M 87.249992,-66.75 c 17.120828,0 30.999998,13.879173 30.999998,31 0,17.120829 -13.87917,31 -30.999998,31 -17.120827,0 -30.999997,-13.879171 -30.999997,-31 0,-17.120827 13.87917,-31 30.999997,-31 z m 0,15.500001 c -8.560409,0 -15.499999,6.93959 -15.499999,15.499999 0,8.56041 6.93959,15.500001 15.499999,15.500001 8.560411,0 15.499998,-6.939591 15.499998,-15.500001 0,-8.560409 -6.939587,-15.499999 -15.499998,-15.499999 z"
+       style="display:inline;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:7.93701458"
+       d="m 7.96875,-85.65625 c -4,0 -7,3 -7,7 v 74 c 0,4 3,7 7,7 h 112 c 4,0 7,-3 7,-6.9995789 V -78.65625 c 0,-4 -3,-7 -7,-7 z"
        id="rect2915"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccssssssssccccccccssssssssss" />
+       sodipodi:nodetypes="csssssscc" />
+    <path
+       style="display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:6.32368326"
+       d="m 98.648282,-81.696546 c 6.930378,0 13.204658,2.853504 17.746338,7.466998 4.54168,4.613494 7.35077,10.986976 7.35077,18.026929 0,7.039953 -2.80909,13.413435 -7.35077,18.026927 -4.54168,4.613493 -10.81596,7.467001 -17.746338,7.467001 -6.930385,0 -13.204643,-2.853508 -17.746312,-7.467001 -4.541687,-4.613492 -7.35078,-10.986974 -7.35078,-18.026927 0,-7.039953 2.809093,-13.413435 7.35078,-18.026929 4.541669,-4.613494 10.815927,-7.466998 17.746312,-7.466998 z m 0,12.746963 c -3.465174,0 -6.60232,1.426755 -8.873169,3.733502 -2.270822,2.306746 -3.675378,5.493487 -3.675378,9.013462 0,3.519976 1.404556,6.706716 3.675378,9.013463 2.270849,2.306747 5.407995,3.733501 8.873169,3.733501 3.465188,0 6.602318,-1.426754 8.873178,-3.733502 2.27083,-2.306746 3.67538,-5.493486 3.67538,-9.013462 0,-3.519975 -1.40455,-6.706716 -3.67538,-9.013462 -2.27086,-2.306747 -5.40799,-3.733502 -8.873178,-3.733502 z"
+       id="rect2915-3"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ssssssssssssssssss" />
+    <rect
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.736;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect918"
+       width="40"
+       height="37"
+       x="8"
+       y="-79"
+       ry="3.6473224" />
+    <circle
+       style="opacity:1;fill:#a8a8a8;fill-opacity:1;stroke:none;stroke-width:10;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path903"
+       cx="28"
+       cy="-22"
+       r="12" />
+    <circle
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:10;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path905"
+       cx="50.5"
+       cy="-15.5"
+       r="5.5" />
+    <circle
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:10;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path907"
+       cx="50.5"
+       cy="-28.5"
+       r="5.5" />
   </g>
 </svg>

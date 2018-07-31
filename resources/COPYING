@@ -1,0 +1,41 @@
+# resources/app/
+- offloadbuddy.*            // Emeric Grange        // CC BY-SA 4.0
+
+# resources/badges:
+*.*                         // Emeric Grange        // CC BY-SA 4.0
+
+# resources/cameras/
+- generic_smartphone.svg    // Lüv icon theme       // CC BY-SA 4.0
+- generic_camera.svg        // Yosa Max icon theme  // GPL v3
+- generic_actioncam.svg     // Faenza icon theme    // GPL v3
+- H6.svg                    // Emeric Grange        // CC BY-SA 4.0
+- H5.svg                    // Emeric Grange        // CC BY-SA 4.0
+- H4.svg                    // Emeric Grange        // CC BY-SA 4.0
+- H3.svg                    // Emeric Grange        // CC BY-SA 4.0
+- H2.svg                    // Emeric Grange        // CC BY-SA 4.0
+- session.svg               // Emeric Grange        // CC BY-SA 4.0
+- fusion.svg                // Emeric Grange        // CC BY-SA 4.0
+
+# resources/icons/
+- card.svg                  // Super Flat Remix     // CC BY-NC-SA 4.0
+- disk.svg                  // Lüv icon theme       // CC BY-SA 4.0
+- phone.svg                 // Lüv icon theme       // CC BY-SA 4.0
+- usb.svg                   // Lüv icon theme       // CC BY-SA 4.0
+
+# resources/menus:
+- about.svg                 // Emeric Grange        // CC BY-SA 4.0
+- arrow.svg                 // Emeric Grange        // CC BY-SA 4.0
+- device.svg                // Yosa Max icon theme  // GPL v3
+- exit.svg                  // Paper icon theme     // CC BY-SA 4.0
+- media.svg                 // Paper icon theme     // CC BY-SA 4.0
+- settings.svg              // Paper icon theme     // CC BY-SA 4.0
+
+# resources/minicons:
+- bookmark.svg              // Emeric Grange        // CC BY-SA 4.0
+- picture.svg               // Boston icon theme    // CC BY-NC-SA 4.0
+- picture_multi.svg         // Boston icon theme    // CC BY-NC-SA 4.0
+- video.svg                 // Boston icon theme    // CC BY-NC-SA 4.0
+
+# resources/other:
+- placeholder.png           // Boston icon theme    // CC BY-NC-SA 4.0
+

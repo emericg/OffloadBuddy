@@ -41,7 +41,7 @@ Emeric Grange <emeric.grange@gmail.com>
 ## Special thanks
 
 * Mickael Heudre <mickheudre@gmail.com> for his invaluable QML expertise!
-* Many icons are from [Faience](https://tiheum.deviantart.com/art/Faience-icon-theme-255099649) and [Boston](https://diazchris.deviantart.com/art/Boston-Icons-558741523) icons themes.
+* Graphical resources: see resources/COPYING
 
 
 ## Get involved!
