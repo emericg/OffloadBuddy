@@ -12,7 +12,26 @@ Rectangle {
     color: "#eef0f1"
 
     property Shot shot: pointer
+    property var shotState: shot.state
     property var itemPassedWidth
+
+    onShotStateChanged: {
+        //console.log("onShotStateChanged")
+
+        icon_state.visible = false
+        rectangleOverlay.visible = false
+
+        if (shotState === 1) {
+            icon_state.visible = true
+            icon_state.source = "qrc:/resources/minicons/queued.svg"
+        } else if (shotState === 2) {
+            icon_state.visible = true
+            icon_state.source = "qrc:/resources/minicons/working.svg"
+        } else if (shotState === 3) {
+            rectangleOverlay.visible = true
+            icon_state.source = "qrc:/icons/done.svg"
+        }
+    }
 
     Component.onCompleted: {
 
@@ -22,6 +41,8 @@ Rectangle {
 
         text_top.text = name
         text_top.visible = false
+
+        rectangleOverlay.visible = false;
 
         if (type === Shared.SHOT_VIDEO ||
             type === Shared.SHOT_VIDEO_LOOPING ||
@@ -61,6 +82,17 @@ Rectangle {
         source: "qrc:/resources/other/placeholder.png"
     }
 
+    Image {
+        id: icon_state
+        width: 24
+        height: 24
+        anchors.top: parent.top
+        anchors.topMargin: 8
+        anchors.right: parent.right
+        anchors.rightMargin: 8
+        fillMode: Image.PreserveAspectFit
+    }
+
     MouseArea {
         id: mouseArea
         anchors.fill: parent
@@ -94,7 +126,25 @@ Rectangle {
     }
 
     Rectangle {
-        id: legend_bottom
+        id: rectangleOverlay
+        color: "#80ffffff"
+        anchors.fill: parent
+
+        Image {
+            id: image_overlay
+            x: 96
+            y: 96
+            width: 64
+            height: 64
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            fillMode: Image.PreserveAspectCrop
+            source: "qrc:/icons/done.svg"
+        }
+    }
+
+    Rectangle {
+        id: legendBottom
         height: 38
         color: "#00000000" // "#80e5e8e6"
         anchors.bottom: parent.bottom

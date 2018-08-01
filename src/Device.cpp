@@ -166,7 +166,7 @@ bool Device::scanFilesystem(const QString &path)
         }
     }
 
-    qDebug() << "  -" << m_shotModel->getShotList()->size() << "shots found";
+    qDebug() << "  -" << m_shotModel->getShotCount() << "shots found";
     qDebug() << "> SCANNING FINISHED";
 
     emit scanningFinished();
@@ -188,12 +188,10 @@ bool Device::scanMtpDevices()
 
     for (auto st: m_mtpStorages)
     {
-        //qDebug() << "DCIM:" << dcim_path;
-
         mtpFileRec(st->m_device, st->m_storage->id, LIBMTP_FILES_AND_FOLDERS_ROOT);
     }
 
-    qDebug() << "  -" << m_shotModel->getShotList()->size() << "shots found";
+    qDebug() << "  -" << m_shotModel->getShotCount() << "shots found";
     qDebug() << "> SCANNING FINISHED";
 
     emit scanningFinished();
@@ -412,14 +410,13 @@ void Device::mtpFileRec(LIBMTP_mtpdevice_t *device, uint32_t storageid, uint32_t
             }
             else //if (file->filetype == LIBMTP_FILETYPE_ALBUM)
             {
-                //qDebug() << "-" << file->filename << "(" << file->filesize;
-                QString file_name = mtpFile->filename;
-                QString file_ext = file_name.right(3).toLower();
+                //qDebug() << "-" << mtpFile->filename << "(" << mtpFile->filesize << "bytes)";
+                QString file_name = mtpFile->filename;                
 
                 ofb_file *f = new ofb_file;
                 {
-                    f->name = mtpFile->filename;
-                    f->extension = file_name.right(3).toLower();
+                    f->extension = file_name.mid(file_name.lastIndexOf(".") + 1, -1).toLower();
+                    f->name = file_name.mid(0, file_name.lastIndexOf("."));
                     f->size = mtpFile->filesize;
                     f->creation_date = f->modification_date = QDateTime::fromTime_t(mtpFile->modificationdate);
 
@@ -433,7 +430,7 @@ void Device::mtpFileRec(LIBMTP_mtpdevice_t *device, uint32_t storageid, uint32_t
                 int group_number = 0;
                 int camera_id = 0; // for multi camera system
 
-                getGoProShotInfos(file_name, file_ext,
+                getGoProShotInfos(f->name, f->extension,
                                   file_type, file_number, group_number, camera_id);
 
                 int shot_id = (file_type == Shared::SHOT_VIDEO) ? file_number : group_number;
@@ -503,6 +500,19 @@ QString Device::getPath(int index) const
 
     return QString();
 }
+
+void Device::getMtpIds(int &devBus, int &devNum) const
+{
+/*
+    if (m_mtpStorages.size() > 0)
+    {
+        StorageMtp *s = m_mtpStorages.at(0);
+        //
+    }
+*/
+}
+
+/* ************************************************************************** */
 
 void Device::refreshDevice()
 {
@@ -608,11 +618,25 @@ int64_t Device::getSpaceAvailable()
 void Device::offloadAll()
 {
     qDebug() << "offloadAll()";
+
+    JobManager *jm = JobManager::getInstance();
+
+    const QList<Shot *> *s = m_shotModel->getShotList();
+
+    for (auto j: *s)
+        jm->addJob(JOB_COPY, this, j);
 }
 
 void Device::deleteAll()
 {
     qDebug() << "deleteAll()";
+
+    JobManager *jm = JobManager::getInstance();
+
+    const QList<Shot *> *s = m_shotModel->getShotList();
+
+    for (auto j: *s)
+        jm->addJob(JOB_DELETE, this, j);
 }
 
 /* ************************************************************************** */

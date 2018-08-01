@@ -17,12 +17,14 @@ Rectangle {
     property Shot shot
 
     onShotChanged: {
-        if (shot){
-            //console.log("onShotChanged()" + shot);
+        if (shot) {
             textShotName.text = shot.name
             duration.text = shot.duration
             date.text = shot.date
             datasize.text = StringUtils.bytesToString_short(shot.size)
+
+            codecAudio.visible = false
+            codecVideo.visible = false
 
             if (shot.preview) {
                 image.source = "file:///" + shot.preview
@@ -40,7 +42,7 @@ Rectangle {
         Text {
             id: textShotName
             y: 20
-            width: 223
+            width: 582
             height: 40
             color: ThemeEngine.colorHeaderTitle
             text: qsTr("SHOT")
@@ -80,6 +82,62 @@ Rectangle {
                 font.pixelSize: 30
             }
         }
+
+        Image {
+            id: codecVideo
+            x: 733
+            y: 20
+            width: 64
+            height: 24
+            anchors.right: codecAudio.left
+            anchors.rightMargin: 16
+            anchors.verticalCenterOffset: 0
+            anchors.verticalCenter: parent.verticalCenter
+            source: "qrc:/badges/H264.svg"
+        }
+
+        Image {
+            id: codecAudio
+            x: 1
+            y: 22
+            width: 64
+            height: 24
+            anchors.right: buttonOverview.left
+            anchors.rightMargin: 32
+            anchors.verticalCenterOffset: 0
+            anchors.verticalCenter: parent.verticalCenter
+            source: "qrc:/badges/AAC.svg"
+        }
+
+        Button {
+            id: buttonMap
+            x: 1164
+            y: 12
+            text: qsTr("Map")
+            anchors.right: parent.right
+            anchors.rightMargin: 16
+            anchors.verticalCenter: buttonOverview.verticalCenter
+        }
+
+        Button {
+            id: buttonMetadata
+            x: 1164
+            y: 340
+            text: qsTr("Metadata")
+            anchors.right: buttonMap.left
+            anchors.rightMargin: 16
+            anchors.verticalCenter: parent.verticalCenter
+        }
+
+        Button {
+            id: buttonOverview
+            x: 935
+            y: 12
+            text: qsTr("Overview")
+            anchors.right: buttonMetadata.left
+            anchors.rightMargin: 16
+        }
+
         anchors.leftMargin: 0
         anchors.left: parent.left
         anchors.topMargin: 0
@@ -88,43 +146,15 @@ Rectangle {
 
     Image {
         id: image
-        width: 400
-        height: 400
-        anchors.top: rectangleHeader.bottom
-        anchors.topMargin: 64
-        anchors.left: parent.left
-        anchors.leftMargin: 16
-        fillMode: Image.PreserveAspectCrop
-        source: "qrc:/resources/other/placeholder.png"
-    }
-
-    Button {
-        id: buttonOverview
-        text: qsTr("Overview")
+        width: 512
+        height: 480
         anchors.top: rectangleHeader.bottom
         anchors.topMargin: 16
         anchors.left: parent.left
         anchors.leftMargin: 16
+        fillMode: Image.PreserveAspectFit
+        source: "qrc:/resources/other/placeholder.png"
     }
-
-    Button {
-        id: buttonMetadata
-        y: 66
-        text: qsTr("Metadata")
-        anchors.verticalCenter: buttonOverview.verticalCenter
-        anchors.left: buttonOverview.right
-        anchors.leftMargin: 16
-    }
-
-    Button {
-        id: buttonMap
-        y: 64
-        text: qsTr("Map")
-        anchors.left: buttonMetadata.right
-        anchors.leftMargin: 16
-        anchors.verticalCenter: buttonOverview.verticalCenter
-    }
-
 
     Rectangle {
         id: rectangleMetadata
@@ -183,7 +213,7 @@ Rectangle {
 
         Text {
             id: text2
-            x: 33
+            x: 123
             y: 41
             width: 128
             height: 32
@@ -194,7 +224,7 @@ Rectangle {
 
         Text {
             id: text3
-            x: 33
+            x: 123
             y: 79
             width: 128
             height: 32
@@ -205,8 +235,8 @@ Rectangle {
 
         Text {
             id: text4
-            x: 33
-            y: 363
+            x: 128
+            y: 341
             width: 128
             height: 32
             text: qsTr("Resolution:")
@@ -216,7 +246,7 @@ Rectangle {
 
         Text {
             id: text5
-            x: 382
+            x: 472
             y: 41
             width: 128
             height: 32
@@ -235,8 +265,8 @@ Rectangle {
 
         Text {
             id: text6
-            x: 33
-            y: 401
+            x: 128
+            y: 379
             width: 128
             height: 32
             text: qsTr("Framerate:")
@@ -246,7 +276,7 @@ Rectangle {
 
         Text {
             id: text7
-            x: 382
+            x: 472
             y: 117
             width: 128
             height: 32
@@ -257,8 +287,8 @@ Rectangle {
 
         Text {
             id: text8
-            x: 33
-            y: 439
+            x: 128
+            y: 417
             width: 128
             height: 32
             text: qsTr("Bitrate:")
@@ -268,7 +298,7 @@ Rectangle {
 
         Text {
             id: text9
-            x: 33
+            x: 123
             y: 155
             width: 128
             height: 32
@@ -279,8 +309,8 @@ Rectangle {
 
         Text {
             id: text10
-            x: 33
-            y: 325
+            x: 128
+            y: 303
             width: 128
             height: 32
             text: qsTr("Codec:")
@@ -290,7 +320,7 @@ Rectangle {
 
         Text {
             id: text11
-            x: 33
+            x: 123
             y: 193
             width: 128
             height: 32
@@ -301,7 +331,7 @@ Rectangle {
 
         Text {
             id: text12
-            x: 33
+            x: 123
             y: 117
             width: 128
             height: 32
@@ -312,8 +342,8 @@ Rectangle {
 
         Text {
             id: text13
-            x: 382
-            y: 79
+            x: 123
+            y: 265
             width: 128
             height: 32
             text: qsTr("Chapters:")
@@ -323,7 +353,7 @@ Rectangle {
 
         Text {
             id: duration
-            x: 167
+            x: 257
             y: 50
             text: qsTr("Text")
             font.pixelSize: 12
@@ -331,10 +361,28 @@ Rectangle {
 
         Text {
             id: date
-            x: 168
+            x: 258
             y: 88
             text: qsTr("Text")
             font.pixelSize: 12
+        }
+
+        Text {
+            id: text14
+            x: 472
+            y: 80
+            width: 128
+            height: 32
+            text: qsTr("Data size:")
+            verticalAlignment: Text.AlignVCenter
+            Text {
+                id: datasize1
+                x: 102
+                y: 9
+                text: qsTr("Text")
+                font.pixelSize: 12
+            }
+            font.pixelSize: 16
         }
     }
 }

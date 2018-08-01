@@ -17,10 +17,12 @@
 - fusion.svg                // Emeric Grange        // CC BY-SA 4.0
 
 # resources/icons/
-- card.svg                  // Super Flat Remix     // CC BY-NC-SA 4.0
+- card.svg                  // Lüv icon theme       // CC BY-SA 4.0
 - disk.svg                  // Lüv icon theme       // CC BY-SA 4.0
 - phone.svg                 // Lüv icon theme       // CC BY-SA 4.0
 - usb.svg                   // Lüv icon theme       // CC BY-SA 4.0
+- done.svg                  // Lüv icon theme       // CC BY-SA 4.0
+- play.svg                  // Lüv icon theme       // CC BY-SA 4.0
 
 # resources/menus:
 - about.svg                 // Emeric Grange        // CC BY-SA 4.0
@@ -32,10 +34,10 @@
 
 # resources/minicons:
 - bookmark.svg              // Emeric Grange        // CC BY-SA 4.0
-- picture.svg               // Boston icon theme    // CC BY-NC-SA 4.0
-- picture_multi.svg         // Boston icon theme    // CC BY-NC-SA 4.0
-- video.svg                 // Boston icon theme    // CC BY-NC-SA 4.0
+- picture.svg               // Lüv icon theme       // CC BY-SA 4.0
+- picture_multi.svg         // Lüv icon theme       // CC BY-SA 4.0
+- video.svg                 // Lüv icon theme       // CC BY-SA 4.0
 
 # resources/other:
-- placeholder.png           // Boston icon theme    // CC BY-NC-SA 4.0
+- placeholder.png           // Lüv icon theme       // CC BY-SA 4.0
 

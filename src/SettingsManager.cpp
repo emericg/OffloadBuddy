@@ -20,6 +20,7 @@
  */
 
 #include "SettingsManager.h"
+#include "Shot.h"
 
 #include <QStandardPaths>
 #include <QStorageInfo>
@@ -316,6 +317,28 @@ void MediaDirectory::setContent(int content)
 bool MediaDirectory::isAvailable()
 {
     return m_available;
+}
+
+bool MediaDirectory::isAvailableFor(unsigned shotType, int64_t shotSize)
+{
+    bool available = false;
+
+    refreshMediaDirectory();
+
+    if (m_available)
+    {
+        if (shotSize < getSpaceAvailable())
+        {
+            if ((shotType == Shared::SHOT_UNKNOWN && m_content_type == CONTENT_ALL) ||
+                (shotType < Shared::SHOT_PICTURE && (m_content_type == CONTENT_VIDEOS || m_content_type == CONTENT_ALL)) ||
+                (shotType >= Shared::SHOT_PICTURE && (m_content_type == CONTENT_PICTURES || m_content_type == CONTENT_ALL)))
+            {
+                available = true;
+            }
+        }
+    }
+
+    return available;
 }
 
 /* ************************************************************************** */

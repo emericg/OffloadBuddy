@@ -10,13 +10,26 @@
         <file>resources/minicons/picture.svg</file>
         <file>resources/minicons/picture_multi.svg</file>
         <file>resources/minicons/video.svg</file>
+        <file>resources/minicons/queued.svg</file>
+        <file>resources/minicons/working.svg</file>
         <file>resources/other/placeholder.png</file>
+    </qresource>
+    <qresource prefix="/badges">
+        <file alias="GPR.svg">resources/badges/GPR.svg</file>
+        <file alias="PNG.svg">resources/badges/PNG.svg</file>
+        <file alias="JPEG.svg">resources/badges/JPEG.svg</file>
+        <file alias="AAC.svg">resources/badges/AAC.svg</file>
+        <file alias="MP3.svg">resources/badges/MP3.svg</file>
+        <file alias="H264.svg">resources/badges/H264.svg</file>
+        <file alias="H265.svg">resources/badges/H265.svg</file>
     </qresource>
     <qresource prefix="/icons">
         <file alias="disk.svg">resources/icons/disk.svg</file>
         <file alias="card.svg">resources/icons/card.svg</file>
         <file alias="phone.svg">resources/icons/card.svg</file>
         <file alias="usb.svg">resources/icons/usb.svg</file>
+        <file alias="done.svg">resources/icons/done.svg</file>
+        <file alias="play.svg">resources/icons/play.svg</file>
     </qresource>
     <qresource prefix="/cameras">
         <file alias="generic_actioncam.svg">resources/cameras/generic_actioncam.svg</file>

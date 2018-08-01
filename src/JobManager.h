@@ -35,7 +35,9 @@
 
 typedef enum JobType
 {
-    JOB_METADATAS = 0,
+    JOB_INVALID = 0,
+
+    JOB_METADATAS,
 
     JOB_FORMAT,
     JOB_DELETE,
@@ -59,7 +61,8 @@ class Job: public QObject
 {
     Q_OBJECT
 
-    JobType m_type;
+    JobType m_type = JOB_INVALID;
+    float m_percent = 0.0;
 
 public:
     Job() {}
@@ -110,6 +113,7 @@ class JobManager: public QObject
 
     //bool getAutoDestination(Shot &s, QString &destination)
     MediaDirectory * getAutoDestination(Shot *s);
+    QString getAutoDestinationString(Shot *s);
 
 Q_SIGNALS:
     void jobAdded();

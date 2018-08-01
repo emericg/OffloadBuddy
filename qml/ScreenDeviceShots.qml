@@ -33,7 +33,7 @@ Rectangle {
         } else if (myDevice.model.includes("HD2")) {
             deviceImage.source = "qrc:/cameras/H2.svg"
         } else {
-            deviceImage.source = "qrc:/cameras/generic.svg"
+            deviceImage.source = "qrc:/cameras/generic_actioncam.svg"
         }
 
         rectangleDelete.stopTheBlink();
@@ -78,7 +78,7 @@ Rectangle {
             anchors.rightMargin: 8
             anchors.top: parent.top
             anchors.topMargin: 8
-            source: "qrc:/cameras/generic.svg"
+            source: "qrc:/cameras/generic_actioncam.svg"
         }
 
         Text {
@@ -270,7 +270,7 @@ Rectangle {
             anchors.topMargin: 16
             anchors.left: parent.left
             anchors.leftMargin: 16
-            displayText: "Filter by:"
+            displayText: qsTr("Filter by: No filters")
         }
 
         Slider {

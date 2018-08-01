@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="64"
+   height="24"
+   viewBox="0 0 16.933333 6.3500002"
+   version="1.1"
+   id="svg821"
+   inkscape:version="0.92.2 2405546, 2018-03-11"
+   sodipodi:docname="AAC.svg">
+  <defs
+     id="defs815" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="15.839192"
+     inkscape:cx="26.051247"
+     inkscape:cy="7.5634108"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     units="px"
+     inkscape:pagecheckerboard="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1920"
+     inkscape:window-height="1056"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:snap-object-midpoints="true"
+     inkscape:snap-center="true"
+     inkscape:snap-grids="false">
+    <inkscape:grid
+       type="xygrid"
+       id="grid1366" />
+    <sodipodi:guide
+       position="8.4666665,3.1750001"
+       orientation="0,1"
+       id="guide1374"
+       inkscape:locked="false" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata818">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-290.64998)">
+    <rect
+       style="opacity:1;fill:#adadad;fill-opacity:1;stroke:none;stroke-width:2.64583325;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect1368"
+       width="16.933332"
+       height="6.3499999"
+       x="0"
+       y="290.64999" />
+    <g
+       aria-label="AAC"
+       style="font-style:normal;font-weight:normal;font-size:5.4156146px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#fbfbfb;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       id="text1372-3">
+      <path
+         d="m 5.3648519,292.56232 -0.3675637,1.6157 H 5.7350599 Z M 4.8888702,291.84835 H 5.843478 l 1.0656703,3.94801 H 6.1290671 L 5.8857875,294.82059 H 4.841272 l -0.2379909,0.97577 H 3.8231999 Z"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:1;font-family:monospace;-inkscape-font-specification:'monospace Bold';text-align:center;text-anchor:middle;fill:#fbfbfb;fill-opacity:1;stroke-width:0.26458332"
+         id="path843" />
+      <path
+         d="m 8.6226825,292.56232 -0.3675637,1.6157 h 0.7377718 z m -0.4759817,-0.71397 h 0.9546078 l 1.0656704,3.94801 H 9.3868977 L 9.1436181,294.82059 H 8.0991026 l -0.2379909,0.97577 H 7.0810305 Z"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:1;font-family:monospace;-inkscape-font-specification:'monospace Bold';text-align:center;text-anchor:middle;fill:#fbfbfb;fill-opacity:1;stroke-width:0.26458332"
+         id="path845" />
+      <path
+         d="m 13.110133,295.68265 q -0.185104,0.0952 -0.388719,0.14279 -0.203614,0.0476 -0.428383,0.0476 -0.798592,0 -1.219042,-0.52622 -0.420451,-0.52623 -0.420451,-1.5205 0,-0.99692 0.420451,-1.52314 0.42045,-0.52623 1.219042,-0.52623 0.224769,0 0.431028,0.0476 0.206258,0.0476 0.386074,0.1428 v 0.86734 q -0.20097,-0.1851 -0.391363,-0.26972 -0.187748,-0.0873 -0.388719,-0.0873 -0.428383,0 -0.647864,0.34112 -0.216836,0.33847 -0.216836,1.00749 0,0.66638 0.216836,1.0075 0.219481,0.33847 0.647864,0.33847 0.200971,0 0.388719,-0.0846 0.190393,-0.0873 0.391363,-0.27237 z"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:1;font-family:monospace;-inkscape-font-specification:'monospace Bold';text-align:center;text-anchor:middle;fill:#fbfbfb;fill-opacity:1;stroke-width:0.26458332"
+         id="path847" />
+    </g>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="text"
+     style="display:none">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:5.41561413px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#fbfbfb;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="8.8571215"
+       y="5.0973339"
+       id="text1372"><tspan
+         sodipodi:role="line"
+         x="8.8571215"
+         y="5.0973339"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:1;font-family:monospace;-inkscape-font-specification:'monospace Bold';text-align:center;text-anchor:middle;fill:#fbfbfb;fill-opacity:1;stroke-width:0.26458332"
+         id="tspan1414">AAC</tspan></text>
+  </g>
+</svg>

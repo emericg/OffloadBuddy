@@ -57,19 +57,21 @@ Rectangle {
             width: 256
             anchors.top: parent.top
             anchors.topMargin: 16
-            displayText: "Filter by:"
-            textRole: "text"
             anchors.left: parent.left
             anchors.leftMargin: 16
-
+            displayText: qsTr("Filter by: No filters")
+/*
             model: ListModel {
                 id: cbMediaFilters
+                ListElement { text: qsTr("No filters"); }
                 ListElement { text: qsTr("Shot types"); }
                 ListElement { text: qsTr("Camera models"); }
             }
+*/
 /*
             model: ListModel {
                 id: cbMediaOrders
+                ListElement { text: qsTr("Alphabetical"); }
                 ListElement { text: qsTr("Date"); }
                 ListElement { text: qsTr("Duration"); }
                 ListElement { text: qsTr("GPS location"); }

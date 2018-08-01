@@ -94,6 +94,7 @@ public slots:
     void setContent(int content);
 
     bool isAvailable();
+    bool isAvailableFor(unsigned shotType, int64_t shotSize);
 
     int64_t getSpaceTotal();
     int64_t getSpaceUsed();
@@ -179,6 +180,7 @@ public:
     void setContentHierarchy(unsigned value) { m_contentHierarchy = value; writeSettings(); }
 
     QVariant getDirectories() const { if (m_mediaDirectories.size() > 0) { return QVariant::fromValue(m_mediaDirectories); } return QVariant(); }
+    const QList <QObject *> *getDirectoriesList() const { return &m_mediaDirectories; }
 
 public slots:
     void addDirectory(QString path);

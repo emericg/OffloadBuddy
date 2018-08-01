@@ -230,12 +230,15 @@ public slots:
     QString getFirmware() const { return m_firmware; }
 
     //
-    QString getPath(int index = 0) const;
     int64_t getSpaceTotal();
     int64_t getSpaceUsed();
     double getSpaceUsed_percent();
     int64_t getSpaceAvailable();
     int64_t getSpaceAvailable_withrefresh();
+
+    //
+    QString getPath(int index = 0) const;
+    void getMtpIds(int &devBus, int &devNum) const;
 
     //
     void offloadAll();

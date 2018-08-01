@@ -60,7 +60,8 @@ public:
     ShotModel(const ShotModel &other);
     ~ShotModel();
 
-    const QList<Shot *> * getShotList() { return &m_shots; }
+    const QList<Shot *> * getShotList() const { return &m_shots; }
+    int getShotCount() const { return m_shots.size(); }
 
     void addShot(Shot *shot);
 

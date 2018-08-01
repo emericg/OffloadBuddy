@@ -14,7 +14,7 @@
    id="svg4359"
    version="1.1"
    inkscape:version="0.92.2 2405546, 2018-03-11"
-   sodipodi:docname="picture_multi.svg">
+   sodipodi:docname="queued.svg">
   <defs
      id="defs4361" />
   <sodipodi:namedview
@@ -24,9 +24,9 @@
      borderopacity="1"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="23"
-     inkscape:cx="3.2902124"
-     inkscape:cy="12.801519"
+     inkscape:zoom="32.526912"
+     inkscape:cx="8.7851074"
+     inkscape:cy="12.686897"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:grid-bbox="true"
@@ -49,6 +49,61 @@
        id="grid4105"
        originx="1"
        originy="1" />
+    <sodipodi:guide
+       position="1,23"
+       orientation="22,0"
+       id="guide4111"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="1,1"
+       orientation="0,22"
+       id="guide4113"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="23,1"
+       orientation="-22,0"
+       id="guide4115"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="12,11"
+       orientation="16,0"
+       id="guide4130"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="13,12"
+       orientation="0,16"
+       id="guide4132"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="20,20"
+       orientation="0,-16"
+       id="guide4136"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="4,23"
+       orientation="19.000011,0"
+       id="guide4152"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="4,3.9999886"
+       orientation="0,4"
+       id="guide4154"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="16,4"
+       orientation="0,4.0000019"
+       id="guide4162"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="20.000002,4"
+       orientation="-19,0"
+       id="guide4164"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="20.000002,23"
+       orientation="0,-4.0000019"
+       id="guide4166"
+       inkscape:locked="false" />
   </sodipodi:namedview>
   <metadata
      id="metadata4364">
@@ -85,9 +140,9 @@
      inkscape:groupmode="layer"
      transform="translate(1,-25)">
     <path
-       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.10000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.29943501"
-       d="m -1,25 v 15 h 4.5 v 4.5 H 8 V 49 H 23 V 34 H 18.5 V 29.5 H 14 V 25 Z m 3,3 h 9 v 1.5 H 3.5 V 37 H 2 Z m 4.5,4.5 h 4.5 3 1.5 V 34 H 14 11 8 v 3 3 1.5 H 6.5 V 40 37 34 Z M 11,37 h 3 1.5 3 1.5 v 9 h -9 v -1.5 -3 -1.5 z"
-       id="rect4174"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.09999999;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.29943501"
+       d="M 11,25 A 12.000002,12 0 0 0 -1,37 12.000002,12 0 0 0 11,49 12.000002,12 0 0 0 23,37 12.000002,12 0 0 0 11,25 Z m 0,3 a 9.0000029,9.0000007 0 0 1 9,9 9.0000029,9.0000007 0 0 1 -9,9 9.0000029,9.0000007 0 0 1 -9,-9 9.0000029,9.0000007 0 0 1 9,-9 z m -1.5,1.5 v 9 1.5 H 17 v -3 h -4.5 v -7.5 z"
+       id="path4152"
        inkscape:connector-curvature="0" />
   </g>
 </svg>

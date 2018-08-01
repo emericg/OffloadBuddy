@@ -58,9 +58,7 @@ namespace Shared
         SHOT_STATE_DEFAULT = 0,
         SHOT_STATE_QUEUED,
         SHOT_STATE_WORKING,
-
-        SHOT_STATE_COPYING,
-        SHOT_STATE_COPIED,
+        SHOT_STATE_OFFLOADED,
     };
     Q_ENUM_NS(ShotState)
 }
@@ -80,7 +78,7 @@ struct ofb_file
 
 #ifdef ENABLE_LIBMTP
     LIBMTP_mtpdevice_t *mtpDevice = nullptr;
-    LIBMTP_devicestorage_t *mtpStorage = nullptr;
+    //LIBMTP_devicestorage_t *mtpStorage = nullptr;
     uint32_t mtpObjectId = 0;
 #endif
 };
@@ -153,7 +151,7 @@ public:
 public slots:
     unsigned getType() const { return m_type; }
     unsigned getState() const { return m_state; }
-    void setState(Shared::ShotState state) { m_state = state; }
+    void setState(Shared::ShotState state) { m_state = state; emit shotUpdated(); }
 
     QString getName() const { return m_name; }
     qint64 getSize() const;
