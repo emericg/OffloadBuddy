@@ -155,9 +155,32 @@ bool JobManager::addJob(JobType type, Device *d, Shot *s, MediaDirectory *md)
             destDir += QDir::separator();
         }
 
-        // Put multishot in there own dir
-        if (s->getType() == Shared::SHOT_PICTURE_MULTI)
+        // Put chaptered videos in there own directory?
+        if (s->getType() < Shared::SHOT_PICTURE)
         {
+            if (s->getChapterCount())
+            {
+                destDir += "chaptered_";
+                destDir += QString::number(s->getFileId());
+                destDir += QDir::separator();
+            }
+        }
+
+        // Put multishot in there own directory
+        if (s->getType() == Shared::SHOT_PICTURE_MULTI ||
+            s->getType() == Shared::SHOT_PICTURE_BURST ||
+            s->getType() == Shared::SHOT_PICTURE_TIMELAPSE ||
+            s->getType() == Shared::SHOT_PICTURE_NIGHTLAPSE)
+        {
+            if (s->getType() == Shared::SHOT_PICTURE_BURST)
+                destDir += "burst_";
+            else if (s->getType() == Shared::SHOT_PICTURE_TIMELAPSE)
+                destDir += "timelapse_";
+            else if (s->getType() == Shared::SHOT_PICTURE_NIGHTLAPSE)
+                destDir += "nightlapse_";
+            else
+                destDir += "multi_";
+
             destDir += QString::number(s->getFileId());
             destDir += QDir::separator();
         }

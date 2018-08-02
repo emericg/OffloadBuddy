@@ -44,12 +44,14 @@ namespace Shared
         SHOT_VIDEO,
         SHOT_VIDEO_LOOPING,
         SHOT_VIDEO_TIMELAPSE,
-        //SHOT_VIDEO_3D,
+        SHOT_VIDEO_NIGHTLAPSE,
+        SHOT_VIDEO_3D,
 
         SHOT_PICTURE,
         SHOT_PICTURE_MULTI,
-        //SHOT_PICTURE_BURST,
-        //SHOT_PICTURE_TIMELAPSE,
+        SHOT_PICTURE_BURST,
+        SHOT_PICTURE_TIMELAPSE,
+        SHOT_PICTURE_NIGHTLAPSE,
     };
     Q_ENUM_NS(ShotType)
 
@@ -95,6 +97,8 @@ class Shot: public QObject
     Q_PROPERTY(QString name READ getName NOTIFY shotUpdated)
     Q_PROPERTY(QString camera READ getCameraSource NOTIFY shotUpdated)
     Q_PROPERTY(qint64 size READ getSize NOTIFY shotUpdated)
+    Q_PROPERTY(qint64 datasize READ getDataSize NOTIFY shotUpdated)
+    Q_PROPERTY(int chapters READ getChapterCount NOTIFY shotUpdated)
 
     Q_PROPERTY(QString preview READ getPreview NOTIFY shotUpdated)
 
@@ -154,8 +158,11 @@ public slots:
     void setState(Shared::ShotState state) { m_state = state; emit shotUpdated(); }
 
     QString getName() const { return m_name; }
-    qint64 getSize() const;
     qint64 getDuration() const;
+    qint64 getSize() const;
+    qint64 getDataSize() const;
+    qint64 getFullSize() const;
+    int getChapterCount() const;    //!< 0 means no notion of chapter
     QDateTime getDate() const { return m_date; }
     QString getPreview() const;
     QString getCameraSource() const { return m_camera_source; }

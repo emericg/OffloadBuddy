@@ -15,22 +15,27 @@ Rectangle {
     property var shotState: shot.state
     property var itemPassedWidth
 
-    onShotStateChanged: {
-        //console.log("onShotStateChanged")
-
-        icon_state.visible = false
-        rectangleOverlay.visible = false
-
-        if (shotState === 1) {
+    function handleState() {
+        if (shotState === Shared.SHOT_STATE_QUEUED) {
             icon_state.visible = true
             icon_state.source = "qrc:/resources/minicons/queued.svg"
-        } else if (shotState === 2) {
+            rectangleOverlay.visible = false
+        } else if (shotState === Shared.SHOT_STATE_WORKING) {
             icon_state.visible = true
             icon_state.source = "qrc:/resources/minicons/working.svg"
-        } else if (shotState === 3) {
+            rectangleOverlay.visible = false
+        } else if (shotState === Shared.SHOT_STATE_OFFLOADED) {
+            icon_state.visible = false
+            image_overlay.source = "qrc:/icons/done.svg"
             rectangleOverlay.visible = true
-            icon_state.source = "qrc:/icons/done.svg"
+        } else {
+            icon_state.visible = false
+            rectangleOverlay.visible = false
         }
+    }
+
+    onShotStateChanged: {
+        handleState()
     }
 
     Component.onCompleted: {
@@ -42,16 +47,14 @@ Rectangle {
         text_top.text = name
         text_top.visible = false
 
-        rectangleOverlay.visible = false;
+        handleState()
 
-        if (type === Shared.SHOT_VIDEO ||
-            type === Shared.SHOT_VIDEO_LOOPING ||
-            type === Shared.SHOT_VIDEO_TIMELAPSE) {
+        if (type < Shared.SHOT_PICTURE) {
             icon_left.source = "qrc:/resources/minicons/video.svg"
             text_left.visible = true
             text_left.text = StringUtils.durationToString_short(duration)
         } else {
-            if (type === Shared.SHOT_PICTURE_MULTI) {
+            if (type >= Shared.SHOT_PICTURE_MULTI) {
                 icon_left.source = "qrc:/resources/minicons/picture_multi.svg"
                 text_left.visible = true
                 text_left.text = duration

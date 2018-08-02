@@ -21,10 +21,12 @@ Rectangle {
             textShotName.text = shot.name
             duration.text = shot.duration
             date.text = shot.date
-            datasize.text = StringUtils.bytesToString_short(shot.size)
+            size.text = StringUtils.bytesToString_short(shot.size)
+            datasize.text = StringUtils.bytesToString_short(shot.datasize)
+            codecVideo.visible = false
 
             codecAudio.visible = false
-            codecVideo.visible = false
+            chapters.text = shot.chapters
 
             if (shot.preview) {
                 image.source = "file:///" + shot.preview
@@ -250,12 +252,12 @@ Rectangle {
             y: 41
             width: 128
             height: 32
-            text: qsTr("Data size:")
+            text: qsTr("size:")
             verticalAlignment: Text.AlignVCenter
             font.pixelSize: 16
 
             Text {
-                id: datasize
+                id: size
                 x: 102
                 y: 9
                 text: qsTr("Text")
@@ -344,11 +346,19 @@ Rectangle {
             id: text13
             x: 123
             y: 265
-            width: 128
+            width: 234
             height: 32
             text: qsTr("Chapters:")
             verticalAlignment: Text.AlignVCenter
             font.pixelSize: 16
+
+            Text {
+                id: chapters
+                x: 114
+                y: 9
+                text: qsTr("Text")
+                font.pixelSize: 12
+            }
         }
 
         Text {
@@ -376,7 +386,7 @@ Rectangle {
             text: qsTr("Data size:")
             verticalAlignment: Text.AlignVCenter
             Text {
-                id: datasize1
+                id: datasize
                 x: 102
                 y: 9
                 text: qsTr("Text")

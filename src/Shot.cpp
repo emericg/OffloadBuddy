@@ -173,9 +173,10 @@ void Shot::attachMtpStorage(LIBMTP_mtpdevice_t *device, LIBMTP_devicestorage_t *
 
 bool Shot::isValid()
 {
-    bool status = true;
+    if (m_jpg.size() > 0 || m_mp4.size() > 0)
+        return true;
 
-    return status;
+    return false;
 }
 /*
 unsigned Shot::getType() const
@@ -190,6 +191,16 @@ unsigned Shot::getType() const
 }
 */
 qint64 Shot::getSize() const
+{
+    return getFullSize();
+}
+
+int Shot::getChapterCount() const
+{
+    return m_mp4.size();
+}
+
+qint64 Shot::getFullSize() const
 {
     qint64 size = 0;
 
@@ -210,6 +221,22 @@ qint64 Shot::getSize() const
         size += f->size;
     }
     for (auto f: m_lrv)
+    {
+        size += f->size;
+    }
+
+    return size;
+}
+
+qint64 Shot::getDataSize() const
+{
+    qint64 size = 0;
+
+    for (auto f: m_jpg)
+    {
+        size += f->size;
+    }
+    for (auto f: m_mp4)
     {
         size += f->size;
     }
