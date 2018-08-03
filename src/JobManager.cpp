@@ -211,7 +211,7 @@ bool JobManager::addJob(JobType type, Device *d, Shot *s, MediaDirectory *md)
         QDir dd(destDir);
         if (!(dd.exists() || dd.mkpath(destDir)))
         {
-            qDebug() << "DEST DIR IS NOT OK";
+            qDebug() << "DEST DIR IS NOT OK! ABORT!";
             return false;
         }
 
@@ -237,6 +237,7 @@ bool JobManager::addJob(JobType type, Device *d, Shot *s, MediaDirectory *md)
                 if (err)
                 {
                     // TODO handle errors
+                    qDebug() << "Couldn't copy file: " << destFile;
                 }
             }
 
@@ -247,7 +248,7 @@ bool JobManager::addJob(JobType type, Device *d, Shot *s, MediaDirectory *md)
             QList <ofb_file *> files = s->getFiles(getPreviews, getHdAudio);
             for (auto file: files)
             {
-                if (!file || file->filesystemPath.isEmpty() == false)
+                if (!file || file->filesystemPath.isEmpty())
                     continue;
 
                 //qDebug() << "JobManager  >  FS copying:" << file->filesystemPath;
@@ -257,10 +258,11 @@ bool JobManager::addJob(JobType type, Device *d, Shot *s, MediaDirectory *md)
                 QString destFile = destDir + fi.baseName() + "." + fi.suffix();
                 // TODO dest file exists ???
 
-                bool err = QFile::copy(file->filesystemPath, destFile);
-                if (err)
+                bool success = QFile::copy(file->filesystemPath, destFile);
+                if (!success)
                 {
                     // TODO handle errors
+                    qDebug() << "Couldn't copy file: " << destFile;
                 }
             }
         }

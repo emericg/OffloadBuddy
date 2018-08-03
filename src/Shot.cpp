@@ -41,17 +41,17 @@ Shot::Shot(Shared::ShotType type)
 
 Shot::~Shot()
 {
-    qDeleteAll(m_jpg);
-    m_jpg.clear();
+    qDeleteAll(m_pictures);
+    m_pictures.clear();
 
-    qDeleteAll(m_mp4);
-    m_mp4.clear();
-    qDeleteAll(m_lrv);
-    m_lrv.clear();
-    qDeleteAll(m_thm);
-    m_thm.clear();
-    qDeleteAll(m_wav);
-    m_wav.clear();
+    qDeleteAll(m_videos);
+    m_videos.clear();
+    qDeleteAll(m_videos_previews);
+    m_videos_previews.clear();
+    qDeleteAll(m_videos_thumbnails);
+    m_videos_thumbnails.clear();
+    qDeleteAll(m_videos_hdAudio);
+    m_videos_hdAudio.clear();
 }
 
 Shot::Shot(const Shot &other) : QObject()
@@ -68,12 +68,12 @@ Shot::Shot(const Shot &other) : QObject()
     m_duration = other.m_duration;
     m_highlights = other.m_highlights;
 
-    m_jpg = other.m_jpg;
+    m_pictures = other.m_pictures;
 
-    m_mp4 = other.m_mp4;
-    m_lrv = other.m_lrv;
-    m_thm = other.m_thm;
-    m_wav = other.m_wav;
+    m_videos = other.m_videos;
+    m_videos_previews = other.m_videos_previews;
+    m_videos_thumbnails = other.m_videos_thumbnails;
+    m_videos_hdAudio = other.m_videos_hdAudio;
 }
 
 /* ************************************************************************** */
@@ -93,23 +93,23 @@ void Shot::addFile(ofb_file *file)
 
             if (file->extension == "jpg")
             {
-                m_jpg.push_front(file);
+                m_pictures.push_front(file);
             }
             else if (file->extension == "mp4")
             {
-                m_mp4.push_front(file);
+                m_videos.push_front(file);
             }
             else if (file->extension == "lrv")
             {
-                m_lrv.push_front(file);
+                m_videos_previews.push_front(file);
             }
             else if (file->extension == "thm")
             {
-                m_thm.push_front(file);
+                m_videos_thumbnails.push_front(file);
             }
             else if (file->extension == "wav")
             {
-                m_wav.push_front(file);
+                m_videos_hdAudio.push_front(file);
             }
             else
             {
@@ -131,23 +131,23 @@ void Shot::addFile(ofb_file *file)
 
             if (file->extension == "jpg")
             {
-                m_jpg.push_back(file);
+                m_pictures.push_back(file);
             }
             else if (file->extension == "mp4")
             {
-                m_mp4.push_back(file);
+                m_videos.push_back(file);
             }
             else if (file->extension == "lrv")
             {
-                m_lrv.push_back(file);
+                m_videos_previews.push_back(file);
             }
             else if (file->extension == "thm")
             {
-                m_thm.push_back(file);
+                m_videos_thumbnails.push_back(file);
             }
             else if (file->extension == "wav")
             {
-                m_wav.push_back(file);
+                m_videos_hdAudio.push_back(file);
             }
             else
             {
@@ -173,7 +173,7 @@ void Shot::attachMtpStorage(LIBMTP_mtpdevice_t *device, LIBMTP_devicestorage_t *
 
 bool Shot::isValid()
 {
-    if (m_jpg.size() > 0 || m_mp4.size() > 0)
+    if (m_pictures.size() > 0 || m_videos.size() > 0)
         return true;
 
     return false;
@@ -197,30 +197,30 @@ qint64 Shot::getSize() const
 
 int Shot::getChapterCount() const
 {
-    return m_mp4.size();
+    return m_videos.size();
 }
 
 qint64 Shot::getFullSize() const
 {
     qint64 size = 0;
 
-    for (auto f: m_jpg)
+    for (auto f: m_pictures)
     {
         size += f->size;
     }
-    for (auto f: m_mp4)
+    for (auto f: m_videos)
     {
         size += f->size;
     }
-    for (auto f: m_thm)
+    for (auto f: m_videos_thumbnails)
     {
         size += f->size;
     }
-    for (auto f: m_wav)
+    for (auto f: m_videos_hdAudio)
     {
         size += f->size;
     }
-    for (auto f: m_lrv)
+    for (auto f: m_videos_previews)
     {
         size += f->size;
     }
@@ -232,11 +232,11 @@ qint64 Shot::getDataSize() const
 {
     qint64 size = 0;
 
-    for (auto f: m_jpg)
+    for (auto f: m_pictures)
     {
         size += f->size;
     }
-    for (auto f: m_mp4)
+    for (auto f: m_videos)
     {
         size += f->size;
     }
@@ -246,13 +246,13 @@ qint64 Shot::getDataSize() const
 
 QString Shot::getPreview() const
 {
-    if (m_jpg.size() > 0 && !m_jpg.at(0)->filesystemPath.isEmpty())
+    if (m_pictures.size() > 0 && !m_pictures.at(0)->filesystemPath.isEmpty())
     {
-        return m_jpg.at(0)->filesystemPath;
+        return m_pictures.at(0)->filesystemPath;
     }
-    else if (m_thm.size() > 0 && !m_thm.at(0)->filesystemPath.isEmpty())
+    else if (m_videos_thumbnails.size() > 0 && !m_videos_thumbnails.at(0)->filesystemPath.isEmpty())
     {
-        return m_thm.at(0)->filesystemPath;
+        return m_videos_thumbnails.at(0)->filesystemPath;
     }
 
     return QString();
@@ -263,7 +263,7 @@ qint64 Shot::getDuration() const
     if (m_type < Shared::SHOT_PICTURE)
         return m_duration;
     else
-        return m_jpg.count();
+        return m_pictures.count();
 }
 
 /* ************************************************************************** */
@@ -272,21 +272,21 @@ QList <ofb_file *> Shot::getFiles(bool withPreviews, bool withHdAudio) const
 {
     QList <ofb_file *> list;
 
-    for (auto f: m_jpg)
+    for (auto f: m_pictures)
         list += f;
-    for (auto f: m_mp4)
+    for (auto f: m_videos)
         list += f;
 
     if (withPreviews)
     {
-        for (auto f: m_lrv)
+        for (auto f: m_videos_previews)
             list += f;
-        for (auto f: m_thm)
+        for (auto f: m_videos_thumbnails)
             list += f;
     }
     if (withHdAudio)
     {
-        for (auto f: m_wav)
+        for (auto f: m_videos_hdAudio)
         list += f;
     }
 

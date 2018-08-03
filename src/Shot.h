@@ -129,13 +129,13 @@ class Shot: public QObject
 #endif
 
     // PICTURES files
-    QList <ofb_file *> m_jpg;
+    QList <ofb_file *> m_pictures;
 
     // VIDEOS files
-    QList <ofb_file *> m_mp4;
-    QList <ofb_file *> m_lrv;
-    QList <ofb_file *> m_thm;
-    QList <ofb_file *> m_wav;
+    QList <ofb_file *> m_videos;
+    QList <ofb_file *> m_videos_previews;
+    QList <ofb_file *> m_videos_thumbnails;
+    QList <ofb_file *> m_videos_hdAudio;
 
 public:
     Shot(QObject *parent = nullptr);
