@@ -62,13 +62,13 @@ Rectangle {
             anchors.leftMargin: 16
 
             Image {
-                id: image
-                width: 200
-                height: 160
+                id: imageLogo
+                width: 220
+                height: 180
+                anchors.verticalCenterOffset: -10
+                anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
                 anchors.rightMargin: 8
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 8
                 fillMode: Image.PreserveAspectCrop
                 source: "qrc:/appicons/offloadbuddy.png"
             }
@@ -91,12 +91,12 @@ Rectangle {
                 id: textArea
                 anchors.top: text_title.bottom
                 anchors.topMargin: 8
-                anchors.bottom: parent.bottom
+                anchors.bottom: imageGitHub.top
                 anchors.bottomMargin: 8
                 anchors.left: parent.left
                 anchors.leftMargin: 8
                 anchors.right: parent.right
-                anchors.rightMargin: 8
+                anchors.rightMargin: 300
 
                 readOnly: true
                 font.pixelSize: ThemeEngine.fontSizeContentText
@@ -104,8 +104,53 @@ Rectangle {
 
 It also helps with many other convenient things like:
 - merging chaptered files
-- video cliping and reencoding
-- extracting many metadatas")
+- extracting many metadatas
+- video cliping and reencoding")
+                wrapMode: Text.WordWrap
+            }
+
+            Text {
+                id: text1
+                x: 1068
+                width: 112
+                height: 15
+                text: qsTr("Version 0.1 (git)")
+                anchors.horizontalCenter: imageLogo.horizontalCenter
+                anchors.top: imageLogo.bottom
+                anchors.topMargin: 6
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                font.pixelSize: 15
+            }
+
+            Text {
+                id: text2
+                y: 239
+                width: 166
+                height: 32
+                text: qsTr("Visit us on <html><style type=\"text/css\"></style><a href=\"https://github.com/emericg/OffloadBuddy\">GitHub</a></html>!")
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignLeft
+                anchors.left: imageGitHub.right
+                anchors.leftMargin: 8
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 8
+                font.pixelSize: 16
+                onLinkActivated: Qt.openUrlExternally("https://github.com/emericg/OffloadBuddy")
+            }
+
+            Image {
+                id: imageGitHub
+                y: 224
+                width: 32
+                height: 32
+                anchors.left: parent.left
+                anchors.leftMargin: 8
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 8
+                sourceSize.height: 64
+                sourceSize.width: 64
+                source: "../resources/other/GitHub-Mark-64px.png"
             }
         }
 
@@ -227,3 +272,8 @@ It also helps with many other convenient things like:
         }
     }
 }
+
+/*##^## Designer {
+    D{i:17;anchors_y:204}D{i:18;anchors_x:61}D{i:19;anchors_x:23}
+}
+ ##^##*/

@@ -13,6 +13,7 @@
         <file>resources/minicons/queued.svg</file>
         <file>resources/minicons/working.svg</file>
         <file>resources/other/placeholder.png</file>
+        <file>resources/other/GitHub-Mark-64px.png</file>
     </qresource>
     <qresource prefix="/badges">
         <file alias="GPR.svg">resources/badges/GPR.svg</file>
