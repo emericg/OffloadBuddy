@@ -79,7 +79,7 @@ struct ofb_file
     QString filesystemPath;         //!< Absolute file path, if available
 
 #ifdef ENABLE_LIBMTP
-    LIBMTP_mtpdevice_t *mtpDevice = nullptr;
+    LIBMTP_mtpdevice_t *mtpDevice = nullptr; // no...
     //LIBMTP_devicestorage_t *mtpStorage = nullptr;
     uint32_t mtpObjectId = 0;
 #endif
@@ -150,7 +150,9 @@ public:
     void attachMtpStorage(LIBMTP_mtpdevice_t *device, LIBMTP_devicestorage_t *storage);
 #endif
 
-    QStringList getFiles() const;
+    QList <ofb_file *> getFiles() const;
+    QStringList getFilePaths() const;
+    QList<uint32_t> getFileObjects(LIBMTP_mtpdevice_t **mtpDevice) const;
 
 public slots:
     unsigned getType() const { return m_type; }

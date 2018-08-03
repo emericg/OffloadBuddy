@@ -266,7 +266,27 @@ qint64 Shot::getDuration() const
         return m_jpg.count();
 }
 
-QStringList Shot::getFiles() const
+/* ************************************************************************** */
+
+QList <ofb_file *> Shot::getFiles() const
+{
+    QList <ofb_file *> list;
+
+    for (auto f: m_jpg)
+        list += f;
+    for (auto f: m_mp4)
+        list += f;
+    for (auto f: m_thm)
+        list += f;
+    for (auto f: m_wav)
+        list += f;
+    for (auto f: m_lrv)
+        list += f;
+
+    return list;
+}
+
+QStringList Shot::getFilePaths() const
 {
     QStringList list;
 
@@ -280,6 +300,29 @@ QStringList Shot::getFiles() const
         list += f->filesystemPath;
     for (auto f: m_lrv)
         list += f->filesystemPath;
+
+    return list;
+}
+
+QList<uint32_t> Shot::getFileObjects(LIBMTP_mtpdevice_t **mtpDevice) const
+{
+    QList<uint32_t> list;
+
+    if (m_jpg.size() > 0)
+        *mtpDevice = m_jpg.at(0)->mtpDevice;
+    else if (m_mp4.size() > 0)
+        *mtpDevice = m_mp4.at(0)->mtpDevice;
+
+    for (auto f: m_jpg)
+        list += f->mtpObjectId;
+    for (auto f: m_mp4)
+        list += f->mtpObjectId;
+    for (auto f: m_thm)
+        list += f->mtpObjectId;
+    for (auto f: m_wav)
+        list += f->mtpObjectId;
+    for (auto f: m_lrv)
+        list += f->mtpObjectId;
 
     return list;
 }

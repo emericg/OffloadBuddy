@@ -21,6 +21,10 @@
 
 #include "JobManager.h"
 
+#ifdef ENABLE_LIBMTP
+#include <libmtp.h>
+#endif
+
 #include <QFileInfo>
 #include <QFile>
 #include <QDir>
@@ -98,21 +102,33 @@ bool JobManager::addJob(JobType type, Device *d, Shot *s, MediaDirectory *md)
     bool status = false;
 
     //
-    if (d->getDeviceType() == DEVICE_MTP)
-        return status;
-
-    //
     if (type == JOB_DELETE)
     {
         // TODO check RO ?
 
-        QStringList files = s->getFiles();
-        for (auto file: files)
+        if (d->getDeviceType() == DEVICE_MTP)
         {
-            if (file.isEmpty() == false)
+#ifdef ENABLE_LIBMTP
+
+            LIBMTP_mtpdevice_t *d;
+            QList<uint32_t> files = s->getFileObjects(&d);
+            for (auto file: files)
             {
-                qDebug() << "JobManager  >  deleting:" << file;
-                //QFile::remove(file);
+                LIBMTP_Delete_Object(d, file);
+            }
+
+#endif // ENABLE_LIBMTP
+        }
+        else
+        {
+            QStringList files = s->getFilePaths();
+            for (auto file: files)
+            {
+                if (file.isEmpty() == false)
+                {
+                    qDebug() << "JobManager  >  deleting:" << file;
+                    //QFile::remove(file);
+                }
             }
         }
 
@@ -121,9 +137,11 @@ bool JobManager::addJob(JobType type, Device *d, Shot *s, MediaDirectory *md)
     }
     else if (type == JOB_COPY)
     {
+        s->setState(Shared::SHOT_STATE_QUEUED);
         s->setState(Shared::SHOT_STATE_WORKING);
 
-        QStringList files = s->getFiles();
+        // HANDLE DESTINATION DIRECTORY ////////////////////////////////////////
+
         QString destDir = getAutoDestinationString(s);
 
         // Now add subdirectories
@@ -148,8 +166,6 @@ bool JobManager::addJob(JobType type, Device *d, Shot *s, MediaDirectory *md)
         }
         if (sm->getContentHierarchy() == HIERARCHY_DATE)
         {
-            //qDebug() << s->getDate();
-
             destDir += QDir::separator();
             destDir += s->getDate().toString("yyyy-MM-dd");
             destDir += QDir::separator();
@@ -158,7 +174,7 @@ bool JobManager::addJob(JobType type, Device *d, Shot *s, MediaDirectory *md)
         // Put chaptered videos in there own directory?
         if (s->getType() < Shared::SHOT_PICTURE)
         {
-            if (s->getChapterCount())
+            if (s->getChapterCount() > 1)
             {
                 destDir += "chaptered_";
                 destDir += QString::number(s->getFileId());
@@ -185,25 +201,54 @@ bool JobManager::addJob(JobType type, Device *d, Shot *s, MediaDirectory *md)
             destDir += QDir::separator();
         }
 
-        QDir d(destDir);
-        //if (QDir::exists(destDir) || QDir::mkpath(destDir))
-        if (!(d.exists() || d.mkpath(destDir)))
+        QDir dd(destDir);
+        if (!(dd.exists() || dd.mkpath(destDir)))
         {
-            qDebug() << "DIR IS NOT OK";
+            qDebug() << "DEST DIR IS NOT OK";
+            return false;
         }
 
-        for (auto f: files)
+        // HANDLE COPY /////////////////////////////////////////////////////////
+
+        if (d->getDeviceType() == DEVICE_MTP)
         {
-            qDebug() << "JobManager  >  copying:" << f;
-            qDebug() << "        to  > " << destDir;
+#ifdef ENABLE_LIBMTP
 
-            QFileInfo fi(f);
-            QString destFile = destDir + fi.baseName() + "." + fi.suffix();
+            QList <ofb_file *> files = s->getFiles();
+            for (auto file: files)
+            {
+                LIBMTP_mtpdevice_t *d = file->mtpDevice;
+                QString destFile = destDir + file->name + "." + file->extension;
 
-            // TODO dest file exists ???
+                qDebug() << destFile;
+                int err = LIBMTP_Get_File_To_File(d, file->mtpObjectId, destFile.toLocal8Bit(), nullptr, nullptr);
+                if (err)
+                {
+                    //
+                }
+            }
 
-            //QFile::copy(const QString &fileName, const QString &newName)
-            QFile::copy(f, destFile);
+            //
+
+#endif // ENABLE_LIBMTP
+        }
+        else
+        {
+            QStringList files = s->getFilePaths();
+
+            for (auto f: files)
+            {
+                qDebug() << "JobManager  >  copying:" << f;
+                qDebug() << "        to  > " << destDir;
+
+                QFileInfo fi(f);
+                QString destFile = destDir + fi.baseName() + "." + fi.suffix();
+
+                // TODO dest file exists ???
+
+                //QFile::copy(const QString &fileName, const QString &newName)
+                QFile::copy(f, destFile);
+            }
         }
 
         s->setState(Shared::SHOT_STATE_OFFLOADED);
