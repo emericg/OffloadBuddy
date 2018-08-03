@@ -150,9 +150,7 @@ public:
     void attachMtpStorage(LIBMTP_mtpdevice_t *device, LIBMTP_devicestorage_t *storage);
 #endif
 
-    QList <ofb_file *> getFiles() const;
-    QStringList getFilePaths() const;
-    QList<uint32_t> getFileObjects(LIBMTP_mtpdevice_t **mtpDevice) const;
+    QList <ofb_file *> getFiles(bool withPreviews = true, bool withHdAudio = true) const;
 
 public slots:
     unsigned getType() const { return m_type; }

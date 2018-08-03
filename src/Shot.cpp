@@ -268,7 +268,7 @@ qint64 Shot::getDuration() const
 
 /* ************************************************************************** */
 
-QList <ofb_file *> Shot::getFiles() const
+QList <ofb_file *> Shot::getFiles(bool withPreviews, bool withHdAudio) const
 {
     QList <ofb_file *> list;
 
@@ -276,16 +276,23 @@ QList <ofb_file *> Shot::getFiles() const
         list += f;
     for (auto f: m_mp4)
         list += f;
-    for (auto f: m_thm)
+
+    if (withPreviews)
+    {
+        for (auto f: m_lrv)
+            list += f;
+        for (auto f: m_thm)
+            list += f;
+    }
+    if (withHdAudio)
+    {
+        for (auto f: m_wav)
         list += f;
-    for (auto f: m_wav)
-        list += f;
-    for (auto f: m_lrv)
-        list += f;
+    }
 
     return list;
 }
-
+/*
 QStringList Shot::getFilePaths() const
 {
     QStringList list;
@@ -326,3 +333,4 @@ QList<uint32_t> Shot::getFileObjects(LIBMTP_mtpdevice_t **mtpDevice) const
 
     return list;
 }
+*/

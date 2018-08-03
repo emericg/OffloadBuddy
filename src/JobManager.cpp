@@ -106,29 +106,33 @@ bool JobManager::addJob(JobType type, Device *d, Shot *s, MediaDirectory *md)
     {
         // TODO check RO ?
 
+        // HANDLE FILE REMOVAL /////////////////////////////////////////////////
+
         if (d->getDeviceType() == DEVICE_MTP)
         {
 #ifdef ENABLE_LIBMTP
 
-            LIBMTP_mtpdevice_t *d;
-            QList<uint32_t> files = s->getFileObjects(&d);
+            QList <ofb_file *> files = s->getFiles();
             for (auto file: files)
             {
-                LIBMTP_Delete_Object(d, file);
+                if (!file || !file->mtpDevice || file->mtpObjectId == 0)
+                    continue;
+
+                //LIBMTP_Delete_Object(file->mtpDevice, file->mtpObjectId);
             }
 
 #endif // ENABLE_LIBMTP
         }
         else
         {
-            QStringList files = s->getFilePaths();
+            QList <ofb_file *> files = s->getFiles();
             for (auto file: files)
             {
-                if (file.isEmpty() == false)
-                {
-                    qDebug() << "JobManager  >  deleting:" << file;
-                    //QFile::remove(file);
-                }
+                if (!file || file->filesystemPath.isEmpty() == false)
+                    continue;
+
+                qDebug() << "JobManager  >  deleting:" << file->filesystemPath;
+                //QFile::remove(file->filesystemPath);
             }
         }
 
@@ -142,10 +146,13 @@ bool JobManager::addJob(JobType type, Device *d, Shot *s, MediaDirectory *md)
 
         // HANDLE DESTINATION DIRECTORY ////////////////////////////////////////
 
+        SettingsManager *sm = SettingsManager::getInstance();
+        bool getPreviews = !sm->getIgnoreJunk();
+        bool getHdAudio = !sm->getIgnoreHdAudio();
+
         QString destDir = getAutoDestinationString(s);
 
-        // Now add subdirectories
-        SettingsManager *sm = SettingsManager::getInstance();
+        // Destination directory and its subdirectories
         if (sm->getContentHierarchy() == HIERARCHY_BRAND_DEVICE_DATE)
         {
             destDir += QDir::separator();
@@ -214,40 +221,47 @@ bool JobManager::addJob(JobType type, Device *d, Shot *s, MediaDirectory *md)
         {
 #ifdef ENABLE_LIBMTP
 
-            QList <ofb_file *> files = s->getFiles();
+            QList <ofb_file *> files = s->getFiles(getPreviews, getHdAudio);
             for (auto file: files)
             {
-                LIBMTP_mtpdevice_t *d = file->mtpDevice;
-                QString destFile = destDir + file->name + "." + file->extension;
+                if (!file || !file->mtpDevice || file->mtpObjectId == 0)
+                    continue;
 
-                qDebug() << destFile;
-                int err = LIBMTP_Get_File_To_File(d, file->mtpObjectId, destFile.toLocal8Bit(), nullptr, nullptr);
+                //qDebug() << "JobManager  >  MTP copying:" << file->mtpObjectId;
+                //qDebug() << "        to  > " << destDir;
+
+                QString destFile = destDir + file->name + "." + file->extension;
+                // TODO destFile exists ???
+
+                int err = LIBMTP_Get_File_To_File(file->mtpDevice, file->mtpObjectId, destFile.toLocal8Bit(), nullptr, nullptr);
                 if (err)
                 {
-                    //
+                    // TODO handle errors
                 }
             }
-
-            //
 
 #endif // ENABLE_LIBMTP
         }
         else
         {
-            QStringList files = s->getFilePaths();
-
-            for (auto f: files)
+            QList <ofb_file *> files = s->getFiles(getPreviews, getHdAudio);
+            for (auto file: files)
             {
-                qDebug() << "JobManager  >  copying:" << f;
-                qDebug() << "        to  > " << destDir;
+                if (!file || file->filesystemPath.isEmpty() == false)
+                    continue;
 
-                QFileInfo fi(f);
+                //qDebug() << "JobManager  >  FS copying:" << file->filesystemPath;
+                //qDebug() << "        to  > " << destDir;
+
+                QFileInfo fi(file->filesystemPath);
                 QString destFile = destDir + fi.baseName() + "." + fi.suffix();
-
                 // TODO dest file exists ???
 
-                //QFile::copy(const QString &fileName, const QString &newName)
-                QFile::copy(f, destFile);
+                bool err = QFile::copy(file->filesystemPath, destFile);
+                if (err)
+                {
+                    // TODO handle errors
+                }
             }
         }
 
