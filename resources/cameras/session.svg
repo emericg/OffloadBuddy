@@ -600,9 +600,9 @@
      borderopacity="1"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.6600006"
-     inkscape:cx="42.99451"
-     inkscape:cy="64.528066"
+     inkscape:zoom="4.0022248"
+     inkscape:cx="-13.655197"
+     inkscape:cy="70.750955"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -617,11 +617,13 @@
      inkscape:pagecheckerboard="true"
      borderlayer="true"
      inkscape:snap-bbox="true"
-     inkscape:snap-nodes="false"
+     inkscape:snap-nodes="true"
      inkscape:bbox-nodes="true"
      inkscape:snap-bbox-edge-midpoints="true"
      inkscape:snap-object-midpoints="true"
-     inkscape:snap-center="true">
+     inkscape:snap-center="true"
+     inkscape:snap-intersection-paths="true"
+     inkscape:snap-smooth-nodes="true">
     <sodipodi:guide
        orientation="1,0"
        position="0,112"
@@ -692,13 +694,13 @@
      transform="translate(0,106)">
     <path
        style="display:inline;fill:#a8a8a8;fill-opacity:1;stroke:none;stroke-width:11.82635784"
-       d="m 26.121593,-89.992143 c -5.607051,0 -10.121032,3.883901 -10.121032,8.883444 v 78.2252514 c 0,4.9995446 4.513981,8.8834475 10.121032,8.8834475 h 75.756827 c 5.60704,0 10.12102,-3.8839029 10.12102,-8.8834475 V -81.108699 c 0,-4.999543 -4.51398,-8.883444 -10.12102,-8.883444 z"
+       d="m 25,-90 c -6,0 -9,3 -9,9 v 78 c 0,6 3,9 9,9 h 78 c 6,0 9,-3 9,-9 v -78 c 0,-6 -3,-9 -9,-9 z"
        id="rect2915"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="csssssscc" />
     <path
        style="display:inline;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:10.98161697"
-       d="m 28.827198,-86.564084 -9.398099,8.248911 v 72.6377214 c 0,4.6424334 4.191552,8.2489202 9.398099,8.2489202 h 70.345616 c 5.206546,0 9.398086,-3.6064868 9.398086,-8.2489202 V -78.315173 c 0,-4.642433 -4.19154,-8.248911 -9.398086,-8.248911 z"
+       d="m 29,-86 -9,8 v 73 c 0,5 2,7 7,7 h 74 c 5,0 7,-2 7,-7 v -74 c 0,-5 -2,-7 -7,-7 z"
        id="rect2915-3"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="ccssssscc" />
@@ -707,12 +709,12 @@
        id="path910"
        cx="64"
        cy="-41.999439"
-       r="41.142376" />
+       r="39.999439" />
     <circle
        style="opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:2.03030753;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path912"
        cx="64"
        cy="-41.999439"
-       r="20.571188" />
+       r="19.99972" />
   </g>
 </svg>
