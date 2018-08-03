@@ -57,10 +57,10 @@ Device::~Device()
     qDeleteAll(m_filesystemStorages);
     m_filesystemStorages.clear();
 
+#ifdef ENABLE_LIBMTP
     qDeleteAll(m_mtpStorages);
     m_mtpStorages.clear();
 
-#ifdef ENABLE_LIBMTP
     if (m_mtpDevice)
         LIBMTP_Release_Device(m_mtpDevice);
 #endif // ENABLE_LIBMTP
@@ -204,25 +204,7 @@ bool Device::scanMtpDevices()
 
 Shot * Device::findShot(Shared::ShotType type, int file_id, int camera_id) const
 {
-    if (m_shotModel->getShotList()->size() > 0 && file_id > 0)
-    {
-        for (int i = m_shotModel->getShotList()->size()-1; i >= 0; i--)
-        {
-            Shot *search = qobject_cast<Shot*>(m_shotModel->getShotList()->at(i));
-            if (search && search->getType() == type)
-            {
-                if (search->getFileId() == file_id &&
-                    search->getCameraId() == camera_id)
-                {
-                    return search;
-                }
-            }
-        }
-
-        //qDebug() << "No shot found for id" << file_id;
-    }
-
-    return nullptr;
+    return m_shotModel->getShotAt(type, file_id, camera_id);
 }
 
 /* ************************************************************************** */
@@ -615,28 +597,55 @@ int64_t Device::getSpaceAvailable()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
+void Device::addShot(Shot *shot)
+{
+    if (m_shotModel)
+    {
+        m_shotModel->addShot(shot);
+    }
+}
+
+void Device::deleteShot(Shot *shot)
+{
+    if (m_shotModel)
+    {
+        m_shotModel->removeShot(shot);
+    }
+}
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+
 void Device::offloadAll()
 {
-    qDebug() << "offloadAll()";
+    //qDebug() << "offloadAll()";
+    //qDebug() << "(a) shots count: " << m_shotModel->getShotCount();
 
     JobManager *jm = JobManager::getInstance();
 
-    const QList<Shot *> *s = m_shotModel->getShotList();
+    QList<Shot *> shots;
+    m_shotModel->getShots(shots);
 
-    for (auto j: *s)
-        jm->addJob(JOB_COPY, this, j);
+    for (auto shot: shots)
+    {
+        jm->addJob(JOB_COPY, this, shot);
+    }
 }
 
 void Device::deleteAll()
 {
-    qDebug() << "deleteAll()";
+    //qDebug() << "deleteAll()";
+    //qDebug() << "(a) shots count: " << m_shotModel->getShotCount();
 
     JobManager *jm = JobManager::getInstance();
 
-    const QList<Shot *> *s = m_shotModel->getShotList();
+    QList<Shot *> shots;
+    m_shotModel->getShots(shots);
 
-    for (auto j: *s)
-        jm->addJob(JOB_DELETE, this, j);
+    for (auto shot: shots)
+    {
+        jm->addJob(JOB_DELETE, this, shot);
+    }
 }
 
 /* ************************************************************************** */

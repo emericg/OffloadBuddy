@@ -12,19 +12,18 @@ Rectangle {
     color: "#eef0f1"
 
     property Shot shot: pointer
-    property var shotState: shot.state
     property var itemPassedWidth
 
     function handleState() {
-        if (shotState === Shared.SHOT_STATE_QUEUED) {
+        if (shot.state === Shared.SHOT_STATE_QUEUED) {
             icon_state.visible = true
             icon_state.source = "qrc:/resources/minicons/queued.svg"
             rectangleOverlay.visible = false
-        } else if (shotState === Shared.SHOT_STATE_WORKING) {
+        } else if (shot.state === Shared.SHOT_STATE_WORKING) {
             icon_state.visible = true
             icon_state.source = "qrc:/resources/minicons/working.svg"
             rectangleOverlay.visible = false
-        } else if (shotState === Shared.SHOT_STATE_OFFLOADED) {
+        } else if (shot.state === Shared.SHOT_STATE_OFFLOADED) {
             icon_state.visible = false
             image_overlay.source = "qrc:/icons/done.svg"
             rectangleOverlay.visible = true
@@ -34,8 +33,9 @@ Rectangle {
         }
     }
 
-    onShotStateChanged: {
-        handleState()
+    Connections {
+        target: shot
+        onStateUpdated: handleState()
     }
 
     Component.onCompleted: {

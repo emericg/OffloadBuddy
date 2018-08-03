@@ -30,6 +30,8 @@
 #include <QDateTime>
 #include <QAbstractListModel>
 
+#include <QMutex>
+
 /* ************************************************************************** */
 
 class ShotModel : public QAbstractListModel
@@ -38,6 +40,7 @@ class ShotModel : public QAbstractListModel
     Q_ENUMS(ShotRoles)
 
     QList<Shot *> m_shots;
+    mutable QMutex m_shots_mutex;
 
 protected:
     QHash<int, QByteArray> roleNames() const;
@@ -60,10 +63,13 @@ public:
     ShotModel(const ShotModel &other);
     ~ShotModel();
 
-    const QList<Shot *> * getShotList() const { return &m_shots; }
-    int getShotCount() const { return m_shots.size(); }
+    void getShots(QList<Shot *> &shots);
+    Shot * getShotAt(int index);
+    Shot * getShotAt(Shared::ShotType type, int file_id, int camera_id) const;
+    int getShotCount() const;
 
     void addShot(Shot *shot);
+    void removeShot(Shot *shot);
 
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
 

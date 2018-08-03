@@ -92,8 +92,9 @@ class Shot: public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(unsigned type READ getType NOTIFY shotUpdated)
-    Q_PROPERTY(unsigned state READ getState NOTIFY shotUpdated)
+    Q_PROPERTY(unsigned type READ getType NOTIFY stateUpdated)
+    Q_PROPERTY(unsigned state READ getState NOTIFY stateUpdated)
+
     Q_PROPERTY(QString name READ getName NOTIFY shotUpdated)
     Q_PROPERTY(QString camera READ getCameraSource NOTIFY shotUpdated)
     Q_PROPERTY(qint64 size READ getSize NOTIFY shotUpdated)
@@ -155,7 +156,7 @@ public:
 public slots:
     unsigned getType() const { return m_type; }
     unsigned getState() const { return m_state; }
-    void setState(Shared::ShotState state) { m_state = state; emit shotUpdated(); }
+    void setState(Shared::ShotState state) { m_state = state; emit stateUpdated(); }
 
     QString getName() const { return m_name; }
     qint64 getDuration() const;
@@ -176,6 +177,7 @@ public slots:
 
 Q_SIGNALS:
     void shotUpdated();
+    void stateUpdated();
 };
 
 //Q_DECLARE_METATYPE(Shot*);

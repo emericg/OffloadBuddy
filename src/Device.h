@@ -189,7 +189,6 @@ class Device: public QObject
     QTimer m_updateTimer;
 
     QList <StorageFilesystem *> m_filesystemStorages;
-    //QList <LIBMTP_devicestorage_t *> m_mtpStorages;
     QList <StorageMtp *> m_mtpStorages;
     LIBMTP_mtpdevice_t *m_mtpDevice = nullptr;
 
@@ -245,12 +244,12 @@ public slots:
     void deleteAll();
 
     //
-    //void addShot(Shot *shot);
-    //void deleteShot(Shot *shot);
+    void addShot(Shot *shot);
+    void deleteShot(Shot *shot);
 
     //
     ShotModel *getShotModel() const { return m_shotModel; }
-    QVariant getShot(int index) const { if (index >= 0 && index < m_shotModel->getShotList()->size()) { return QVariant::fromValue(m_shotModel->getShotList()->at(index)); } return QVariant(); }
+    QVariant getShot(int index) const { return QVariant::fromValue(m_shotModel->getShotAt(index)); }
 };
 
 /* ************************************************************************** */

@@ -137,7 +137,7 @@ bool JobManager::addJob(JobType type, Device *d, Shot *s, MediaDirectory *md)
         }
 
         // TODO send shot deleted signal to the device
-        // d->deleteShot(s);
+        d->deleteShot(s);
     }
     else if (type == JOB_COPY)
     {
@@ -149,6 +149,7 @@ bool JobManager::addJob(JobType type, Device *d, Shot *s, MediaDirectory *md)
         SettingsManager *sm = SettingsManager::getInstance();
         bool getPreviews = !sm->getIgnoreJunk();
         bool getHdAudio = !sm->getIgnoreHdAudio();
+        bool autoDelete = sm->getAutoDelete();
 
         QString destDir = getAutoDestinationString(s);
 
@@ -269,7 +270,11 @@ bool JobManager::addJob(JobType type, Device *d, Shot *s, MediaDirectory *md)
 
         s->setState(Shared::SHOT_STATE_OFFLOADED);
 
-        // TODO delete shot if needed?
+        // Delete shot only if needed (and current job success)
+        if (autoDelete)
+        {
+            addJob(JOB_DELETE, d, s);
+        }
 
         // TODO create new shot
         // TODO add new shot to media library
