@@ -24,6 +24,7 @@
 
 #include <QStandardPaths>
 #include <QStorageInfo>
+#include <QDir>
 
 #include <QSettings>
 #include <QDebug>
@@ -214,26 +215,50 @@ void SettingsManager::directoryModified()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
+/*!
+ * \brief Used when there is no saved MediaDirectory.
+ */
 MediaDirectory::MediaDirectory()
 {
-    QString path = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + "/GoPro";
+    // Use default path
+    // Windows 'C:/Users/USERNAME/Videos/GoPro'
+    // Linux '/home/USERNAME/Videos/GoPro'
 
-    setPath(path);
-    setContent(0);
+    QString path = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + "/OffloadBuddy";
 
-    m_updateTimer.setInterval(MEDIA_DIRECTORIES_REFRESH_INTERVAL * 1000);
-    connect(&m_updateTimer, &QTimer::timeout, this, &MediaDirectory::refreshMediaDirectory);
-    m_updateTimer.start();
+    QDir path_dir(path);
+    if (!path_dir.exists())
+    {
+        path_dir.mkpath(path);
+    }
+
+    if (path_dir.exists())
+    {
+        setPath(path);
+        setContent(CONTENT_ALL);
+
+        m_updateTimer.setInterval(MEDIA_DIRECTORIES_REFRESH_INTERVAL * 1000);
+        connect(&m_updateTimer, &QTimer::timeout, this, &MediaDirectory::refreshMediaDirectory);
+        m_updateTimer.start();
+    }
 }
 
+/*!
+ * \brief Used when loading a saved MediaDirectory.
+ */
 MediaDirectory::MediaDirectory(QString &path, int content)
 {
-    setPath(path);
-    setContent(content);
+    QDir path_dir(path);
 
-    m_updateTimer.setInterval(MEDIA_DIRECTORIES_REFRESH_INTERVAL * 1000);
-    connect(&m_updateTimer, &QTimer::timeout, this, &MediaDirectory::refreshMediaDirectory);
-    m_updateTimer.start();
+    if (path_dir.exists())
+    {
+        setPath(path);
+        setContent(content);
+
+        m_updateTimer.setInterval(MEDIA_DIRECTORIES_REFRESH_INTERVAL * 1000);
+        connect(&m_updateTimer, &QTimer::timeout, this, &MediaDirectory::refreshMediaDirectory);
+        m_updateTimer.start();
+    }
 }
 
 MediaDirectory::~MediaDirectory()
@@ -248,6 +273,18 @@ QString MediaDirectory::getPath()
     return m_path;
 }
 
+/*!
+ * \brief MediaDirectory::setPath
+ * \param path: The path of this MediaDirectory
+ *
+ * We could 'force create' the directory here, but there are many cases were it
+ * could lead to unintended behavior.
+ * Ex: A user set its output directory to E:/Videos.
+ * Next time the soft is opened, E:/ exists, but Videos doesn't anymore, because
+ * E:/ was a removable media and it is not the same disk anymore. Do we want to take
+ * the risk to inadvertantly use another disk or just let the user know that its
+ * output directory is now invalid?
+ */
 void MediaDirectory::setPath(QString path)
 {
     m_path = path;
