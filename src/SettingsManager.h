@@ -47,8 +47,7 @@ typedef enum content_types
 typedef enum content_hierarchy
 {
     HIERARCHY_DATE = 0,
-    HIERARCHY_DEVICE_DATE,
-    HIERARCHY_BRAND_DEVICE_DATE,
+    HIERARCHY_DATE_DEVICE,
 
 } content_hierarchy;
 

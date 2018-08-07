@@ -154,25 +154,15 @@ bool JobManager::addJob(JobType type, Device *d, Shot *s, MediaDirectory *md)
         QString destDir = getAutoDestinationString(s);
 
         // Destination directory and its subdirectories
-        if (sm->getContentHierarchy() == HIERARCHY_BRAND_DEVICE_DATE)
+        if (sm->getContentHierarchy() == HIERARCHY_DATE_DEVICE)
         {
-            destDir += QDir::separator();
-            destDir += d->getBrand();
-            destDir += QDir::separator();
-            destDir += d->getModel();
             destDir += QDir::separator();
             destDir += s->getDate().toString("yyyy-MM-dd");
             destDir += QDir::separator();
-        }
-        if (sm->getContentHierarchy() == HIERARCHY_DEVICE_DATE)
-        {
-            destDir += QDir::separator();
             destDir += d->getModel();
             destDir += QDir::separator();
-            destDir += s->getDate().toString("yyyy-MM-dd");
-            destDir += QDir::separator();
         }
-        if (sm->getContentHierarchy() == HIERARCHY_DATE)
+        else if (sm->getContentHierarchy() == HIERARCHY_DATE)
         {
             destDir += QDir::separator();
             destDir += s->getDate().toString("yyyy-MM-dd");

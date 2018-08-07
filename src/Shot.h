@@ -111,8 +111,8 @@ class Shot: public QObject
 
     bool m_onCamera = false;        //!< Shot datas currently located on a device
 
-    Shared::ShotType m_type;
-    Shared::ShotState m_state;
+    Shared::ShotType m_type = Shared::SHOT_UNKNOWN;
+    Shared::ShotState m_state = Shared::SHOT_STATE_DEFAULT;
     QString m_camera_source;        //!< Model of the camera that produced the shot
 
     int m_shot_id = -1;
