@@ -12,10 +12,30 @@ Rectangle {
 
     property int selectedItem : shotsview.currentIndex
 
+    Connections {
+        target: myDevice
+        onStateUpdated: updateLoading()
+    }
+
+    function updateLoading() {
+        if (myDevice) {
+            if (myDevice.deviceState !== 1) {
+                loadingFader.start()
+            } else {
+                loadingFader.stop()
+                if (shotsview.count > 0) {
+                    circleEmpty.visible = false;
+                }
+            }
+        }
+    }
+
     function updateDeviceHeader() {
         deviceModelText.text = myDevice.brand + " " + myDevice.model;
         deviceSpaceText.text = StringUtils.bytesToString_short(myDevice.spaceUsed) + " used of " + StringUtils.bytesToString_short(myDevice.spaceTotal)
         deviceSpaceBar.value = myDevice.spaceUsedPercent
+
+        loadingFader.start()
 
         if (myDevice.model.includes("HERO6")) {
             deviceImage.source = "qrc:/cameras/H6.svg"
@@ -41,7 +61,9 @@ Rectangle {
 
     function updateGridViewStuff() {
         if (shotsview.count > 0) {
-            circleEmpty.visible = false;
+            if (myDevice && myDevice.deviceState === 0) {
+                circleEmpty.visible = false;
+            }
         } else {
             shotsview.currentIndex = -1
 
@@ -374,6 +396,14 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 fillMode: Image.PreserveAspectFit
                 source: "qrc:/icons/card.svg"
+            }
+
+            NumberAnimation on opacity {
+                id: loadingFader;
+                from: 1;
+                to: 0;
+                duration: 2000;
+                loops: Animation.Infinite
             }
         }
 

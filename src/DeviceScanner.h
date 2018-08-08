@@ -19,65 +19,49 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#ifndef SHOT_MODEL_H
-#define SHOT_MODEL_H
+#ifndef DEVICE_SCANNER
+#define DEVICE_SCANNER
 /* ************************************************************************** */
 
 #include "Shot.h"
+#include "Device.h"
 
 #include <QObject>
-#include <QMetaType>
-#include <QDateTime>
-#include <QAbstractListModel>
-
-#include <QMutex>
+#include <QList>
+#include <QString>
 
 /* ************************************************************************** */
 
-class ShotModel : public QAbstractListModel
+class DeviceScanner: public QObject
 {
     Q_OBJECT
-    Q_ENUMS(ShotRoles)
 
-    QList<Shot *> m_shots;
-    //mutable QMutex m_shots_mutex;
+    QList <QString> m_watchedFilesystems;
+    QList <std::pair<unsigned, unsigned>> m_watchedMtpDevices;
 
-protected:
-    QHash<int, QByteArray> roleNames() const;
+    void scanFilesystems();
+    void scanVirtualFilesystems();
+    void scanMtpDevices();
 
 public:
-    enum ShotRoles {
-        NameRole = Qt::UserRole+1,
-        TypeRole,
-        PreviewRole,
-        SizeRole,
-        DurationRole,
-        DateRole,
-        GpsRole,
-        CameraRole,
-
-        PointerRole,
-    };
-
-    ShotModel(QObject *parent = nullptr);
-    ShotModel(const ShotModel &other);
-    ~ShotModel();
-
-    int rowCount(const QModelIndex & parent = QModelIndex()) const;
-    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-
-    void getShots(QList<Shot *> &shots);
-    Shot * getShotAt(int index);
-    Shot * getShotAt(Shared::ShotType type, int file_id, int camera_id) const;
-    int getShotCount() const;
+    DeviceScanner();
+    ~DeviceScanner();
 
 public slots:
-    void addFile(ofb_file *f, ofb_shot *s);
-    void addShot(Shot *shot);
-    void removeShot(Shot *shot);
+    void searchDevices();
+
+signals:
+    void scanningStarted();
+    void scanningFinished();
+
+    void fsDeviceFound(QString, gopro_info_version *);
+    void vfsDeviceFound(ofb_vfs_device *);
+    void mtpDeviceFound(ofb_mtp_device *);
+
+    void fsDeviceRemoved(QString);
+    void vfsDeviceRemoved(QString, std::pair<unsigned, unsigned>);
+    void mtpDeviceRemoved(std::pair<unsigned, unsigned>);
 };
 
-//Q_DECLARE_METATYPE(ShotModel*)
-
 /* ************************************************************************** */
-#endif // SHOT_MODEL_H
+#endif // DEVICE_SCANNER

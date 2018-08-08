@@ -24,7 +24,34 @@
 /* ************************************************************************** */
 
 #include "Shot.h"
+#include "Device.h"
+
 #include <QString>
+
+/* ************************************************************************** */
+
+/*!
+ * \brief parseGoProVersionFile
+ * \param path[in]
+ * \param infos[out]
+ * \return
+ */
+bool parseGoProVersionFile(const QString &path, gopro_info_version &infos);
+
+/*!
+ * \brief getGoProShotInfos
+ * \param file[in]: Describe the file.
+ * \param shot[out]: Describe the shot.
+ * \return true if the file is coming from a GoPro shot.
+ *
+ * \ref https://gopro.com/help/articles/question_answer/GoPro-Camera-File-Naming-Convention
+ *
+ * TODO: test if Qt::CaseSensitivity makes a performance difference?
+ * TODO: merge file_number and group_number into shot_id?
+ */
+bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot);
+
+/* ************************************************************************** */
 
 /*!
  * \brief getGoProShotInfos

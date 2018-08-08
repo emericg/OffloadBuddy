@@ -28,10 +28,14 @@
 
 #ifdef ENABLE_LIBMTP
 #include <libmtp.h>
+#ifndef LIBMTP_FILES_AND_FOLDERS_ROOT
+// Hack for older versions of libmtp (<=1.10?)
+#define LIBMTP_FILES_AND_FOLDERS_ROOT 0xffffffff
+#endif
 #else
 typedef void LIBMTP_mtpdevice_t;
 typedef void LIBMTP_devicestorage_t;
-#endif
+#endif // ENABLE_LIBMTP
 
 #include <QObject>
 #include <QVariant>
@@ -118,8 +122,8 @@ typedef enum deviceModel_e
 typedef enum deviceType_e
 {
     DEVICE_FILESYSTEM = 0,
-    //DEVICE_VIRTUAL_FILESYSTEM = ?,
-    DEVICE_MTP = 1,
+    DEVICE_VIRTUAL_FILESYSTEM = 1,
+    DEVICE_MTP = 2,
 
 } deviceType_e;
 
@@ -137,7 +141,6 @@ class StorageFilesystem
 {
 public:
     QString m_path;
-    // QStrin gm_dcim_path?
     QStorageInfo m_storage;
     bool m_writable = false;
 };
@@ -147,9 +150,57 @@ class StorageMtp
 public:
     unsigned m_dcim_id = 0;
     LIBMTP_mtpdevice_t *m_device = nullptr;
-    LIBMTP_devicestorage_t *m_storage;
+    LIBMTP_devicestorage_t *m_storage = nullptr;
     bool m_writable = false;
 };
+
+/* ************************************************************************** */
+
+struct ofb_fs_device
+{
+    QString brand = "unknown";
+    QString model = "device";
+    QString serial;
+    QString firmware;
+
+    QStringList paths;
+    QList <StorageFilesystem *> storages;
+};
+
+struct ofb_vfs_device
+{
+    QString brand = "brand";
+    QString model = "MODEL";
+    QString serial;
+    QString firmware;
+
+    //std::pair<uint32_t, uint32_t> currentMtpDevice;
+    uint32_t devBus = 0;
+    uint32_t devNum = 0;
+
+    QStringList paths;
+    QList <StorageFilesystem *> storages;
+};
+
+struct ofb_mtp_device
+{
+    QString brand = "brand";
+    QString model = "MODEL";
+    QString serial;
+    QString firmware;
+
+    //std::pair<uint32_t, uint32_t> currentMtpDevice;
+    uint32_t devBus = 0;
+    uint32_t devNum = 0;
+
+    double battery = 0.0;
+
+    LIBMTP_mtpdevice_t *device = nullptr;
+
+    QList <StorageMtp *> storages;
+};
+
+/* ************************************************************************** */
 
 /*!
  * \brief The Device class
@@ -157,8 +208,10 @@ public:
 class Device: public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(int deviceModel READ getDeviceModel NOTIFY deviceUpdated)
+
+    Q_PROPERTY(int deviceState READ getDeviceState NOTIFY stateUpdated)
     Q_PROPERTY(int deviceType READ getDeviceType NOTIFY deviceUpdated)
+    Q_PROPERTY(int deviceModel READ getDeviceModel NOTIFY deviceUpdated)
 
     Q_PROPERTY(QString brand READ getBrand NOTIFY deviceUpdated)
     Q_PROPERTY(QString model READ getModel NOTIFY deviceUpdated)
@@ -170,40 +223,40 @@ class Device: public QObject
     Q_PROPERTY(double spaceUsedPercent READ getSpaceUsed_percent NOTIFY spaceUpdated)
     Q_PROPERTY(qint64 spaceAvailable READ getSpaceAvailable NOTIFY spaceUpdated)
 
-    Q_PROPERTY(ShotModel* shotModel READ getShotModel NOTIFY shotsUpdated)
+    Q_PROPERTY(ShotModel *shotModel READ getShotModel NOTIFY shotModelUpdated)
 
     deviceModel_e m_deviceModel = DEVICE_UNKNOWN;
     deviceType_e m_deviceType = DEVICE_FILESYSTEM;
     deviceState_e m_deviceState = DEVICE_STATE_IDLE;
 
     // Generic infos
-    QString m_brand = "GoPro";
-    QString m_model = "HERO?";
+    QString m_brand = "brand";
+    QString m_model = "MODEL";
     QString m_serial;
     QString m_firmware;
 
     // HW infos
-    double m_battery = 0.0;
+    double m_mtpBattery = 0.0;
+    LIBMTP_mtpdevice_t *m_mtpDevice = nullptr;
 
     // Storage(s)
-    QTimer m_updateTimer;
-
+    QTimer m_updateStorageTimer;
     QList <StorageFilesystem *> m_filesystemStorages;
     QList <StorageMtp *> m_mtpStorages;
-    LIBMTP_mtpdevice_t *m_mtpDevice = nullptr;
 
     // Shot(s)
     ShotModel *m_shotModel = nullptr;
     Shot *findShot(Shared::ShotType type, int file_id, int camera_id) const;
 
 private slots:
-    void refreshDevice();
+    void refreshBatteryInfos();
+    void refreshStorageInfos();
 
 Q_SIGNALS:
-    void scanningStarted();
-    void scanningFinished();
     void deviceUpdated();
+    void shotModelUpdated();
     void shotsUpdated();
+    void stateUpdated();
     void spaceUpdated();
 
 public:
@@ -212,15 +265,16 @@ public:
     ~Device();
 
     bool isValid();
-    bool scanFilesystem(const QString &path);
-    bool scanMtpDevices();
 
     bool addStorage_filesystem(const QString &path);
     bool addStorage_mtp(LIBMTP_mtpdevice_t *m_mtpDevice);
-        void mtpFileRec(LIBMTP_mtpdevice_t *device, uint32_t storageid, uint32_t leaf);
+
+    bool addStorages_filesystem(ofb_fs_device *device);
+    bool addStorages_mtp(ofb_mtp_device *device);
 
 public slots:
     //
+    int getDeviceState() const { return m_deviceState; }
     int getDeviceModel() const { return m_deviceModel; }
     int getDeviceType() const { return m_deviceType; }
     QString getBrand() const { return m_brand; }
@@ -246,6 +300,10 @@ public slots:
     //
     void addShot(Shot *shot);
     void deleteShot(Shot *shot);
+
+    void workerScanningStarted(QString s);
+    void workerScanningFinished(QString s);
+    void workerFoundShot(Shot *s);
 
     //
     ShotModel *getShotModel() const { return m_shotModel; }

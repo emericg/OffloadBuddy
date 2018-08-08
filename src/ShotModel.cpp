@@ -48,15 +48,50 @@ ShotModel::~ShotModel()
     m_shots.clear();
 }
 
+/* ************************************************************************** */
+
+void ShotModel::addFile(ofb_file *f, ofb_shot *s)
+{
+    //qDebug() << "ShotModel::addFile()";
+
+    Shot *shot = getShotAt(s->file_type, s->shot_id, s->camera_id);
+    if (shot)
+    {
+        //qDebug() << "Adding file:" << f->name << "to an existing shot";
+        shot->addFile(f);
+    }
+    else
+    {
+        //qDebug() << "file:" << file_name << "is a new shot";
+        shot = new Shot(s->file_type);
+        if (shot)
+        {
+            shot->addFile(f);
+            shot->setFileId(s->shot_id);
+            shot->setCameraId(s->camera_id);
+            if (shot->isValid())
+            {
+                addShot(shot);
+            }
+            else
+            {
+                delete shot;
+            }
+        }
+    }
+
+    delete s;
+}
+
 void ShotModel::addShot(Shot *shot)
 {
     if (shot)
     {
         beginInsertRows(QModelIndex(), getShotCount(), getShotCount());
 
-        m_shots_mutex.lock();
+        //m_shots_mutex.lock();
         m_shots.push_back(shot);
-        m_shots_mutex.unlock();
+        //m_shots_mutex.unlock();
 
         endInsertRows();
     }
@@ -68,10 +103,10 @@ void ShotModel::removeShot(Shot *shot)
     {
         beginRemoveRows(QModelIndex(), 0, getShotCount());
 
-        m_shots_mutex.lock();
+        //m_shots_mutex.lock();
         m_shots.removeOne(shot);
         delete shot;
-        m_shots_mutex.unlock();
+        //m_shots_mutex.unlock();
 
         endRemoveRows();
     }
@@ -79,7 +114,7 @@ void ShotModel::removeShot(Shot *shot)
 
 void ShotModel::getShots(QList<Shot *> &shots)
 {
-    QMutexLocker locker(&m_shots_mutex);
+    //QMutexLocker locker(&m_shots_mutex);
 
     for (auto shot: m_shots)
     {
@@ -89,7 +124,7 @@ void ShotModel::getShots(QList<Shot *> &shots)
 
 Shot * ShotModel::getShotAt(int index)
 {
-    QMutexLocker locker(&m_shots_mutex);
+    //QMutexLocker locker(&m_shots_mutex);
 
     if (index >= 0 && index < m_shots.size())
     {
@@ -110,7 +145,7 @@ Shot * ShotModel::getShotAt(Shared::ShotType type, int file_id, int camera_id) c
 {
     if (file_id > 0)
     {
-        QMutexLocker locker(&m_shots_mutex);
+        //QMutexLocker locker(&m_shots_mutex);
 
         for (int i = m_shots.size()-1; i >= 0; i--)
         {
@@ -133,28 +168,30 @@ Shot * ShotModel::getShotAt(Shared::ShotType type, int file_id, int camera_id) c
 
 int ShotModel::getShotCount() const
 {
-    QMutexLocker locker(&m_shots_mutex);
+    //QMutexLocker locker(&m_shots_mutex);
     return m_shots.size();
 }
+
+/* ************************************************************************** */
 
 int ShotModel::rowCount(const QModelIndex & parent) const
 {
     Q_UNUSED(parent);
 
-    QMutexLocker locker(&m_shots_mutex);
+    //QMutexLocker locker(&m_shots_mutex);
     return m_shots.count();
 }
 
 QVariant ShotModel::data(const QModelIndex & index, int role) const
 {
-    m_shots_mutex.lock();
+    //m_shots_mutex.lock();
 
     if (index.row() < 0 || index.row() >= m_shots.size())
         return QVariant();
 
     Shot *shot = m_shots[index.row()];
 
-    m_shots_mutex.unlock();
+    //m_shots_mutex.unlock();
 
     if (role == NameRole)
         return shot->getName();
@@ -193,3 +230,5 @@ QHash<int, QByteArray> ShotModel::roleNames() const
 
     return roles;
 }
+
+/* ************************************************************************** */

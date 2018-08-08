@@ -79,10 +79,19 @@ struct ofb_file
     QString filesystemPath;         //!< Absolute file path, if available
 
 #ifdef ENABLE_LIBMTP
-    LIBMTP_mtpdevice_t *mtpDevice = nullptr; // no...
-    //LIBMTP_devicestorage_t *mtpStorage = nullptr;
+    LIBMTP_mtpdevice_t *mtpDevice = nullptr;
     uint32_t mtpObjectId = 0;
 #endif
+};
+
+struct ofb_shot
+{
+    Shared::ShotType file_type = Shared::SHOT_UNKNOWN;
+    int camera_id = 0; // for multi camera system
+    int shot_id = -1;
+
+    int file_number = -1;
+    int group_number = -1;
 };
 
 /*!

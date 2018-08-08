@@ -30,8 +30,10 @@ SOURCES  += src/main.cpp \
             src/SettingsManager.cpp \
             src/JobManager.cpp \
             src/MediaManager.cpp \
+            src/DeviceScanner.cpp \
             src/DeviceManager.cpp \
             src/Device.cpp \
+            src/FileScanner.cpp \
             src/Shot.cpp \
             src/ShotModel.cpp \
             src/GoProFileModel.cpp
@@ -39,8 +41,10 @@ SOURCES  += src/main.cpp \
 HEADERS  += src/SettingsManager.h \
             src/JobManager.h \
             src/MediaManager.h \
+            src/DeviceScanner.h \
             src/DeviceManager.h \
             src/Device.h \
+            src/FileScanner.h \
             src/Shot.h \
             src/ShotModel.h \
             src/GoProFileModel.h
@@ -66,9 +70,6 @@ unix {
     contains(DEFINES, ENABLE_LIBMTP) {
         CONFIG += link_pkgconfig
         PKGCONFIG += libusb-1.0 libmtp
-
-        #LIBS += `pkg-config --libs libusb-1.0 libmtp`
-        #INCLUDEPATH += `pkg-config --cflags libusb-1.0 libmtp`
     }
 
     contains(DEFINES, ENABLE_FFMPEG) {

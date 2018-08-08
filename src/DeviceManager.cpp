@@ -22,12 +22,15 @@
 #include "DeviceManager.h"
 #include "Device.h"
 
+#include "GoProFileModel.h"
+
 #ifdef Q_OS_UNIX
 #include <unistd.h>
 #endif
 
 #include <QFile>
 #include <QDir>
+#include <QThread>
 #include <QDebug>
 
 /* ************************************************************************** */
@@ -39,184 +42,21 @@ DeviceManager::DeviceManager()
     qDebug() << "libmtp enabled, version:" << LIBMTP_VERSION_STRING;
 #endif
 
-    m_updateTimer.setInterval(SCANNING_INTERVAL);
-    connect(&m_updateTimer, &QTimer::timeout, this, &DeviceManager::searchDevices);
-    m_updateTimer.start();
-
-    QObject::connect(&m_watcherFilesystem, &QFileSystemWatcher::directoryChanged, this, &DeviceManager::somethingsUp);
+    connect(&m_deviceScannerTimer, &QTimer::timeout, this, &DeviceManager::searchDevices);
+    connect(&m_watcherFilesystem, &QFileSystemWatcher::directoryChanged, this, &DeviceManager::filesystemWatcherActivity);
 }
 
 DeviceManager::~DeviceManager()
 {
+    delete m_deviceScannerThread;
+    delete m_deviceScanner;
+
     qDeleteAll(m_devices);
     m_devices.clear();
 }
 
 /* ************************************************************************** */
-
-bool DeviceManager::scanFilesystems()
-{
-    bool status = false;
-
-    foreach (const QStorageInfo &storage, QStorageInfo::mountedVolumes())
-    {
-        //qDebug() << "> MOUNTPOINT(" << storage.fileSystemType() << ") > " << storage.rootPath();
-
-        if (storage.fileSystemType() == "nfs" ||
-            storage.fileSystemType() == "nfs4")
-        {
-            //qDebug() << "> skipping network filesystem";
-            continue;
-        }
-
-        if (storage.fileSystemType() == "tmpfs")
-        {
-            //qDebug() << "> skipping virtual filesystem";
-            continue;
-        }
-
-        // Path in watch list? bail early!
-        if (m_watcherFilesystem.directories().contains(storage.rootPath()))
-        {
-            //qDebug() << "> skipping '" << storage.rootPath() << "', already handled";
-            continue;
-        }
-
-        if (storage.isValid() && storage.isReady())
-        {
-            QString deviceRootpath = storage.rootPath();
-            gopro_info_version deviceInfos;
-
-            if (parseGoProVersionFile(deviceRootpath, deviceInfos))
-            {
-                addDevice(deviceRootpath, deviceInfos);
-            }
-            else
-            {
-                // TODO scan for other stuff than GoPro SD cards
-            }
-        }
-        else
-        {
-            qDebug() << "* mountpoint invalid? '" << storage.displayName() << "'";
-        }
-    }
-
-    return status;
-}
-
-bool DeviceManager::scanVirtualFilesystems()
-{
-    bool status = false;
-
-#ifdef __linux
-    foreach (const QStorageInfo &storage, QStorageInfo::mountedVolumes())
-    {
-        if (storage.fileSystemType() == "tmpfs")
-        {
-            //qDebug() << "> MOUNTPOINT(" << storage.fileSystemType() << ") > " << storage.rootPath();
-
-            if (storage.rootPath() == "/run" ||
-                storage.rootPath() == "/tmp")
-            {
-                //qDebug() << "> skipping OS internal filesystem";
-                continue;
-            }
-
-            // Chances are, we now have a virtual MTP filesystem, so let's look for it
-            // ex: /run/user/1000/gvfs/gphoto2:host=%5Busb%3A005%2C012%5D/
-            // ex: /run/user/1000/gvfs/mtp:host=%5Busb%3A005%2C012%5D/
-            // 0x2C: ','   0x3A: ':'   0x5B: '['   0x5D: ']'
-
-            QDir gvfsDirectory(storage.rootPath() + "/gvfs");
-            foreach (QString subdir_device, gvfsDirectory.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
-            {
-                //qDebug() << "Scanning MTP subdir_device:" << subdir_device;
-
-                int bus = -1, dev = -1;
-                std::pair<uint32_t, uint32_t> currentMtpDevice;
-                QString brand = "unknown", model = "device", firmware, serial;
-                QString deviceRootpath = storage.rootPath();
-
-                if (subdir_device.startsWith("mtp"))
-                {
-                    bus = subdir_device.mid(18,3).toInt();
-                    dev = subdir_device.mid(24,3).toInt();
-                }
-                else if (subdir_device.startsWith("gphoto2"))
-                {
-                    bus = subdir_device.mid(22,3).toInt();
-                    dev = subdir_device.mid(28,3).toInt();
-                }
-                if (bus >= 0 && dev >= 0)
-                {
-                    // Device in watch list? bail early!
-                    currentMtpDevice = std::make_pair(bus, dev);
-                    if (m_watcherMtp.contains(currentMtpDevice))
-                    {
-                        //qDebug() << "> skipping device @ bus" << currentMtpDevice.first << ", dev" << currentMtpDevice.second << ", already handled";
-                        continue;
-                    }
-
-                    getMtpDevices(static_cast<uint32_t>(bus), static_cast<uint32_t>(dev), brand, model);
-                    //qDebug() << "MTP infos:" << bus << "/" << dev;
-                    //qDebug() << "MTP infos:" << brand << "/" << model;
-                }
-                else
-                {
-                    // skip?
-                    continue;
-                }
-
-                Device *d = new Device(brand, model, firmware, serial);
-
-                // Then we usually have a subdirectory per MTP 'volume'
-                // ex: one volume for the internal flash of a phone and one for its SD card
-                QDir gvfsSubDirectory(gvfsDirectory.path() + "/" + subdir_device);
-                foreach (QString subdir_volume, gvfsSubDirectory.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
-                {
-                    //qDebug() << "Scanning MTP subdir_volume:" << subdir_volume;
-                    //qDebug() << "deviceRootpath:" << deviceRootpath;
-                    deviceRootpath = gvfsSubDirectory.path() + "/" + subdir_volume;
-
-                    QDir dcim(deviceRootpath + "/DCIM");
-                    if (dcim.exists())
-                    {
-                        //qDebug() << "WE HAVE DCIM at ";
-                        d->addStorage_filesystem(deviceRootpath);
-                    }
-                }
-
-                QFile getstarted(deviceRootpath + "/Get_started_with_GoPro.url");
-                QDir dcim(deviceRootpath + "/DCIM");
-                if (getstarted.exists() && dcim.exists())
-                {
-                    //qDebug() << "WE HAVE Get_started_with_GoPro";
-                    if (d->isValid())
-                    {
-                        m_watcherMtp.push_back(currentMtpDevice);
-                        if (m_watcherFilesystem.addPath(deviceRootpath) == false)
-                            qDebug() << "FILE WATCHER FAILZD";
-
-                        m_devices.push_back(d);
-                    }
-                    else
-                    {
-                        delete d;
-                    }
-                }
-                else
-                {
-                    // TODO scan for other stuff than GoPro devices
-                    delete d;
-                }
-            }
-        }
-    }
-#endif // __linux
-
-    return status;
-}
+/* ************************************************************************** */
 
 /*!
  * \brief Get the brand and model of a device from its MTP bus and device number.
@@ -230,8 +70,8 @@ bool DeviceManager::scanVirtualFilesystems()
  * This is used to match virtual filesystem with (at least) a brand and model.
  * Not much more can be found through libMTP if GVFS is already connected to the device.
  */
-bool DeviceManager::getMtpDevices(const uint32_t busNum, const uint32_t devNum,
-                                  QString &brand, QString &model)
+bool DeviceManager::getMtpDeviceName(const uint32_t busNum, const uint32_t devNum,
+                                     QString &brand, QString &model)
 {
     bool status = false;
 
@@ -266,203 +106,74 @@ bool DeviceManager::getMtpDevices(const uint32_t busNum, const uint32_t devNum,
     return status;
 }
 
-bool DeviceManager::scanMtpDevices()
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+void DeviceManager::searchDevices()
 {
-    bool status = false;
+    //qDebug() << "DeviceManager::searchDevices()";
 
-#ifdef ENABLE_LIBMTP
-
-    int numrawdevices = 0;
-    LIBMTP_raw_device_t *rawdevices = nullptr;
-
-    // use this to get *already* connected devices? ??
-    //LIBMTP_Get_Connected_Devices(LIBMTP_mtpdevice_t **device_list)
-
-    // check for devices that have disapeared
-    //LIBMTP_Check_Specific_Device()
-    //LIBMTP_Get_Connected_Devices(LIBMTP_mtpdevice_t **device_list)
-
-    LIBMTP_error_number_t err = LIBMTP_Detect_Raw_Devices(&rawdevices, &numrawdevices);
-    switch (err)
+    if (m_deviceScanner == nullptr)
     {
-    case LIBMTP_ERROR_NONE:
-        status = true;
-        //qDebug() << "MTP: Found %d device(s):" << numrawdevices;
-        break;
-    case LIBMTP_ERROR_NO_DEVICE_ATTACHED:
-        status = true;
-        break;
+        m_deviceScannerThread = new QThread();
+        m_deviceScanner = new DeviceScanner();
 
-    case LIBMTP_ERROR_CONNECTING:
-        qDebug() << "MTP: There has been a connection error!";
-        break;
-    case LIBMTP_ERROR_MEMORY_ALLOCATION:
-        qDebug() << "MTP: Encountered a Memory Allocation Error!";
-        break;
-    case LIBMTP_ERROR_GENERAL:
-    default:
-        qDebug() << "MTP: Unknown connection error!";
-        break;
-    }
-
-    for (int i = 0; i < numrawdevices; i++)
-    {
-/*
-        qDebug() << "> MTP DEVICE(" << rawdevices[i].device_entry.vendor << rawdevices[i].device_entry.product \
-                 << ") [" << rawdevices[i].device_entry.vendor_id << ":" << rawdevices[i].device_entry.product_id \
-                 << "] @ bus" << rawdevices[i].bus_location << ", dev" << rawdevices[i].devnum;
-*/
-        // Device in watch list? bail early!
-        auto currentMtpDevice = std::make_pair(rawdevices[i].bus_location, rawdevices[i].devnum);
-        if (m_watcherMtp.contains(currentMtpDevice))
+        if (m_deviceScannerThread && m_deviceScanner)
         {
-            //qDebug() << "> skipping device @ bus" << currentMtpDevice.first << ", dev" << currentMtpDevice.second << ", already handled";
-            continue;
-        }
+            m_deviceScanner->moveToThread(m_deviceScannerThread);
 
-        LIBMTP_mtpdevice_t *mtpDevice = LIBMTP_Open_Raw_Device_Uncached(&rawdevices[i]);
-        if (mtpDevice == nullptr)
-        {
-            qDebug() << "MTP: Unable to open raw device #" << i;
-            continue;
-        }
-/*
-        LIBMTP_Dump_Errorstack(device);
-        LIBMTP_Clear_Errorstack(device);
-        LIBMTP_Dump_Device_Info(device);
-*/
-        // Device infos
-        QString brand_qstr =  rawdevices[i].device_entry.vendor;
-        QString model_qstr = rawdevices[i].device_entry.product;
-        char *version = LIBMTP_Get_Deviceversion(mtpDevice);
-        char *serial = LIBMTP_Get_Serialnumber(mtpDevice);
-        QString serial_qstr = serial;
-        QString firmware_qstr = version;
+            connect(m_deviceScannerThread, SIGNAL(started()), m_deviceScanner, SLOT(searchDevices()));
+            connect(this, SIGNAL(startDeviceScanning()), m_deviceScanner, SLOT(searchDevices()));
 
-        // Create device
-        Device *d = new Device(brand_qstr, model_qstr, serial_qstr, firmware_qstr);
-        if (d)
-        {
-            if (d->addStorage_mtp(mtpDevice) == true)
-            {
-                if (d->isValid())
-                {
-                    m_watcherMtp.push_back(currentMtpDevice);
-                    m_devices.push_back(d);
+            connect(m_deviceScanner, SIGNAL(fsDeviceFound(QString, gopro_info_version *)), this, SLOT(addFsDevice(QString, gopro_info_version *)));
+            connect(m_deviceScanner, SIGNAL(vfsDeviceFound(ofb_vfs_device *)), this, SLOT(addVfsDevice(ofb_vfs_device *)));
+            connect(m_deviceScanner, SIGNAL(mtpDeviceFound(ofb_mtp_device *)), this, SLOT(addMtpDevice(ofb_mtp_device *)));
 
-                    emit devicesUpdated();
-                }
-                else
-                {
-                    qDebug() << "> INVALID DEVICE";
-                    delete d;
-                }
-            }
-            else
-            {
-                qDebug() << "> INVALID DEVICE";
-                delete d;
-            }
+            connect(m_deviceScanner, SIGNAL(scanningStarted()), this, SLOT(workerScanningStarted()));
+            connect(m_deviceScanner, SIGNAL(scanningFinished()), this, SLOT(workerScanningFinished()));
+            //connect(m_deviceScanner, SIGNAL (scanningFinished()), m_deviceScanner, SLOT (deleteLater()));
+            //connect(m_deviceScanner, SIGNAL(scanningFinished()), m_deviceScannerThread, SLOT(quit()));
+
+            // automatically delete thread when its work is done
+            //connect(m_deviceScannerThread, SIGNAL(finished()), m_deviceScannerThread, SLOT(deleteLater()));
+
+            m_deviceScannerThread->start();
         }
     }
-
-    free(rawdevices);
-
-#endif // ENABLE_LIBMTP
-
-    return status;
-}
-
-bool DeviceManager::searchDevices()
-{
-    bool status = false;
-
-    scanFilesystems();
-    scanVirtualFilesystems();
-    scanMtpDevices();
-
-    if (m_devices.size() > 0)
-        status = true;
-
-    return status;
-}
-
-/*!
- * \brief parseGoProVersionFile
- * \param path[in]
- * \param infos[out]
- * \return
- */
-bool DeviceManager::parseGoProVersionFile(const QString &path, gopro_info_version &infos)
-{
-    bool status = false;
-
-    QFile versiontxt(path + "/MISC/version.txt");
-
-    if (versiontxt.exists() &&
-        versiontxt.size() > 0 &&
-        versiontxt.open(QIODevice::ReadOnly))
+    else
     {
-/*
-        qDebug() << "> GOPRO SD CARD FOUND:";
-        qDebug() << "- mountpoint:" << storage.displayName();
-        qDebug() << "- type:" << storage.fileSystemType();
-*/
-        QTextStream in(&versiontxt);
-        while (!in.atEnd())
-        {
-            QString line = in.readLine();
-            if (!line.isEmpty())
-            {
-                QStringList kv = line.split(':');
-                if (kv.size() == 2)
-                {
-                    QString key = kv.at(0);
-                    key.remove(0,1).chop(1);
-                    QString value = kv.at(1);
-                    value.remove(0,1).chop(2);
-                    //qDebug() << "key:" << key << " / value:" << value;
-
-                    if (key == "info version")
-                        if (value != "1.0" && value != "1.1" &&  value != "2.0")
-                            qWarning() << "SD Card version.txt is unsupported!";
-
-                    if (key == "firmware version")
-                        infos.firmware_version = value;
-
-                    if (key == "camera type")
-                        infos.camera_type = value;
-
-                    if (key == "camera serial number")
-                        infos.camera_serial_number = value;
-
-                    if (key == "wifi mac")
-                        infos.wifi_mac = value;
-                    if (key == "wifi version")
-                        infos.wifi_version = value;
-                    if (key == "wifi bootloader version")
-                        infos.wifi_bootloader_version = value;
-                }
-            }
-        }
-
-        if (!infos.camera_type.isEmpty() && !infos.camera_serial_number.isEmpty())
-            status = true;
+        emit startDeviceScanning();
     }
-
-    versiontxt.close();
-
-    return status;
 }
 
 /* ************************************************************************** */
 
-void DeviceManager::addDevice(const QString &path, const gopro_info_version &infos)
+void DeviceManager::workerScanningStarted()
 {
-    if (path.isEmpty())
+    //qDebug() << "DeviceManager::workerScanningStarted()";
+}
+
+void DeviceManager::workerScanningFinished()
+{
+    //qDebug() << "DeviceManager::workerScanningFinished()";
+
+    // Restart device scanning timer
+    m_deviceScannerTimer.setInterval(SCANNING_INTERVAL);
+    m_deviceScannerTimer.setSingleShot(true);
+    m_deviceScannerTimer.start();
+}
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+void DeviceManager::addFsDevice(QString path, gopro_info_version *infos)
+{
+    if (m_devices.size() >= MAX_DEVICES ||
+        path.isEmpty() || !infos)
+    {
+        delete infos;
         return;
-    if (m_devices.size() >= MAX_DEVICES)
-        return;
+    }
 
     Device *d = nullptr;
     bool deviceExists = false;
@@ -474,14 +185,14 @@ void DeviceManager::addDevice(const QString &path, const gopro_info_version &inf
         if (d)
         {
             if ((d->getPath(0) == path || d->getPath(1) == path) &&
-                (d->getSerial() == infos.camera_serial_number))
+                (d->getSerial() == infos->camera_serial_number))
             {
                 deviceExists = true;
                 break;
             }
             else if (d->getModel() == "FUSION" &&
                      d->getPath(0) != path &&
-                     (d->getSerial() == infos.camera_serial_number))
+                     (d->getSerial() == infos->camera_serial_number))
             {
                 // we only want to merge two SD cards from a same FUSION device
                 deviceMerge = true;
@@ -494,24 +205,26 @@ void DeviceManager::addDevice(const QString &path, const gopro_info_version &inf
     {
         if (deviceMerge == true)
         {
-            if (!d) return;
-            qDebug() << ">>>> MERGING DEVICE";
+            if (d)
+            {
+                qDebug() << ">>>> MERGING DEVICE";
 
-            // fusioooooooon
-            d->addStorage_filesystem(path);
+                // fusioooooooon
+                d->addStorage_filesystem(path);
 
-            if (m_watcherFilesystem.addPath(path) == false)
-                qDebug() << "FILE WATCHER FAILZD";
+                if (m_watcherFilesystem.addPath(path) == false)
+                    qDebug() << "FILE WATCHER FAILZD";
 
-            emit devicesUpdated();
-            emit devicesAdded();
+                emit deviceListUpdated();
+                emit devicesAdded();
+            }
         }
         else
         {
             QString brand = "GoPro";
-            d = new Device(brand, infos.camera_type,
-                           infos.camera_serial_number,
-                           infos.firmware_version);
+            d = new Device(brand, infos->camera_type,
+                           infos->camera_serial_number,
+                           infos->firmware_version);
             if (d)
             {
                 if (d->addStorage_filesystem(path) == true)
@@ -523,7 +236,7 @@ void DeviceManager::addDevice(const QString &path, const gopro_info_version &inf
                         if (m_watcherFilesystem.addPath(path) == false)
                             qDebug() << "FILE WATCHER FAILZD";
 
-                        emit devicesUpdated();
+                        emit deviceListUpdated();
                         emit devicesAdded();
                     }
                     else
@@ -540,7 +253,100 @@ void DeviceManager::addDevice(const QString &path, const gopro_info_version &inf
             }
         }
     }
+
+    delete infos;
 }
+
+void DeviceManager::addVfsDevice(ofb_vfs_device *deviceInfos)
+{
+    if (m_devices.size() >= MAX_DEVICES || !deviceInfos)
+    {
+        delete deviceInfos;
+        return;
+    }
+
+    Device *d = nullptr;
+    bool deviceExists = false;
+    bool deviceMerge = false;
+/*
+    for (auto dd: m_devices)
+    {
+        d = qobject_cast<Device*>(dd);
+        if (d)
+        {
+            //if ((d->getPath(0) == path || d->getPath(1) == path) &&
+            //    (d->getSerial() == infos->camera_serial_number))
+            //{
+            //    deviceExists = true;
+            //    break;
+            //}
+        }
+    }
+*/
+    if (deviceExists == false)
+    {
+        d = new Device(deviceInfos->brand, deviceInfos->model,
+                       deviceInfos->firmware, deviceInfos->serial);
+
+        for (auto fs: deviceInfos->paths)
+        {
+            d->addStorage_filesystem(fs);
+        }
+
+        if (d->isValid())
+        {
+            m_devices.push_back(d);
+
+            emit deviceListUpdated();
+            emit devicesAdded();
+        }
+    }
+
+    delete deviceInfos;
+}
+
+void DeviceManager::addMtpDevice(ofb_mtp_device *deviceInfos)
+{
+    if (m_devices.size() >= MAX_DEVICES ||
+        !deviceInfos || !deviceInfos->device)
+    {
+        delete deviceInfos;
+        return;
+    }
+
+    Device *d = nullptr;
+    bool deviceExists = false;
+    bool deviceMerge = false;
+/*
+    for (auto dd: m_devices)
+    {
+        d = qobject_cast<Device*>(dd);
+        if (d)
+        {
+            //
+        }
+    }
+*/
+    if (deviceExists == false)
+    {
+        d = new Device(deviceInfos->brand, deviceInfos->model,
+                       deviceInfos->firmware, deviceInfos->serial);
+
+        d->addStorages_mtp(deviceInfos);
+
+        if (d->isValid())
+        {
+            m_devices.push_back(d);
+
+            emit deviceListUpdated();
+            emit devicesAdded();
+        }
+    }
+
+    delete deviceInfos;
+}
+
+/* ************************************************************************** */
 
 void DeviceManager::removeDevice(const QString &path)
 {
@@ -556,9 +362,8 @@ void DeviceManager::removeDevice(const QString &path)
             it = m_devices.erase(it);
             m_watcherFilesystem.removePath(path);
 
-            emit devicesUpdated();
-            emit devicesRemoved();
             emit deviceRemoved(d);
+            emit deviceListUpdated();
 
             return;
         }
@@ -567,7 +372,10 @@ void DeviceManager::removeDevice(const QString &path)
     }
 }
 
-void DeviceManager::somethingsUp(const QString &path)
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+void DeviceManager::filesystemWatcherActivity(const QString &path)
 {
     if (path.isEmpty())
         return;

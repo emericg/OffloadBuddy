@@ -24,6 +24,7 @@
 /* ************************************************************************** */
 
 #include "Device.h"
+#include "DeviceScanner.h"
 
 #ifdef ENABLE_LIBMTP
 #include <libmtp.h>
@@ -49,38 +50,42 @@ class DeviceManager: public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(QVariant devicesList READ getDevices NOTIFY devicesUpdated)
-
-    bool parseGoProVersionFile(const QString &path, gopro_info_version &infos);
+    Q_PROPERTY(QVariant devicesList READ getDevices NOTIFY deviceListUpdated)
 
     QList <QObject *> m_devices;
 
-    QTimer m_updateTimer;
+    DeviceScanner *m_deviceScanner = nullptr;
+    QThread *m_deviceScannerThread = nullptr;
+    QTimer m_deviceScannerTimer;
 
     QFileSystemWatcher m_watcherFilesystem;
-    QList <std::pair<unsigned, unsigned>> m_watcherMtp;
 
 Q_SIGNALS:
     void devicesAdded();
-    void devicesUpdated();
-    void devicesRemoved();
+    void deviceListUpdated();
     void deviceRemoved(Device *devicePtr);
+    void startDeviceScanning();
+
+private slots:
+    void workerScanningStarted();
+    void workerScanningFinished();
+    void filesystemWatcherActivity(const QString &path);
 
 public:
     DeviceManager();
     ~DeviceManager();
 
-public slots:
-    bool searchDevices();
-        bool scanFilesystems();
-        bool scanVirtualFilesystems();
-        bool scanMtpDevices();
-        bool getMtpDevices(const uint32_t busNum, const uint32_t devNum,
-                           QString &brand, QString &model);
+    static bool getMtpDeviceName(const uint32_t busNum, const uint32_t devNum,
+                                 QString &brand, QString &model);
 
-    void addDevice(const QString &path, const gopro_info_version &infos);
+public slots:
+    void searchDevices();
+
+    void addFsDevice(QString path, gopro_info_version *infos);
+    void addVfsDevice(ofb_vfs_device *deviceInfos);
+    void addMtpDevice(ofb_mtp_device *deviceInfos);
+
     void removeDevice(const QString &path);
-    void somethingsUp(const QString &path);
 
     QVariant getFirstDevice() const { if (m_devices.size() > 0) { return QVariant::fromValue(m_devices.at(0)); } return QVariant(); }
     QVariant getDevice(int index) const { if (index >= 0 && index < m_devices.size()) { return QVariant::fromValue(m_devices.at(index)); } return QVariant(); }

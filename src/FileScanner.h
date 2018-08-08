@@ -19,65 +19,58 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#ifndef SHOT_MODEL_H
-#define SHOT_MODEL_H
+#ifndef FILE_SCANNER
+#define FILE_SCANNER
 /* ************************************************************************** */
 
 #include "Shot.h"
+#include "Device.h"
+
+#ifdef ENABLE_LIBMTP
+#include <libmtp.h>
+#endif
 
 #include <QObject>
-#include <QMetaType>
-#include <QDateTime>
-#include <QAbstractListModel>
+#include <QVariant>
+#include <QList>
 
-#include <QMutex>
+#include <QStorageInfo>
+#include <QTimer>
 
 /* ************************************************************************** */
 
-class ShotModel : public QAbstractListModel
+class FileScanner: public QObject
 {
     Q_OBJECT
-    Q_ENUMS(ShotRoles)
 
-    QList<Shot *> m_shots;
-    //mutable QMutex m_shots_mutex;
+    QString m_selected_filesystem;
 
-protected:
-    QHash<int, QByteArray> roleNames() const;
+#ifdef ENABLE_LIBMTP
+    LIBMTP_mtpdevice_t *m_selected_mtpDevice = nullptr;
+    LIBMTP_devicestorage_t *m_selected_mtpStorage = nullptr;
+
+    void mtpFileLvl1(LIBMTP_mtpdevice_t *device, uint32_t storageid, uint32_t leaf);
+    void mtpFileRec(LIBMTP_mtpdevice_t *device, uint32_t storageid, uint32_t leaf);
+    void mtpFileUseless(LIBMTP_mtpdevice_t *device, uint32_t storageid, uint32_t leaf);
+#endif // ENABLE_LIBMTP
 
 public:
-    enum ShotRoles {
-        NameRole = Qt::UserRole+1,
-        TypeRole,
-        PreviewRole,
-        SizeRole,
-        DurationRole,
-        DateRole,
-        GpsRole,
-        CameraRole,
-
-        PointerRole,
-    };
-
-    ShotModel(QObject *parent = nullptr);
-    ShotModel(const ShotModel &other);
-    ~ShotModel();
-
-    int rowCount(const QModelIndex & parent = QModelIndex()) const;
-    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-
-    void getShots(QList<Shot *> &shots);
-    Shot * getShotAt(int index);
-    Shot * getShotAt(Shared::ShotType type, int file_id, int camera_id) const;
-    int getShotCount() const;
+    FileScanner();
+    ~FileScanner();
 
 public slots:
-    void addFile(ofb_file *f, ofb_shot *s);
-    void addShot(Shot *shot);
-    void removeShot(Shot *shot);
+    void chooseFilesystem(const QString &m_selected_filesystem);
+    void chooseMtpStorage(StorageMtp *mtpStorage);
+    //void chooseMtpStorages(QList<StorageMtp *> *storages);
+
+    void scanFilesystem();
+    void scanMtpDevice();
+
+signals:
+    void fileFound(ofb_file *, ofb_shot *);
+    void scanningStarted(QString);
+    void scanningFinished(QString);
 };
 
-//Q_DECLARE_METATYPE(ShotModel*)
-
 /* ************************************************************************** */
-#endif // SHOT_MODEL_H
+#endif // FILE_SCANNER
