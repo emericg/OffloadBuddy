@@ -45,8 +45,10 @@ Device::Device(const deviceType_e type,
 
     m_shotModel = new ShotModel;
 
-    m_updateStorageTimer.setInterval(5 * 1000);
     connect(&m_updateStorageTimer, &QTimer::timeout, this, &Device::refreshStorageInfos);
+    if (m_deviceType == DEVICE_MTP)
+        connect(&m_updateStorageTimer, &QTimer::timeout, this, &Device::refreshBatteryInfos);
+    m_updateStorageTimer.setInterval(5 * 1000);
     m_updateStorageTimer.start();
 }
 

@@ -101,10 +101,9 @@ bool JobManager::addJob(JobType type, Device *d, Shot *s, MediaDirectory *md)
 {
     bool status = false;
 
-    //
     if (type == JOB_DELETE)
     {
-        // TODO check RO ?
+        // TODO check if device is RO?
 
         // HANDLE FILE REMOVAL /////////////////////////////////////////////////
 
@@ -112,13 +111,14 @@ bool JobManager::addJob(JobType type, Device *d, Shot *s, MediaDirectory *md)
         {
 #ifdef ENABLE_LIBMTP
 
-            QList <ofb_file *> files = s->getFiles();
+            QList <ofb_file *> files = s->getFiles(); // Delete everything, MP4, LRVs...
             for (auto file: files)
             {
                 if (!file || !file->mtpDevice || file->mtpObjectId == 0)
                     continue;
 
-                //LIBMTP_Delete_Object(file->mtpDevice, file->mtpObjectId);
+                qDebug() << "JobManager  >  deleting:" << file->name;
+                LIBMTP_Delete_Object(file->mtpDevice, file->mtpObjectId);
             }
 
 #endif // ENABLE_LIBMTP
@@ -132,7 +132,7 @@ bool JobManager::addJob(JobType type, Device *d, Shot *s, MediaDirectory *md)
                     continue;
 
                 qDebug() << "JobManager  >  deleting:" << file->filesystemPath;
-                //QFile::remove(file->filesystemPath);
+                QFile::remove(file->filesystemPath);
             }
         }
 
@@ -268,6 +268,10 @@ bool JobManager::addJob(JobType type, Device *d, Shot *s, MediaDirectory *md)
 
         // TODO create new shot
         // TODO add new shot to media library
+    }
+    else
+    {
+        qWarning() << "Unimplemented job type:" << type;
     }
 
     return status;

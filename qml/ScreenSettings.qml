@@ -235,8 +235,8 @@ Rectangle {
 
             model: ListModel {
                 id: cbItemsContentHierarchy
-                ListElement { text: qsTr("date"); }
-                ListElement { text: qsTr("date > model"); }
+                ListElement { text: qsTr("/ date / FILES"); }
+                ListElement { text: qsTr("/ date / device / FILES"); }
             }
 
             Component.onCompleted: {

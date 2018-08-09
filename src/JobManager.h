@@ -55,6 +55,14 @@ typedef enum JobType
 
 } JobType;
 
+typedef enum JobState
+{
+    JOB_IDLE = 0,
+    JOB_IN_PROGRESS,
+    JOB_DONE,
+    JOB_INTERUPTED,
+} JobState;
+
 /* ************************************************************************** */
 
 class Job: public QObject
@@ -101,9 +109,9 @@ class JobManager: public QObject
 {
     Q_OBJECT
 
-    QList <QObject *> m_job_queue_1;
-    QList <QObject *> m_job_queue_2;
-    QList <QObject *> m_job_queue_3;
+    QList <QObject *> m_job_queue_1; // instant jobs (deletion...)
+    QList <QObject *> m_job_queue_2; // web downloads jobs
+    QList <QObject *> m_job_queue_3; // CPU jobs (reencodes, stabs...)
     QList <QObject *> m_job_queue_4;
 
     // Singleton
@@ -129,4 +137,5 @@ public slots:
     QVariant getJob(int index) const { if (m_job_queue_1.size() > index) { return QVariant::fromValue(m_job_queue_1.at(index)); } return QVariant(); }
 };
 
+/* ************************************************************************** */
 #endif // JOB_MANAGER_H

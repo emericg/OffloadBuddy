@@ -60,6 +60,8 @@ public:
 
 public slots:
     void chooseFilesystem(const QString &m_selected_filesystem);
+    //void chooseFilesystems(QList<StorageFilesystem *> *storages);
+
     void chooseMtpStorage(StorageMtp *mtpStorage);
     //void chooseMtpStorages(QList<StorageMtp *> *storages);
 
