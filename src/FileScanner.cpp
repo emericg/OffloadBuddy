@@ -69,15 +69,15 @@ void FileScanner::scanFilesystem()
 
     QString dcim_path = m_selected_filesystem + QDir::separator() + "DCIM";
 
-    qDebug() << "> SCANNING STARTED (filesystem)";
-    qDebug() << "  * DCIM:" << dcim_path;
+    //qDebug() << "> SCANNING STARTED (filesystem)";
+    //qDebug() << "  * DCIM:" << dcim_path;
     emit scanningStarted(m_selected_filesystem);
 
     QDir dcim;
     dcim.setPath(dcim_path);
     foreach (QString subdir_name, dcim.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
     {
-        qDebug() << "  * Scanning subdir:" << subdir_name;
+        //qDebug() << "  * Scanning subdir:" << subdir_name;
 
         // ex:  100GOPRO
         //      100ANDRO
@@ -111,7 +111,7 @@ void FileScanner::scanFilesystem()
         }
     }
 
-    qDebug() << "> SCANNING FINISHED";
+    //qDebug() << "> SCANNING FINISHED";
     emit scanningFinished(m_selected_filesystem);
 }
 
@@ -127,14 +127,14 @@ void FileScanner::scanMtpDevice()
         return;
     }
 
-    qDebug() << "> SCANNING STARTED (MTP device)";
+    //qDebug() << "> SCANNING STARTED (MTP device)";
     emit scanningStarted(m_selected_filesystem);
 
     mtpFileRec(m_selected_mtpDevice,
                m_selected_mtpStorage->id,
                LIBMTP_FILES_AND_FOLDERS_ROOT);
 
-    qDebug() << "> SCANNING FINISHED";
+    //qDebug() << "> SCANNING FINISHED";
     emit scanningFinished(m_selected_filesystem);
 
 #endif // ENABLE_LIBMTP
@@ -228,7 +228,7 @@ void FileScanner::mtpFileRec(LIBMTP_mtpdevice_t *device, uint32_t storageid, uin
         {
             if (mtpFile->filetype == LIBMTP_FILETYPE_FOLDER)
             {
-                qDebug() << "- (folder) " << mtpFile->filename;
+                //qDebug() << "- (subfolder) " << mtpFile->filename;
                 mtpFileRec(device, storageid, mtpFile->item_id);
             }
             else

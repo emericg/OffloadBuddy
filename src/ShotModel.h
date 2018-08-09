@@ -30,8 +30,6 @@
 #include <QDateTime>
 #include <QAbstractListModel>
 
-#include <QMutex>
-
 /* ************************************************************************** */
 
 class ShotModel : public QAbstractListModel
@@ -40,7 +38,6 @@ class ShotModel : public QAbstractListModel
     Q_ENUMS(ShotRoles)
 
     QList<Shot *> m_shots;
-    //mutable QMutex m_shots_mutex;
 
 protected:
     QHash<int, QByteArray> roleNames() const;

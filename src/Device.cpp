@@ -33,9 +33,12 @@
 
 /* ************************************************************************** */
 
-Device::Device(const QString &brand, const QString &model,
+Device::Device(const deviceType_e type,
+               const QString &brand, const QString &model,
                const QString &serial, const QString &version)
 {
+    m_deviceType = type;
+
     m_brand = brand;
     m_model = model;
     m_serial = serial;
@@ -99,11 +102,21 @@ int64_t Device::getSpaceAvailable_withrefresh()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
+void Device::setMtpInfos(LIBMTP_mtpdevice_t *device, double battery,
+                         uint32_t devBus, uint32_t devNum)
+{
+    m_deviceType = DEVICE_MTP;
+    m_mtpDevice = device;
+    m_mtpBattery = battery;
+    m_devBus = devBus;
+    m_devNum = devNum;
+}
+
 bool Device::addStorages_filesystem(ofb_fs_device *device)
 {
     bool status = false;
 
-    qDebug() << "addStorages_filesystem" << device->storages.size();
+    //qDebug() << "addStorages_filesystem" << device->storages.size();
 
     return status;
 }
@@ -112,7 +125,7 @@ bool Device::addStorages_mtp(ofb_mtp_device *device)
 {
     bool status = true;
 
-    qDebug() << "addStorages_mtp" << device->storages.size();
+    //qDebug() << "addStorages_mtp" << device->storages.size();
 
     for (auto st: device->storages)
     {
@@ -130,6 +143,7 @@ bool Device::addStorages_mtp(ofb_mtp_device *device)
 
                 connect(thread, SIGNAL(started()), fs, SLOT(scanMtpDevice()));
                 connect(fs, SIGNAL(fileFound(ofb_file *, ofb_shot *)), m_shotModel, SLOT(addFile(ofb_file *, ofb_shot *)));
+                connect(fs, SIGNAL(scanningStarted(QString)), this, SLOT(workerScanningStarted(QString)));
                 connect(fs, SIGNAL(scanningFinished(QString)), this, SLOT(workerScanningFinished(QString)));
 
                 // automatically delete thread and everything when the work is done
@@ -206,6 +220,7 @@ bool Device::addStorage_filesystem(const QString &path)
 
             connect(thread, SIGNAL(started()), fs, SLOT(scanFilesystem()));
             connect(fs, SIGNAL(fileFound(ofb_file *, ofb_shot *)), m_shotModel, SLOT(addFile(ofb_file *, ofb_shot *)));
+            connect(fs, SIGNAL(scanningStarted(QString)), this, SLOT(workerScanningStarted(QString)));
             connect(fs, SIGNAL(scanningFinished(QString)), this, SLOT(workerScanningFinished(QString)));
 
             // automatically delete thread and everything when the work is done
@@ -215,78 +230,6 @@ bool Device::addStorage_filesystem(const QString &path)
 
             thread->start();
         }
-    }
-
-    return status;
-}
-
-bool Device::addStorage_mtp(LIBMTP_mtpdevice_t *mtpDevice)
-{
-    bool status = false;
-
-#ifdef ENABLE_LIBMTP
-    if (mtpDevice)
-    {
-/*
-        // Synchronization partner
-        char *syncpartner = LIBMTP_Get_Syncpartner(device);
-        if (syncpartner != nullptr)
-        {
-            qDebug() << "   Synchronization partner:" << syncpartner;
-            free(syncpartner);
-        }
-*/
-        // Storage infos
-        for (LIBMTP_devicestorage_t *storage = mtpDevice->storage;
-             storage != nullptr;
-             storage = storage->next)
-        {
-            //storage->AccessCapability // 0x0000 read/write
-            //storage->FreeSpaceInBytes
-            //storage->MaxCapacity
-
-            // Get file listing for the root directory only
-            LIBMTP_file_t *files = LIBMTP_Get_Files_And_Folders(mtpDevice, storage->id, LIBMTP_FILES_AND_FOLDERS_ROOT);
-            if (files != nullptr)
-            {
-                qDebug() << "MTP FILES:";
-
-                LIBMTP_file_t *file = files;
-                LIBMTP_file_t *tmp;
-                while (file != nullptr)
-                {
-                    qDebug() << "-" << file->filename;
-
-                    if (strcmp(file->filename, "DCIM"))
-                    {
-                        StorageMtp *s = new StorageMtp;
-                        s->m_device = mtpDevice;
-                        s->m_storage = storage;
-                        s->m_dcim_id = file->item_id;
-                        s->m_writable = (storage->AccessCapability == 0) ? true : false;
-
-                        m_mtpStorages.push_back(s);
-                        m_deviceType = DEVICE_MTP;
-                        m_deviceModel = DEVICE_CAMERA;
-                        status = true;
-                    }
-                    else if (strcmp(file->filename, "Android"))
-                        m_deviceModel = DEVICE_PHONE;
-                    else if (strcmp(file->filename, "Get_started_with_GoPro.url"))
-                        m_deviceModel = DEVICE_GOPRO;
-
-                    tmp = file;
-                    file = file->next;
-                    LIBMTP_destroy_file_t(tmp);
-                }
-            }
-        }
-    }
-#endif // ENABLE_LIBMTP
-
-    if (status == true)
-    {
-        //status = scanMtpDevices();
     }
 
     return status;
@@ -333,13 +276,6 @@ void Device::getMtpIds(int &devBus, int &devNum) const
 
 /* ************************************************************************** */
 
-void Device::workerFoundShot(Shot *s)
-{
-    qDebug() << "> Device::workerFoundShot";
-
-    m_shotModel->addShot(s);
-}
-
 void Device::workerScanningStarted(QString s)
 {
     //qDebug() << "> Device::workerScanningStarted(" << s << ")";
@@ -359,7 +295,24 @@ void Device::workerScanningFinished(QString s)
 void Device::refreshBatteryInfos()
 {
     //qDebug() << "refreshBatteryInfos()";
-    // TODO
+
+#ifdef ENABLE_LIBMTP
+    if (m_mtpDevice)
+    {
+        uint8_t maxbattlevel, currbattlevel;
+        int ret = LIBMTP_Get_Batterylevel(m_mtpDevice, &maxbattlevel, &currbattlevel);
+        if (ret == 0 && maxbattlevel > 0)
+        {
+            m_mtpBattery = (static_cast<double>(currbattlevel) / static_cast<double>(maxbattlevel)) * 100.0;
+            qDebug() << "MTP Battery level:" << m_mtpBattery << "%";
+        }
+        else
+        {
+            // Silently ignore. Some devices does not support getting the battery level.
+            LIBMTP_Clear_Errorstack(m_mtpDevice);
+        }
+    }
+#endif
 }
 
 void Device::refreshStorageInfos()
@@ -391,10 +344,9 @@ void Device::refreshStorageInfos()
     {
         if (storage)
         {
-            // TODO?
+            // TODO? or space related values kept up to date by the lib?
         }
     }
-
 #endif // ENABLE_LIBMTP
 
     emit spaceUpdated();

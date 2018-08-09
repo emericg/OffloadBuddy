@@ -222,7 +222,8 @@ void DeviceManager::addFsDevice(QString path, gopro_info_version *infos)
         else
         {
             QString brand = "GoPro";
-            d = new Device(brand, infos->camera_type,
+            d = new Device(DEVICE_FILESYSTEM,
+                           brand, infos->camera_type,
                            infos->camera_serial_number,
                            infos->firmware_version);
             if (d)
@@ -285,7 +286,8 @@ void DeviceManager::addVfsDevice(ofb_vfs_device *deviceInfos)
 */
     if (deviceExists == false)
     {
-        d = new Device(deviceInfos->brand, deviceInfos->model,
+        d = new Device(DEVICE_VIRTUAL_FILESYSTEM,
+                       deviceInfos->brand, deviceInfos->model,
                        deviceInfos->firmware, deviceInfos->serial);
 
         for (auto fs: deviceInfos->paths)
@@ -329,9 +331,12 @@ void DeviceManager::addMtpDevice(ofb_mtp_device *deviceInfos)
 */
     if (deviceExists == false)
     {
-        d = new Device(deviceInfos->brand, deviceInfos->model,
+        d = new Device(DEVICE_MTP,
+                       deviceInfos->brand, deviceInfos->model,
                        deviceInfos->firmware, deviceInfos->serial);
 
+        d->setMtpInfos(deviceInfos->device, deviceInfos->battery,
+                       deviceInfos->devBus, deviceInfos->devNum);
         d->addStorages_mtp(deviceInfos);
 
         if (d->isValid())

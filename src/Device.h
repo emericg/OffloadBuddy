@@ -236,8 +236,10 @@ class Device: public QObject
     QString m_firmware;
 
     // HW infos
-    double m_mtpBattery = 0.0;
     LIBMTP_mtpdevice_t *m_mtpDevice = nullptr;
+    uint32_t m_devBus = 0;
+    uint32_t m_devNum = 0;
+    double m_mtpBattery = 0.0;
 
     // Storage(s)
     QTimer m_updateStorageTimer;
@@ -260,7 +262,8 @@ Q_SIGNALS:
     void spaceUpdated();
 
 public:
-    Device(const QString &brand, const QString &model,
+    Device(const deviceType_e type,
+           const QString &brand, const QString &model,
            const QString &serial, const QString &version);
     ~Device();
 
@@ -271,6 +274,9 @@ public:
 
     bool addStorages_filesystem(ofb_fs_device *device);
     bool addStorages_mtp(ofb_mtp_device *device);
+
+    void setMtpInfos(LIBMTP_mtpdevice_t *device, double battery,
+                     uint32_t devBus, uint32_t devNum);
 
 public slots:
     //
@@ -303,7 +309,6 @@ public slots:
 
     void workerScanningStarted(QString s);
     void workerScanningFinished(QString s);
-    void workerFoundShot(Shot *s);
 
     //
     ShotModel *getShotModel() const { return m_shotModel; }

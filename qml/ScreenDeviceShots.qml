@@ -14,28 +14,13 @@ Rectangle {
 
     Connections {
         target: myDevice
-        onStateUpdated: updateLoading()
-    }
-
-    function updateLoading() {
-        if (myDevice) {
-            if (myDevice.deviceState !== 1) {
-                loadingFader.start()
-            } else {
-                loadingFader.stop()
-                if (shotsview.count > 0) {
-                    circleEmpty.visible = false;
-                }
-            }
-        }
+        onStateUpdated: updateGridViewStuff()
     }
 
     function updateDeviceHeader() {
         deviceModelText.text = myDevice.brand + " " + myDevice.model;
         deviceSpaceText.text = StringUtils.bytesToString_short(myDevice.spaceUsed) + " used of " + StringUtils.bytesToString_short(myDevice.spaceTotal)
         deviceSpaceBar.value = myDevice.spaceUsedPercent
-
-        loadingFader.start()
 
         if (myDevice.model.includes("HERO6")) {
             deviceImage.source = "qrc:/cameras/H6.svg"
@@ -56,22 +41,37 @@ Rectangle {
             deviceImage.source = "qrc:/cameras/generic_actioncam.svg"
         }
 
-        rectangleDelete.stopTheBlink();
+        rectangleDelete.stopTheBlink()
+        initGridViewStuff()
+        updateGridViewStuff()
+    }
+
+    function initGridViewStuff() {
+
+        shotsview.currentIndex = -1
+
+        if (myDevice && myDevice.deviceType === 0)
+            imageEmpty.source = "qrc:/icons/card.svg"
+        else
+            imageEmpty.source = "qrc:/icons/usb.svg"
     }
 
     function updateGridViewStuff() {
-        if (shotsview.count > 0) {
-            if (myDevice && myDevice.deviceState === 0) {
-                circleEmpty.visible = false;
-            }
-        } else {
-            shotsview.currentIndex = -1
+        //console.log("updateGridViewStuff() [device "+ myDevice + "] (state " + myDevice.deviceState + ") (shotcount: " + shotsview.count + ")")
 
-            if (myDevice && myDevice.deviceType === 0)
-                imageEmpty.source = "qrc:/icons/card.svg"
-            else
-                imageEmpty.source = "qrc:/icons/usb.svg"
-            circleEmpty.visible = true;
+        if (shotsview.count == 0) {
+            shotsview.currentIndex = -1
+        }
+
+        if (myDevice) {
+            if (myDevice.deviceState === 1) {
+                circleEmpty.visible = true
+                loadingFader.start()
+            } else if (myDevice.deviceState === 0) {
+                loadingFader.stop()
+                if (shotsview.count > 0)
+                    circleEmpty.visible = false
+            }
         }
     }
 
@@ -395,7 +395,6 @@ Rectangle {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
                 fillMode: Image.PreserveAspectFit
-                source: "qrc:/icons/card.svg"
             }
 
             NumberAnimation on opacity {
@@ -417,13 +416,8 @@ Rectangle {
             GridView {
                 id: shotsview
 
-                onCountChanged: {
-                    updateGridViewStuff()
-                }
-
-                Component.onCompleted: {
-                    updateGridViewStuff()
-                }
+                //Component.onCompleted: initGridViewStuff()
+                //onCountChanged: updateGridViewStuff()
 
                 flickableChildren: MouseArea {
                     anchors.fill: parent
