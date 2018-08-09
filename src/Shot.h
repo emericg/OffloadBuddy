@@ -59,6 +59,7 @@ namespace Shared
     {
         SHOT_STATE_DEFAULT = 0,
         SHOT_STATE_QUEUED,
+        SHOT_STATE_TRANSFERING,
         SHOT_STATE_WORKING,
         SHOT_STATE_OFFLOADED,
     };

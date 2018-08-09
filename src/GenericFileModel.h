@@ -19,8 +19,8 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#ifndef GOPRO_FILE_MODEL_H
-#define GOPRO_FILE_MODEL_H
+#ifndef GENERIC_FILE_MODEL_H
+#define GENERIC_FILE_MODEL_H
 /* ************************************************************************** */
 
 #include "Shot.h"
@@ -31,28 +31,12 @@
 /* ************************************************************************** */
 
 /*!
- * \brief parseGoProVersionFile
- * \param path[in]
- * \param infos[out]
- * \return
- */
-bool parseGoProVersionFile(const QString &path, gopro_info_version &infos);
-
-/*!
- * \brief getGoProShotInfos
+ * \brief getGenericShotInfos
  * \param file[in]: Describe the file.
  * \param shot[out]: Describe the shot.
- * \return true if the file is coming from a GoPro shot.
- *
- * \ref https://gopro.com/help/articles/question_answer/GoPro-Camera-File-Naming-Convention
- * \ref https://gopro.com/help/articles/question_answer/GoPro-Camera-File-Chaptering-Information
- *
- * Limitation: Timelapse groups are sometimes from the same timelapse...
- *
- * TODO: test if Qt::CaseSensitivity makes a performance difference?
- * TODO: merge file_number and group_number into shot_id?
+ * \return true if the file has an extension that we can use.
  */
-bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot);
+bool getGenericShotInfos(const ofb_file &file, ofb_shot &shot);
 
 /* ************************************************************************** */
-#endif // GOPRO_FILE_MODEL_H
+#endif // GENERIC_FILE_MODEL_H

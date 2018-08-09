@@ -21,7 +21,6 @@
 
 #include "DeviceScanner.h"
 #include "DeviceManager.h"
-
 #include "GoProFileModel.h"
 
 #ifdef ENABLE_LIBMTP

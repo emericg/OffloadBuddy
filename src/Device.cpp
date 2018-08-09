@@ -21,7 +21,6 @@
 
 #include "Device.h"
 #include "DeviceScanner.h"
-#include "GoProFileModel.h"
 #include "JobManager.h"
 #include "FileScanner.h"
 

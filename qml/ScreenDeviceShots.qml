@@ -417,7 +417,7 @@ Rectangle {
                 id: shotsview
 
                 //Component.onCompleted: initGridViewStuff()
-                //onCountChanged: updateGridViewStuff()
+                onCountChanged: updateGridViewStuff()
 
                 flickableChildren: MouseArea {
                     anchors.fill: parent

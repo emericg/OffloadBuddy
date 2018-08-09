@@ -227,7 +227,7 @@ Rectangle {
         ComboBox {
             id: comboBoxContentHierarchy
             y: 174
-            width: 350
+            width: 256
             height: 40
             anchors.verticalCenter: text4.verticalCenter
             anchors.left: text4.right
@@ -236,9 +236,9 @@ Rectangle {
             model: ListModel {
                 id: cbItemsContentHierarchy
                 ListElement { text: qsTr("date"); }
-                ListElement { text: qsTr("model > date"); }
-                ListElement { text: qsTr("brand > model > date"); }
+                ListElement { text: qsTr("date > model"); }
             }
+
             Component.onCompleted: {
                 currentIndex = mySettings.contenthierarchy;
                 if (currentIndex === -1) { currentIndex = 0 }

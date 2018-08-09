@@ -22,8 +22,6 @@
 #include "DeviceManager.h"
 #include "Device.h"
 
-#include "GoProFileModel.h"
-
 #ifdef Q_OS_UNIX
 #include <unistd.h>
 #endif

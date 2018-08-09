@@ -20,6 +20,7 @@
  */
 
 #include "FileScanner.h"
+#include "GenericFileModel.h"
 #include "GoProFileModel.h"
 #include "ShotModel.h"
 
