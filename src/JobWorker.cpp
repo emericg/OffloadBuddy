@@ -96,6 +96,7 @@ void JobWorker::work()
                                 qDebug() << "Couldn't delete file: " << file.filesystemPath;
                             }
                         }
+#ifdef ENABLE_LIBMTP
                         else if (file.mtpDevice && file.mtpObjectId)
                         {
                             //qDebug() << "JobWorker  >  deleting:" << file.name;
@@ -111,6 +112,7 @@ void JobWorker::work()
                                 stuff_done++;
                             }
                         }
+#endif // ENABLE_LIBMTP
                     }
 
                     progress = ((stuff_done) / static_cast<float>(current_job->totalFiles)) * 100.f;
@@ -152,6 +154,7 @@ void JobWorker::work()
                                 stuff_done += fi_src.size();
                             }
                         }
+#ifdef ENABLE_LIBMTP
                         else if (file.mtpDevice && file.mtpObjectId)
                         {
                             //qDebug() << "JobWorker  >  MTP copying:" << file->mtpObjectId;
@@ -181,6 +184,8 @@ void JobWorker::work()
                                 stuff_done += file.size;
                             }
                         }
+#endif // ENABLE_LIBMTP
+
                     }
 
                     progress = ((stuff_done) / static_cast<float>(current_job->totalSize)) * 100.f;
