@@ -88,7 +88,7 @@ struct ofb_file
 struct ofb_shot
 {
     Shared::ShotType file_type = Shared::SHOT_UNKNOWN;
-    int camera_id = 0; // for multi camera system
+    int camera_id = 0;              //!< for multi camera system
     int shot_id = -1;
 
     int file_number = -1;

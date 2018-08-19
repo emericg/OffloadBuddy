@@ -22,6 +22,11 @@ OffloadBuddy remove the hassle of handling and transfering the many videos and p
 
 You will need a C++14 capable compiler and Qt 5.10+
 
+Optional dependencies:
+- libusb and libmtp  
+- libexif  
+- ffmpeg  
+- minivideo  
 
 ### Building OffloadBuddy
 

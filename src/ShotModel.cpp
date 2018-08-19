@@ -166,27 +166,31 @@ int ShotModel::rowCount(const QModelIndex & parent) const
 
 QVariant ShotModel::data(const QModelIndex & index, int role) const
 {
-    if (index.row() < 0 || index.row() >= m_shots.size())
+    //qDebug() << "ShotModel::data(r:" << index.row() << "c:" << index.column();
+
+    if (index.row() < 0 || index.row() >= m_shots.size() || !index.isValid())
         return QVariant();
 
     Shot *shot = m_shots[index.row()];
-
-    if (role == NameRole)
-        return shot->getName();
-    else if (role == TypeRole)
-        return shot->getType();
-    else if (role == PreviewRole)
-        return shot->getPreview();
-    else if (role == SizeRole)
-        return shot->getSize();
-    else if (role == DurationRole)
-        return shot->getDuration();
-    else if (role == DateRole)
-        return shot->getDate();
-    else if (role == PointerRole)
-        return QVariant::fromValue(shot);
-    else
-        qDebug() << "Oups missing ShotModel role !!!";
+    if (shot)
+    {
+        if (role == NameRole)
+            return shot->getName();
+        else if (role == TypeRole)
+            return shot->getType();
+        else if (role == PreviewRole)
+            return shot->getPreview();
+        else if (role == SizeRole)
+            return shot->getSize();
+        else if (role == DurationRole)
+            return shot->getDuration();
+        else if (role == DateRole)
+            return shot->getDate();
+        else if (role == PointerRole)
+            return QVariant::fromValue(shot);
+        else
+            qDebug() << "Ooops missing ShotModel role !!!";
+    }
 
     return QVariant();
 }

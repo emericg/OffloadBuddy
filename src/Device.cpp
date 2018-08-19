@@ -445,10 +445,7 @@ void Device::offloadAll()
     QList<Shot *> shots;
     m_shotModel->getShots(shots);
 
-    for (auto shot: shots)
-    {
-        jm->addJob(JOB_COPY, this, shot);
-    }
+    jm->addJobs(JOB_COPY, this, shots);
 }
 
 void Device::deleteAll()
@@ -461,10 +458,7 @@ void Device::deleteAll()
     QList<Shot *> shots;
     m_shotModel->getShots(shots);
 
-    for (auto shot: shots)
-    {
-        jm->addJob(JOB_DELETE, this, shot);
-    }
+    jm->addJobs(JOB_DELETE, this, shots);
 }
 
 /* ************************************************************************** */

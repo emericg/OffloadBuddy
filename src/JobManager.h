@@ -26,78 +26,62 @@
 #include "Device.h"
 #include "Shot.h"
 #include "SettingsManager.h"
+#include "JobWorker.h"
 
 #include <QObject>
 #include <QVariant>
 #include <QList>
+#include <QThread>
 
 /* ************************************************************************** */
 
-typedef enum JobType
-{
-    JOB_INVALID = 0,
-
-    JOB_METADATAS,
-
-    JOB_FORMAT,
-    JOB_DELETE,
-    JOB_COPY,
-    JOB_MERGE,
-    JOB_CLIP,
-
-    JOB_TIMELAPSE_TO_VIDEO,
-
-    JOB_REENCODE,
-    JOB_STAB,
-
-    JOB_FIRMWARE_DOWNLOAD,
-    JOB_FIRMWARE_UPLOAD,
-
-} JobType;
-
-typedef enum JobState
-{
-    JOB_IDLE = 0,
-    JOB_IN_PROGRESS,
-    JOB_DONE,
-    JOB_INTERUPTED,
-} JobState;
-
-/* ************************************************************************** */
-
-class Job: public QObject
+/*!
+ * \brief The JobTracker class
+ */
+class JobTracker: public QObject
 {
     Q_OBJECT
 
-    JobType m_type = JOB_INVALID;
+    Q_PROPERTY(QString name READ getName NOTIFY jobUpdated)
+    Q_PROPERTY(QString type READ getType NOTIFY jobUpdated)
+    Q_PROPERTY(int state READ getState NOTIFY jobUpdated)
+    Q_PROPERTY(float progress READ getProgress NOTIFY jobUpdated)
+
+    QString m_name;
+    JobType m_type;
+    JobState m_state = JOB_STATE_QUEUED;
     float m_percent = 0.0;
 
-public:
-    Job() {}
-    virtual~Job() {}
-};
-
-class CopyJob: public Job
-{
-    std::list<Shot *>m_shots;
-    MediaDirectory *m_dest = nullptr;
+    int m_job_id = -1;
+    Device *m_device = nullptr;
 
 public:
-    CopyJob() {}
-    ~CopyJob() {}
 
-    virtual void work();
-};
-
-class DeleteJob: public Job
-{
-    std::list<Shot *> m_shots;
+Q_SIGNALS:
+    void jobUpdated();
 
 public:
-    DeleteJob() {}
-    ~DeleteJob() {}
+    JobTracker(int job_id, int job_type) {m_job_id = job_id; m_type = (JobType)job_type; }
+    ~JobTracker() {}
 
-    virtual void work();
+    int getId() { return m_job_id; }
+    QString getName() { return "NAME"; }
+    QString getType()
+    {
+        if (m_type == JOB_COPY)
+            return tr("COPY");
+        else if (m_type == JOB_DELETE)
+            return tr("DELETION");
+        else
+            return tr("UNKNOWN");
+    }
+    Device *getDevice() const { return m_device; }
+
+    void setState(int state) { m_state = (JobState)state; jobUpdated(); }
+    int getState() { return m_state; }
+
+    void setProgress(float p) { m_percent = p; jobUpdated(); }
+    float getProgress() { return m_percent / 100.f; }
 };
 
 /* ************************************************************************** */
@@ -109,21 +93,31 @@ class JobManager: public QObject
 {
     Q_OBJECT
 
-    QList <QObject *> m_job_queue_1; // instant jobs (deletion...)
-    QList <QObject *> m_job_queue_2; // web downloads jobs
-    QList <QObject *> m_job_queue_3; // CPU jobs (reencodes, stabs...)
-    QList <QObject *> m_job_queue_4;
+    Q_PROPERTY(QVariant jobsList READ getTrackedJobs NOTIFY trackedJobsUpdated)
+    Q_PROPERTY(int trackedJobCount READ getTrackedJobsCount NOTIFY trackedJobsUpdated)
+    Q_PROPERTY(int workingJobCount READ getWorkingJobsCount NOTIFY trackedJobsUpdated)
+
+    QList <QObject *> m_trackedJobs;
+    int m_workingJobs = 0;
+
+    JobWorker *m_job_w1 = nullptr;
+    QThread *m_job_w1_thread = nullptr;
+
+    // instant jobs (deletion...)
+    // web downloads jobs
+    // CPU jobs (reencodes, stabs...)
+
+    MediaDirectory * getAutoDestination(Shot *s);
+    QString getAutoDestinationString(Shot *s);
+    QString getandmakeDestination(Shot *s, Device *d);
 
     // Singleton
     static JobManager *instance;
     JobManager();
     ~JobManager();
 
-    //bool getAutoDestination(Shot &s, QString &destination)
-    MediaDirectory * getAutoDestination(Shot *s);
-    QString getAutoDestinationString(Shot *s);
-
 Q_SIGNALS:
+    void trackedJobsUpdated();
     void jobAdded();
     void jobCanceled();
     void jobFinished();
@@ -134,7 +128,17 @@ public:
     bool addJobs(JobType type, Device *d, QList<Shot *> list, MediaDirectory *m = nullptr);
 
 public slots:
-    QVariant getJob(int index) const { if (m_job_queue_1.size() > index) { return QVariant::fromValue(m_job_queue_1.at(index)); } return QVariant(); }
+    QVariant getTrackedJobs() const { if (m_trackedJobs.size() > 0) { return QVariant::fromValue(m_trackedJobs); } return QVariant(); }
+    int getTrackedJobsCount() const { return m_trackedJobs.size(); }
+    int getWorkingJobsCount() const { return m_workingJobs; }
+
+    void clearFinishedJobs();
+
+    void jobProgress(int, float);
+    void jobStarted(int);
+    void jobFinished(int, int);
+    void shotStarted(int, Shot *);
+    void shotFinished(int, Shot *);
 };
 
 /* ************************************************************************** */

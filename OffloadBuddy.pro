@@ -29,6 +29,7 @@ DESTDIR     = bin/
 SOURCES  += src/main.cpp \
             src/SettingsManager.cpp \
             src/JobManager.cpp \
+            src/JobWorker.cpp \
             src/MediaManager.cpp \
             src/DeviceScanner.cpp \
             src/DeviceManager.cpp \
@@ -41,6 +42,7 @@ SOURCES  += src/main.cpp \
 
 HEADERS  += src/SettingsManager.h \
             src/JobManager.h \
+            src/JobWorker.h \
             src/MediaManager.h \
             src/DeviceScanner.h \
             src/DeviceManager.h \

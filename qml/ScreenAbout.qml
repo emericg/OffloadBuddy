@@ -272,8 +272,3 @@ It also helps with many other convenient things like:
         }
     }
 }
-
-/*##^## Designer {
-    D{i:17;anchors_y:204}D{i:18;anchors_x:61}D{i:19;anchors_x:23}
-}
- ##^##*/

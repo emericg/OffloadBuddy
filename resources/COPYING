@@ -23,20 +23,27 @@
 - usb.svg                   // Lüv icon theme       // CC BY-SA 4.0
 - done.svg                  // Lüv icon theme       // CC BY-SA 4.0
 - play.svg                  // Lüv icon theme       // CC BY-SA 4.0
+- done.svg                  // Lüv icon theme       // CC BY-SA 4.0
 
 # resources/menus:
+- jobs.svg                  // Emeric Grange        // CC BY-SA 4.0
 - about.svg                 // Emeric Grange        // CC BY-SA 4.0
 - arrow.svg                 // Emeric Grange        // CC BY-SA 4.0
 - device.svg                // Yosa Max icon theme  // GPL v3
-- exit.svg                  // Paper icon theme     // CC BY-SA 4.0
 - media.svg                 // Paper icon theme     // CC BY-SA 4.0
 - settings.svg              // Paper icon theme     // CC BY-SA 4.0
+- exit.svg                  // Paper icon theme     // CC BY-SA 4.0
 
 # resources/minicons:
 - bookmark.svg              // Emeric Grange        // CC BY-SA 4.0
 - picture.svg               // Lüv icon theme       // CC BY-SA 4.0
 - picture_multi.svg         // Lüv icon theme       // CC BY-SA 4.0
 - video.svg                 // Lüv icon theme       // CC BY-SA 4.0
+- queued.svg                // Lüv icon theme       // CC BY-SA 4.0
+- working.svg               // Lüv icon theme       // CC BY-SA 4.0
+- dark_done.svg             // Lüv icon theme       // CC BY-SA 4.0
+- dark_queued.svg           // Lüv icon theme       // CC BY-SA 4.0
+- dark_working.svg          // Lüv icon theme       // CC BY-SA 4.0
 
 # resources/other:
 - placeholder.png           // Lüv icon theme       // CC BY-SA 4.0

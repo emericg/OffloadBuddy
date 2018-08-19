@@ -179,7 +179,7 @@ void DeviceManager::addFsDevice(QString path, gopro_info_version *infos)
 
     for (auto dd: m_devices)
     {
-        d = qobject_cast<Device*>(dd);
+        d = qobject_cast<Device *>(dd);
         if (d)
         {
             if ((d->getPath(0) == path || d->getPath(1) == path) &&

@@ -6,10 +6,12 @@
         <file>qml/ScreenDevice.qml</file>
         <file>qml/ScreenDeviceShots.qml</file>
         <file>qml/ScreenDeviceShotDetails.qml</file>
+        <file>qml/ScreenJobs.qml</file>
         <file>qml/ScreenSettings.qml</file>
+        <file>qml/ScreenAbout.qml</file>
         <file>qml/ItemDeviceMenu.qml</file>
         <file>qml/ItemMediaDirectory.qml</file>
-        <file>qml/ScreenAbout.qml</file>
+        <file>qml/ItemJob.qml</file>
         <file>qml/ItemShot.qml</file>
         <file>qml/StringUtils.js</file>
     </qresource>

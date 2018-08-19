@@ -13,9 +13,6 @@ ApplicationWindow {
     height: 720
     minimumWidth: 1280
     minimumHeight: 720
-
-    property var currentDevicePtr
-
     visible: true
 /*
     menuBar: MenuBar {
@@ -32,6 +29,26 @@ ApplicationWindow {
         }
     }
 */
+
+    property var currentDevicePtr
+
+    Connections {
+        target: jobManager
+        onTrackedJobsUpdated: {
+            if (button_jobs.visible === false && jobManager.trackedJobCount > 0) {
+                button_jobs.visible = true
+                button_jobs_fadein.start()
+            }
+
+            if (jobManager.workingJobCount > 0) {
+                button_jobs_working.start()
+            } else {
+                button_jobs_working.stop()
+                button_jobs_fadein.start()
+            }
+        }
+    }
+
     Rectangle {
         id: sideBar
         width: 96
@@ -99,6 +116,47 @@ ApplicationWindow {
         }
 
         Rectangle {
+            id: button_jobs
+            width: 50
+            height: 50
+            color: "#00000000"
+            anchors.bottom: button_settings.top
+            anchors.bottomMargin: 8
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
+                onClicked: content.state = "jobs"
+            }
+            Image {
+                id: button_jobs_image
+                anchors.fill: parent
+                fillMode: Image.PreserveAspectFit
+                source: "qrc:/resources/menus/jobs.svg"
+                opacity: 0
+
+                NumberAnimation on opacity {
+                    id: button_jobs_fadein
+                    running: false
+                    from: button_jobs_image.opacity
+                    to: 1
+                    duration: 1000
+                }
+
+                SequentialAnimation on opacity {
+                    id: button_jobs_working
+                    running: false
+                    loops: Animation.Infinite
+                    OpacityAnimator { from: 0; to: 1; duration: 1000 }
+                    OpacityAnimator { from: 1; to: 0; duration: 1000 }
+                }
+            }
+
+            visible: false
+        }
+
+        Rectangle {
             id: button_settings
             width: 50
             height: 50
@@ -141,8 +199,6 @@ ApplicationWindow {
 
         Rectangle {
             id: button_exit
-            x: 8
-            y: 664
             width: 50
             height: 50
             color: "#00000000"
@@ -167,7 +223,7 @@ ApplicationWindow {
             height: 12
             anchors.right: parent.right
             anchors.rightMargin: 0
-            source: "../resources/menus/arrow.svg"
+            source: "qrc:/resources/menus/arrow.svg"
         }
 
         signal myDeviceClicked(var devicePtr)
@@ -215,6 +271,11 @@ ApplicationWindow {
             id: screenDevice
             mySettings: settingsManager
         }
+        ScreenJobs {
+            anchors.fill: parent
+            id: screenJobs
+            myJobs: jobManager
+        }
         ScreenSettings {
             anchors.fill: parent
             id: screenSettings
@@ -243,6 +304,10 @@ ApplicationWindow {
                     visible: false
                 }
                 PropertyChanges {
+                    target: screenJobs
+                    visible: false
+                }
+                PropertyChanges {
                     target: screenSettings
                     visible: false
                 }
@@ -264,6 +329,38 @@ ApplicationWindow {
                 }
                 PropertyChanges {
                     target: screenDevice
+                    visible: true
+                }
+                PropertyChanges {
+                    target: screenJobs
+                    visible: false
+                }
+                PropertyChanges {
+                    target: screenSettings
+                    visible: false
+                }
+                PropertyChanges {
+                    target: screenAbout
+                    visible: false
+                }
+            },
+            State {
+                name: "jobs"
+
+                PropertyChanges {
+                    target: imageArrow
+                    anchors.verticalCenter: button_jobs.verticalCenter
+                }
+                PropertyChanges {
+                    target: screenMedias
+                    visible: false
+                }
+                PropertyChanges {
+                    target: screenDevice
+                    visible: false
+                }
+                PropertyChanges {
+                    target: screenJobs
                     visible: true
                 }
                 PropertyChanges {
@@ -291,6 +388,10 @@ ApplicationWindow {
                     visible: false
                 }
                 PropertyChanges {
+                    target: screenJobs
+                    visible: false
+                }
+                PropertyChanges {
                     target: screenSettings
                     visible: true
                 }
@@ -312,6 +413,10 @@ ApplicationWindow {
                 }
                 PropertyChanges {
                     target: screenDevice
+                    visible: false
+                }
+                PropertyChanges {
+                    target: screenJobs
                     visible: false
                 }
                 PropertyChanges {

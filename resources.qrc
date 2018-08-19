@@ -3,6 +3,7 @@
         <file>resources/menus/arrow.svg</file>
         <file>resources/menus/media.svg</file>
         <file>resources/menus/device.svg</file>
+        <file>resources/menus/jobs.svg</file>
         <file>resources/menus/settings.svg</file>
         <file>resources/menus/about.svg</file>
         <file>resources/menus/exit.svg</file>
@@ -12,6 +13,9 @@
         <file>resources/minicons/video.svg</file>
         <file>resources/minicons/queued.svg</file>
         <file>resources/minicons/working.svg</file>
+        <file>resources/minicons/dark_queued.svg</file>
+        <file>resources/minicons/dark_working.svg</file>
+        <file>resources/minicons/dark_done.svg</file>
         <file>resources/other/placeholder.png</file>
         <file>resources/other/GitHub-Mark-64px.png</file>
     </qresource>
@@ -31,6 +35,7 @@
         <file alias="usb.svg">resources/icons/usb.svg</file>
         <file alias="done.svg">resources/icons/done.svg</file>
         <file alias="play.svg">resources/icons/play.svg</file>
+        <file alias="working.svg">resources/icons/working.svg</file>
     </qresource>
     <qresource prefix="/cameras">
         <file alias="generic_actioncam.svg">resources/cameras/generic_actioncam.svg</file>

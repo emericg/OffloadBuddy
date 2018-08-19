@@ -58,7 +58,7 @@ Rectangle {
             height: 40
             text: qsTr("Launch OffloadBuddy when a new device is detected?")
             enabled: false
-            anchors.top: parent.top
+            anchors.top: text1.bottom
             anchors.topMargin: 16
             anchors.left: parent.left
             anchors.leftMargin: 16
@@ -101,12 +101,12 @@ Rectangle {
             }
         }
 
-
         CheckBox {
             id: checkAutoMerge
             width: 350
             height: 40
             text: qsTr("Automatically merge video chapters")
+            enabled: false
             anchors.top: checkIgnoreJunk.bottom
             anchors.topMargin: 16
             anchors.left: parent.left
@@ -125,6 +125,7 @@ Rectangle {
             width: 350
             height: 40
             text: qsTr("Automatically extract metadatas")
+            enabled: false
             anchors.verticalCenter: checkAutoMerge.verticalCenter
             anchors.left: checkAutoMerge.right
             anchors.leftMargin: 16
@@ -167,7 +168,6 @@ Rectangle {
             Text {
                 id: textMediasTitle
                 y: 10
-                width: 300
                 height: 40
                 anchors.left: parent.left
                 anchors.leftMargin: 16
@@ -184,7 +184,7 @@ Rectangle {
                 y: 10
                 text: qsTr("Add new")
                 anchors.left: textMediasTitle.right
-                anchors.leftMargin: 16
+                anchors.leftMargin: 32
                 anchors.verticalCenter: textMediasTitle.verticalCenter
                 onClicked: fileDialogAdd.open()
             }
@@ -231,7 +231,7 @@ Rectangle {
             height: 40
             anchors.verticalCenter: text4.verticalCenter
             anchors.left: text4.right
-            anchors.leftMargin: 15
+            anchors.leftMargin: 32
 
             model: ListModel {
                 id: cbItemsContentHierarchy
@@ -254,7 +254,6 @@ Rectangle {
 
         Text {
             id: text4
-            width: 150
             height: 40
             text: qsTr("Import hierarchy:")
             anchors.top: checkAutoMerge.bottom
@@ -264,6 +263,30 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignLeft
             font.pixelSize: 14
+        }
+
+        Text {
+            id: text1
+            y: 8
+            height: 40
+            text: qsTr("Application theme:")
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignLeft
+            anchors.left: parent.left
+            anchors.leftMargin: 16
+            font.pixelSize: 14
+        }
+
+        ComboBox {
+            id: comboBoxAppTheme
+            y: 18
+            width: 256
+            height: 40
+            enabled: false
+            displayText: "\"not dark\""
+            anchors.left: text1.right
+            anchors.leftMargin: 32
+            anchors.verticalCenter: text1.verticalCenter
         }
     }
 }

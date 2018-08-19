@@ -20,6 +20,7 @@
  */
 
 #include "SettingsManager.h"
+#include "JobManager.h"
 #include "DeviceManager.h"
 
 #include <singleapplication.h>
@@ -47,6 +48,8 @@ int main(int argc, char *argv[])
 
     SettingsManager *s = SettingsManager::getInstance();
 
+    JobManager *j = JobManager::getInstance();
+
     DeviceManager *d = new DeviceManager;
     d->searchDevices();
 
@@ -68,6 +71,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     QQmlContext *engine_context = engine.rootContext();
     engine_context->setContextProperty("settingsManager", s);
+    engine_context->setContextProperty("jobManager", j);
     engine_context->setContextProperty("deviceManager", d);
 
     engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
