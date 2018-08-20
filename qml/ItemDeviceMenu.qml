@@ -50,9 +50,8 @@ Rectangle {
         onClicked: {
             //console.log("SIDEBAR deviceClick: " + myDevice.serial);
             itemDeviceMenu.myDeviceClicked(myDevice)
-
-            imageArrow.anchors.verticalCenter= undefined
-            imageArrow.y = menuDevice.y + itemDeviceMenu.y + 32
+            selectorArrow.anchors.verticalCenter= undefined
+            selectorArrow.y = menuDevice.y + itemDeviceMenu.y + 34
         }
     }
 }

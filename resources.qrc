@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
-        <file>resources/menus/arrow.svg</file>
+        <file>resources/menus/selector_arrow.svg</file>
+        <file>resources/menus/selector_bar.svg</file>
         <file>resources/menus/media.svg</file>
         <file>resources/menus/device.svg</file>
         <file>resources/menus/jobs.svg</file>

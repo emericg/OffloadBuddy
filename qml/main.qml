@@ -218,14 +218,23 @@ ApplicationWindow {
         }
 
         Image {
-            id: imageArrow
+            id: selectorArrow
             width: 12
             height: 12
             anchors.right: parent.right
             anchors.rightMargin: 0
-            source: "qrc:/resources/menus/arrow.svg"
+            source: "qrc:/resources/menus/selector_arrow.svg"
         }
-
+/*
+        Image {
+            id: selectorBar
+            width: 4
+            height: 40
+            anchors.right: parent.right
+            anchors.rightMargin: 0
+            source: "qrc:/resources/menus/selector_bar.svg"
+        }
+*/
         signal myDeviceClicked(var devicePtr)
         onMyDeviceClicked: {
             if (typeof devicePtr !== "undefined") {
@@ -292,7 +301,7 @@ ApplicationWindow {
                 name: "medias"
 
                 PropertyChanges {
-                    target: imageArrow
+                    target: selectorArrow
                     anchors.verticalCenter: button_media.verticalCenter
                 }
                 PropertyChanges {
@@ -320,7 +329,7 @@ ApplicationWindow {
                 name: "device"
 
                 PropertyChanges {
-                    target: imageArrow
+                    target: selectorArrow
                     anchors.verticalCenter: undefined
                 }
                 PropertyChanges {
@@ -348,7 +357,7 @@ ApplicationWindow {
                 name: "jobs"
 
                 PropertyChanges {
-                    target: imageArrow
+                    target: selectorArrow
                     anchors.verticalCenter: button_jobs.verticalCenter
                 }
                 PropertyChanges {
@@ -376,7 +385,7 @@ ApplicationWindow {
                 name: "settings"
 
                 PropertyChanges {
-                    target: imageArrow
+                    target: selectorArrow
                     anchors.verticalCenter: button_settings.verticalCenter
                 }
                 PropertyChanges {
@@ -404,7 +413,7 @@ ApplicationWindow {
                 name: "about"
 
                 PropertyChanges {
-                    target: imageArrow
+                    target: selectorArrow
                     anchors.verticalCenter: button_about.verticalCenter
                 }
                 PropertyChanges {

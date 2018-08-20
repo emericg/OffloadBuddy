@@ -26,9 +26,10 @@
 - done.svg                  // Lüv icon theme       // CC BY-SA 4.0
 
 # resources/menus:
+- selector_arrow.svg        // Emeric Grange        // CC BY-SA 4.0
+- selector_bar.svg          // Emeric Grange        // CC BY-SA 4.0
 - jobs.svg                  // Emeric Grange        // CC BY-SA 4.0
 - about.svg                 // Emeric Grange        // CC BY-SA 4.0
-- arrow.svg                 // Emeric Grange        // CC BY-SA 4.0
 - device.svg                // Yosa Max icon theme  // GPL v3
 - media.svg                 // Paper icon theme     // CC BY-SA 4.0
 - settings.svg              // Paper icon theme     // CC BY-SA 4.0
