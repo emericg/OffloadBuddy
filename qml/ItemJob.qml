@@ -129,7 +129,7 @@ Rectangle {
         id: rectanglePlayPause
         width: 40
         height: 40
-        color: ThemeEngine.colorGreen
+        color: ThemeEngine.colorApproved
         anchors.rightMargin: 8
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: rectangleDelete.left

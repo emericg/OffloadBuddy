@@ -97,13 +97,14 @@ Rectangle {
             id: textZoom
             y: 72
             height: 40
-            text: qsTr("Zoom:")
             anchors.verticalCenter: comboBox_filterby.verticalCenter
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             anchors.left: comboBox_filterby.right
             anchors.leftMargin: 16
-            font.pixelSize: 16
+            text: qsTr("Zoom:")
+            font.pixelSize: ThemeEngine.fontSizeContentText
+            color: ThemeEngine.colorHeaderSubText
         }
     }
 

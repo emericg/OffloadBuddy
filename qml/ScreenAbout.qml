@@ -129,12 +129,11 @@ It also helps with many other convenient things like:
                 width: 166
                 height: 32
                 text: qsTr("Visit us on <html><style type=\"text/css\"></style><a href=\"https://github.com/emericg/OffloadBuddy\">GitHub</a></html>!")
+                anchors.verticalCenter: imageGitHub.verticalCenter
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignLeft
                 anchors.left: imageGitHub.right
                 anchors.leftMargin: 8
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 8
                 font.pixelSize: 16
                 onLinkActivated: Qt.openUrlExternally("https://github.com/emericg/OffloadBuddy")
             }
@@ -145,9 +144,9 @@ It also helps with many other convenient things like:
                 width: 32
                 height: 32
                 anchors.left: parent.left
-                anchors.leftMargin: 8
+                anchors.leftMargin: 16
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: 8
+                anchors.bottomMargin: 12
                 sourceSize.height: 64
                 sourceSize.width: 64
                 source: "../resources/other/GitHub-Mark-64px.png"
@@ -188,7 +187,7 @@ It also helps with many other convenient things like:
                 y: 64
                 width: 512
                 height: 128
-                color: ThemeEngine.colorHeaderBackground
+                color: ThemeEngine.colorContentSubBox
                 radius: 8
 
                 Rectangle {
@@ -210,7 +209,6 @@ It also helps with many other convenient things like:
                         anchors.fill: parent
                         //source: "qrc:/authors/mask.png"
                     }
-
                     Image {
                         id: authorImg
                         anchors.fill: parent
@@ -220,7 +218,6 @@ It also helps with many other convenient things like:
                         source: "qrc:/authors/emeric.jpg"
                         visible: false
                     }
-
                     OpacityMask {
                         id: whatever
                         source: authorImg
@@ -232,7 +229,6 @@ It also helps with many other convenient things like:
                         anchors.topMargin: 5
                     }
                 }
-
                 Text {
                     id: textName
                     height: 24
@@ -244,6 +240,7 @@ It also helps with many other convenient things like:
                     anchors.rightMargin: 8
 
                     text: qsTr("Emeric")
+                    color: ThemeEngine.colorContentSubTitle
                     horizontalAlignment: Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter
                     font.bold: true

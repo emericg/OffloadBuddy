@@ -16,13 +16,13 @@ Rectangle {
 
     Component.onCompleted: {
         if (directory.available === false)
-            itemMediaDirectory.color = ThemeEngine.colorWarning
+            itemMediaDirectory.color = ThemeEngine.colorSomethingsWrong
         else
             itemMediaDirectory.color = "white"
     }
     onDirectoryAvailableChanged: {
         if (directory.available === false)
-            itemMediaDirectory.color = ThemeEngine.colorWarning
+            itemMediaDirectory.color = ThemeEngine.colorSomethingsWrong
         else
             itemMediaDirectory.color = "white"
     }

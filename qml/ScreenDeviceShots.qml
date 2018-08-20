@@ -1,5 +1,6 @@
 import QtQuick 2.10
 import QtQuick.Controls 2.4
+import QtQuick.Controls.Styles 1.4
 
 import com.offloadbuddy.style 1.0
 import "StringUtils.js" as StringUtils
@@ -123,14 +124,16 @@ Rectangle {
             id: deviceSpaceText
             width: 220
             height: 15
-            text: "64GB available of 128GB"
-            horizontalAlignment: Text.AlignRight
             anchors.right: deviceModelText.right
             anchors.rightMargin: 0
             anchors.top: deviceModelText.bottom
             anchors.topMargin: 8
+
+            text: "64GB available of 128GB"
+            color: ThemeEngine.colorHeaderSubText
+            font.pixelSize: ThemeEngine.fontSizeContentText
+            horizontalAlignment: Text.AlignRight
             verticalAlignment: Text.AlignVCenter
-            font.pixelSize: 15
         }
 
         ProgressBar {
@@ -142,6 +145,13 @@ Rectangle {
             anchors.top: deviceSpaceText.bottom
             anchors.topMargin: 8
             value: 0.5
+/*
+            contentItem: Rectangle {
+                    width: deviceSpaceBar.visualPosition * deviceSpaceBar.width
+                    height: deviceSpaceBar.height
+                    color: ThemeEngine.colorProgressbar
+                }
+*/
         }
 
         Rectangle {
@@ -157,7 +167,7 @@ Rectangle {
 
             Rectangle {
                 id: rectangleTransferDecorated
-                color: ThemeEngine.colorDoIt
+                color: ThemeEngine.colorApproved
                 width: parent.width
                 height: parent.height
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -240,8 +250,8 @@ Rectangle {
                     id: blinkReset
                     running: false
                     loops: Animation.Infinite
-                    ColorAnimation { from: ThemeEngine.colorDangerZone; to: ThemeEngine.colorRed; duration: 1000 }
-                    ColorAnimation { from: ThemeEngine.colorRed; to: ThemeEngine.colorDangerZone; duration: 1000 }
+                    ColorAnimation { from: ThemeEngine.colorDangerZone; to: "red"; duration: 1000 }
+                    ColorAnimation { from: "red"; to: ThemeEngine.colorDangerZone; duration: 1000 }
                 }
             }
 
@@ -323,13 +333,14 @@ Rectangle {
             id: textZoom
             y: 72
             height: 40
-            text: qsTr("Zoom:")
             anchors.verticalCenter: comboBox_filterby.verticalCenter
             anchors.left: comboBox_filterby.right
             anchors.leftMargin: 16
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
-            font.pixelSize: 16
+            text: qsTr("Zoom:")
+            font.pixelSize: ThemeEngine.fontSizeContentText
+            color: ThemeEngine.colorHeaderSubText
         }
     }
 
@@ -360,7 +371,7 @@ Rectangle {
                 height: shotsview.cellSize
                 color: "#00000000"
                 border.width : 4
-                border.color: ThemeEngine.colorDoIt
+                border.color: ThemeEngine.colorApproved
                 x: {
                     if (shotsview.currentItem.x) {
                         x = shotsview.currentItem.x

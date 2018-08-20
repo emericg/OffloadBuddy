@@ -8,7 +8,6 @@ Rectangle {
     width: 80
     height: 80
     color: "#00000000"
-    //color: "#ff6464"
     anchors.horizontalCenter: parent.horizontalCenter
 
     property var myDevice
@@ -29,19 +28,19 @@ Rectangle {
     Text {
         id: deviceText
         height: 16
-        color: "#ffffff"
-        text: myDevice.model
-        font.bold: true
-        font.pixelSize: 10
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-
         anchors.left: parent.left
         anchors.leftMargin: 0
         anchors.right: parent.right
         anchors.rightMargin: 0
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0
+
+        color: ThemeEngine.colorSidebarText
+        text: myDevice.model
+        font.bold: true
+        font.pixelSize: 11
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
     }
 
     MouseArea {

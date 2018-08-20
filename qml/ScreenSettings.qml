@@ -283,10 +283,16 @@ Rectangle {
             width: 256
             height: 40
             enabled: false
-            displayText: "\"not dark\""
             anchors.left: text1.right
             anchors.leftMargin: 32
             anchors.verticalCenter: text1.verticalCenter
+
+            model: ListModel {
+                id: cbAppTheme
+                ListElement { text: qsTr("PLAIN AND BORING"); }
+                ListElement { text: qsTr("DARK AND SPOOKY"); }
+                ListElement { text: qsTr("MIGHTY KITTEN"); }
+            }
         }
     }
 }
