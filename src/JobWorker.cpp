@@ -37,7 +37,7 @@ JobWorker::JobWorker()
 
 JobWorker::~JobWorker()
 {
-    //
+    delete thread;
 }
 
 /* ************************************************************************** */

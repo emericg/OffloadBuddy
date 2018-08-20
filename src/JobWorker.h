@@ -45,9 +45,10 @@ typedef enum JobType
 
     JOB_FORMAT,
     JOB_DELETE,
-    JOB_COPY,
 
+    JOB_COPY,
     JOB_MERGE,
+
     JOB_CLIP,
     JOB_TIMELAPSE_TO_VIDEO,
     JOB_REENCODE,
@@ -108,6 +109,8 @@ class JobWorker: public QObject
 public:
     JobWorker();
     ~JobWorker();
+
+    QThread *thread;
 
 public slots:
     void queueWork(Job *job);

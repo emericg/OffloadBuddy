@@ -54,7 +54,13 @@ JobManager::JobManager()
 
 JobManager::~JobManager()
 {
-    //
+    delete m_job_instant;
+    delete m_job_w1;
+    delete m_job_w2;
+    delete m_job_w3;
+    delete m_job_w4;
+    delete m_job_cpu;
+    delete m_job_web;
 }
 
 /* ************************************************************************** */
@@ -202,7 +208,7 @@ bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list, MediaDirec
         getHdAudio = true;
     }
 
-    // CREATE JOB //////////////////////////////////////////////////////////
+    // CREATE JOB //////////////////////////////////////////////////////////////
 
     Job *job = new Job;
     job->id = rand(); // lol
@@ -231,42 +237,63 @@ bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list, MediaDirec
     m_trackedJobs.push_back(tracker);
     emit trackedJobsUpdated();
 
-    // START JOB
-    if (m_job_w1 == nullptr)
+    // DISPATCH JOB ////////////////////////////////////////////////////////////
+
+    JobWorker *m_selected_worker = nullptr;
+
+    if (type == JOB_DELETE || type == JOB_FORMAT)
     {
-        m_job_w1_thread = new QThread();
-        m_job_w1 = new JobWorker();
+        m_selected_worker = m_job_instant;
+    }
+    else if (type == JOB_FIRMWARE_DOWNLOAD)
+    {
+        m_selected_worker = m_job_web;
+    }
+    else if (type == JOB_REENCODE || type == JOB_TIMELAPSE_TO_VIDEO || type == JOB_STAB)
+    {
+        m_selected_worker = m_job_cpu;
+    }
+    else if (type == JOB_METADATAS || type == JOB_FIRMWARE_UPLOAD ||
+             type == JOB_CLIP ||
+             type == JOB_COPY || type == JOB_MERGE)
+    {
+        // TODO 'per device' dispatch
+        m_selected_worker = m_job_w1;
+    }
+    else
+    {
+        qWarning() << "Unable to select a worker to dispatch current job...";
+        return status;
+    }
 
-        if (m_job_w1_thread && m_job_w1)
+    if (m_selected_worker == nullptr)
+    {
+        m_selected_worker = new JobWorker();
+        m_selected_worker->thread = new QThread();
+
+        if (m_selected_worker->thread && m_selected_worker)
         {
-            m_job_w1->queueWork(job);
-            m_job_w1->moveToThread(m_job_w1_thread);
+            m_selected_worker->queueWork(job);
+            m_selected_worker->moveToThread(m_selected_worker->thread);
 
-            connect(m_job_w1_thread, SIGNAL(started()), m_job_w1, SLOT(work()));
+            connect(m_selected_worker->thread, SIGNAL(started()), m_selected_worker, SLOT(work()));
 
-            connect(m_job_w1, SIGNAL(jobProgress(int, float)), this, SLOT(jobProgress(int, float)));
-            connect(m_job_w1, SIGNAL(jobStarted(int)), this, SLOT(jobStarted(int)));
-            connect(m_job_w1, SIGNAL(jobFinished(int, int)), this, SLOT(jobFinished(int, int)));
-            connect(m_job_w1, SIGNAL(shotStarted(int, Shot *)), this, SLOT(shotStarted(int, Shot *)));
-            connect(m_job_w1, SIGNAL(shotFinished(int, Shot *)), this, SLOT(shotFinished(int, Shot *)));
-            //connect(m_job_w1, SIGNAL(), this, SLOT());
-/*
-            //connect(m_job_w1, SIGNAL (scanningFinished()), m_job_w1, SLOT (deleteLater()));
-            //connect(m_job_w1, SIGNAL(scanningFinished()), m_job_w1_thread, SLOT(quit()));
+            connect(m_selected_worker, SIGNAL(jobProgress(int, float)), this, SLOT(jobProgress(int, float)));
+            connect(m_selected_worker, SIGNAL(jobStarted(int)), this, SLOT(jobStarted(int)));
+            connect(m_selected_worker, SIGNAL(jobFinished(int, int)), this, SLOT(jobFinished(int, int)));
+            connect(m_selected_worker, SIGNAL(shotStarted(int, Shot *)), this, SLOT(shotStarted(int, Shot *)));
+            connect(m_selected_worker, SIGNAL(shotFinished(int, Shot *)), this, SLOT(shotFinished(int, Shot *)));
 
-            // automatically delete thread when its work is done
-            //connect(m_job_w1_thread, SIGNAL(finished()), m_job_w1_thread, SLOT(deleteLater()));
-*/
-            m_job_w1_thread->start();
+            m_selected_worker->thread->start();
+            status = true;
         }
     }
     else
     {
-        m_job_w1->queueWork(job);
-        emit m_job_w1->work();
+        m_selected_worker->queueWork(job);
+        emit m_selected_worker->work();
+        status = true;
     }
-
-    qWarning() << "JOB ADDED";
 
     return status;
 }

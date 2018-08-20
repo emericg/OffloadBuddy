@@ -106,12 +106,17 @@ class JobManager: public QObject
     QList <QObject *> m_trackedJobs;
     int m_workingJobs = 0;
 
-    JobWorker *m_job_w1 = nullptr;
-    QThread *m_job_w1_thread = nullptr;
-
     // instant jobs (deletion...)
-    // web downloads jobs
+    JobWorker *m_job_instant = nullptr;
+    // copy/merge jobs
+    JobWorker *m_job_w1 = nullptr;
+    JobWorker *m_job_w2 = nullptr;
+    JobWorker *m_job_w3 = nullptr;
+    JobWorker *m_job_w4 = nullptr;
     // CPU jobs (reencodes, stabs...)
+    JobWorker *m_job_cpu = nullptr;
+    // web downloads jobs
+    JobWorker *m_job_web = nullptr;
 
     MediaDirectory * getAutoDestination(Shot *s);
     QString getAutoDestinationString(Shot *s);
