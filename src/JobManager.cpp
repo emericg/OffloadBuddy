@@ -181,7 +181,7 @@ bool JobManager::addJob(JobType type, Device *d, Shot *s, MediaDirectory *md)
     return addJobs(type, d, list, md);
 }
 
-bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list, MediaDirectory *m)
+bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list, MediaDirectory *md)
 {
     bool status = false;
 
@@ -200,120 +200,70 @@ bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list, MediaDirec
         // Delete everything, MP4, LRVs...
         getPreviews = true;
         getHdAudio = true;
-
-        // HANDLE FILE REMOVAL /////////////////////////////////////////////////
-
-        for (auto s: list)
-        {
-        if (d->getDeviceType() == DEVICE_MTP)
-        {
-#ifdef ENABLE_LIBMTP
-
-            QList <ofb_file *> files = s->getFiles(); // Delete everything, MP4, LRVs...
-            for (auto file: files)
-            {
-                if (!file || !file->mtpDevice || file->mtpObjectId == 0)
-                    continue;
-
-                qDebug() << "JobManager  >  deleting:" << file->name;
-                LIBMTP_Delete_Object(file->mtpDevice, file->mtpObjectId);
-            }
-
-#endif // ENABLE_LIBMTP
-        }
-        else
-        {
-            QList <ofb_file *> files = s->getFiles();
-            for (auto file: files)
-            {
-                if (!file || file->filesystemPath.isEmpty() == false)
-                    continue;
-
-                qDebug() << "JobManager  >  deleting:" << file->filesystemPath;
-                QFile::remove(file->filesystemPath);
-            }
-        }
-
-        // TODO send shot deleted signal to the device
-        d->deleteShot(s);
-        }
     }
-    else if (type == JOB_COPY)
+
+    // CREATE JOB //////////////////////////////////////////////////////////
+
+    Job *job = new Job;
+    job->id = rand(); // lol
+    job->type = type;
+
+    for (auto shot: list)
     {
-        // CREATE JOB //////////////////////////////////////////////////////////
-
-        Job *j = new Job;
-        j->id = rand(); // lol
-        j->type = type;
-
-        for (auto s: list)
+        JobElement *je = new JobElement;
+        je->destination_dir = getandmakeDestination(shot, d);
+        je->parent_shots = shot;
+        QList <ofb_file *> files = shot->getFiles(getPreviews, getHdAudio);
+        for (auto f: files)
         {
-            JobElement *je = new JobElement;
-            je->destination_dir = getandmakeDestination(s, d);
-            je->parent_shots = s;
-            QList <ofb_file *> files = s->getFiles(getPreviews, getHdAudio);
-            for (auto f: files)
-            {
-                je->files.push_back(*f);
-                j->totalSize += f->size;
-                j->totalFiles++;
-            }
-            j->elements.push_back(je);
-
-            s->setState(Shared::SHOT_STATE_QUEUED);
+            je->files.push_back(*f);
+            job->totalSize += f->size;
+            job->totalFiles++;
         }
+        job->elements.push_back(je);
 
-        JobTracker *jt = new JobTracker(j->id, j->type);
-        m_trackedJobs.push_back(jt);
-        emit trackedJobsUpdated();
+        shot->setState(Shared::SHOT_STATE_QUEUED);
+    }
 
-        // START JOB
-        if (m_job_w1 == nullptr)
+    JobTracker *tracker = new JobTracker(job->id, job->type);
+    tracker->setDevice(d);
+    tracker->setAutoDelete(autoDelete);
+    m_trackedJobs.push_back(tracker);
+    emit trackedJobsUpdated();
+
+    // START JOB
+    if (m_job_w1 == nullptr)
+    {
+        m_job_w1_thread = new QThread();
+        m_job_w1 = new JobWorker();
+
+        if (m_job_w1_thread && m_job_w1)
         {
-            m_job_w1_thread = new QThread();
-            m_job_w1 = new JobWorker();
+            m_job_w1->queueWork(job);
+            m_job_w1->moveToThread(m_job_w1_thread);
 
-            if (m_job_w1_thread && m_job_w1)
-            {
-                m_job_w1->queueWork(j);
-                m_job_w1->moveToThread(m_job_w1_thread);
+            connect(m_job_w1_thread, SIGNAL(started()), m_job_w1, SLOT(work()));
 
-                connect(m_job_w1_thread, SIGNAL(started()), m_job_w1, SLOT(work()));
-
-                connect(m_job_w1, SIGNAL(jobProgress(int, float)), this, SLOT(jobProgress(int, float)));
-                connect(m_job_w1, SIGNAL(jobStarted(int)), this, SLOT(jobStarted(int)));
-                connect(m_job_w1, SIGNAL(jobFinished(int, int)), this, SLOT(jobFinished(int, int)));
-                connect(m_job_w1, SIGNAL(shotStarted(int, Shot *)), this, SLOT(shotStarted(int, Shot *)));
-                connect(m_job_w1, SIGNAL(shotFinished(int, Shot *)), this, SLOT(shotFinished(int, Shot *)));
-                //connect(m_job_w1, SIGNAL(), this, SLOT());
+            connect(m_job_w1, SIGNAL(jobProgress(int, float)), this, SLOT(jobProgress(int, float)));
+            connect(m_job_w1, SIGNAL(jobStarted(int)), this, SLOT(jobStarted(int)));
+            connect(m_job_w1, SIGNAL(jobFinished(int, int)), this, SLOT(jobFinished(int, int)));
+            connect(m_job_w1, SIGNAL(shotStarted(int, Shot *)), this, SLOT(shotStarted(int, Shot *)));
+            connect(m_job_w1, SIGNAL(shotFinished(int, Shot *)), this, SLOT(shotFinished(int, Shot *)));
+            //connect(m_job_w1, SIGNAL(), this, SLOT());
 /*
-                //connect(m_job_w1, SIGNAL (scanningFinished()), m_job_w1, SLOT (deleteLater()));
-                //connect(m_job_w1, SIGNAL(scanningFinished()), m_job_w1_thread, SLOT(quit()));
+            //connect(m_job_w1, SIGNAL (scanningFinished()), m_job_w1, SLOT (deleteLater()));
+            //connect(m_job_w1, SIGNAL(scanningFinished()), m_job_w1_thread, SLOT(quit()));
 
-                // automatically delete thread when its work is done
-                //connect(m_job_w1_thread, SIGNAL(finished()), m_job_w1_thread, SLOT(deleteLater()));
+            // automatically delete thread when its work is done
+            //connect(m_job_w1_thread, SIGNAL(finished()), m_job_w1_thread, SLOT(deleteLater()));
 */
-                m_job_w1_thread->start();
-            }
+            m_job_w1_thread->start();
         }
-        else
-        {
-            m_job_w1->queueWork(j);
-            emit m_job_w1->work();
-        }
-/*
-        // Delete shot only if needed (and current job success)
-        if (autoDelete)
-        {
-            addJob(JOB_DELETE, d, s);
-        }
-*/
-        // TODO create new shot
-        // TODO add new shot to media library
     }
     else
     {
-        qWarning() << "Unimplemented job type:" << type;
+        m_job_w1->queueWork(job);
+        emit m_job_w1->work();
     }
 
     qWarning() << "JOB ADDED";
@@ -388,6 +338,12 @@ void JobManager::jobFinished(int jobId, int jobState)
 
 void JobManager::shotStarted(int jobId, Shot *shot)
 {
+    if (!shot)
+    {
+        qWarning() << "shotStarted() without a valid Shot*";
+        return;
+    }
+
     for (auto jj: m_trackedJobs)
     {
         JobTracker *j = qobject_cast<JobTracker *>(jj);
@@ -400,6 +356,12 @@ void JobManager::shotStarted(int jobId, Shot *shot)
 
 void JobManager::shotFinished(int jobId, Shot *shot)
 {
+    if (!shot)
+    {
+        qWarning() << "shotFinished() without a valid Shot*";
+        return;
+    }
+
     for (auto jj: m_trackedJobs)
     {
         JobTracker *j = qobject_cast<JobTracker *>(jj);
@@ -408,13 +370,21 @@ void JobManager::shotFinished(int jobId, Shot *shot)
             if (j->getType() == JOB_DELETE)
             {
                 Device *d = j->getDevice();
-                if (d && shot)
-                    d->deleteShot(shot);
+                if (d) d->deleteShot(shot);
+                // shot is now invalid
             }
             else
             {
-                if (shot)
-                    shot->setState(Shared::SHOT_STATE_OFFLOADED);
+                shot->setState(Shared::SHOT_STATE_OFFLOADED);
+
+                if (j->getAutoDelete() &&
+                    (j->getType() == JOB_COPY || j->getType() == JOB_MERGE))
+                {
+                    addJob(JOB_DELETE, j->getDevice(), shot);
+                }
+
+                // TODO create new shot
+                // TODO add new shot to media library
             }
         }
     }

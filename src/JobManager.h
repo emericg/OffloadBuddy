@@ -43,7 +43,7 @@ class JobTracker: public QObject
     Q_OBJECT
 
     Q_PROPERTY(QString name READ getName NOTIFY jobUpdated)
-    Q_PROPERTY(QString type READ getType NOTIFY jobUpdated)
+    Q_PROPERTY(QString type READ getTypeString NOTIFY jobUpdated)
     Q_PROPERTY(int state READ getState NOTIFY jobUpdated)
     Q_PROPERTY(float progress READ getProgress NOTIFY jobUpdated)
 
@@ -52,21 +52,22 @@ class JobTracker: public QObject
     JobState m_state = JOB_STATE_QUEUED;
     float m_percent = 0.0;
 
+    bool m_autoDelete = false;
+
     int m_job_id = -1;
     Device *m_device = nullptr;
-
-public:
 
 Q_SIGNALS:
     void jobUpdated();
 
 public:
-    JobTracker(int job_id, int job_type) {m_job_id = job_id; m_type = (JobType)job_type; }
+    JobTracker(int job_id, int job_type) { m_job_id = job_id; m_type = static_cast<JobType>(job_type); }
     ~JobTracker() {}
 
     int getId() { return m_job_id; }
+    JobType getType() { return m_type; }
     QString getName() { return "NAME"; }
-    QString getType()
+    QString getTypeString()
     {
         if (m_type == JOB_COPY)
             return tr("COPY");
@@ -75,9 +76,14 @@ public:
         else
             return tr("UNKNOWN");
     }
+
+    void setDevice(Device *d) { m_device = d; }
     Device *getDevice() const { return m_device; }
 
-    void setState(int state) { m_state = (JobState)state; jobUpdated(); }
+    void setAutoDelete(bool d) { m_autoDelete = d; }
+    bool getAutoDelete() const { return m_autoDelete; }
+
+    void setState(int state) { m_state = static_cast<JobState>(state); jobUpdated(); }
     int getState() { return m_state; }
 
     void setProgress(float p) { m_percent = p; jobUpdated(); }
@@ -124,8 +130,8 @@ Q_SIGNALS:
 
 public:
     static JobManager *getInstance();
-    bool addJob(JobType type, Device *d, Shot *s, MediaDirectory *m = nullptr);
-    bool addJobs(JobType type, Device *d, QList<Shot *> list, MediaDirectory *m = nullptr);
+    bool addJob(JobType type, Device *d, Shot *s, MediaDirectory *md = nullptr);
+    bool addJobs(JobType type, Device *d, QList<Shot *> list, MediaDirectory *md = nullptr);
 
 public slots:
     QVariant getTrackedJobs() const { if (m_trackedJobs.size() > 0) { return QVariant::fromValue(m_trackedJobs); } return QVariant(); }

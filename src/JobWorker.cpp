@@ -185,7 +185,6 @@ void JobWorker::work()
                             }
                         }
 #endif // ENABLE_LIBMTP
-
                     }
 
                     progress = ((stuff_done) / static_cast<float>(current_job->totalSize)) * 100.f;
