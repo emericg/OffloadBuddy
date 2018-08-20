@@ -117,7 +117,7 @@ Rectangle {
             horizontalAlignment: Text.AlignRight
             color: ThemeEngine.colorHeaderTitle
             font.bold: true
-            font.pixelSize: 28
+            font.pixelSize: ThemeEngine.fontSizeHeaderTitle - 2
         }
 
         Text {
@@ -130,8 +130,8 @@ Rectangle {
             anchors.topMargin: 8
 
             text: "64GB available of 128GB"
-            color: ThemeEngine.colorHeaderSubText
-            font.pixelSize: ThemeEngine.fontSizeContentText
+            color: ThemeEngine.colorHeaderText
+            font.pixelSize: ThemeEngine.fontSizeHeaderText
             horizontalAlignment: Text.AlignRight
             verticalAlignment: Text.AlignVCenter
         }
@@ -331,16 +331,16 @@ Rectangle {
 
         Text {
             id: textZoom
-            y: 72
             height: 40
             anchors.verticalCenter: comboBox_filterby.verticalCenter
             anchors.left: comboBox_filterby.right
             anchors.leftMargin: 16
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignHCenter
+
             text: qsTr("Zoom:")
-            font.pixelSize: ThemeEngine.fontSizeContentText
-            color: ThemeEngine.colorHeaderSubText
+            font.pixelSize: ThemeEngine.fontSizeHeaderText
+            color: ThemeEngine.colorHeaderText
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
         }
     }
 

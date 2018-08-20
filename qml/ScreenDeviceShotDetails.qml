@@ -13,6 +13,7 @@ Rectangle {
     width: 1280
     height: 720
     anchors.fill: parent
+    color: ThemeEngine.colorContentBackground
 
     property Shot shot
 
@@ -46,14 +47,15 @@ Rectangle {
             y: 20
             width: 582
             height: 40
-            color: ThemeEngine.colorHeaderTitle
-            text: qsTr("SHOT")
-            verticalAlignment: Text.AlignVCenter
-            font.bold: true
             anchors.leftMargin: 16
             anchors.left: rectangleBack.right
-            font.pixelSize: 30
             anchors.verticalCenter: parent.verticalCenter
+
+            text: qsTr("SHOT")
+            color: ThemeEngine.colorHeaderTitle
+            font.bold: true
+            font.pixelSize: ThemeEngine.fontSizeHeaderTitle
+            verticalAlignment: Text.AlignVCenter
         }
 
         Rectangle {
@@ -75,13 +77,14 @@ Rectangle {
 
             Text {
                 id: textBack
-                color: "#1d1d1d"
+                anchors.fill: parent
+
                 text: qsTr("<")
+                color: "#1d1d1d"
+                font.bold: true
+                font.pixelSize: ThemeEngine.fontSizeHeaderTitle
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
-                font.bold: true
-                anchors.fill: parent
-                font.pixelSize: 30
             }
         }
 
@@ -160,8 +163,6 @@ Rectangle {
 
     Rectangle {
         id: rectangleMetadata
-        x: 7
-        y: 4
         color: "#ffffff"
         anchors.rightMargin: 0
         anchors.bottomMargin: 0
@@ -203,7 +204,7 @@ Rectangle {
     }
     Rectangle {
         id: rectangleOverview
-        color: "#f4f4f4"
+        color: ThemeEngine.colorContentBox
         anchors.bottomMargin: 0
         anchors.rightMargin: 0
         anchors.right: parent.right
@@ -221,7 +222,8 @@ Rectangle {
             height: 32
             text: qsTr("Duration:")
             verticalAlignment: Text.AlignVCenter
-            font.pixelSize: 16
+            font.pixelSize: ThemeEngine.fontSizeContentText
+            color: ThemeEngine.colorContentText
         }
 
         Text {
@@ -232,7 +234,8 @@ Rectangle {
             height: 32
             text: qsTr("Date:")
             verticalAlignment: Text.AlignVCenter
-            font.pixelSize: 16
+            font.pixelSize: ThemeEngine.fontSizeContentText
+            color: ThemeEngine.colorContentText
         }
 
         Text {
@@ -243,7 +246,8 @@ Rectangle {
             height: 32
             text: qsTr("Resolution:")
             verticalAlignment: Text.AlignVCenter
-            font.pixelSize: 16
+            font.pixelSize: ThemeEngine.fontSizeContentText
+            color: ThemeEngine.colorContentText
         }
 
         Text {
@@ -254,14 +258,16 @@ Rectangle {
             height: 32
             text: qsTr("size:")
             verticalAlignment: Text.AlignVCenter
-            font.pixelSize: 16
+            font.pixelSize: ThemeEngine.fontSizeContentText
+            color: ThemeEngine.colorContentText
 
             Text {
                 id: size
                 x: 102
                 y: 9
                 text: qsTr("Text")
-                font.pixelSize: 12
+                font.pixelSize: ThemeEngine.fontSizeContentText
+                color: ThemeEngine.colorContentText
             }
         }
 
@@ -273,7 +279,8 @@ Rectangle {
             height: 32
             text: qsTr("Framerate:")
             verticalAlignment: Text.AlignVCenter
-            font.pixelSize: 16
+            font.pixelSize: ThemeEngine.fontSizeContentText
+            color: ThemeEngine.colorContentText
         }
 
         Text {
@@ -284,7 +291,8 @@ Rectangle {
             height: 32
             text: qsTr("Files:")
             verticalAlignment: Text.AlignVCenter
-            font.pixelSize: 16
+            font.pixelSize: ThemeEngine.fontSizeContentText
+            color: ThemeEngine.colorContentText
         }
 
         Text {
@@ -295,7 +303,8 @@ Rectangle {
             height: 32
             text: qsTr("Bitrate:")
             verticalAlignment: Text.AlignVCenter
-            font.pixelSize: 16
+            font.pixelSize: ThemeEngine.fontSizeContentText
+            color: ThemeEngine.colorContentText
         }
 
         Text {
@@ -306,7 +315,8 @@ Rectangle {
             height: 32
             text: qsTr("Aspect Ratio:")
             verticalAlignment: Text.AlignVCenter
-            font.pixelSize: 16
+            font.pixelSize: ThemeEngine.fontSizeContentText
+            color: ThemeEngine.colorContentText
         }
 
         Text {
@@ -317,7 +327,8 @@ Rectangle {
             height: 32
             text: qsTr("Codec:")
             verticalAlignment: Text.AlignVCenter
-            font.pixelSize: 16
+            font.pixelSize: ThemeEngine.fontSizeContentText
+            color: ThemeEngine.colorContentText
         }
 
         Text {
@@ -328,7 +339,8 @@ Rectangle {
             height: 32
             text: qsTr("Timecode:")
             verticalAlignment: Text.AlignVCenter
-            font.pixelSize: 16
+            font.pixelSize: ThemeEngine.fontSizeContentText
+            color: ThemeEngine.colorContentText
         }
 
         Text {
@@ -339,7 +351,8 @@ Rectangle {
             height: 32
             text: qsTr("Camera:")
             verticalAlignment: Text.AlignVCenter
-            font.pixelSize: 16
+            font.pixelSize: ThemeEngine.fontSizeContentText
+            color: ThemeEngine.colorContentText
         }
 
         Text {
@@ -350,14 +363,16 @@ Rectangle {
             height: 32
             text: qsTr("Chapters:")
             verticalAlignment: Text.AlignVCenter
-            font.pixelSize: 16
+            font.pixelSize: ThemeEngine.fontSizeContentText
+            color: ThemeEngine.colorContentText
 
             Text {
                 id: chapters
                 x: 114
                 y: 9
                 text: qsTr("Text")
-                font.pixelSize: 12
+                font.pixelSize: ThemeEngine.fontSizeContentText
+                color: ThemeEngine.colorContentText
             }
         }
 
@@ -366,7 +381,8 @@ Rectangle {
             x: 257
             y: 50
             text: qsTr("Text")
-            font.pixelSize: 12
+            font.pixelSize: ThemeEngine.fontSizeContentText
+            color: ThemeEngine.colorContentText
         }
 
         Text {
@@ -374,7 +390,8 @@ Rectangle {
             x: 258
             y: 88
             text: qsTr("Text")
-            font.pixelSize: 12
+            font.pixelSize: ThemeEngine.fontSizeContentText
+            color: ThemeEngine.colorContentText
         }
 
         Text {
@@ -385,14 +402,17 @@ Rectangle {
             height: 32
             text: qsTr("Data size:")
             verticalAlignment: Text.AlignVCenter
+            font.pixelSize: ThemeEngine.fontSizeContentText
+            color: ThemeEngine.colorContentText
+
             Text {
                 id: datasize
                 x: 102
                 y: 9
                 text: qsTr("Text")
-                font.pixelSize: 12
+                font.pixelSize: ThemeEngine.fontSizeContentText
+                color: ThemeEngine.colorContentText
             }
-            font.pixelSize: 16
         }
     }
 }

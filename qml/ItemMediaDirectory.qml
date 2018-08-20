@@ -16,15 +16,15 @@ Rectangle {
 
     Component.onCompleted: {
         if (directory.available === false)
-            itemMediaDirectory.color = ThemeEngine.colorSomethingsWrong
+            color = ThemeEngine.colorSomethingsWrong
         else
-            itemMediaDirectory.color = "white"
+            color = ThemeEngine.colorContentSubBox
     }
     onDirectoryAvailableChanged: {
         if (directory.available === false)
-            itemMediaDirectory.color = ThemeEngine.colorSomethingsWrong
+            color = ThemeEngine.colorSomethingsWrong
         else
-            itemMediaDirectory.color = "white"
+            color = ThemeEngine.colorContentSubBox
     }
 
     TextField {

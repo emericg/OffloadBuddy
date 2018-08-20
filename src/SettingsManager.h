@@ -81,6 +81,9 @@ Q_SIGNALS:
     void availableUpdated();
     void spaceUpdated();
 
+private slots:
+    void refreshMediaDirectory();
+
 public:
     MediaDirectory();
     MediaDirectory(QString &path, int content);
@@ -100,9 +103,6 @@ public slots:
     double getSpaceUsed_percent();
     int64_t getSpaceAvailable();
     int64_t getSpaceAvailable_withrefresh();
-
-private slots:
-    void refreshMediaDirectory();
 };
 
 /* ************************************************************************** */
@@ -114,6 +114,7 @@ class SettingsManager: public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(uint apptheme READ getAppTheme WRITE setAppTheme NOTIFY appThemeChanged)
     Q_PROPERTY(bool autolaunch READ getAutoLaunch WRITE setAutoLaunch NOTIFY autoLaunchChanged)
     Q_PROPERTY(bool automerge READ getAutoMerge WRITE setAutoMerge NOTIFY autoMergeChanged)
     Q_PROPERTY(bool autometadata READ getAutoMetadata WRITE setAutoMetadata NOTIFY autoMetadataChanged)
@@ -128,6 +129,7 @@ class SettingsManager: public QObject
     bool writeSettings();
 
     // Global
+    unsigned m_appTheme = 0;
     bool m_autoLaunch = false;
     bool m_ignoreJunk = true;
     bool m_ignoreHdAudio = false;
@@ -145,6 +147,7 @@ class SettingsManager: public QObject
     ~SettingsManager();
 
 Q_SIGNALS:
+    void appThemeChanged();
     void autoLaunchChanged();
     void autoMergeChanged();
     void autoMetadataChanged();
@@ -156,6 +159,9 @@ Q_SIGNALS:
 
 public:
     static SettingsManager *getInstance();
+
+    unsigned getAppTheme() const { return m_appTheme; }
+    void setAppTheme(unsigned value) { m_appTheme = value; writeSettings(); }
 
     bool getAutoLaunch() const { return m_autoLaunch; }
     void setAutoLaunch(bool value) { m_autoLaunch = value; writeSettings(); }

@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.3
+import QtQuick.Controls.Styles 1.4
 import QtQuick.Dialogs 1.1
 
 import com.offloadbuddy.style 1.0
@@ -142,6 +143,8 @@ Rectangle {
             width: 350
             height: 40
             text: qsTr("Automatically delete imported medias")
+            font.pixelSize: ThemeEngine.fontSizeContentText
+
             anchors.left: checkAutoMetadatas.right
             anchors.leftMargin: 16
             anchors.verticalCenter: checkAutoMetadatas.verticalCenter
@@ -152,8 +155,95 @@ Rectangle {
             }
         }
 
+        ComboBox {
+            id: comboBoxContentHierarchy
+            y: 174
+            width: 256
+            height: 40
+            anchors.verticalCenter: text4.verticalCenter
+            anchors.left: text4.right
+            anchors.leftMargin: 32
+
+            model: ListModel {
+                id: cbItemsContentHierarchy
+                ListElement { text: qsTr("/ date / FILES"); }
+                ListElement { text: qsTr("/ date / device / FILES"); }
+            }
+
+            Component.onCompleted: {
+                currentIndex = mySettings.contenthierarchy;
+                if (currentIndex === -1) { currentIndex = 0 }
+            }
+            property bool cbinit: false
+            onCurrentIndexChanged: {
+                if (cbinit)
+                    mySettings.contenthierarchy = currentIndex;
+                else
+                    cbinit = true;
+            }
+        }
+
+        Text {
+            id: text4
+            height: 40
+            anchors.top: checkAutoMerge.bottom
+            anchors.topMargin: 16
+            anchors.left: parent.left
+            anchors.leftMargin: 24
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignLeft
+            text: qsTr("Import hierarchy:")
+            font.pixelSize: ThemeEngine.fontSizeContentText
+            color: ThemeEngine.colorContentText
+        }
+
+        Text {
+            id: text1
+            y: 8
+            height: 40
+            text: qsTr("Application theme:")
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignLeft
+            anchors.left: parent.left
+            anchors.leftMargin: 16
+            font.pixelSize: ThemeEngine.fontSizeContentText
+            color: ThemeEngine.colorContentText
+        }
+
+        ComboBox {
+            id: comboBoxAppTheme
+            y: 18
+            width: 256
+            height: 40
+            anchors.left: text1.right
+            anchors.leftMargin: 32
+            anchors.verticalCenter: text1.verticalCenter
+
+            model: ListModel {
+                id: cbAppTheme
+                ListElement { text: "PLAIN AND BORING"; }
+                ListElement { text: "DARK AND SPOOKY"; }
+                ListElement { text: "MIGHTY KITTEN"; }
+            }
+
+            Component.onCompleted: {
+                currentIndex = mySettings.apptheme;
+                if (currentIndex === -1) { currentIndex = 0 }
+            }
+            property bool cbinit: false
+            onCurrentIndexChanged: {
+                if (cbinit)
+                    mySettings.apptheme = currentIndex;
+                else
+                    cbinit = true;
+
+                ThemeEngine.loadTheme(currentIndex)
+            }
+        }
+
         Rectangle {
             id: rectangleMedias
+            radius: 4
             color: ThemeEngine.colorContentBox
 
             anchors.bottom: parent.bottom
@@ -167,8 +257,9 @@ Rectangle {
 
             Text {
                 id: textMediasTitle
-                y: 10
                 height: 40
+                anchors.top: parent.top
+                anchors.topMargin: 16
                 anchors.left: parent.left
                 anchors.leftMargin: 16
 
@@ -181,7 +272,6 @@ Rectangle {
 
             Button {
                 id: buttonNew
-                y: 10
                 text: qsTr("Add new")
                 anchors.left: textMediasTitle.right
                 anchors.leftMargin: 32
@@ -221,77 +311,6 @@ Rectangle {
                 anchors.leftMargin: 16
                 anchors.right: parent.right
                 anchors.rightMargin: 16
-            }
-        }
-
-        ComboBox {
-            id: comboBoxContentHierarchy
-            y: 174
-            width: 256
-            height: 40
-            anchors.verticalCenter: text4.verticalCenter
-            anchors.left: text4.right
-            anchors.leftMargin: 32
-
-            model: ListModel {
-                id: cbItemsContentHierarchy
-                ListElement { text: qsTr("/ date / FILES"); }
-                ListElement { text: qsTr("/ date / device / FILES"); }
-            }
-
-            Component.onCompleted: {
-                currentIndex = mySettings.contenthierarchy;
-                if (currentIndex === -1) { currentIndex = 0 }
-            }
-            property bool cbinit: false
-            onCurrentIndexChanged: {
-                if (cbinit)
-                    mySettings.contenthierarchy = currentIndex;
-                else
-                    cbinit = true;
-            }
-        }
-
-        Text {
-            id: text4
-            height: 40
-            text: qsTr("Import hierarchy:")
-            anchors.top: checkAutoMerge.bottom
-            anchors.topMargin: 16
-            anchors.left: parent.left
-            anchors.leftMargin: 24
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignLeft
-            font.pixelSize: 14
-        }
-
-        Text {
-            id: text1
-            y: 8
-            height: 40
-            text: qsTr("Application theme:")
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignLeft
-            anchors.left: parent.left
-            anchors.leftMargin: 16
-            font.pixelSize: 14
-        }
-
-        ComboBox {
-            id: comboBoxAppTheme
-            y: 18
-            width: 256
-            height: 40
-            enabled: false
-            anchors.left: text1.right
-            anchors.leftMargin: 32
-            anchors.verticalCenter: text1.verticalCenter
-
-            model: ListModel {
-                id: cbAppTheme
-                ListElement { text: qsTr("PLAIN AND BORING"); }
-                ListElement { text: qsTr("DARK AND SPOOKY"); }
-                ListElement { text: qsTr("MIGHTY KITTEN"); }
             }
         }
     }

@@ -32,7 +32,7 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignRight
             font.bold: true
-            font.pixelSize: 30
+            font.pixelSize: ThemeEngine.fontSizeHeaderTitle
         }
 
         ComboBox {
@@ -95,16 +95,16 @@ Rectangle {
 
         Text {
             id: textZoom
-            y: 72
             height: 40
             anchors.verticalCenter: comboBox_filterby.verticalCenter
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
             anchors.left: comboBox_filterby.right
             anchors.leftMargin: 16
+
             text: qsTr("Zoom:")
-            font.pixelSize: ThemeEngine.fontSizeContentText
-            color: ThemeEngine.colorHeaderSubText
+            font.pixelSize: ThemeEngine.fontSizeHeaderText
+            color: ThemeEngine.colorHeaderText
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
         }
     }
 

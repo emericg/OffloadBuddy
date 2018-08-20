@@ -53,7 +53,7 @@ Rectangle {
             id: rectangleProject
             height: 256
             color: ThemeEngine.colorContentBox
-            radius: 16
+            radius: 8
             anchors.top: parent.top
             anchors.topMargin: 16
             anchors.right: parent.right
@@ -99,42 +99,44 @@ Rectangle {
                 anchors.rightMargin: 300
 
                 readOnly: true
+                wrapMode: Text.WordWrap
                 font.pixelSize: ThemeEngine.fontSizeContentText
+                color: ThemeEngine.colorContentText
                 text: qsTr("OffloadBuddy remove the hassle of handling and transfering the many videos and pictures file from your actioncams, cameras or phones.
 
 It also helps with many other convenient things like:
 - merging chaptered files
 - extracting many metadatas
 - video cliping and reencoding")
-                wrapMode: Text.WordWrap
             }
 
             Text {
                 id: text1
-                x: 1068
                 width: 112
-                height: 15
+                height: 16
                 text: qsTr("Version 0.1 (git)")
                 anchors.horizontalCenter: imageLogo.horizontalCenter
                 anchors.top: imageLogo.bottom
                 anchors.topMargin: 6
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
-                font.pixelSize: 15
+                font.pixelSize: ThemeEngine.fontSizeContentText
+                color: ThemeEngine.colorContentText
             }
 
             Text {
                 id: text2
-                y: 239
                 width: 166
                 height: 32
-                text: qsTr("Visit us on <html><style type=\"text/css\"></style><a href=\"https://github.com/emericg/OffloadBuddy\">GitHub</a></html>!")
                 anchors.verticalCenter: imageGitHub.verticalCenter
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignLeft
                 anchors.left: imageGitHub.right
                 anchors.leftMargin: 8
-                font.pixelSize: 16
+
+                text: qsTr("Visit us on <html><style type=\"text/css\"></style><a href=\"https://github.com/emericg/OffloadBuddy\">GitHub</a></html>!")
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignLeft
+                font.pixelSize: ThemeEngine.fontSizeContentText
+                color: ThemeEngine.colorContentText
                 onLinkActivated: Qt.openUrlExternally("https://github.com/emericg/OffloadBuddy")
             }
 
@@ -155,7 +157,7 @@ It also helps with many other convenient things like:
 
         Rectangle {
             id: rectangleAuthors
-            radius: 16
+            radius: 8
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 16
             anchors.topMargin: 16
@@ -192,12 +194,11 @@ It also helps with many other convenient things like:
 
                 Rectangle {
                     id: backImg
-                    y: 24
                     width: 100
                     height: 100
                     radius: 50
                     anchors.left: parent.left
-                    anchors.leftMargin: 8
+                    anchors.leftMargin: 12
                     anchors.verticalCenter: parent.verticalCenter
 
                     Rectangle {
@@ -231,7 +232,7 @@ It also helps with many other convenient things like:
                 }
                 Text {
                     id: textName
-                    height: 24
+                    height: 20
                     anchors.top: parent.top
                     anchors.topMargin: 24
                     anchors.left: backImg.right
@@ -239,14 +240,13 @@ It also helps with many other convenient things like:
                     anchors.right: parent.right
                     anchors.rightMargin: 8
 
-                    text: qsTr("Emeric")
+                    text: "Emeric"
                     color: ThemeEngine.colorContentSubTitle
                     horizontalAlignment: Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter
                     font.bold: true
                     font.pixelSize: 20
                 }
-
                 TextArea {
                     id: textArea1
                     anchors.top: textName.bottom
@@ -259,7 +259,7 @@ It also helps with many other convenient things like:
                     anchors.rightMargin: 4
 
                     readOnly: true
-                    text: qsTr("Main developer. Likes animals and flowers. Also, ponies. Yes I needed two lines here...")
+                    text: qsTr("Main developer. Likes animals and flowers. Also, ponies. You know, the ones with horn and wings.")
                     font.pixelSize: ThemeEngine.fontSizeContentText
                     wrapMode: Text.WordWrap
                     verticalAlignment: Text.AlignTop

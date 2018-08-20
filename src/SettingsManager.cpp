@@ -68,6 +68,9 @@ bool SettingsManager::readSettings()
 
     if (settings.status() == QSettings::NoError)
     {
+        if (settings.contains("global/appTheme"))
+            m_appTheme = settings.value("global/appTheme").toUInt();
+
         if (settings.contains("global/autoLaunch"))
             m_autoLaunch = settings.value("global/autoLaunch").toBool();
 
@@ -131,6 +134,7 @@ bool SettingsManager::writeSettings()
 
     if (settings.isWritable())
     {
+        settings.setValue("global/appTheme", m_appTheme);
         settings.setValue("global/autoLaunch", m_autoLaunch);
         settings.setValue("global/autoMerge", m_autoMerge);
         settings.setValue("global/autoMetadata", m_autoMetadata);

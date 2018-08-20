@@ -116,10 +116,10 @@ void JobWorker::work()
                     }
 
                     progress = ((stuff_done) / static_cast<float>(current_job->totalFiles)) * 100.f;
-                    //qDebug() << "progress: " << progress << "(" << current_job->totalFiles << "/" << bbbbbb << ")";
+                    //qDebug() << "progress: " << progress << "(" << current_job->totalFiles << "/" << stuff_done << ")";
                 }
 
-                // HANDLE COPY /////////////////////////////////////////////////////////
+                // HANDLE COPY /////////////////////////////////////////////////
                 if (current_job->type == JOB_COPY)
                 {
                     for (auto file: element->files)
@@ -188,7 +188,7 @@ void JobWorker::work()
                     }
 
                     progress = ((stuff_done) / static_cast<float>(current_job->totalSize)) * 100.f;
-                    //qDebug() << "progress: " << progress << "(" << current_job->totalSize << "/" << bbbbbb << ")";
+                    //qDebug() << "progress: " << progress << "(" << current_job->totalSize << "/" << stuff_done << ")";
                 }
 
                 emit shotFinished(current_job->id, element->parent_shots);

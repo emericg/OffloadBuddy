@@ -61,8 +61,8 @@ int main(int argc, char *argv[])
     qmlRegisterUncreatableMetaObject(
       Shared::staticMetaObject,
       "com.offloadbuddy.shared", 1, 0,
-      "Shared",                 // name in QML (does not have to match C++ name)
-      "Error: only enums"            // error in case someone tries to create a MyNamespace object
+      "Shared",             // name in QML (does not have to match C++ name)
+      "Error: only enums"   // error in case someone tries to create a MyNamespace object
     );
 
     //qRegisterMetaType<Shot*>("Shot*");

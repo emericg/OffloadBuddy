@@ -9,6 +9,7 @@ Rectangle {
     id: itemJob
     height: 48
     width: parent.width
+    color: ThemeEngine.colorContentSubBox
 
     property var job
 
