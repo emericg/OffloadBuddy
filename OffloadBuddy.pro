@@ -9,6 +9,7 @@ QT     += charts location
 # Enables or disable optional features
 unix {
     DEFINES += ENABLE_LIBMTP
+    DEFINES += ENABLE_LIBEXIF
     #DEFINES += ENABLE_FFMPEG
 }
 
@@ -53,7 +54,7 @@ HEADERS  += src/SettingsManager.h \
             src/GenericFileModel.h \
             src/GoProFileModel.h
 
-RESOURCES += qml.qrc \
+RESOURCES += qml/qml.qrc \
              resources.qrc
 
 include(src/thirdparty/SingleApplication/singleapplication.pri)
@@ -74,6 +75,11 @@ unix {
     contains(DEFINES, ENABLE_LIBMTP) {
         CONFIG += link_pkgconfig
         PKGCONFIG += libusb-1.0 libmtp
+    }
+
+    contains(DEFINES, ENABLE_LIBEXIF) {
+        CONFIG += link_pkgconfig
+        PKGCONFIG += libexif
     }
 
     contains(DEFINES, ENABLE_FFMPEG) {

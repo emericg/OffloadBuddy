@@ -30,11 +30,41 @@
 #include <QQmlContext>
 #include <QIcon>
 
+void print_build_infos()
+{
+    qDebug() << "print_build_infos()";
+
+    qDebug() << "* Built on '" << __DATE__ << __TIME__ << "'";
+#if defined(__ICC) || defined(__INTEL_COMPILER)
+    qDebug() << "* Built with ICC '" << __INTEL_COMPILER << "/" __INTEL_COMPILER_BUILD_DATE << "'";
+#elif defined(_MSC_VER)
+    qDebug() << "* Built with MSVC '" <<_MSC_VER<< "'";
+#elif defined(__clang__)
+    qDebug() << "* Built with CLANG '" << __clang_major__ << __clang_minor__<< "'";
+#elif defined(__GNUC__) || defined(__GNUG__)
+    qDebug() << "* Built with GCC '" << __GNUC__ << __GNUC_MINOR__ << __GNUC_PATCHLEVEL__ << "'";
+#else
+    qDebug() << "* Built with an unknown compiler";
+#endif
+
+#ifndef NDEBUG
+    qDebug() << "* This is a DEBUG build";
+#endif
+
+    qDebug() << "- Qt version:" << QT_VERSION_MAJOR << QT_VERSION_MINOR << QT_VERSION_PATCH;
+#ifdef ENABLE_LIBMTP
+    qDebug() << "- libmtp enabled, version:" << LIBMTP_VERSION_STRING;
+#endif
+#ifdef ENABLE_LIBEXIF
+    qDebug() << "- libexif enabled";
+#endif
+}
+
 int main(int argc, char *argv[])
 {
-#if defined(Q_OS_WIN)
+    print_build_infos();
+
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-#endif
     QCoreApplication::setApplicationName("OffloadBuddy");
 
     //SingleApplication app(argc, argv);
@@ -55,7 +85,7 @@ int main(int argc, char *argv[])
 
     ////////////////////////////////////////////////////////////////////////////
 
-    qmlRegisterSingletonType(QUrl("qrc:/qml/themes.qml"),
+    qmlRegisterSingletonType(QUrl("qrc:/qml/ThemeEngine.qml"),
                              "com.offloadbuddy.style", 1, 0, "ThemeEngine");
 
     qmlRegisterUncreatableMetaObject(

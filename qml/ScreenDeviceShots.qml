@@ -1,6 +1,6 @@
 import QtQuick 2.10
-import QtQuick.Controls 2.4
-import QtQuick.Controls.Styles 1.4
+import QtQuick.Controls 2.3
+import QtQuick.Controls.Styles 1.3
 
 import com.offloadbuddy.style 1.0
 import "StringUtils.js" as StringUtils

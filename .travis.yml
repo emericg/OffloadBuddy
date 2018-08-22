@@ -20,10 +20,12 @@ install:
       sudo apt-get install qt511base qt511quickcontrols2 qt511svg qt511imageformats qt511tools qt511charts-no-lgpl qt511location -y;
       sudo apt-get install libgl1-mesa-dev -y;
       sudo apt-get install libmtp-dev -y;
+      sudo apt-get install libexif-dev -y;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       brew install qt;
       brew install libmtp;
+      brew install libexif;
     fi
 
 before_script:

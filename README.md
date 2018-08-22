@@ -20,7 +20,7 @@ OffloadBuddy remove the hassle of handling and transfering the many videos and p
 
 ### Dependencies
 
-You will need a C++14 capable compiler and Qt 5.10+
+You will need a C++14 capable compiler and Qt 5.10+ (with QtCharts and QtLocation)
 
 Optional dependencies:
 - libusb and libmtp  
@@ -58,4 +58,3 @@ You can browse the code here on GitHub, submit patches and pull requests! Your h
 ### Users
 
 You can help us finding bugs, proposing new features and more! Visit the "Issues" section in the GitHub menu to start.
-

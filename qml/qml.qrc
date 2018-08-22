@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/qml">
+        <file>main.qml</file>
+        <file>ThemeEngine.qml</file>
+        <file>StringUtils.js</file>
+        <file>ScreenMedias.qml</file>
+        <file>ScreenDevice.qml</file>
+        <file>ScreenDeviceShots.qml</file>
+        <file>ScreenDeviceShotDetails.qml</file>
+        <file>ScreenJobs.qml</file>
+        <file>ScreenSettings.qml</file>
+        <file>ScreenAbout.qml</file>
+        <file>ItemDeviceMenu.qml</file>
+        <file>ItemMediaDirectory.qml</file>
+        <file>ItemJob.qml</file>
+        <file>ItemShot.qml</file>
+    </qresource>
+</RCC>

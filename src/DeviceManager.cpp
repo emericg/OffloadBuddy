@@ -37,7 +37,6 @@ DeviceManager::DeviceManager()
 {
 #ifdef ENABLE_LIBMTP
     LIBMTP_Init();
-    qDebug() << "libmtp enabled, version:" << LIBMTP_VERSION_STRING;
 #endif
 
     connect(&m_deviceScannerTimer, &QTimer::timeout, this, &DeviceManager::searchDevices);
