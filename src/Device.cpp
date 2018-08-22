@@ -305,7 +305,7 @@ void Device::refreshBatteryInfos()
         if (ret == 0 && maxbattlevel > 0)
         {
             m_mtpBattery = (static_cast<double>(currbattlevel) / static_cast<double>(maxbattlevel)) * 100.0;
-            qDebug() << "MTP Battery level:" << m_mtpBattery << "%";
+            //qDebug() << "MTP Battery level:" << m_mtpBattery << "%";
         }
         else
         {

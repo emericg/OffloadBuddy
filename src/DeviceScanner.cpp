@@ -315,7 +315,7 @@ void DeviceScanner::scanMtpDevices()
             if (ret == 0 && maxbattlevel > 0)
             {
                 deviceInfos->battery = (static_cast<double>(currbattlevel) / static_cast<double>(maxbattlevel)) * 100.0;
-                qDebug() << "MTP Battery level:" << deviceInfos->battery << "%";
+                //qDebug() << "MTP Battery level:" << deviceInfos->battery << "%";
             }
             else
             {

@@ -110,13 +110,21 @@ class Shot: public QObject
     Q_PROPERTY(qint64 size READ getSize NOTIFY shotUpdated)
     Q_PROPERTY(qint64 datasize READ getDataSize NOTIFY shotUpdated)
     Q_PROPERTY(int chapters READ getChapterCount NOTIFY shotUpdated)
+    Q_PROPERTY(int highlightCount READ getHighlightCount NOTIFY shotUpdated)
 
     Q_PROPERTY(QString preview READ getPreview NOTIFY shotUpdated)
 
-    Q_PROPERTY(int highlightCount READ getHighlightCount NOTIFY shotUpdated)
-
     Q_PROPERTY(qint64 duration READ getDuration NOTIFY shotUpdated)
     Q_PROPERTY(QDateTime date READ getDate NOTIFY shotUpdated)
+
+    Q_PROPERTY(QString iso READ getIso NOTIFY shotUpdated)
+    Q_PROPERTY(QString focal READ getFocal NOTIFY shotUpdated)
+    Q_PROPERTY(QString exposure READ getExposure NOTIFY shotUpdated)
+
+    Q_PROPERTY(double latitude READ getLatitude NOTIFY shotUpdated)
+    Q_PROPERTY(double longitude READ getLongitude NOTIFY shotUpdated)
+    Q_PROPERTY(double altitude READ getAltitude NOTIFY shotUpdated)
+
     //Q_PROPERTY(QString gps READ getGPS NOTIFY shotUpdated)
 
     bool m_onCamera = false;        //!< Shot datas currently located on a device
@@ -124,6 +132,7 @@ class Shot: public QObject
     Shared::ShotType m_type = Shared::SHOT_UNKNOWN;
     Shared::ShotState m_state = Shared::SHOT_STATE_DEFAULT;
     QString m_camera_source;        //!< Model of the camera that produced the shot
+    QString m_camera_firmware;      //!< Firmware of the camera that produced the shot
 
     int m_shot_id = -1;
     int m_camera_id = 0;            //!< Shot is part of a multi camera systems
@@ -147,6 +156,23 @@ class Shot: public QObject
     QList <ofb_file *> m_videos_previews;
     QList <ofb_file *> m_videos_thumbnails;
     QList <ofb_file *> m_videos_hdAudio;
+
+    // GLOBAL metadatas
+    QString orientation;
+
+    // GPS metadatas
+    double gps_lat = 0.0;
+    double gps_long = 0.0;
+    double gps_alt = 0.0;
+    QDateTime gps_ts;
+
+    // PICTURES metadatas
+    QString focal;
+    QString iso;
+    QString esposure_time;
+
+    bool getMetadatasFromPicture();
+    bool getMetadatasFromVideo();
 
 public:
     Shot(QObject *parent = nullptr);
@@ -177,6 +203,14 @@ public slots:
     QDateTime getDate() const { return m_date; }
     QString getPreview() const;
     QString getCameraSource() const { return m_camera_source; }
+
+    QString getIso() const { return iso; }
+    QString getFocal() const { return focal; }
+    QString getExposure() const { return esposure_time; }
+
+    double getLatitude() const { return gps_lat; }
+    double getLongitude() const { return gps_long; }
+    double getAltitude() const { return gps_alt; }
 
     int getHighlightCount() const { return m_highlights.size(); }
 

@@ -13,35 +13,65 @@ Rectangle {
     width: 1280
     height: 720
     anchors.fill: parent
-    color: ThemeEngine.colorContentBackground
 
     property Shot shot
 
     onShotChanged: {
         if (shot) {
             textShotName.text = shot.name
-            duration.text = shot.duration
-            date.text = shot.date
-            size.text = StringUtils.bytesToString_short(shot.size)
-            datasize.text = StringUtils.bytesToString_short(shot.datasize)
-            codecVideo.visible = false
 
+            codecVideo.visible = false
             codecAudio.visible = false
-            chapters.text = shot.chapters
 
             if (shot.preview) {
                 image.source = "file:///" + shot.preview
             }
+
+            duration.text = shot.duration
+            date.text = shot.date.toUTCString()
+            size.text = StringUtils.bytesToString_short(shot.size)
+            sizefull.text = StringUtils.bytesToString_short(shot.datasize)
+            chapters.text = shot.chapters
+            camera.text = shot.camera
+
+            if (shot.type <= Shared.SHOT_PICTURE) {
+                rectanglePicture.visible = true
+                rectangleVideo.visible = false
+
+                codecVideo.visible = true
+                codecVideo.source = "qrc:/badges/JPEG.svg"
+            } else {
+                rectanglePicture.visible = false
+                rectangleVideo.visible = true
+            }
+
+            mapBase.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
         }
     }
 
     Rectangle {
         id: rectangleHeader
         height: 64
-        color: ThemeEngine.colorHeaderBackground
         anchors.rightMargin: 0
         anchors.right: parent.right
+        anchors.leftMargin: 0
+        anchors.left: parent.left
+        anchors.topMargin: 0
+        anchors.top: parent.top
+        color: ThemeEngine.colorHeaderBackground
 
+        Button {
+            id: rectangleBack
+            width: 40
+            height: 40
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: parent.left
+            anchors.leftMargin: 16
+            text: "<"
+            font.bold: true
+            font.pixelSize: ThemeEngine.fontSizeHeaderTitle
+            onClicked: screenDevice.state = "shotsview"
+        }
         Text {
             id: textShotName
             y: 20
@@ -51,368 +81,663 @@ Rectangle {
             anchors.left: rectangleBack.right
             anchors.verticalCenter: parent.verticalCenter
 
-            text: qsTr("SHOT")
+            text: "SHOT NAME"
             color: ThemeEngine.colorHeaderTitle
             font.bold: true
             font.pixelSize: ThemeEngine.fontSizeHeaderTitle
             verticalAlignment: Text.AlignVCenter
         }
 
-        Rectangle {
-            id: rectangleBack
-            x: 16
-            y: 16
-            width: 40
-            height: 40
-            color: "#e0e0e0"
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.left: parent.left
-            anchors.leftMargin: 16
-
-            MouseArea {
-                id: mouseArea
-                anchors.fill: parent
-                onClicked: screenDevice.state = "shotsview"
-            }
-
-            Text {
-                id: textBack
-                anchors.fill: parent
-
-                text: qsTr("<")
-                color: "#1d1d1d"
-                font.bold: true
-                font.pixelSize: ThemeEngine.fontSizeHeaderTitle
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-            }
-        }
-
         Image {
-            id: codecVideo
-            x: 733
-            y: 20
+            id: codecAudio
             width: 64
             height: 24
             anchors.right: codecAudio.left
+            anchors.rightMargin: 32
+            anchors.verticalCenterOffset: 0
+            anchors.verticalCenter: parent.verticalCenter
+            source: "qrc:/badges/AAC.svg"
+        }
+        Image {
+            id: codecVideo
+            width: 64
+            height: 24
+            anchors.right: buttonOverview.left
             anchors.rightMargin: 16
             anchors.verticalCenterOffset: 0
             anchors.verticalCenter: parent.verticalCenter
             source: "qrc:/badges/H264.svg"
         }
 
-        Image {
-            id: codecAudio
-            x: 1
-            y: 22
-            width: 64
-            height: 24
-            anchors.right: buttonOverview.left
-            anchors.rightMargin: 32
-            anchors.verticalCenterOffset: 0
-            anchors.verticalCenter: parent.verticalCenter
-            source: "qrc:/badges/AAC.svg"
-        }
-
         Button {
-            id: buttonMap
-            x: 1164
-            y: 12
-            text: qsTr("Map")
-            anchors.right: parent.right
+            id: buttonOverview
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.right: buttonPreview.left
             anchors.rightMargin: 16
-            anchors.verticalCenter: buttonOverview.verticalCenter
-        }
 
+            text: qsTr("Overview")
+            onClicked: screenDeviceShotDetails.state = "overview"
+        }
+        Button {
+            id: buttonPreview
+            anchors.right: buttonMetadata.left
+            anchors.rightMargin: 16
+            anchors.verticalCenter: parent.verticalCenter
+
+            text: qsTr("Preview")
+            //onClicked: screenDeviceShotDetails.state = "preview"
+        }
         Button {
             id: buttonMetadata
-            x: 1164
-            y: 340
-            text: qsTr("Metadata")
             anchors.right: buttonMap.left
             anchors.rightMargin: 16
             anchors.verticalCenter: parent.verticalCenter
-        }
 
+            text: qsTr("Metadatas")
+            //onClicked: screenDeviceShotDetails.state = "metadatas"
+        }
         Button {
-            id: buttonOverview
-            x: 935
-            y: 12
-            text: qsTr("Overview")
-            anchors.right: buttonMetadata.left
+            id: buttonMap
+            anchors.right: parent.right
             anchors.rightMargin: 16
+            anchors.verticalCenter: buttonOverview.verticalCenter
+
+            text: qsTr("Map")
+            onClicked: screenDeviceShotDetails.state = "map"
         }
-
-        anchors.leftMargin: 0
-        anchors.left: parent.left
-        anchors.topMargin: 0
-        anchors.top: parent.top
     }
 
-    Image {
-        id: image
-        width: 512
-        height: 480
-        anchors.top: rectangleHeader.bottom
-        anchors.topMargin: 16
-        anchors.left: parent.left
-        anchors.leftMargin: 16
-        fillMode: Image.PreserveAspectFit
-        source: "qrc:/resources/other/placeholder.png"
-    }
+    state: "overview"
+    states: [
+        State {
+            name: "overview"
+
+            PropertyChanges {
+                target: contentOverview
+                visible: true
+            }
+            PropertyChanges {
+                target: contentPreview
+                visible: false
+            }
+            PropertyChanges {
+                target: contentMetadatas
+                visible: false
+            }
+            PropertyChanges {
+                target: contentMap
+                visible: false
+            }
+        },
+        State {
+            name: "map"
+
+            PropertyChanges {
+                target: contentOverview
+                visible: false
+            }
+            PropertyChanges {
+                target: contentPreview
+                visible: false
+            }
+            PropertyChanges {
+                target: contentMetadatas
+                visible: false
+            }
+            PropertyChanges {
+                target: contentMap
+                visible: true
+            }
+        }
+    ]
 
     Rectangle {
-        id: rectangleMetadata
-        color: "#ffffff"
-        anchors.rightMargin: 0
-        anchors.bottomMargin: 0
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        anchors.leftMargin: 16
-        anchors.left: image.right
-        anchors.topMargin: 0
-        anchors.top: rectangleHeader.bottom
-    }
+        id: rectangleContent
+        color: ThemeEngine.colorContentBackground
 
-    Rectangle {
-        id: rectangleMap
-        color: "#ffffff"
         anchors.top: rectangleHeader.bottom
-        anchors.topMargin: 0
-        anchors.left: image.right
-        anchors.leftMargin: 16
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
         anchors.right: parent.right
-        anchors.rightMargin: 0
-/*
-        Map {
-            id: mapBase
-            anchors.rightMargin: 32
-            anchors.bottomMargin: 32
-            anchors.leftMargin: 32
-            anchors.topMargin: 32
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.topMargin: 0
+
+        Rectangle {
+            id: contentOverview
             anchors.fill: parent
+            color: "#00000000"
 
-            gesture.enabled: false
-            plugin: Plugin { name: "osm" }
-            center: QtPositioning.coordinate(45,10)
-            zoomLevel: 4
-            z: parent.z + 1
-        }
-*/
-    }
-    Rectangle {
-        id: rectangleOverview
-        color: ThemeEngine.colorContentBox
-        anchors.bottomMargin: 0
-        anchors.rightMargin: 0
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        anchors.leftMargin: 16
-        anchors.left: image.right
-        anchors.topMargin: 0
-        anchors.top: rectangleHeader.bottom
+            Image {
+                id: image
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 13
+                anchors.right: rectangleMetadatas.left
+                anchors.rightMargin: 13
+                anchors.top: parent.top
+                anchors.topMargin: 16
+                anchors.left: parent.left
+                anchors.leftMargin: 16
+                fillMode: Image.PreserveAspectFit
+                source: "qrc:/resources/other/placeholder.png"
+            }
 
-        Text {
-            id: text2
-            x: 123
-            y: 41
-            width: 128
-            height: 32
-            text: qsTr("Duration:")
-            verticalAlignment: Text.AlignVCenter
-            font.pixelSize: ThemeEngine.fontSizeContentText
-            color: ThemeEngine.colorContentText
-        }
+            Rectangle {
+                id: rectangleMetadatas
+                width: 600
+                color: ThemeEngine.colorContentBox
+                anchors.bottomMargin: 0
+                anchors.rightMargin: 0
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                anchors.topMargin: 0
+                anchors.top: parent.top
 
-        Text {
-            id: text3
-            x: 123
-            y: 79
-            width: 128
-            height: 32
-            text: qsTr("Date:")
-            verticalAlignment: Text.AlignVCenter
-            font.pixelSize: ThemeEngine.fontSizeContentText
-            color: ThemeEngine.colorContentText
-        }
+                Text {
+                    id: labelDuration
+                    y: 104
+                    width: 256
+                    height: 40
+                    color: ThemeEngine.colorContentText
+                    text: qsTr("Duration:")
+                    anchors.left: parent.left
+                    anchors.leftMargin: 24
+                    verticalAlignment: Text.AlignVCenter
+                    font.bold: true
+                    font.pixelSize: ThemeEngine.fontSizeContentText
 
-        Text {
-            id: text4
-            x: 128
-            y: 341
-            width: 128
-            height: 32
-            text: qsTr("Resolution:")
-            verticalAlignment: Text.AlignVCenter
-            font.pixelSize: ThemeEngine.fontSizeContentText
-            color: ThemeEngine.colorContentText
-        }
+                    Text {
+                        id: duration
+                        x: 142
+                        y: 8
+                        width: 128
+                        height: 32
+                        color: ThemeEngine.colorContentText
+                        text: qsTr("Text")
+                        anchors.right: parent.right
+                        anchors.rightMargin: 0
+                        horizontalAlignment: Text.AlignRight
+                        verticalAlignment: Text.AlignVCenter
+                        anchors.verticalCenter: parent.verticalCenter
+                        font.pixelSize: ThemeEngine.fontSizeContentText
+                    }
+                }
 
-        Text {
-            id: text5
-            x: 472
-            y: 41
-            width: 128
-            height: 32
-            text: qsTr("size:")
-            verticalAlignment: Text.AlignVCenter
-            font.pixelSize: ThemeEngine.fontSizeContentText
-            color: ThemeEngine.colorContentText
+                Text {
+                    id: labelDate
+                    width: 552
+                    height: 40
+                    color: ThemeEngine.colorContentText
+                    text: qsTr("Date:")
+                    anchors.top: parent.top
+                    anchors.topMargin: 24
+                    anchors.left: parent.left
+                    anchors.leftMargin: 24
+                    verticalAlignment: Text.AlignVCenter
+                    font.bold: true
+                    font.pixelSize: ThemeEngine.fontSizeContentText
 
-            Text {
-                id: size
-                x: 102
-                y: 9
-                text: qsTr("Text")
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
+                    Text {
+                        id: date
+                        x: 146
+                        y: 263
+                        width: 256
+                        height: 32
+                        color: ThemeEngine.colorContentText
+                        text: qsTr("Text")
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignRight
+                        anchors.right: parent.right
+                        anchors.rightMargin: 0
+                        anchors.verticalCenter: parent.verticalCenter
+                        font.pixelSize: ThemeEngine.fontSizeContentText
+                    }
+                }
+
+                Text {
+                    id: labelDefinition
+                    width: 256
+                    height: 40
+                    color: ThemeEngine.colorContentText
+                    text: qsTr("Resolution:")
+                    anchors.top: parent.top
+                    anchors.topMargin: 144
+                    anchors.left: parent.left
+                    anchors.leftMargin: 24
+                    verticalAlignment: Text.AlignVCenter
+                    font.bold: true
+                    font.pixelSize: ThemeEngine.fontSizeContentText
+
+                    Text {
+                        id: definition
+                        width: 128
+                        height: 32
+                        text: qsTr("Text")
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignRight
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.right: parent.right
+                        anchors.rightMargin: 0
+                        font.pixelSize: ThemeEngine.fontSizeContentText
+                        color: ThemeEngine.colorContentText
+                    }
+                }
+
+                Text {
+                    id: labelSize
+                    y: 184
+                    width: 256
+                    height: 40
+                    anchors.left: parent.left
+                    anchors.leftMargin: 24
+
+                    color: ThemeEngine.colorContentText
+                    text: qsTr("Size:")
+                    verticalAlignment: Text.AlignVCenter
+                    font.bold: true
+                    font.pixelSize: ThemeEngine.fontSizeContentText
+
+                    Text {
+                        id: size
+                        x: 102
+                        y: 9
+                        width: 128
+                        height: 32
+                        color: ThemeEngine.colorContentText
+                        text: qsTr("Text")
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignRight
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.right: parent.right
+                        anchors.rightMargin: 0
+                        font.pixelSize: ThemeEngine.fontSizeContentText
+                    }
+                }
+
+                Text {
+                    id: labelAR
+                    x: 320
+                    y: 144
+                    width: 256
+                    height: 40
+                    color: ThemeEngine.colorContentText
+                    text: qsTr("Aspect Ratio:")
+                    anchors.right: parent.right
+                    anchors.rightMargin: 24
+                    verticalAlignment: Text.AlignVCenter
+                    font.bold: true
+                    font.pixelSize: ThemeEngine.fontSizeContentText
+
+                    Text {
+                        id: ar
+                        width: 128
+                        height: 32
+                        text: qsTr("Text")
+                        anchors.right: parent.right
+                        anchors.rightMargin: 0
+                        anchors.verticalCenter: parent.verticalCenter
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignRight
+                        font.pixelSize: ThemeEngine.fontSizeContentText
+                        color: ThemeEngine.colorContentText
+                    }
+                }
+
+                Text {
+                    id: labelCamera
+                    x: 24
+                    y: 64
+                    width: 552
+                    height: 40
+                    color: ThemeEngine.colorContentText
+                    text: qsTr("Camera:")
+                    verticalAlignment: Text.AlignVCenter
+                    font.bold: true
+                    font.pixelSize: ThemeEngine.fontSizeContentText
+
+                    Text {
+                        id: camera
+                        width: 256
+                        height: 32
+                        text: shot.camera
+                        anchors.right: parent.right
+                        anchors.rightMargin: 0
+                        anchors.verticalCenter: parent.verticalCenter
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignRight
+                        font.pixelSize: ThemeEngine.fontSizeContentText
+                        color: ThemeEngine.colorContentText
+                    }
+                }
+
+                Text {
+                    id: labelSizeFull
+                    x: 320
+                    y: 184
+                    width: 256
+                    height: 40
+                    anchors.right: parent.right
+                    anchors.rightMargin: 24
+
+                    color: ThemeEngine.colorContentText
+                    text: qsTr("Full size:")
+                    verticalAlignment: Text.AlignVCenter
+                    font.bold: true
+                    font.pixelSize: ThemeEngine.fontSizeContentText
+
+                    Text {
+                        id: sizefull
+                        x: 102
+                        y: 9
+                        width: 128
+                        height: 32
+                        color: ThemeEngine.colorContentText
+                        text: qsTr("Text")
+                        horizontalAlignment: Text.AlignRight
+                        verticalAlignment: Text.AlignVCenter
+                        anchors.right: parent.right
+                        anchors.rightMargin: 0
+                        anchors.verticalCenter: parent.verticalCenter
+                        font.pixelSize: ThemeEngine.fontSizeContentText
+                    }
+                }
+
+                Rectangle {
+                    id: rectanglePicture
+                    height: 120
+                    color: "#00000000"
+                    anchors.bottom: rectangleFiles.top
+                    anchors.bottomMargin: 0
+                    anchors.left: parent.left
+                    anchors.leftMargin: 0
+                    anchors.right: parent.right
+                    anchors.rightMargin: 0
+
+                    Text {
+                        id: labelISO
+                        width: 256
+                        height: 40
+                        color: ThemeEngine.colorContentText
+                        text: qsTr("ISO:")
+                        anchors.top: parent.top
+                        anchors.topMargin: 0
+                        anchors.left: parent.left
+                        anchors.leftMargin: 24
+                        verticalAlignment: Text.AlignVCenter
+                        font.bold: true
+                        font.pixelSize: ThemeEngine.fontSizeContentText
+
+                        Text {
+                            id: iso
+                            x: 114
+                            y: 9
+                            width: 128
+                            height: 32
+                            anchors.right: parent.right
+                            anchors.rightMargin: 0
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            text: shot.iso
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignRight
+                            font.pixelSize: ThemeEngine.fontSizeContentText
+                            color: ThemeEngine.colorContentText
+                        }
+                    }
+
+                    Text {
+                        id: labelFocal
+                        width: 256
+                        height: 40
+                        anchors.left: parent.left
+                        anchors.leftMargin: 24
+                        anchors.top: labelISO.bottom
+                        anchors.topMargin: 0
+
+                        color: ThemeEngine.colorContentText
+                        text: qsTr("Focal:")
+                        verticalAlignment: Text.AlignVCenter
+                        font.bold: true
+                        font.pixelSize: ThemeEngine.fontSizeContentText
+
+                        Text {
+                            id: focal
+                            x: 114
+                            y: 9
+                            width: 128
+                            height: 32
+                            anchors.right: parent.right
+                            anchors.rightMargin: 0
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            text: shot.focal
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignRight
+                            font.pixelSize: ThemeEngine.fontSizeContentText
+                            color: ThemeEngine.colorContentText
+                        }
+                    }
+                    Text {
+                        id: labelExposure
+                        width: 256
+                        height: 40
+                        anchors.left: parent.left
+                        anchors.leftMargin: 24
+                        anchors.top: labelFocal.bottom
+                        anchors.topMargin: 0
+
+                        color: ThemeEngine.colorContentText
+                        text: qsTr("Exposure time:")
+                        verticalAlignment: Text.AlignVCenter
+                        font.bold: true
+                        font.pixelSize: ThemeEngine.fontSizeContentText
+
+                        Text {
+                            id: exposure
+                            x: 114
+                            y: 9
+                            width: 128
+                            height: 32
+                            anchors.right: parent.right
+                            anchors.rightMargin: 0
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            text: shot.exposure
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignRight
+                            font.pixelSize: ThemeEngine.fontSizeContentText
+                            color: ThemeEngine.colorContentText
+                        }
+                    }
+                }
+
+                Rectangle {
+                    id: rectangleVideo
+                    height: 120
+                    color: "#00000000"
+                    anchors.bottom: rectangleFiles.top
+                    anchors.bottomMargin: 0
+                    anchors.right: parent.right
+                    anchors.rightMargin: 0
+                    anchors.left: parent.left
+                    anchors.leftMargin: 0
+
+                    Text {
+                        id: labelChapter
+                        x: 303
+                        y: 113
+                        width: 256
+                        height: 40
+                        color: ThemeEngine.colorContentText
+                        text: qsTr("Chapters:")
+                        anchors.right: parent.right
+                        anchors.rightMargin: 24
+                        anchors.verticalCenter: labelTimecode.verticalCenter
+                        verticalAlignment: Text.AlignVCenter
+                        font.bold: true
+                        font.pixelSize: ThemeEngine.fontSizeContentText
+
+                        Text {
+                            id: chapters
+                            x: 114
+                            y: 9
+                            width: 128
+                            height: 32
+                            color: ThemeEngine.colorContentText
+                            text: qsTr("Text")
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignRight
+                            anchors.right: parent.right
+                            anchors.rightMargin: 0
+                            anchors.verticalCenter: parent.verticalCenter
+                            font.pixelSize: ThemeEngine.fontSizeContentText
+                        }
+                    }
+
+                    Text {
+                        id: labelTimecode
+                        width: 256
+                        height: 40
+                        color: ThemeEngine.colorContentText
+                        text: qsTr("Timecode:")
+                        anchors.left: parent.left
+                        anchors.leftMargin: 24
+                        anchors.top: labelFramerate.bottom
+                        anchors.topMargin: 0
+                        verticalAlignment: Text.AlignVCenter
+                        font.bold: true
+                        font.pixelSize: ThemeEngine.fontSizeContentText
+                    }
+
+                    Text {
+                        id: labelCodec
+                        width: 256
+                        height: 40
+                        color: ThemeEngine.colorContentText
+                        text: qsTr("Codec:")
+                        anchors.top: parent.top
+                        anchors.topMargin: 0
+                        anchors.left: parent.left
+                        anchors.leftMargin: 24
+                        verticalAlignment: Text.AlignVCenter
+                        font.bold: true
+                        font.pixelSize: ThemeEngine.fontSizeContentText
+                    }
+
+                    Text {
+                        id: labelBitrate
+                        x: 314
+                        y: 51
+                        width: 256
+                        height: 40
+                        color: ThemeEngine.colorContentText
+                        text: qsTr("Bitrate:")
+                        anchors.right: parent.right
+                        anchors.rightMargin: 24
+                        anchors.verticalCenter: labelFramerate.verticalCenter
+                        verticalAlignment: Text.AlignVCenter
+                        font.bold: true
+                        font.pixelSize: ThemeEngine.fontSizeContentText
+                    }
+
+                    Text {
+                        id: labelFramerate
+                        width: 256
+                        height: 40
+                        color: ThemeEngine.colorContentText
+                        text: qsTr("Framerate:")
+                        anchors.left: parent.left
+                        anchors.leftMargin: 24
+                        anchors.top: labelCodec.bottom
+                        anchors.topMargin: 0
+                        verticalAlignment: Text.AlignVCenter
+                        font.bold: true
+                        font.pixelSize: ThemeEngine.fontSizeContentText
+                    }
+                }
+
+                Rectangle {
+                    id: rectangleFiles
+                    height: 256
+                    color: ThemeEngine.colorContentSubBox
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: 0
+                    anchors.right: parent.right
+                    anchors.rightMargin: 0
+                    anchors.left: parent.left
+                    anchors.leftMargin: 0
+
+                    Text {
+                        id: labelFileCount
+                        height: 32
+                        color: ThemeEngine.colorContentText
+                        text: qsTr("Files:")
+                        anchors.right: parent.right
+                        anchors.rightMargin: 8
+                        font.bold: true
+                        horizontalAlignment: Text.AlignLeft
+                        anchors.left: parent.left
+                        anchors.leftMargin: 8
+                        anchors.top: parent.top
+                        anchors.topMargin: 8
+                        verticalAlignment: Text.AlignVCenter
+                        font.pixelSize: ThemeEngine.fontSizeContentText
+                    }
+                }
             }
         }
 
-        Text {
-            id: text6
-            x: 128
-            y: 379
-            width: 128
-            height: 32
-            text: qsTr("Framerate:")
-            verticalAlignment: Text.AlignVCenter
-            font.pixelSize: ThemeEngine.fontSizeContentText
-            color: ThemeEngine.colorContentText
+        Rectangle {
+            id: contentPreview
+            anchors.fill: parent
+            color: "#00000000"
         }
 
-        Text {
-            id: text7
-            x: 472
-            y: 117
-            width: 128
-            height: 32
-            text: qsTr("Files:")
-            verticalAlignment: Text.AlignVCenter
-            font.pixelSize: ThemeEngine.fontSizeContentText
-            color: ThemeEngine.colorContentText
-        }
+        Rectangle {
+            id: contentMap
+            anchors.fill: parent
+            color: "#00000000"
 
-        Text {
-            id: text8
-            x: 128
-            y: 417
-            width: 128
-            height: 32
-            text: qsTr("Bitrate:")
-            verticalAlignment: Text.AlignVCenter
-            font.pixelSize: ThemeEngine.fontSizeContentText
-            color: ThemeEngine.colorContentText
-        }
+            Map {
+                id: mapBase
+                anchors.rightMargin: 32
+                anchors.bottomMargin: 32
+                anchors.leftMargin: 32
+                anchors.topMargin: 32
+                anchors.fill: parent
 
-        Text {
-            id: text9
-            x: 123
-            y: 155
-            width: 128
-            height: 32
-            text: qsTr("Aspect Ratio:")
-            verticalAlignment: Text.AlignVCenter
-            font.pixelSize: ThemeEngine.fontSizeContentText
-            color: ThemeEngine.colorContentText
-        }
+                gesture.enabled: false
+                plugin: Plugin { name: "osm" }
+                //center: QtPositioning.coordinate(45.6833, 5.83333)
+                zoomLevel: 10
+                z: parent.z + 1
 
-        Text {
-            id: text10
-            x: 128
-            y: 303
-            width: 128
-            height: 32
-            text: qsTr("Codec:")
-            verticalAlignment: Text.AlignVCenter
-            font.pixelSize: ThemeEngine.fontSizeContentText
-            color: ThemeEngine.colorContentText
-        }
-
-        Text {
-            id: text11
-            x: 123
-            y: 193
-            width: 128
-            height: 32
-            text: qsTr("Timecode:")
-            verticalAlignment: Text.AlignVCenter
-            font.pixelSize: ThemeEngine.fontSizeContentText
-            color: ThemeEngine.colorContentText
-        }
-
-        Text {
-            id: text12
-            x: 123
-            y: 117
-            width: 128
-            height: 32
-            text: qsTr("Camera:")
-            verticalAlignment: Text.AlignVCenter
-            font.pixelSize: ThemeEngine.fontSizeContentText
-            color: ThemeEngine.colorContentText
-        }
-
-        Text {
-            id: text13
-            x: 123
-            y: 265
-            width: 234
-            height: 32
-            text: qsTr("Chapters:")
-            verticalAlignment: Text.AlignVCenter
-            font.pixelSize: ThemeEngine.fontSizeContentText
-            color: ThemeEngine.colorContentText
-
-            Text {
-                id: chapters
-                x: 114
-                y: 9
-                text: qsTr("Text")
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
+                MapCircle {
+                    center: QtPositioning.coordinate(45.6833, 5.83333)
+                    /*center {
+                        latitude: 45.6833
+                        longitude: 5.83333
+                    }*/
+                    radius: 50.00
+                    color: 'green'
+                    border.width: 3
+                }
+                /*
+                MapPolyline {
+                    line.width: 3
+                    line.color: 'green'
+                    path: [
+                        { latitude: -27, longitude: 153.0 },
+                        { latitude: -27, longitude: 154.1 },
+                        { latitude: -28, longitude: 153.5 },
+                        { latitude: -29, longitude: 153.5 }
+                    ]
+                    */
             }
         }
 
-        Text {
-            id: duration
-            x: 257
-            y: 50
-            text: qsTr("Text")
-            font.pixelSize: ThemeEngine.fontSizeContentText
-            color: ThemeEngine.colorContentText
-        }
-
-        Text {
-            id: date
-            x: 258
-            y: 88
-            text: qsTr("Text")
-            font.pixelSize: ThemeEngine.fontSizeContentText
-            color: ThemeEngine.colorContentText
-        }
-
-        Text {
-            id: text14
-            x: 472
-            y: 80
-            width: 128
-            height: 32
-            text: qsTr("Data size:")
-            verticalAlignment: Text.AlignVCenter
-            font.pixelSize: ThemeEngine.fontSizeContentText
-            color: ThemeEngine.colorContentText
-
-            Text {
-                id: datasize
-                x: 102
-                y: 9
-                text: qsTr("Text")
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
-            }
+        Rectangle {
+            id: contentMetadatas
+            anchors.fill: parent
+            color: "#00000000"
         }
     }
 }
