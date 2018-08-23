@@ -20,32 +20,52 @@ Rectangle {
         if (shot) {
             textShotName.text = shot.name
 
-            codecVideo.visible = false
-            codecAudio.visible = false
-
             if (shot.preview) {
                 image.source = "file:///" + shot.preview
+                imageFull.source = "file:///" + shot.preview
             }
-
+/*
             duration.text = shot.duration
             date.text = shot.date.toUTCString()
-            size.text = StringUtils.bytesToString_short(shot.size)
-            sizefull.text = StringUtils.bytesToString_short(shot.datasize)
+            size.text = StringUtils.bytesToString_short(shot.datasize)
+            sizefull.text = StringUtils.bytesToString_short(shot.size)
             chapters.text = shot.chapters
             camera.text = shot.camera
-
-            if (shot.type <= Shared.SHOT_PICTURE) {
+*/
+            if (shot.type >= Shared.SHOT_PICTURE) {
                 rectanglePicture.visible = true
                 rectangleVideo.visible = false
 
+                codecAudio.visible = false
                 codecVideo.visible = true
                 codecVideo.source = "qrc:/badges/JPEG.svg"
+
+                if (shot.duration > 1) {
+                    labelDuration.visible = true
+                    labelDuration.height = 40
+                    duration.text = shot.duration + qsTr(" pictures")
+                } else {
+                    labelDuration.visible = false
+                    labelDuration.height = 0
+                }
             } else {
                 rectanglePicture.visible = false
-                rectangleVideo.visible = true
+                rectangleVideo.visible = false
+                codecVideo.visible = false
+                codecAudio.visible = false
+
+                labelDuration.visible = true
+                labelDuration.height = 40
             }
 
-            mapBase.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
+            if (shot.size !== shot.datasize) {
+                labelSizeFull.visible = true
+            } else {
+                labelSizeFull.visible = false
+            }
+
+            mapGPS.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
+            mapGpsCenter.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
         }
     }
 
@@ -125,7 +145,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
 
             text: qsTr("Preview")
-            //onClicked: screenDeviceShotDetails.state = "preview"
+            onClicked: screenDeviceShotDetails.state = "preview"
         }
         Button {
             id: buttonMetadata
@@ -159,6 +179,26 @@ Rectangle {
             PropertyChanges {
                 target: contentPreview
                 visible: false
+            }
+            PropertyChanges {
+                target: contentMetadatas
+                visible: false
+            }
+            PropertyChanges {
+                target: contentMap
+                visible: false
+            }
+        },
+        State {
+            name: "preview"
+
+            PropertyChanges {
+                target: contentOverview
+                visible: false
+            }
+            PropertyChanges {
+                target: contentPreview
+                visible: true
             }
             PropertyChanges {
                 target: contentMetadatas
@@ -222,7 +262,7 @@ Rectangle {
 
             Rectangle {
                 id: rectangleMetadatas
-                width: 600
+                width: 560
                 color: ThemeEngine.colorContentBox
                 anchors.bottomMargin: 0
                 anchors.rightMargin: 0
@@ -234,7 +274,7 @@ Rectangle {
                 Text {
                     id: labelDuration
                     y: 104
-                    width: 256
+                    width: 240
                     height: 40
                     color: ThemeEngine.colorContentText
                     text: qsTr("Duration:")
@@ -251,7 +291,7 @@ Rectangle {
                         width: 128
                         height: 32
                         color: ThemeEngine.colorContentText
-                        text: qsTr("Text")
+                        text: shot.duration
                         anchors.right: parent.right
                         anchors.rightMargin: 0
                         horizontalAlignment: Text.AlignRight
@@ -263,7 +303,7 @@ Rectangle {
 
                 Text {
                     id: labelDate
-                    width: 552
+                    width: 512
                     height: 40
                     color: ThemeEngine.colorContentText
                     text: qsTr("Date:")
@@ -279,10 +319,10 @@ Rectangle {
                         id: date
                         x: 146
                         y: 263
-                        width: 256
+                        width: 240
                         height: 32
                         color: ThemeEngine.colorContentText
-                        text: qsTr("Text")
+                        text: shot.date.toUTCString()
                         verticalAlignment: Text.AlignVCenter
                         horizontalAlignment: Text.AlignRight
                         anchors.right: parent.right
@@ -294,14 +334,15 @@ Rectangle {
 
                 Text {
                     id: labelDefinition
-                    width: 256
+                    width: 240
                     height: 40
-                    color: ThemeEngine.colorContentText
-                    text: qsTr("Resolution:")
-                    anchors.top: parent.top
-                    anchors.topMargin: 144
+                    anchors.top: labelDuration.bottom
+                    anchors.topMargin: 0
                     anchors.left: parent.left
                     anchors.leftMargin: 24
+
+                    color: ThemeEngine.colorContentText
+                    text: qsTr("Definition:")
                     verticalAlignment: Text.AlignVCenter
                     font.bold: true
                     font.pixelSize: ThemeEngine.fontSizeContentText
@@ -324,10 +365,12 @@ Rectangle {
                 Text {
                     id: labelSize
                     y: 184
-                    width: 256
+                    width: 240
                     height: 40
                     anchors.left: parent.left
                     anchors.leftMargin: 24
+                    anchors.top: labelDefinition.bottom
+                    anchors.topMargin: 0
 
                     color: ThemeEngine.colorContentText
                     text: qsTr("Size:")
@@ -342,7 +385,7 @@ Rectangle {
                         width: 128
                         height: 32
                         color: ThemeEngine.colorContentText
-                        text: qsTr("Text")
+                        text: StringUtils.bytesToString_short(shot.datasize)
                         verticalAlignment: Text.AlignVCenter
                         horizontalAlignment: Text.AlignRight
                         anchors.verticalCenter: parent.verticalCenter
@@ -351,17 +394,50 @@ Rectangle {
                         font.pixelSize: ThemeEngine.fontSizeContentText
                     }
                 }
+                Text {
+                    id: labelSizeFull
+                    x: 320
+                    y: 184
+                    width: 240
+                    height: 40
+                    anchors.right: parent.right
+                    anchors.rightMargin: 24
+                    anchors.verticalCenter: labelSize.verticalCenter
+
+                    color: ThemeEngine.colorContentText
+                    text: qsTr("Full size:")
+                    verticalAlignment: Text.AlignVCenter
+                    font.bold: true
+                    font.pixelSize: ThemeEngine.fontSizeContentText
+
+                    Text {
+                        id: sizefull
+                        x: 102
+                        y: 9
+                        width: 128
+                        height: 32
+                        color: ThemeEngine.colorContentText
+                        text: StringUtils.bytesToString_short(shot.size)
+                        horizontalAlignment: Text.AlignRight
+                        verticalAlignment: Text.AlignVCenter
+                        anchors.right: parent.right
+                        anchors.rightMargin: 0
+                        anchors.verticalCenter: parent.verticalCenter
+                        font.pixelSize: ThemeEngine.fontSizeContentText
+                    }
+                }
 
                 Text {
                     id: labelAR
                     x: 320
                     y: 144
-                    width: 256
+                    width: 240
                     height: 40
                     color: ThemeEngine.colorContentText
                     text: qsTr("Aspect Ratio:")
                     anchors.right: parent.right
                     anchors.rightMargin: 24
+                    anchors.verticalCenter: labelDefinition.verticalCenter
                     verticalAlignment: Text.AlignVCenter
                     font.bold: true
                     font.pixelSize: ThemeEngine.fontSizeContentText
@@ -385,7 +461,7 @@ Rectangle {
                     id: labelCamera
                     x: 24
                     y: 64
-                    width: 552
+                    width: 512
                     height: 40
                     color: ThemeEngine.colorContentText
                     text: qsTr("Camera:")
@@ -395,7 +471,7 @@ Rectangle {
 
                     Text {
                         id: camera
-                        width: 256
+                        width: 240
                         height: 32
                         text: shot.camera
                         anchors.right: parent.right
@@ -405,38 +481,6 @@ Rectangle {
                         horizontalAlignment: Text.AlignRight
                         font.pixelSize: ThemeEngine.fontSizeContentText
                         color: ThemeEngine.colorContentText
-                    }
-                }
-
-                Text {
-                    id: labelSizeFull
-                    x: 320
-                    y: 184
-                    width: 256
-                    height: 40
-                    anchors.right: parent.right
-                    anchors.rightMargin: 24
-
-                    color: ThemeEngine.colorContentText
-                    text: qsTr("Full size:")
-                    verticalAlignment: Text.AlignVCenter
-                    font.bold: true
-                    font.pixelSize: ThemeEngine.fontSizeContentText
-
-                    Text {
-                        id: sizefull
-                        x: 102
-                        y: 9
-                        width: 128
-                        height: 32
-                        color: ThemeEngine.colorContentText
-                        text: qsTr("Text")
-                        horizontalAlignment: Text.AlignRight
-                        verticalAlignment: Text.AlignVCenter
-                        anchors.right: parent.right
-                        anchors.rightMargin: 0
-                        anchors.verticalCenter: parent.verticalCenter
-                        font.pixelSize: ThemeEngine.fontSizeContentText
                     }
                 }
 
@@ -453,7 +497,7 @@ Rectangle {
 
                     Text {
                         id: labelISO
-                        width: 256
+                        width: 240
                         height: 40
                         color: ThemeEngine.colorContentText
                         text: qsTr("ISO:")
@@ -485,7 +529,7 @@ Rectangle {
 
                     Text {
                         id: labelFocal
-                        width: 256
+                        width: 240
                         height: 40
                         anchors.left: parent.left
                         anchors.leftMargin: 24
@@ -517,7 +561,7 @@ Rectangle {
                     }
                     Text {
                         id: labelExposure
-                        width: 256
+                        width: 240
                         height: 40
                         anchors.left: parent.left
                         anchors.leftMargin: 24
@@ -564,7 +608,7 @@ Rectangle {
                         id: labelChapter
                         x: 303
                         y: 113
-                        width: 256
+                        width: 240
                         height: 40
                         color: ThemeEngine.colorContentText
                         text: qsTr("Chapters:")
@@ -582,7 +626,7 @@ Rectangle {
                             width: 128
                             height: 32
                             color: ThemeEngine.colorContentText
-                            text: qsTr("Text")
+                            text: shot.chapters
                             verticalAlignment: Text.AlignVCenter
                             horizontalAlignment: Text.AlignRight
                             anchors.right: parent.right
@@ -594,7 +638,7 @@ Rectangle {
 
                     Text {
                         id: labelTimecode
-                        width: 256
+                        width: 240
                         height: 40
                         color: ThemeEngine.colorContentText
                         text: qsTr("Timecode:")
@@ -609,7 +653,7 @@ Rectangle {
 
                     Text {
                         id: labelCodec
-                        width: 256
+                        width: 240
                         height: 40
                         color: ThemeEngine.colorContentText
                         text: qsTr("Codec:")
@@ -626,7 +670,7 @@ Rectangle {
                         id: labelBitrate
                         x: 314
                         y: 51
-                        width: 256
+                        width: 240
                         height: 40
                         color: ThemeEngine.colorContentText
                         text: qsTr("Bitrate:")
@@ -640,7 +684,7 @@ Rectangle {
 
                     Text {
                         id: labelFramerate
-                        width: 256
+                        width: 240
                         height: 40
                         color: ThemeEngine.colorContentText
                         text: qsTr("Framerate:")
@@ -689,6 +733,19 @@ Rectangle {
             id: contentPreview
             anchors.fill: parent
             color: "#00000000"
+
+            Image {
+                id: imageFull
+                anchors.fill: parent
+                anchors.margins: 16
+                fillMode: Image.PreserveAspectFit
+            }
+        }
+
+        Rectangle {
+            id: contentMetadatas
+            anchors.fill: parent
+            color: "#00000000"
         }
 
         Rectangle {
@@ -697,30 +754,25 @@ Rectangle {
             color: "#00000000"
 
             Map {
-                id: mapBase
-                anchors.rightMargin: 32
-                anchors.bottomMargin: 32
-                anchors.leftMargin: 32
-                anchors.topMargin: 32
+                id: mapGPS
                 anchors.fill: parent
+                anchors.margins: 16
 
                 gesture.enabled: false
-                plugin: Plugin { name: "osm" }
-                //center: QtPositioning.coordinate(45.6833, 5.83333)
-                zoomLevel: 10
+                zoomLevel: 12
                 z: parent.z + 1
+                plugin: Plugin { name: "osm" } // "osm", "mapboxgl", "esri"
+                //center: QtPositioning.coordinate(45, 5)
 
                 MapCircle {
-                    center: QtPositioning.coordinate(45.6833, 5.83333)
-                    /*center {
-                        latitude: 45.6833
-                        longitude: 5.83333
-                    }*/
-                    radius: 50.00
-                    color: 'green'
-                    border.width: 3
+                    id: mapGpsCenter
+                    radius: 200.00
+                    color: ThemeEngine.colorApproved
+                    opacity: 0.5
+                    border.width: 4
+                    //center: QtPositioning.coordinate(45, 5)
                 }
-                /*
+/*
                 MapPolyline {
                     line.width: 3
                     line.color: 'green'
@@ -730,14 +782,8 @@ Rectangle {
                         { latitude: -28, longitude: 153.5 },
                         { latitude: -29, longitude: 153.5 }
                     ]
-                    */
+*/
             }
-        }
-
-        Rectangle {
-            id: contentMetadatas
-            anchors.fill: parent
-            color: "#00000000"
         }
     }
 }
