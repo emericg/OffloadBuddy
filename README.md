@@ -13,7 +13,9 @@ OffloadBuddy remove the hassle of handling and transfering the many videos and p
 
 ### Screenshots!
 
-![GUI1](https://i.imgur.com/2w9V8uA.png)
+![GUI1](https://i.imgur.com/tqCeaEC.png)
+![GUI2](https://i.imgur.com/96E5Y29.png)
+![GUI3](https://i.imgur.com/wnG32fh.png)
 
 
 ## Documentation

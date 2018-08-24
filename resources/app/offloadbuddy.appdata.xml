@@ -13,8 +13,16 @@
  </description>
  <screenshots>
   <screenshot type="default">
-   <image>https://i.imgur.com/2w9V8uA.png</image>
+   <image>https://i.imgur.com/tqCeaEC.png</image>
    <caption>Device screen</caption>
+  </screenshot>
+  <screenshot>
+   <image>https://i.imgur.com/96E5Y29.png</image>
+   <caption>Detail screen</caption>
+  </screenshot>
+  <screenshot>
+   <image>https://i.imgur.com/wnG32fh.png</image>
+   <caption>GPS screen</caption>
   </screenshot>
  </screenshots>
  <url type="homepage">https://github.com/emericg/OffloadBuddy</url>
