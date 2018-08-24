@@ -113,14 +113,22 @@ class Shot: public QObject
     Q_PROPERTY(int highlightCount READ getHighlightCount NOTIFY shotUpdated)
 
     Q_PROPERTY(QString preview READ getPreview NOTIFY shotUpdated)
+    Q_PROPERTY(QString fileList READ getFileList NOTIFY shotUpdated)
 
     Q_PROPERTY(qint64 duration READ getDuration NOTIFY shotUpdated)
     Q_PROPERTY(QDateTime date READ getDate NOTIFY shotUpdated)
+
+    Q_PROPERTY(QString orientation READ getOrientation NOTIFY shotUpdated)
+    Q_PROPERTY(int width READ getWidth NOTIFY shotUpdated)
+    Q_PROPERTY(int height READ getHeight NOTIFY shotUpdated)
 
     Q_PROPERTY(QString iso READ getIso NOTIFY shotUpdated)
     Q_PROPERTY(QString focal READ getFocal NOTIFY shotUpdated)
     Q_PROPERTY(QString exposure READ getExposure NOTIFY shotUpdated)
 
+    Q_PROPERTY(QString latitudeString READ getLatitudeStr NOTIFY shotUpdated)
+    Q_PROPERTY(QString longitudeString READ getLongitudeStr NOTIFY shotUpdated)
+    Q_PROPERTY(QString altitudeString READ getAltitudeStr NOTIFY shotUpdated)
     Q_PROPERTY(double latitude READ getLatitude NOTIFY shotUpdated)
     Q_PROPERTY(double longitude READ getLongitude NOTIFY shotUpdated)
     Q_PROPERTY(double altitude READ getAltitude NOTIFY shotUpdated)
@@ -159,8 +167,13 @@ class Shot: public QObject
 
     // GLOBAL metadatas
     QString orientation;
+    int width = 0;
+    int height = 0;
 
     // GPS metadatas
+    QString gps_lat_str;
+    QString gps_long_str;
+    QString gps_alt_str;
     double gps_lat = 0.0;
     double gps_long = 0.0;
     double gps_alt = 0.0;
@@ -204,15 +217,23 @@ public slots:
     QString getPreview() const;
     QString getCameraSource() const { return m_camera_source; }
 
+    QString getOrientation() const { return orientation; }
+    int getWidth() const { return width; }
+    int getHeight() const { return height; }
+
     QString getIso() const { return iso; }
     QString getFocal() const { return focal; }
     QString getExposure() const { return esposure_time; }
 
+    QString getLatitudeStr() const { return gps_lat_str; }
+    QString getLongitudeStr() const { return gps_long_str; }
+    QString getAltitudeStr() const { return gps_alt_str; }
     double getLatitude() const { return gps_lat; }
     double getLongitude() const { return gps_long; }
     double getAltitude() const { return gps_alt; }
 
     int getHighlightCount() const { return m_highlights.size(); }
+    QString getFileList() const;
 
     int getFileId() const { return m_shot_id; }
     void setFileId(int id) { m_shot_id = id; }

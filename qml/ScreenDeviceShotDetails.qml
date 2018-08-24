@@ -32,6 +32,8 @@ Rectangle {
             chapters.text = shot.chapters
             camera.text = shot.camera
 */
+            textFileList.text = shot.fileList
+
             if (shot.type >= Shared.SHOT_PICTURE) {
                 rectanglePicture.visible = true
                 rectangleVideo.visible = false
@@ -64,8 +66,19 @@ Rectangle {
                 labelSizeFull.visible = false
             }
 
-            mapGPS.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
-            mapGpsCenter.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
+            if (shot.altitude != 0.0) {
+                mapGPS.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
+                mapGPS.zoomLevel = 12
+                mapMarker.visible = true
+                mapMarker.coordinate = QtPositioning.coordinate(shot.latitude, shot.longitude)
+
+                coordinates.text = shot.latitudeString + "    " + shot.longitudeString
+                altitude.text = shot.altitudeString
+            } else {
+                mapGPS.center = QtPositioning.coordinate(45.5, 6)
+                mapGPS.zoomLevel = 2
+                mapMarker.visible = false
+            }
         }
     }
 
@@ -351,7 +364,7 @@ Rectangle {
                         id: definition
                         width: 128
                         height: 32
-                        text: qsTr("Text")
+                        text: shot.width + "x" + shot.height
                         verticalAlignment: Text.AlignVCenter
                         horizontalAlignment: Text.AlignRight
                         anchors.verticalCenter: parent.verticalCenter
@@ -725,6 +738,20 @@ Rectangle {
                         verticalAlignment: Text.AlignVCenter
                         font.pixelSize: ThemeEngine.fontSizeContentText
                     }
+
+                    Text {
+                        id: textFileList
+                        text: qsTr("Text")
+                        anchors.rightMargin: 8
+                        anchors.leftMargin: 8
+                        anchors.bottomMargin: 8
+                        anchors.top: labelFileCount.bottom
+                        anchors.right: parent.right
+                        anchors.bottom: parent.bottom
+                        anchors.left: parent.left
+                        anchors.topMargin: 8
+                        font.pixelSize: 12
+                    }
                 }
             }
         }
@@ -755,27 +782,34 @@ Rectangle {
 
             Map {
                 id: mapGPS
+                copyrightsVisible: false
+                anchors.topMargin: 48
                 anchors.fill: parent
                 anchors.margins: 16
 
                 gesture.enabled: false
-                zoomLevel: 12
                 z: parent.z + 1
                 plugin: Plugin { name: "osm" } // "osm", "mapboxgl", "esri"
-                //center: QtPositioning.coordinate(45, 5)
+                center: QtPositioning.coordinate(45.5, 6)
+                zoomLevel: 2
 
-                MapCircle {
-                    id: mapGpsCenter
-                    radius: 200.00
-                    color: ThemeEngine.colorApproved
-                    opacity: 0.5
-                    border.width: 4
-                    //center: QtPositioning.coordinate(45, 5)
+                MapQuickItem {
+                    id: mapMarker
+                    visible: false
+                    anchorPoint.x: mapMarkerImg.width/2
+                    anchorPoint.y: mapMarkerImg.height/2
+                    sourceItem: Image {
+                        id: mapMarkerImg
+                        source: "qrc:/resources/other/marker.svg"
+                    }
                 }
 /*
                 MapPolyline {
+                    id: mapTrace
+                    visible: false
                     line.width: 3
                     line.color: 'green'
+
                     path: [
                         { latitude: -27, longitude: 153.0 },
                         { latitude: -27, longitude: 154.1 },
@@ -783,6 +817,60 @@ Rectangle {
                         { latitude: -29, longitude: 153.5 }
                     ]
 */
+            }
+
+            Rectangle {
+                id: rectangle
+                height: 32
+                color: "#ffffff"
+                anchors.right: parent.right
+                anchors.rightMargin: 16
+                anchors.left: parent.left
+                anchors.leftMargin: 16
+                anchors.top: parent.top
+                anchors.topMargin: 8
+
+                Text {
+                    id: labelCoodrinates
+                    text: qsTr("GPS coordinates:")
+                    verticalAlignment: Text.AlignVCenter
+                    font.bold: true
+                    anchors.left: parent.left
+                    anchors.leftMargin: 0
+                    anchors.verticalCenter: parent.verticalCenter
+                    font.pixelSize: 16
+                }
+
+                Text {
+                    id: labelAltitude
+                    text: qsTr("Altitude:")
+                    anchors.verticalCenterOffset: 0
+                    anchors.left: coordinates.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    font.pixelSize: 16
+                    anchors.leftMargin: 64
+                    verticalAlignment: Text.AlignVCenter
+                    font.bold: true
+                }
+
+                Text {
+                    id: coordinates
+                    text: qsTr("Text")
+                    anchors.left: labelCoodrinates.right
+                    anchors.leftMargin: 16
+                    anchors.verticalCenter: parent.verticalCenter
+                    verticalAlignment: Text.AlignVCenter
+                    font.pixelSize: 16
+                }
+
+                Text {
+                    id: altitude
+                    text: qsTr("Text")
+                    anchors.left: labelAltitude.right
+                    anchors.leftMargin: 16
+                    anchors.verticalCenter: parent.verticalCenter
+                    font.pixelSize: 16
+                }
             }
         }
     }

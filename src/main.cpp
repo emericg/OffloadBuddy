@@ -32,7 +32,7 @@
 
 void print_build_infos()
 {
-    qDebug() << "print_build_infos()";
+    qDebug() << "OffloadBuddy::print_build_infos()";
 
     qDebug() << "* Built on '" << __DATE__ << __TIME__ << "'";
 #if defined(__ICC) || defined(__INTEL_COMPILER)
@@ -64,15 +64,15 @@ int main(int argc, char *argv[])
 {
     print_build_infos();
 
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QCoreApplication::setApplicationName("OffloadBuddy");
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     //SingleApplication app(argc, argv);
     QGuiApplication app(argc, argv);
+    app.setApplicationDisplayName("OffloadBuddy");
 
     QIcon appIcon(":/appicons/offloadbuddy.svg");
     app.setWindowIcon(appIcon);
-    app.setApplicationDisplayName("OffloadBuddy");
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -85,17 +85,17 @@ int main(int argc, char *argv[])
 
     ////////////////////////////////////////////////////////////////////////////
 
-    qmlRegisterSingletonType(QUrl("qrc:/qml/ThemeEngine.qml"),
-                             "com.offloadbuddy.style", 1, 0, "ThemeEngine");
+    qmlRegisterSingletonType(
+        QUrl("qrc:/qml/ThemeEngine.qml"),
+        "com.offloadbuddy.style", 1, 0,
+        "ThemeEngine");
 
     qmlRegisterUncreatableMetaObject(
-      Shared::staticMetaObject,
-      "com.offloadbuddy.shared", 1, 0,
-      "Shared",             // name in QML (does not have to match C++ name)
-      "Error: only enums"   // error in case someone tries to create a MyNamespace object
-    );
+        Shared::staticMetaObject,
+        "com.offloadbuddy.shared", 1, 0,
+        "Shared",             // name in QML (does not have to match C++ name)
+        "Error: only enums"); // error in case someone tries to create a MyNamespace object
 
-    //qRegisterMetaType<Shot*>("Shot*");
     qmlRegisterType<Shot>("com.offloadbuddy.shared", 1, 0, "Shot");
 
     QQmlApplicationEngine engine;
