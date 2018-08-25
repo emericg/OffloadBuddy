@@ -10,6 +10,7 @@ QT     += charts location
 unix {
     DEFINES += ENABLE_LIBMTP
     DEFINES += ENABLE_LIBEXIF
+    DEFINES += ENABLE_MINIVIDEO
     #DEFINES += ENABLE_FFMPEG
 }
 
@@ -71,20 +72,22 @@ unix {
     # Enables AddressSanitizer
     #QMAKE_CXXFLAGS += -fsanitize=address,undefined
     #QMAKE_LFLAGS += -fsanitize=address,undefined
+    CONFIG += link_pkgconfig
 
     contains(DEFINES, ENABLE_LIBMTP) {
-        CONFIG += link_pkgconfig
         PKGCONFIG += libusb-1.0 libmtp
     }
 
     contains(DEFINES, ENABLE_LIBEXIF) {
-        CONFIG += link_pkgconfig
         PKGCONFIG += libexif
     }
 
     contains(DEFINES, ENABLE_FFMPEG) {
-        CONFIG += link_pkgconfig
         PKGCONFIG += libavutil libavparser libavcodec
+    }
+
+    contains(DEFINES, ENABLE_MINIVIDEO) {
+        PKGCONFIG += libminivideo
     }
 }
 

@@ -119,12 +119,18 @@ class Shot: public QObject
     Q_PROPERTY(QDateTime date READ getDate NOTIFY shotUpdated)
 
     Q_PROPERTY(QString orientation READ getOrientation NOTIFY shotUpdated)
-    Q_PROPERTY(int width READ getWidth NOTIFY shotUpdated)
-    Q_PROPERTY(int height READ getHeight NOTIFY shotUpdated)
+    Q_PROPERTY(unsigned width READ getWidth NOTIFY shotUpdated)
+    Q_PROPERTY(unsigned height READ getHeight NOTIFY shotUpdated)
 
     Q_PROPERTY(QString iso READ getIso NOTIFY shotUpdated)
     Q_PROPERTY(QString focal READ getFocal NOTIFY shotUpdated)
     Q_PROPERTY(QString exposure READ getExposure NOTIFY shotUpdated)
+
+    Q_PROPERTY(QString codecAudio READ getCodecAudio NOTIFY shotUpdated)
+    Q_PROPERTY(QString codecVideo READ getCodecVideo NOTIFY shotUpdated)
+    Q_PROPERTY(QString timecode READ getTimecode NOTIFY shotUpdated)
+    Q_PROPERTY(double framerate READ getFramerate NOTIFY shotUpdated)
+    Q_PROPERTY(unsigned bitrate READ getBitrate NOTIFY shotUpdated)
 
     Q_PROPERTY(QString latitudeString READ getLatitudeStr NOTIFY shotUpdated)
     Q_PROPERTY(QString longitudeString READ getLongitudeStr NOTIFY shotUpdated)
@@ -167,8 +173,8 @@ class Shot: public QObject
 
     // GLOBAL metadatas
     QString orientation;
-    int width = 0;
-    int height = 0;
+    unsigned width = 0;
+    unsigned height = 0;
 
     // GPS metadatas
     QString gps_lat_str;
@@ -183,6 +189,13 @@ class Shot: public QObject
     QString focal;
     QString iso;
     QString esposure_time;
+
+    // VIDEO metadatas
+    QString acodec;
+    QString vcodec;
+    QString timecode;
+    double framerate = 0.0;
+    unsigned bitrate = 0;
 
     bool getMetadatasFromPicture();
     bool getMetadatasFromVideo();
@@ -224,6 +237,12 @@ public slots:
     QString getIso() const { return iso; }
     QString getFocal() const { return focal; }
     QString getExposure() const { return esposure_time; }
+
+    QString getCodecAudio() const { return acodec; }
+    QString getCodecVideo() const { return vcodec; }
+    QString getTimecode() const { return timecode; }
+    double getFramerate() const { return framerate; }
+    int getBitrate() const { return bitrate; }
 
     QString getLatitudeStr() const { return gps_lat_str; }
     QString getLongitudeStr() const { return gps_long_str; }

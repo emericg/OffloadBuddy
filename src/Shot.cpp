@@ -31,6 +31,10 @@
 #include <libexif/exif-data.h>
 #endif
 
+#ifdef ENABLE_MINIVIDEO
+#include <minivideo.h>
+#endif
+
 /* ************************************************************************** */
 
 Shot::Shot(QObject *parent) : QObject(parent)
@@ -400,8 +404,8 @@ bool Shot::getMetadatasFromPicture()
         return  false;
 
 #ifdef ENABLE_LIBEXIF
-    // EXIF ////////////////////////////////////////////////////////////////////
 
+    // EXIF ////////////////////////////////////////////////////////////////////
     ExifData *ed = exif_data_new_from_file(m_pictures.at(0)->filesystemPath.toLatin1());
     if (!ed)
     {
@@ -440,13 +444,13 @@ bool Shot::getMetadatasFromPicture()
     if (entry)
     {
         exif_entry_get_value(entry, buf, sizeof(buf));
-        width = QString::fromLatin1(buf).toInt();
+        width = QString::fromLatin1(buf).toUInt();
     }
     entry = exif_content_get_entry(ed->ifd[EXIF_IFD_EXIF], EXIF_TAG_PIXEL_Y_DIMENSION);
     if (entry)
     {
         exif_entry_get_value(entry, buf, sizeof(buf));
-        height = QString::fromLatin1(buf).toInt();
+        height = QString::fromLatin1(buf).toUInt();
     }
 
     entry = exif_content_get_entry(ed->ifd[EXIF_IFD_0], EXIF_TAG_ORIENTATION);
@@ -592,7 +596,6 @@ bool Shot::getMetadatasFromPicture()
     }
 
     // MAKERNOTE ///////////////////////////////////////////////////////////////
-
     ExifMnoteData *mn = exif_data_get_mnote_data(ed);
     if (mn)
     {
@@ -619,5 +622,56 @@ bool Shot::getMetadatasFromPicture()
 
 bool Shot::getMetadatasFromVideo()
 {
+    if (m_videos.size() <= 0)
+        return false;
+    if (m_videos.at(0)->filesystemPath.isEmpty())
+        return  false;
+
+#ifdef ENABLE_MINIVIDEO
+
+    // MINIVIDEO ///////////////////////////////////////////////////////////////
+    MediaFile_t *media = nullptr;
+    int minivideo_retcode = minivideo_open(m_videos.at(0)->filesystemPath.toLocal8Bit(), &media);
+
+    if (minivideo_retcode == 1)
+    {
+        minivideo_retcode = minivideo_parse(media, true);
+
+        if (minivideo_retcode != 1)
+        {
+            qDebug() << "minivideo_parse() failed with retcode: " << minivideo_retcode;
+        }
+        else
+        {
+            if (media->tracks_audio_count > 0)
+            {
+                acodec = QString::fromLocal8Bit(getCodecString(stream_AUDIO, media->tracks_audio[0]->stream_codec, false));
+            }
+            if (media->tracks_video_count > 0)
+            {
+                width = media->tracks_video[0]->width;
+                height = media->tracks_video[0]->height;
+                m_duration += media->tracks_video[0]->stream_duration_ms;
+
+                vcodec = QString::fromLocal8Bit(getCodecString(stream_VIDEO, media->tracks_video[0]->stream_codec, false));
+                framerate = media->tracks_video[0]->framerate;
+                bitrate = media->tracks_video[0]->bitrate_avg;
+                //timecode = QString::fromLocal8Bit(media->tracks_video[0]->time_reference);
+
+                //QDateTime vt = QDateTime::fromTime_t(media->creation_time);
+                //qDebug() << "media->creation_time:" << vt;
+            }
+        }
+
+        minivideo_close(&media);
+    }
+    else
+    {
+        qDebug() << "minivideo_open() failed with retcode: " << minivideo_retcode;
+    }
+
+    return true;
+#endif // ENABLE_MINIVIDEO
+
     return false;
 }
