@@ -83,6 +83,9 @@ Rectangle {
         asynchronous: true
         fillMode: Image.PreserveAspectCrop
         source: "qrc:/resources/other/placeholder.png"
+
+        sourceSize.width: 512
+        sourceSize.height: 512
     }
 
     Image {

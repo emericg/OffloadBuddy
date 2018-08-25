@@ -103,6 +103,7 @@ void Shot::addFile(ofb_file *file)
             else if (file->extension == "mp4")
             {
                 m_videos.push_front(file);
+                getMetadatasFromVideo();
             }
             else if (file->extension == "lrv")
             {
@@ -142,6 +143,7 @@ void Shot::addFile(ofb_file *file)
             else if (file->extension == "mp4")
             {
                 m_videos.push_back(file);
+                getMetadatasFromVideo();
             }
             else if (file->extension == "lrv")
             {
@@ -394,8 +396,12 @@ bool Shot::getMetadatasFromPicture()
 {
     if (m_pictures.size() <= 0)
         return false;
+    if (m_pictures.at(0)->filesystemPath.isEmpty())
+        return  false;
 
 #ifdef ENABLE_LIBEXIF
+    // EXIF ////////////////////////////////////////////////////////////////////
+
     ExifData *ed = exif_data_new_from_file(m_pictures.at(0)->filesystemPath.toLatin1());
     if (!ed)
     {
@@ -501,7 +507,12 @@ bool Shot::getMetadatasFromPicture()
     }
     gps_ts = QDateTime(gpsDate, gpsTime);
 
-    // GPS infos
+/*
+    qDebug() << "gps_ts:" << gps_ts;
+    qDebug() << "exif_ts:" << exif_ts;
+*/
+
+    // GPS infos ///////////////////////////////////////////////////////////////
     if (gps_ts.isValid())
     {
         entry = exif_content_get_entry(ed->ifd[EXIF_IFD_GPS],
@@ -570,18 +581,24 @@ bool Shot::getMetadatasFromPicture()
                     gps_alt = -gps_alt;
             }
         }
-    }
 /*
-    qDebug() << "gps_ts:" << gps_ts;
-    qDebug() << "exif_ts:" << exif_ts;
-
-    qDebug() << "gps_lat_str:" << gps_lat_str;
-    qDebug() << "gps_long_str:" << gps_long_str;
-    qDebug() << "gps_alt_str:" << gps_alt_str;
-    qDebug() << "gps_lat:" << gps_lat;
-    qDebug() << "gps_long:" << gps_long;
-    qDebug() << "gps_alt:" << gps_alt;
+        qDebug() << "gps_lat_str:" << gps_lat_str;
+        qDebug() << "gps_long_str:" << gps_long_str;
+        qDebug() << "gps_alt_str:" << gps_alt_str;
+        qDebug() << "gps_lat:" << gps_lat;
+        qDebug() << "gps_long:" << gps_long;
+        qDebug() << "gps_alt:" << gps_alt;
 */
+    }
+
+    // MAKERNOTE ///////////////////////////////////////////////////////////////
+
+    ExifMnoteData *mn = exif_data_get_mnote_data(ed);
+    if (mn)
+    {
+        //qDebug() << "WE HAVE MAKERNOTEs";
+    }
+
     // Adjust picture timestamp
     if (gps_ts.isValid())
     {

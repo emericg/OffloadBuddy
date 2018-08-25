@@ -58,6 +58,7 @@ Rectangle {
 
                 labelDuration.visible = true
                 labelDuration.height = 40
+                duration.text =  StringUtils.durationToString(shot.duration)
             }
 
             if (shot.size !== shot.datasize) {
@@ -66,7 +67,7 @@ Rectangle {
                 labelSizeFull.visible = false
             }
 
-            if (shot.altitude != 0.0) {
+            if (shot.altitude !== 0.0) {
                 mapGPS.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
                 mapGPS.zoomLevel = 12
                 mapMarker.visible = true
@@ -304,7 +305,7 @@ Rectangle {
                         width: 128
                         height: 32
                         color: ThemeEngine.colorContentText
-                        text: shot.duration
+                        text: qsTr("text")
                         anchors.right: parent.right
                         anchors.rightMargin: 0
                         horizontalAlignment: Text.AlignRight

@@ -63,7 +63,7 @@ function bytesToString_short(bytes) {
 function durationToString_short(duration) {
     var text = ''
 
-    if (duration > 0) {
+    if (duration > 1000) {
         var hours = Math.floor(duration / 3600000);
         var minutes = Math.floor((duration - (hours * 3600000)) / 60000);
         var seconds = Math.floor((duration - (hours * 3600000) - (minutes * 60000)) / 1000);
@@ -72,6 +72,8 @@ function durationToString_short(duration) {
             text += pad(hours).toString()
         if (hours > 0 && minutes > 0)
             text += ":"
+        if (hours == 0 && minutes == 0)
+            text += "00:"
         if (minutes > 0)
             text += pad(minutes).toString()
         if (minutes > 0 && seconds > 0)
@@ -79,6 +81,8 @@ function durationToString_short(duration) {
         if (seconds > 0) {
             text += pad(seconds).toString()
         }
+    } else if (duration > 0) {
+        text = "~00:01";
     } else {
         text = "00:xx";
     }

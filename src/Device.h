@@ -111,7 +111,11 @@ typedef enum deviceModel_e
         DEVICE_CONTOUR_ROAM1600,
         DEVICE_CONTOUR_4K,
 
-    DEVICE_YI = 300,
+    DEVICE_KODAK = 300,
+        DEVICE_PIXPRO_SP1,
+        DEVICE_PIXPRO_SPZ1,
+
+    DEVICE_YI = 310,
         DEVICE_YI_DISCOVERY_4K,
         DEVICE_YI_LITE,
         DEVICE_YI_4K,
