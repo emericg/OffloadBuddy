@@ -62,7 +62,7 @@ void ShotModel::addFile(ofb_file *f, ofb_shot *s)
     else
     {
         //qDebug() << "file:" << file_name << "is a new shot";
-        shot = new Shot(s->file_type);
+        shot = new Shot(s->file_type, this);
         if (shot)
         {
             shot->addFile(f);

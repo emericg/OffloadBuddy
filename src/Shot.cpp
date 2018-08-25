@@ -38,7 +38,7 @@ Shot::Shot(QObject *parent) : QObject(parent)
     //
 }
 
-Shot::Shot(Shared::ShotType type)
+Shot::Shot(Shared::ShotType type, QObject *parent) : QObject(parent)
 {
     m_type = type;
 }

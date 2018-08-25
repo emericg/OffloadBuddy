@@ -189,7 +189,7 @@ class Shot: public QObject
 
 public:
     Shot(QObject *parent = nullptr);
-    Shot(Shared::ShotType type);
+    Shot(Shared::ShotType type, QObject *parent = nullptr);
     ~Shot();
 
     Shot(const Shot &other);
