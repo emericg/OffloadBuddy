@@ -267,6 +267,8 @@ Rectangle {
                 fillMode: Image.PreserveAspectFit
                 source: "qrc:/resources/other/placeholder.png"
 
+                sourceSize.width: shot.width / 2
+                sourceSize.height: shot.height / 2
                 property  bool isFullScreen: false
 
                 MouseArea {
@@ -300,7 +302,6 @@ Rectangle {
 
                 Text {
                     id: labelDate
-                    width: 512
                     height: 40
                     color: ThemeEngine.colorContentText
                     text: qsTr("Date:")
@@ -314,14 +315,13 @@ Rectangle {
 
                     Text {
                         id: date
-                        width: 240
                         height: 32
                         color: ThemeEngine.colorContentText
                         text: shot.date.toUTCString()
+                        anchors.left: parent.right
+                        anchors.leftMargin: 16
                         verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignRight
-                        anchors.right: parent.right
-                        anchors.rightMargin: 0
+                        horizontalAlignment: Text.AlignLeft
                         anchors.verticalCenter: parent.verticalCenter
                         font.pixelSize: ThemeEngine.fontSizeContentText
                     }
@@ -329,7 +329,6 @@ Rectangle {
 
                 Text {
                     id: labelCamera
-                    width: 512
                     height: 40
                     anchors.top: labelDate.bottom
                     anchors.left: parent.left
@@ -342,14 +341,13 @@ Rectangle {
 
                     Text {
                         id: camera
-                        width: 240
                         height: 32
                         text: shot.camera
-                        anchors.right: parent.right
-                        anchors.rightMargin: 0
+                        anchors.left: parent.right
+                        anchors.leftMargin: 16
                         anchors.verticalCenter: parent.verticalCenter
                         verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignRight
+                        horizontalAlignment: Text.AlignLeft
                         font.pixelSize: ThemeEngine.fontSizeContentText
                         color: ThemeEngine.colorContentText
                     }
@@ -357,7 +355,6 @@ Rectangle {
 
                 Text {
                     id: labelDuration
-                    width: 240
                     height: 40
                     text: qsTr("Duration:")
                     anchors.top: labelCamera.bottom
@@ -370,12 +367,11 @@ Rectangle {
 
                     Text {
                         id: duration
-                        width: 128
                         height: 32
                         anchors.verticalCenter: parent.verticalCenter
-                        anchors.right: parent.right
-                        anchors.rightMargin: 0
                         text: qsTr("Text")
+                        anchors.left: parent.right
+                        anchors.leftMargin: 16
                         horizontalAlignment: Text.AlignRight
                         verticalAlignment: Text.AlignVCenter
                         color: ThemeEngine.colorContentText
@@ -771,23 +767,23 @@ Rectangle {
                     Text {
                         id: labelFileCount
                         height: 32
-                        color: ThemeEngine.colorContentText
-                        text: qsTr("Files:")
-                        anchors.right: parent.right
-                        anchors.rightMargin: 8
-                        font.bold: true
-                        horizontalAlignment: Text.AlignLeft
                         anchors.left: parent.left
                         anchors.leftMargin: 8
                         anchors.top: parent.top
                         anchors.topMargin: 8
+                        anchors.right: parent.right
+                        anchors.rightMargin: 8
+
+                        text: qsTr("Files:")
+                        horizontalAlignment: Text.AlignLeft
                         verticalAlignment: Text.AlignVCenter
+                        color: ThemeEngine.colorContentText
+                        font.bold: true
                         font.pixelSize: ThemeEngine.fontSizeContentText
                     }
 
                     Text {
                         id: textFileList
-                        text: qsTr("Text")
                         anchors.rightMargin: 8
                         anchors.leftMargin: 8
                         anchors.bottomMargin: 8
@@ -795,8 +791,11 @@ Rectangle {
                         anchors.right: parent.right
                         anchors.bottom: parent.bottom
                         anchors.left: parent.left
-                        anchors.topMargin: 8
-                        font.pixelSize: 12
+                        anchors.topMargin: 0
+
+                        text: qsTr("Text")
+                        //color: ThemeEngine.colorContentText
+                        font.pixelSize: ThemeEngine.fontSizeContentText
                     }
                 }
             }
