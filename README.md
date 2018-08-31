@@ -8,7 +8,17 @@ OffloadBuddy
 
 ## Introduction
 
-OffloadBuddy remove the hassle of handling and transfering the many videos and pictures file from your action cameras.
+OffloadBuddy is a multimedia offloading software with a few tricks up his sleeve!
+It's designed to remove the hassle of handling and transferring the many videos and pictures file from your devices like action cameras, regular cameras and smartphones...
+
+FEATURES (WIP):
+* Import datas from SD cards, mass storage or MTP devices
+  * Copy, merge or reencode medias
+  * Consult and export shots metadatas
+  * Organize your media library
+* Create clips or extract photos from your videos
+* Assemble photo timelapses into videos
+* GoPro firmware updates
 
 
 ### Screenshots!
@@ -39,8 +49,8 @@ Optional dependencies:
 
 ## Licensing
 
-OffloadBuddy is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
-[Consult the licence on the FSF website](http://www.gnu.org/licenses/gpl-3.0.txt).
+OffloadBuddy is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.  
+Read [LICENSE](LICENSE) or [consult the licence on the FSF website](http://www.gnu.org/licenses/gpl-3.0.txt) directly.
 
 Emeric Grange <emeric.grange@gmail.com>
 
@@ -48,7 +58,7 @@ Emeric Grange <emeric.grange@gmail.com>
 ## Special thanks
 
 * Mickael Heudre <mickheudre@gmail.com> for his invaluable QML expertise!
-* Graphical resources: see resources/COPYING
+* Graphical resources: read [resources/COPYING](resources/COPYING)
 
 
 ## Get involved!

@@ -22,7 +22,6 @@ Rectangle {
         Text {
             id: textHeader
             y: 20
-            width: 512
             height: 40
             anchors.left: parent.left
             anchors.leftMargin: 16
@@ -51,9 +50,9 @@ Rectangle {
 
         Rectangle {
             id: rectangleProject
-            height: 256
+            height: 320
             color: ThemeEngine.colorContentBox
-            radius: 8
+            radius: 2
             anchors.top: parent.top
             anchors.topMargin: 16
             anchors.right: parent.right
@@ -76,8 +75,6 @@ Rectangle {
             Text {
                 id: text_title
                 y: 10
-                width: 300
-                height: 40
                 anchors.left: parent.left
                 anchors.leftMargin: 16
                 text: "OffloadBuddy"
@@ -102,12 +99,7 @@ Rectangle {
                 wrapMode: Text.WordWrap
                 font.pixelSize: ThemeEngine.fontSizeContentText
                 color: ThemeEngine.colorContentText
-                text: qsTr("OffloadBuddy remove the hassle of handling and transfering the many videos and pictures file from your actioncams, cameras or phones.
-
-It also helps with many other convenient things like:
-- merging chaptered files
-- extracting many metadatas
-- video cliping and reencoding")
+                text: "OffloadBuddy is a multimedia offloading software with a few tricks up his sleeve!\nIt's designed to remove the hassle of handling and transferring the many videos and pictures file from your devices like action cameras, regular cameras and smartphones...\n\n* Import datas from SD cards, mass storage or MTP devices\n  - Copy, merge or reencode medias\n  - Consult and export shots metadatas\n  - Organize your media library\n* Create clips or extract photos from your videos\n* Assemble photo timelapses into videos\n* GoPro firmware updates"
             }
 
             Text {
@@ -166,13 +158,10 @@ It also helps with many other convenient things like:
             anchors.right: parent.right
             anchors.rightMargin: 16
             anchors.left: parent.left
-            color: ThemeEngine.colorContentBox
 
             Text {
                 id: text_title1
                 y: 10
-                width: 300
-                height: 40
                 anchors.left: parent.left
                 anchors.leftMargin: 16
 
@@ -259,7 +248,7 @@ It also helps with many other convenient things like:
                     anchors.rightMargin: 4
 
                     readOnly: true
-                    text: qsTr("Main developer. Likes animals and flowers. Also, ponies. You know, the ones with horn and wings.")
+                    text: qsTr("Main developer. Likes animals and flowers. Also, ponies. You know, the ones with horns and wings.")
                     font.pixelSize: ThemeEngine.fontSizeContentText
                     wrapMode: Text.WordWrap
                     verticalAlignment: Text.AlignTop

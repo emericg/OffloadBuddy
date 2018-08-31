@@ -1,8 +1,7 @@
 # Binaries and build artifacts
 build/*
 bin/*
-*.o
-qrc_resources.cpp
+contribs/*
 
 # QtCreator temporary project files
 OffloadBuddy.config

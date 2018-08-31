@@ -27,7 +27,7 @@ Item { // PLAIN AND BORING
     property string colorSidebar: "#4E596E"
     property string colorSidebarText: "#ffffff"
 
-    property string colorHeaderBackground: "#eef0f1"
+    property string colorHeaderBackground: "#ebedee"
     property string colorHeaderTitle: "#353637"
     property string colorHeaderText: "#000000"
 
@@ -66,7 +66,7 @@ Item { // PLAIN AND BORING
             colorSidebar =          "#4E596E"
             colorSidebarText =      "#ffffff"
 
-            colorHeaderBackground = "#eef0f1"
+            colorHeaderBackground = "#ebedee"
             colorHeaderTitle =      "#353637"
             colorHeaderText =       "#000000"
 
