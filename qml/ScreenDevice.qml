@@ -26,6 +26,38 @@ Rectangle {
         id: screenDeviceShotDetails
     }
 
+    MouseArea {
+        anchors.fill: parent
+        propagateComposedEvents: true
+        acceptedButtons: Qt.BackButton | Qt.ForwardButton
+
+        onClicked: {
+            if (mouse.button === Qt.BackButton) {
+                if (screenDevice.state === "shotdetails")
+                    screenDevice.state = "shotsview"
+            } else if (mouse.button === Qt.ForwardButton) {
+                if (screenDevice.state === "shotsview")
+                    if (screenDeviceShots.selectedItem >= 0)
+                        screenDevice.state = "shotdetails"
+            }
+        }
+    }
+    Shortcut {
+        sequence: StandardKey.Back
+        onActivated: {
+            if (screenDevice.state === "shotdetails")
+                screenDevice.state = "shotsview"
+        }
+    }
+    Shortcut {
+        sequence: StandardKey.Forward
+        onActivated: {
+            if (screenDevice.state === "shotsview")
+                if (screenDeviceShots.selectedItem >= 0)
+                    screenDevice.state = "shotdetails"
+        }
+    }
+
     state: "shotsview"
     states: [
         State {
