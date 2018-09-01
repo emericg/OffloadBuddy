@@ -238,7 +238,7 @@ bool Device::addStorage_filesystem(const QString &path)
 
 /* ************************************************************************** */
 
-QString Device::getPath(int index) const
+QString Device::getPath(const int index) const
 {
     if (index >= 0)
     {
@@ -445,7 +445,8 @@ void Device::offloadAll()
     QList<Shot *> shots;
     m_shotModel->getShots(shots);
 
-    jm->addJobs(JOB_COPY, this, shots);
+    if (jm && shots.count() > 0)
+        jm->addJobs(JOB_COPY, this, shots);
 }
 
 void Device::deleteAll()
@@ -458,7 +459,30 @@ void Device::deleteAll()
     QList<Shot *> shots;
     m_shotModel->getShots(shots);
 
-    jm->addJobs(JOB_DELETE, this, shots);
+    if (jm && shots.count() > 0)
+        jm->addJobs(JOB_DELETE, this, shots);
 }
 
 /* ************************************************************************** */
+
+void Device::offloadSelected(const int index)
+{
+    qDebug() << "offloadSelected(" << index << ")";
+
+    JobManager *jm = JobManager::getInstance();
+    Shot *shot = m_shotModel->getShotAt(index);
+
+    if (jm && shot)
+        jm->addJob(JOB_COPY, this, shot);
+}
+
+void Device::deleteSelected(const int index)
+{
+    qDebug() << "deleteSelected(" << index << ")";
+
+    JobManager *jm = JobManager::getInstance();
+    Shot *shot = m_shotModel->getShotAt(index);
+
+    if (jm && shot)
+        jm->addJob(JOB_DELETE, this, shot);
+}

@@ -14,5 +14,7 @@
         <file>ItemMediaDirectory.qml</file>
         <file>ItemJob.qml</file>
         <file>ItemShot.qml</file>
+        <file>ActionMenu.qml</file>
+        <file>ActionButton.qml</file>
     </qresource>
 </RCC>

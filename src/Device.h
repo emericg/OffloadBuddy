@@ -300,12 +300,14 @@ public slots:
     int64_t getSpaceAvailable_withrefresh();
 
     //
-    QString getPath(int index = 0) const;
+    QString getPath(const int index = 0) const;
     void getMtpIds(int &devBus, int &devNum) const;
 
     //
     void offloadAll();
     void deleteAll();
+    void offloadSelected(const int index);
+    void deleteSelected(const int index);
 
     //
     void addShot(Shot *shot);
@@ -316,7 +318,7 @@ public slots:
 
     //
     ShotModel *getShotModel() const { return m_shotModel; }
-    QVariant getShot(int index) const { return QVariant::fromValue(m_shotModel->getShotAt(index)); }
+    QVariant getShot(const int index) const { return QVariant::fromValue(m_shotModel->getShotAt(index)); }
 };
 
 /* ************************************************************************** */

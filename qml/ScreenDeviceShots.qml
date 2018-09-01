@@ -50,6 +50,7 @@ Rectangle {
     function initGridViewStuff() {
 
         shotsview.currentIndex = -1
+        actionMenu.visible = false
 
         if (myDevice && myDevice.deviceType === 0)
             imageEmpty.source = "qrc:/icons/card.svg"
@@ -75,6 +76,8 @@ Rectangle {
             }
         }
     }
+
+    // HEADER //////////////////////////////////////////////////////////////////
 
     Rectangle {
         id: rectangleHeader
@@ -344,6 +347,8 @@ Rectangle {
         }
     }
 
+    // CONTENT /////////////////////////////////////////////////////////////////
+
     Rectangle {
         id: rectangleDeviceShots
         color: ThemeEngine.colorContentBackground
@@ -356,39 +361,6 @@ Rectangle {
         anchors.leftMargin: 0
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0
-
-        MouseArea {
-            x: 0
-            y: 0
-            anchors.fill: parent
-            onClicked: shotsview.currentIndex = -1
-        }
-
-        Component {
-            id: highlight
-            Rectangle {
-                width: shotsview.cellSize;
-                height: shotsview.cellSize
-                color: "#00000000"
-                border.width : 4
-                border.color: ThemeEngine.colorApproved
-                x: {
-                    if (shotsview.currentItem.x) {
-                        x = shotsview.currentItem.x
-                    } else {
-                        x = 0
-                    }
-                }
-                y: {
-                    if (shotsview.currentItem.y) {
-                        y = shotsview.currentItem.y
-                    } else {
-                        y = 0
-                    }
-                }
-                z: 1
-            }
-        }
 
         Rectangle {
             id: circleEmpty
@@ -417,6 +389,51 @@ Rectangle {
             }
         }
 
+        Component {
+            id: highlight
+            Rectangle {
+                width: shotsview.cellSize;
+                height: shotsview.cellSize
+                color: "#00000000"
+                border.width : 4
+                border.color: ThemeEngine.colorApproved
+                x: {
+                    if (shotsview.currentItem.x) {
+                        x = shotsview.currentItem.x
+                    } else {
+                        x = 0
+                    }
+                }
+                y: {
+                    if (shotsview.currentItem.y) {
+                        y = shotsview.currentItem.y
+                    } else {
+                        y = 0
+                    }
+                }
+                z: 1
+            }
+        }
+
+        ActionMenu {
+            id: actionMenu
+            z: 2
+        }
+        Connections {
+            target: actionMenu
+            onMenuSelected: rectangleDeviceShots.actionMenuTriggered(index)
+        }
+        function actionMenuTriggered(index) {
+            //console.log("actionMenuTriggered(" + index + ") selected shot: " + shotsview.currentIndex)
+
+            if (index === 1 || index === 2)
+                myDevice.offloadSelected(shotsview.currentIndex)
+            if (index === 4)
+                myDevice.deleteSelected(shotsview.currentIndex)
+
+            actionMenu.visible = false
+        }
+
         ScrollView {
             id: scrollView
             x: 0
@@ -432,7 +449,10 @@ Rectangle {
 
                 flickableChildren: MouseArea {
                     anchors.fill: parent
-                    onClicked: shotsview.currentIndex = -1
+                    onClicked: {
+                        shotsview.currentIndex = -1
+                        actionMenu.visible = false
+                    }
                 }
 
                 property int cellSize: 256

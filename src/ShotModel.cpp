@@ -72,7 +72,7 @@ void ShotModel::addFile(ofb_file *f, ofb_shot *s)
             {
                 addShot(shot);
             }
-            else // FIXME what if the thm arrives first?
+            else // FIXME what if the THM arrives first?
             {
                 qDebug() << "Invalid shot: " << shot->getName();
                 delete shot;
@@ -97,7 +97,7 @@ void ShotModel::removeShot(Shot *shot)
 {
     if (shot)
     {
-        beginRemoveRows(QModelIndex(), 0, getShotCount());
+        beginRemoveRows(QModelIndex(), m_shots.indexOf(shot), m_shots.indexOf(shot));
         m_shots.removeOne(shot);
         delete shot;
         endRemoveRows();

@@ -903,6 +903,16 @@ Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
                     font.pixelSize: 16
                 }
+
+                Button {
+                    id: button
+                    text: qsTr("Export GPS trace")
+                    anchors.right: parent.right
+                    anchors.rightMargin: 0
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    visible: false
+                }
             }
         }
     }

@@ -60,14 +60,13 @@ Rectangle {
             anchors.left: parent.left
             anchors.leftMargin: 16
             displayText: qsTr("Filter by: No filters")
-/*
+
             model: ListModel {
                 id: cbMediaFilters
                 ListElement { text: qsTr("No filters"); }
-                ListElement { text: qsTr("Shot types"); }
-                ListElement { text: qsTr("Camera models"); }
+                //ListElement { text: qsTr("Shot types"); }
+                //ListElement { text: qsTr("Camera models"); }
             }
-*/
 /*
             model: ListModel {
                 id: cbMediaOrders

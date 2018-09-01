@@ -107,8 +107,24 @@ Rectangle {
         onHoveredChanged: {
             text_top.visible = !text_top.visible
         }
-        onClicked: shotsview.currentIndex = index
-        onDoubleClicked: screenDevice.state = "shotdetails"
+
+        acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
+        onClicked: {
+            shotsview.currentIndex = index
+
+            if (mouse.button === Qt.RightButton) {
+                actionMenu.visible = true
+                actionMenu.x = parent.x + mouseX + 24
+                actionMenu.y = parent.y + mouseY + 24
+            } else {
+                actionMenu.visible = false
+            }
+        }
+        onDoubleClicked: {
+            actionMenu.visible = false
+            shotsview.currentIndex = index
+            screenDevice.state = "shotdetails"
+        }
     }
 
     Text {
