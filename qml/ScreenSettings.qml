@@ -56,7 +56,7 @@ Rectangle {
             id: checkAutoLaunch
             width: 500
             height: 40
-            text: qsTr("Launch OffloadBuddy when a new device is detected?")
+            text: qsTr("Launch OffloadBuddy when a new device is detected")
             enabled: false
             anchors.top: text1.bottom
             anchors.topMargin: 16

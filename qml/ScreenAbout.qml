@@ -52,7 +52,7 @@ Rectangle {
             id: rectangleProject
             height: 320
             color: ThemeEngine.colorContentBox
-            radius: 2
+            radius: 4
             anchors.top: parent.top
             anchors.topMargin: 16
             anchors.right: parent.right
@@ -74,10 +74,11 @@ Rectangle {
 
             Text {
                 id: text_title
-                y: 10
                 anchors.left: parent.left
                 anchors.leftMargin: 16
                 text: "OffloadBuddy"
+                anchors.top: parent.top
+                anchors.topMargin: 12
                 verticalAlignment: Text.AlignVCenter
                 font.bold: true
                 font.pixelSize: ThemeEngine.fontSizeContentTitle
@@ -92,14 +93,14 @@ Rectangle {
                 anchors.bottomMargin: 8
                 anchors.left: parent.left
                 anchors.leftMargin: 8
-                anchors.right: parent.right
-                anchors.rightMargin: 300
+                anchors.right: imageLogo.left
 
                 readOnly: true
                 wrapMode: Text.WordWrap
                 font.pixelSize: ThemeEngine.fontSizeContentText
                 color: ThemeEngine.colorContentText
                 text: "OffloadBuddy is a multimedia offloading software with a few tricks up his sleeve!\nIt's designed to remove the hassle of handling and transferring the many videos and pictures file from your devices like action cameras, regular cameras and smartphones...\n\n* Import datas from SD cards, mass storage or MTP devices\n  - Copy, merge or reencode medias\n  - Consult and export shots metadatas\n  - Organize your media library\n* Create clips or extract photos from your videos\n* Assemble photo timelapses into videos\n* GoPro firmware updates"
+                anchors.rightMargin: 8
             }
 
             Text {
@@ -118,17 +119,12 @@ Rectangle {
 
             Text {
                 id: text2
-                width: 166
-                height: 32
                 anchors.verticalCenter: imageGitHub.verticalCenter
                 anchors.left: imageGitHub.right
                 anchors.leftMargin: 8
 
                 text: qsTr("Visit us on <html><style type=\"text/css\"></style><a href=\"https://github.com/emericg/OffloadBuddy\">GitHub</a></html>!")
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignLeft
                 font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
                 onLinkActivated: Qt.openUrlExternally("https://github.com/emericg/OffloadBuddy")
             }
 
@@ -149,23 +145,22 @@ Rectangle {
 
         Rectangle {
             id: rectangleAuthors
-            radius: 8
+            radius: 4
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 16
-            anchors.topMargin: 16
-            anchors.leftMargin: 16
             anchors.top: rectangleProject.bottom
             anchors.right: parent.right
-            anchors.rightMargin: 16
             anchors.left: parent.left
+            anchors.margins: 16
+            color: ThemeEngine.colorContentBox
 
             Text {
                 id: text_title1
-                y: 10
                 anchors.left: parent.left
                 anchors.leftMargin: 16
 
                 text: qsTr("Authors")
+                anchors.top: parent.top
+                anchors.topMargin: 12
                 verticalAlignment: Text.AlignVCenter
                 font.bold: true
                 font.pixelSize: ThemeEngine.fontSizeContentTitle
