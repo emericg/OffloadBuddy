@@ -142,6 +142,7 @@ public:
     static JobManager *getInstance();
     bool addJob(JobType type, Device *d, Shot *s, MediaDirectory *md = nullptr);
     bool addJobs(JobType type, Device *d, QList<Shot *> list, MediaDirectory *md = nullptr);
+    void cleanup();
 
 public slots:
     QVariant getTrackedJobs() const { if (m_trackedJobs.size() > 0) { return QVariant::fromValue(m_trackedJobs); } return QVariant(); }

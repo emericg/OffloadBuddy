@@ -26,6 +26,7 @@ Item {
             viewButton.state = "clicked"
         }
     }
+
     Rectangle {
         id: viewButton;
         height: vButton.height + 4
@@ -36,7 +37,9 @@ Item {
             text: qsTr(button_text)
             width: parent.width
             anchors { verticalCenter: parent.verticalCenter; left: parent.left; leftMargin: 10 }
-            font.pixelSize: 14
+            font.bold: true
+            font.pixelSize: ThemeEngine.fontSizeContentText
+            color: "#3d3d3d"
         }
         MouseArea {
             hoverEnabled: enable
@@ -53,11 +56,11 @@ Item {
             },
             State {
                 name: "hovered";
-                PropertyChanges { target: vButton; color: ThemeEngine.colorApproved; /*font.bold: true;*/ }
+                PropertyChanges { target: vButton; color: ThemeEngine.colorApproved; }
             },
             State {
                 name: "normal";
-                PropertyChanges { target: vButton; color: "#232323"; }
+                PropertyChanges { target: vButton; color: "#3d3d3d"; }
             }
         ]
     }

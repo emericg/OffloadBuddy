@@ -54,6 +54,11 @@ JobManager::JobManager()
 
 JobManager::~JobManager()
 {
+    //
+}
+
+void JobManager::cleanup()
+{
     delete m_job_instant;
     delete m_job_w1;
     delete m_job_w2;

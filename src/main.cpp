@@ -60,6 +60,12 @@ void print_build_infos()
 #endif
 }
 
+static void exithandler()
+{
+    JobManager *j = JobManager::getInstance();
+    j->cleanup();
+}
+
 int main(int argc, char *argv[])
 {
     print_build_infos();
@@ -79,6 +85,7 @@ int main(int argc, char *argv[])
     SettingsManager *s = SettingsManager::getInstance();
 
     JobManager *j = JobManager::getInstance();
+    atexit(exithandler); // will stop running job on exit
 
     DeviceManager *d = new DeviceManager;
     d->searchDevices();

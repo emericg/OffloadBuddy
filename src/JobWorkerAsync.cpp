@@ -37,15 +37,17 @@ JobWorkerAsync::JobWorkerAsync()
 
 JobWorkerAsync::~JobWorkerAsync()
 {
-    if (m_childProcess)
-        delete m_childProcess;
+    jobAbort();
 }
 
 /* ************************************************************************** */
 
 void JobWorkerAsync::jobAbort()
 {
-    m_working = false;
+    if (m_childProcess)
+    {
+        m_childProcess->terminate();
+    }
 }
 
 void JobWorkerAsync::queueWork(Job *job)
@@ -114,6 +116,7 @@ void JobWorkerAsync::work()
         m_childProcess->start(program, arguments);
     }
 }
+/* ************************************************************************** */
 
 void JobWorkerAsync::processStarted()
 {
@@ -121,6 +124,7 @@ void JobWorkerAsync::processStarted()
     emit jobStarted(m_current_job->id);
     emit shotStarted(m_current_job->id, m_current_job->elements.front()->parent_shots);
 }
+
 void JobWorkerAsync::processFinished()
 {
     qDebug() << "JobSuperWorker::processFinished()";
@@ -168,6 +172,5 @@ void JobWorkerAsync::processOutput()
         emit jobProgress(m_current_job->id, progress);
     }
 }
-
 
 /* ************************************************************************** */

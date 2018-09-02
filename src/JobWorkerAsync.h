@@ -67,10 +67,10 @@ public:
     JobWorkerAsync();
     ~JobWorkerAsync();
 
-    void queueWork(Job *job);
     void work();
 
 public slots:
+    void queueWork(Job *job);
     void jobAbort();
 
 signals:
