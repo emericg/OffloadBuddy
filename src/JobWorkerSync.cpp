@@ -19,7 +19,7 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#include "JobWorker.h"
+#include "JobWorkerSync.h"
 #include "SettingsManager.h"
 
 #include <QFileInfo>
@@ -30,12 +30,12 @@
 
 /* ************************************************************************** */
 
-JobWorker::JobWorker()
+JobWorkerSync::JobWorkerSync()
 {
     //
 }
 
-JobWorker::~JobWorker()
+JobWorkerSync::~JobWorkerSync()
 {
     delete thread;
 }
@@ -43,7 +43,7 @@ JobWorker::~JobWorker()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void JobWorker::queueWork(Job *job)
+void JobWorkerSync::queueWork(Job *job)
 {
     qDebug() << ">> queueWork()";
 
@@ -53,7 +53,7 @@ void JobWorker::queueWork(Job *job)
     qDebug() << "<< queueWork()";
 }
 
-void JobWorker::work()
+void JobWorkerSync::work()
 {
     qDebug() << ">> work()";
 
@@ -64,7 +64,7 @@ void JobWorker::work()
     while (!m_jobs.isEmpty())
     {
         Job *current_job = m_jobs.dequeue();
-        working = true;
+        m_working = true;
         m_jobsMutex.unlock();
 
         if (current_job)
@@ -84,7 +84,7 @@ void JobWorker::work()
 
                         if (!file.filesystemPath.isEmpty())
                         {
-                            //qDebug() << "JobWorker  >  deleting:" << file.filesystemPath;
+                            //qDebug() << "JobWorkerSync  >  deleting:" << file.filesystemPath;
 
                             if (QFile::remove(file.filesystemPath) == true)
                             {
@@ -99,7 +99,7 @@ void JobWorker::work()
 #ifdef ENABLE_LIBMTP
                         else if (file.mtpDevice && file.mtpObjectId)
                         {
-                            //qDebug() << "JobWorker  >  deleting:" << file.name;
+                            //qDebug() << "JobWorkerSync  >  deleting:" << file.name;
 
                             int err = LIBMTP_Delete_Object(file.mtpDevice, file.mtpObjectId);
                             if (err)
@@ -126,7 +126,7 @@ void JobWorker::work()
                     {
                         if (!file.filesystemPath.isEmpty())
                         {
-                            //qDebug() << "JobWorker  >  FS copying:" << file->filesystemPath;
+                            //qDebug() << "JobWorkerSync  >  FS copying:" << file->filesystemPath;
                             //qDebug() << "       to  > " << element->destination_dir;
 
                             QFileInfo fi_src(file.filesystemPath);
@@ -157,7 +157,7 @@ void JobWorker::work()
 #ifdef ENABLE_LIBMTP
                         else if (file.mtpDevice && file.mtpObjectId)
                         {
-                            //qDebug() << "JobWorker  >  MTP copying:" << file->mtpObjectId;
+                            //qDebug() << "JobWorkerSync  >  MTP copying:" << file->mtpObjectId;
                             //qDebug() << "       to  > " << element->destination_dir;
 
                             QString destFile = element->destination_dir + file.name + "." + file.extension;
@@ -201,7 +201,7 @@ void JobWorker::work()
         m_jobsMutex.lock();
     }
 
-    working = false;
+    m_working = false;
     m_jobsMutex.unlock();
 
     qDebug() << "<< work()";

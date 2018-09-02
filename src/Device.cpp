@@ -476,6 +476,17 @@ void Device::offloadSelected(const int index)
         jm->addJob(JOB_COPY, this, shot);
 }
 
+void Device::reencodeSelected(const int index)
+{
+    qDebug() << "reencodeSelected(" << index << ")";
+
+    JobManager *jm = JobManager::getInstance();
+    Shot *shot = m_shotModel->getShotAt(index);
+
+    if (jm && shot)
+        jm->addJob(JOB_REENCODE, this, shot);
+}
+
 void Device::deleteSelected(const int index)
 {
     qDebug() << "deleteSelected(" << index << ")";

@@ -635,7 +635,7 @@ bool Shot::getMetadatasFromVideo()
 
     if (minivideo_retcode == 1)
     {
-        minivideo_retcode = minivideo_parse(media, true);
+        minivideo_retcode = minivideo_parse(media, false);
 
         if (minivideo_retcode != 1)
         {

@@ -307,6 +307,7 @@ public slots:
     void offloadAll();
     void deleteAll();
     void offloadSelected(const int index);
+    void reencodeSelected(const int index);
     void deleteSelected(const int index);
 
     //

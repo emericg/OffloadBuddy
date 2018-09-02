@@ -239,60 +239,81 @@ bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list, MediaDirec
 
     // DISPATCH JOB ////////////////////////////////////////////////////////////
 
-    JobWorker *m_selected_worker = nullptr;
-
-    if (type == JOB_DELETE || type == JOB_FORMAT)
+    if (type == JOB_REENCODE || type == JOB_TIMELAPSE_TO_VIDEO || type == JOB_STAB)
     {
-        m_selected_worker = m_job_instant;
-    }
-    else if (type == JOB_FIRMWARE_DOWNLOAD)
-    {
-        m_selected_worker = m_job_web;
-    }
-    else if (type == JOB_REENCODE || type == JOB_TIMELAPSE_TO_VIDEO || type == JOB_STAB)
-    {
-        m_selected_worker = m_job_cpu;
-    }
-    else if (type == JOB_METADATAS || type == JOB_FIRMWARE_UPLOAD ||
-             type == JOB_CLIP ||
-             type == JOB_COPY || type == JOB_MERGE)
-    {
-        // TODO 'per device' dispatch
-        m_selected_worker = m_job_w1;
-    }
-    else
-    {
-        qWarning() << "Unable to select a worker to dispatch current job...";
-        return status;
-    }
-
-    if (m_selected_worker == nullptr)
-    {
-        m_selected_worker = new JobWorker();
-        m_selected_worker->thread = new QThread();
-
-        if (m_selected_worker->thread && m_selected_worker)
+        // ffmpeg worker
+        if (m_job_cpu == nullptr)
         {
-            m_selected_worker->queueWork(job);
-            m_selected_worker->moveToThread(m_selected_worker->thread);
+            m_job_cpu = new JobWorkerAsync();
 
-            connect(m_selected_worker->thread, SIGNAL(started()), m_selected_worker, SLOT(work()));
+            connect(m_job_cpu, SIGNAL(jobStarted(int)), this, SLOT(jobStarted(int)));
+            connect(m_job_cpu, SIGNAL(jobProgress(int, float)), this, SLOT(jobProgress(int, float)));
+            connect(m_job_cpu, SIGNAL(jobFinished(int, int)), this, SLOT(jobFinished(int, int)));
 
-            connect(m_selected_worker, SIGNAL(jobProgress(int, float)), this, SLOT(jobProgress(int, float)));
-            connect(m_selected_worker, SIGNAL(jobStarted(int)), this, SLOT(jobStarted(int)));
-            connect(m_selected_worker, SIGNAL(jobFinished(int, int)), this, SLOT(jobFinished(int, int)));
-            connect(m_selected_worker, SIGNAL(shotStarted(int, Shot *)), this, SLOT(shotStarted(int, Shot *)));
-            connect(m_selected_worker, SIGNAL(shotFinished(int, Shot *)), this, SLOT(shotFinished(int, Shot *)));
+            connect(m_job_cpu, SIGNAL(shotStarted(int, Shot *)), this, SLOT(shotStarted(int, Shot *)));
+            connect(m_job_cpu, SIGNAL(shotFinished(int, Shot *)), this, SLOT(shotFinished(int, Shot *)));
+        }
 
-            m_selected_worker->thread->start();
-            status = true;
+        if (m_job_cpu)
+        {
+            m_job_cpu->queueWork(job);
+            m_job_cpu->work();
         }
     }
     else
     {
-        m_selected_worker->queueWork(job);
-        emit m_selected_worker->work();
-        status = true;
+        // Regular worker
+        JobWorkerSync *m_selected_worker = nullptr;
+
+        if (type == JOB_DELETE || type == JOB_FORMAT)
+        {
+            m_selected_worker = m_job_instant;
+        }
+        else if (type == JOB_FIRMWARE_DOWNLOAD)
+        {
+            m_selected_worker = m_job_web;
+        }
+        else if (type == JOB_METADATAS || type == JOB_FIRMWARE_UPLOAD ||
+                 type == JOB_CLIP ||
+                 type == JOB_COPY || type == JOB_MERGE)
+        {
+            // TODO 'per device' dispatch
+            m_selected_worker = m_job_w1;
+        }
+        else
+        {
+            qWarning() << "Unable to select a worker to dispatch current job...";
+            return status;
+        }
+
+        if (m_selected_worker == nullptr)
+        {
+            m_selected_worker = new JobWorkerSync();
+            m_selected_worker->thread = new QThread();
+
+            if (m_selected_worker->thread && m_selected_worker)
+            {
+                m_selected_worker->queueWork(job);
+                m_selected_worker->moveToThread(m_selected_worker->thread);
+
+                connect(m_selected_worker->thread, SIGNAL(started()), m_selected_worker, SLOT(work()));
+
+                connect(m_selected_worker, SIGNAL(jobProgress(int, float)), this, SLOT(jobProgress(int, float)));
+                connect(m_selected_worker, SIGNAL(jobStarted(int)), this, SLOT(jobStarted(int)));
+                connect(m_selected_worker, SIGNAL(jobFinished(int, int)), this, SLOT(jobFinished(int, int)));
+                connect(m_selected_worker, SIGNAL(shotStarted(int, Shot *)), this, SLOT(shotStarted(int, Shot *)));
+                connect(m_selected_worker, SIGNAL(shotFinished(int, Shot *)), this, SLOT(shotFinished(int, Shot *)));
+
+                m_selected_worker->thread->start();
+                status = true;
+            }
+        }
+        else
+        {
+            m_selected_worker->queueWork(job);
+            emit m_selected_worker->work();
+            status = true;
+        }
     }
 
     return status;

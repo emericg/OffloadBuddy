@@ -19,11 +19,12 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#ifndef JOB_WORKER_H
-#define JOB_WORKER_H
+#ifndef JOB_SUPER_WORKER_H
+#define JOB_SUPER_WORKER_H
 /* ************************************************************************** */
 
 #include "Shot.h"
+#include "JobWorkerSync.h"
 
 #ifdef ENABLE_LIBMTP
 #include <libmtp.h>
@@ -32,98 +33,57 @@
 #include <QObject>
 #include <QString>
 #include <QQueue>
+
+#include <QProcess>
 #include <QThread>
 #include <QMutex>
 
 /* ************************************************************************** */
 
-typedef enum JobType
-{
-    JOB_INVALID = 0,
-
-    JOB_METADATAS,
-
-    JOB_FORMAT,
-    JOB_DELETE,
-
-    JOB_COPY,
-    JOB_MERGE,
-
-    JOB_CLIP,
-    JOB_TIMELAPSE_TO_VIDEO,
-    JOB_REENCODE,
-    JOB_STAB,
-
-    JOB_FIRMWARE_DOWNLOAD,
-    JOB_FIRMWARE_UPLOAD,
-
-} JobType;
-
-typedef enum JobState
-{
-    JOB_STATE_QUEUED = 0,
-    JOB_STATE_WORKING,
-    JOB_STATE_PAUSED,
-
-    JOB_STATE_DONE = 8,
-    JOB_STATE_ERRORED
-
-} JobState;
-
-/* ************************************************************************** */
-
-typedef struct JobElement
-{
-    Shot *parent_shots;
-    QString destination_dir;
-
-    std::list <ofb_file> files;
-
-} JobElement;
-
-typedef struct Job
-{
-    int id = -1;
-    JobType type = JOB_INVALID;
-
-    std::list<JobElement *> elements;
-
-    JobState state = JOB_STATE_QUEUED;
-    float percent = 0.0;
-    int totalFiles = 0;
-    int64_t totalSize = 0;
-
-} Job;
-
-/* ************************************************************************** */
-/* ************************************************************************** */
-
-class JobWorker: public QObject
+/*!
+ * \brief The JobWorkerAsync class
+ * Run async job and report progress
+ */
+class JobWorkerAsync: public QObject
 {
     Q_OBJECT
 
-    bool working = false;
+    bool m_working = false;
     QQueue <Job *> m_jobs;
     QMutex m_jobsMutex;
+    Job *m_current_job = nullptr;
+
+    QProcess *m_childProcess = nullptr;
+
+    QTime m_duration;
+    QTime m_progress;
+
+private slots:
+    void processStarted();
+    void processFinished();
+    void processOutput();
 
 public:
-    JobWorker();
-    ~JobWorker();
+    JobWorkerAsync();
+    ~JobWorkerAsync();
 
-    QThread *thread;
-
-public slots:
     void queueWork(Job *job);
     void work();
 
+public slots:
+    void jobAbort();
+
 signals:
-    void jobProgress(int, float);
     void jobStarted(int);
+    void jobProgress(int, float);
     void jobFinished(int, int);
+
+    void jobAborted();
+    void jobErrored();
 
     void shotStarted(int, Shot *);
     void shotFinished(int, Shot *);
 };
 
 /* ************************************************************************** */
-#endif // JOB_WORKER_H
+#endif // JOB_SUPER_WORKER_H

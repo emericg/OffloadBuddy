@@ -428,6 +428,8 @@ Rectangle {
 
             if (index === 1 || index === 2)
                 myDevice.offloadSelected(shotsview.currentIndex)
+            if (index === 3)
+                myDevice.reencodeSelected(shotsview.currentIndex)
             if (index === 4)
                 myDevice.deleteSelected(shotsview.currentIndex)
 

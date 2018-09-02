@@ -23,10 +23,11 @@
 #define JOB_MANAGER_H
 /* ************************************************************************** */
 
+#include "SettingsManager.h"
 #include "Device.h"
 #include "Shot.h"
-#include "SettingsManager.h"
-#include "JobWorker.h"
+#include "JobWorkerAsync.h"
+#include "JobWorkerSync.h"
 
 #include <QObject>
 #include <QVariant>
@@ -70,9 +71,13 @@ public:
     QString getTypeString()
     {
         if (m_type == JOB_COPY)
-            return tr("COPY");
+            return tr("COPYING");
+        else if (m_type == JOB_MERGE)
+            return tr("MERGING");
         else if (m_type == JOB_DELETE)
             return tr("DELETION");
+        else if (m_type == JOB_REENCODE)
+            return tr("ENCODING");
         else
             return tr("UNKNOWN");
     }
@@ -107,16 +112,16 @@ class JobManager: public QObject
     int m_workingJobs = 0;
 
     // instant jobs (deletion...)
-    JobWorker *m_job_instant = nullptr;
+    JobWorkerSync *m_job_instant = nullptr;
     // copy/merge jobs
-    JobWorker *m_job_w1 = nullptr;
-    JobWorker *m_job_w2 = nullptr;
-    JobWorker *m_job_w3 = nullptr;
-    JobWorker *m_job_w4 = nullptr;
+    JobWorkerSync *m_job_w1 = nullptr;
+    JobWorkerSync *m_job_w2 = nullptr;
+    JobWorkerSync *m_job_w3 = nullptr;
+    JobWorkerSync *m_job_w4 = nullptr;
     // CPU jobs (reencodes, stabs...)
-    JobWorker *m_job_cpu = nullptr;
+    JobWorkerAsync *m_job_cpu = nullptr;
     // web downloads jobs
-    JobWorker *m_job_web = nullptr;
+    JobWorkerSync *m_job_web = nullptr;
 
     MediaDirectory * getAutoDestination(Shot *s);
     QString getAutoDestinationString(Shot *s);
