@@ -88,6 +88,8 @@ Rectangle {
                 mapGPS.anchors.topMargin = 48
                 mapMarker.visible = true
                 mapMarker.coordinate = QtPositioning.coordinate(shot.latitude, shot.longitude)
+                button_minus.enabled = true
+                button_plus.enabled = true
 
                 rectangleCoordinates.visible = true
                 coordinates.text = shot.latitudeString + "    " + shot.longitudeString
@@ -98,6 +100,8 @@ Rectangle {
                 mapGPS.anchors.topMargin = 16
                 mapMarker.visible = false
                 rectangleCoordinates.visible = false
+                button_minus.enabled = false
+                button_plus.enabled = false
             }
         }
     }
@@ -833,6 +837,39 @@ Rectangle {
                     sourceItem: Image {
                         id: mapMarkerImg
                         source: "qrc:/resources/other/marker.svg"
+                    }
+                }
+
+                Row {
+                    id: row
+                    anchors.top: parent.top
+                    anchors.topMargin: 16
+                    anchors.right: parent.right
+                    anchors.rightMargin: 16
+                    spacing: 16
+
+                    Button {
+                        id: button_minus
+                        width: 40
+                        height: 40
+                        text: "-"
+                        font.bold: true
+                        font.pointSize: 16
+                        opacity: 0.90
+
+                        onClicked: parent.parent.zoomLevel--
+                    }
+
+                    Button {
+                        id: button_plus
+                        width: 40
+                        height: 40
+                        text: "+"
+                        font.bold: true
+                        font.pointSize: 14
+                        opacity: 0.90
+
+                        onClicked: parent.parent.zoomLevel++
                     }
                 }
 /*
