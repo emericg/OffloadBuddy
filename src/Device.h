@@ -25,6 +25,7 @@
 
 #include "Shot.h"
 #include "ShotModel.h"
+#include "ShotFilter.h"
 
 #ifdef ENABLE_LIBMTP
 #include <libmtp.h>
@@ -228,6 +229,7 @@ class Device: public QObject
     Q_PROPERTY(qint64 spaceAvailable READ getSpaceAvailable NOTIFY spaceUpdated)
 
     Q_PROPERTY(ShotModel *shotModel READ getShotModel NOTIFY shotModelUpdated)
+    Q_PROPERTY(ShotFilter *shotFilter READ getShotFilter NOTIFY shotModelUpdated)
 
     deviceModel_e m_deviceModel = DEVICE_UNKNOWN;
     deviceType_e m_deviceType = DEVICE_FILESYSTEM;
@@ -252,6 +254,7 @@ class Device: public QObject
 
     // Shot(s)
     ShotModel *m_shotModel = nullptr;
+    ShotFilter *m_shotFilter = nullptr;
     Shot *findShot(Shared::ShotType type, int file_id, int camera_id) const;
 
 private slots:
@@ -304,11 +307,20 @@ public slots:
     void getMtpIds(int &devBus, int &devNum) const;
 
     //
-    void offloadAll();
+    void orderByDate();
+    void orderByDuration();
+    void orderByShotType();
+    void orderByName();
+
+    //
+    void offloadCopyAll();
+    void offloadMergeAll();
     void deleteAll();
-    void offloadSelected(const int index);
-    void reencodeSelected(const int index);
-    void deleteSelected(const int index);
+
+    void offloadCopySelected(const QString shot_name);
+    void offloadMergeSelected(const QString shot_name);
+    void reencodeSelected(const QString shot_name);
+    void deleteSelected(const QString shot_name);
 
     //
     void addShot(Shot *shot);
@@ -319,7 +331,9 @@ public slots:
 
     //
     ShotModel *getShotModel() const { return m_shotModel; }
-    QVariant getShot(const int index) const { return QVariant::fromValue(m_shotModel->getShotAt(index)); }
+    ShotFilter *getShotFilter() const { return m_shotFilter; }
+    //QVariant getShot(const int index) const { return QVariant::fromValue(m_shotModel->getShotAt(index)); }
+    QVariant getShot(const QString name) const { return QVariant::fromValue(m_shotModel->getShotAt(name)); }
 };
 
 /* ************************************************************************** */

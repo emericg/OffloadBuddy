@@ -104,6 +104,10 @@ void ShotModel::removeShot(Shot *shot)
     }
 }
 
+/*!
+ * \brief Return all of the shots from a device.
+ * \param shots[out]
+ */
 void ShotModel::getShots(QList<Shot *> &shots)
 {
     for (auto shot: m_shots)
@@ -112,11 +116,44 @@ void ShotModel::getShots(QList<Shot *> &shots)
     }
 }
 
-Shot *ShotModel::getShotAt(int index)
+/*!
+ * \brief ShotModel::getShotAt
+ * \param listIndex: might not be the same than gridview index...
+ * \return
+ */
+Shot *ShotModel::getShotAt(int listIndex)
 {
-    if (index >= 0 && index < m_shots.size())
+    //qDebug() << "ShotModel::index:" << index(0, listIndex);
+
+    if (listIndex >= 0 && listIndex < m_shots.size())
     {
-        return m_shots.at(index);
+        return m_shots.at(listIndex);
+    }
+
+    return nullptr;
+}
+
+/*!
+ * \brief ShotModel::getShotAt
+ * \param name
+ * \return
+ */
+Shot *ShotModel::getShotAt(QString name)
+{
+    //qDebug() << "ShotModel::name:" << name;
+
+    if (!name.isEmpty())
+    {
+        for (int i = 0; i < m_shots.size(); i++)
+        {
+            Shot *search = qobject_cast<Shot*>(m_shots.at(i));
+            if (search->getName() == name)
+            {
+                return search;
+            }
+        }
+
+        //qDebug() << "No shot found for id" << file_id;
     }
 
     return nullptr;
@@ -128,8 +165,12 @@ Shot *ShotModel::getShotAt(int index)
  * \param file_id
  * \param camera_id
  * \return
+ *
+ * This function is used to associate new files to existing shots. We go backward
+ * for faster association, because we will just most likely use the last created
+ * shot.
  */
-Shot * ShotModel::getShotAt(Shared::ShotType type, int file_id, int camera_id) const
+Shot *ShotModel::getShotAt(Shared::ShotType type, int file_id, int camera_id) const
 {
     if (file_id > 0)
     {

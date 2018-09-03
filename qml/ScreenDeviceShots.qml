@@ -11,7 +11,11 @@ Rectangle {
     height: 720
     anchors.fill: parent
 
-    property int selectedItem : shotsview.currentIndex
+    property var selectedItem : shotsview.currentItem
+    property int selectedItemIndex : shotsview.currentIndex
+    property string selectedItemName : shotsview.currentItem.shot.name
+
+    property var selectionList : [] // TODO
 
     Connections {
         target: myDevice
@@ -23,7 +27,8 @@ Rectangle {
         deviceSpaceText.text = StringUtils.bytesToString_short(myDevice.spaceUsed) + " used of " + StringUtils.bytesToString_short(myDevice.spaceTotal)
         deviceSpaceBar.value = myDevice.spaceUsedPercent
 
-        if (myDevice.model.includes("HERO6")) {
+        if (myDevice.model.includes("HERO7") ||
+            myDevice.model.includes("HERO6")) {
             deviceImage.source = "qrc:/cameras/H6.svg"
         } else if (myDevice.model.includes("HERO5")) {
             deviceImage.source = "qrc:/cameras/H5.svg"
@@ -48,9 +53,10 @@ Rectangle {
     }
 
     function initGridViewStuff() {
-
+        selectionList = []
         shotsview.currentIndex = -1
         actionMenu.visible = false
+        comboBox_orderby.enabled = false
 
         if (myDevice && myDevice.deviceType === 0)
             imageEmpty.source = "qrc:/icons/card.svg"
@@ -62,6 +68,7 @@ Rectangle {
         //console.log("updateGridViewStuff() [device "+ myDevice + "] (state " + myDevice.deviceState + ") (shotcount: " + shotsview.count + ")")
 
         if (shotsview.count == 0) {
+            selectionList = []
             shotsview.currentIndex = -1
         }
 
@@ -188,7 +195,7 @@ Rectangle {
                     rectangleTransferDecorated.height = rectangleTransferDecorated.height + 8
                 }
                 onClicked: {
-                    myDevice.offloadAll();
+                    myDevice.offloadCopyAll();
                 }
             }
 
@@ -298,14 +305,40 @@ Rectangle {
         }
 
         ComboBox {
-            id: comboBox_filterby
+            id: comboBox_orderby
             width: 256
             height: 40
             anchors.top: parent.top
             anchors.topMargin: 16
             anchors.left: parent.left
             anchors.leftMargin: 16
-            displayText: qsTr("Filter by: No filters")
+            displayText: qsTr("Order by: Date")
+
+            model: ListModel {
+                id: cbShotsOrderby
+                ListElement { text: qsTr("Date"); }
+                ListElement { text: qsTr("Duration"); }
+                ListElement { text: qsTr("Shot type"); }
+                //ListElement { text: qsTr("GPS location"); }
+                ListElement { text: qsTr("Name"); }
+            }
+
+            property bool cbinit: false
+            onCurrentIndexChanged: {
+                if (cbinit) {
+                    if (currentIndex == 0)
+                        myDevice.orderByDate()
+                    else if (currentIndex == 1)
+                        myDevice.orderByDuration()
+                    else if (currentIndex == 2)
+                        myDevice.orderByShotType()
+                    else if (currentIndex == 3)
+                        myDevice.orderByName()
+                } else
+                    cbinit = true;
+
+                displayText = qsTr("Order by:") + " " + cbShotsOrderby.get(currentIndex).text
+            }
         }
 
         Slider {
@@ -313,7 +346,7 @@ Rectangle {
             y: 72
             width: 200
             height: 40
-            anchors.verticalCenter: comboBox_filterby.verticalCenter
+            anchors.verticalCenter: comboBox_orderby.verticalCenter
             anchors.left: textZoom.right
             anchors.leftMargin: 16
             stepSize: 1
@@ -335,8 +368,8 @@ Rectangle {
         Text {
             id: textZoom
             height: 40
-            anchors.verticalCenter: comboBox_filterby.verticalCenter
-            anchors.left: comboBox_filterby.right
+            anchors.verticalCenter: comboBox_orderby.verticalCenter
+            anchors.left: comboBox_orderby.right
             anchors.leftMargin: 16
 
             text: qsTr("Zoom:")
@@ -354,13 +387,9 @@ Rectangle {
         color: ThemeEngine.colorContentBackground
 
         anchors.top: rectangleHeader.bottom
-        anchors.topMargin: 0
         anchors.right: parent.right
-        anchors.rightMargin: 0
         anchors.left: parent.left
-        anchors.leftMargin: 0
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
 
         Rectangle {
             id: circleEmpty
@@ -411,36 +440,35 @@ Rectangle {
                         y = 0
                     }
                 }
-                z: 1
+                z: 6
             }
         }
 
         ActionMenu {
             id: actionMenu
-            z: 2
+            z: 7
         }
         Connections {
             target: actionMenu
             onMenuSelected: rectangleDeviceShots.actionMenuTriggered(index)
         }
         function actionMenuTriggered(index) {
-            //console.log("actionMenuTriggered(" + index + ") selected shot: " + shotsview.currentIndex)
+            //console.log("actionMenuTriggered(" + index + ") selected shot: '" + shotsview.currentItem.shot.name + "'")
 
-            if (index === 1 || index === 2)
-                myDevice.offloadSelected(shotsview.currentIndex)
+            if (index === 1)
+                myDevice.offloadCopySelected(shotsview.currentItem.shot.name)
+            if (index === 2)
+                myDevice.offloadMergeSelected(shotsview.currentItem.shot.name)
             if (index === 3)
-                myDevice.reencodeSelected(shotsview.currentIndex)
+                myDevice.reencodeSelected(shotsview.currentItem.shot.name)
             if (index === 4)
-                myDevice.deleteSelected(shotsview.currentIndex)
+                myDevice.deleteSelected(shotsview.currentItem.shot.name)
 
             actionMenu.visible = false
         }
 
         ScrollView {
             id: scrollView
-            x: 0
-            y: 0
-            z: 0
             anchors.fill: parent
 
             GridView {
@@ -448,14 +476,6 @@ Rectangle {
 
                 //Component.onCompleted: initGridViewStuff()
                 onCountChanged: updateGridViewStuff()
-
-                flickableChildren: MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        shotsview.currentIndex = -1
-                        actionMenu.visible = false
-                    }
-                }
 
                 property int cellSize: 256
                 property int cellMargin: 16
@@ -470,7 +490,11 @@ Rectangle {
                 anchors.fill: parent
 
                 interactive: true
-                model: myDevice.shotModel
+                //snapMode: GridView.SnapToRow
+                //clip: true
+                //keyNavigationEnabled: true
+
+                model: myDevice.shotFilter
                 delegate: ItemShot { width: shotsview.cellSize }
 
                 highlight: highlight

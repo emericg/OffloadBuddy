@@ -13,7 +13,7 @@ Rectangle {
     property var myDevice
 
     onMyDeviceChanged: {
-        screenDeviceShots.updateDeviceHeader();
+        screenDeviceShots.updateDeviceHeader()
         state = "shotsview"
     }
 
@@ -37,7 +37,7 @@ Rectangle {
                     screenDevice.state = "shotsview"
             } else if (mouse.button === Qt.ForwardButton) {
                 if (screenDevice.state === "shotsview")
-                    if (screenDeviceShots.selectedItem >= 0)
+                    if (screenDeviceShots.selectedItemIndex >= 0)
                         screenDevice.state = "shotdetails"
             }
         }
@@ -53,7 +53,7 @@ Rectangle {
         sequence: StandardKey.Forward
         onActivated: {
             if (screenDevice.state === "shotsview")
-                if (screenDeviceShots.selectedItem >= 0)
+                if (screenDeviceShots.selectedItemIndex >= 0)
                     screenDevice.state = "shotdetails"
         }
     }
@@ -82,7 +82,7 @@ Rectangle {
             PropertyChanges {
                 target: screenDeviceShotDetails
                 visible: true
-                shot: myDevice.getShot(screenDeviceShots.selectedItem)
+                shot: myDevice.getShot(screenDeviceShots.selectedItemName)
             }
         }
     ]

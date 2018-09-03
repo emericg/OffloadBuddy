@@ -53,28 +53,29 @@ Rectangle {
         }
 
         ComboBox {
-            id: comboBox_filterby
+            id: comboBox_orderby
             width: 256
             anchors.top: parent.top
             anchors.topMargin: 16
             anchors.left: parent.left
             anchors.leftMargin: 16
-            displayText: qsTr("Filter by: No filters")
-
+            displayText: qsTr("Order by: Date")
+/*
+            //displayText: qsTr("Filter by: No filters")
             model: ListModel {
                 id: cbMediaFilters
                 ListElement { text: qsTr("No filters"); }
-                //ListElement { text: qsTr("Shot types"); }
-                //ListElement { text: qsTr("Camera models"); }
+                ListElement { text: qsTr("Shot types"); }
+                ListElement { text: qsTr("Camera models"); }
             }
+*/
 /*
             model: ListModel {
                 id: cbMediaOrders
-                ListElement { text: qsTr("Alphabetical"); }
                 ListElement { text: qsTr("Date"); }
                 ListElement { text: qsTr("Duration"); }
-                ListElement { text: qsTr("GPS location"); }
-                ListElement { text: qsTr("Camera model"); }
+                //ListElement { text: qsTr("GPS location"); }
+                ListElement { text: qsTr("Alphabetical"); }
             }
 */
         }
@@ -83,7 +84,7 @@ Rectangle {
             id: sliderZoom
             y: 72
             width: 200
-            anchors.verticalCenter: comboBox_filterby.verticalCenter
+            anchors.verticalCenter: comboBox_orderby.verticalCenter
             anchors.left: textZoom.right
             anchors.leftMargin: 16
             stepSize: 1
@@ -95,8 +96,8 @@ Rectangle {
         Text {
             id: textZoom
             height: 40
-            anchors.verticalCenter: comboBox_filterby.verticalCenter
-            anchors.left: comboBox_filterby.right
+            anchors.verticalCenter: comboBox_orderby.verticalCenter
+            anchors.left: comboBox_orderby.right
             anchors.leftMargin: 16
 
             text: qsTr("Zoom:")

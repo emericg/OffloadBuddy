@@ -24,6 +24,8 @@ Rectangle {
 
             if (shot.preview) {
                 image.source = "file:///" + shot.preview
+            } else {
+                image.source = "qrc:/resources/other/placeholder.png"
             }
 
             textFileList.text = shot.fileList
@@ -88,8 +90,10 @@ Rectangle {
                 mapGPS.anchors.topMargin = 48
                 mapMarker.visible = true
                 mapMarker.coordinate = QtPositioning.coordinate(shot.latitude, shot.longitude)
-                button_minus.enabled = true
-                button_plus.enabled = true
+                button_map_dezoom.enabled = true
+                button_map_zoom.enabled = true
+                button_gps_export.visible = true
+                button_gps_export.enabled = false
 
                 rectangleCoordinates.visible = true
                 coordinates.text = shot.latitudeString + "    " + shot.longitudeString
@@ -100,8 +104,9 @@ Rectangle {
                 mapGPS.anchors.topMargin = 16
                 mapMarker.visible = false
                 rectangleCoordinates.visible = false
-                button_minus.enabled = false
-                button_plus.enabled = false
+                button_map_dezoom.enabled = false
+                button_map_zoom.enabled = false
+                button_gps_export.visible = false
             }
         }
     }
@@ -849,7 +854,7 @@ Rectangle {
                     spacing: 16
 
                     Button {
-                        id: button_minus
+                        id: button_map_dezoom
                         width: 40
                         height: 40
                         text: "-"
@@ -861,7 +866,7 @@ Rectangle {
                     }
 
                     Button {
-                        id: button_plus
+                        id: button_map_zoom
                         width: 40
                         height: 40
                         text: "+"
@@ -942,13 +947,11 @@ Rectangle {
                 }
 
                 Button {
-                    id: button
+                    id: button_gps_export
                     text: qsTr("Export GPS trace")
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
-
-                    visible: false
                 }
             }
         }

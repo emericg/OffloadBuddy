@@ -44,6 +44,11 @@ Device::Device(const deviceType_e type,
     m_firmware = version;
 
     m_shotModel = new ShotModel;
+    m_shotFilter = new ShotFilter;
+
+    m_shotFilter->setSourceModel(m_shotModel);
+    m_shotFilter->setSortRole(ShotModel::DateRole);
+    m_shotFilter->sort(0, Qt::AscendingOrder);
 
     connect(&m_updateStorageTimer, &QTimer::timeout, this, &Device::refreshStorageInfos);
     if (m_deviceType == DEVICE_MTP)
@@ -55,6 +60,7 @@ Device::Device(const deviceType_e type,
 Device::~Device()
 {
     delete m_shotModel;
+    delete m_shotFilter;
 
     qDeleteAll(m_filesystemStorages);
     m_filesystemStorages.clear();
@@ -435,9 +441,38 @@ void Device::deleteShot(Shot *shot)
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void Device::offloadAll()
+void Device::orderByDate()
 {
-    //qDebug() << "offloadAll()";
+    qDebug() << "orderByDate()";
+    m_shotFilter->setSortRole(ShotModel::DateRole);
+    m_shotFilter->sort(0, Qt::AscendingOrder);
+}
+
+void Device::orderByDuration()
+{
+    qDebug() << "orderByDuration()";
+    m_shotFilter->setSortRole(ShotModel::DurationRole);
+    m_shotFilter->sort(0, Qt::DescendingOrder);
+}
+
+void Device::orderByShotType()
+{
+    m_shotFilter->setSortRole(ShotModel::TypeRole);
+    m_shotFilter->sort(0, Qt::AscendingOrder);
+}
+
+void Device::orderByName()
+{
+    m_shotFilter->setSortRole(ShotModel::NameRole);
+    m_shotFilter->sort(0, Qt::AscendingOrder);
+}
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+void Device::offloadCopyAll()
+{
+    //qDebug() << "offloadCopyAll()";
     //qDebug() << "(a) shots count: " << m_shotModel->getShotCount();
 
     JobManager *jm = JobManager::getInstance();
@@ -447,6 +482,20 @@ void Device::offloadAll()
 
     if (jm && shots.count() > 0)
         jm->addJobs(JOB_COPY, this, shots);
+}
+
+void Device::offloadMergeAll()
+{
+    //qDebug() << "offloadMergeAll()";
+    //qDebug() << "(a) shots count: " << m_shotModel->getShotCount();
+
+    JobManager *jm = JobManager::getInstance();
+
+    QList<Shot *> shots;
+    m_shotModel->getShots(shots);
+
+    if (jm && shots.count() > 0)
+        jm->addJobs(JOB_MERGE, this, shots);
 }
 
 void Device::deleteAll()
@@ -465,34 +514,45 @@ void Device::deleteAll()
 
 /* ************************************************************************** */
 
-void Device::offloadSelected(const int index)
+void Device::offloadCopySelected(const QString shot_name)
 {
-    qDebug() << "offloadSelected(" << index << ")";
+    qDebug() << "offloadCopySelected(" << shot_name << ")";
 
     JobManager *jm = JobManager::getInstance();
-    Shot *shot = m_shotModel->getShotAt(index);
+    Shot *shot = m_shotModel->getShotAt(shot_name);
 
     if (jm && shot)
         jm->addJob(JOB_COPY, this, shot);
 }
 
-void Device::reencodeSelected(const int index)
+void Device::offloadMergeSelected(const QString shot_name)
 {
-    qDebug() << "reencodeSelected(" << index << ")";
+    qDebug() << "offloadMergeSelected(" << shot_name << ")";
 
     JobManager *jm = JobManager::getInstance();
-    Shot *shot = m_shotModel->getShotAt(index);
+    Shot *shot = m_shotModel->getShotAt(shot_name);
+
+    if (jm && shot)
+        jm->addJob(JOB_COPY, this, shot);
+}
+
+void Device::reencodeSelected(const QString shot_name)
+{
+    qDebug() << "reencodeSelected(" << shot_name << ")";
+
+    JobManager *jm = JobManager::getInstance();
+    Shot *shot = m_shotModel->getShotAt(shot_name);
 
     if (jm && shot)
         jm->addJob(JOB_REENCODE, this, shot);
 }
 
-void Device::deleteSelected(const int index)
+void Device::deleteSelected(const QString shot_name)
 {
-    qDebug() << "deleteSelected(" << index << ")";
+    qDebug() << "deleteSelected(" << shot_name << ")";
 
     JobManager *jm = JobManager::getInstance();
-    Shot *shot = m_shotModel->getShotAt(index);
+    Shot *shot = m_shotModel->getShotAt(shot_name);
 
     if (jm && shot)
         jm->addJob(JOB_DELETE, this, shot);

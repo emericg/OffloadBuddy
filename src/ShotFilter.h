@@ -19,63 +19,27 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#ifndef SHOT_MODEL_H
-#define SHOT_MODEL_H
+#ifndef SHOT_FILTER_H
+#define SHOT_FILTER_H
 /* ************************************************************************** */
 
 #include "Shot.h"
 
 #include <QObject>
-#include <QMetaType>
-#include <QDateTime>
-#include <QAbstractListModel>
+#include <QSortFilterProxyModel>
 
 /* ************************************************************************** */
 
-class ShotModel : public QAbstractListModel
+class ShotFilter : public QSortFilterProxyModel
 {
     Q_OBJECT
-    Q_ENUMS(ShotRoles)
-
-    QList<Shot *> m_shots;
-
-protected:
-    QHash<int, QByteArray> roleNames() const;
 
 public:
-    enum ShotRoles {
-        NameRole = Qt::UserRole+1,
-        TypeRole,
-        PreviewRole,
-        SizeRole,
-        DurationRole,
-        DateRole,
-        GpsRole,
-        CameraRole,
-
-        PointerRole,
-    };
-
-    ShotModel(QObject *parent = nullptr);
-    ShotModel(const ShotModel &other);
-    ~ShotModel();
-
-    int rowCount(const QModelIndex & parent = QModelIndex()) const;
-    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-
-    void getShots(QList<Shot *> &shots);
-    Shot *getShotAt(int index);
-    Shot *getShotAt(QString name);
-    Shot *getShotAt(Shared::ShotType type, int file_id, int camera_id) const;
-    int getShotCount() const;
-
-public slots:
-    void addFile(ofb_file *f, ofb_shot *s);
-    void addShot(Shot *shot);
-    void removeShot(Shot *shot);
+    ShotFilter(QObject *parent = nullptr);
+    ~ShotFilter();
 };
 
-//Q_DECLARE_METATYPE(ShotModel*)
+//Q_DECLARE_METATYPE(ShotFilter*)
 
 /* ************************************************************************** */
-#endif // SHOT_MODEL_H
+#endif // SHOT_FILTER_H

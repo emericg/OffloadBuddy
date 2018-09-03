@@ -40,6 +40,7 @@ SOURCES  += src/main.cpp \
             src/FileScanner.cpp \
             src/Shot.cpp \
             src/ShotModel.cpp \
+            src/ShotFilter.cpp \
             src/GenericFileModel.cpp \
             src/GoProFileModel.cpp
 
@@ -54,6 +55,7 @@ HEADERS  += src/SettingsManager.h \
             src/FileScanner.h \
             src/Shot.h \
             src/ShotModel.h \
+            src/ShotFilter.h \
             src/GenericFileModel.h \
             src/GoProFileModel.h
 
