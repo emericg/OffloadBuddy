@@ -19,7 +19,13 @@ Rectangle {
 
     Connections {
         target: myDevice
-        onStateUpdated: updateGridViewStuff()
+        onStateUpdated: updateGridViewSettings()
+    }
+
+    function restoreState() {
+        sliderZoom.value = deviceState.zoomLevel
+        comboBox_orderby.currentIndex = deviceState.orderBy
+        shotsview.currentIndex = deviceState.selectedIndex
     }
 
     function updateDeviceHeader() {
@@ -48,13 +54,9 @@ Rectangle {
         }
 
         rectangleDelete.stopTheBlink()
-        initGridViewStuff()
-        updateGridViewStuff()
     }
 
-    function initGridViewStuff() {
-        selectionList = []
-        shotsview.currentIndex = -1
+    function initGridViewSettings() {
         actionMenu.visible = false
         comboBox_orderby.enabled = false
 
@@ -64,8 +66,11 @@ Rectangle {
             imageEmpty.source = "qrc:/icons/usb.svg"
     }
 
-    function updateGridViewStuff() {
-        //console.log("updateGridViewStuff() [device "+ myDevice + "] (state " + myDevice.deviceState + ") (shotcount: " + shotsview.count + ")")
+    function updateGridViewSettings() {
+        //console.log("updateGridViewSettings() [device "+ myDevice + "] (state " + myDevice.deviceState + ") (shotcount: " + shotsview.count + ")")
+
+        // restore state
+        shotsview.currentIndex = deviceState.selectedIndex
 
         if (shotsview.count == 0) {
             selectionList = []
@@ -338,6 +343,9 @@ Rectangle {
                     cbinit = true;
 
                 displayText = qsTr("Order by:") + " " + cbShotsOrderby.get(currentIndex).text
+
+                // save state
+                deviceState.orderBy = currentIndex
             }
         }
 
@@ -362,6 +370,9 @@ Rectangle {
                 } else  if (value == 3.0) {
                     shotsview.cellSize = 400;
                 }
+
+                // save state
+                deviceState.zoomLevel = value
             }
         }
 
@@ -475,7 +486,12 @@ Rectangle {
                 id: shotsview
 
                 //Component.onCompleted: initGridViewStuff()
-                onCountChanged: updateGridViewStuff()
+                onCountChanged: updateGridViewSettings()
+                onCurrentIndexChanged: {
+                    // save state
+                    if (shotsview.currentIndex != 0)
+                        deviceState.selectedIndex = shotsview.currentIndex
+                }
 
                 property int cellSize: 256
                 property int cellMargin: 16

@@ -121,6 +121,7 @@ Rectangle {
             }
         }
         onDoubleClicked: {
+            // Show the "shot details" screen
             actionMenu.visible = false
             shotsview.currentIndex = index
             screenDevice.state = "shotdetails"

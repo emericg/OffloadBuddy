@@ -15,11 +15,22 @@ Rectangle {
     anchors.fill: parent
 
     property Shot shot
-
     onShotChanged: {
-        if (shot) {
-            screenDeviceShotDetails.state = "overview"
+        // if we 'just' changed shot, we reset the state // FIXME forward/backward reset's it too
+        screenDeviceShotDetails.state = "overview"
+        updateDeviceDetails()
 
+        // save state
+        deviceState.detail_shot = shot
+    }
+
+    function restoreState() {
+        shot = deviceState.detail_shot
+        screenDeviceShotDetails.state = deviceState.detail_state
+    }
+
+    function updateDeviceDetails() {
+        if (shot) {
             textShotName.text = shot.name
 
             if (shot.preview) {
@@ -197,6 +208,11 @@ Rectangle {
             text: qsTr("Map")
             onClicked: screenDeviceShotDetails.state = "map"
         }
+    }
+
+    onStateChanged: {
+        // save state
+        deviceState.detail_state = state
     }
 
     state: "overview"

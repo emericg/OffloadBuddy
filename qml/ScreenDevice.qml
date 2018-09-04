@@ -9,12 +9,31 @@ Rectangle {
     width: 1280
     height: 720
 
-    property var mySettings
     property var myDevice
 
+    property var deviceStateList: []
+    property var deviceState
+
     onMyDeviceChanged: {
+        if (!deviceStateList[myDevice.serial]) {
+            deviceStateList[myDevice.serial] = ({ orderBy: 0,
+                                                  zoomLevel: 2.0,
+                                                  mainState: "shotsview",
+                                                  selectedIndex: 0,
+                                                  detail_shot: null,
+                                                  detail_state: "overview" })
+        }
+
+        // restore state
+        deviceState = deviceStateList[myDevice.serial]
+        state = deviceState.mainState
+
+        screenDeviceShots.restoreState()
         screenDeviceShots.updateDeviceHeader()
-        state = "shotsview"
+        screenDeviceShots.initGridViewSettings()
+        screenDeviceShots.updateGridViewSettings()
+
+        screenDeviceShotDetails.restoreState()
     }
 
     ScreenDeviceShots {
@@ -58,6 +77,10 @@ Rectangle {
         }
     }
 
+    onStateChanged: {
+         // save state
+         deviceState.mainState = state
+    }
     state: "shotsview"
     states: [
         State {

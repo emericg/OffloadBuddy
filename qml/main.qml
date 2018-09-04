@@ -299,7 +299,6 @@ ApplicationWindow {
         ScreenDevice {
             anchors.fill: parent
             id: screenDevice
-            mySettings: settingsManager
         }
         ScreenJobs {
             anchors.fill: parent
