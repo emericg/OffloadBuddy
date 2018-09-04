@@ -461,6 +461,7 @@ Rectangle {
         Connections {
             target: actionMenu
             onMenuSelected: rectangleDeviceShots.actionMenuTriggered(index)
+            onVisibleChanged: shotsview.interactive = !shotsview.interactive
         }
         function actionMenuTriggered(index) {
             //console.log("actionMenuTriggered(" + index + ") selected shot: '" + shotsview.currentItem.shot.name + "'")
@@ -492,6 +493,18 @@ Rectangle {
                         deviceState.selectedIndex = shotsview.currentIndex
                 }
 
+                flickableChildren: MouseArea {
+                    id: mouseAreaInsideView
+                    anchors.fill: parent
+
+                    acceptedButtons: Qt.AllButtons
+                    onClicked: {
+                        screenDeviceShots.selectionList = []
+                        shotsview.currentIndex = -1
+                        actionMenu.visible = false
+                    }
+                }
+
                 property int cellSize: 256
                 property int cellMargin: 16
                 //property int cellMargin: (parent.width%cellSize) / Math.floor(parent.width/cellSize);
@@ -517,6 +530,13 @@ Rectangle {
                 highlightMoveDuration: 0
                 focus: true
             }
+        }
+
+        MouseArea {
+            id: mouseAreaOutsideView
+            anchors.fill: parent
+            acceptedButtons: Qt.RightButton
+            propagateComposedEvents: true
         }
     }
 }

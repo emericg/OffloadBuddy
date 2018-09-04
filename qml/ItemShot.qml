@@ -38,7 +38,6 @@ Rectangle {
     }
 
     Component.onCompleted: {
-
         if (preview) {
             image.source = "file:///" + preview
         }
@@ -99,22 +98,22 @@ Rectangle {
     }
 
     MouseArea {
-        id: mouseArea
+        id: mouseAreaItem
         anchors.fill: parent
 
         hoverEnabled: true
-        onHoveredChanged: {
-            text_top.visible = !text_top.visible
-        }
+        onHoveredChanged: text_top.visible = !text_top.visible
+        propagateComposedEvents: true
 
         acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
+
         onClicked: {
             shotsview.currentIndex = index
 
             if (mouse.button === Qt.RightButton) {
                 actionMenu.visible = true
-                actionMenu.x = parent.x + mouseX + 24
-                actionMenu.y = parent.y + mouseY + 24
+                actionMenu.x = mouseAreaOutsideView.mouseX + 8
+                actionMenu.y = mouseAreaOutsideView.mouseY + 8
             } else {
                 actionMenu.visible = false
             }
