@@ -1,6 +1,7 @@
 import QtQuick 2.10
 import QtQuick.Controls 2.3
 import QtQuick.Dialogs 1.1
+import QtGraphicalEffects 1.0
 
 import com.offloadbuddy.style 1.0
 import "StringUtils.js" as StringUtils
@@ -16,14 +17,45 @@ Rectangle {
     signal pauseClicked()
     signal stopClicked()
 
-    Image {
-        id: imageStatus
+    Rectangle {
+        id: rectangleStatus
         width: 40
         height: 40
         anchors.left: parent.left
-        anchors.leftMargin: 8
+        anchors.leftMargin: 16
         anchors.verticalCenter: parent.verticalCenter
-        source: "qrc:/resources/minicons/dark_queued.svg"
+        color: "#00000000"
+        clip: true
+
+        Image {
+            id: imageStatus
+            width: 40
+            height: 40
+            source: "qrc:/resources/minicons/dark_queued.svg"
+
+            NumberAnimation on rotation {
+                id: encodeAnimation
+                running: false
+
+                onStarted: imageStatus.source = "qrc:/resources/minicons/dark_encoding.svg"
+                onStopped: imageStatus.rotation = 0
+                duration: 2000;
+                from: 0;
+                to: 360;
+                loops: Animation.Infinite
+            }
+
+            SequentialAnimation {
+                id: offloadAnimation
+                running: false
+
+                onStarted: imageStatus.source = "qrc:/resources/minicons/dark_offloading.svg"
+                onStopped: imageStatus.y = 0
+                NumberAnimation { target: imageStatus; property: "y"; to: -40; duration: 0 }
+                NumberAnimation { target: imageStatus; property: "y"; to: 40; duration: 1000 }
+                loops: Animation.Infinite
+            }
+        }
     }
 
     Connections {
@@ -31,8 +63,13 @@ Rectangle {
         onJobUpdated: {
             if (job.state >= 8) {
                 imageStatus.source = "qrc:/resources/minicons/dark_done.svg"
+                offloadAnimation.stop()
+                encodeAnimation.stop()
             } else if (job.state >= 1) {
-                imageStatus.source = "qrc:/resources/minicons/dark_working.svg"
+                if (job.type === "ENCODING")
+                    encodeAnimation.start()
+                else
+                    offloadAnimation.start()
             }
         }
     }
@@ -47,13 +84,12 @@ Rectangle {
 
     Text {
         id: jobType
-        width: 96
         height: 40
         text: job.type
         font.bold: true
         verticalAlignment: Text.AlignVCenter
-        anchors.left: imageStatus.right
-        anchors.leftMargin: 8
+        anchors.left: rectangleStatus.right
+        anchors.leftMargin: 16
         anchors.verticalCenter: parent.verticalCenter
         font.pixelSize: 12
     }
@@ -61,7 +97,6 @@ Rectangle {
     Text {
         id: jobName
         y: 25
-        width: 96
         height: 40
         text: job.name
         verticalAlignment: Text.AlignVCenter
@@ -144,7 +179,7 @@ Rectangle {
             id: textPlayPause
             color: ThemeEngine.colorButtonText
             text: qsTr("▶")
-            verticalAlignment: Text.AlignVCenter
+            verticalAlignment: Text.AlignTop
             font.bold: true
             horizontalAlignment: Text.AlignHCenter
             anchors.fill: parent

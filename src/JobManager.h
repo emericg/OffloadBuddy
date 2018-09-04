@@ -67,7 +67,6 @@ public:
 
     int getId() { return m_job_id; }
     JobType getType() { return m_type; }
-    QString getName() { return "NAME"; }
     QString getTypeString()
     {
         if (m_type == JOB_COPY)
@@ -81,6 +80,8 @@ public:
         else
             return tr("UNKNOWN");
     }
+    void setName(QString name) { m_name = name; }
+    QString getName() { return m_name; }
 
     void setDevice(Device *d) { m_device = d; }
     Device *getDevice() const { return m_device; }

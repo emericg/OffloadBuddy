@@ -15,21 +15,20 @@ Rectangle {
     property var itemPassedWidth
 
     function handleState() {
+        icon_state.visible = true
+        rectangleOverlay.visible = false
         if (shot.state === Shared.SHOT_STATE_QUEUED) {
-            icon_state.visible = true
             icon_state.source = "qrc:/resources/minicons/queued.svg"
-            rectangleOverlay.visible = false
-        } else if (shot.state === Shared.SHOT_STATE_WORKING) {
-            icon_state.visible = true
-            icon_state.source = "qrc:/resources/minicons/working.svg"
-            rectangleOverlay.visible = false
-        } else if (shot.state === Shared.SHOT_STATE_OFFLOADED) {
+        } else if (shot.state === Shared.SHOT_STATE_OFFLOADING) {
+            icon_state.source = "qrc:/resources/minicons/offloading.svg"
+        } else if (shot.state === Shared.SHOT_STATE_ENCODING) {
+            icon_state.source = "qrc:/resources/minicons/encoding.svg"
+        } else if (shot.state === Shared.SHOT_STATE_DONE) {
             icon_state.visible = false
             image_overlay.source = "qrc:/icons/done.svg"
             rectangleOverlay.visible = true
         } else {
             icon_state.visible = false
-            rectangleOverlay.visible = false
         }
     }
 

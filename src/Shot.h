@@ -59,9 +59,9 @@ namespace Shared
     {
         SHOT_STATE_DEFAULT = 0,
         SHOT_STATE_QUEUED,
-        SHOT_STATE_TRANSFERING,
-        SHOT_STATE_WORKING,
-        SHOT_STATE_OFFLOADED,
+        SHOT_STATE_OFFLOADING,
+        SHOT_STATE_ENCODING,
+        SHOT_STATE_DONE,
     };
     Q_ENUM_NS(ShotState)
 }

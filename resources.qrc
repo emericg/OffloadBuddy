@@ -13,9 +13,11 @@
         <file>resources/minicons/picture_multi.svg</file>
         <file>resources/minicons/video.svg</file>
         <file>resources/minicons/queued.svg</file>
-        <file>resources/minicons/working.svg</file>
+        <file>resources/minicons/offloading.svg</file>
+        <file>resources/minicons/encoding.svg</file>
         <file>resources/minicons/dark_queued.svg</file>
-        <file>resources/minicons/dark_working.svg</file>
+        <file>resources/minicons/dark_offloading.svg</file>
+        <file>resources/minicons/dark_encoding.svg</file>
         <file>resources/minicons/dark_done.svg</file>
         <file>resources/other/marker.svg</file>
         <file>resources/other/placeholder.png</file>

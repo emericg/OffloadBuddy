@@ -402,7 +402,11 @@ void JobManager::shotStarted(int jobId, Shot *shot)
         JobTracker *j = qobject_cast<JobTracker *>(jj);
         if (j && j->getId() == jobId)
         {
-            shot->setState(Shared::SHOT_STATE_WORKING);
+            j->setName(shot->getName());
+            if (j->getType() == JOB_REENCODE)
+                shot->setState(Shared::SHOT_STATE_ENCODING);
+            else
+                shot->setState(Shared::SHOT_STATE_OFFLOADING);
         }
     }
 }
@@ -428,7 +432,7 @@ void JobManager::shotFinished(int jobId, Shot *shot)
             }
             else
             {
-                shot->setState(Shared::SHOT_STATE_OFFLOADED);
+                shot->setState(Shared::SHOT_STATE_DONE);
 
                 if (j->getAutoDelete() &&
                     (j->getType() == JOB_COPY || j->getType() == JOB_MERGE))

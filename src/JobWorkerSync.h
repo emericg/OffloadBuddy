@@ -77,7 +77,7 @@ typedef struct JobElement
     Shot *parent_shots;
     QString destination_dir;
 
-    std::list <ofb_file> files;
+    std::vector <ofb_file> files;
 
 } JobElement;
 
@@ -86,7 +86,7 @@ typedef struct Job
     int id = -1;
     JobType type = JOB_INVALID;
 
-    std::list<JobElement *> elements;
+    std::vector<JobElement *> elements;
 
     JobState state = JOB_STATE_QUEUED;
     float percent = 0.0;

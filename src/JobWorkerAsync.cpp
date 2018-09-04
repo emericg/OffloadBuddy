@@ -24,6 +24,7 @@
 
 #include <QFileInfo>
 #include <QFile>
+#include <QDir>
 #include <QMutexLocker>
 
 #include <QDebug>
@@ -46,7 +47,7 @@ void JobWorkerAsync::jobAbort()
 {
     if (m_childProcess)
     {
-        m_childProcess->terminate();
+        m_childProcess->kill();
     }
 }
 
@@ -78,7 +79,15 @@ void JobWorkerAsync::work()
         }
     }
 
+    // FFMPEG binary
     QString program = "ffmpeg";
+#ifdef Q_OS_WINDOWS
+    {
+        program = QDir::currentPath() + "/ffmpeg.exe";
+    }
+#endif
+
+    // FFMPEG arguments
     QStringList arguments;
     arguments << "-y" /*<< "-loglevel" << "warning" << "-stats"*/;
     arguments << "-i" << m_current_job->elements.front()->files.front().filesystemPath;
