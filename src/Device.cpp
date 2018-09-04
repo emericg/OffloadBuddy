@@ -443,28 +443,30 @@ void Device::deleteShot(Shot *shot)
 
 void Device::orderByDate()
 {
-    qDebug() << "orderByDate()";
     m_shotFilter->setSortRole(ShotModel::DateRole);
     m_shotFilter->sort(0, Qt::AscendingOrder);
+    m_shotFilter->invalidate();
 }
 
 void Device::orderByDuration()
 {
-    qDebug() << "orderByDuration()";
     m_shotFilter->setSortRole(ShotModel::DurationRole);
     m_shotFilter->sort(0, Qt::DescendingOrder);
+    m_shotFilter->invalidate();
 }
 
 void Device::orderByShotType()
 {
     m_shotFilter->setSortRole(ShotModel::TypeRole);
     m_shotFilter->sort(0, Qt::AscendingOrder);
+    m_shotFilter->invalidate();
 }
 
 void Device::orderByName()
 {
     m_shotFilter->setSortRole(ShotModel::NameRole);
     m_shotFilter->sort(0, Qt::AscendingOrder);
+    m_shotFilter->invalidate();
 }
 
 /* ************************************************************************** */

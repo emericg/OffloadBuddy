@@ -58,7 +58,6 @@ Rectangle {
 
     function initGridViewSettings() {
         actionMenu.visible = false
-        comboBox_orderby.enabled = false
 
         if (myDevice && myDevice.deviceType === 0)
             imageEmpty.source = "qrc:/icons/card.svg"
