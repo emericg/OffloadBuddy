@@ -54,7 +54,8 @@ signals:
     void scanningStarted();
     void scanningFinished();
 
-    void fsDeviceFound(QString, gopro_info_version *);
+    void fsDeviceFound(QString, gopro_device_infos *);
+    void fsDeviceFound(QString, generic_device_infos *);
     void vfsDeviceFound(ofb_vfs_device *);
     void mtpDeviceFound(ofb_mtp_device *);
 

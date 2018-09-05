@@ -22,6 +22,7 @@
 #include "DeviceScanner.h"
 #include "DeviceManager.h"
 #include "GoProFileModel.h"
+#include "GenericFileModel.h"
 
 #ifdef ENABLE_LIBMTP
 #include <libmtp.h>
@@ -90,20 +91,34 @@ void DeviceScanner::scanFilesystems()
         if (storage.isValid() && storage.isReady())
         {
             QString deviceRootpath = storage.rootPath();
-            gopro_info_version *deviceInfos = new gopro_info_version;
+            bool found = false;
 
-            if (deviceInfos)
+            gopro_device_infos *goproDeviceInfos = new gopro_device_infos;
+            if (goproDeviceInfos)
             {
-                if (parseGoProVersionFile(deviceRootpath, *deviceInfos))
+                if (parseGoProVersionFile(deviceRootpath, *goproDeviceInfos))
                 {
                     // Send device infos to the DeviceManager
-                    emit fsDeviceFound(deviceRootpath, deviceInfos);
+                    emit fsDeviceFound(deviceRootpath, goproDeviceInfos);
                     m_watchedFilesystems.push_back(deviceRootpath);
                 }
                 else
                 {
-                    delete deviceInfos;
-                    // TODO scan for other stuff than GoPro SD cards
+                    delete goproDeviceInfos;
+                }
+            }
+
+            generic_device_infos *genericDeviceInfos = new generic_device_infos;
+            if (genericDeviceInfos)
+            {
+                if (parseGenericDCIM(deviceRootpath, *genericDeviceInfos))
+                {
+                    emit fsDeviceFound(deviceRootpath, genericDeviceInfos);
+                    m_watchedFilesystems.push_back(deviceRootpath);
+                }
+                else
+                {
+                    delete genericDeviceInfos;
                 }
             }
         }

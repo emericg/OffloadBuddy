@@ -122,7 +122,8 @@ void DeviceManager::searchDevices()
             connect(m_deviceScannerThread, SIGNAL(started()), m_deviceScanner, SLOT(searchDevices()));
             connect(this, SIGNAL(startDeviceScanning()), m_deviceScanner, SLOT(searchDevices()));
 
-            connect(m_deviceScanner, SIGNAL(fsDeviceFound(QString, gopro_info_version *)), this, SLOT(addFsDevice(QString, gopro_info_version *)));
+            connect(m_deviceScanner, SIGNAL(fsDeviceFound(QString, gopro_device_infos *)), this, SLOT(addFsDeviceGoPro(QString, gopro_device_infos *)));
+            connect(m_deviceScanner, SIGNAL(fsDeviceFound(QString, generic_device_infos *)), this, SLOT(addFsDeviceGeneric(QString, generic_device_infos *)));
             connect(m_deviceScanner, SIGNAL(vfsDeviceFound(ofb_vfs_device *)), this, SLOT(addVfsDevice(ofb_vfs_device *)));
             connect(m_deviceScanner, SIGNAL(mtpDeviceFound(ofb_mtp_device *)), this, SLOT(addMtpDevice(ofb_mtp_device *)));
 
@@ -163,10 +164,9 @@ void DeviceManager::workerScanningFinished()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void DeviceManager::addFsDevice(QString path, gopro_info_version *infos)
+void DeviceManager::addFsDeviceGoPro(QString path, gopro_device_infos *infos)
 {
-    if (m_devices.size() >= MAX_DEVICES ||
-        path.isEmpty() || !infos)
+    if (m_devices.size() >= MAX_DEVICES || path.isEmpty() || !infos)
     {
         delete infos;
         return;
@@ -219,7 +219,8 @@ void DeviceManager::addFsDevice(QString path, gopro_info_version *infos)
         else
         {
             QString brand = "GoPro";
-            d = new Device(DEVICE_FILESYSTEM,
+            d = new Device(DEVICE_ACTIONCAM,
+                           STORAGE_FILESYSTEM,
                            brand, infos->camera_type,
                            infos->camera_serial_number,
                            infos->firmware_version);
@@ -255,6 +256,65 @@ void DeviceManager::addFsDevice(QString path, gopro_info_version *infos)
     delete infos;
 }
 
+void DeviceManager::addFsDeviceGeneric(QString path, generic_device_infos *infos)
+{
+    if (m_devices.size() >= MAX_DEVICES || path.isEmpty() || !infos)
+    {
+        delete infos;
+        return;
+    }
+
+    Device *d = nullptr;
+    bool deviceExists = false;
+
+    for (auto dd: m_devices)
+    {
+        d = qobject_cast<Device *>(dd);
+        if (d && (d->getPath(0) == path || d->getPath(1) == path))
+        {
+            deviceExists = true;
+            break;
+        }
+    }
+
+    if (deviceExists == false)
+    {
+        QString brand = "Unknown";
+        d = new Device(infos->device_type,
+                       STORAGE_FILESYSTEM,
+                       infos->device_brand,
+                       infos->device_model,
+                       "camera_serial_number",
+                       "firmware_version");
+        if (d)
+        {
+            if (d->addStorage_filesystem(path) == true)
+            {
+                if (d->isValid())
+                {
+                    m_devices.push_back(d);
+
+                    if (m_watcherFilesystem.addPath(path) == false)
+                        qDebug() << "FILE WATCHER FAILZD";
+
+                    emit deviceListUpdated();
+                    emit devicesAdded();
+                }
+                else
+                {
+                    qDebug() << "> INVALID DEVICE";
+                    delete d;
+                }
+            }
+            else
+            {
+                qDebug() << "> INVALID DEVICE FILESYSTEM";
+                delete d;
+            }
+        }
+    }
+}
+
 void DeviceManager::addVfsDevice(ofb_vfs_device *deviceInfos)
 {
     if (m_devices.size() >= MAX_DEVICES || !deviceInfos)
@@ -283,7 +343,8 @@ void DeviceManager::addVfsDevice(ofb_vfs_device *deviceInfos)
 */
     if (deviceExists == false)
     {
-        d = new Device(DEVICE_VIRTUAL_FILESYSTEM,
+        d = new Device(DEVICE_UNKNOWN,
+                       STORAGE_VIRTUAL_FILESYSTEM,
                        deviceInfos->brand, deviceInfos->model,
                        deviceInfos->firmware, deviceInfos->serial);
 
@@ -328,7 +389,8 @@ void DeviceManager::addMtpDevice(ofb_mtp_device *deviceInfos)
 */
     if (deviceExists == false)
     {
-        d = new Device(DEVICE_MTP,
+        d = new Device(DEVICE_UNKNOWN,
+                       STORAGE_MTP,
                        deviceInfos->brand, deviceInfos->model,
                        deviceInfos->firmware, deviceInfos->serial);
 

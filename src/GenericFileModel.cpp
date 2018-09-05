@@ -25,6 +25,111 @@
 
 /* ************************************************************************** */
 
+bool parseGenericDCIM(const QString &path, generic_device_infos &infos)
+{
+    bool status = false;
+
+    QDir dcim(path + "/DCIM");
+    if (dcim.exists() && dcim.isReadable())
+    {
+        //qDebug() << "WE HAVE DCIM at ";
+        status = true;
+
+        // Try to guess brand
+        foreach (QString subdir_name, dcim.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
+        {
+            //qDebug() << "  * Scanning DCIM subdir:" << subdir_name;
+
+            if (subdir_name.size() == 8)
+            {
+                QString brand = subdir_name.mid(3, 5);
+
+                if (brand.toUpper() == "ANDRO")
+                {
+                    infos.device_type = DEVICE_SMARTPHONE;
+                    infos.device_model = "Android";
+                }
+                else if (brand.toUpper() == "APPLE")
+                {
+                    infos.device_type = DEVICE_SMARTPHONE;
+                    infos.device_brand = "Apple";
+                }
+                else if (brand.toUpper() == "CANON")
+                {
+                    infos.device_type = DEVICE_CAMERA;
+                    infos.device_brand = "Canon";
+                }
+                else if (brand.toUpper() == "GOPRO" || brand.toUpper() == "0GP")
+                {
+                    infos.device_type = DEVICE_ACTIONCAM;
+                    infos.device_brand = "GoPro";
+                    infos.device_model = "HERO";
+                }
+                else if (brand.toUpper() == "GBACK"|| brand.toUpper() == "GFRNT")
+                {
+                    infos.device_type = DEVICE_ACTIONCAM;
+                    infos.device_brand = "GoPro";
+                    infos.device_model = "Fusion";
+                }
+                else if (brand.toLower() == "olymp")
+                {
+                    infos.device_type = DEVICE_CAMERA;
+                    infos.device_brand = "Olympus";
+                }
+                else if (brand.toUpper() == "SHARP")
+                {
+                    infos.device_type = DEVICE_CAMERA;
+                    infos.device_brand = "Sharp";
+                }
+                else if (brand.toUpper() == "MSDCF")
+                {
+                    infos.device_type = DEVICE_CAMERA;
+                    infos.device_brand = "Sony";
+                }
+                else if (brand.toUpper() == "MEDIA")
+                {
+                    // DJI ???
+                }
+                else if (brand.toUpper() == "NIKON")
+                {
+                    infos.device_type = DEVICE_CAMERA;
+                    infos.device_brand = "Nikon";
+                }
+                else
+                {
+                    // Assume model number? why not?
+                    infos.device_type = DEVICE_CAMERA;
+                    infos.device_model = brand;
+                }
+            }
+            else
+            {
+                if (subdir_name == "1000GP")
+                {
+                    // I mean of course they broke the rule...
+                    infos.device_type = DEVICE_ACTIONCAM;
+                    infos.device_brand = "GoPro";
+                    infos.device_model = "HERO";
+                }
+                else
+                {
+                    // I mean who knows...
+                    infos.device_type = DEVICE_CAMERA;
+                    infos.device_brand = "Generic";
+                    infos.device_model = "Camera";
+                }
+            }
+
+            break;
+        }
+    }
+
+    return status;
+}
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+
 bool getGenericShotInfos(const ofb_file &file, ofb_shot &shot)
 {
     bool status = true;

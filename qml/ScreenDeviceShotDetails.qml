@@ -52,7 +52,7 @@ Rectangle {
                 if (shot.duration > 1) {
                     labelDuration.visible = true
                     labelDuration.height = 40
-                    duration.text = shot.duration + qsTr(" pictures")
+                    duration.text = shot.duration + " " + qsTr("pictures")
                 } else {
                     labelDuration.visible = false
                     labelDuration.height = 0

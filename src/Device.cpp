@@ -32,11 +32,12 @@
 
 /* ************************************************************************** */
 
-Device::Device(const deviceType_e type,
+Device::Device(const deviceType_e type, const deviceStorage_e storage,
                const QString &brand, const QString &model,
                const QString &serial, const QString &version)
 {
     m_deviceType = type;
+    m_deviceStorage = storage;
 
     m_brand = brand;
     m_model = model;
@@ -51,7 +52,7 @@ Device::Device(const deviceType_e type,
     m_shotFilter->sort(0, Qt::AscendingOrder);
 
     connect(&m_updateStorageTimer, &QTimer::timeout, this, &Device::refreshStorageInfos);
-    if (m_deviceType == DEVICE_MTP)
+    if (m_deviceStorage == STORAGE_MTP)
         connect(&m_updateStorageTimer, &QTimer::timeout, this, &Device::refreshBatteryInfos);
     m_updateStorageTimer.setInterval(5 * 1000);
     m_updateStorageTimer.start();
@@ -81,7 +82,7 @@ bool Device::isValid()
 {
     bool status = true;
 
-    if (m_brand.isEmpty() || m_model.isEmpty())
+    if (m_brand.isEmpty() && m_model.isEmpty())
         status = false;
 
     if (m_filesystemStorages.size() == 0 && m_mtpStorages.size() == 0)
@@ -112,7 +113,7 @@ int64_t Device::getSpaceAvailable_withrefresh()
 void Device::setMtpInfos(LIBMTP_mtpdevice_t *device, double battery,
                          uint32_t devBus, uint32_t devNum)
 {
-    m_deviceType = DEVICE_MTP;
+    m_deviceStorage = STORAGE_MTP;
     m_mtpDevice = device;
     m_mtpBattery = battery;
     m_devBus = devBus;
@@ -203,7 +204,7 @@ bool Device::addStorage_filesystem(const QString &path)
                 }
 
                 m_filesystemStorages.push_back(storage);
-                m_deviceType = DEVICE_FILESYSTEM;
+                m_deviceStorage = STORAGE_FILESYSTEM;
                 status = true;
             }
             else

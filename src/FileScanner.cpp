@@ -80,11 +80,6 @@ void FileScanner::scanFilesystem()
     {
         //qDebug() << "  * Scanning subdir:" << subdir_name;
 
-        // ex:  100GOPRO
-        //      100ANDRO
-        //      1000GP
-        //      100GBACK
-
         QDir subdir;
         subdir.setPath(dcim_path + QDir::separator() + subdir_name);
 
@@ -249,6 +244,8 @@ void FileScanner::mtpFileRec(LIBMTP_mtpdevice_t *device, uint32_t storageid, uin
                 }
 
                 ofb_shot *s = new ofb_shot;
+
+                //getGenericShotInfos(*f, *s);
                 getGoProShotInfos(*f, *s);
 
                 emit fileFound(f, s);

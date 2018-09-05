@@ -31,10 +31,21 @@
 /* ************************************************************************** */
 
 /*!
+ * \brief parseGenericDCIM
+ * \param path[in]: Path where to look for a DCIM directory.
+ * \param infos[in,out] Infos guessed from DCIM subfolders.
+ * \return true if a DCIM directory has been found.
+ */
+bool parseGenericDCIM(const QString &path, generic_device_infos &infos);
+
+/*!
  * \brief getGenericShotInfos
  * \param file[in]: Describe the file.
  * \param shot[out]: Describe the shot.
  * \return true if the file has an extension that we can use.
+ *
+ * \todo implement DCM file model.
+ * \ref https://en.wikipedia.org/wiki/Design_rule_for_Camera_File_system
  */
 bool getGenericShotInfos(const ofb_file &file, ofb_shot &shot);
 

@@ -47,29 +47,20 @@ typedef void LIBMTP_devicestorage_t;
 
 /* ************************************************************************** */
 
-typedef struct gopro_info_version
-{
-    //QString info_version;         // "1.0",
-    QString camera_type;            // ex: "HERO6 Black", "FUSION", "Hero3-Black Edition", "HD2"
-    QString firmware_version;       // ex: "HD6.01.02.01.00"
-
-    //QString info_version;         // "1.1",
-    QString wifi_mac;               // ex: "0441693db024"
-    QString wifi_version;           // ex: "3.4.2.9"
-    QString wifi_bootloader_version;// ex: "0.2.2"
-
-    //QString info_version;         // "2.0",
-    QString camera_serial_number;   // ex: "C3221324521518"
-
-} gopro_info_version;
-
-typedef enum deviceModel_e
+typedef enum deviceType_e
 {
     DEVICE_UNKNOWN = 0,
 
-    DEVICE_COMPUTER = 1,
-    DEVICE_CAMERA   = 2,
-    DEVICE_PHONE    = 3,
+    DEVICE_COMPUTER,
+    DEVICE_SMARTPHONE,
+    DEVICE_CAMERA,
+    DEVICE_ACTIONCAM,
+
+} deviceType_e;
+
+typedef enum deviceModel_e
+{
+    MODEL_UNKNOWN = 0,
 
     DEVICE_GOPRO = 128,
         DEVICE_HERO2,
@@ -89,6 +80,8 @@ typedef enum deviceModel_e
         DEVICE_HERO5_WHITE,
         DEVICE_HERO5_BLACK,
         DEVICE_HERO6_BLACK,
+        DEVICE_HERO7_WHITE,
+        DEVICE_HERO7_SILVER,
         DEVICE_HERO7_BLACK,
         DEVICE_FUSION,
 
@@ -124,21 +117,48 @@ typedef enum deviceModel_e
 
 } deviceModel_e;
 
-typedef enum deviceType_e
+typedef enum deviceStorage_e
 {
-    DEVICE_FILESYSTEM = 0,
-    DEVICE_VIRTUAL_FILESYSTEM = 1,
-    DEVICE_MTP = 2,
+    STORAGE_FILESYSTEM = 0,
+    STORAGE_VIRTUAL_FILESYSTEM = 1,
+    STORAGE_MTP = 2,
 
-} deviceType_e;
+} deviceStorage_e;
 
 typedef enum deviceState_e
 {
     DEVICE_STATE_IDLE = 0,
     DEVICE_STATE_SCANNING = 1,
-    //DEVICE_STATE_JobInProgress = ?,
 
 } deviceState_e;
+
+/* ************************************************************************** */
+
+typedef struct generic_device_infos
+{
+    deviceType_e device_type;
+    QString device_brand;
+    QString device_model;
+
+} generic_device_infos;
+
+typedef struct gopro_device_infos
+{
+    deviceStorage_e device_type;
+
+    // Fields from version.txt "info_version 1.0"
+    QString camera_type;            // ex: "HERO6 Black", "FUSION", "Hero3-Black Edition", "HD2"
+    QString firmware_version;       // ex: "HD6.01.02.01.00"
+
+    // Fields from version.txt "info_version 1.1"
+    QString wifi_mac;               // ex: "0441693db024"
+    QString wifi_version;           // ex: "3.4.2.9"
+    QString wifi_bootloader_version;// ex: "0.2.2"
+
+    // Fields from version.txt "info_version 2.0"
+    QString camera_serial_number;   // ex: "C3221324521518"
+
+} gopro_device_infos;
 
 /* ************************************************************************** */
 
@@ -216,6 +236,7 @@ class Device: public QObject
 
     Q_PROPERTY(int deviceState READ getDeviceState NOTIFY stateUpdated)
     Q_PROPERTY(int deviceType READ getDeviceType NOTIFY deviceUpdated)
+    Q_PROPERTY(int deviceStorage READ getDeviceStorage NOTIFY deviceUpdated)
     Q_PROPERTY(int deviceModel READ getDeviceModel NOTIFY deviceUpdated)
 
     Q_PROPERTY(QString brand READ getBrand NOTIFY deviceUpdated)
@@ -231,8 +252,9 @@ class Device: public QObject
     Q_PROPERTY(ShotModel *shotModel READ getShotModel NOTIFY shotModelUpdated)
     Q_PROPERTY(ShotFilter *shotFilter READ getShotFilter NOTIFY shotModelUpdated)
 
-    deviceModel_e m_deviceModel = DEVICE_UNKNOWN;
-    deviceType_e m_deviceType = DEVICE_FILESYSTEM;
+    deviceType_e m_deviceType = DEVICE_UNKNOWN;
+    deviceModel_e m_deviceModel = MODEL_UNKNOWN;
+    deviceStorage_e m_deviceStorage = STORAGE_FILESYSTEM;
     deviceState_e m_deviceState = DEVICE_STATE_IDLE;
 
     // Generic infos
@@ -269,7 +291,7 @@ Q_SIGNALS:
     void spaceUpdated();
 
 public:
-    Device(const deviceType_e type,
+    Device(const deviceType_e type, const deviceStorage_e storage,
            const QString &brand, const QString &model,
            const QString &serial, const QString &version);
     ~Device();
@@ -290,6 +312,7 @@ public slots:
     int getDeviceState() const { return m_deviceState; }
     int getDeviceModel() const { return m_deviceModel; }
     int getDeviceType() const { return m_deviceType; }
+    int getDeviceStorage() const { return m_deviceStorage; }
     QString getBrand() const { return m_brand; }
     QString getModel() const { return m_model; }
     QString getSerial() const { return m_serial; }

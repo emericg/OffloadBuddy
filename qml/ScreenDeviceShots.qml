@@ -50,7 +50,12 @@ Rectangle {
         } else if (myDevice.model.includes("HD2")) {
             deviceImage.source = "qrc:/cameras/H2.svg"
         } else {
-            deviceImage.source = "qrc:/cameras/generic_actioncam.svg"
+            if (myDevice.deviceType === 2)
+                deviceImage.source = "qrc:/cameras/generic_smartphone.svg"
+            else if (myDevice.deviceType === 3)
+                deviceImage.source = "qrc:/cameras/generic_camera.svg"
+            else
+                deviceImage.source = "qrc:/cameras/generic_actioncam.svg"
         }
 
         rectangleDelete.stopTheBlink()
@@ -59,7 +64,7 @@ Rectangle {
     function initGridViewSettings() {
         actionMenu.visible = false
 
-        if (myDevice && myDevice.deviceType === 0)
+        if (myDevice && myDevice.deviceStorage === 0)
             imageEmpty.source = "qrc:/icons/card.svg"
         else
             imageEmpty.source = "qrc:/icons/usb.svg"

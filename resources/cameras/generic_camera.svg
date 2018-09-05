@@ -27,7 +27,7 @@
      borderlayer="true"
      borderopacity="1"
      inkscape:current-layer="layer10"
-     inkscape:cx="64.477393"
+     inkscape:cx="3.602393"
      inkscape:cy="66.546914"
      gridtolerance="10"
      inkscape:guide-bbox="true"
@@ -152,31 +152,31 @@
      transform="translate(-325.0004,271.00336)">
     <path
        inkscape:connector-curvature="0"
-       d="m 363.56019,-257.13902 -8.48006,8.49119 h -8.48007 c -16.96011,0 -16.96011,16.98242 -16.96011,16.98242 v 59.43844 c 0,16.98241 16.96011,16.98241 16.96011,16.98241 h 84.80062 c 16.96012,0 16.96012,-16.98241 16.96012,-16.98241 v -59.43844 c 0,-16.98242 -16.96012,-16.98242 -16.96012,-16.98242 h -8.48006 l -8.48007,-8.49119 z"
+       d="m 362.52544,-259.28324 -8.82497,8.8427 h -8.82497 c -17.64992,0 -17.64992,17.68545 -17.64992,17.68545 v 61.89902 c 0,17.68544 17.64992,17.68544 17.64992,17.68544 h 88.24967 c 17.64993,0 17.64993,-17.68544 17.64993,-17.68544 v -61.89902 c 0,-17.68545 -17.64993,-17.68545 -17.64993,-17.68545 h -8.82497 l -8.82497,-8.8427 z"
        id="rect5238"
        sodipodi:nodetypes="ccccccscccccc"
-       style="color:#bebebe;display:inline;overflow:visible;visibility:visible;fill:#bebebe;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:3;marker:none;enable-background:accumulate" />
+       style="color:#bebebe;display:inline;overflow:visible;visibility:visible;fill:#bebebe;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:2.99999976;marker:none;enable-background:accumulate" />
     <ellipse
-       style="opacity:1;fill:#a8a8a8;fill-opacity:1;stroke:none;stroke-width:10;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="opacity:1;fill:#a8a8a8;fill-opacity:1;stroke:none;stroke-width:9.99999905;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path846"
-       cx="389.00037"
-       cy="-210.3795"
-       rx="26.981981"
-       ry="27.017443" />
+       cx="389.00034"
+       cy="-210.58801"
+       rx="28.079407"
+       ry="28.135889" />
     <path
-       style="color:#bebebe;display:inline;overflow:visible;visibility:visible;fill:#a8a8a8;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:2.77780509;marker:none;filter:url(#filter7554);enable-background:accumulate"
+       style="color:#bebebe;display:inline;overflow:visible;visibility:visible;fill:#a8a8a8;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:2.66831136;marker:none;filter:url(#filter7554);enable-background:accumulate"
        d="m 334.00097,-172.70037 c 0,15.71429 15.71484,15.71484 15.71484,15.71484 h 78.57032 c 15.71429,0 15.71484,-15.71484 15.71484,-15.71484 z"
        id="rect5238-3"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="ccscc"
-       transform="matrix(1.0792804,0,0,1.0806989,-30.840147,14.409533)" />
+       transform="matrix(1.1231775,0,0,1.1254368,-47.916148,23.506664)" />
     <ellipse
-       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:10;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:9.99999905;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path848"
-       cx="389.00037"
-       cy="-210.3795"
-       rx="21.431442"
-       ry="21.45961" />
+       cx="389.00034"
+       cy="-210.58801"
+       rx="22.303112"
+       ry="22.347979" />
   </g>
   <g
      inkscape:groupmode="layer"

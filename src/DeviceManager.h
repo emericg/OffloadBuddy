@@ -81,7 +81,8 @@ public:
 public slots:
     void searchDevices();
 
-    void addFsDevice(QString path, gopro_info_version *infos);
+    void addFsDeviceGoPro(QString path, gopro_device_infos *infos);
+    void addFsDeviceGeneric(QString path, generic_device_infos *infos);
     void addVfsDevice(ofb_vfs_device *deviceInfos);
     void addMtpDevice(ofb_mtp_device *deviceInfos);
 

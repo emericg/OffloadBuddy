@@ -25,7 +25,7 @@
 
 /* ************************************************************************** */
 
-bool parseGoProVersionFile(const QString &path, gopro_info_version &infos)
+bool parseGoProVersionFile(const QString &path, gopro_device_infos &infos)
 {
     bool status = false;
 

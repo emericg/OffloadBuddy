@@ -32,11 +32,11 @@
 
 /*!
  * \brief parseGoProVersionFile
- * \param path[in]
- * \param infos[out]
- * \return
+ * \param path[in]: Path where to look for a version.txt file.
+ * \param infos[in,out] Infos parsed from a version.txt file.
+ * \return true if a GoPro version.txt file has been found and successfully parsed.
  */
-bool parseGoProVersionFile(const QString &path, gopro_info_version &infos);
+bool parseGoProVersionFile(const QString &path, gopro_device_infos &infos);
 
 /*!
  * \brief getGoProShotInfos
