@@ -31,13 +31,13 @@ Rectangle {
             id: imageStatus
             width: 40
             height: 40
-            source: "qrc:/resources/minicons/dark_queued.svg"
+            source: "qrc:/resources/minicons/job_queued.svg"
 
             NumberAnimation on rotation {
                 id: encodeAnimation
                 running: false
 
-                onStarted: imageStatus.source = "qrc:/resources/minicons/dark_encoding.svg"
+                onStarted: imageStatus.source = "qrc:/resources/minicons/job_encoding.svg"
                 onStopped: imageStatus.rotation = 0
                 duration: 2000;
                 from: 0;
@@ -49,10 +49,9 @@ Rectangle {
                 id: offloadAnimation
                 running: false
 
-                onStarted: imageStatus.source = "qrc:/resources/minicons/dark_offloading.svg"
+                onStarted: imageStatus.source = "qrc:/resources/minicons/job_offloading.svg"
                 onStopped: imageStatus.y = 0
-                NumberAnimation { target: imageStatus; property: "y"; to: -40; duration: 0 }
-                NumberAnimation { target: imageStatus; property: "y"; to: 40; duration: 1000 }
+                NumberAnimation { target: imageStatus; property: "y"; from: -40; to: 40; duration: 1000; }
                 loops: Animation.Infinite
             }
         }
@@ -60,25 +59,25 @@ Rectangle {
 
     Connections {
         target: job
-        onJobUpdated: {
-            if (job.state >= 8) {
-                imageStatus.source = "qrc:/resources/minicons/dark_done.svg"
-                offloadAnimation.stop()
-                encodeAnimation.stop()
-            } else if (job.state >= 1) {
-                if (job.type === "ENCODING")
-                    encodeAnimation.start()
-                else
-                    offloadAnimation.start()
-            }
-        }
+        onJobUpdated: updateJobStatus()
     }
 
-    Component.onCompleted: {
-        if (job.state >= 8) {
-            imageStatus.source = "qrc:/resources/minicons/dark_done.svg"
+    Component.onCompleted: updateJobStatus()
+
+    function updateJobStatus() {
+        if (job.state === 8) {
+            imageStatus.source = "qrc:/resources/minicons/job_done.svg"
+            offloadAnimation.stop()
+            encodeAnimation.stop()
+        } else if (job.state === 9) {
+            imageStatus.source = "qrc:/resources/minicons/job_errored.svg"
+            offloadAnimation.stop()
+            encodeAnimation.stop()
         } else if (job.state >= 1) {
-            imageStatus.source = "qrc:/resources/minicons/dark_working.svg"
+            if (job.type === qsTr("ENCODING"))
+                encodeAnimation.start()
+            else
+                offloadAnimation.start()
         }
     }
 

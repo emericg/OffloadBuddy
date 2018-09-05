@@ -857,7 +857,7 @@ Rectangle {
                     anchorPoint.y: mapMarkerImg.height/2
                     sourceItem: Image {
                         id: mapMarkerImg
-                        source: "qrc:/resources/other/marker.svg"
+                        source: "qrc:/resources/other/gps_marker.svg"
                     }
                 }
 

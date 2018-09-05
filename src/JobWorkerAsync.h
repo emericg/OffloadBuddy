@@ -26,19 +26,22 @@
 #include "Shot.h"
 #include "JobWorkerSync.h"
 
-#ifdef ENABLE_LIBMTP
-#include <libmtp.h>
-#endif
-
 #include <QObject>
 #include <QString>
 #include <QQueue>
-
 #include <QProcess>
-#include <QThread>
-#include <QMutex>
 
 /* ************************************************************************** */
+
+typedef struct commandWrapper
+{
+    Job *job = nullptr;
+    int job_element_index = -1;
+
+    QString command;
+    QStringList arguments;
+
+} commandWrapper;
 
 /*!
  * \brief The JobWorkerAsync class
@@ -48,10 +51,8 @@ class JobWorkerAsync: public QObject
 {
     Q_OBJECT
 
-    bool m_working = false;
-    QQueue <Job *> m_jobs;
-    QMutex m_jobsMutex;
-    Job *m_current_job = nullptr;
+    QQueue <commandWrapper *> m_ffmpegjobs;
+    commandWrapper *m_ffmpegcurrent = nullptr;
 
     QProcess *m_childProcess = nullptr;
 
@@ -71,6 +72,8 @@ public:
 
 public slots:
     void queueWork(Job *job);
+
+    void jobPlayPause();
     void jobAbort();
 
 signals:

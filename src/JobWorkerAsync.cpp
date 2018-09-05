@@ -25,9 +25,11 @@
 #include <QFileInfo>
 #include <QFile>
 #include <QDir>
-#include <QMutexLocker>
-
 #include <QDebug>
+
+#ifdef Q_OS_LINUX
+#include <signal.h>
+#endif
 
 /* ************************************************************************** */
 
@@ -38,147 +40,203 @@ JobWorkerAsync::JobWorkerAsync()
 
 JobWorkerAsync::~JobWorkerAsync()
 {
+    do {
+        commandWrapper *wrap = m_ffmpegjobs.dequeue();
+        delete wrap;
+    } while (!m_ffmpegjobs.isEmpty());
+
     jobAbort();
 }
 
 /* ************************************************************************** */
+/* ************************************************************************** */
+
+void JobWorkerAsync::jobPlayPause()
+{
+    if (m_childProcess)
+    {
+#ifdef Q_OS_LINUX
+        //kill(m_childProcess->pid(), SIGSTOP); // suspend
+        //kill(m_childProcess->pid(), SIGCONT); // resume
+#endif
+    }
+}
 
 void JobWorkerAsync::jobAbort()
 {
     if (m_childProcess)
     {
-        m_childProcess->kill();
+        //m_childProcess->write("q\n");
+        //if (!m_childProcess->waitForFinished(4000))
+        {
+            m_childProcess->kill();
+            if (!m_childProcess->waitForFinished(4000))
+            {
+                qDebug() << "jobAbort() current process won't die...";
+            }
+        }
     }
 }
 
+/* ************************************************************************** */
+
 void JobWorkerAsync::queueWork(Job *job)
 {
-    qDebug() << ">> queueWork()";
+    if (job)
+    {
+        for (unsigned i = 0; i < job->elements.size(); i++)
+        {
+            JobElement *element = job->elements.at(i);
+            if (element->files.size() != 1)
+            {
+                qDebug() << "This async job element got more (or less actually) than 1 file, it should not happen...";
+                continue;
+            }
 
-    QMutexLocker locker(& m_jobsMutex);
-    m_jobs.enqueue(job);
+            commandWrapper *ptiwrap = new commandWrapper;
 
-    qDebug() << "<< queueWork()";
+            ptiwrap->job = job;
+            ptiwrap->job_element_index = i;
+
+            // FFMPEG binary
+            ptiwrap->command = "ffmpeg";
+#ifdef Q_OS_WINDOWS
+            ptiwrap->command = QDir::currentPath() + "/ffmpeg.exe";
+#endif
+            // FFMPEG arguments
+            ptiwrap->arguments << "-y" /*<< "-loglevel" << "warning" << "-stats"*/;
+            ptiwrap->arguments << "-i" << element->files.at(0).filesystemPath;
+
+            // H.264 video
+            ptiwrap->arguments << "-c:v" << "libx264";
+            ptiwrap->arguments << "-preset" << "slower" << "-tune" << "film";
+            ptiwrap->arguments << "-crf" << "24";
+            // AAC audio copy
+            ptiwrap->arguments << "-c:a" << "copy";
+/*
+            // H.265 video
+            arguments << "-c:v" << "libx265";
+            arguments << "-crf" << "28" << "-preset" << "slow";
+            // AAC audio copy
+            arguments << "-c:a" << "copy";
+*/
+/*
+            // VP9 video
+            arguments << "-c:v" << "libvpx-vp9";
+            arguments <<"-crf" << "40" << "-b:v" << "0" <<"-cpu-used" << "2";
+            // Opus audio
+            arguments << "-c:a" << "libopus";
+            arguments << "-b:a" << "70K";
+*/
+            ptiwrap->arguments << element->destination_dir + element->files.front().name + "_reencoded.mkv";
+
+            m_ffmpegjobs.push_front(ptiwrap);
+        }
+    }
 }
 
 void JobWorkerAsync::work()
 {
-    qDebug() << "> JobSuperWorker::work()";
-
-    m_jobsMutex.lock();
-    while (!m_jobs.isEmpty())
-    {
-        m_current_job = m_jobs.dequeue();
-        m_working = true;
-        m_jobsMutex.unlock();
-
-        if (m_current_job)
-        {
-            qDebug() << "> input file:" << m_current_job->elements.front()->files.front().filesystemPath;
-            qDebug() << "> ouput file:" << m_current_job->elements.front()->destination_dir + m_current_job->elements.front()->files.front().name + "_reencoded.mp4";
-        }
-    }
-
-    // FFMPEG binary
-    QString program = "ffmpeg";
-#ifdef Q_OS_WINDOWS
-    {
-        program = QDir::currentPath() + "/ffmpeg.exe";
-    }
-#endif
-
-    // FFMPEG arguments
-    QStringList arguments;
-    arguments << "-y" /*<< "-loglevel" << "warning" << "-stats"*/;
-    arguments << "-i" << m_current_job->elements.front()->files.front().filesystemPath;
-
-    // H.264 video
-    arguments << "-c:v" << "libx264";
-    arguments << "-preset" << "slower" << "-tune" << "film";
-    arguments << "-crf" << "24";
-    // AAC audio copy
-    arguments << "-c:a" << "copy";
-/*
-    // H.265 video
-    arguments << "-c:v" << "libx265";
-    arguments << "-crf" << "28" << "-preset" << "slow";
-    // AAC audio copy
-    arguments << "-c:a" << "copy";
-*/
-/*
-    // VP9 video
-    arguments << "-c:v" << "libvpx-vp9";
-    arguments <<"-crf" << "40" << "-b:v" << "0" <<"-cpu-used" << "2";
-    // Opus audio
-    arguments << "-c:a" << "libopus";
-    arguments << "-b:a" << "70K";
-*/
-    arguments << m_current_job->elements.front()->destination_dir + m_current_job->elements.front()->files.front().name + "_reencoded.mkv";
-
     if (m_childProcess == nullptr)
     {
-        m_childProcess = new QProcess();
-        connect(m_childProcess, SIGNAL(started()), this, SLOT(processStarted()));
-        connect(m_childProcess, SIGNAL(finished(int)), this, SLOT(processFinished()));
-        connect(m_childProcess, &QProcess::readyReadStandardOutput, this, &JobWorkerAsync::processOutput);
-        connect(m_childProcess, &QProcess::readyReadStandardError, this, &JobWorkerAsync::processOutput);
-        m_childProcess->start(program, arguments);
+        qDebug() << "> JobSuperWorker::work()";
+
+        if (!m_ffmpegjobs.isEmpty())
+        {
+            m_ffmpegcurrent = m_ffmpegjobs.dequeue();
+            if (m_ffmpegcurrent)
+            {
+                m_childProcess = new QProcess();
+                connect(m_childProcess, SIGNAL(started()), this, SLOT(processStarted()));
+                connect(m_childProcess, SIGNAL(finished(int)), this, SLOT(processFinished()));
+                connect(m_childProcess, &QProcess::readyReadStandardOutput, this, &JobWorkerAsync::processOutput);
+                connect(m_childProcess, &QProcess::readyReadStandardError, this, &JobWorkerAsync::processOutput);
+
+                m_childProcess->start(m_ffmpegcurrent->command, m_ffmpegcurrent->arguments);
+            }
+        }
     }
 }
+
+/* ************************************************************************** */
 /* ************************************************************************** */
 
 void JobWorkerAsync::processStarted()
 {
-    qDebug() << "JobSuperWorker::processStarted()";
-    emit jobStarted(m_current_job->id);
-    emit shotStarted(m_current_job->id, m_current_job->elements.front()->parent_shots);
+    if (m_childProcess && m_ffmpegcurrent)
+    {
+        qDebug() << "JobSuperWorker::processStarted()";
+
+        emit jobStarted(m_ffmpegcurrent->job->id);
+        emit shotStarted(m_ffmpegcurrent->job->id, m_ffmpegcurrent->job->elements.at(m_ffmpegcurrent->job_element_index)->parent_shots);
+    }
 }
 
 void JobWorkerAsync::processFinished()
 {
-    qDebug() << "JobSuperWorker::processFinished()";
-    emit shotFinished(m_current_job->id, m_current_job->elements.front()->parent_shots);
-    emit jobFinished(m_current_job->id, JOB_STATE_DONE);
+    if (m_childProcess && m_ffmpegcurrent)
+    {
+        qDebug() << "JobSuperWorker::processFinished()";
 
-    delete m_childProcess;
-    m_childProcess = nullptr;
+        JobState js = JOB_STATE_DONE;
+        if (m_childProcess->exitStatus() == QProcess::CrashExit)
+            js = JOB_STATE_ERRORED;
+
+        if (m_ffmpegcurrent->job &&
+            m_ffmpegcurrent->job->elements.size() > m_ffmpegcurrent->job_element_index)
+        {
+            emit shotFinished(m_ffmpegcurrent->job->id, m_ffmpegcurrent->job->elements.at(m_ffmpegcurrent->job_element_index)->parent_shots);
+            emit jobFinished(m_ffmpegcurrent->job->id, js);
+        }
+
+        delete m_childProcess;
+        m_childProcess = nullptr;
+        m_duration = QTime();
+        m_progress = QTime();
+
+        delete m_ffmpegcurrent;
+        m_ffmpegcurrent = nullptr;
+    }
+
+    work();
 }
 
 void JobWorkerAsync::processOutput()
 {
-    m_childProcess->waitForBytesWritten(1000);
-    QString txt(m_childProcess->readAllStandardError());
-
-    //qDebug() << "JobSuperWorker::processOutput(1)" << txt;
-    //qDebug() << txt;
-
-    if (m_duration.isNull())
+    if (m_childProcess)
     {
-        if (txt.contains("Duration: "))
+        m_childProcess->waitForBytesWritten(500);
+        QString txt(m_childProcess->readAllStandardError());
+
+        //qDebug() << "JobSuperWorker::processOutput()" << txt;
+
+        if (m_duration.isNull() || !m_duration.isValid())
         {
-            QString duration_qstr = txt.mid(txt.indexOf("Duration: ") + 10, 11);
-            m_duration = QTime::fromString(duration_qstr, "hh:mm:ss.z");
-
-            //qDebug() << "> duration (qstr:" << duration_qstr << ") [qtime:" << m_duration;
+            if (txt.contains("Duration: "))
+            {
+                QString duration_qstr = txt.mid(txt.indexOf("Duration: ") + 10, 11);
+                m_duration = QTime::fromString(duration_qstr, "hh:mm:ss.z");
+                //qDebug() << "> duration (qstr:" << duration_qstr << ") [qtime:" << m_duration;
+            }
         }
-    }
-    else
-    {
-        if (txt.contains("time="))
+        else
         {
-            QString progress_qstr = txt.mid(txt.indexOf("time=") + 5, 11);
-            m_progress = QTime::fromString(progress_qstr, "hh:mm:ss.z");
-            //qDebug() << "- progress (qstr:" << progress_qstr << ") [qtime:" << m_progress;
+            if (txt.contains("time="))
+            {
+                QString progress_qstr = txt.mid(txt.indexOf("time=") + 5, 11);
+                m_progress = QTime::fromString(progress_qstr, "hh:mm:ss.z");
+                //qDebug() << "- progress (qstr:" << progress_qstr << ") [qtime:" << m_progress;
+            }
         }
-    }
 
-    if (m_duration.isValid() && m_progress.isValid())
-    {
-        float progress = QTime(0, 0, 0).msecsTo(m_progress) / static_cast<float>(QTime(0, 0, 0).msecsTo(m_duration));
-        progress *= 100.f;
+        if (m_duration.isValid() && m_progress.isValid())
+        {
+            float progress = QTime(0, 0, 0).msecsTo(m_progress) / static_cast<float>(QTime(0, 0, 0).msecsTo(m_duration));
+            progress *= 100.f;
 
-        //qDebug() << "- PROGRESS:" << progress;
-        emit jobProgress(m_current_job->id, progress);
+            //qDebug() << "- PROGRESS:" << progress;
+            emit jobProgress(m_ffmpegcurrent->job->id, progress);
+        }
     }
 }
 

@@ -69,14 +69,27 @@ public:
     JobType getType() { return m_type; }
     QString getTypeString()
     {
-        if (m_type == JOB_COPY)
+        if (m_type == JOB_METADATAS)
+            return tr("METADATAS EXTRACTION");
+        else if (m_type == JOB_COPY)
             return tr("COPYING");
         else if (m_type == JOB_MERGE)
             return tr("MERGING");
+        else if (m_type == JOB_FORMAT)
+            return tr("FORMAT");
         else if (m_type == JOB_DELETE)
             return tr("DELETION");
-        else if (m_type == JOB_REENCODE)
+        else if (m_type == JOB_CLIP)
+            return tr("CLIP CREATION");
+        else if (m_type == JOB_REENCODE ||
+                 m_type == JOB_TIMELAPSE_TO_VIDEO)
             return tr("ENCODING");
+        else if (m_type == JOB_STAB)
+            return tr("STABILIZATION");
+        else if (m_type == JOB_FIRMWARE_DOWNLOAD)
+            return tr("DOWNLOADING");
+        else if (m_type == JOB_FIRMWARE_UPLOAD)
+            return tr("FIRMWARE");
         else
             return tr("UNKNOWN");
     }
