@@ -222,6 +222,7 @@ Rectangle {
                 id: cbAppTheme
                 ListElement { text: "PLAIN AND BORING"; }
                 ListElement { text: "DARK AND SPOOKY"; }
+                ListElement { text: "BLOOD AND TEARS"; }
                 ListElement { text: "MIGHTY KITTEN"; }
             }
 

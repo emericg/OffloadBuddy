@@ -112,6 +112,15 @@ bool SettingsManager::readSettings()
             // Create a default entry
             MediaDirectory *d = new MediaDirectory();
             m_mediaDirectories.push_back(d);
+/*
+            // Create a default entries
+            QString pathV = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + "/GoPro";
+            QString pathP = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/GoPro";
+            MediaDirectory *dv = new MediaDirectory(pathV, 1);
+            m_mediaDirectories.push_back(dv);
+            MediaDirectory *dp = new MediaDirectory(pathP, 2);
+            m_mediaDirectories.push_back(dp);
+*/
         }
 
         emit directoriesUpdated();

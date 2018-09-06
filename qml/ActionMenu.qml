@@ -3,7 +3,7 @@ import QtQuick.Controls 1.1
 
 Rectangle {
     id: actionMenuItem
-    width: 160
+    width: 165
     height: menuHolder.height + 12
     visible: isOpen
     focus: isOpen
@@ -16,7 +16,7 @@ Rectangle {
         spacing: 1
         width: parent.width
         height: children.height * children.length
-        anchors { verticalCenter: parent.verticalCenter; left: parent.left; leftMargin: 3 }
+        anchors { verticalCenter: parent.verticalCenter; left: parent.left; leftMargin: 4 }
 
         ActionButton {
             id: offloadCopy

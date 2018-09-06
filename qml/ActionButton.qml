@@ -6,13 +6,14 @@ import com.offloadbuddy.style 1.0
 Item {
     id: actionButtonItem
     height: 24
-    width: parent.width - 5
+    width: parent.width - 4
 
     property string button_text;
     property bool clicked;
     property int index;
     property string target;
     property bool enable: true;
+
     signal buttonClicked;
 
     function viewButtonHovered() {
@@ -56,7 +57,7 @@ Item {
             },
             State {
                 name: "hovered";
-                PropertyChanges { target: vButton; color: ThemeEngine.colorApproved; }
+                PropertyChanges { target: vButton; color: { if (vButton.text === qsTr("DELETE")) ThemeEngine.colorDangerZone; else ThemeEngine.colorApproved; } }
             },
             State {
                 name: "normal";

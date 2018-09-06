@@ -22,7 +22,14 @@
 pragma Singleton
 import QtQuick 2.10
 
-Item { // PLAIN AND BORING
+Item {
+    enum ThemeNames {
+        PLAIN_AND_BORING = 0,
+        DARK_AND_SPOOKY = 1,
+        BLOOD_AND_TEARS = 2,
+        MIGHTY_KITTEN = 3
+    }
+
     // Colors
     property string colorSidebar: "#4E596E"
     property string colorSidebarText: "#ffffff"
@@ -59,7 +66,7 @@ Item { // PLAIN AND BORING
             console.log("ThemeEngine::loadTheme(" + themeIndex + ") ERROR Unknown theme!")
         }
 
-        if (themeIndex === 0) {
+        if (themeIndex === ThemeEngine.PLAIN_AND_BORING) {
 
             // "PLAIN AND BORING"
 
@@ -85,7 +92,7 @@ Item { // PLAIN AND BORING
             colorButtonText =       "#ffffff"
             colorProgressbar =      "#000000"
 
-        } else if (themeIndex === 1) {
+        } else if (themeIndex === ThemeEngine.DARK_AND_SPOOKY) {
 
             // "DARK AND SPOOKY"
 
@@ -111,7 +118,33 @@ Item { // PLAIN AND BORING
             colorButtonText =       "#ffffff"
             colorProgressbar =      "#000000"
 
-        } else if (themeIndex === 2) {
+        } else if (themeIndex === ThemeEngine.BLOOD_AND_TEARS) {
+
+            // "BLOOD AND TEARS"
+
+            colorSidebar =          "#181818"
+            colorSidebarText =      "#bebebe"
+
+            colorHeaderBackground = "#141414"
+            colorHeaderTitle =      "#ffffff"
+            colorHeaderText =       "#a3a3a0"
+
+            colorContentBackground ="#222222"
+            colorContentBox =       "#333333"
+            colorContentTitle =     "#a0a29c"
+            colorContentText =      "#a3a3a0"
+            colorContentSubBox =    "#565656"
+            colorContentSubTitle =  "#ffffff"
+            colorContentSubText =   "#a3a3a0"
+
+            colorApproved =         "#009ee2"
+            colorDangerZone =       "#fa6871"
+            colorSomethingsWrong =  "#FFDB63"
+
+            colorButtonText =       "#ffffff"
+            colorProgressbar =      "#009ee2"
+
+        } else if (themeIndex === ThemeEngine.MIGHTY_KITTEN) {
 
             // "MIGHTY KITTEN"
 

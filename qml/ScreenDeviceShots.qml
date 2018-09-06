@@ -65,7 +65,10 @@ Rectangle {
         actionMenu.visible = false
 
         if (myDevice && myDevice.deviceStorage === 0)
-            imageEmpty.source = "qrc:/icons/card.svg"
+            if (myDevice.deviceType === 2)
+                imageEmpty.source = "qrc:/icons/card.svg"
+            else
+                imageEmpty.source = "qrc:/icons/phone.svg"
         else
             imageEmpty.source = "qrc:/icons/usb.svg"
     }
@@ -109,9 +112,7 @@ Rectangle {
 
         Image {
             id: deviceImage
-            x: 16
             width: 128
-            height: 112
             antialiasing: true
             fillMode: Image.PreserveAspectFit
             anchors.bottom: parent.bottom
@@ -125,13 +126,13 @@ Rectangle {
 
         Text {
             id: deviceModelText
-            x: 874
-            y: 26
             width: 256
             height: 30
             text: "Camera brand & model"
+            anchors.top: parent.top
+            anchors.topMargin: 28
             anchors.right: deviceImage.left
-            anchors.rightMargin: 16
+            anchors.rightMargin: 8
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignRight
             color: ThemeEngine.colorHeaderTitle
@@ -141,7 +142,7 @@ Rectangle {
 
         Text {
             id: deviceSpaceText
-            width: 220
+            width: 256
             height: 15
             anchors.right: deviceModelText.right
             anchors.rightMargin: 0
@@ -175,7 +176,6 @@ Rectangle {
 
         Rectangle {
             id: rectangleTransfer
-            y: 16
             width: 256
             height: 40
             color: "#00000000"
@@ -222,8 +222,6 @@ Rectangle {
 
         Rectangle {
             id: rectangleDelete
-            x: 4
-            y: 79
             width: 256
             height: 40
             color: "#00000000"
@@ -302,7 +300,6 @@ Rectangle {
 
             Text {
                 id: textReset
-                width: 256
                 color: ThemeEngine.colorButtonText
                 text: qsTr("Delete ALL content")
                 verticalAlignment: Text.AlignVCenter
@@ -429,7 +426,8 @@ Rectangle {
                 from: 1;
                 to: 0;
                 duration: 2000;
-                loops: Animation.Infinite
+                loops: Animation.Infinite;
+                onStopped: imageEmpty.opacity = 1;
             }
         }
 
