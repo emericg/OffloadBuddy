@@ -40,13 +40,12 @@ DeviceManager::DeviceManager()
 #endif
 
     connect(&m_deviceScannerTimer, &QTimer::timeout, this, &DeviceManager::searchDevices);
-    connect(&m_watcherFilesystem, &QFileSystemWatcher::directoryChanged, this, &DeviceManager::filesystemWatcherActivity);
 }
 
 DeviceManager::~DeviceManager()
 {
-    delete m_deviceScannerThread;
     delete m_deviceScanner;
+    delete m_deviceScannerThread;
 
     qDeleteAll(m_devices);
     m_devices.clear();
@@ -127,11 +126,15 @@ void DeviceManager::searchDevices()
             connect(m_deviceScanner, SIGNAL(vfsDeviceFound(ofb_vfs_device *)), this, SLOT(addVfsDevice(ofb_vfs_device *)));
             connect(m_deviceScanner, SIGNAL(mtpDeviceFound(ofb_mtp_device *)), this, SLOT(addMtpDevice(ofb_mtp_device *)));
 
+            connect(m_deviceScanner, SIGNAL(fsDeviceRemoved(QString)), this, SLOT(removeFsDevice(QString)));
+            //connect(m_deviceScanner, SIGNAL(mtpDeviceFound()), this, SLOT(removeMtpDevice(ofb_mtp_device *)));
+
             connect(m_deviceScanner, SIGNAL(scanningStarted()), this, SLOT(workerScanningStarted()));
             connect(m_deviceScanner, SIGNAL(scanningFinished()), this, SLOT(workerScanningFinished()));
+
+            // we just keep the scanner always on now...
             //connect(m_deviceScanner, SIGNAL (scanningFinished()), m_deviceScanner, SLOT (deleteLater()));
             //connect(m_deviceScanner, SIGNAL(scanningFinished()), m_deviceScannerThread, SLOT(quit()));
-
             // automatically delete thread when its work is done
             //connect(m_deviceScannerThread, SIGNAL(finished()), m_deviceScannerThread, SLOT(deleteLater()));
 
@@ -156,6 +159,9 @@ void DeviceManager::workerScanningFinished()
     //qDebug() << "DeviceManager::workerScanningFinished()";
 
     // Restart device scanning timer
+    // We use single shot timer restarted after each scan because we don't want
+    // a scanning started while the previous one is still running (ex: blocked
+    // more than SCANNING_INTERVAL on a buggy unresponding MTP device...)
     m_deviceScannerTimer.setInterval(SCANNING_INTERVAL);
     m_deviceScannerTimer.setSingleShot(true);
     m_deviceScannerTimer.start();
@@ -209,9 +215,6 @@ void DeviceManager::addFsDeviceGoPro(QString path, gopro_device_infos *infos)
                 // fusioooooooon
                 d->addStorage_filesystem(path);
 
-                if (m_watcherFilesystem.addPath(path) == false)
-                    qDebug() << "FILE WATCHER FAILZD";
-
                 emit deviceListUpdated();
                 emit devicesAdded();
             }
@@ -231,9 +234,6 @@ void DeviceManager::addFsDeviceGoPro(QString path, gopro_device_infos *infos)
                     if (d->isValid())
                     {
                         m_devices.push_back(d);
-
-                        if (m_watcherFilesystem.addPath(path) == false)
-                            qDebug() << "FILE WATCHER FAILZD";
 
                         emit deviceListUpdated();
                         emit devicesAdded();
@@ -293,9 +293,6 @@ void DeviceManager::addFsDeviceGeneric(QString path, generic_device_infos *infos
                 if (d->isValid())
                 {
                     m_devices.push_back(d);
-
-                    if (m_watcherFilesystem.addPath(path) == false)
-                        qDebug() << "FILE WATCHER FAILZD";
 
                     emit deviceListUpdated();
                     emit devicesAdded();
@@ -412,7 +409,7 @@ void DeviceManager::addMtpDevice(ofb_mtp_device *deviceInfos)
 
 /* ************************************************************************** */
 
-void DeviceManager::removeDevice(const QString &path)
+void DeviceManager::removeFsDevice(const QString &path)
 {
     if (path.isEmpty())
         return;
@@ -424,7 +421,6 @@ void DeviceManager::removeDevice(const QString &path)
         if (d && (d->getPath(0) == path || d->getPath(1) == path))
         {
             it = m_devices.erase(it);
-            m_watcherFilesystem.removePath(path);
 
             emit deviceRemoved(d);
             emit deviceListUpdated();
@@ -433,24 +429,6 @@ void DeviceManager::removeDevice(const QString &path)
         }
         else
             ++it;
-    }
-}
-
-/* ************************************************************************** */
-/* ************************************************************************** */
-
-void DeviceManager::filesystemWatcherActivity(const QString &path)
-{
-    if (path.isEmpty())
-        return;
-
-    qDebug() << "QFileSystemWatcher::directoryChanged()" << path;
-
-    // FIXME virtual filesystem sometimes still exists after physical removal
-    //QDir dir(path);
-    //if (dir.exists() == false)
-    {
-        removeDevice(path);
     }
 }
 

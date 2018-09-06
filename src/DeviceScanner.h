@@ -29,14 +29,20 @@
 #include <QObject>
 #include <QList>
 #include <QString>
+#include <QFileSystemWatcher>
 
 /* ************************************************************************** */
 
+/*!
+ * \brief The DeviceScanner class
+ */
 class DeviceScanner: public QObject
 {
     Q_OBJECT
 
+    QFileSystemWatcher m_watcherFilesystem;
     QList <QString> m_watchedFilesystems;
+    QList <QString> m_watchedVirtualFilesystems;
     QList <std::pair<unsigned, unsigned>> m_watchedMtpDevices;
 
     void scanFilesystems();
@@ -50,6 +56,9 @@ public:
 public slots:
     void searchDevices();
 
+private slots:
+    void removeFilesystem(const QString &path);
+
 signals:
     void scanningStarted();
     void scanningFinished();
@@ -59,8 +68,7 @@ signals:
     void vfsDeviceFound(ofb_vfs_device *);
     void mtpDeviceFound(ofb_mtp_device *);
 
-    void fsDeviceRemoved(QString);
-    void vfsDeviceRemoved(QString, std::pair<unsigned, unsigned>);
+    void fsDeviceRemoved(const QString &);
     void mtpDeviceRemoved(std::pair<unsigned, unsigned>);
 };
 

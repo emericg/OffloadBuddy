@@ -54,7 +54,7 @@ JobManager::JobManager()
 
 JobManager::~JobManager()
 {
-    //
+    // never called anyway
 }
 
 void JobManager::cleanup()

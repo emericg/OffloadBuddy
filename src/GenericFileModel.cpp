@@ -32,7 +32,7 @@ bool parseGenericDCIM(const QString &path, generic_device_infos &infos)
     QDir dcim(path + "/DCIM");
     if (dcim.exists() && dcim.isReadable())
     {
-        //qDebug() << "WE HAVE DCIM at ";
+        //qDebug() << "WE HAVE a DCIM directory on" << path;
         status = true;
 
         // Try to guess brand

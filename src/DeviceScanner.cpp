@@ -28,17 +28,16 @@
 #include <libmtp.h>
 #endif
 
-#include <QStorageInfo>
-
-#include <QFile>
 #include <QDir>
+#include <QFile>
+#include <QStorageInfo>
 #include <QDebug>
 
 /* ************************************************************************** */
 
 DeviceScanner::DeviceScanner()
 {
-    //
+    connect(&m_watcherFilesystem, &QFileSystemWatcher::directoryChanged, this, &DeviceScanner::removeFilesystem);
 }
 
 DeviceScanner::~DeviceScanner()
@@ -64,6 +63,9 @@ void DeviceScanner::searchDevices()
 
 void DeviceScanner::scanFilesystems()
 {
+    QStringList connectedFilesystems;
+
+    // Check if we have new device(s)
     foreach (const QStorageInfo &storage, QStorageInfo::mountedVolumes())
     {
         //qDebug() << "> MOUNTPOINT(" << storage.fileSystemType() << ") > " << storage.rootPath();
@@ -81,10 +83,21 @@ void DeviceScanner::scanFilesystems()
             continue;
         }
 
-        // Path in watch list? bail early!
+        if (storage.rootPath() == "/" ||
+            storage.rootPath() == "/home" ||
+            storage.rootPath().startsWith("/boot") ||
+            storage.rootPath().startsWith("/Users/"))
+        {
+            //qDebug() << "> skipping OS internal filesystem";
+            continue;
+        }
+
+        connectedFilesystems.push_back(storage.rootPath());
+
+        // Path already in "watched" list? bail early!
         if (m_watchedFilesystems.contains(storage.rootPath()))
         {
-            //qDebug() << "> skipping '" << storage.rootPath() << "', already handled";
+            qDebug() << "> skipping '" << storage.rootPath() << "', already handled";
             continue;
         }
 
@@ -94,13 +107,19 @@ void DeviceScanner::scanFilesystems()
             bool found = false;
 
             gopro_device_infos *goproDeviceInfos = new gopro_device_infos;
-            if (goproDeviceInfos)
+            if (goproDeviceInfos && found == false)
             {
                 if (parseGoProVersionFile(deviceRootpath, *goproDeviceInfos))
                 {
+                    found = true;
+
                     // Send device infos to the DeviceManager
                     emit fsDeviceFound(deviceRootpath, goproDeviceInfos);
+
+                    // Watch this path
                     m_watchedFilesystems.push_back(deviceRootpath);
+                    if (m_watcherFilesystem.addPath(deviceRootpath) == false)
+                        qDebug() << "FILE WATCHER FAILZD for " << deviceRootpath;
                 }
                 else
                 {
@@ -109,12 +128,19 @@ void DeviceScanner::scanFilesystems()
             }
 
             generic_device_infos *genericDeviceInfos = new generic_device_infos;
-            if (genericDeviceInfos)
+            if (genericDeviceInfos && found == false)
             {
                 if (parseGenericDCIM(deviceRootpath, *genericDeviceInfos))
                 {
+                    found = true;
+
+                    // Send device infos to the DeviceManager
                     emit fsDeviceFound(deviceRootpath, genericDeviceInfos);
+
+                    // Watch this path
                     m_watchedFilesystems.push_back(deviceRootpath);
+                    if (m_watcherFilesystem.addPath(deviceRootpath) == false)
+                        qDebug() << "FILE WATCHER FAILZD for " << deviceRootpath;
                 }
                 else
                 {
@@ -127,6 +153,16 @@ void DeviceScanner::scanFilesystems()
             qDebug() << "* mountpoint invalid? '" << storage.displayName() << "'";
         }
     }
+
+    // Check if we lost some device(s) since last scan
+    for (auto storage: m_watchedFilesystems)
+    {
+        if (connectedFilesystems.contains(storage) == false)
+        {
+            //qDebug() << storage << "has gone missing, removing device...";
+            removeFilesystem(storage);
+        }
+    }
 }
 
 /* ************************************************************************** */
@@ -134,7 +170,9 @@ void DeviceScanner::scanFilesystems()
 void DeviceScanner::scanVirtualFilesystems()
 {
 #ifdef __linux
+    QStringList connectedVirtualFilesystems;
 
+    // Check if we have new device(s)
     foreach (const QStorageInfo &storage, QStorageInfo::mountedVolumes())
     {
         if (storage.fileSystemType() == "tmpfs")
@@ -156,14 +194,17 @@ void DeviceScanner::scanVirtualFilesystems()
             QDir gvfsDirectory(storage.rootPath() + "/gvfs");
             foreach (QString subdir_device, gvfsDirectory.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
             {
-                //qDebug() << "Scanning MTP subdir_device:" << subdir_device;
+                QString virtual_mountpoint = storage.rootPath() + "/gvfs/" + subdir_device;
+
+                //qDebug() << "> VIRTUAL MOUNTPOINT(" << storage.fileSystemType() << ") > " << virtual_mountpoint;
+
+                connectedVirtualFilesystems.push_back(storage.rootPath() + "/gvfs/" + subdir_device);
 
                 ofb_vfs_device *deviceInfos = new ofb_vfs_device;
                 if (deviceInfos)
                 {
                     int bus = -1, dev = -1;
                     std::pair<uint32_t, uint32_t> currentMtpDevice;
-                    QString deviceRootpath = storage.rootPath();
 
                     if (subdir_device.startsWith("mtp"))
                     {
@@ -183,6 +224,7 @@ void DeviceScanner::scanVirtualFilesystems()
                         deviceInfos->devNum = static_cast<uint32_t>(dev);
 
                         // Device in watch list? bail early!
+                        // FIXME m_watchedMtpDevices is never cleaned but bus ids are dynamic anyway
                         if (m_watchedMtpDevices.contains(currentMtpDevice))
                         {
                             //qDebug() << "> skipping device @ bus" << currentMtpDevice.first << ", dev" << currentMtpDevice.second << ", already handled";
@@ -192,12 +234,13 @@ void DeviceScanner::scanVirtualFilesystems()
 
                         DeviceManager::getMtpDeviceName(deviceInfos->devBus, deviceInfos->devNum,
                                                         deviceInfos->brand, deviceInfos->model);
-                        //qDebug() << "MTP infos:" << bus << "/" << dev;
-                        //qDebug() << "MTP infos:" << brand << "/" << model;
+                        //qDebug() << "MTP infos:" << deviceInfos->devBus << "/" << deviceInfos->devNum;
+                        //qDebug() << "MTP infos:" << deviceInfos->brand << "/" << deviceInfos->model;
                     }
                     else
                     {
                         // Probably not handled by libMTP...
+                        //qDebug() << "> skipping device: not handled";
 
                         // skip?
                         delete deviceInfos;
@@ -206,32 +249,27 @@ void DeviceScanner::scanVirtualFilesystems()
 
                     // Then we usually have a subdirectory per MTP 'volume'
                     // ex: one volume for the internal flash of a phone and one for its SD card
-                    QDir gvfsSubDirectory(gvfsDirectory.path() + "/" + subdir_device);
+                    QDir gvfsSubDirectory(virtual_mountpoint);
                     foreach (QString subdir_volume, gvfsSubDirectory.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
                     {
                         //qDebug() << "Scanning MTP subdir_volume:" << subdir_volume;
                         //qDebug() << "deviceRootpath:" << deviceRootpath;
-                        deviceRootpath = gvfsSubDirectory.path() + "/" + subdir_volume;
+                        QString devicePath = virtual_mountpoint + "/" + subdir_volume;
 
-                        QDir dcim(deviceRootpath + "/DCIM");
-                        if (dcim.exists())
+                        QDir dcim(devicePath + "/DCIM");
+                        if (dcim.exists() && dcim.isReadable())
                         {
-                            //qDebug() << "WE HAVE DCIM at ";
-                            deviceInfos->paths.push_back(deviceRootpath);
+                            //qDebug() << "WE HAVE a DCIM directory on" << devicePath;
+                            deviceInfos->paths.push_back(devicePath);
                         }
                     }
-/*
-                    QFile getstarted(deviceInfos->paths.at(0) + "/Get_started_with_GoPro.url");
-                    if (getstarted.exists())
-                    {
-                        qDebug() << "WE HAVE A GOPRO";
-                    }
-*/
+
                     if (deviceInfos->paths.size() > 0)
                     {
                         // Send device infos to the DeviceManager
                         emit vfsDeviceFound(deviceInfos);
                         m_watchedMtpDevices.push_back(currentMtpDevice);
+                        m_watchedVirtualFilesystems.push_back(deviceInfos->paths.front());
                     }
                     else
                     {
@@ -239,6 +277,24 @@ void DeviceScanner::scanVirtualFilesystems()
                     }
                 }
             }
+        }
+    }
+
+    // Check if we lost some device(s) since last scan
+    for (auto watchedFs: m_watchedVirtualFilesystems)
+    {
+        bool connected = false;
+
+        for (auto connectedFs: connectedVirtualFilesystems)
+        {
+            connected = true;
+            connectedFs.startsWith(watchedFs);
+        }
+
+        if (connected == false)
+        {
+            //qDebug() << watchedFs << "has gone missing, removing device...";
+            removeFilesystem(watchedFs);
         }
     }
 
@@ -400,3 +456,26 @@ void DeviceScanner::scanMtpDevices()
 }
 
 /* ************************************************************************** */
+
+void DeviceScanner::removeFilesystem(const QString &path)
+{
+    if (path.isEmpty())
+        return;
+
+    //qDebug() << "DeviceScanner::removeFilesystem()" << path;
+
+    QDir dir(path);
+    if (dir.exists() == true)
+    {
+        // FIXME virtual filesystem sometimes still exists after physical removal
+        qDebug() << "DeviceScanner::removeFilesystem()" << path << "but associated directory STILL exists";
+    }
+
+    {
+        m_watcherFilesystem.removePath(path);
+        m_watchedFilesystems.removeOne(path);
+        m_watchedVirtualFilesystems.removeOne(path);
+
+        Q_EMIT fsDeviceRemoved(path);
+    }
+}

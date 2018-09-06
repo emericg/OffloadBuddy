@@ -58,8 +58,6 @@ class DeviceManager: public QObject
     QThread *m_deviceScannerThread = nullptr;
     QTimer m_deviceScannerTimer;
 
-    QFileSystemWatcher m_watcherFilesystem;
-
 Q_SIGNALS:
     void devicesAdded();
     void deviceListUpdated();
@@ -69,7 +67,6 @@ Q_SIGNALS:
 private slots:
     void workerScanningStarted();
     void workerScanningFinished();
-    void filesystemWatcherActivity(const QString &path);
 
 public:
     DeviceManager();
@@ -86,7 +83,7 @@ public slots:
     void addVfsDevice(ofb_vfs_device *deviceInfos);
     void addMtpDevice(ofb_mtp_device *deviceInfos);
 
-    void removeDevice(const QString &path);
+    void removeFsDevice(const QString &path);
 
     QVariant getFirstDevice() const { if (m_devices.size() > 0) { return QVariant::fromValue(m_devices.at(0)); } return QVariant(); }
     QVariant getDevice(int index) const { if (index >= 0 && index < m_devices.size()) { return QVariant::fromValue(m_devices.at(index)); } return QVariant(); }
