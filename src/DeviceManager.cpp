@@ -126,8 +126,8 @@ void DeviceManager::searchDevices()
             connect(m_deviceScanner, SIGNAL(vfsDeviceFound(ofb_vfs_device *)), this, SLOT(addVfsDevice(ofb_vfs_device *)));
             connect(m_deviceScanner, SIGNAL(mtpDeviceFound(ofb_mtp_device *)), this, SLOT(addMtpDevice(ofb_mtp_device *)));
 
-            connect(m_deviceScanner, SIGNAL(fsDeviceRemoved(QString)), this, SLOT(removeFsDevice(QString)));
-            //connect(m_deviceScanner, SIGNAL(mtpDeviceFound()), this, SLOT(removeMtpDevice(ofb_mtp_device *)));
+            connect(m_deviceScanner, SIGNAL(fsDeviceRemoved(const QString &)), this, SLOT(removeFsDevice(const QString &)));
+            connect(m_deviceScanner, SIGNAL(mtpDeviceRemoved(const unsigned, const unsigned)), this, SLOT(removeMtpDevice(const unsigned, const unsigned)));
 
             connect(m_deviceScanner, SIGNAL(scanningStarted()), this, SLOT(workerScanningStarted()));
             connect(m_deviceScanner, SIGNAL(scanningFinished()), this, SLOT(workerScanningFinished()));
@@ -426,6 +426,31 @@ void DeviceManager::removeFsDevice(const QString &path)
             emit deviceListUpdated();
 
             return;
+        }
+        else
+            ++it;
+    }
+}
+
+void DeviceManager::removeMtpDevice(const unsigned devBus, const unsigned devNum)
+{
+    QList<QObject *>::iterator it = m_devices.begin();
+    while (it != m_devices.end())
+    {
+        Device *d = qobject_cast<Device*>(*it);
+        if (d)
+        {
+            std::pair<unsigned, unsigned> dIds = d->getMtpIds();
+
+            if (dIds.first == devBus && dIds.second == devNum)
+            {
+                it = m_devices.erase(it);
+
+                emit deviceRemoved(d);
+                emit deviceListUpdated();
+
+                return;
+            }
         }
         else
             ++it;

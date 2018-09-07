@@ -327,7 +327,8 @@ public slots:
 
     //
     QString getPath(const int index = 0) const;
-    void getMtpIds(int &devBus, int &devNum) const;
+    void getMtpIds(unsigned &devBus, unsigned &devNum) const;
+    std::pair<unsigned, unsigned> getMtpIds() const;
 
     //
     void orderByDate();

@@ -271,15 +271,15 @@ QString Device::getPath(const int index) const
     return QString();
 }
 
-void Device::getMtpIds(int &devBus, int &devNum) const
+void Device::getMtpIds(unsigned &devBus, unsigned &devNum) const
 {
-/*
-    if (m_mtpStorages.size() > 0)
-    {
-        StorageMtp *s = m_mtpStorages.at(0);
-        //
-    }
-*/
+    devBus = m_devBus;
+    devNum = m_devNum;
+}
+
+std::pair<unsigned, unsigned> Device::getMtpIds() const
+{
+    return std::make_pair(m_devBus, m_devNum);
 }
 
 /* ************************************************************************** */

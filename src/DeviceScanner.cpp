@@ -97,7 +97,7 @@ void DeviceScanner::scanFilesystems()
         // Path already in "watched" list? bail early!
         if (m_watchedFilesystems.contains(storage.rootPath()))
         {
-            qDebug() << "> skipping '" << storage.rootPath() << "', already handled";
+            //qDebug() << "> skipping '" << storage.rootPath() << "', already handled";
             continue;
         }
 
@@ -287,8 +287,10 @@ void DeviceScanner::scanVirtualFilesystems()
 
         for (auto connectedFs: connectedVirtualFilesystems)
         {
-            connected = true;
-            connectedFs.startsWith(watchedFs);
+            if (connectedFs.startsWith(watchedFs))
+            {
+                connected = true;
+            }
         }
 
         if (connected == false)
@@ -306,6 +308,8 @@ void DeviceScanner::scanVirtualFilesystems()
 void DeviceScanner::scanMtpDevices()
 {
 #ifdef ENABLE_LIBMTP
+
+    QList <std::pair<unsigned, unsigned>> connectedMtpDevices;
 
     int numrawdevices = 0;
     LIBMTP_raw_device_t *rawdevices = nullptr;
@@ -338,6 +342,7 @@ void DeviceScanner::scanMtpDevices()
         break;
     }
 
+    // Check if we have new device(s)
     for (int i = 0; i < numrawdevices; i++)
     {
 /*
@@ -347,6 +352,7 @@ void DeviceScanner::scanMtpDevices()
 */
         // Device in watch list? bail early!
         auto currentMtpDevice = std::make_pair(rawdevices[i].bus_location, rawdevices[i].devnum);
+        connectedMtpDevices.push_back(currentMtpDevice);
         if (m_watchedMtpDevices.contains(currentMtpDevice))
         {
             //qDebug() << "> skipping device @ bus" << currentMtpDevice.first << ", dev" << currentMtpDevice.second << ", already handled";
@@ -452,6 +458,16 @@ void DeviceScanner::scanMtpDevices()
 
     free(rawdevices);
 
+    // Check if we lost some device(s) since last scan
+    for (auto watchedDevice: m_watchedMtpDevices)
+    {
+        if (connectedMtpDevices.contains(watchedDevice) == false)
+        {
+            //qDebug() << "Device @ bus" << watchedDevice.first << ", dev" << watchedDevice.second << "has gone missing, removing device...";
+            removeMtpDevice(watchedDevice);
+        }
+    }
+
 #endif // ENABLE_LIBMTP
 }
 
@@ -479,3 +495,12 @@ void DeviceScanner::removeFilesystem(const QString &path)
         Q_EMIT fsDeviceRemoved(path);
     }
 }
+
+void DeviceScanner::removeMtpDevice(std::pair<unsigned, unsigned> device)
+{
+    m_watchedMtpDevices.removeOne(device);
+
+    Q_EMIT mtpDeviceRemoved(device.first, device.second);
+}
+
+/* ************************************************************************** */

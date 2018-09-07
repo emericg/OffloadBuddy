@@ -58,6 +58,7 @@ public slots:
 
 private slots:
     void removeFilesystem(const QString &path);
+    void removeMtpDevice(const std::pair<unsigned, unsigned> device);
 
 signals:
     void scanningStarted();
@@ -69,7 +70,7 @@ signals:
     void mtpDeviceFound(ofb_mtp_device *);
 
     void fsDeviceRemoved(const QString &);
-    void mtpDeviceRemoved(std::pair<unsigned, unsigned>);
+    void mtpDeviceRemoved(const unsigned devBus, const unsigned devNum);
 };
 
 /* ************************************************************************** */
