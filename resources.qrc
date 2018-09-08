@@ -21,8 +21,10 @@
         <file>resources/minicons/job_done.svg</file>
         <file>resources/minicons/job_errored.svg</file>
         <file>resources/other/gps_marker.svg</file>
-        <file>resources/other/placeholder.png</file>
         <file>resources/other/GitHub-Mark-64px.png</file>
+        <file>resources/other/placeholder_picture.svg</file>
+        <file>resources/other/placeholder_picture_multi.svg</file>
+        <file>resources/other/placeholder_video.svg</file>
     </qresource>
     <qresource prefix="/badges">
         <file alias="GPR.svg">resources/badges/GPR.svg</file>

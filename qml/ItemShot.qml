@@ -38,27 +38,36 @@ Rectangle {
     }
 
     Component.onCompleted: {
-        if (preview) {
-            image.source = "file:///" + preview
-        }
-
         text_top.text = name
         text_top.visible = false
 
         handleState()
 
+        if (preview) {
+            image.source = "file:///" + preview
+        }
+
         if (type < Shared.SHOT_PICTURE) {
-            icon_left.source = "qrc:/resources/minicons/video.svg"
             text_left.visible = true
             text_left.text = StringUtils.durationToString_short(duration)
+            icon_left.source = "qrc:/resources/minicons/video.svg"
+
+            if (!preview)
+                image.source = "qrc:/resources/other/placeholder_video.svg"
         } else {
             if (type >= Shared.SHOT_PICTURE_MULTI) {
-                icon_left.source = "qrc:/resources/minicons/picture_multi.svg"
                 text_left.visible = true
                 text_left.text = duration
+                icon_left.source = "qrc:/resources/minicons/picture_multi.svg"
+
+                if (!preview)
+                    image.source = "qrc:/resources/other/placeholder_picture_multi.svg"
             } else {
-                icon_left.source = "qrc:/resources/minicons/picture.svg"
                 text_left.visible = false
+                icon_left.source = "qrc:/resources/minicons/picture.svg"
+
+                if (!preview)
+                    image.source = "qrc:/resources/other/placeholder_picture.svg"
             }
         }
 
@@ -80,7 +89,7 @@ Rectangle {
         antialiasing: false
         asynchronous: true
         fillMode: Image.PreserveAspectCrop
-        source: "qrc:/resources/other/placeholder.png"
+        //source: "qrc:/resources/other/placeholder_picture.svg"
 
         sourceSize.width: 512
         sourceSize.height: 512

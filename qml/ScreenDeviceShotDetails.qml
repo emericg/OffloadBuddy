@@ -35,8 +35,6 @@ Rectangle {
 
             if (shot.preview) {
                 image.source = "file:///" + shot.preview
-            } else {
-                image.source = "qrc:/resources/other/placeholder.png"
             }
 
             textFileList.text = shot.fileList
@@ -53,13 +51,22 @@ Rectangle {
                     labelDuration.visible = true
                     labelDuration.height = 40
                     duration.text = shot.duration + " " + qsTr("pictures")
+
+                    if (!shot.preview)
+                        image.source = "qrc:/resources/other/placeholder_picture_multi.svg"
                 } else {
                     labelDuration.visible = false
                     labelDuration.height = 0
+
+                    if (!shot.preview)
+                        image.source = "qrc:/resources/other/placeholder_picture.svg"
                 }
             } else {
                 rectanglePicture.visible = false
                 rectangleVideo.visible = true
+
+                if (!shot.preview)
+                    image.source = "qrc:/resources/other/placeholder_video.svg"
 
                 codecVideo.visible = true
                 if (shot.codecVideo === "H.264")
@@ -95,7 +102,13 @@ Rectangle {
                 labelSizeFull.visible = false
             }
 
-            if (shot.altitude !== 0.0) {
+            buttonMetadata.visible = false
+            buttonMetadata.width = -16
+
+            if (shot.latitude !== 0.0) {
+                buttonMap.visible = true
+                buttonMap.width = 64
+
                 mapGPS.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
                 mapGPS.zoomLevel = 12
                 mapGPS.anchors.topMargin = 48
@@ -103,13 +116,16 @@ Rectangle {
                 mapMarker.coordinate = QtPositioning.coordinate(shot.latitude, shot.longitude)
                 button_map_dezoom.enabled = true
                 button_map_zoom.enabled = true
-                button_gps_export.visible = true
+                button_gps_export.visible = false
                 button_gps_export.enabled = false
 
                 rectangleCoordinates.visible = true
                 coordinates.text = shot.latitudeString + "    " + shot.longitudeString
                 altitude.text = shot.altitudeString
             } else {
+                buttonMap.visible = false
+                buttonMap.width = -16
+
                 mapGPS.center = QtPositioning.coordinate(45.5, 6)
                 mapGPS.zoomLevel = 2
                 mapGPS.anchors.topMargin = 16
@@ -290,7 +306,7 @@ Rectangle {
                 anchors.right: rectangleMetadatas.left
                 anchors.margins: 16
                 fillMode: Image.PreserveAspectFit
-                source: "qrc:/resources/other/placeholder.png"
+                //source: "qrc:/resources/other/placeholder_picture.svg"
 
                 sourceSize.width: shot.width / 2
                 sourceSize.height: shot.height / 2
