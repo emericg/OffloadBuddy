@@ -59,10 +59,20 @@ Rectangle {
         }
 
         rectangleDelete.stopTheBlink()
+
+        banner.visible = false
+        banner.height = 0
+        if (myDevice.deviceStorage === 2) {
+            banner.visible = true
+            banner.height = 56
+            bannerText.text = qsTr("Previews and metadatas are not available yet with MTP devices...")
+        }
     }
 
     function initGridViewSettings() {
         actionMenu.visible = false
+        rectangleDelete.visible = false
+        rectangleTransfer.visible = false
 
         if (myDevice && myDevice.deviceStorage === 0)
             if (myDevice.deviceType === 2)
@@ -85,13 +95,16 @@ Rectangle {
         }
 
         if (myDevice) {
-            if (myDevice.deviceState === 1) {
+            if (myDevice.deviceState === 1) { // scanning
                 circleEmpty.visible = true
                 loadingFader.start()
-            } else if (myDevice.deviceState === 0) {
+            } else if (myDevice.deviceState === 0) { // idle
                 loadingFader.stop()
-                if (shotsview.count > 0)
+                if (shotsview.count > 0) {
                     circleEmpty.visible = false
+                    rectangleDelete.visible = true
+                    rectangleTransfer.visible = true
+                }
             }
         }
     }
@@ -481,9 +494,33 @@ Rectangle {
             actionMenu.visible = false
         }
 
+        Rectangle {
+            id: banner
+            z: 1
+            height: 56
+            color: ThemeEngine.colorInfoBanner
+            anchors.top: parent.top
+            anchors.topMargin: 0
+            anchors.left: parent.left
+            anchors.leftMargin: 0
+            anchors.right: parent.right
+            anchors.rightMargin: 0
+
+            Text {
+                id: bannerText
+                anchors.left: parent.left
+                anchors.leftMargin: 16
+                anchors.verticalCenter: parent.verticalCenter
+                text: qsTr("Text")
+                color: ThemeEngine.colorInfoBannerText
+                font.pixelSize: ThemeEngine.fontSizeBannerText
+            }
+        }
+
         ScrollView {
             id: scrollView
             anchors.fill: parent
+            anchors.topMargin: banner.height
 
             GridView {
                 id: shotsview

@@ -158,7 +158,7 @@ class Shot: public QObject
     QList <QTime> m_highlights;
 
 #ifdef ENABLE_LIBMTP
-    LIBMTP_mtpdevice_t *m_mtpDevice = nullptr;
+    LIBMTP_mtpdevice_t *m_mtpDevice = nullptr; // TODO remove?
     LIBMTP_devicestorage_t *m_mtpStorage = nullptr;
 #endif
 

@@ -124,6 +124,7 @@ Rectangle {
                 anchors.leftMargin: 8
 
                 text: qsTr("Visit us on <html><style type=\"text/css\"></style><a href=\"https://github.com/emericg/OffloadBuddy\">GitHub</a></html>!")
+                color: ThemeEngine.colorContentText
                 font.pixelSize: ThemeEngine.fontSizeContentText
                 onLinkActivated: Qt.openUrlExternally("https://github.com/emericg/OffloadBuddy")
             }

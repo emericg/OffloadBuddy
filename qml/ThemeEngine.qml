@@ -27,7 +27,9 @@ Item {
         PLAIN_AND_BORING = 0,
         DARK_AND_SPOOKY = 1,
         BLOOD_AND_TEARS = 2,
-        MIGHTY_KITTEN = 3
+        MIGHTY_KITTEN = 3,
+
+        LAST_THEME
     }
 
     // Colors
@@ -37,6 +39,9 @@ Item {
     property string colorHeaderBackground: "#ebedee"
     property string colorHeaderTitle: "#353637"
     property string colorHeaderText: "#000000"
+
+    property string colorInfoBanner: "#fed859"
+    property string colorInfoBannerText: "#ffffff"
 
     property string colorContentBackground: "#ffffff"
     property string colorContentBox: "#F7F7F7"
@@ -56,12 +61,13 @@ Item {
     // Fonts (sizes in pixel)
     readonly property int fontSizeHeaderTitle: 30
     readonly property int fontSizeHeaderText: 17
+    readonly property int fontSizeBannerText: 20
     readonly property int fontSizeContentTitle: 24
     readonly property int fontSizeContentText: 15
 
     function loadTheme(themeIndex) {
 
-        if (themeIndex >= 3) {
+        if (themeIndex >= ThemeEngine.LAST_THEME) {
             themeIndex = 0
             console.log("ThemeEngine::loadTheme(" + themeIndex + ") ERROR Unknown theme!")
         }

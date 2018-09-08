@@ -362,7 +362,6 @@ QString Shot::getFileList() const
         list += "- " + f->filesystemPath + "\n";
 
 #ifdef ENABLE_LIBMTP
-    if (m_mtpDevice)
     {
         for (auto f: m_pictures)
             list += "- " + f->name + "." + f->extension + "\n";

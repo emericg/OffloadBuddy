@@ -47,9 +47,13 @@ Rectangle {
             image.source = "file:///" + preview
         }
 
+        text_right.visible = false
+        text_left.visible = false
         if (type < Shared.SHOT_PICTURE) {
-            text_left.visible = true
-            text_left.text = StringUtils.durationToString_short(duration)
+            if (duration > 0) {
+                text_left.visible = true
+                text_left.text = StringUtils.durationToString_short(duration)
+            }
             icon_left.source = "qrc:/resources/minicons/video.svg"
 
             if (!preview)
@@ -63,7 +67,6 @@ Rectangle {
                 if (!preview)
                     image.source = "qrc:/resources/other/placeholder_picture_multi.svg"
             } else {
-                text_left.visible = false
                 icon_left.source = "qrc:/resources/minicons/picture.svg"
 
                 if (!preview)
@@ -74,11 +77,9 @@ Rectangle {
         if (shot.highlightCount > 0) {
             icon_right.visible = true
             icon_right.source = "qrc:/resources/minicons/bookmark.svg"
-            text_right.visible = false
             text_right.text = shot.highlightCount
         } else {
             icon_right.visible = false
-            text_right.visible = false
         }
     }
 
