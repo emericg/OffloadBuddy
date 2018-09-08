@@ -239,6 +239,8 @@ class Device: public QObject
     Q_PROPERTY(int deviceStorage READ getDeviceStorage NOTIFY deviceUpdated)
     Q_PROPERTY(int deviceModel READ getDeviceModel NOTIFY deviceUpdated)
 
+    Q_PROPERTY(QString uniqueId READ getUniqueId NOTIFY deviceUpdated)
+
     Q_PROPERTY(QString brand READ getBrand NOTIFY deviceUpdated)
     Q_PROPERTY(QString model READ getModel NOTIFY deviceUpdated)
     Q_PROPERTY(QString serial READ getSerial NOTIFY deviceUpdated)
@@ -317,6 +319,8 @@ public slots:
     QString getModel() const { return m_model; }
     QString getSerial() const { return m_serial; }
     QString getFirmware() const { return m_firmware; }
+
+    QString getUniqueId() const;
 
     //
     int64_t getSpaceTotal();

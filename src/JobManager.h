@@ -32,6 +32,7 @@
 #include <QObject>
 #include <QVariant>
 #include <QList>
+#include <QHash>
 #include <QThread>
 
 /* ************************************************************************** */
@@ -127,11 +128,8 @@ class JobManager: public QObject
 
     // instant jobs (deletion...)
     JobWorkerSync *m_job_instant = nullptr;
-    // copy/merge jobs
-    JobWorkerSync *m_job_w1 = nullptr;
-    JobWorkerSync *m_job_w2 = nullptr;
-    JobWorkerSync *m_job_w3 = nullptr;
-    JobWorkerSync *m_job_w4 = nullptr;
+    // per device disk jobs (copy/merge...)
+    QHash<QString, JobWorkerSync *> m_job_disk;
     // CPU jobs (reencodes, stabs...)
     JobWorkerAsync *m_job_cpu = nullptr;
     // web downloads jobs

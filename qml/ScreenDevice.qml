@@ -15,8 +15,8 @@ Rectangle {
     property var deviceState
 
     onMyDeviceChanged: {
-        if (!deviceStateList[myDevice.serial]) {
-            deviceStateList[myDevice.serial] = ({ orderBy: 0,
+        if (!deviceStateList[myDevice.uniqueId]) {
+            deviceStateList[myDevice.uniqueId] = ({ orderBy: 0,
                                                   zoomLevel: 2.0,
                                                   mainState: "shotsview",
                                                   selectedIndex: 0,
@@ -25,7 +25,7 @@ Rectangle {
         }
 
         // restore state
-        deviceState = deviceStateList[myDevice.serial]
+        deviceState = deviceStateList[myDevice.uniqueId]
         state = deviceState.mainState
 
         screenDeviceShots.restoreState()

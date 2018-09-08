@@ -62,10 +62,15 @@ Rectangle {
 
         banner.visible = false
         banner.height = 0
-        if (myDevice.deviceStorage === 2) {
+        if (myDevice.deviceStorage === 1) { // VFS
             banner.visible = true
             banner.height = 56
-            bannerText.text = qsTr("Previews and metadatas are not available yet with MTP devices...")
+            bannerText.text = qsTr("Previews are not available (yet) with MTP devices...")
+        }
+        if (myDevice.deviceStorage === 2) { // MTP
+            banner.visible = true
+            banner.height = 56
+            bannerText.text = qsTr("Previews and metadatas are not available (yet) with MTP devices...")
         }
     }
 
@@ -480,16 +485,16 @@ Rectangle {
             onVisibleChanged: shotsview.interactive = !shotsview.interactive
         }
         function actionMenuTriggered(index) {
-            //console.log("actionMenuTriggered(" + index + ") selected shot: '" + shotsview.currentItem.shot.name + "'")
+            //console.log("actionMenuTriggered(" + index + ") selected shot: '" + selectedItemName + "'")
 
             if (index === 1)
-                myDevice.offloadCopySelected(shotsview.currentItem.shot.name)
+                myDevice.offloadCopySelected(selectedItemName)
             if (index === 2)
-                myDevice.offloadMergeSelected(shotsview.currentItem.shot.name)
+                myDevice.offloadMergeSelected(selectedItemName)
             if (index === 3)
-                myDevice.reencodeSelected(shotsview.currentItem.shot.name)
+                myDevice.reencodeSelected(selectedItemName)
             if (index === 4)
-                myDevice.deleteSelected(shotsview.currentItem.shot.name)
+                myDevice.deleteSelected(selectedItemName)
 
             actionMenu.visible = false
         }

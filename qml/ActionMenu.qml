@@ -11,6 +11,21 @@ Rectangle {
     signal menuSelected(int index)
     property bool isOpen: false
 
+    function setMenuButtons(merge, encode, remove) {
+        if (merge)
+            offloadMerge.visible = true
+        else
+            offloadMerge.visible = false
+        if (encode)
+            offloadReencode.visible = true
+        else
+            offloadReencode.visible = false
+        if (remove)
+            removeSelected.visible = true
+        else
+            removeSelected.visible = false
+    }
+
     Column {
         id: menuHolder
         spacing: 1
@@ -35,6 +50,19 @@ Rectangle {
             index: 3
             button_text: qsTr("Reencode")
             onButtonClicked: menuSelected(index)
+        }
+        Item {
+            id: separator
+            height: 2
+            anchors.left: parent.left
+            anchors.leftMargin:  10
+            anchors.right: parent.right
+            anchors.rightMargin: 20
+            Rectangle {
+                height: 2
+                width: parent.width
+                color: "#c3c3c3"
+            }
         }
         ActionButton {
             id: removeSelected

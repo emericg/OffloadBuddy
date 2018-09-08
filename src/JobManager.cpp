@@ -60,10 +60,7 @@ JobManager::~JobManager()
 void JobManager::cleanup()
 {
     delete m_job_instant;
-    delete m_job_w1;
-    delete m_job_w2;
-    delete m_job_w3;
-    delete m_job_w4;
+    m_job_disk.clear();
     delete m_job_cpu;
     delete m_job_web;
 }
@@ -282,8 +279,31 @@ bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list, MediaDirec
                  type == JOB_CLIP ||
                  type == JOB_COPY || type == JOB_MERGE)
         {
-            // TODO 'per device' dispatch
-            m_selected_worker = m_job_w1;
+            m_selected_worker = m_job_disk[d->getUniqueId()];
+
+            if (m_selected_worker == nullptr)
+            {
+                m_selected_worker = new JobWorkerSync();
+                m_selected_worker->thread = new QThread();
+
+                if (m_selected_worker->thread && m_selected_worker)
+                {
+                    m_selected_worker->moveToThread(m_selected_worker->thread);
+
+                    connect(m_selected_worker->thread, SIGNAL(started()), m_selected_worker, SLOT(work()));
+
+                    connect(m_selected_worker, SIGNAL(jobProgress(int, float)), this, SLOT(jobProgress(int, float)));
+                    connect(m_selected_worker, SIGNAL(jobStarted(int)), this, SLOT(jobStarted(int)));
+                    connect(m_selected_worker, SIGNAL(jobFinished(int, int)), this, SLOT(jobFinished(int, int)));
+                    connect(m_selected_worker, SIGNAL(shotStarted(int, Shot *)), this, SLOT(shotStarted(int, Shot *)));
+                    connect(m_selected_worker, SIGNAL(shotFinished(int, Shot *)), this, SLOT(shotFinished(int, Shot *)));
+
+                    m_selected_worker->thread->start();
+                    status = true;
+                }
+
+                m_job_disk.insert(d->getUniqueId(), m_selected_worker);
+            }
         }
         else
         {
@@ -298,7 +318,6 @@ bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list, MediaDirec
 
             if (m_selected_worker->thread && m_selected_worker)
             {
-                m_selected_worker->queueWork(job);
                 m_selected_worker->moveToThread(m_selected_worker->thread);
 
                 connect(m_selected_worker->thread, SIGNAL(started()), m_selected_worker, SLOT(work()));
@@ -313,7 +332,7 @@ bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list, MediaDirec
                 status = true;
             }
         }
-        else
+
         {
             m_selected_worker->queueWork(job);
             emit m_selected_worker->work();

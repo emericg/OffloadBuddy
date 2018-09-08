@@ -282,6 +282,25 @@ std::pair<unsigned, unsigned> Device::getMtpIds() const
     return std::make_pair(m_devBus, m_devNum);
 }
 
+QString Device::getUniqueId() const
+{
+    QString id;
+
+    if (m_serial.isEmpty() == false)
+        id = m_serial;
+    else if (getPath(0).isEmpty() == false)
+        id = getPath(0);
+    else if (m_devBus || m_devNum)
+        id = "MTP-" + QString::number(m_devBus) + "-" + QString::number(m_devBus);
+    else
+    {
+        qWarning() << "getUniqueId() unable to get unique Id !!!";
+        id = m_model;
+    }
+
+    return id;
+}
+
 /* ************************************************************************** */
 
 void Device::workerScanningStarted(QString s)

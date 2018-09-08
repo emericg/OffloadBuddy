@@ -87,7 +87,8 @@ void JobWorkerAsync::queueWork(Job *job)
         for (unsigned i = 0; i < job->elements.size(); i++)
         {
             JobElement *element = job->elements.at(i);
-            if (element->files.size() != 1)
+            if (element->parent_shots->getType() <= Shared::SHOT_PICTURE &&
+                element->files.size() != 1)
             {
                 qDebug() << "This async job element got more (or less actually) than 1 file, it should not happen...";
                 continue;
@@ -105,7 +106,19 @@ void JobWorkerAsync::queueWork(Job *job)
 #endif
             // FFMPEG arguments
             ptiwrap->arguments << "-y" /*<< "-loglevel" << "warning" << "-stats"*/;
-            ptiwrap->arguments << "-i" << element->files.at(0).filesystemPath;
+
+            if (element->parent_shots->getType() > Shared::SHOT_PICTURE)
+            {
+                // timelapse to video
+                ptiwrap->arguments << "-r" << "10";
+                ptiwrap->arguments << "-start_number" << element->files.at(0).name.mid(1, -1);
+                QString replacestr = "/" + element->files.at(0).name + "." + element->files.at(0).extension.toUpper();
+                ptiwrap->arguments << "-i" << element->files.at(0).filesystemPath.replace(replacestr, "/G%07d.JPG");
+            }
+            else
+            {
+                ptiwrap->arguments << "-i" << element->files.at(0).filesystemPath;
+            }
 
             // H.264 video
             ptiwrap->arguments << "-c:v" << "libx264";
@@ -128,7 +141,10 @@ void JobWorkerAsync::queueWork(Job *job)
             arguments << "-c:a" << "libopus";
             arguments << "-b:a" << "70K";
 */
-            ptiwrap->arguments << element->destination_dir + element->files.front().name + "_reencoded.mkv";
+            ptiwrap->arguments << element->destination_dir + element->files.front().name + "_reencoded.mp4";
+
+            //qDebug() << "REENCODING JOB:";
+            //qDebug() << ptiwrap->arguments;
 
             m_ffmpegjobs.push_front(ptiwrap);
         }
@@ -139,8 +155,6 @@ void JobWorkerAsync::work()
 {
     if (m_childProcess == nullptr)
     {
-        qDebug() << "> JobSuperWorker::work()";
-
         if (!m_ffmpegjobs.isEmpty())
         {
             m_ffmpegcurrent = m_ffmpegjobs.dequeue();
@@ -165,7 +179,7 @@ void JobWorkerAsync::processStarted()
 {
     if (m_childProcess && m_ffmpegcurrent)
     {
-        qDebug() << "JobSuperWorker::processStarted()";
+        qDebug() << "JobWorkerAsync::processStarted()";
 
         emit jobStarted(m_ffmpegcurrent->job->id);
         emit shotStarted(m_ffmpegcurrent->job->id, m_ffmpegcurrent->job->elements.at(m_ffmpegcurrent->job_element_index)->parent_shots);
@@ -176,7 +190,7 @@ void JobWorkerAsync::processFinished()
 {
     if (m_childProcess && m_ffmpegcurrent)
     {
-        qDebug() << "JobSuperWorker::processFinished()";
+        qDebug() << "JobWorkerAsync::processFinished()";
 
         JobState js = JOB_STATE_DONE;
         if (m_childProcess->exitStatus() == QProcess::CrashExit)
@@ -208,7 +222,7 @@ void JobWorkerAsync::processOutput()
         m_childProcess->waitForBytesWritten(500);
         QString txt(m_childProcess->readAllStandardError());
 
-        //qDebug() << "JobSuperWorker::processOutput()" << txt;
+        //qDebug() << "JobWorkerAsync::processOutput()" << txt;
 
         if (m_duration.isNull() || !m_duration.isValid())
         {

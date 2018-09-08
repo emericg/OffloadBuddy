@@ -121,6 +121,24 @@ Rectangle {
             shotsview.currentIndex = index
 
             if (mouse.button === Qt.RightButton) {
+                var merge = true
+                var encode = true
+                var remove = true
+
+                if (shot.type === Shared.SHOT_PICTURE) {
+                    merge = false
+                    encode = false
+                } else if (shot.type > Shared.SHOT_PICTURE) {
+                    merge = false
+                }
+                if (myDevice.deviceStorage === 2) { // MTP
+                    merge = false
+                    encode = false
+                }
+                //if (myDevice.isReadOnly)
+                //    remove = false
+                actionMenu.setMenuButtons(merge, encode, remove)
+
                 actionMenu.visible = true
                 actionMenu.x = mouseAreaOutsideView.mouseX + 8
                 actionMenu.y = mouseAreaOutsideView.mouseY + 8
