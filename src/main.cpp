@@ -25,6 +25,10 @@
 
 #include <singleapplication.h>
 
+#ifdef ENABLE_MINIVIDEO
+#include <minivideo.h>
+#endif
+
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
@@ -57,6 +61,11 @@ void print_build_infos()
 #endif
 #ifdef ENABLE_LIBEXIF
     qDebug() << "- libexif enabled";
+#endif
+#ifdef ENABLE_MINIVIDEO
+    int mv_maj, mv_min, mv_patch;
+    minivideo_get_infos(&mv_maj, &mv_min, &mv_patch, nullptr, nullptr, nullptr);
+    qDebug() << "- minivideo enabled, version:" << mv_maj << mv_min << mv_patch;
 #endif
 }
 
@@ -111,7 +120,7 @@ int main(int argc, char *argv[])
     engine_context->setContextProperty("jobManager", j);
     engine_context->setContextProperty("deviceManager", d);
 
-    engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
+    engine.load(QUrl(QStringLiteral("qrc:/qml/MainWindow.qml")));
     if (engine.rootObjects().isEmpty())
         return -1;
 

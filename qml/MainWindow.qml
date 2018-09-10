@@ -308,7 +308,6 @@ ApplicationWindow {
         ScreenSettings {
             anchors.fill: parent
             id: screenSettings
-            mySettings: settingsManager
         }
         ScreenAbout {
             anchors.fill: parent

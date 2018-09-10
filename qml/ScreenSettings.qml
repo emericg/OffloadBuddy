@@ -9,8 +9,6 @@ Rectangle {
     width: 1280
     height: 720
 
-    property var mySettings
-
     Rectangle {
         id: rectangleHeader
         height: 64
@@ -63,9 +61,9 @@ Rectangle {
             anchors.left: parent.left
             anchors.leftMargin: 16
 
-            checked: mySettings.autolaunch
+            checked: settingsManager.autolaunch
             onCheckStateChanged: {
-                mySettings.autolaunch = checked
+                settingsManager.autolaunch = checked
             }
         }
 
@@ -79,9 +77,9 @@ Rectangle {
             anchors.left: parent.left
             anchors.leftMargin: 16
 
-            checked: mySettings.ignorejunk
+            checked: settingsManager.ignorejunk
             onCheckStateChanged: {
-                mySettings.ignorejunk = checked
+                settingsManager.ignorejunk = checked
             }
         }
 
@@ -95,9 +93,9 @@ Rectangle {
             anchors.leftMargin: 16
             anchors.verticalCenter: checkIgnoreJunk.verticalCenter
 
-            checked: mySettings.ignorehdaudio
+            checked: settingsManager.ignorehdaudio
             onCheckStateChanged: {
-                mySettings.ignorehdaudio = checked
+                settingsManager.ignorehdaudio = checked
             }
         }
 
@@ -112,9 +110,9 @@ Rectangle {
             anchors.left: parent.left
             anchors.leftMargin: 16
 
-            checked: mySettings.automerge
+            checked: settingsManager.automerge
             onCheckStateChanged: {
-                mySettings.automerge = checked
+                settingsManager.automerge = checked
             }
         }
 
@@ -130,9 +128,9 @@ Rectangle {
             anchors.left: checkAutoMerge.right
             anchors.leftMargin: 16
 
-            checked: mySettings.autometadata
+            checked: settingsManager.autometadata
             onCheckStateChanged: {
-                mySettings.autometadata = checked
+                settingsManager.autometadata = checked
             }
         }
 
@@ -148,9 +146,9 @@ Rectangle {
             anchors.leftMargin: 16
             anchors.verticalCenter: checkAutoMetadatas.verticalCenter
 
-            checked: mySettings.autodelete
+            checked: settingsManager.autodelete
             onCheckStateChanged: {
-                mySettings.autodelete = checked
+                settingsManager.autodelete = checked
             }
         }
 
@@ -170,13 +168,13 @@ Rectangle {
             }
 
             Component.onCompleted: {
-                currentIndex = mySettings.contenthierarchy;
+                currentIndex = settingsManager.contenthierarchy;
                 if (currentIndex === -1) { currentIndex = 0 }
             }
             property bool cbinit: false
             onCurrentIndexChanged: {
                 if (cbinit)
-                    mySettings.contenthierarchy = currentIndex;
+                    settingsManager.contenthierarchy = currentIndex;
                 else
                     cbinit = true;
             }
@@ -227,13 +225,13 @@ Rectangle {
             }
 
             Component.onCompleted: {
-                currentIndex = mySettings.apptheme;
+                currentIndex = settingsManager.apptheme;
                 if (currentIndex === -1) { currentIndex = 0 }
             }
             property bool cbinit: false
             onCurrentIndexChanged: {
                 if (cbinit)
-                    mySettings.apptheme = currentIndex;
+                    settingsManager.apptheme = currentIndex;
                 else
                     cbinit = true;
 
@@ -289,7 +287,7 @@ Rectangle {
                 folder: shortcuts.home
 
                 onAccepted: {
-                    mySettings.addDirectory(StringUtils.urlToPath(fileDialogAdd.fileUrl.toString()))
+                    settingsManager.addDirectory(StringUtils.urlToPath(fileDialogAdd.fileUrl.toString()))
                 }
             }
 
@@ -298,8 +296,8 @@ Rectangle {
                 width: parent.width
                 height: 64
                 interactive: false
-                model: mySettings.directoriesList
-                delegate: ItemMediaDirectory { settingsMgr: mySettings;
+                model: settingsManager.directoriesList
+                delegate: ItemMediaDirectory { settingsMgr: settingsManager;
                                                directory: modelData }
 
                 spacing: 16

@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/qml">
-        <file>main.qml</file>
+        <file>MainWindow.qml</file>
         <file>ThemeEngine.qml</file>
         <file>StringUtils.js</file>
         <file>ScreenMedias.qml</file>
@@ -16,5 +16,6 @@
         <file>ItemShot.qml</file>
         <file>ActionMenu.qml</file>
         <file>ActionButton.qml</file>
+        <file>PanelEncode.qml</file>
     </qresource>
 </RCC>

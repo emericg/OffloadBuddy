@@ -76,6 +76,8 @@ unix {
     # Enables AddressSanitizer
     #QMAKE_CXXFLAGS += -fsanitize=address,undefined
     #QMAKE_LFLAGS += -fsanitize=address,undefined
+
+    # Handle dependencies
     CONFIG += link_pkgconfig
 
     contains(DEFINES, ENABLE_LIBMTP) {

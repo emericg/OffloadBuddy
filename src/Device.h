@@ -246,6 +246,7 @@ class Device: public QObject
     Q_PROPERTY(QString serial READ getSerial NOTIFY deviceUpdated)
     Q_PROPERTY(QString firmware READ getFirmware NOTIFY deviceUpdated)
 
+    Q_PROPERTY(bool readOnly READ isReadOnly NOTIFY spaceUpdated)
     Q_PROPERTY(qint64 spaceTotal READ getSpaceTotal NOTIFY spaceUpdated)
     Q_PROPERTY(qint64 spaceUsed READ getSpaceUsed NOTIFY spaceUpdated)
     Q_PROPERTY(double spaceUsedPercent READ getSpaceUsed_percent NOTIFY spaceUpdated)
@@ -323,6 +324,7 @@ public slots:
     QString getUniqueId() const;
 
     //
+    bool isReadOnly();
     int64_t getSpaceTotal();
     int64_t getSpaceUsed();
     double getSpaceUsed_percent();

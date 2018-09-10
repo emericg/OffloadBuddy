@@ -379,6 +379,19 @@ void Device::refreshStorageInfos()
     emit spaceUpdated();
 }
 
+bool Device::isReadOnly()
+{
+    bool ro = false;
+
+    for (auto st: m_filesystemStorages)
+    {
+        if (st)
+            ro |= !st->m_writable;
+    }
+
+    return ro;
+}
+
 int64_t Device::getSpaceTotal()
 {
     int64_t s = 0;
