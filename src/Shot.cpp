@@ -362,6 +362,7 @@ QString Shot::getFileList() const
         list += "- " + f->filesystemPath + "\n";
 
 #ifdef ENABLE_LIBMTP
+    if (list.isEmpty())
     {
         for (auto f: m_pictures)
             list += "- " + f->name + "." + f->extension + "\n";
@@ -378,6 +379,7 @@ QString Shot::getFileList() const
 
     return list;
 }
+
 /* ************************************************************************** */
 /* ************************************************************************** */
 

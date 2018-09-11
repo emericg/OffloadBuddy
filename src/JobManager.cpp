@@ -176,7 +176,8 @@ QString JobManager::getandmakeDestination(Shot *s, Device *d)
 
 /* ************************************************************************** */
 
-bool JobManager::addJob(JobType type, Device *d, Shot *s, MediaDirectory *md)
+bool JobManager::addJob(JobType type, Device *d, Shot *s,
+                        MediaDirectory *md, JobEncodeSettings *settings)
 {
     bool status = false;
 
@@ -186,10 +187,11 @@ bool JobManager::addJob(JobType type, Device *d, Shot *s, MediaDirectory *md)
     QList<Shot *> list;
     list.push_back(s);
 
-    return addJobs(type, d, list, md);
+    return addJobs(type, d, list, md, settings);
 }
 
-bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list, MediaDirectory *md)
+bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list,
+                         MediaDirectory *md, JobEncodeSettings *settings)
 {
     bool status = false;
 
@@ -215,6 +217,8 @@ bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list, MediaDirec
     Job *job = new Job;
     job->id = rand(); // lol
     job->type = type;
+    if (settings)
+        job->settings = *settings;
 
     for (auto shot: list)
     {

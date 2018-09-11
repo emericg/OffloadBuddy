@@ -102,8 +102,9 @@ class Shot: public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(unsigned type READ getType NOTIFY stateUpdated)
     Q_PROPERTY(unsigned state READ getState NOTIFY stateUpdated)
+
+    Q_PROPERTY(unsigned type READ getType NOTIFY shotUpdated)
 
     Q_PROPERTY(QString name READ getName NOTIFY shotUpdated)
     Q_PROPERTY(QString camera READ getCameraSource NOTIFY shotUpdated)

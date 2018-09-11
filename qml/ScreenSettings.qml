@@ -139,7 +139,7 @@ Rectangle {
             y: 128
             width: 350
             height: 40
-            text: qsTr("Automatically delete imported medias")
+            text: qsTr("Automatically delete offloaded medias")
             font.pixelSize: ThemeEngine.fontSizeContentText
 
             anchors.left: checkAutoMetadatas.right

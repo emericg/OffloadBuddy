@@ -72,6 +72,15 @@ typedef enum JobState
 
 /* ************************************************************************** */
 
+typedef struct JobEncodeSettings
+{
+    QString codec = "H.264";
+    int quality = 3; // [1:5]
+    int speed = 2; // [1:3]
+    int fps = 10; // [5:60]
+
+} JobEncodeSettings;
+
 typedef struct JobElement
 {
     Shot *parent_shots;
@@ -85,11 +94,11 @@ typedef struct Job
 {
     int id = -1;
     JobType type = JOB_INVALID;
+    JobEncodeSettings settings;
 
     std::vector<JobElement *> elements;
 
     JobState state = JOB_STATE_QUEUED;
-    float percent = 0.0;
     int totalFiles = 0;
     int64_t totalSize = 0;
 

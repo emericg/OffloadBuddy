@@ -152,8 +152,10 @@ Q_SIGNALS:
 
 public:
     static JobManager *getInstance();
-    bool addJob(JobType type, Device *d, Shot *s, MediaDirectory *md = nullptr);
-    bool addJobs(JobType type, Device *d, QList<Shot *> list, MediaDirectory *md = nullptr);
+    bool addJob(JobType type, Device *d, Shot *s,
+                MediaDirectory *md = nullptr, JobEncodeSettings *set = nullptr);
+    bool addJobs(JobType type, Device *d, QList<Shot *> list,
+                 MediaDirectory *md = nullptr, JobEncodeSettings *set = nullptr);
     void cleanup();
 
 public slots:

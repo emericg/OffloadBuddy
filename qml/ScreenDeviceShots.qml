@@ -114,6 +114,21 @@ Rectangle {
         }
     }
 
+    // POPUPS //////////////////////////////////////////////////////////////////
+
+    Popup {
+        id: popupEncode
+        modal: true
+        focus: true
+        x: (parent.width - panelEncode.width) / 2
+        y: (parent.height - panelEncode.height) / 2
+        closePolicy: Popup.CloseOnEscape /*| Popup.CloseOnPressOutsideParent*/
+
+        PanelEncode {
+            id: panelEncode
+        }
+    }
+
     // HEADER //////////////////////////////////////////////////////////////////
 
     Rectangle {
@@ -222,7 +237,7 @@ Rectangle {
                     rectangleTransferDecorated.height = rectangleTransferDecorated.height + 8
                 }
                 onClicked: {
-                    myDevice.offloadCopyAll();
+                    myDevice.offloadAll();
                 }
             }
 
@@ -491,8 +506,10 @@ Rectangle {
                 myDevice.offloadCopySelected(selectedItemName)
             if (index === 2)
                 myDevice.offloadMergeSelected(selectedItemName)
-            if (index === 3)
-                myDevice.reencodeSelected(selectedItemName)
+            if (index === 3) {
+                panelEncode.updateEncodePanel()
+                popupEncode.open()
+            }
             if (index === 4)
                 myDevice.deleteSelected(selectedItemName)
 

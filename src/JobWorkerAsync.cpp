@@ -99,6 +99,8 @@ void JobWorkerAsync::queueWork(Job *job)
             ptiwrap->job = job;
             ptiwrap->job_element_index = i;
 
+            QString file_extension = "mp4";
+
             // FFMPEG binary
             ptiwrap->command = "ffmpeg";
 #ifdef Q_OS_WINDOWS
@@ -110,7 +112,7 @@ void JobWorkerAsync::queueWork(Job *job)
             if (element->parent_shots->getType() > Shared::SHOT_PICTURE)
             {
                 // timelapse to video
-                ptiwrap->arguments << "-r" << "10";
+                ptiwrap->arguments << "-r" << QString::number(job->settings.fps);
                 ptiwrap->arguments << "-start_number" << element->files.at(0).name.mid(1, -1);
                 QString replacestr = "/" + element->files.at(0).name + "." + element->files.at(0).extension.toUpper();
                 ptiwrap->arguments << "-i" << element->files.at(0).filesystemPath.replace(replacestr, "/G%07d.JPG");
@@ -120,34 +122,83 @@ void JobWorkerAsync::queueWork(Job *job)
                 ptiwrap->arguments << "-i" << element->files.at(0).filesystemPath;
             }
 
-            // H.264 video
-            ptiwrap->arguments << "-c:v" << "libx264";
-            ptiwrap->arguments << "-preset" << "slower" << "-tune" << "film";
-            ptiwrap->arguments << "-crf" << "24";
-            // AAC audio copy
-            ptiwrap->arguments << "-c:a" << "copy";
-/*
-            // H.265 video
-            arguments << "-c:v" << "libx265";
-            arguments << "-crf" << "28" << "-preset" << "slow";
-            // AAC audio copy
-            arguments << "-c:a" << "copy";
-*/
-/*
-            // VP9 video
-            arguments << "-c:v" << "libvpx-vp9";
-            arguments <<"-crf" << "40" << "-b:v" << "0" <<"-cpu-used" << "2";
-            // Opus audio
-            arguments << "-c:a" << "libopus";
-            arguments << "-b:a" << "70K";
-*/
-            ptiwrap->arguments << element->destination_dir + element->files.front().name + "_reencoded.mp4";
+            if (job->settings.codec == "H.264")
+            {
+                // H.264 video
+                ptiwrap->arguments << "-c:v" << "libx264";
 
-            //qDebug() << "REENCODING JOB:";
-            //qDebug() << ptiwrap->arguments;
+                if (job->settings.speed == 0)
+                    ptiwrap->arguments << "-preset" << "faster";
+                else if (job->settings.speed == 2)
+                    ptiwrap->arguments << "-preset" << "slower";
+                else
+                    ptiwrap->arguments << "-preset" << "medium";
 
+                ptiwrap->arguments << "-tune" << "film";
+
+                int crf = 21; // default usecase should be 24
+                crf += job->settings.quality;
+                ptiwrap->arguments << "-crf" << QString::number(crf);
+
+                // AAC audio copy
+                ptiwrap->arguments << "-c:a" << "copy";
+            }
+
+            if (job->settings.codec == "H.265")
+            {
+                // H.265 video
+                ptiwrap->arguments << "-c:v" << "libx265";
+
+                if (job->settings.speed == 0)
+                    ptiwrap->arguments << "-preset" << "faster";
+                else if (job->settings.speed == 2)
+                    ptiwrap->arguments << "-preset" << "slower";
+                else
+                    ptiwrap->arguments << "-preset" << "medium";
+
+                int crf = 25; // default usecase should be 28
+                crf += job->settings.quality;
+                ptiwrap->arguments << "-crf" << QString::number(crf);
+
+                // AAC audio copy
+                ptiwrap->arguments << "-c:a" << "copy";
+            }
+
+            if (job->settings.codec == "VP9")
+            {
+                file_extension = "mkv";
+
+                // VP9 video
+                ptiwrap->arguments << "-c:v" << "libvpx-vp9";
+                ptiwrap->arguments <<"-crf" << "40" << "-b:v" << "0" <<"-cpu-used" << "2";
+                // Opus audio
+                ptiwrap->arguments << "-c:a" << "libopus";
+                ptiwrap->arguments << "-b:a" << "70K";
+            }
+
+            if (job->settings.codec == "GIF")
+            {
+                file_extension = "gif";
+
+                ptiwrap->arguments << "-vf" << "scale=480:-1";
+            }
+
+            ptiwrap->arguments << element->destination_dir + element->files.front().name + "_reencoded." + file_extension;
+/*
+            // Recap encoding arguments:
+            qDebug() << "ENCODING JOB:";
+            qDebug() << ">" << ptiwrap->arguments;
+*/
             m_ffmpegjobs.push_front(ptiwrap);
         }
+/*
+        // Recap settings:
+        qDebug() << "ENCODING SETTINGS:";
+        qDebug() << "* codec:" << job->settings.codec;
+        qDebug() << "* quality:" << job->settings.quality;
+        qDebug() << "* speed:" << job->settings.speed;
+        qDebug() << "* fps:" << job->settings.fps;
+*/
     }
 }
 

@@ -343,13 +343,13 @@ public slots:
     void orderByName();
 
     //
-    void offloadCopyAll();
-    void offloadMergeAll();
+    void offloadAll();
     void deleteAll();
 
     void offloadCopySelected(const QString shot_name);
     void offloadMergeSelected(const QString shot_name);
-    void reencodeSelected(const QString shot_name);
+    void reencodeSelected(const QString shot_name, const QString codec,
+                          float quality, float speed, float fps);
     void deleteSelected(const QString shot_name);
 
     //

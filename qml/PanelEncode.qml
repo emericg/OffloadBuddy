@@ -1,10 +1,34 @@
 import QtQuick 2.10
 import QtQuick.Controls 2.3
 
+import com.offloadbuddy.shared 1.0
+
 Item {
-    id: item1
+    id: itemEncode
     width: 640
     height: 640
+
+    function updateEncodePanel() {
+        if (selectedItem.shot.type === Shared.SHOT_PICTURE_MULTI ||
+            selectedItem.shot.type === Shared.SHOT_PICTURE_BURST ||
+            selectedItem.shot.type === Shared.SHOT_PICTURE_TIMELAPSE ||
+            selectedItem.shot.type === Shared.SHOT_PICTURE_NIGHTLAPSE) {
+            rectangleTimelapse.visible = true
+        } else {
+            rectangleTimelapse.visible = false
+        }
+
+        // Handle destination(s)
+        cbDestinations.clear()
+        //cbDestinations.append( { "text": "auto" } )
+
+        for (var child in settingsManager.directoriesList) {
+            //console.log("destination: " + settingsManager.directoriesList[child].directoryPath)
+            if (settingsManager.directoriesList[child].directoryContent < 2)
+                cbDestinations.append( { "text": settingsManager.directoriesList[child].directoryPath } )
+        }
+    }
+
     Rectangle {
         id: rectangleEncode
         color: "#ffffff"
@@ -46,7 +70,7 @@ Item {
 
             RadioButton {
                 id: rbVP9
-                text: qsTr("VP9")
+                text: "VP9"
                 anchors.left: rbH265.right
                 anchors.leftMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
@@ -54,7 +78,7 @@ Item {
 
             RadioButton {
                 id: rbH265
-                text: qsTr("H.265")
+                text: "H.265"
                 anchors.left: rbH264.right
                 anchors.leftMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
@@ -62,7 +86,7 @@ Item {
 
             RadioButton {
                 id: rbH264
-                text: qsTr("H.264")
+                text: "H.264"
                 checked: true
                 anchors.left: text1.right
                 anchors.leftMargin: 64
@@ -72,7 +96,7 @@ Item {
 
             RadioButton {
                 id: rbGIF
-                text: qsTr("GIF")
+                text: "GIF"
                 anchors.left: rbVP9.right
                 anchors.leftMargin: 16
                 anchors.verticalCenterOffset: 0
@@ -89,10 +113,6 @@ Item {
                 anchors.leftMargin: 16
                 font.pixelSize: 14
             }
-
-
-
-
         }
 
         Rectangle {
@@ -150,12 +170,15 @@ Item {
 
             Slider {
                 id: sliderQuality
+                from: 1
+                to: 5
+                stepSize: 1
                 anchors.left: text2.right
                 anchors.leftMargin: 64
                 anchors.right: parent.right
                 anchors.rightMargin: 64
                 anchors.verticalCenter: parent.verticalCenter
-                value: 0.5
+                value: 3
             }
         }
 
@@ -181,7 +204,7 @@ Item {
 
             Text {
                 id: text6
-                text: qsTr("30fps")
+                text: sliderFps.value + " " + qsTr("fps")
                 anchors.left: text5.right
                 anchors.leftMargin: 32
                 anchors.verticalCenter: parent.verticalCenter
@@ -189,36 +212,38 @@ Item {
             }
 
             Slider {
-                id: slider
+                id: sliderFps
                 width: 256
+                to: 60
+                from: 5
+                stepSize: 1
                 anchors.left: text6.right
                 anchors.leftMargin: 32
                 anchors.verticalCenter: parent.verticalCenter
-                value: 0.5
+                value: 30
             }
         }
 
         CheckBox {
-            id: checkBox
+            id: checkBox_stab
             x: 16
             y: 310
             text: qsTr("stabilization")
         }
 
         CheckBox {
-            id: checkBox1
+            id: checkBox_defish
             x: 159
             y: 310
-            text: qsTr("defishye")
+            text: qsTr("defisheye")
         }
 
         CheckBox {
-            id: checkBox2
+            id: checkBox_crop
             x: 280
             y: 310
             text: qsTr("crop")
         }
-
     }
 
     Rectangle {
@@ -243,10 +268,16 @@ Item {
         ComboBox {
             id: comboBoxDestination
             width: 256
-            displayText: "auto"
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: textDestinationTitle.right
             anchors.leftMargin: 16
+
+            ListModel {
+                id: cbDestinations
+                ListElement { text: "auto"; }
+            }
+
+            model: cbDestinations
         }
     }
 
@@ -270,6 +301,24 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             anchors.leftMargin: 12
+
+            onClicked: {
+                var codec = "H.264"
+                if (rbH264.checked)
+                    codec = rbH264.text
+                else if (rbH265.checked)
+                    codec = rbH265.text
+                else if (rbVP9.checked)
+                    codec = rbVP9.text
+                else if (rbGIF.checked)
+                    codec = rbGIF.text
+
+                myDevice.reencodeSelected(selectedItemName, codec,
+                                          sliderQuality.value,
+                                          sliderSpeed.value,
+                                          sliderFps.value)
+                popupEncode.close()
+            }
         }
 
         Button {
@@ -280,20 +329,8 @@ Item {
             anchors.left: buttonStart.right
             anchors.leftMargin: 16
             anchors.verticalCenter: parent.verticalCenter
+
+            onClicked: popupEncode.close()
         }
     }
-
-
-
 }
-
-/*##^## Designer {
-    D{i:2;anchors_height:200;anchors_width:200}D{i:3;anchors_x:14;anchors_y:13}D{i:5;anchors_x:62;anchors_y:48}
-D{i:6;anchors_x:34}D{i:7;anchors_x:23}D{i:8;anchors_x:16}D{i:9;anchors_x:16}D{i:4;anchors_x:16;anchors_y:65}
-D{i:11;anchors_x:116}D{i:12;anchors_x:335}D{i:10;anchors_x:569}D{i:14;anchors_width:200;anchors_x:173;anchors_y:177}
-D{i:15;anchors_width:200;anchors_x:79;anchors_y:120}D{i:13;anchors_x:466}D{i:17;anchors_width:200;anchors_x:230;anchors_y:197}
-D{i:16;anchors_width:400;anchors_x:213}D{i:21;anchors_x:21}D{i:22;anchors_width:200}
-D{i:1;anchors_height:350;anchors_width:200;anchors_x:84;anchors_y:184}D{i:24;anchors_x:67}
-D{i:25;anchors_x:205}D{i:23;anchors_width:200;anchors_x:73}D{i:27;anchors_x:173}D{i:28;anchors_x:254}
-}
- ##^##*/
