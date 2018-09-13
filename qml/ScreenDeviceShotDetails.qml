@@ -540,8 +540,8 @@ Rectangle {
                     id: rectanglePicture
                     height: 120
                     color: "#00000000"
-                    anchors.bottom: rectangleFiles.top
-                    anchors.bottomMargin: 0
+                    anchors.top: labelSize.bottom
+                    anchors.topMargin: 16
                     anchors.left: parent.left
                     anchors.leftMargin: 0
                     anchors.right: parent.right
@@ -643,8 +643,8 @@ Rectangle {
                     id: rectangleVideo
                     height: 120
                     color: "#00000000"
-                    anchors.bottom: rectangleFiles.top
-                    anchors.bottomMargin: 0
+                    anchors.top: labelSize.bottom
+                    anchors.topMargin: 16
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.left: parent.left
