@@ -862,7 +862,7 @@ Rectangle {
 
                 gesture.enabled: false
                 z: parent.z + 1
-                plugin: Plugin { name: "osm" } // "osm", "mapboxgl", "esri"
+                plugin: Plugin { name: "mapboxgl" } // "osm", "mapboxgl", "esri"
                 center: QtPositioning.coordinate(45.5, 6)
                 zoomLevel: 2
 

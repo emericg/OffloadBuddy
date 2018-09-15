@@ -527,11 +527,11 @@ bool Shot::getMetadatasFromPicture()
             // ex: "45, 41, 24,5662800"
             exif_entry_get_value(entry, buf, sizeof(buf));
             QString str = buf;
-            int deg = str.mid(0, 2).toInt();
-            int min = str.mid(4, 2).toInt();
-            double sec = str.mid(8, 10).toDouble();
+            double deg = str.mid(0, 2).toDouble();
+            double min = str.mid(4, 2).toDouble();
+            double sec = str.mid(8, 10).replace(',', '.').toDouble();
             gps_lat = deg + min/60.0 + sec/3600.0;
-            gps_lat_str = str.mid(0, 2) + "° " + str.mid(4, 2) + "` " + str.mid(8, 5) + "``";
+            gps_lat_str = str.mid(0, 2) + "° " + str.mid(4, 2) + "` " + str.mid(8, 8) + "``";
 
             entry = exif_content_get_entry(ed->ifd[EXIF_IFD_GPS],
                                            static_cast<ExifTag>(EXIF_TAG_GPS_LATITUDE_REF));
@@ -549,11 +549,11 @@ bool Shot::getMetadatasFromPicture()
         {
             exif_entry_get_value(entry, buf, sizeof(buf));
             QString str = buf;
-            int deg = str.mid(0, 2).toInt();
-            int min = str.mid(4, 2).toInt();
-            double sec = str.mid(8, 10).toDouble();
+            double deg = str.mid(0, 2).toDouble();
+            double min = str.mid(4, 2).toDouble();
+            double sec = str.mid(8, 10).replace(',', '.').toDouble();
             gps_long = deg + min/60.0 + sec/3600.0;
-            gps_long_str = str.mid(0, 2) + "° " + str.mid(4, 2) + "` " + str.mid(8, 5) + "``";
+            gps_long_str = str.mid(0, 2) + "° " + str.mid(4, 2) + "` " + str.mid(8, 8) + "``";
 
             entry = exif_content_get_entry(ed->ifd[EXIF_IFD_GPS],
                                            static_cast<ExifTag>(EXIF_TAG_GPS_LONGITUDE_REF));
