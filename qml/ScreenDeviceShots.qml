@@ -33,7 +33,10 @@ Rectangle {
         deviceSpaceText.text = StringUtils.bytesToString_short(myDevice.spaceUsed) + " used of " + StringUtils.bytesToString_short(myDevice.spaceTotal)
         deviceSpaceBar.value = myDevice.spaceUsedPercent
 
-        if (myDevice.model.includes("HERO7") ||
+        if (myDevice.model.includes("HERO7 White") ||
+            myDevice.model.includes("HERO7 Silver")) {
+            deviceImage.source = "qrc:/cameras/H7w.svg"
+        } else if (myDevice.model.includes("HERO7") ||
             myDevice.model.includes("HERO6")) {
             deviceImage.source = "qrc:/cameras/H6.svg"
         } else if (myDevice.model.includes("HERO5")) {
