@@ -225,7 +225,7 @@ ApplicationWindow {
             color: "#00000000"
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 16
+            anchors.bottomMargin: 23
 
             MouseArea {
                 anchors.fill: parent

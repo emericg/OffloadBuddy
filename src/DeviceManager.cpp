@@ -284,8 +284,8 @@ void DeviceManager::addFsDeviceGeneric(QString path, generic_device_infos *infos
                        STORAGE_FILESYSTEM,
                        infos->device_brand,
                        infos->device_model,
-                       "camera_serial_number",
-                       "firmware_version");
+                       "",
+                       "");
         if (d)
         {
             if (d->addStorage_filesystem(path) == true)

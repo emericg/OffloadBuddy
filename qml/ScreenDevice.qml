@@ -17,12 +17,14 @@ Rectangle {
     onMyDeviceChanged: {
         if (!deviceStateList[myDevice.uniqueId]) {
             deviceStateList[myDevice.uniqueId] = ({ orderBy: 0,
-                                                  zoomLevel: 2.0,
-                                                  mainState: "shotsview",
-                                                  selectedIndex: 0,
-                                                  detail_shot: null,
-                                                  detail_state: "overview" })
+                                                    zoomLevel: 2.0,
+                                                    mainState: "shotsview",
+                                                    selectedIndex: 0,
+                                                    detail_shot: null,
+                                                    detail_state: "overview" })
         }
+
+        //console.log("Device is now " + myDevice.uniqueId)
 
         // restore state
         deviceState = deviceStateList[myDevice.uniqueId]
