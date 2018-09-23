@@ -3,6 +3,7 @@ import QtQuick.Controls 2.3
 
 import QtLocation 5.10
 import QtPositioning 5.10
+import QtMultimedia 5.10
 
 import com.offloadbuddy.style 1.0
 import com.offloadbuddy.shared 1.0
@@ -24,6 +25,12 @@ Rectangle {
         deviceState.detail_shot = shot
     }
 
+    onVisibleChanged: {
+        if (visible === false) {
+            mediaPlayer.pause()
+        }
+    }
+
     function restoreState() {
         shot = deviceState.detail_shot
         screenDeviceShotDetails.state = deviceState.detail_state
@@ -32,11 +39,6 @@ Rectangle {
     function updateDeviceDetails() {
         if (shot) {
             textShotName.text = shot.name
-
-            if (shot.preview) {
-                image.source = "file:///" + shot.preview
-            }
-
             textFileList.text = shot.fileList
 
             if (shot.type >= Shared.SHOT_PICTURE) {
@@ -47,25 +49,39 @@ Rectangle {
                 codecVideo.visible = true
                 codecVideo.source = "qrc:/badges/JPEG.svg"
 
+                image.visible = true
+                mediaOutput.visible = false
+
                 if (shot.duration > 1) {
                     labelDuration.visible = true
                     labelDuration.height = 40
                     duration.text = shot.duration + " " + qsTr("pictures")
 
-                    if (!shot.preview)
+                    if (shot.preview)
+                        image.source = "file:///" + shot.preview
+                    else
                         image.source = "qrc:/resources/other/placeholder_picture_multi.svg"
                 } else {
                     labelDuration.visible = false
                     labelDuration.height = 0
 
-                    if (!shot.preview)
+                    if (shot.preview)
+                        image.source = "file:///" + shot.preview
+                    else
                         image.source = "qrc:/resources/other/placeholder_picture.svg"
                 }
             } else {
                 rectanglePicture.visible = false
                 rectangleVideo.visible = true
 
-                if (!shot.preview)
+                image.visible = false
+                mediaOutput.visible = true
+
+                //console.log("shot.preview :" + shot.previewVideo)
+
+                if (shot.previewVideo)
+                    mediaPlayer.source = "file://" + shot.previewVideo
+                else
                     image.source = "qrc:/resources/other/placeholder_video.svg"
 
                 codecVideo.visible = true
@@ -298,33 +314,231 @@ Rectangle {
             anchors.fill: parent
             color: "#00000000"
 
-            Image {
-                id: image
+            Rectangle {
+                id: preview
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
                 anchors.right: rectangleMetadatas.left
                 anchors.margins: 16
-                fillMode: Image.PreserveAspectFit
-                //source: "qrc:/resources/other/placeholder_picture.svg"
+                color: "black"
 
-                sourceSize.width: shot.width / 2
-                sourceSize.height: shot.height / 2
                 property  bool isFullScreen: false
 
                 MouseArea {
-                    id: imageFullScreenOrNot
+                    id: previewFullScreen
                     anchors.fill: parent
 
-                    onDoubleClicked: {
-                        image.isFullScreen = !image.isFullScreen
+                    onDoubleClicked: toogleFullScreen()
 
-                        if (image.isFullScreen) {
+                    function toogleFullScreen() {
+                        preview.isFullScreen = !preview.isFullScreen
+
+                        if (preview.isFullScreen) {
+                            buttonFullscreen.text = "⇱"
                             rectangleMetadatas.visible = true
-                            image.anchors.right = rectangleMetadatas.left
+                            preview.anchors.right = rectangleMetadatas.left
                         } else {
+                            buttonFullscreen.text = "⇲"
                             rectangleMetadatas.visible = false
-                            image.anchors.right = parent.parent.right
+                            preview.anchors.right = parent.parent.right
+                        }
+                    }
+                }
+
+                Image {
+                    id: image
+                    anchors.fill: parent
+                    fillMode: Image.PreserveAspectFit
+                    //source: "qrc:/resources/other/placeholder_picture.svg"
+
+                    sourceSize.width: shot.width / 2
+                    sourceSize.height: shot.height / 2
+                }
+
+                VideoOutput {
+                    id: mediaOutput
+                    anchors.fill: parent
+                    source: mediaPlayer
+
+                    MediaPlayer {
+                        id: mediaPlayer
+                        volume: 0.5
+                        autoPlay: false
+                        //source: "file://" + "/home/emeric/Videos/equi/VIDEO_1927.mp4"
+
+                        property bool isRunning: false
+
+                        onStopped: {
+                            isRunning = false
+                        }
+                        onSourceChanged: {
+                            stop()
+                            isRunning = false
+                        }
+                        onVolumeChanged: {
+                            soundlinePosition.width = (soundline.width * volume)
+                        }
+                        onPositionChanged: {
+                            timelinePosition.width = timeline.width * (mediaPlayer.position / mediaPlayer.duration);
+                        }
+                    }
+
+                    Rectangle {
+                        id: mediaControls
+                        height: 32
+                        color: "#d9d9d9"
+                        anchors.right: parent.right
+                        anchors.rightMargin: 0
+                        anchors.left: parent.left
+                        anchors.leftMargin: 0
+                        anchors.bottom: parent.bottom
+                        anchors.bottomMargin: 0
+
+                        Button {
+                            id: buttonPlay
+                            width: 32
+                            height: 32
+                            text: "▶"
+                            anchors.left: parent.left
+                            anchors.leftMargin: 0
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            onClicked: {
+                                if (mediaPlayer.isRunning) {
+                                    mediaPlayer.pause()
+                                    mediaPlayer.isRunning = false
+                                    buttonPlay.text = "▷"
+                                } else {
+                                    mediaPlayer.play()
+                                    mediaPlayer.isRunning = true
+                                    buttonPlay.text = "▶"
+                                }
+                            }
+                        }
+
+                        Button {
+                            id: buttonStop
+                            width: 32
+                            height: 32
+                            text: "■"
+                            anchors.left: buttonPlay.right
+                            anchors.leftMargin: 0
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            onClicked: {
+                                mediaPlayer.stop()
+                                mediaPlayer.isRunning = false
+                            }
+                        }
+
+                        Button {
+                            id: buttonStartCut
+                            width: 32
+                            height: 32
+                            text: "["
+                            anchors.left: buttonStop.right
+                            anchors.leftMargin: 0
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            onClicked: {
+                                //
+                            }
+                        }
+
+                        Button {
+                            id: buttonStopCut
+                            width: 32
+                            height: 32
+                            text: "]"
+                            anchors.right: buttonScreenshot.left
+                            anchors.rightMargin: 0
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            onClicked: {
+                                //
+                            }
+                        }
+                        Button {
+                            id: buttonScreenshot
+                            width: 32
+                            height: 32
+                            text: "⎔"
+                            anchors.right: soundline.left
+                            anchors.rightMargin: 0
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            onClicked: previewFullScreen.toogleFullScreen()
+                        }
+                        Button {
+                            id: buttonFullscreen
+                            width: 32
+                            height: 32
+                            text: "⇱"
+                            anchors.right: parent.right
+                            anchors.rightMargin: 0
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            onClicked: previewFullScreen.toogleFullScreen()
+                        }
+
+
+                        Rectangle {
+                            id: timeline
+                            height: 32
+                            color: "#e0e0e0"
+                            anchors.left: buttonStartCut.right
+                            anchors.leftMargin: 0
+                            anchors.right: buttonStopCut.left
+                            anchors.rightMargin: 0
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            Rectangle {
+                                id: timelinePosition
+                                width: 0
+                                height: 32
+                                color: "#addfff"
+                                anchors.left: parent.left
+                                anchors.leftMargin: 0
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+
+                            MouseArea {
+                                id: timelineSeeker
+                                anchors.fill: parent
+
+                                onClicked: {
+                                    var fff = mouseX / timeline.width
+                                    //if (mediaPlayer.isRunning)
+                                    mediaPlayer.seek(mediaPlayer.duration * fff)
+                                }
+                            }
+                        }
+
+                        Rectangle {
+                            id: soundline
+                            width: 80
+                            height: 32
+                            color: "#ffffff"
+                            anchors.right: buttonFullscreen.left
+                            anchors.rightMargin: 0
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            Rectangle {
+                                id: soundlinePosition
+                                width: 0
+                                height: 32
+                                color: "#ffe695"
+                                anchors.left: parent.left
+                                anchors.leftMargin: 0
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+
+                            MouseArea {
+                                id: mouseArea
+                                anchors.fill: parent
+                                onClicked: mediaPlayer.volume = (mouseX / soundline.width)
+                            }
                         }
                     }
                 }

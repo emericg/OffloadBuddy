@@ -221,7 +221,7 @@ QVariant ShotModel::data(const QModelIndex & index, int role) const
         else if (role == TypeRole)
             return shot->getType();
         else if (role == PreviewRole)
-            return shot->getPreview();
+            return shot->getPreviewPicture();
         else if (role == SizeRole)
             return shot->getSize();
         else if (role == DurationRole)

@@ -5,6 +5,7 @@ CONFIG += c++14
 QT     += core gui svg
 QT     += quick quickcontrols2
 QT     += charts location
+QT     += multimedia
 
 # Enables or disable optional features
 unix {

@@ -256,7 +256,7 @@ qint64 Shot::getDataSize() const
     return size;
 }
 
-QString Shot::getPreview() const
+QString Shot::getPreviewPicture() const
 {
     if (m_pictures.size() > 0 && !m_pictures.at(0)->filesystemPath.isEmpty())
     {
@@ -265,6 +265,15 @@ QString Shot::getPreview() const
     else if (m_videos_thumbnails.size() > 0 && !m_videos_thumbnails.at(0)->filesystemPath.isEmpty())
     {
         return m_videos_thumbnails.at(0)->filesystemPath;
+    }
+
+    return QString();
+}
+QString Shot::getPreviewVideo() const
+{
+    if (m_videos.size() > 0 && !m_videos.at(0)->filesystemPath.isEmpty())
+    {
+        return m_videos.at(0)->filesystemPath;
     }
 
     return QString();

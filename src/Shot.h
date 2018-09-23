@@ -113,7 +113,8 @@ class Shot: public QObject
     Q_PROPERTY(int chapters READ getChapterCount NOTIFY shotUpdated)
     Q_PROPERTY(int highlightCount READ getHighlightCount NOTIFY shotUpdated)
 
-    Q_PROPERTY(QString preview READ getPreview NOTIFY shotUpdated)
+    Q_PROPERTY(QString preview READ getPreviewPicture NOTIFY shotUpdated)
+    Q_PROPERTY(QString previewVideo READ getPreviewVideo NOTIFY shotUpdated)
     Q_PROPERTY(QString fileList READ getFileList NOTIFY shotUpdated)
 
     Q_PROPERTY(qint64 duration READ getDuration NOTIFY shotUpdated)
@@ -228,7 +229,8 @@ public slots:
     qint64 getFullSize() const;
     int getChapterCount() const;    //!< 0 means no notion of chapter
     QDateTime getDate() const { return m_date; }
-    QString getPreview() const;
+    QString getPreviewPicture() const;
+    QString getPreviewVideo() const;
     QString getCameraSource() const { return m_camera_source; }
 
     QString getOrientation() const { return orientation; }
