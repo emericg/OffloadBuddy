@@ -14,14 +14,13 @@ before_install:
       brew update;
     fi
 
-
 install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
       sudo apt-get install qt511base qt511quickcontrols2 qt511svg qt511imageformats qt511tools qt511charts-no-lgpl qt511location qt511multimedia -y;
       sudo apt-get install libgl1-mesa-dev -y;
       sudo apt-get install libmtp-dev -y;
       sudo apt-get install libexif-dev -y;
-      sudo apt-get install ffmpeg-dev -y;
+      sudo apt-get install ffmpeg -y;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       brew install qt;
