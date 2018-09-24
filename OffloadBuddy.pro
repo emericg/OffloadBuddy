@@ -71,14 +71,23 @@ ICON = resources/app/$$lower($${TARGET}).icns
 # Windows icon
 RC_ICONS = resources/app/$$lower($${TARGET}).ico
 
-# Build ########################################################################
+# Build settings ###############################################################
 
 unix {
     # Enables AddressSanitizer
     #QMAKE_CXXFLAGS += -fsanitize=address,undefined
     #QMAKE_LFLAGS += -fsanitize=address,undefined
+}
 
-    # Handle dependencies
+DEFINES += QT_DEPRECATED_WARNINGS
+
+# Additional import path used to resolve QML modules
+QML_IMPORT_PATH = qml/
+QML_DESIGNER_IMPORT_PATH = qml/
+
+# Dependencies #################################################################
+
+unix {
     CONFIG += link_pkgconfig
 
     contains(DEFINES, ENABLE_LIBMTP) {
@@ -90,19 +99,13 @@ unix {
     }
 
     contains(DEFINES, ENABLE_FFMPEG) {
-        PKGCONFIG += libavutil libavparser libavcodec
+        PKGCONFIG += libavformat libavcodec libswscale libavutil
     }
 
     contains(DEFINES, ENABLE_MINIVIDEO) {
         PKGCONFIG += libminivideo
     }
 }
-
-DEFINES += QT_DEPRECATED_WARNINGS
-
-# Additional import path used to resolve QML modules
-QML_IMPORT_PATH = qml/
-QML_DESIGNER_IMPORT_PATH = qml/
 
 # Deploy #######################################################################
 

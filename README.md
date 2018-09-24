@@ -16,7 +16,8 @@ FEATURES (WIP):
   * Copy, merge or reencode medias
   * Consult and export shots metadatas
   * Organize your media library
-* Create clips or extract photos from your videos
+* Create short video clips or extract photos from your videos
+* Create timeplapse from videos
 * Assemble photo timelapses into videos
 * GoPro firmware updates
 
@@ -32,7 +33,7 @@ FEATURES (WIP):
 
 ### Dependencies
 
-You will need a C++14 capable compiler and Qt 5.10+ (with QtCharts and QtLocation)
+You will need a C++14 capable compiler and Qt 5.10+ (with QtMultimedia, QtLocation and QtCharts)
 
 Optional dependencies:
 - libusb and libmtp  
@@ -42,6 +43,11 @@ Optional dependencies:
 
 ### Building OffloadBuddy
 
+Contribs (optional):
+$ cd OffloadBuddy/Contribs  
+$ ./contribs.py  
+
+OffloadBuddy:
 > $ cd OffloadBuddy/  
 > $ qmake  
 > $ make  
