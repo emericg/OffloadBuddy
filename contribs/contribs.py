@@ -234,9 +234,10 @@ for TARGET in TARGETS:
             CMAKE_gen = "Visual Studio 15 2017"
 
     ## EXTRACT
-    if not os.path.isdir(build_dir + DIR_libmtp):
-        zipMTP = zipfile.ZipFile(src_dir + FILE_libmtp)
-        zipMTP.extractall(build_dir)
+    if OS_HOST != "Windows":
+        if not os.path.isdir(build_dir + DIR_libmtp):
+            zipMTP = zipfile.ZipFile(src_dir + FILE_libmtp)
+            zipMTP.extractall(build_dir)
 
     if not os.path.isdir(build_dir + DIR_libexif):
         zipEX = zipfile.ZipFile(src_dir + FILE_libexif)
