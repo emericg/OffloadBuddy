@@ -2,17 +2,15 @@ TARGET  = OffloadBuddy
 VERSION = 0.1.0
 
 CONFIG += c++14
-QT     += core gui svg
-QT     += quick quickcontrols2
-QT     += charts location
-QT     += multimedia
+QT     += core gui svg quick quickcontrols2
+QT     += multimedia location charts
 
 # Enables or disable optional features
 unix {
     DEFINES += ENABLE_LIBMTP
     DEFINES += ENABLE_LIBEXIF
-    #DEFINES += ENABLE_MINIVIDEO
-    #DEFINES += ENABLE_FFMPEG
+    DEFINES += ENABLE_FFMPEG
+    DEFINES += ENABLE_MINIVIDEO
 }
 
 # Validate Qt version
@@ -87,23 +85,47 @@ QML_DESIGNER_IMPORT_PATH = qml/
 
 # Dependencies #################################################################
 
-unix {
+contains(DEFINES, USE_CONTRIBS) {
+
+    ARCH = "x86_64"
+    linux { PLATFORM = "linux" }
+    macx { PLATFORM = "macOS" }
+    win32 { PLATFORM = "windows" }
+    CONTRIBS_DIR = $${PWD}/contribs/env/$${PLATFORM}_$${ARCH}/usr
+
+    INCLUDEPATH     += $${CONTRIBS_DIR}/include/
+    QMAKE_LIBDIR    += $${CONTRIBS_DIR}/lib/
+    QMAKE_RPATHDIR  += $${CONTRIBS_DIR}/lib
+    LIBS            += -L$${CONTRIBS_DIR}/lib/
+
+    contains(DEFINES, ENABLE_LIBMTP) { LIBS += -lusb -lmtp }
+    contains(DEFINES, ENABLE_LIBEXIF) { LIBS += -lexif }
+    contains(DEFINES, ENABLE_MINIVIDEO) { LIBS += -lminivideo }
+    contains(DEFINES, ENABLE_FFMPEG) { LIBS += -lavformat -lavcodec -lswscale -lavutil }
+
+} else {
+
+    !unix { warning("Building ReShoot without contribs on windows is untested...") }
+
     CONFIG += link_pkgconfig
+
+    # PKG_CONFIG_PATH = "contribs/env/usr/lib/pkgconfig:$(PKG_CONFIG_PATH)"
+    # warning("PKG_CONFIG_PATH: " $(PKG_CONFIG_PATH))
+
+    #system("pkg-config --exists libmtp")
+    #    DEFINES -= ENABLE_LIBMTP
 
     contains(DEFINES, ENABLE_LIBMTP) {
         PKGCONFIG += libusb-1.0 libmtp
     }
-
     contains(DEFINES, ENABLE_LIBEXIF) {
         PKGCONFIG += libexif
     }
-
-    contains(DEFINES, ENABLE_FFMPEG) {
-        PKGCONFIG += libavformat libavcodec libswscale libavutil
-    }
-
     contains(DEFINES, ENABLE_MINIVIDEO) {
         PKGCONFIG += libminivideo
+    }
+    contains(DEFINES, ENABLE_FFMPEG) {
+        PKGCONFIG += libavformat libavcodec libswscale libavutil
     }
 }
 
