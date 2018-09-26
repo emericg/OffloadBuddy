@@ -93,9 +93,14 @@ contains(DEFINES, USE_CONTRIBS) {
     win32 { PLATFORM = "windows" }
     CONTRIBS_DIR = $${PWD}/contribs/env/$${PLATFORM}_$${ARCH}/usr
 
+    INCLUDEPATH     += /include/
+    QMAKE_LIBDIR    += /include/
+    QMAKE_RPATHDIR  += /lib/
+    LIBS            += -L/lib/
+
     INCLUDEPATH     += $${CONTRIBS_DIR}/include/
     QMAKE_LIBDIR    += $${CONTRIBS_DIR}/lib/
-    QMAKE_RPATHDIR  += $${CONTRIBS_DIR}/lib
+    QMAKE_RPATHDIR  += $${CONTRIBS_DIR}/lib/
     LIBS            += -L$${CONTRIBS_DIR}/lib/
 
     contains(DEFINES, ENABLE_LIBMTP) { LIBS += -lusb -lmtp }
