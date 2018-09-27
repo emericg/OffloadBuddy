@@ -6,11 +6,11 @@ QT     += core gui svg quick quickcontrols2
 QT     += multimedia location charts
 
 # Enables or disable optional features
+DEFINES += ENABLE_LIBEXIF
+DEFINES += ENABLE_MINIVIDEO
 unix {
     DEFINES += ENABLE_LIBMTP
-    DEFINES += ENABLE_LIBEXIF
-    DEFINES += ENABLE_FFMPEG
-    DEFINES += ENABLE_MINIVIDEO
+    #DEFINES += ENABLE_FFMPEG
 }
 
 # Validate Qt version
@@ -93,15 +93,15 @@ contains(DEFINES, USE_CONTRIBS) {
     win32 { PLATFORM = "windows" }
     CONTRIBS_DIR = $${PWD}/contribs/env/$${PLATFORM}_$${ARCH}/usr
 
-    INCLUDEPATH     += /include/
-    QMAKE_LIBDIR    += /include/
-    QMAKE_RPATHDIR  += /lib/
-    LIBS            += -L/lib/
-
     INCLUDEPATH     += $${CONTRIBS_DIR}/include/
     QMAKE_LIBDIR    += $${CONTRIBS_DIR}/lib/
     QMAKE_RPATHDIR  += $${CONTRIBS_DIR}/lib/
     LIBS            += -L$${CONTRIBS_DIR}/lib/
+
+    INCLUDEPATH     += /usr/include/
+    QMAKE_LIBDIR    += /usr/include/
+    QMAKE_RPATHDIR  += /usr/lib/
+    LIBS            += -L/usr/lib/
 
     contains(DEFINES, ENABLE_LIBMTP) { LIBS += -lusb -lmtp }
     contains(DEFINES, ENABLE_LIBEXIF) { LIBS += -lexif }

@@ -238,6 +238,9 @@ for TARGET in TARGETS:
         if not os.path.isdir(build_dir + DIR_libmtp):
             zipMTP = zipfile.ZipFile(src_dir + FILE_libmtp)
             zipMTP.extractall(build_dir)
+        if not os.path.isdir(build_dir + DIR_libusb):
+            zipUSB = zipfile.ZipFile(src_dir + FILE_libusb)
+            zipUSB.extractall(build_dir)
 
     if not os.path.isdir(build_dir + DIR_libexif):
         zipEX = zipfile.ZipFile(src_dir + FILE_libexif)
@@ -249,6 +252,15 @@ for TARGET in TARGETS:
 
     ## BUILD & INSTALL
     if OS_HOST != "Windows":
+        # libUSB
+        os.chdir(build_dir + DIR_libusb)
+        os.chmod("autogen.sh", 509)
+        os.system("./autogen.sh <<< \"y\"")
+        os.system("./configure --prefix=" + env_dir + "/usr")
+        os.system("make -j" + str(CPU_COUNT))
+        os.system("make install")
+        os.chdir(build_dir + DIR_libusb)
+        # libMTP
         os.chdir(build_dir + DIR_libmtp)
         os.chmod("autogen.sh", 509)
         os.system("./autogen.sh <<< \"y\"")
