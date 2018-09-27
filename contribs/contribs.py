@@ -255,6 +255,7 @@ for TARGET in TARGETS:
         # libUSB
         os.chdir(build_dir + DIR_libusb)
         os.chmod("autogen.sh", 509)
+        os.chmod("bootstrap.sh", 509)
         os.system("./autogen.sh <<< \"y\"")
         os.system("./configure --prefix=" + env_dir + "/usr")
         os.system("make -j" + str(CPU_COUNT))
