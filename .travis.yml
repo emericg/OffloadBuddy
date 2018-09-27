@@ -29,7 +29,7 @@ install:
       brew install libmtp;
       brew install libexif;
       brew install ffmpeg;
-      brew install libtool automake m4;
+      brew install libtool automake;
     fi
 
 before_script:
