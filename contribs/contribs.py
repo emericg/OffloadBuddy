@@ -17,6 +17,19 @@ else: # python2
 
 print("\n> OffloadBuddy contribs builder")
 
+## DEPENDENCIES ###############################################################
+
+## linux:
+# cmake libtool automake m4 libudev-dev
+
+## macOS:
+# brew install libtool automake m4
+
+## Windows:
+# python (https://www.python.org/downloads/)
+# cmake (https://cmake.org/download/)
+# MSVC 2017
+
 ## SANITY CHECKS ###############################################################
 
 if platform.system() != "Windows":
@@ -235,12 +248,12 @@ for TARGET in TARGETS:
 
     ## EXTRACT
     if OS_HOST != "Windows":
-        if not os.path.isdir(build_dir + DIR_libmtp):
-            zipMTP = zipfile.ZipFile(src_dir + FILE_libmtp)
-            zipMTP.extractall(build_dir)
         if not os.path.isdir(build_dir + DIR_libusb):
             zipUSB = zipfile.ZipFile(src_dir + FILE_libusb)
             zipUSB.extractall(build_dir)
+        if not os.path.isdir(build_dir + DIR_libmtp):
+            zipMTP = zipfile.ZipFile(src_dir + FILE_libmtp)
+            zipMTP.extractall(build_dir)
 
     if not os.path.isdir(build_dir + DIR_libexif):
         zipEX = zipfile.ZipFile(src_dir + FILE_libexif)
@@ -254,21 +267,18 @@ for TARGET in TARGETS:
     if OS_HOST != "Windows":
         # libUSB
         os.chdir(build_dir + DIR_libusb)
-        os.chmod("autogen.sh", 509)
         os.chmod("bootstrap.sh", 509)
-        os.system("./autogen.sh <<< \"y\"")
+        os.system("./bootstrap.sh")
         os.system("./configure --prefix=" + env_dir + "/usr")
         os.system("make -j" + str(CPU_COUNT))
         os.system("make install")
-        os.chdir(build_dir + DIR_libusb)
         # libMTP
         os.chdir(build_dir + DIR_libmtp)
         os.chmod("autogen.sh", 509)
-        os.system("./autogen.sh <<< \"y\"")
+        os.system("./autogen.sh << \"y\"")
         os.system("./configure --prefix=" + env_dir + "/usr --with-udev=" + env_dir + "/usr/lib/udev")
         os.system("make -j" + str(CPU_COUNT))
         os.system("make install")
-        os.chdir(build_dir + DIR_libmtp)
 
     subprocess.check_call(CMAKE_cmd + ["-G", CMAKE_gen, "-DCMAKE_BUILD_TYPE=Release", "-DBUILD_STATIC_LIBS:BOOL=OFF", "-DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=TRUE", "-DCMAKE_INSTALL_PREFIX=" + env_dir + "/usr", ".."], cwd=build_dir + DIR_libexif + "/build")
     subprocess.check_call(["cmake", "--build", "."], cwd=build_dir + DIR_libexif + "/build")
