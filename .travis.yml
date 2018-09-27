@@ -24,12 +24,11 @@ install:
       sudo apt-get install libtool automake m4 -y;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-      brew install python;
       brew install qt;
       brew install libmtp;
       brew install libexif;
       brew install ffmpeg;
-      brew install libtool automake;
+      brew install libtool;
     fi
 
 before_script:

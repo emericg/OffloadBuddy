@@ -23,7 +23,8 @@ print("\n> OffloadBuddy contribs builder")
 # cmake libtool automake m4 libudev-dev
 
 ## macOS:
-# brew install libtool automake
+# brew install python automake
+# brew install libtool
 
 ## Windows:
 # python (https://www.python.org/downloads/)

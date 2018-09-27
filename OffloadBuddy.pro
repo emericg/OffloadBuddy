@@ -99,8 +99,7 @@ contains(DEFINES, USE_CONTRIBS) {
     LIBS            += -L$${CONTRIBS_DIR}/lib/
 
     INCLUDEPATH     += /usr/include/
-    QMAKE_LIBDIR    += /usr/include/
-    QMAKE_RPATHDIR  += /usr/lib/
+    QMAKE_LIBDIR    += /usr/lib/
     LIBS            += -L/usr/lib/
 
     contains(DEFINES, ENABLE_LIBMTP) { LIBS += -lusb -lmtp }
