@@ -8,6 +8,9 @@ export VERSION=$(git rev-parse --short HEAD);
 
 make install
 
+# recap installation directory content
+find bin/;
+
 ## PACKAGE #####################################################################
 
 # already run by the make install

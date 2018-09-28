@@ -104,7 +104,7 @@ contains(DEFINES, USE_CONTRIBS) {
     QMAKE_LIBDIR    += /usr/lib/
     LIBS            += -L/usr/lib/
 
-    contains(DEFINES, ENABLE_LIBMTP) { LIBS += -lusb -lmtp }
+    contains(DEFINES, ENABLE_LIBMTP) { LIBS += -lusb-1.0 -lmtp }
     contains(DEFINES, ENABLE_LIBEXIF) { LIBS += -lexif }
     contains(DEFINES, ENABLE_MINIVIDEO) { LIBS += -lminivideo }
     contains(DEFINES, ENABLE_FFMPEG) { LIBS += -lavformat -lavcodec -lswscale -lavutil }

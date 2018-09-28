@@ -6,7 +6,10 @@ export VERSION=$(git rev-parse --short HEAD);
 
 ## APP INSTALL #################################################################
 
-make INSTALL_ROOT=appdir -j$(nproc) install; find appdir/;
+make INSTALL_ROOT=appdir -j$(nproc) install;
+
+# recap installation directory content
+find appdir/;
 
 ## PACKAGE #####################################################################
 
@@ -38,4 +41,4 @@ cp $QTDIR/plugins/iconengines/libqsvgicon.so appdir/$USRDIR/plugins/iconengines/
 
 # upload to transfer.sh
 find appdir -executable -type f -exec ldd {} \; | grep " => $USRDIR" | cut -d " " -f 2-3 | sort | uniq;
-#curl --upload-file OffloadBuddy*.AppImage https://transfer.sh/OffloadBuddy-git.$VERSION-linux64.AppImage;
+curl --upload-file OffloadBuddy*.AppImage https://transfer.sh/OffloadBuddy-git.$VERSION-linux64.AppImage;
