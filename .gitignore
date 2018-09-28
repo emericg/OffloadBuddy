@@ -2,6 +2,7 @@
 build/*
 bin/*
 contribs/*
+appdir/*
 
 # QtCreator temporary project files
 OffloadBuddy.config
