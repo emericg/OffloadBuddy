@@ -277,7 +277,7 @@ for TARGET in TARGETS:
         os.chdir(build_dir + DIR_libmtp)
         os.chmod("autogen.sh", 509)
         os.system("./autogen.sh << \"y\"")
-        os.system("./configure --prefix=" + env_dir + "/usr --with-udev=" + env_dir + "/usr/lib/udev")
+        os.system("./configure --disable-mtpz --prefix=" + env_dir + "/usr --with-udev=" + env_dir + "/usr/lib/udev")
         os.system("make -j" + str(CPU_COUNT))
         os.system("make install")
 
