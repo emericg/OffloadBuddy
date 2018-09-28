@@ -75,6 +75,8 @@ unix {
     # Enables AddressSanitizer
     #QMAKE_CXXFLAGS += -fsanitize=address,undefined
     #QMAKE_LFLAGS += -fsanitize=address,undefined
+
+    QMAKE_CXXFLAGS += -Wno-nullability-completeness
 }
 
 DEFINES += QT_DEPRECATED_WARNINGS

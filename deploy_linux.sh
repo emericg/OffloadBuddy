@@ -17,7 +17,7 @@ fi
 chmod a+x contribs/src/linuxdeployqt-continuous-x86_64.AppImage;
 
 unset LD_LIBRARY_PATH; unset QT_PLUGIN_PATH; #unset QTDIR;
-if [ ! -z QTDIR ]; then
+if [ -z "$QTDIR" ]; then
   QTDIR=/usr/lib/qt
 fi
 USRDIR=/usr
