@@ -160,6 +160,7 @@ linux {
 
     # Clean bin/ directory
     #QMAKE_CLEAN += $${OUT_PWD}/$${DESTDIR}/$$lower($${TARGET})
+    #QMAKE_CLEAN += $${OUT_PWD}/appdir
 }
 
 macx {

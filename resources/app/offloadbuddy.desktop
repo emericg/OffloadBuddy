@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=OffloadBuddy
-Comment=Helps you offload and handle the many videos and pictures file from your camera devices.
+Comment=OffloadBuddy is a multimedia offloading software with a few tricks up its sleeve!
 Exec=offloadbuddy
 Icon=offloadbuddy
 Categories=Qt;Utility;

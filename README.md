@@ -44,8 +44,8 @@ Optional dependencies:
 ### Building OffloadBuddy
 
 Contribs (optional):
-$ cd OffloadBuddy/Contribs  
-$ ./contribs.py  
+> $ cd OffloadBuddy/Contribs  
+> $ ./contribs.py  
 
 OffloadBuddy:
 > $ cd OffloadBuddy/  

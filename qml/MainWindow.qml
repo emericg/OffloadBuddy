@@ -98,11 +98,7 @@ ApplicationWindow {
             }
 
             Image {
-                id: image
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.left: parent.left
-                anchors.bottom: parent.bottom
-                anchors.top: parent.top
+                anchors.fill: parent
                 source: "qrc:/resources/menus/media.svg"
             }
         }
