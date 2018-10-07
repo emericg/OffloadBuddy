@@ -20,13 +20,15 @@ Item {
 
         // Handle destination(s)
         cbDestinations.clear()
-        //cbDestinations.append( { "text": "auto" } )
+        cbDestinations.append( { "text": "auto" } )
 
         for (var child in settingsManager.directoriesList) {
             //console.log("destination: " + settingsManager.directoriesList[child].directoryPath)
             if (settingsManager.directoriesList[child].directoryContent < 2)
                 cbDestinations.append( { "text": settingsManager.directoriesList[child].directoryPath } )
         }
+        comboBoxDestination.currentIndex = 0
+        comboBoxDestination.enabled = false
     }
 
     Rectangle {
@@ -137,10 +139,12 @@ Item {
 
             Slider {
                 id: sliderSpeed
+                from: 2
+                wheelEnabled: true
                 anchors.right: parent.right
                 anchors.rightMargin: 64
                 stepSize: 1
-                to: 2
+                to: 0
                 anchors.left: text3.right
                 anchors.leftMargin: 64
                 anchors.verticalCenter: parent.verticalCenter
@@ -170,8 +174,8 @@ Item {
 
             Slider {
                 id: sliderQuality
-                from: 1
-                to: 5
+                from: 5
+                to: 1
                 stepSize: 1
                 anchors.left: text2.right
                 anchors.leftMargin: 64
@@ -267,7 +271,8 @@ Item {
 
         ComboBox {
             id: comboBoxDestination
-            width: 256
+            anchors.right: parent.right
+            anchors.rightMargin: 16
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: textDestinationTitle.right
             anchors.leftMargin: 16
