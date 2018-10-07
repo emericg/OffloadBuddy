@@ -185,6 +185,7 @@ struct ofb_fs_device
 {
     QString brand = "unknown";
     QString model = "device";
+    QString stringId;
     QString serial;
     QString firmware;
 
@@ -196,6 +197,7 @@ struct ofb_vfs_device
 {
     QString brand = "brand";
     QString model = "MODEL";
+    QString stringId;
     QString serial;
     QString firmware;
 
@@ -211,6 +213,7 @@ struct ofb_mtp_device
 {
     QString brand = "brand";
     QString model = "MODEL";
+    QString stringId;
     QString serial;
     QString firmware;
 
@@ -243,6 +246,7 @@ class Device: public QObject
 
     Q_PROPERTY(QString brand READ getBrand NOTIFY deviceUpdated)
     Q_PROPERTY(QString model READ getModel NOTIFY deviceUpdated)
+    Q_PROPERTY(QString stringId READ getStringId NOTIFY deviceUpdated)
     Q_PROPERTY(QString serial READ getSerial NOTIFY deviceUpdated)
     Q_PROPERTY(QString firmware READ getFirmware NOTIFY deviceUpdated)
 
@@ -261,8 +265,9 @@ class Device: public QObject
     deviceState_e m_deviceState = DEVICE_STATE_IDLE;
 
     // Generic infos
-    QString m_brand = "brand";
-    QString m_model = "MODEL";
+    QString m_brand = "brand";  //!< Device brand
+    QString m_model = "MODEL";  //!< Device model
+    QString m_stringId;         //!< A backup string that describe the device in case neither brand/model can be identified
     QString m_serial;
     QString m_firmware;
 
@@ -318,6 +323,7 @@ public slots:
     int getDeviceStorage() const { return m_deviceStorage; }
     QString getBrand() const { return m_brand; }
     QString getModel() const { return m_model; }
+    QString getStringId() const { return m_stringId; }
     QString getSerial() const { return m_serial; }
     QString getFirmware() const { return m_firmware; }
 

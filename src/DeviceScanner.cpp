@@ -195,7 +195,6 @@ void DeviceScanner::scanVirtualFilesystems()
             foreach (QString subdir_device, gvfsDirectory.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
             {
                 QString virtual_mountpoint = storage.rootPath() + "/gvfs/" + subdir_device;
-
                 //qDebug() << "> VIRTUAL MOUNTPOINT(" << storage.fileSystemType() << ") > " << virtual_mountpoint;
 
                 connectedVirtualFilesystems.push_back(storage.rootPath() + "/gvfs/" + subdir_device);
@@ -203,46 +202,77 @@ void DeviceScanner::scanVirtualFilesystems()
                 ofb_vfs_device *deviceInfos = new ofb_vfs_device;
                 if (deviceInfos)
                 {
+                    // first, try to get device bus and number
                     int bus = -1, dev = -1;
-                    std::pair<uint32_t, uint32_t> currentMtpDevice;
-
                     if (subdir_device.startsWith("mtp"))
                     {
-                        bus = subdir_device.mid(18,3).toInt();
-                        dev = subdir_device.mid(24,3).toInt();
+                        bool ok = false;
+                        bus = subdir_device.mid(18,3).toInt(&ok);
+                        if (!ok) bus = -1;
+                        dev = subdir_device.mid(24,3).toInt(&ok);
+                        if (!ok) dev = -1;
                     }
                     else if (subdir_device.startsWith("gphoto2"))
                     {
-                        bus = subdir_device.mid(22,3).toInt();
-                        dev = subdir_device.mid(28,3).toInt();
+                        bool ok = false;
+                        bus = subdir_device.mid(22,3).toInt(&ok);
+                        if (!ok) bus = -1;
+                        dev = subdir_device.mid(28,3).toInt(&ok);
+                        if (!ok) dev = -1;
                     }
-
                     if (bus >= 0 && dev >= 0)
                     {
-                        currentMtpDevice = std::make_pair(bus, dev);
                         deviceInfos->devBus = static_cast<uint32_t>(bus);
                         deviceInfos->devNum = static_cast<uint32_t>(dev);
 
-                        // Device in watch list? bail early!
+                        DeviceManager::getMtpDeviceName(deviceInfos->devBus, deviceInfos->devNum,
+                                                        deviceInfos->brand, deviceInfos->model);
+
+                        //qDebug() << "MTP infos:" << deviceInfos->devBus << "/" << deviceInfos->devNum;
+                        //qDebug() << "MTP infos:" << deviceInfos->brand << "/" << deviceInfos->model;
+                    }
+
+                    // as a fallback, try to get a string able to 'identify' the device
+                    if (bus < 0 || dev < 0)
+                    {
+                        if (subdir_device.startsWith("mtp:host="))
+                            deviceInfos->stringId = subdir_device.mid(9);
+
+                        //qDebug() << "MTP infos:" << deviceInfos->other_id;
+                    }
+
+                    // Device already in watch list? bail early!
+                    if (deviceInfos->devBus > 0 && deviceInfos->devNum > 0)
+                    {
                         // FIXME m_watchedMtpDevices is never cleaned but bus ids are dynamic anyway
-                        if (m_watchedMtpDevices.contains(currentMtpDevice))
+                        if (m_watchedMtpDevices.contains(std::make_pair(deviceInfos->devBus, deviceInfos->devNum)))
                         {
                             //qDebug() << "> skipping device @ bus" << currentMtpDevice.first << ", dev" << currentMtpDevice.second << ", already handled";
                             delete deviceInfos;
                             continue;
                         }
-
-                        DeviceManager::getMtpDeviceName(deviceInfos->devBus, deviceInfos->devNum,
-                                                        deviceInfos->brand, deviceInfos->model);
-                        //qDebug() << "MTP infos:" << deviceInfos->devBus << "/" << deviceInfos->devNum;
-                        //qDebug() << "MTP infos:" << deviceInfos->brand << "/" << deviceInfos->model;
+                    }
+                    else if (!deviceInfos->stringId.isEmpty())
+                    {
+                        bool devicefound = false;
+                        for (auto s: m_watchedVirtualFilesystems)
+                        {
+                            if (s.contains(virtual_mountpoint))
+                            {
+                                devicefound = true;
+                                break;
+                            }
+                        }
+                        if (devicefound)
+                        {
+                            //qDebug() << "> skipping device @ " << virtual_mountpoint;
+                            delete deviceInfos;
+                            continue;
+                        }
                     }
                     else
                     {
-                        // Probably not handled by libMTP...
-                        //qDebug() << "> skipping device: not handled";
-
-                        // skip?
+                        qDebug() << "> skipping device: probably not handled by libMTP...";
                         delete deviceInfos;
                         continue;
                     }
@@ -268,8 +298,11 @@ void DeviceScanner::scanVirtualFilesystems()
                     {
                         // Send device infos to the DeviceManager
                         emit vfsDeviceFound(deviceInfos);
-                        m_watchedMtpDevices.push_back(currentMtpDevice);
+
+                        // And watch for disconnection
                         m_watchedVirtualFilesystems.push_back(deviceInfos->paths.front());
+                        if (deviceInfos->devBus > 0 && deviceInfos->devNum > 0)
+                            m_watchedMtpDevices.push_back(std::make_pair(deviceInfos->devBus, deviceInfos->devNum));
                     }
                     else
                     {
@@ -472,6 +505,7 @@ void DeviceScanner::scanMtpDevices()
 }
 
 /* ************************************************************************** */
+/* ************************************************************************** */
 
 void DeviceScanner::removeFilesystem(const QString &path)
 {
@@ -486,7 +520,7 @@ void DeviceScanner::removeFilesystem(const QString &path)
         // FIXME virtual filesystem sometimes still exists after physical removal
         qDebug() << "DeviceScanner::removeFilesystem()" << path << "but associated directory STILL exists";
     }
-
+    else
     {
         m_watcherFilesystem.removePath(path);
         m_watchedFilesystems.removeOne(path);

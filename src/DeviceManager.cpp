@@ -452,8 +452,8 @@ void DeviceManager::removeMtpDevice(const unsigned devBus, const unsigned devNum
                 return;
             }
         }
-        else
-            ++it;
+
+        ++it;
     }
 }
 
