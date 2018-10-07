@@ -17,5 +17,8 @@
         <file>ActionMenu.qml</file>
         <file>ActionButton.qml</file>
         <file>PanelEncode.qml</file>
+        <file>MediaDetailMap.qml</file>
+        <file>MediaDetailMetadatas.qml</file>
+        <file>MediaDetailOverview.qml</file>
     </qresource>
 </RCC>
