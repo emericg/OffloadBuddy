@@ -99,12 +99,19 @@ void Shot::addFile(ofb_file *file)
             else
                 m_date = file->modification_date;
 
-            if (file->extension == "jpg")
+            if (file->extension == "jpg" ||
+                file->extension == "jpeg" ||
+                file->extension == "png" ||
+                file->extension == "gpr")
             {
                 m_pictures.push_front(file);
                 getMetadatasFromPicture();
             }
-            else if (file->extension == "mp4")
+            else if (file->extension == "mp4" ||
+                     file->extension == "m4v" ||
+                     file->extension == "mov" ||
+                     file->extension == "mkv" ||
+                     file->extension == "webm")
             {
                 m_videos.push_front(file);
                 getMetadatasFromVideo();
@@ -139,12 +146,19 @@ void Shot::addFile(ofb_file *file)
                     m_date = file->modification_date;
             }
 
-            if (file->extension == "jpg")
+            if (file->extension == "jpg" ||
+                file->extension == "jpeg" ||
+                file->extension == "png" ||
+                file->extension == "gpr")
             {
                 m_pictures.push_back(file);
                 getMetadatasFromPicture();
             }
-            else if (file->extension == "mp4")
+            else if (file->extension == "mp4" ||
+                     file->extension == "m4v" ||
+                     file->extension == "mov" ||
+                     file->extension == "mkv" ||
+                     file->extension == "webm")
             {
                 m_videos.push_back(file);
                 getMetadatasFromVideo();
