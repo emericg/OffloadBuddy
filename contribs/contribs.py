@@ -253,7 +253,7 @@ for TARGET in TARGETS:
             pfid = 7
         else:
             pfid = 5
-    if OS_HOST == "macOS":
+    if OS_HOST == "Darwin":
         pfid = 3
     if OS_HOST == "Windows":
         pfid = 0
@@ -319,6 +319,7 @@ for TARGET in TARGETS:
             zipFF.extractall(build_dir)
         elif ffmpeg_BIN_EXT[pfid] == ".7z":
             print("!!! CANNOT EXTRACT 7z files AUTOMATICALLY, PLEASE DO IT YOURSELF !!!")
+            sys.exit(0)
             #zipFF = zipfile.open(FFMPEG_FILE_DST)
             #zipFF.extractall(build_dir)
 
@@ -334,4 +335,3 @@ for TARGET in TARGETS:
             copytree(FFMPEG_FILE_DIR + "/lib/x64/", env_dir + "/usr/lib")
     else:
         copytree(FFMPEG_FILE_DIR + "/lib/", env_dir + "/usr/lib")
-

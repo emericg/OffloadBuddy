@@ -100,10 +100,6 @@ contains(DEFINES, USE_CONTRIBS) {
     QMAKE_RPATHDIR  += $${CONTRIBS_DIR}/lib/
     LIBS            += -L$${CONTRIBS_DIR}/lib/
 
-    INCLUDEPATH     += /usr/include/
-    QMAKE_LIBDIR    += /usr/lib/
-    LIBS            += -L/usr/lib/
-
     contains(DEFINES, ENABLE_LIBMTP) { LIBS += -lusb-1.0 -lmtp }
     contains(DEFINES, ENABLE_LIBEXIF) { LIBS += -lexif }
     contains(DEFINES, ENABLE_MINIVIDEO) { LIBS += -lminivideo }
