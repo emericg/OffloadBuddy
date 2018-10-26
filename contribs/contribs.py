@@ -2,18 +2,19 @@
 
 import os
 import sys
+
+if sys.version_info < (3, 0):
+    print("This script NEEDS Python 3. Run it with 'python3 contribs.py'")
+    sys.exit()
+
 import platform
 import multiprocessing
-
 import shutil
 import zipfile
+import tarfile
 import argparse
 import subprocess
-
-if sys.version_info >= (3, 0):
-    import urllib.request
-else: # python2
-    import urllib
+import urllib.request
 
 print("\n> OffloadBuddy contribs builder")
 
@@ -27,7 +28,7 @@ print("\n> OffloadBuddy contribs builder")
 # brew install libtool
 
 ## Windows:
-# python (https://www.python.org/downloads/)
+# python3 (https://www.python.org/downloads/)
 # cmake (https://cmake.org/download/)
 # MSVC 2017
 
@@ -54,10 +55,7 @@ if platform.machine() not in ("x86_64", "AMD64"):
 # - Darwin (macOS)
 # - Windows
 # Cross compilation (from Linux):
-# - Android (armv7a, armv8a)
 # - Windows (mingw32-w64)
-# Cross compilation (from macOS):
-# - iOS (?)
 
 OS_HOST = platform.system()
 ARCH_HOST = platform.machine()
@@ -111,6 +109,20 @@ if clean:
     print(">> Contribs cleaned!")
     sys.exit()
 
+## UTILS #######################################################################
+
+def copytree(src, dst, symlinks=False, ignore=None):
+    if not os.path.exists(dst):
+        os.makedirs(dst)
+    for item in os.listdir(src):
+        s = os.path.join(src, item)
+        d = os.path.join(dst, item)
+        if os.path.isdir(s):
+            copytree(s, d, symlinks, ignore)
+        else:
+            if not os.path.exists(d) or os.stat(s).st_mtime - os.stat(d).st_mtime > 1:
+                shutil.copy2(s, d)
+
 ## SOFTWARES ###################################################################
 
 if not os.path.exists(src_dir):
@@ -144,11 +156,8 @@ FILE_libexif = "libexif-master.zip"
 DIR_libexif = "libexif-master"
 
 if not os.path.exists("src/" + FILE_libexif):
-    print("> Downloading " + FILE_libexif)
-    if sys.version_info >= (3, 0):
-        urllib.request.urlretrieve("https://github.com/emericg/libexif/archive/master.zip", src_dir + FILE_libexif)
-    else:
-        urllib.urlretrieve("https://github.com/libexif/emericg/archive/master.zip", src_dir + FILE_libexif)
+    print("> Downloading " + FILE_libexif + "...")
+    urllib.request.urlretrieve("https://github.com/emericg/libexif/archive/master.zip", src_dir + FILE_libexif)
 
 ## minivideo
 ## version: git (0.10+)
@@ -156,11 +165,8 @@ FILE_minivideo = "minivideo-master.zip"
 DIR_minivideo = "MiniVideo-master"
 
 if not os.path.exists("src/" + FILE_minivideo):
-    print("> Downloading " + FILE_minivideo)
-    if sys.version_info >= (3, 0):
-        urllib.request.urlretrieve("https://github.com/emericg/MiniVideo/archive/master.zip", src_dir + FILE_minivideo)
-    else:
-        urllib.urlretrieve("https://github.com/emericg/MiniVideo/archive/master.zip", src_dir + FILE_minivideo)
+    print("> Downloading " + FILE_minivideo + "...")
+    urllib.request.urlretrieve("https://github.com/emericg/MiniVideo/archive/master.zip", src_dir + FILE_minivideo)
 
 ## ffmpeg
 ## version: 4.0.2
@@ -168,22 +174,25 @@ FILE_ffmpeg = "ffmpeg-4.0.2.tar.xz"
 DIR_ffmpeg = "ffmpeg-4.0.2"
 
 if not os.path.exists("src/" + FILE_ffmpeg):
-    print("> Downloading " + FILE_ffmpeg)
-    if sys.version_info >= (3, 0):
-        urllib.request.urlretrieve("http://www.ffmpeg.org/releases/" + FILE_ffmpeg, src_dir + FILE_ffmpeg)
-    else:
-        urllib.urlretrieve("http://www.ffmpeg.org/releases/" + FILE_ffmpeg, src_dir + FILE_ffmpeg)
+    print("> Downloading " + FILE_ffmpeg + "...")
+    urllib.request.urlretrieve("http://www.ffmpeg.org/releases/" + FILE_ffmpeg, src_dir + FILE_ffmpeg)
+
+## ffmpeg (src & bin)
+ffmpeg_VERSION="ffmpeg-4.0.2"
+ffmpeg_SRC="https://www.ffmpeg.org/releases/" + ffmpeg_VERSION + ".tar.xz"
+ffmpeg_BIN_BASEURL="https://sourceforge.net/projects/avbuild/files/"
+ffmpeg_BIN_PF1=["windows-desktop", "windows-desktop", "windows-store", "macOS", "iOS", "linux", "android"]
+ffmpeg_BIN_PF2=["desktop-VS2017", "desktop-MINGW", "store-VS2017", "macOS", "iOS", "linux-gcc", "android-clang"]
+ffmpeg_BIN_EDITION="-lite"
+ffmpeg_BIN_EXT=[".7z", ".7z", ".7z", ".tar.xz", ".tar.xz", ".tar.xz", ".tar.xz"]
 
 ## linuxdeployqt
 ## version: git
 if OS_HOST == "Linux":
     FILE_linuxdeployqt = "linuxdeployqt-continuous-x86_64.AppImage"
     if not os.path.exists("src/" + FILE_linuxdeployqt):
-        print("> Downloading " + FILE_linuxdeployqt)
-        if sys.version_info >= (3, 0):
-            urllib.request.urlretrieve("https://github.com/probonopd/linuxdeployqt/releases/download/continuous/" + FILE_linuxdeployqt, src_dir + FILE_linuxdeployqt)
-        else:
-            urllib.urlretrieve("https://github.com/probonopd/linuxdeployqt/releases/download/continuous/" + FILE_linuxdeployqt, src_dir + FILE_linuxdeployqt)
+        print("> Downloading " + FILE_linuxdeployqt + "...")
+        urllib.request.urlretrieve("https://github.com/probonopd/linuxdeployqt/releases/download/continuous/" + FILE_linuxdeployqt, src_dir + FILE_linuxdeployqt)
 
 ## CHOOSE TARGETS ##############################################################
 
@@ -191,18 +200,20 @@ TARGETS = []
 
 if OS_HOST == "Linux":
     TARGETS.append(["linux", "x86_64"])
+    #TARGETS.append(["windows", "x86_64"])
 
 if OS_HOST == "Darwin":
     TARGETS.append(["macOS", "x86_64"])
 
 if OS_HOST == "Windows":
     TARGETS.append(["windows", "x86_64"])
+    #TARGETS.append(["windows", "armv7"]) # WinRT
 
 ## EXECUTE #####################################################################
 
 for TARGET in TARGETS:
 
-    ## PREPARE
+    ## PREPARE environment
     OS_TARGET = TARGET[0]
     ARCH_TARGET = TARGET[1]
 
@@ -219,26 +230,15 @@ for TARGET in TARGETS:
     print("- build_dir : " + build_dir)
     print("- env_dir : " + env_dir)
 
-    ## CMAKE command
+    ## CMAKE command selection
     CMAKE_cmd = ["cmake"]
     CMAKE_gen = "Unix Makefiles"
     if OS_HOST == "Linux":
-        if OS_TARGET == "android":
-            if ARCH_TARGET == "armv8":
-                CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_HOME + "/build/cmake/android.toolchain.cmake", "-DANDROID_TOOLCHAIN=clang", "-DANDROID_ABI=arm64-v8a"]
-            else:
-                CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_HOME + "/build/cmake/android.toolchain.cmake", "-DANDROID_TOOLCHAIN=gcc", "-DANDROID_ABI=armeabi-v7a"]
         if OS_TARGET == "windows":
             if ARCH_TARGET == "i686":
                 CMAKE_cmd = ["i686-w64-mingw32-cmake"]
             else:
                 CMAKE_cmd = ["x86_64-w64-mingw32-cmake"]
-    elif OS_HOST == "Darwin":
-        if OS_TARGET == "iOS":
-            if ARCH_TARGET == "armv8":
-                CMAKE_cmd = ["ios-armv8-cmake"]
-            else:
-                CMAKE_cmd = ["ios-armv7-cmake"]
     elif OS_HOST == "Windows":
         if ARCH_TARGET == "x86_64":
             CMAKE_gen = "Visual Studio 15 2017 Win64"
@@ -246,6 +246,19 @@ for TARGET in TARGETS:
             CMAKE_gen = "Visual Studio 15 2017 ARM"
         else:
             CMAKE_gen = "Visual Studio 15 2017"
+
+    ## ffmpeg archive selection
+    if OS_HOST == "Linux":
+        if OS_TARGET == "windows":
+            pfid = 7
+        else:
+            pfid = 5
+    if OS_HOST == "macOS":
+        pfid = 3
+    if OS_HOST == "Windows":
+        pfid = 0
+
+    ############################################################################
 
     ## EXTRACT
     if OS_HOST != "Windows":
@@ -288,3 +301,37 @@ for TARGET in TARGETS:
     subprocess.check_call(CMAKE_cmd + ["-G", CMAKE_gen, "-DCMAKE_BUILD_TYPE=Release", "-DBUILD_STATIC_LIBS:BOOL=OFF", "-DCMAKE_INSTALL_PREFIX=" + env_dir + "/usr", ".."], cwd=build_dir + DIR_minivideo + "/minivideo/build")
     subprocess.check_call(["cmake", "--build", "."], cwd=build_dir + DIR_minivideo + "/minivideo/build")
     subprocess.check_call(["cmake", "--build", ".", "--target", "install"], cwd=build_dir + DIR_minivideo + "/minivideo/build")
+
+    ############################################################################
+
+    ## ffmpeg binaries download & install
+    FFMPEG_FILE_DST=src_dir + ffmpeg_VERSION + "-" + ffmpeg_BIN_PF2[pfid] + ffmpeg_BIN_EDITION + ffmpeg_BIN_EXT[pfid]
+    FFMPEG_FILE_DIR=build_dir + ffmpeg_VERSION + "-" + ffmpeg_BIN_PF2[pfid] + ffmpeg_BIN_EDITION
+    FFMPEG_FILE_URL=ffmpeg_BIN_BASEURL + ffmpeg_BIN_PF1[pfid] + "/" + ffmpeg_VERSION + "-" + ffmpeg_BIN_PF2[pfid] + ffmpeg_BIN_EDITION + ffmpeg_BIN_EXT[pfid] + "/download"
+
+    if not os.path.exists(FFMPEG_FILE_DST):
+        print("> Downloading " + FFMPEG_FILE_DST)
+        urllib.request.urlretrieve(FFMPEG_FILE_URL, FFMPEG_FILE_DST)
+
+    if not os.path.isdir(FFMPEG_FILE_DIR):
+        if ffmpeg_BIN_EXT[pfid] == ".tar.xz":
+            zipFF = tarfile.open(FFMPEG_FILE_DST)
+            zipFF.extractall(build_dir)
+        elif ffmpeg_BIN_EXT[pfid] == ".7z":
+            print("!!! CANNOT EXTRACT 7z files AUTOMATICALLY, PLEASE DO IT YOURSELF !!!")
+            #zipFF = zipfile.open(FFMPEG_FILE_DST)
+            #zipFF.extractall(build_dir)
+
+    copytree(FFMPEG_FILE_DIR + "/include/", env_dir + "/usr/include")
+    if TARGET[0] == "android":
+        if TARGET[1] == "armv7":
+            copytree(FFMPEG_FILE_DIR + "/lib/armeabi-v7a/", env_dir + "/usr/lib")
+        elif TARGET[1] == "armv8":
+            copytree(FFMPEG_FILE_DIR + "/lib/arm64-v8a/", env_dir + "/usr/lib")
+    if TARGET[0] == "windows":
+        if TARGET[1] == "x86_64":
+            copytree(FFMPEG_FILE_DIR + "/bin/x64/", env_dir + "/usr/lib")
+            copytree(FFMPEG_FILE_DIR + "/lib/x64/", env_dir + "/usr/lib")
+    else:
+        copytree(FFMPEG_FILE_DIR + "/lib/", env_dir + "/usr/lib")
+

@@ -19,6 +19,8 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
+/* ************************************************************************** */
+
 #include "SettingsManager.h"
 #include "JobManager.h"
 #include "DeviceManager.h"
@@ -33,6 +35,8 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QIcon>
+
+/* ************************************************************************** */
 
 void print_build_infos()
 {
@@ -67,13 +71,18 @@ void print_build_infos()
     minivideo_get_infos(&mv_maj, &mv_min, &mv_patch, nullptr, nullptr, nullptr);
     qDebug() << "- minivideo enabled, version:" << mv_maj << mv_min << mv_patch;
 #endif
+#ifdef ENABLE_FFMPEG
+    qDebug() << "- ffmpeg enabled";
+#endif
 }
 
 static void exithandler()
 {
-    JobManager *j = JobManager::getInstance();
-    j->cleanup();
+    JobManager *jm = JobManager::getInstance();
+    jm->cleanup();
 }
+
+/* ************************************************************************** */
 
 int main(int argc, char *argv[])
 {
@@ -129,3 +138,5 @@ int main(int argc, char *argv[])
 
     return app.exec();
 }
+
+/* ************************************************************************** */

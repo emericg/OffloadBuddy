@@ -10,7 +10,7 @@ DEFINES += ENABLE_LIBEXIF
 DEFINES += ENABLE_MINIVIDEO
 unix {
     DEFINES += ENABLE_LIBMTP
-    #DEFINES += ENABLE_FFMPEG
+    DEFINES += ENABLE_FFMPEG
 }
 
 # Validate Qt version
@@ -107,7 +107,7 @@ contains(DEFINES, USE_CONTRIBS) {
     contains(DEFINES, ENABLE_LIBMTP) { LIBS += -lusb-1.0 -lmtp }
     contains(DEFINES, ENABLE_LIBEXIF) { LIBS += -lexif }
     contains(DEFINES, ENABLE_MINIVIDEO) { LIBS += -lminivideo }
-    contains(DEFINES, ENABLE_FFMPEG) { LIBS += -lavformat -lavcodec -lswscale -lavutil }
+    contains(DEFINES, ENABLE_FFMPEG) { LIBS += -lavformat -lavcodec -lswscale -lswresample -lavutil }
 
 } else {
 
@@ -131,7 +131,7 @@ contains(DEFINES, USE_CONTRIBS) {
         PKGCONFIG += libminivideo
     }
     contains(DEFINES, ENABLE_FFMPEG) {
-        PKGCONFIG += libavformat libavcodec libswscale libavutil
+        PKGCONFIG += libavformat libavcodec libswscale libswresample libavutil
     }
 }
 
