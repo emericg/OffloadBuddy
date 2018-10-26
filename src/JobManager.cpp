@@ -54,7 +54,7 @@ JobManager::JobManager()
 
 JobManager::~JobManager()
 {
-    // never called anyway
+    cleanup(); // singleton destructor is never called anyway...
 }
 
 void JobManager::cleanup()
@@ -63,6 +63,10 @@ void JobManager::cleanup()
     m_job_disk.clear();
     delete m_job_cpu;
     delete m_job_web;
+
+    m_job_instant = nullptr;
+    m_job_cpu = nullptr;
+    m_job_web = nullptr;
 }
 
 /* ************************************************************************** */

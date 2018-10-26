@@ -284,8 +284,7 @@ void DeviceManager::addFsDeviceGeneric(QString path, generic_device_infos *infos
                        STORAGE_FILESYSTEM,
                        infos->device_brand,
                        infos->device_model,
-                       "",
-                       "");
+                       "", "");
         if (d)
         {
             if (d->addStorage_filesystem(path) == true)
@@ -310,6 +309,8 @@ void DeviceManager::addFsDeviceGeneric(QString path, generic_device_infos *infos
             }
         }
     }
+
+    delete infos;
 }
 
 void DeviceManager::addVfsDevice(ofb_vfs_device *deviceInfos)
