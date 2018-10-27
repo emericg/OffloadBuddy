@@ -48,6 +48,6 @@
 - dark_errored.svg          // Lüv icon theme       // CC BY-SA 4.0
 
 # resources/other:
-- placeholder.png           // Lüv icon theme       // CC BY-SA 4.0
+- placeholder_*.svg         // Lüv icon theme       // CC BY-SA 4.0
 - gps_marker.png            // Emeric Grange        // CC BY-SA 4.0
 - GitHub-Mark-64px.png      // https://github.com/logos // proprietary

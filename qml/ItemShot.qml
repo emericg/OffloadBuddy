@@ -91,7 +91,7 @@ Rectangle {
         antialiasing: false
         asynchronous: true
         fillMode: Image.PreserveAspectCrop
-        //source: "qrc:/resources/other/placeholder_picture.svg"
+        source: "qrc:/resources/other/placeholder_loading.svg"
 
         sourceSize.width: 512
         sourceSize.height: 512

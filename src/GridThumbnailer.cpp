@@ -42,6 +42,8 @@ extern "C"
 #include <QImage>
 #include <QDebug>
 
+#include <cmath>
+
 /* ************************************************************************** */
 
 GridThumbnailer::GridThumbnailer() :
@@ -59,11 +61,6 @@ QImage GridThumbnailer::requestImage(const QString &id, QSize *size,
                                      const QSize &requestedSize)
 {
     QImage thumb;
-
-#ifdef LATENCY_TIMER
-    std::chrono::time_point<std::chrono::system_clock> start, end;
-    start = std::chrono::system_clock::now();
-#endif
 
     QString path = id;
     int width = requestedSize.width() > 0 ? requestedSize.width() : DEFAULT_THUMB_SIZE;
@@ -121,14 +118,6 @@ QImage GridThumbnailer::requestImage(const QString &id, QSize *size,
     }
 
     if (size) *size = QSize(thumb.width(), thumb.height());
-    //qDebug() << "@ final size: " << *size;
-
-#ifdef LATENCY_TIMER
-    end = std::chrono::system_clock::now();
-    int64_t ms = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count();
-    int64_t us = std::chrono::duration_cast<std::chrono::microseconds>(end-start).count();
-    qDebug() << "THUMBNAILING TOOK" << ms << "ms   (or" << us <<"us)";
-#endif
 
     return thumb;
 }
@@ -475,15 +464,12 @@ bool GridThumbnailer::getImage_withFfmpeg(const QString &path, QImage &img,
     {
         if (pPacket->stream_index == video_stream_index)
         {
-            int response = decode_packet(pPacket, pCodecContext, pFrame,
-                                         img, width, height);
-            if (response < 0)
+            status = decode_packet(pPacket, pCodecContext, pFrame,
+                                   img, width, height);
+
+            // we have a picture!
+            if (status == true)
                 break;
-            else if (response == 99)
-            {
-                status = true;
-                break;
-            }
 
             // stop it, otherwise we'll be saving hundreds of frames
             if (--max_packets_to_process <= 0)
