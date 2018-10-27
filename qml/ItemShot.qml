@@ -43,9 +43,10 @@ Rectangle {
 
         handleState()
 
-        if (preview) {
-            image.source = "file:///" + preview
-        }
+        if (shot.previewVideo)
+            image.source = "image://GridThumbnailer/" + shot.previewVideo
+        else if (preview)
+            image.source = "image://GridThumbnailer/" + preview
 
         text_right.visible = false
         text_left.visible = false
@@ -56,7 +57,7 @@ Rectangle {
             }
             icon_left.source = "qrc:/resources/minicons/video.svg"
 
-            if (!preview)
+            if (!preview && !shot.previewVideo)
                 image.source = "qrc:/resources/other/placeholder_video.svg"
         } else {
             if (type >= Shared.SHOT_PICTURE_MULTI) {

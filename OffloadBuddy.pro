@@ -41,7 +41,8 @@ SOURCES  += src/main.cpp \
             src/ShotModel.cpp \
             src/ShotFilter.cpp \
             src/GenericFileModel.cpp \
-            src/GoProFileModel.cpp
+            src/GoProFileModel.cpp \
+            src/GridThumbnailer.cpp
 
 HEADERS  += src/SettingsManager.h \
             src/JobManager.h \
@@ -56,7 +57,8 @@ HEADERS  += src/SettingsManager.h \
             src/ShotModel.h \
             src/ShotFilter.h \
             src/GenericFileModel.h \
-            src/GoProFileModel.h
+            src/GoProFileModel.h \
+            src/GridThumbnailer.h
 
 RESOURCES += qml/qml.qrc \
              resources.qrc

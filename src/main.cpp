@@ -27,6 +27,8 @@
 
 #include <singleapplication.h>
 
+#include "GridThumbnailer.h"
+
 #ifdef ENABLE_MINIVIDEO
 #include <minivideo.h>
 #endif
@@ -128,6 +130,8 @@ int main(int argc, char *argv[])
     engine_context->setContextProperty("settingsManager", s);
     engine_context->setContextProperty("jobManager", j);
     engine_context->setContextProperty("deviceManager", d);
+
+    engine.addImageProvider("GridThumbnailer", new GridThumbnailer);
 
     engine.load(QUrl(QStringLiteral("qrc:/qml/MainWindow.qml")));
     if (engine.rootObjects().isEmpty())
