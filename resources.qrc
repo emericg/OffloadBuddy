@@ -15,11 +15,12 @@
         <file>resources/minicons/queued.svg</file>
         <file>resources/minicons/offloading.svg</file>
         <file>resources/minicons/encoding.svg</file>
-        <file>resources/minicons/job_queued.svg</file>
-        <file>resources/minicons/job_offloading.svg</file>
-        <file>resources/minicons/job_encoding.svg</file>
         <file>resources/minicons/job_done.svg</file>
+        <file>resources/minicons/job_encoding.svg</file>
         <file>resources/minicons/job_errored.svg</file>
+        <file>resources/minicons/job_offloading.svg</file>
+        <file>resources/minicons/job_open.svg</file>
+        <file>resources/minicons/job_queued.svg</file>
         <file>resources/other/gps_marker.svg</file>
         <file>resources/other/GitHub-Mark-64px.png</file>
         <file>resources/other/placeholder_loading.svg</file>
@@ -44,6 +45,9 @@
         <file alias="done.svg">resources/icons/done.svg</file>
         <file alias="play.svg">resources/icons/play.svg</file>
         <file alias="working.svg">resources/icons/working.svg</file>
+        <file alias="process_play.svg">resources/icons/process_play.svg</file>
+        <file alias="process_pause.svg">resources/icons/process_pause.svg</file>
+        <file alias="process_stop.svg">resources/icons/process_stop.svg</file>
     </qresource>
     <qresource prefix="/cameras">
         <file alias="generic_actioncam.svg">resources/cameras/generic_actioncam.svg</file>

@@ -34,6 +34,7 @@
 #include <QList>
 #include <QHash>
 #include <QThread>
+#include <QDesktopServices>
 
 /* ************************************************************************** */
 
@@ -58,6 +59,7 @@ class JobTracker: public QObject
 
     int m_job_id = -1;
     Device *m_device = nullptr;
+    QString m_destination;
 
 Q_SIGNALS:
     void jobUpdated();
@@ -100,6 +102,9 @@ public:
     void setDevice(Device *d) { m_device = d; }
     Device *getDevice() const { return m_device; }
 
+    void setDestination(QString dest) { m_destination = dest; }
+    QString getDestination() const { return m_destination; }
+
     void setAutoDelete(bool d) { m_autoDelete = d; }
     bool getAutoDelete() const { return m_autoDelete; }
 
@@ -108,6 +113,16 @@ public:
 
     void setProgress(float p) { m_percent = p; jobUpdated(); }
     float getProgress() { return m_percent / 100.f; }
+
+public slots:
+    void openDestination() const
+    {
+        QFileInfo d(m_destination);
+        if (!m_destination.isEmpty() && d.exists())
+        {
+            QDesktopServices::openUrl(QUrl::fromLocalFile(m_destination));
+        }
+    }
 };
 
 /* ************************************************************************** */

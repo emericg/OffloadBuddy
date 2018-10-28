@@ -42,10 +42,12 @@
 - video.svg                 // Lüv icon theme       // CC BY-SA 4.0
 - queued.svg                // Lüv icon theme       // CC BY-SA 4.0
 - working.svg               // Lüv icon theme       // CC BY-SA 4.0
-- dark_queued.svg           // Lüv icon theme       // CC BY-SA 4.0
-- dark_working.svg          // Lüv icon theme       // CC BY-SA 4.0
-- dark_done.svg             // Lüv icon theme       // CC BY-SA 4.0
-- dark_errored.svg          // Lüv icon theme       // CC BY-SA 4.0
+- job_done.svg              // Lüv icon theme       // CC BY-SA 4.0
+- job_encoding.svg          // Lüv icon theme       // CC BY-SA 4.0
+- job_errored.svg           // Lüv icon theme       // CC BY-SA 4.0
+- job_offloading.svg        // Lüv icon theme       // CC BY-SA 4.0
+- job_open.svg              // Lüv icon theme       // CC BY-SA 4.0
+- job_queued.svg            // Lüv icon theme       // CC BY-SA 4.0
 
 # resources/other:
 - placeholder_*.svg         // Lüv icon theme       // CC BY-SA 4.0

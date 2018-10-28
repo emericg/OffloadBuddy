@@ -244,6 +244,8 @@ bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list,
     JobTracker *tracker = new JobTracker(job->id, job->type);
     tracker->setDevice(d);
     tracker->setAutoDelete(autoDelete);
+    if (job->elements.size() > 0)
+        tracker->setDestination(job->elements.front()->destination_dir);
     m_trackedJobs.push_back(tracker);
     emit trackedJobsUpdated();
 

@@ -109,7 +109,7 @@ Rectangle {
         id: progressBar
         y: 20
         height: 20
-        anchors.right: rectanglePlayPause.left
+        anchors.right: rectangleOpen.left
         anchors.rightMargin: 8
         anchors.left: jobName.right
         anchors.leftMargin: 8
@@ -118,45 +118,70 @@ Rectangle {
     }
 
     Rectangle {
+        id: rectangleOpen
+        width: 40
+        height: 40
+        color: "#00000000"
+        anchors.right: rectanglePlayPause.left
+        anchors.rightMargin: 8
+        anchors.verticalCenter: parent.verticalCenter
+
+        Image {
+            id: imageOpen
+            width: 40
+            height: 40
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            source: "qrc:/resources/minicons/job_open.svg"
+        }
+
+        MouseArea {
+            id: mouseAreaOpen
+            anchors.fill: parent
+            onClicked: job.openDestination()
+
+            onPressed: {
+                imageOpen.width = imageOpen.width - 4
+                imageOpen.height = imageOpen.height - 4
+            }
+            onReleased: {
+                imageOpen.width = imageOpen.width + 4
+                imageOpen.height = imageOpen.height + 4
+            }
+        }
+    }
+
+    Rectangle {
         id: rectangleDelete
         width: 40
         height: 40
-        color: ThemeEngine.colorDangerZone
+        color: "#00000000"
         anchors.right: parent.right
         anchors.rightMargin: 8
         anchors.verticalCenter: parent.verticalCenter
 
+        Image {
+            id: imageDelete
+            width: 40
+            height: 40
+            fillMode: Image.PreserveAspectFit
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            source: "qrc:/icons/process_stop.svg"
+        }
         MouseArea {
             id: mouseAreaDelete
             anchors.fill: parent
             //onClicked:
 
             onPressed: {
-                rectangleDelete.anchors.bottomMargin = rectangleDelete.anchors.bottomMargin + 2
-                rectangleDelete.anchors.leftMargin = rectangleDelete.anchors.leftMargin + 2
-                rectangleDelete.anchors.rightMargin = rectangleDelete.anchors.rightMargin + 2
-                rectangleDelete.width = rectangleDelete.width - 4
-                rectangleDelete.height = rectangleDelete.height - 4
+                imageDelete.width = imageDelete.width - 4
+                imageDelete.height = imageDelete.height - 4
             }
             onReleased: {
-                rectangleDelete.anchors.bottomMargin = rectangleDelete.anchors.bottomMargin - 2
-                rectangleDelete.anchors.leftMargin = rectangleDelete.anchors.leftMargin - 2
-                rectangleDelete.anchors.rightMargin = rectangleDelete.anchors.rightMargin - 2
-                rectangleDelete.width = rectangleDelete.width + 4
-                rectangleDelete.height = rectangleDelete.height + 4
+                imageDelete.width = imageDelete.width + 4
+                imageDelete.height = imageDelete.height + 4
             }
-        }
-
-        Text {
-            id: textDelete
-            color: ThemeEngine.colorButtonText
-            text: qsTr("X")
-            font.pixelSize: 24
-            font.bold: true
-
-            anchors.fill: parent
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignHCenter
         }
     }
 
@@ -164,25 +189,33 @@ Rectangle {
         id: rectanglePlayPause
         width: 40
         height: 40
-        color: ThemeEngine.colorApproved
+        color: "#00000000"
         anchors.rightMargin: 8
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: rectangleDelete.left
 
+        Image {
+            id: imagePlayPause
+            width: 40
+            height: 40
+            fillMode: Image.PreserveAspectFit
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            source: "qrc:/icons/process_pause.svg"
+        }
+
         MouseArea {
             id: mouseAreaPlayPause
             anchors.fill: parent
-        }
 
-        Text {
-            id: textPlayPause
-            color: ThemeEngine.colorButtonText
-            text: qsTr("▶")
-            verticalAlignment: Text.AlignTop
-            font.bold: true
-            horizontalAlignment: Text.AlignHCenter
-            anchors.fill: parent
-            font.pixelSize: 24
+            onPressed: {
+                imagePlayPause.width = imagePlayPause.width - 4
+                imagePlayPause.height = imagePlayPause.height - 4
+            }
+            onReleased: {
+                imagePlayPause.width = imagePlayPause.width + 4
+                imagePlayPause.height = imagePlayPause.height + 4
+            }
         }
     }
 }

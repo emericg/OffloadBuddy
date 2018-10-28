@@ -231,7 +231,7 @@ Rectangle {
                     Rectangle {
                         id: timelineLimitStop
                         height: 32
-                        color: "#ffffff"
+                        color: "#cfa9ff"
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.right: parent.right
                         anchors.rightMargin: 0

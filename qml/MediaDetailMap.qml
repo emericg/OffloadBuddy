@@ -13,7 +13,7 @@ Rectangle {
     id: contentMap
     anchors.fill: parent
     color: "#00000000"
-    
+
     function updateMap() {
         if (shot.latitude !== 0.0) {
             mapGPS.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
@@ -47,13 +47,13 @@ Rectangle {
         anchors.topMargin: 48
         anchors.fill: parent
         anchors.margins: 16
-        
+
         gesture.enabled: false
         z: parent.z + 1
         plugin: Plugin { name: "mapboxgl" } // "osm", "mapboxgl", "esri"
         center: QtPositioning.coordinate(45.5, 6)
         zoomLevel: 2
-        
+
         MapQuickItem {
             id: mapMarker
             visible: false
@@ -64,7 +64,17 @@ Rectangle {
                 source: "qrc:/resources/other/gps_marker.svg"
             }
         }
-        
+
+        MouseArea {
+            anchors.fill: parent
+            onWheel: {
+                if (wheel.angleDelta.y < 0)
+                    onClicked: parent.zoomLevel--
+                else
+                    onClicked: parent.zoomLevel++
+            }
+        }
+
         Row {
             id: row
             anchors.top: parent.top
@@ -72,7 +82,7 @@ Rectangle {
             anchors.right: parent.right
             anchors.rightMargin: 16
             spacing: 16
-            
+
             Button {
                 id: button_map_dezoom
                 width: 40
@@ -80,11 +90,11 @@ Rectangle {
                 text: "-"
                 font.bold: true
                 font.pointSize: 16
-                opacity: 0.90
-                
+                opacity: 1
+
                 onClicked: parent.parent.zoomLevel--
             }
-            
+
             Button {
                 id: button_map_zoom
                 width: 40
@@ -92,8 +102,8 @@ Rectangle {
                 text: "+"
                 font.bold: true
                 font.pointSize: 14
-                opacity: 0.90
-                
+                opacity: 1
+
                 onClicked: parent.parent.zoomLevel++
             }
         }
@@ -103,7 +113,7 @@ Rectangle {
                     visible: false
                     line.width: 3
                     line.color: 'green'
-                    
+
                     path: [
                         { latitude: -27, longitude: 153.0 },
                         { latitude: -27, longitude: 154.1 },
@@ -112,7 +122,7 @@ Rectangle {
                     ]
 */
     }
-    
+
     Rectangle {
         id: rectangleCoordinates
         height: 32
@@ -123,7 +133,7 @@ Rectangle {
         anchors.leftMargin: 16
         anchors.top: parent.top
         anchors.topMargin: 8
-        
+
         Text {
             id: labelCoodrinates
             text: qsTr("GPS coordinates:")
@@ -134,7 +144,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             font.pixelSize: 16
         }
-        
+
         Text {
             id: labelAltitude
             text: qsTr("Altitude:")
@@ -146,7 +156,7 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
             font.bold: true
         }
-        
+
         Text {
             id: coordinates
             text: qsTr("Text")
@@ -156,7 +166,7 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
             font.pixelSize: 16
         }
-        
+
         Text {
             id: altitude
             text: qsTr("Text")
@@ -165,7 +175,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             font.pixelSize: 16
         }
-        
+
         Button {
             id: button_gps_export
             text: qsTr("Export GPS trace")

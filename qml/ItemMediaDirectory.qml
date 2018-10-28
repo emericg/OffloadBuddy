@@ -112,47 +112,33 @@ Rectangle {
         id: rectangleDelete
         width: 40
         height: 40
+        color: "#00000000"
         anchors.right: parent.right
-        anchors.rightMargin: 4
+        anchors.rightMargin: 12
         anchors.verticalCenter: parent.verticalCenter
 
-        Rectangle {
-            id: rectangleDeleteIn
+        Image {
+            id: imageDelete
             width: 40
             height: 40
-            color: ThemeEngine.colorDangerZone
+            fillMode: Image.PreserveAspectFit
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
+            source: "qrc:/icons/process_stop.svg"
+        }
 
-            Text {
-                id: textDelete
-                color: ThemeEngine.colorButtonText
-                text: qsTr("X")
-                anchors.fill: parent
-                font.bold: true
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-                font.pixelSize: 24
+        MouseArea {
+            id: mouseAreaDelete
+            anchors.fill: parent
+            onClicked: settingsMgr.deleteDirectory(textField_path.text)
+
+            onPressed: {
+                imageDelete.width = imageDelete.width - 4
+                imageDelete.height = imageDelete.height - 4
             }
-
-            MouseArea {
-                id: mouseAreaDelete
-                anchors.fill: parent
-                onClicked: settingsMgr.deleteDirectory(textField_path.text)
-                onPressed: {
-                    rectangleDeleteIn.anchors.bottomMargin = rectangleDeleteIn.anchors.bottomMargin + 2
-                    rectangleDeleteIn.anchors.leftMargin = rectangleDeleteIn.anchors.leftMargin + 2
-                    rectangleDeleteIn.anchors.rightMargin = rectangleDeleteIn.anchors.rightMargin + 2
-                    rectangleDeleteIn.width = rectangleDeleteIn.width - 4
-                    rectangleDeleteIn.height = rectangleDeleteIn.height - 4
-                }
-                onReleased: {
-                    rectangleDeleteIn.anchors.bottomMargin = rectangleDeleteIn.anchors.bottomMargin - 2
-                    rectangleDeleteIn.anchors.leftMargin = rectangleDeleteIn.anchors.leftMargin - 2
-                    rectangleDeleteIn.anchors.rightMargin = rectangleDeleteIn.anchors.rightMargin - 2
-                    rectangleDeleteIn.width = rectangleDeleteIn.width + 4
-                    rectangleDeleteIn.height = rectangleDeleteIn.height + 4
-                }
+            onReleased: {
+                imageDelete.width = imageDelete.width + 4
+                imageDelete.height = imageDelete.height + 4
             }
         }
     }
