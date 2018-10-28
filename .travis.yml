@@ -10,28 +10,34 @@ before_install:
       sudo apt-add-repository ppa:beineri/opt-qt-5.11.1-xenial -y;
       sudo apt-get update -q;
     fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-      #brew update;
-    fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+#      brew update;
+#    fi
 
 install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
       sudo apt-get install qt511base qt511quickcontrols2 qt511svg qt511imageformats qt511tools qt511charts-no-lgpl qt511location qt511multimedia -y;
       sudo apt-get install libgl1-mesa-dev libva-dev -y;
       sudo apt-get install libtool automake m4 -y;
-      sudo apt-get install libudev-dev libusb-dev libmtp-dev -y;
-      sudo apt-get install libexif-dev -y;
-      #sudo apt-get install ffmpeg -y;
+      sudo apt-get install libudev-dev;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       brew install qt;
-      #brew install libmtp;
-      #brew install libexif;
-      #brew install ffmpeg;
       brew install libtool;
       brew install gettext;
       brew link --force gettext;
     fi
+#  # only when contribs.py is not used:
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+#      sudo apt-get install libudev-dev libusb-dev libmtp-dev -y;
+#      sudo apt-get install libexif-dev -y;
+#      sudo apt-get install ffmpeg -y;
+#    fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+#      brew install libmtp;
+#      brew install libexif;
+#      brew install ffmpeg;
+#    fi
 
 before_script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then source /opt/qt511/bin/qt511-env.sh; fi

@@ -6,11 +6,11 @@ QT     += core gui svg quick quickcontrols2
 QT     += multimedia location charts
 
 # Enables or disable optional features
+DEFINES += ENABLE_FFMPEG
 DEFINES += ENABLE_LIBEXIF
 DEFINES += ENABLE_MINIVIDEO
 unix {
     DEFINES += ENABLE_LIBMTP
-    DEFINES += ENABLE_FFMPEG
 }
 
 # Validate Qt version

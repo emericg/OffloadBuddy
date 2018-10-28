@@ -318,10 +318,11 @@ for TARGET in TARGETS:
             zipFF = tarfile.open(FFMPEG_FILE_DST)
             zipFF.extractall(build_dir)
         elif ffmpeg_BIN_EXT[pfid] == ".7z":
-            print("!!! CANNOT EXTRACT 7z files AUTOMATICALLY, PLEASE DO IT YOURSELF !!!")
-            sys.exit(0)
-            #zipFF = zipfile.open(FFMPEG_FILE_DST)
-            #zipFF.extractall(build_dir)
+            if os.path.isfile("C:\\Program Files\\7-Zip\\7z.exe"):
+                os.system('"C:\\Program Files\\7-Zip\\7z.exe" x ' + FFMPEG_FILE_DST + " -aos -o" + build_dir)
+            else:
+                print("!!! CANNOT EXTRACT 7z files AUTOMATICALLY, PLEASE DO IT YOURSELF !!!")
+                sys.exit(0)
 
     copytree(FFMPEG_FILE_DIR + "/include/", env_dir + "/usr/include")
     if TARGET[0] == "android":
