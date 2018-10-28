@@ -202,10 +202,14 @@ bool GridThumbnailer::getImage_withMinivideo(const QString &path, QImage &img,
 
 // to work around av_err2str() in C++
 #undef av_err2str
+#ifdef _MSC_VER
+#define av_err2str(errnum) av_make_error_string((char*)_alloca(AV_ERROR_MAX_STRING_SIZE), AV_ERROR_MAX_STRING_SIZE, errnum)
+#else
 #define av_err2str(errnum) av_make_error_string((char*)__builtin_alloca(AV_ERROR_MAX_STRING_SIZE), AV_ERROR_MAX_STRING_SIZE, errnum)
+#endif
 
 // align buffer sizes to multiples of 'roundTo'
-int roundTo(const int value, const int roundTo)
+static int roundTo(const int value, const int roundTo)
 {
     return (value + (roundTo - 1)) & ~(roundTo - 1);
 }
