@@ -11,23 +11,23 @@ before_install:
       sudo apt-get update -q;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-      brew update;
+      #brew update;
     fi
 
 install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
       sudo apt-get install qt511base qt511quickcontrols2 qt511svg qt511imageformats qt511tools qt511charts-no-lgpl qt511location qt511multimedia -y;
       sudo apt-get install libgl1-mesa-dev libva-dev -y;
+      sudo apt-get install libtool automake m4 -y;
       sudo apt-get install libudev-dev libusb-dev libmtp-dev -y;
       sudo apt-get install libexif-dev -y;
-      sudo apt-get install ffmpeg -y;
-      sudo apt-get install libtool automake m4 -y;
+      #sudo apt-get install ffmpeg -y;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       brew install qt;
-      brew install libmtp;
-      brew install libexif;
-      brew install ffmpeg;
+      #brew install libmtp;
+      #brew install libexif;
+      #brew install ffmpeg;
       brew install libtool;
       brew install gettext;
       brew link --force gettext;
