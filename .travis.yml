@@ -10,9 +10,6 @@ before_install:
       sudo apt-add-repository ppa:beineri/opt-qt-5.11.1-xenial -y;
       sudo apt-get update -q;
     fi
-#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-#      brew update;
-#    fi
 
 install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
@@ -27,17 +24,6 @@ install:
       brew install gettext;
       brew link --force gettext;
     fi
-#  # only when contribs.py is not used:
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-#      sudo apt-get install libudev-dev libusb-dev libmtp-dev -y;
-#      sudo apt-get install libexif-dev -y;
-#      sudo apt-get install ffmpeg -y;
-#    fi
-#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-#      brew install libmtp;
-#      brew install libexif;
-#      brew install ffmpeg;
-#    fi
 
 before_script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then source /opt/qt511/bin/qt511-env.sh; fi

@@ -11,12 +11,12 @@ windeployqt bin/ --qmldir qml/
 mv contribs/env/windows_x86_64/usr/lib/exif.dll bin/
 mv contribs/env/windows_x86_64/usr/lib/minivideo.dll bin/
 
-mv contribs/env/windows_x86_64/usr/lib/ffmpeg bin/
+mv contribs/env/windows_x86_64/usr/lib/ffmpeg.exe bin/
 mv contribs/env/windows_x86_64/usr/lib/avcodec-*.dll bin/
 mv contribs/env/windows_x86_64/usr/lib/avdevice-*.dll bin/
 mv contribs/env/windows_x86_64/usr/lib/avfilter-*.dll bin/
 mv contribs/env/windows_x86_64/usr/lib/avformat-*.dll bin/
-mv contribs/env/windows_x86_64/usr/lib/avutils-*.dll bin/
+mv contribs/env/windows_x86_64/usr/lib/avutil-*.dll bin/
 mv contribs/env/windows_x86_64/usr/lib/swresample-*.dll bin/
 mv contribs/env/windows_x86_64/usr/lib/swscale-*.dll bin/
 
