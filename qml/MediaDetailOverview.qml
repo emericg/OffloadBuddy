@@ -24,20 +24,20 @@ Rectangle {
         anchors.right: rectangleMetadatas.left
         anchors.margins: 16
         color: "black"
-        
+
         property bool isFullScreen: false
         property int startLimit: 0
         property int stopLimit: 0
-        
+
         MouseArea {
             id: previewFullScreen
             anchors.fill: parent
-            
+
             onDoubleClicked: toogleFullScreen()
-            
+
             function toogleFullScreen() {
                 preview.isFullScreen = !preview.isFullScreen
-                
+
                 if (preview.isFullScreen) {
                     buttonFullscreen.text = "⇱"
                     rectangleMetadatas.visible = true
@@ -49,30 +49,31 @@ Rectangle {
                 }
             }
         }
-        
+
         Image {
             id: image
             anchors.fill: parent
             fillMode: Image.PreserveAspectFit
             //source: "qrc:/resources/other/placeholder_picture.svg"
-            
+
             sourceSize.width: shot.width / 2
             sourceSize.height: shot.height / 2
         }
-        
+
         VideoOutput {
             id: mediaOutput
             anchors.fill: parent
             source: mediaPlayer
-            
+
             MediaPlayer {
                 id: mediaPlayer
                 volume: 0.5
                 autoPlay: false
+                notifyInterval: 66
                 //source: "file://" + "/home/emeric/Videos/equi/VIDEO_1927.mp4"
-                
+
                 property bool isRunning: false
-                
+
                 onStopped: {
                     isRunning = false
                 }
@@ -87,7 +88,7 @@ Rectangle {
                     timelinePosition.width = timeline.width * (mediaPlayer.position / mediaPlayer.duration);
                 }
             }
-            
+
             Rectangle {
                 id: mediaControls
                 height: 32
@@ -98,7 +99,7 @@ Rectangle {
                 anchors.leftMargin: 0
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 0
-                
+
                 Button {
                     id: buttonPlay
                     width: 32
@@ -107,7 +108,7 @@ Rectangle {
                     anchors.left: parent.left
                     anchors.leftMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
-                    
+
                     onClicked: {
                         if (mediaPlayer.isRunning) {
                             mediaPlayer.pause()
@@ -120,7 +121,7 @@ Rectangle {
                         }
                     }
                 }
-                
+
                 Button {
                     id: buttonStop
                     width: 32
@@ -129,13 +130,13 @@ Rectangle {
                     anchors.left: buttonPlay.right
                     anchors.leftMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
-                    
+
                     onClicked: {
                         mediaPlayer.stop()
                         mediaPlayer.isRunning = false
                     }
                 }
-                
+
                 Button {
                     id: buttonStartCut
                     width: 32
@@ -144,13 +145,13 @@ Rectangle {
                     anchors.left: buttonStop.right
                     anchors.leftMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
-                    
+
                     onClicked: {
                         preview.startLimit = mediaPlayer.position
                         timelineLimitStart.width = timeline.width * (mediaPlayer.position / mediaPlayer.duration);
                     }
                 }
-                
+
                 Button {
                     id: buttonStopCut
                     width: 32
@@ -159,7 +160,7 @@ Rectangle {
                     anchors.right: buttonScreenshot.left
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
-                    
+
                     onClicked: {
                         preview.stopLimit = mediaPlayer.position
                         timelineLimitStop.width = timeline.width * ( ((mediaPlayer.duration  -mediaPlayer.position) / mediaPlayer.duration));
@@ -173,7 +174,7 @@ Rectangle {
                     anchors.right: soundline.left
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
-                    
+
                     onClicked: previewFullScreen.toogleFullScreen()
                 }
                 Button {
@@ -184,10 +185,10 @@ Rectangle {
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
-                    
+
                     onClicked: previewFullScreen.toogleFullScreen()
                 }
-                
+
                 Rectangle {
                     id: timeline
                     height: 32
@@ -197,7 +198,7 @@ Rectangle {
                     anchors.right: buttonStopCut.left
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
-                    
+
                     Rectangle {
                         id: timelinePosition
                         width: 0
@@ -207,18 +208,18 @@ Rectangle {
                         anchors.leftMargin: 0
                         anchors.verticalCenter: parent.verticalCenter
                     }
-                    
+
                     MouseArea {
                         id: timelineSeeker
                         anchors.fill: parent
-                        
+
                         onClicked: {
                             var fff = mouseX / timeline.width
                             //if (mediaPlayer.isRunning)
                             mediaPlayer.seek(mediaPlayer.duration * fff)
                         }
                     }
-                    
+
                     Rectangle {
                         id: timelineLimitStart
                         height: 32
@@ -227,7 +228,7 @@ Rectangle {
                         anchors.leftMargin: 0
                         anchors.verticalCenter: parent.verticalCenter
                     }
-                    
+
                     Rectangle {
                         id: timelineLimitStop
                         height: 32
@@ -237,7 +238,7 @@ Rectangle {
                         anchors.rightMargin: 0
                     }
                 }
-                
+
                 Rectangle {
                     id: soundline
                     width: 80
@@ -246,7 +247,7 @@ Rectangle {
                     anchors.right: buttonFullscreen.left
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
-                    
+
                     Rectangle {
                         id: soundlinePosition
                         width: 0
@@ -256,7 +257,7 @@ Rectangle {
                         anchors.leftMargin: 0
                         anchors.verticalCenter: parent.verticalCenter
                     }
-                    
+
                     MouseArea {
                         id: mouseArea
                         anchors.fill: parent
@@ -370,7 +371,7 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
             font.bold: true
             font.pixelSize: ThemeEngine.fontSizeContentText
-            
+
             Text {
                 id: date
                 height: 32
@@ -384,7 +385,7 @@ Rectangle {
                 font.pixelSize: ThemeEngine.fontSizeContentText
             }
         }
-        
+
         Text {
             id: labelCamera
             height: 40
@@ -396,7 +397,7 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
             font.bold: true
             font.pixelSize: ThemeEngine.fontSizeContentText
-            
+
             Text {
                 id: camera
                 height: 32
@@ -410,7 +411,7 @@ Rectangle {
                 color: ThemeEngine.colorContentText
             }
         }
-        
+
         Text {
             id: labelDuration
             height: 40
@@ -422,7 +423,7 @@ Rectangle {
             font.bold: true
             font.pixelSize: ThemeEngine.fontSizeContentText
             color: ThemeEngine.colorContentText
-            
+
             Text {
                 id: duration
                 height: 32
@@ -436,7 +437,7 @@ Rectangle {
                 font.pixelSize: ThemeEngine.fontSizeContentText
             }
         }
-        
+
         Text {
             id: labelDefinition
             width: 240
@@ -445,13 +446,13 @@ Rectangle {
             anchors.topMargin: 0
             anchors.left: parent.left
             anchors.leftMargin: 24
-            
+
             color: ThemeEngine.colorContentText
             text: qsTr("Definition:")
             verticalAlignment: Text.AlignVCenter
             font.bold: true
             font.pixelSize: ThemeEngine.fontSizeContentText
-            
+
             Text {
                 id: definition
                 width: 128
@@ -466,7 +467,7 @@ Rectangle {
                 color: ThemeEngine.colorContentText
             }
         }
-        
+
         Text {
             id: labelSize
             width: 240
@@ -475,13 +476,13 @@ Rectangle {
             anchors.leftMargin: 24
             anchors.top: labelDefinition.bottom
             anchors.topMargin: 0
-            
+
             color: ThemeEngine.colorContentText
             text: qsTr("Size:")
             verticalAlignment: Text.AlignVCenter
             font.bold: true
             font.pixelSize: ThemeEngine.fontSizeContentText
-            
+
             Text {
                 id: size
                 width: 128
@@ -503,13 +504,13 @@ Rectangle {
             anchors.right: parent.right
             anchors.rightMargin: 24
             anchors.verticalCenter: labelSize.verticalCenter
-            
+
             color: ThemeEngine.colorContentText
             text: qsTr("Full size:")
             verticalAlignment: Text.AlignVCenter
             font.bold: true
             font.pixelSize: ThemeEngine.fontSizeContentText
-            
+
             Text {
                 id: sizefull
                 width: 128
@@ -524,7 +525,7 @@ Rectangle {
                 font.pixelSize: ThemeEngine.fontSizeContentText
             }
         }
-        
+
         Text {
             id: labelAR
             width: 240
@@ -537,7 +538,7 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
             font.bold: true
             font.pixelSize: ThemeEngine.fontSizeContentText
-            
+
             Text {
                 id: ar
                 width: 128
@@ -552,7 +553,7 @@ Rectangle {
                 color: ThemeEngine.colorContentText
             }
         }
-        
+
         Rectangle {
             id: rectanglePicture
             height: 120
@@ -563,7 +564,7 @@ Rectangle {
             anchors.leftMargin: 0
             anchors.right: parent.right
             anchors.rightMargin: 0
-            
+
             Text {
                 id: labelISO
                 width: 240
@@ -577,7 +578,7 @@ Rectangle {
                 verticalAlignment: Text.AlignVCenter
                 font.bold: true
                 font.pixelSize: ThemeEngine.fontSizeContentText
-                
+
                 Text {
                     id: iso
                     width: 128
@@ -585,7 +586,7 @@ Rectangle {
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
-                    
+
                     text: shot.iso
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
@@ -593,7 +594,7 @@ Rectangle {
                     color: ThemeEngine.colorContentText
                 }
             }
-            
+
             Text {
                 id: labelFocal
                 width: 240
@@ -602,13 +603,13 @@ Rectangle {
                 anchors.leftMargin: 24
                 anchors.top: labelISO.bottom
                 anchors.topMargin: 0
-                
+
                 color: ThemeEngine.colorContentText
                 text: qsTr("Focal:")
                 verticalAlignment: Text.AlignVCenter
                 font.bold: true
                 font.pixelSize: ThemeEngine.fontSizeContentText
-                
+
                 Text {
                     id: focal
                     width: 128
@@ -616,7 +617,7 @@ Rectangle {
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
-                    
+
                     text: shot.focal
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
@@ -632,13 +633,13 @@ Rectangle {
                 anchors.leftMargin: 24
                 anchors.top: labelFocal.bottom
                 anchors.topMargin: 0
-                
+
                 color: ThemeEngine.colorContentText
                 text: qsTr("Exposure time:")
                 verticalAlignment: Text.AlignVCenter
                 font.bold: true
                 font.pixelSize: ThemeEngine.fontSizeContentText
-                
+
                 Text {
                     id: exposure
                     width: 128
@@ -646,7 +647,7 @@ Rectangle {
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
-                    
+
                     text: shot.exposure
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
@@ -655,7 +656,7 @@ Rectangle {
                 }
             }
         }
-        
+
         Rectangle {
             id: rectangleVideo
             height: 120
@@ -666,7 +667,7 @@ Rectangle {
             anchors.rightMargin: 0
             anchors.left: parent.left
             anchors.leftMargin: 0
-            
+
             Text {
                 id: labelChapter
                 width: 240
@@ -679,7 +680,7 @@ Rectangle {
                 verticalAlignment: Text.AlignVCenter
                 font.bold: true
                 font.pixelSize: ThemeEngine.fontSizeContentText
-                
+
                 Text {
                     id: chapters
                     width: 128
@@ -694,7 +695,7 @@ Rectangle {
                     color: ThemeEngine.colorContentText
                 }
             }
-            
+
             Text {
                 id: labelTimecode
                 width: 240
@@ -708,7 +709,7 @@ Rectangle {
                 font.bold: true
                 font.pixelSize: ThemeEngine.fontSizeContentText
                 color: ThemeEngine.colorContentText
-                
+
                 Text {
                     id: timecode
                     width: 128
@@ -723,7 +724,7 @@ Rectangle {
                     font.pixelSize: ThemeEngine.fontSizeContentText
                 }
             }
-            
+
             Text {
                 id: labelCodec
                 width: 240
@@ -737,7 +738,7 @@ Rectangle {
                 font.bold: true
                 font.pixelSize: ThemeEngine.fontSizeContentText
                 color: ThemeEngine.colorContentText
-                
+
                 Text {
                     id: codec
                     width: 128
@@ -752,7 +753,7 @@ Rectangle {
                     font.pixelSize: ThemeEngine.fontSizeContentText
                 }
             }
-            
+
             Text {
                 id: labelBitrate
                 width: 240
@@ -765,7 +766,7 @@ Rectangle {
                 verticalAlignment: Text.AlignVCenter
                 font.bold: true
                 font.pixelSize: ThemeEngine.fontSizeContentText
-                
+
                 Text {
                     id: bitrate
                     width: 128
@@ -780,7 +781,7 @@ Rectangle {
                     font.pixelSize: ThemeEngine.fontSizeContentText
                 }
             }
-            
+
             Text {
                 id: labelFramerate
                 width: 240
@@ -794,7 +795,7 @@ Rectangle {
                 verticalAlignment: Text.AlignVCenter
                 font.bold: true
                 font.pixelSize: ThemeEngine.fontSizeContentText
-                
+
                 Text {
                     id: framerate
                     width: 128
@@ -810,7 +811,7 @@ Rectangle {
                 }
             }
         }
-        
+
         Rectangle {
             id: rectangleFiles
             height: 256
@@ -821,7 +822,7 @@ Rectangle {
             anchors.rightMargin: 0
             anchors.left: parent.left
             anchors.leftMargin: 0
-            
+
             Text {
                 id: labelFileCount
                 height: 32
@@ -831,7 +832,7 @@ Rectangle {
                 anchors.topMargin: 8
                 anchors.right: parent.right
                 anchors.rightMargin: 8
-                
+
                 text: qsTr("Files:")
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
@@ -839,7 +840,7 @@ Rectangle {
                 font.bold: true
                 font.pixelSize: ThemeEngine.fontSizeContentText
             }
-            
+
             Text {
                 id: textFileList
                 anchors.rightMargin: 8
@@ -850,7 +851,7 @@ Rectangle {
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
                 anchors.topMargin: 0
-                
+
                 text: qsTr("Text")
                 //color: ThemeEngine.colorContentText
                 font.pixelSize: ThemeEngine.fontSizeContentText

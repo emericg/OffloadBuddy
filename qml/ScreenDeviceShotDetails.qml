@@ -27,7 +27,8 @@ Rectangle {
 
     onVisibleChanged: {
         if (visible === false) {
-            mediaPlayer.pause()
+            if (typeof mediaPlayer !== "undefined")
+                mediaPlayer.pause()
         }
     }
 
