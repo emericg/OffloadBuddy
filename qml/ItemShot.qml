@@ -112,11 +112,45 @@ Rectangle {
         id: mouseAreaItem
         anchors.fill: parent
 
+        propagateComposedEvents: true
+        acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
+
         hoverEnabled: true
         onHoveredChanged: text_top.visible = !text_top.visible
-        propagateComposedEvents: true
 
-        acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
+        property int thumbId: 1
+        Timer {
+            id: thumbTimer
+            interval: 1500;
+            running: false;
+            repeat: true
+            onTriggered: {
+                if (shot.type < Shared.SHOT_PICTURE) {
+                    var timecode = Math.round((shot.duration / 4000) * mouseAreaItem.thumbId)
+                    if (++mouseAreaItem.thumbId > 3) mouseAreaItem.thumbId = 1
+
+                    if (shot.previewVideo)
+                        image.source = "image://GridThumbnailer/" + shot.previewVideo + "@" + timecode
+                    else if (preview)
+                        image.source = "image://GridThumbnailer/" + preview + "@" + timecode
+                }
+            }
+        }
+        onEntered: {
+            if (shot.type < Shared.SHOT_PICTURE) {
+                thumbTimer.start()
+            }
+        }
+        onExited: {
+            if (shot.type < Shared.SHOT_PICTURE) {
+                thumbId = 1
+                thumbTimer.stop()
+                if (shot.previewVideo)
+                    image.source = "image://GridThumbnailer/" + shot.previewVideo
+                else if (preview)
+                    image.source = "image://GridThumbnailer/" + preview
+            }
+        }
 
         onClicked: {
             shotsview.currentIndex = index

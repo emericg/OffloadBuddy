@@ -66,21 +66,21 @@ QImage GridThumbnailer::requestImage(const QString &id, QSize *size,
     int width = requestedSize.width() > 0 ? requestedSize.width() : DEFAULT_THUMB_SIZE;
     int height = requestedSize.height() > 0 ? requestedSize.height() : DEFAULT_THUMB_SIZE;
 
-    int timecode = 0;
+    int timecode_s = 0;
     if (id.lastIndexOf('@') > 0)
     {
         int timecode_pos = id.size() - id.lastIndexOf('@');
-        timecode = id.right(timecode_pos - 1).toInt();
+        timecode_s = id.right(timecode_pos - 1).toInt();
         path.chop(timecode_pos);
     }
 /*
     qDebug() << "@ requestId: " << id;
     qDebug() << "@ requestPath: " << path;
-    qDebug() << "@ requestedTimecode: " << timecode;
+    qDebug() << "@ requestedTimecode: " << timecode_s;
     qDebug() << "@ requestedSize: " << requestedSize;
 */
 #if defined(ENABLE_FFMPEG)
-    bool decoding_status = getImage_withFfmpeg(path, thumb, timecode, width, height);
+    bool decoding_status = getImage_withFfmpeg(path, thumb, timecode_s, width, height);
 #elif defined(ENABLE_MINIVIDEO)
     bool decoding_status = getImage_withMinivideo(path, thumb, timecode, width, height);
 #else
@@ -148,7 +148,7 @@ QQuickTextureFactory *GridThumbnailer::requestTexture(const QString &id, QSize *
 #if defined(ENABLE_MINIVIDEO)
 
 bool GridThumbnailer::getImage_withMinivideo(const QString &path, QImage &img,
-                                             const int timecode,
+                                             const int timecode_s,
                                              const int width, const int height)
 {
     bool status = false;
@@ -166,7 +166,7 @@ bool GridThumbnailer::getImage_withMinivideo(const QString &path, QImage &img,
                 if (track && sid < track->sample_count)
                 {
                     // TODO seek
-                    Q_UNUSED(timecode);
+                    Q_UNUSED(timecode_s);
 
                     // TODO check if sid is a keyframe
                     //track->sample_type[sid] == sample_VIDEO_SYNC)
@@ -342,7 +342,8 @@ bool decode_packet(AVPacket *pPacket, AVCodecContext *pCodecContext, AVFrame *pF
 }
 
 bool GridThumbnailer::getImage_withFfmpeg(const QString &path, QImage &img,
-                                          const int timecode, const int width, const int height)
+                                          const int timecode_s,
+                                          const int width, const int height)
 {
     bool status = false;
 
@@ -448,12 +449,12 @@ bool GridThumbnailer::getImage_withFfmpeg(const QString &path, QImage &img,
     {
         // note: this function is part of an unstable API
         if (avformat_seek_file(pFormatContext, video_stream_index,
-                               0,
-                               (timecode / av_q2d(pStreamContext->time_base)),
-                               ((timecode+4) / av_q2d(pStreamContext->time_base)),
+                               ((timecode_s - 8) / av_q2d(pStreamContext->time_base)),
+                               (timecode_s / av_q2d(pStreamContext->time_base)),
+                               ((timecode_s+  8) / av_q2d(pStreamContext->time_base)),
                                0) < 0)
         {
-            qDebug() << "ERROR couldn't seek at" << timecode << "sec into the stream...";
+            qDebug() << "ERROR couldn't seek at" << timecode_s << "sec into the stream...";
         }
     }
 

@@ -39,11 +39,13 @@ class GridThumbnailer : public QQuickImageProvider
 
 #ifdef ENABLE_FFMPEG
     bool getImage_withFfmpeg(const QString &path, QImage &img,
-                             const int timecode, const int width, const int height);
+                             const int timecode_s,
+                             const int width, const int height);
 #endif
 #ifdef ENABLE_MINIVIDEO
     bool getImage_withMinivideo(const QString &path, QImage &img,
-                                const int timecode, const int width, const int height);
+                                const int timecode_s,
+                                const int width, const int height);
 #endif
 
 public:
