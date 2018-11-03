@@ -659,7 +659,7 @@ bool Shot::getMetadatasFromVideo()
 
     if (minivideo_retcode == 1)
     {
-        minivideo_retcode = minivideo_parse(media, false, false);
+        minivideo_retcode = minivideo_parse(media, true, false);
 
         if (minivideo_retcode != 1)
         {
@@ -680,10 +680,25 @@ bool Shot::getMetadatasFromVideo()
                 vcodec = QString::fromLocal8Bit(getCodecString(stream_VIDEO, media->tracks_video[0]->stream_codec, false));
                 framerate = media->tracks_video[0]->framerate;
                 bitrate = media->tracks_video[0]->bitrate_avg;
-                //timecode = QString::fromLocal8Bit(media->tracks_video[0]->time_reference);
 
                 //QDateTime vt = QDateTime::fromTime_t(media->creation_time);
                 //qDebug() << "media->creation_time:" << vt;
+            }
+            for (unsigned i = 0; i < media->tracks_others_count; i++)
+            {
+                if (media->tracks_others[i])
+                {
+                    const MediaStream_t *t = media->tracks_others[i];
+
+                    if (t->stream_type == stream_TMCD)
+                    {
+                        timecode += QString("%1:%2:%3-%4")\
+                                        .arg(t->time_reference[0], 2, 'u', 0, '0')\
+                                        .arg(t->time_reference[1], 2, 'u', 0, '0')\
+                                        .arg(t->time_reference[2], 2, 'u', 0, '0')\
+                                        .arg(t->time_reference[3], 2, 'u', 0, '0');
+                    }
+                }
             }
         }
 
