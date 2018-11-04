@@ -15,6 +15,7 @@
         <file>resources/minicons/queued.svg</file>
         <file>resources/minicons/offloading.svg</file>
         <file>resources/minicons/encoding.svg</file>
+        <file>resources/minicons/locked.svg</file>
         <file>resources/minicons/job_done.svg</file>
         <file>resources/minicons/job_encoding.svg</file>
         <file>resources/minicons/job_errored.svg</file>

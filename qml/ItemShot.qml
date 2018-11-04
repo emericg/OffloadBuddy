@@ -171,8 +171,9 @@ Rectangle {
                     merge = false
                     encode = false
                 }
-                if (myDevice.readOnly)
+                if (myDevice.readOnly) {
                     remove = false
+                }
                 actionMenu.setMenuButtons(merge, encode, remove)
 
                 actionMenu.visible = true

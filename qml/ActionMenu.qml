@@ -20,10 +20,13 @@ Rectangle {
             offloadReencode.visible = true
         else
             offloadReencode.visible = false
-        if (remove)
+        if (remove) {
+            removeSeparator.visible = true
             removeSelected.visible = true
-        else
+        } else {
+            removeSeparator.visible = false
             removeSelected.visible = false
+        }
     }
 
     Column {
@@ -52,7 +55,7 @@ Rectangle {
             onButtonClicked: menuSelected(index)
         }
         Item {
-            id: separator
+            id: removeSeparator
             height: 2
             anchors.left: parent.left
             anchors.leftMargin:  10

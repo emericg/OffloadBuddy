@@ -61,7 +61,13 @@ Rectangle {
                 deviceImage.source = "qrc:/cameras/generic_actioncam.svg"
         }
 
-        rectangleDelete.stopTheBlink()
+        if (myDevice.readOnly === true) {
+            deviceSpaceLocked.visible = true
+            deviceSpaceLocked.width = 24
+        } else {
+            deviceSpaceLocked.visible = false
+            deviceSpaceLocked.width = 0
+        }
 
         banner.visible = false
         banner.height = 0
@@ -78,9 +84,10 @@ Rectangle {
     }
 
     function initGridViewSettings() {
-        actionMenu.visible = false
-        rectangleDelete.visible = false
         rectangleTransfer.visible = false
+        rectangleDelete.stopTheBlink()
+        rectangleDelete.visible = false
+        actionMenu.visible = false
 
         if (myDevice && myDevice.deviceStorage === 0)
             if (myDevice.deviceType === 2)
@@ -110,8 +117,12 @@ Rectangle {
                 loadingFader.stop()
                 if (shotsview.count > 0) {
                     circleEmpty.visible = false
-                    rectangleDelete.visible = true
                     rectangleTransfer.visible = true
+
+                    if (myDevice.readOnly === true)
+                        rectangleDelete.visible = false
+                     else
+                        rectangleDelete.visible = true
                 }
             }
         }
@@ -163,7 +174,7 @@ Rectangle {
         Text {
             id: deviceModelText
             width: 256
-            height: 30
+            height: 32
             text: "Camera brand & model"
             anchors.top: parent.top
             anchors.topMargin: 28
@@ -176,12 +187,23 @@ Rectangle {
             font.pixelSize: ThemeEngine.fontSizeHeaderTitle - 2
         }
 
-        Text {
-            id: deviceSpaceText
-            width: 256
-            height: 15
+        Image {
+            id: deviceSpaceLocked
+            width: 24
+            height: 24
+            anchors.top: deviceModelText.bottom
+            anchors.topMargin: 2
             anchors.right: deviceModelText.right
             anchors.rightMargin: 0
+            source: "qrc:/resources/minicons/locked.svg"
+        }
+
+        Text {
+            id: deviceSpaceText
+            width: 232
+            height: 16
+            anchors.right: deviceSpaceLocked.left
+            anchors.rightMargin: 8
             anchors.top: deviceModelText.bottom
             anchors.topMargin: 8
 
