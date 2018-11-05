@@ -532,7 +532,7 @@ Rectangle {
             if (index === 2)
                 myDevice.offloadMergeSelected(selectedItemName)
             if (index === 3) {
-                panelEncode.updateEncodePanel()
+                panelEncode.updateEncodePanel(selectedItem.shot)
                 popupEncode.open()
             }
             if (index === 4)

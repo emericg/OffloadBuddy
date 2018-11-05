@@ -14,6 +14,24 @@ Rectangle {
     anchors.fill: parent
     color: "#00000000"
 
+    property var selectedShot : shot
+    property string selectedItemName : shot.name
+
+    // POPUPS //////////////////////////////////////////////////////////////////
+
+    Popup {
+        id: popupEncode
+        modal: true
+        focus: true
+        x: (parent.width - panelEncode.width) / 2
+        y: (parent.height - panelEncode.height) / 2
+        closePolicy: Popup.CloseOnEscape /*| Popup.CloseOnPressOutsideParent*/
+
+        PanelEncode {
+            id: panelEncode
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////
 
     Rectangle {
@@ -26,8 +44,8 @@ Rectangle {
         color: "black"
 
         property bool isFullScreen: false
-        property int startLimit: 0
-        property int stopLimit: 0
+        property int startLimit: -1
+        property int stopLimit: -1
 
         MouseArea {
             id: previewFullScreen
@@ -64,6 +82,9 @@ Rectangle {
             id: mediaOutput
             anchors.fill: parent
             source: mediaPlayer
+
+            property int clipStart: 0
+            property int clipStop: shot.duration
 
             MediaPlayer {
                 id: mediaPlayer
@@ -148,10 +169,11 @@ Rectangle {
 
                     onClicked: {
                         preview.startLimit = mediaPlayer.position
+                        //clipStart = mediaPlayer.position
+                        //console.log("clipStart: " + clipStart)
                         timelineLimitStart.width = timeline.width * (mediaPlayer.position / mediaPlayer.duration);
                     }
                 }
-
                 Button {
                     id: buttonStopCut
                     width: 32
@@ -163,7 +185,9 @@ Rectangle {
 
                     onClicked: {
                         preview.stopLimit = mediaPlayer.position
-                        timelineLimitStop.width = timeline.width * ( ((mediaPlayer.duration  -mediaPlayer.position) / mediaPlayer.duration));
+                        //clipStop = mediaPlayer.position
+                        //console.log("clipStop: " + clipStart)
+                        timelineLimitStop.width = timeline.width * (((mediaPlayer.duration - mediaPlayer.position) / mediaPlayer.duration));
                     }
                 }
                 Button {
@@ -175,7 +199,11 @@ Rectangle {
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
 
-                    onClicked: previewFullScreen.toogleFullScreen()
+                    onClicked: {
+                        panelEncode.updateEncodePanel(shot)
+                        panelEncode.setClip(preview.startLimit, preview.stopLimit)
+                        popupEncode.open()
+                    }
                 }
                 Button {
                     id: buttonFullscreen

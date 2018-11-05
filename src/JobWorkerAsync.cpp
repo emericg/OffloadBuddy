@@ -33,6 +33,37 @@
 
 /* ************************************************************************** */
 
+QString getFFmpegDurationString(const uint32_t duration_ms)
+{
+    QString duration_qstr;
+
+    if (duration_ms > 0)
+    {
+        unsigned hours = duration_ms / 3600000;
+        unsigned minutes = (duration_ms - (hours * 3600000)) / 60000;
+        unsigned seconds = (duration_ms - (hours * 3600000) - (minutes * 60000)) / 1000;
+        unsigned ms = (duration_ms - (hours * 3600000) - (minutes * 60000)) - (seconds * 1000);
+
+        duration_qstr += QString::number(hours).rightJustified(2, '0');
+        duration_qstr += ":";
+        duration_qstr += QString::number(minutes).rightJustified(2, '0');
+        duration_qstr += ":";
+        duration_qstr += QString::number(seconds).rightJustified(2, '0');
+        duration_qstr += ".";
+        duration_qstr += QString::number(ms);
+    }
+    else
+    {
+        duration_qstr = "00:00:00";
+    }
+
+    //qDebug() << "getFFmpegDurationString(" << duration_ms << ") >" << duration_qstr;
+
+    return duration_qstr;
+}
+
+/* ************************************************************************** */
+
 JobWorkerAsync::JobWorkerAsync()
 {
     //
@@ -40,10 +71,11 @@ JobWorkerAsync::JobWorkerAsync()
 
 JobWorkerAsync::~JobWorkerAsync()
 {
-    do {
+    while (!m_ffmpegjobs.isEmpty())
+    {
         commandWrapper *wrap = m_ffmpegjobs.dequeue();
         delete wrap;
-    } while (!m_ffmpegjobs.isEmpty());
+    }
 
     jobAbort();
 }
@@ -122,8 +154,15 @@ void JobWorkerAsync::queueWork(Job *job)
                 ptiwrap->arguments << "-i" << element->files.at(0).filesystemPath;
             }
 
+            if (job->settings.codec == "copy")
+            {
+                ptiwrap->arguments << "-codec" << "copy";
+            }
+
             if (job->settings.codec == "H.264")
             {
+                file_extension = "mp4";
+
                 // H.264 video
                 ptiwrap->arguments << "-c:v" << "libx264";
 
@@ -146,6 +185,8 @@ void JobWorkerAsync::queueWork(Job *job)
 
             if (job->settings.codec == "H.265")
             {
+                file_extension = "mp4";
+
                 // H.265 video
                 ptiwrap->arguments << "-c:v" << "libx265";
 
@@ -183,13 +224,33 @@ void JobWorkerAsync::queueWork(Job *job)
                 ptiwrap->arguments << "-vf" << "scale=480:-1";
             }
 
-            ptiwrap->arguments << element->destination_dir + element->files.front().name + "_reencoded." + file_extension;
+            QString reencode_or_clipped = "_reencoded";
+            if (job->settings.durationMs > 0)
+            {
+                reencode_or_clipped = "_clipped";
+                ptiwrap->arguments << "-ss" << getFFmpegDurationString(job->settings.startMs);
+                ptiwrap->arguments << "-t" << getFFmpegDurationString(job->settings.durationMs);
+            }
+
+            // Defisheye filter
+            // HERO4? lenscorrection=k1=-0.6:k2=0.55
+            // ? lenscorrection=k1=-0.56:k2=0.3
+            //ptiwrap->arguments << "-vf" << "lenscorrection=k1=-0.6:k2=0.55";
+
+            // Change output framerate
+            if (job->settings.fps > 0)
+            {
+                ptiwrap->arguments << "-r" << QString::number(job->settings.fps);
+            }
+
+            ptiwrap->arguments << element->destination_dir + element->files.front().name + reencode_or_clipped + "." + file_extension;
+
+            m_ffmpegjobs.push_back(ptiwrap);
 /*
             // Recap encoding arguments:
             qDebug() << "ENCODING JOB:";
             qDebug() << ">" << ptiwrap->arguments;
 */
-            m_ffmpegjobs.push_front(ptiwrap);
         }
 /*
         // Recap settings:
@@ -198,6 +259,8 @@ void JobWorkerAsync::queueWork(Job *job)
         qDebug() << "* quality:" << job->settings.quality;
         qDebug() << "* speed:" << job->settings.speed;
         qDebug() << "* fps:" << job->settings.fps;
+        qDebug() << "* start:" << job->settings.startMs;
+        qDebug() << "* duration:" << job->settings.durationMs;
 */
     }
 }
@@ -270,7 +333,7 @@ void JobWorkerAsync::processOutput()
 {
     if (m_childProcess)
     {
-        m_childProcess->waitForBytesWritten(500);
+        m_childProcess->waitForBytesWritten(128);
         QString txt(m_childProcess->readAllStandardError());
 
         //qDebug() << "JobWorkerAsync::processOutput()" << txt;

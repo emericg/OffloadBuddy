@@ -53,7 +53,7 @@ Rectangle {
         if (type < Shared.SHOT_PICTURE) {
             if (duration > 0) {
                 text_left.visible = true
-                text_left.text = StringUtils.durationToString_short(duration)
+                text_left.text = StringUtils.durationToString_condensed(duration)
             }
             icon_left.source = "qrc:/resources/minicons/video.svg"
 

@@ -355,7 +355,8 @@ public slots:
     void offloadCopySelected(const QString shot_name);
     void offloadMergeSelected(const QString shot_name);
     void reencodeSelected(const QString shot_name, const QString codec,
-                          float quality, float speed, float fps);
+                          float quality, float speed, float fps,
+                          int start, int duration);
     void deleteSelected(const QString shot_name);
 
     //

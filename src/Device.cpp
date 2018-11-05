@@ -564,7 +564,8 @@ void Device::offloadMergeSelected(const QString shot_name)
 }
 
 void Device::reencodeSelected(const QString shot_name, const QString codec,
-                              float quality, float speed, float fps)
+                              float quality, float speed, float fps,
+                              int start, int duration)
 {
     qDebug() << "reencodeSelected(" << shot_name << ")";
 
@@ -575,7 +576,10 @@ void Device::reencodeSelected(const QString shot_name, const QString codec,
     sett.codec = codec;
     sett.quality = quality;
     sett.speed = speed;
-    sett.fps = fps;
+    if (fps > 0) sett.fps = fps;
+
+    if (start > 0) sett.startMs = start;
+    if (duration > 0) sett.durationMs = duration;
 
     if (jm && shot)
         jm->addJob(JOB_REENCODE, this, shot, nullptr, &sett);
