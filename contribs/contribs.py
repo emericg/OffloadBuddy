@@ -295,12 +295,12 @@ for TARGET in TARGETS:
         os.system("make install")
 
     subprocess.check_call(CMAKE_cmd + ["-G", CMAKE_gen, "-DCMAKE_BUILD_TYPE=Release", "-DBUILD_STATIC_LIBS:BOOL=OFF", "-DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=TRUE", "-DCMAKE_INSTALL_PREFIX=" + env_dir + "/usr", ".."], cwd=build_dir + DIR_libexif + "/build")
-    subprocess.check_call(["cmake", "--build", "."], cwd=build_dir + DIR_libexif + "/build")
-    subprocess.check_call(["cmake", "--build", ".", "--target", "install"], cwd=build_dir + DIR_libexif + "/build")
+    subprocess.check_call(["cmake", "--build", ".", "--config", "Release"], cwd=build_dir + DIR_libexif + "/build")
+    subprocess.check_call(["cmake", "--build", ".", "--target", "install", "--config", "Release"], cwd=build_dir + DIR_libexif + "/build")
 
     subprocess.check_call(CMAKE_cmd + ["-G", CMAKE_gen, "-DCMAKE_BUILD_TYPE=Release", "-DBUILD_STATIC_LIBS:BOOL=OFF", "-DCMAKE_INSTALL_PREFIX=" + env_dir + "/usr", ".."], cwd=build_dir + DIR_minivideo + "/minivideo/build")
-    subprocess.check_call(["cmake", "--build", "."], cwd=build_dir + DIR_minivideo + "/minivideo/build")
-    subprocess.check_call(["cmake", "--build", ".", "--target", "install"], cwd=build_dir + DIR_minivideo + "/minivideo/build")
+    subprocess.check_call(["cmake", "--build", ".", "--config", "Release"], cwd=build_dir + DIR_minivideo + "/minivideo/build")
+    subprocess.check_call(["cmake", "--build", ".", "--target", "install", "--config", "Release"], cwd=build_dir + DIR_minivideo + "/minivideo/build")
 
     ############################################################################
 
