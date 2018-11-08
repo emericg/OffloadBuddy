@@ -50,7 +50,12 @@ Rectangle {
 
         text_right.visible = false
         text_left.visible = false
-        if (type < Shared.SHOT_PICTURE) {
+        if (type === Shared.SHOT_UNKNOWN) {
+            icon_left.source = "qrc:/resources/minicons/unknown.svg"
+
+            if (!preview && !shot.previewVideo)
+                image.source = "qrc:/resources/other/placeholder_video.svg"
+        } else if (type < Shared.SHOT_PICTURE) {
             if (duration > 0) {
                 text_left.visible = true
                 text_left.text = StringUtils.durationToString_condensed(duration)
@@ -125,7 +130,8 @@ Rectangle {
             running: false;
             repeat: true
             onTriggered: {
-                if (shot.type < Shared.SHOT_PICTURE) {
+                if (shot.type > Shared.SHOT_UNKNOWN &&
+                    shot.type < Shared.SHOT_PICTURE) {
                     var timecode = Math.round((shot.duration / 4000) * mouseAreaItem.thumbId)
                     if (++mouseAreaItem.thumbId > 3) mouseAreaItem.thumbId = 1
 
@@ -137,12 +143,14 @@ Rectangle {
             }
         }
         onEntered: {
-            if (shot.type < Shared.SHOT_PICTURE) {
+            if (shot.type > Shared.SHOT_UNKNOWN &&
+                shot.type < Shared.SHOT_PICTURE) {
                 thumbTimer.start()
             }
         }
         onExited: {
-            if (shot.type < Shared.SHOT_PICTURE) {
+            if (shot.type > Shared.SHOT_UNKNOWN &&
+                shot.type < Shared.SHOT_PICTURE) {
                 thumbId = 1
                 thumbTimer.stop()
                 if (shot.previewVideo)
@@ -193,8 +201,6 @@ Rectangle {
 
     Text {
         id: text_top
-        x: 8
-        y: 0
         height: 20
         color: "#ffffff"
         text: name

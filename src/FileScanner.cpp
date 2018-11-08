@@ -100,7 +100,8 @@ void FileScanner::scanFilesystem()
                 }
 
                 ofb_shot *s = new ofb_shot;
-                getGoProShotInfos(*f, *s);
+                if (getGoProShotInfos(*f, *s) == false)
+                    getGenericShotInfos(*f, *s);
 
                 emit fileFound(f, s);
             }
@@ -244,9 +245,8 @@ void FileScanner::mtpFileRec(LIBMTP_mtpdevice_t *device, uint32_t storageid, uin
                 }
 
                 ofb_shot *s = new ofb_shot;
-
-                //getGenericShotInfos(*f, *s);
-                getGoProShotInfos(*f, *s);
+                if (getGoProShotInfos(*f, *s) == false)
+                    getGenericShotInfos(*f, *s);
 
                 emit fileFound(f, s);
             }
@@ -261,4 +261,3 @@ void FileScanner::mtpFileRec(LIBMTP_mtpdevice_t *device, uint32_t storageid, uin
 
 /* ************************************************************************** */
 /* ************************************************************************** */
-

@@ -92,15 +92,18 @@ bool parseGoProVersionFile(const QString &path, gopro_device_infos &infos)
 
 bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot)
 {
-    bool status = true;
     QString group_string;
 
     if (file.name.size() != 8)
+    {
         qWarning() << "-" << file.name << ": filename is not 8 chars... Probably not a GoPro file...";
+        return false;
+    }
     if (file.name.startsWith("G") == false)
+    {
         qWarning() << "-" << file.name << ": filename doesn't start by 'G'... Probably not a GoPro file...";
-
-    shot.file_number = file.name.mid(4, 4).toInt();
+        return false;
+    }
 
     if (file.name.startsWith("GOPR"))
     {
@@ -189,16 +192,18 @@ bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot)
     else if (file.name.startsWith("3D_"))
     {
         // 3D Recording Video
-        //shot.file_type = Shared::SHOT_VIDEO_3D;
+        shot.file_type = Shared::SHOT_VIDEO_3D;
+
         qWarning() << "Unhandled file name format:" << file.name;
-        status = false;
+        return false;
     }
     else
     {
         qWarning() << "Unknown file name format:" << file.name;
-        status = false;
+        return false;
     }
 
+    shot.file_number = file.name.mid(4, 4).toInt();
     shot.shot_id = (shot.file_type == Shared::SHOT_VIDEO) ? shot.file_number : shot.group_number;
 /*
     qDebug() << "* FILE:" << file.name;
@@ -208,7 +213,7 @@ bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot)
     qDebug() << "- " << shot.file_number;
     qDebug() << "- " << shot.shot_id;
 */
-    return  status;
+    return true;
 }
 
 /* ************************************************************************** */

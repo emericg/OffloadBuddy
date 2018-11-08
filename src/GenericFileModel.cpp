@@ -138,13 +138,13 @@ bool getGenericShotInfos(const ofb_file &file, ofb_shot &shot)
     shot.file_number = 0;
     shot.shot_id = 0;
 
-    if (file.extension == "jpg" || file.extension == "png")
+    if (file.extension == "jpg" || file.extension == "png" || file.extension == "webp")
     {
         shot.file_type = Shared::SHOT_PICTURE;
     }
     else if (file.extension == "mov" || file.extension == "mp4" || file.extension == "m4v" ||
              file.extension == "avi" ||
-             file.extension == "mkv")
+             file.extension == "mkv" || file.extension == "webm")
     {
         shot.file_type = Shared::SHOT_VIDEO;
     }
@@ -158,7 +158,7 @@ bool getGenericShotInfos(const ofb_file &file, ofb_shot &shot)
     qDebug() << "- " << file.extension;
     qDebug() << "- " << shot.file_type;
 */
-    return  status;
+    return status;
 }
 
 /* ************************************************************************** */
