@@ -238,7 +238,41 @@ void DeviceScanner::scanVirtualFilesystems()
                         if (subdir_device.startsWith("mtp:host="))
                             deviceInfos->stringId = subdir_device.mid(9);
 
-                        //qDebug() << "MTP infos:" << deviceInfos->other_id;
+                        //qDebug() << "MTP infos:" << deviceInfos->stringId;
+
+                        // Manual associations
+                        if (deviceInfos->stringId.contains("GoPro"))
+                        {
+                            deviceInfos->brand = "GoPro";
+
+                            if (deviceInfos->stringId.contains("HERO7"))
+                                deviceInfos->model = "HERO7";
+                            else if (deviceInfos->stringId.contains("HERO_6"))
+                            {
+                                deviceInfos->model = "HERO6";
+                            }
+                            else if (deviceInfos->stringId.contains("HERO5"))
+                                deviceInfos->model = "HERO5";
+                            else if (deviceInfos->stringId.contains("HERO4"))
+                                deviceInfos->model = "HERO4";
+                            else if (deviceInfos->stringId.contains("HERO", Qt::CaseInsensitive))
+                                deviceInfos->model = "HERO";
+
+                            if (deviceInfos->stringId.contains("BLACK", Qt::CaseInsensitive))
+                                deviceInfos->model += " BLACK";
+                        }
+                        else if (deviceInfos->stringId.contains("Sony"))
+                        {
+                            deviceInfos->brand = "Sony";
+                        }
+                        else if (deviceInfos->stringId.contains("Garmin"))
+                        {
+                            deviceInfos->brand = "Garmin";
+                        }
+                        else if (deviceInfos->stringId.contains("Xiaomi"))
+                        {
+                            deviceInfos->brand = "Xiaomi";
+                        }
                     }
 
                     // Device already in watch list? bail early!

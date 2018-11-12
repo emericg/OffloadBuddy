@@ -690,7 +690,7 @@ bool Shot::getMetadatasFromVideo()
                 {
                     const MediaStream_t *t = media->tracks_others[i];
 
-                    if (t->stream_type == stream_TMCD)
+                    if (t->stream_type == stream_TMCD && timecode.isEmpty())
                     {
                         timecode += QString("%1:%2:%3-%4")\
                                         .arg(t->time_reference[0], 2, 'u', 0, '0')\
