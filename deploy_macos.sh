@@ -14,7 +14,7 @@ find bin/;
 ## PACKAGE #####################################################################
 
 # already run by the make install
-#macdeployqt bin/OffloadBuddy.app
+#macdeployqt bin/OffloadBuddy.app --qmldir qml/
 
 cd bin/;
 zip -r -X OffloadBuddy.zip OffloadBuddy.app;
