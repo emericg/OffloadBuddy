@@ -3,7 +3,7 @@ VERSION = 0.1.0
 
 CONFIG += c++14
 QT     += core gui svg quick quickcontrols2
-QT     += multimedia location charts
+QT     += multimedia location sql charts
 
 # Enables or disable optional features
 DEFINES += ENABLE_FFMPEG
@@ -112,6 +112,8 @@ contains(DEFINES, USE_CONTRIBS) {
     !unix { warning("Building ReShoot without contribs on windows is untested...") }
 
     CONFIG += link_pkgconfig
+    macx { PKG_CONFIG = /usr/local/bin/pkg-config } # use pkg-config from brew
+
     contains(DEFINES, ENABLE_LIBMTP) {
         PKGCONFIG += libusb-1.0 libmtp
     }
@@ -156,7 +158,7 @@ linux {
 
 macx {
     # Automatic bundle packaging
-    deploy.commands = macdeployqt $${OUT_PWD}/$${DESTDIR}/$${TARGET}.app
+    deploy.commands = macdeployqt $${OUT_PWD}/$${DESTDIR}/$${TARGET}.app -qmldir=qml/
     install.depends = deploy
     QMAKE_EXTRA_TARGETS += install deploy
 

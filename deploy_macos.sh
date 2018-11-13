@@ -53,11 +53,11 @@ fi
 
 # (already run by the make install)
 #echo '---- Running macdeployqt'
-#macdeployqt bin/OffloadBuddy.app;
+#macdeployqt bin/OffloadBuddy.app -qmldir=qml/;
 
 echo '---- Compressing package'
 cd bin/;
-zip -r -X OffloadBuddy.zip OffloadBuddy.app;
+zip -r -X OffloadBuddy-$GIT_VERSION-macos.zip OffloadBuddy.app;
 
 ## UPLOAD ######################################################################
 

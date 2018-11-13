@@ -48,7 +48,7 @@ export GIT_VERSION=$(git rev-parse --short HEAD);
 unset LD_LIBRARY_PATH; unset QT_PLUGIN_PATH; #unset QTDIR;
 
 if [[ $use_contribs = true ]] ; then
-  export LD_LIBRARY_PATH=$(pwd)/contribs/src/env/linux_x86_64/usr/lib/;
+  export LD_LIBRARY_PATH=$(pwd)/contribs/src/env/linux_x86_64/usr/lib/:$LD_LIBRARY_PATH;
 else
   export LD_LIBRARY_PATH=/usr/lib/;
 fi
