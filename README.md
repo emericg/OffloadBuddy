@@ -35,6 +35,12 @@ FEATURES (WIP):
 
 You will need a C++14 capable compiler and Qt 5.10+ (with QtMultimedia, QtLocation and QtCharts)
 
+Build dependencies:
+- Qt 5.10+  
+- wget  
+- cmake  
+- pkgconfig  
+
 Optional dependencies:
 - libusb and libmtp  
 - libexif  
@@ -44,7 +50,7 @@ Optional dependencies:
 ### Building OffloadBuddy
 
 Contribs (optional):
-> $ cd OffloadBuddy/Contribs  
+> $ cd OffloadBuddy/contribs  
 > $ ./contribs.py  
 
 OffloadBuddy:

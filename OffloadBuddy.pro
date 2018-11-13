@@ -112,13 +112,6 @@ contains(DEFINES, USE_CONTRIBS) {
     !unix { warning("Building ReShoot without contribs on windows is untested...") }
 
     CONFIG += link_pkgconfig
-
-    # PKG_CONFIG_PATH = "contribs/env/usr/lib/pkgconfig:$(PKG_CONFIG_PATH)"
-    # warning("PKG_CONFIG_PATH: " $(PKG_CONFIG_PATH))
-
-    #system("pkg-config --exists libmtp")
-    #    DEFINES -= ENABLE_LIBMTP
-
     contains(DEFINES, ENABLE_LIBMTP) {
         PKGCONFIG += libusb-1.0 libmtp
     }
@@ -139,40 +132,41 @@ contains(DEFINES, USE_CONTRIBS) {
 linux {
     TARGET = $$lower($${TARGET})
 
-    # Application packaging # Needs linuxdeployqt installed
+    # Automatic application packaging # Needs linuxdeployqt installed
     #deploy.commands = $${OUT_PWD}/$${DESTDIR}/ -qmldir=qml/
     #install.depends = deploy
     #QMAKE_EXTRA_TARGETS += install deploy
 
     # Installation
     isEmpty(PREFIX) { PREFIX = /usr/local }
-    target_app.files   += $${OUT_PWD}/$${DESTDIR}/$$lower($${TARGET})
-    target_app.path     = $${PREFIX}/bin/
-    target_icon.files  += $${OUT_PWD}/resources/app/$$lower($${TARGET}).svg
-    target_icon.path    = $${PREFIX}/share/pixmaps/
-    target_appentry.files  += $${OUT_PWD}/resources/app/$$lower($${TARGET}).desktop
-    target_appentry.path    = $${PREFIX}/share/applications
-    target_appdata.files   += $${OUT_PWD}/resources/app/$$lower($${TARGET}).appdata.xml
-    target_appdata.path     = $${PREFIX}/share/appdata
+    target_app.files      += $${OUT_PWD}/$${DESTDIR}/$$lower($${TARGET})
+    target_app.path        = $${PREFIX}/bin/
+    target_icon.files     += $${OUT_PWD}/resources/app/$$lower($${TARGET}).svg
+    target_icon.path       = $${PREFIX}/share/pixmaps/
+    target_appentry.files += $${OUT_PWD}/resources/app/$$lower($${TARGET}).desktop
+    target_appentry.path   = $${PREFIX}/share/applications
+    target_appdata.files  += $${OUT_PWD}/resources/app/$$lower($${TARGET}).appdata.xml
+    target_appdata.path    = $${PREFIX}/share/appdata
     INSTALLS += target_app target_icon target_appentry target_appdata
 
-    # Clean bin/ directory
+    # Clean appdir/ and bin/ directories
     #QMAKE_CLEAN += $${OUT_PWD}/$${DESTDIR}/$$lower($${TARGET})
-    #QMAKE_CLEAN += $${OUT_PWD}/appdir
+    #QMAKE_CLEAN += $${OUT_PWD}/appdir/
 }
 
 macx {
     # Automatic bundle packaging
-    deploy.commands = macdeployqt $${OUT_PWD}/$${DESTDIR}/$${TARGET}.app -qmldir=qml/
+    deploy.commands = macdeployqt $${OUT_PWD}/$${DESTDIR}/$${TARGET}.app
     install.depends = deploy
     QMAKE_EXTRA_TARGETS += install deploy
 
     # Installation
+    isEmpty(PREFIX) { PREFIX = /usr/local }
     target.files += $${OUT_PWD}/${DESTDIR}/${TARGET}.app
     target.path = $$(HOME)/Applications
     INSTALLS += target
 
-    # Clean bin/ directory
+    # Clean ${TARGET}.app directory
     QMAKE_DISTCLEAN += -r $${OUT_PWD}/${DESTDIR}/${TARGET}.app
 }
 
