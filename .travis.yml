@@ -35,5 +35,5 @@ script:
   - make -j$(nproc)
 
 after_success:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./deploy_linux.sh; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./deploy_macos.sh; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./deploy_linux.sh -c -u; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./deploy_macos.sh -c -u; fi

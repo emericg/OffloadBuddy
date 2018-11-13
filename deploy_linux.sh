@@ -7,11 +7,31 @@ if [ "$(id -u)" == "0" ]; then
   exit 1
 fi
 
-current_dir=$(pwd)
-if [ ! ${current_dir##*/} == "OffloadBuddy" ]; then
+if [ ${PWD##*/} != "OffloadBuddy" ]; then
   echo "This script MUST be run from the OffloadBuddy/ directory"
   exit 1
 fi
+
+## SETTINGS ####################################################################
+
+use_contribs=false
+upload_package=false
+
+while [[ $# -gt 0 ]]
+do
+case $1 in
+    -c|--contribs)
+    use_contribs=true
+    ;;
+    -u|--upload)
+    upload_package=true
+    ;;
+    *)
+    echo "> Unknown argument '$1'"
+    ;;
+esac
+shift # skip argument or value
+done
 
 ## APP INSTALL #################################################################
 
@@ -23,17 +43,22 @@ find appdir/;
 
 ## PACKAGE #####################################################################
 
-unset LD_LIBRARY_PATH; unset QT_PLUGIN_PATH; #unset QTDIR;
-if [ -z "$QTDIR" ]; then
-  QTDIR=/usr/lib/qt
-fi
-USRDIR=/usr
-if [ -d appdir/usr/local ]; then
-  USRDIR=/usr/local
-fi
-
 export GIT_VERSION=$(git rev-parse --short HEAD);
-export LD_LIBRARY_PATH=contribs/src/env/linux_x86_64/usr/lib/
+
+unset LD_LIBRARY_PATH; unset QT_PLUGIN_PATH; #unset QTDIR;
+
+if [[ $use_contribs = true ]] ; then
+  export LD_LIBRARY_PATH=$(pwd)/contribs/src/env/linux_x86_64/usr/lib/;
+else
+  export LD_LIBRARY_PATH=/usr/lib/;
+fi
+USRDIR=/usr;
+if [ -d appdir/usr/local ]; then
+  USRDIR=/usr/local;
+fi
+if [ -z "$QTDIR" ]; then
+  QTDIR=/usr/lib/qt;
+fi
 
 echo '---- Downloading linuxdeployqt'
 if [ ! -x contribs/src/linuxdeployqt-continuous-x86_64.AppImage ]; then
@@ -52,6 +77,8 @@ echo '---- Running appimage packager'
 
 ## UPLOAD ######################################################################
 
-echo '---- Uploading to transfer.sh'
-find appdir -executable -type f -exec ldd {} \; | grep " => $USRDIR" | cut -d " " -f 2-3 | sort | uniq;
-curl --upload-file OffloadBuddy*.AppImage https://transfer.sh/OffloadBuddy-git.$GIT_VERSION-linux64.AppImage;
+if [[ $upload_package = true ]] ; then
+  echo '---- Uploading to transfer.sh'
+  find appdir -executable -type f -exec ldd {} \; | grep " => $USRDIR" | cut -d " " -f 2-3 | sort | uniq;
+  curl --upload-file OffloadBuddy*.AppImage https://transfer.sh/OffloadBuddy-git.$GIT_VERSION-linux64.AppImage;
+fi

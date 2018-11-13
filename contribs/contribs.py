@@ -169,16 +169,16 @@ if not os.path.exists("src/" + FILE_minivideo):
     urllib.request.urlretrieve("https://github.com/emericg/MiniVideo/archive/master.zip", src_dir + FILE_minivideo)
 
 ## ffmpeg
-## version: 4.0.2
-FILE_ffmpeg = "ffmpeg-4.0.2.tar.xz"
-DIR_ffmpeg = "ffmpeg-4.0.2"
+## version: 4.0.3
+ffmpeg_VERSION="ffmpeg-4.0.3"
+DIR_ffmpeg = ffmpeg_VERSION
+FILE_ffmpeg = ffmpeg_VERSION + ".tar.xz"
 
 if not os.path.exists("src/" + FILE_ffmpeg):
     print("> Downloading " + FILE_ffmpeg + "...")
     urllib.request.urlretrieve("http://www.ffmpeg.org/releases/" + FILE_ffmpeg, src_dir + FILE_ffmpeg)
 
 ## ffmpeg (src & bin)
-ffmpeg_VERSION="ffmpeg-4.0.2"
 ffmpeg_SRC="https://www.ffmpeg.org/releases/" + ffmpeg_VERSION + ".tar.xz"
 ffmpeg_BIN_BASEURL="https://sourceforge.net/projects/avbuild/files/"
 ffmpeg_BIN_PF1=["windows-desktop", "windows-desktop", "windows-store", "macOS", "iOS", "linux", "android"]

@@ -2,11 +2,31 @@
 
 echo "> OffloadBuddy packager (Windows x86_64)"
 
-current_dir=$(pwd)
-if [ ! ${current_dir##*/} == "OffloadBuddy" ]; then
+if [ ${PWD##*/} != "OffloadBuddy" ]; then
   echo "This script MUST be run from the OffloadBuddy/ directory"
   exit 1
 fi
+
+## SETTINGS ####################################################################
+
+use_contribs=false
+upload_package=false
+
+while [[ $# -gt 0 ]]
+do
+case $1 in
+    -c|--contribs)
+    use_contribs=true
+    ;;
+    -u|--upload)
+    upload_package=true
+    ;;
+    *)
+    echo "> Unknown argument '$1'"
+    ;;
+esac
+shift # skip argument or value
+done
 
 ## APP INSTALL #################################################################
 
@@ -38,5 +58,7 @@ mv bin OffloadBuddy-$GIT_VERSION-win64
 
 ## UPLOAD ######################################################################
 
-echo '---- Uploading to transfer.sh'
-curl --upload-file OffloadBuddy*.zip https://transfer.sh/OffloadBuddy-git.$GIT_VERSION-win64.zip;
+if [[ $upload_package = true ]] ; then
+  echo '---- Uploading to transfer.sh'
+  curl --upload-file OffloadBuddy*.zip https://transfer.sh/OffloadBuddy-git.$GIT_VERSION-win64.zip;
+fi
