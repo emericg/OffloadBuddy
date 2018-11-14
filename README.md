@@ -11,6 +11,8 @@ OffloadBuddy
 OffloadBuddy is a multimedia offloading software with a few tricks up his sleeve!
 It's designed to remove the hassle of handling and transferring the many videos and pictures file from your devices like action cameras, regular cameras and smartphones...
 
+Works with Linux, macOS and Windows!
+
 FEATURES (WIP):
 * Import datas from SD cards, mass storage or MTP devices
   * Copy, merge or reencode medias
@@ -37,9 +39,8 @@ You will need a C++14 capable compiler and Qt 5.10+ (with QtMultimedia, QtLocati
 
 Build dependencies:
 - Qt 5.10+  
-- wget  
 - cmake  
-- pkgconfig  
+- pkg-config  
 
 Optional dependencies:
 - libusb and libmtp  
