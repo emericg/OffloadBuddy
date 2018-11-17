@@ -208,6 +208,35 @@ bool GridThumbnailer::getImage_withMinivideo(const QString &path, QImage &img,
 #define av_err2str(errnum) av_make_error_string((char*)__builtin_alloca(AV_ERROR_MAX_STRING_SIZE), AV_ERROR_MAX_STRING_SIZE, errnum)
 #endif
 
+static bool ffmpeg_get_keyframes(const AVStream *stream, const int64_t target,
+                                 int64_t &prev, int64_t &next)
+{
+    bool status = false;
+
+    if (stream && stream->nb_index_entries > 1)
+    {
+        for (int i = 0; i < stream->nb_index_entries; i++)
+        {
+            if ((stream->index_entries[i].flags & AVINDEX_KEYFRAME) == 1)
+            {
+                if (next < 0 && stream->index_entries[i].timestamp > target)
+                {
+                    next = stream->index_entries[i].timestamp;
+                    status = true;
+                    break;
+                }
+
+                if (stream->index_entries[i].timestamp > prev)
+                {
+                    prev = stream->index_entries[i].timestamp;
+                }
+            }
+        }
+    }
+
+    return status;
+}
+
 // align buffer sizes to multiples of 'roundTo'
 static int roundTo(const int value, const int roundTo)
 {
@@ -424,6 +453,15 @@ bool GridThumbnailer::getImage_withFfmpeg(const QString &path, QImage &img,
         qDebug() << "ERROR failed to copy codec params to codec context";
         goto abort_stage2;
     }
+
+    // SPEED FLAGS // "ain't nobody got time for that"
+    pCodecContext->skip_loop_filter = AVDISCARD_ALL;
+    pCodecContext->flags2 |= AV_CODEC_FLAG2_FAST;
+
+    pCodecContext->thread_count = 4;
+    pCodecContext->thread_type = FF_THREAD_SLICE;
+    //pCodecContext->thread_type = FF_THREAD_FRAME | FF_THREAD_SLICE;
+
     if (avcodec_open2(pCodecContext, pCodec, nullptr) < 0)
     {
         qDebug() << "ERROR failed to open codec through avcodec_open2";
@@ -447,22 +485,26 @@ bool GridThumbnailer::getImage_withFfmpeg(const QString &path, QImage &img,
     // do not try to seek on images...
     if (strcmp(pFormatContext->iformat->name, "image2") != 0)
     {
-        // note: this function is part of an unstable API
-        if (avformat_seek_file(pFormatContext, video_stream_index,
-                               ((timecode_s - 8) / av_q2d(pStreamContext->time_base)),
-                               (timecode_s / av_q2d(pStreamContext->time_base)),
-                               ((timecode_s+  8) / av_q2d(pStreamContext->time_base)),
-                               0) < 0)
+        AVRational timebase_s = {1, 1};
+        int64_t target_opt = av_rescale_q(timecode_s, timebase_s, pStreamContext->time_base);
+
+        // Keyframe around optimal seek point
+        int64_t prev_keyframe = -1;
+        int64_t next_keyframe = -1;
+        ffmpeg_get_keyframes(pStreamContext, target_opt, prev_keyframe, next_keyframe);
+
+        int ret_seek = av_seek_frame(pFormatContext, video_stream_index, prev_keyframe, 0);
+        if (ret_seek < 0)
         {
             qDebug() << "ERROR couldn't seek at" << timecode_s << "sec into the stream...";
+        }
+        else
+        {
+            avcodec_flush_buffers(pCodecContext);
         }
     }
 
     /// DECODE /////////////////////////////////////////////////////////////////
-
-    // SPEED FLAGS // "ain't nobody got time for that"
-    pCodecContext->skip_loop_filter = AVDISCARD_ALL;
-    pCodecContext->flags2 |= AV_CODEC_FLAG2_FAST;
 
     // fill the Packet with data from the Stream
     while (av_read_frame(pFormatContext, pPacket) >= 0)

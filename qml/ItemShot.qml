@@ -132,13 +132,13 @@ Rectangle {
             onTriggered: {
                 if (shot.type > Shared.SHOT_UNKNOWN &&
                     shot.type < Shared.SHOT_PICTURE) {
-                    var timecode = Math.round((shot.duration / 4000) * mouseAreaItem.thumbId)
+                    var timecode_s = Math.round((shot.duration / 4000) * mouseAreaItem.thumbId)
                     if (++mouseAreaItem.thumbId > 3) mouseAreaItem.thumbId = 1
 
                     if (shot.previewVideo)
-                        image.source = "image://GridThumbnailer/" + shot.previewVideo + "@" + timecode
+                        image.source = "image://GridThumbnailer/" + shot.previewVideo + "@" + timecode_s
                     else if (preview)
-                        image.source = "image://GridThumbnailer/" + preview + "@" + timecode
+                        image.source = "image://GridThumbnailer/" + preview + "@" + timecode_s
                 }
             }
         }
@@ -202,18 +202,20 @@ Rectangle {
     Text {
         id: text_top
         height: 20
-        color: "#ffffff"
-        text: name
-        style: Text.Raised
-        horizontalAlignment: Text.AlignLeft
-        verticalAlignment: Text.AlignVCenter
         anchors.right: parent.right
         anchors.rightMargin: 8
         anchors.left: parent.left
         anchors.leftMargin: 8
-        font.bold: true
         anchors.top: parent.top
         anchors.topMargin: 8
+
+        color: "#ffffff"
+        clip: false
+        text: name
+        style: Text.Raised
+        horizontalAlignment: Text.AlignLeft
+        verticalAlignment: Text.AlignVCenter
+        font.bold: true
         font.pixelSize: 13
     }
 
