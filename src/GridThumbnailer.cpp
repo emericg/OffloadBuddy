@@ -171,17 +171,12 @@ bool GridThumbnailer::getImage_withMinivideo(const QString &path, QImage &img,
                     // TODO check if sid is a keyframe
                     //track->sample_type[sid] == sample_VIDEO_SYNC)
 
-                    OutputSurface_t *out = new OutputSurface_t;
+                    OutputSurface_t *out = minivideo_decode_frame(media, sid);
                     if (out)
                     {
-                        if (minivideo_decode(media, out, sid) > 0)
-                        {
-                            status = true;
-                            img = QImage(out->surface, out->width, out->height, QImage::Format_RGB888, &free).scaled(width*2, height);
-                        }
-
-                        free(out->surface);
-                        delete out;
+                        status = true;
+                        img = QImage(out->surface, out->width, out->height, QImage::Format_RGB888, &free).scaled(width*2, height);
+                        minivideo_destroy_frame(&out);
                     }
                 }
             }
