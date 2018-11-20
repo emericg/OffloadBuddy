@@ -337,7 +337,7 @@ Rectangle {
             //console.log("shot.preview :" + shot.previewVideo)
 
             if (shot.previewVideo)
-                mediaPlayer.source = "file://" + shot.previewVideo
+                mediaPlayer.source = "file:///" + shot.previewVideo
             else
                 image.source = "qrc:/resources/other/placeholder_video.svg"
 

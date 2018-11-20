@@ -135,7 +135,7 @@ void JobWorkerAsync::queueWork(Job *job)
 
             // FFMPEG binary
             ptiwrap->command = "ffmpeg";
-#ifdef Q_OS_WINDOWS
+#ifdef Q_OS_WIN
             ptiwrap->command = QDir::currentPath() + "/ffmpeg.exe";
 #endif
             // FFMPEG arguments
