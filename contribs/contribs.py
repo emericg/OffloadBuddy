@@ -18,14 +18,15 @@ import urllib.request
 
 print("\n> OffloadBuddy contribs builder")
 
-## DEPENDENCIES ###############################################################
+## DEPENDENCIES ################################################################
 
 ## linux:
 # cmake libtool automake m4 libudev-dev
 
 ## macOS:
-# brew install python cmake automake
-# brew install libtool pkg-config
+# brew install python cmake pkg-config
+# brew install automake libtool gettext iconv libudev
+# brew link --force gettext
 
 ## Windows:
 # python3 (https://www.python.org/downloads/)

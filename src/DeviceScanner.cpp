@@ -441,13 +441,10 @@ void DeviceScanner::scanMtpDevices()
         if (deviceInfos)
         {
             // Device infos
-            char *deviceversion = LIBMTP_Get_Deviceversion(mtpDevice);
-            char *serialnumber = LIBMTP_Get_Serialnumber(mtpDevice);
-
-            deviceInfos->brand =  rawdevices[i].device_entry.vendor;
-            deviceInfos->model = rawdevices[i].device_entry.product;
-            deviceInfos->serial = serialnumber;
-            deviceInfos->firmware = deviceversion;
+            deviceInfos->brand = LIBMTP_Get_Manufacturername(mtpDevice);
+            deviceInfos->model = LIBMTP_Get_Modelname(mtpDevice);
+            deviceInfos->serial = LIBMTP_Get_Serialnumber(mtpDevice);
+            deviceInfos->firmware = LIBMTP_Get_Deviceversion(mtpDevice);
 
             deviceInfos->devBus = rawdevices[i].bus_location;
             deviceInfos->devNum = rawdevices[i].devnum;
