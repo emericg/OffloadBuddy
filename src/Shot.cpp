@@ -161,7 +161,7 @@ void Shot::addFile(ofb_file *file)
                      file->extension == "webm")
             {
                 m_videos.push_back(file);
-                getMetadatasFromVideo();
+                getMetadatasFromVideo(m_videos.count() - 1);
             }
             else if (file->extension == "lrv")
             {
@@ -283,6 +283,7 @@ QString Shot::getPreviewPicture() const
 
     return QString();
 }
+
 QString Shot::getPreviewVideo() const
 {
     if (m_videos.size() > 0 && !m_videos.at(0)->filesystemPath.isEmpty())
@@ -420,17 +421,17 @@ static void show_tag(ExifData *d, ExifIfd ifd, ExifTag tag)
 }
 #endif // ENABLE_LIBEXIF
 
-bool Shot::getMetadatasFromPicture()
+bool Shot::getMetadatasFromPicture(int index)
 {
     if (m_pictures.size() <= 0)
         return false;
-    if (m_pictures.at(0)->filesystemPath.isEmpty())
-        return  false;
+    if (m_pictures.at(index)->filesystemPath.isEmpty())
+        return false;
 
 #ifdef ENABLE_LIBEXIF
 
     // EXIF ////////////////////////////////////////////////////////////////////
-    ExifData *ed = exif_data_new_from_file(m_pictures.at(0)->filesystemPath.toLatin1());
+    ExifData *ed = exif_data_new_from_file(m_pictures.at(index)->filesystemPath.toLatin1());
     if (!ed)
     {
         qWarning() << "File not readable or no EXIF data in file";
@@ -644,18 +645,18 @@ bool Shot::getMetadatasFromPicture()
     return false;
 }
 
-bool Shot::getMetadatasFromVideo()
+bool Shot::getMetadatasFromVideo(int index)
 {
     if (m_videos.size() <= 0)
         return false;
-    if (m_videos.at(0)->filesystemPath.isEmpty())
-        return  false;
+    if (m_videos.at(index)->filesystemPath.isEmpty())
+        return false;
 
 #ifdef ENABLE_MINIVIDEO
 
     // MINIVIDEO ///////////////////////////////////////////////////////////////
     MediaFile_t *media = nullptr;
-    int minivideo_retcode = minivideo_open(m_videos.at(0)->filesystemPath.toLocal8Bit(), &media);
+    int minivideo_retcode = minivideo_open(m_videos.at(index)->filesystemPath.toLocal8Bit(), &media);
 
     if (minivideo_retcode == 1)
     {
@@ -688,7 +689,7 @@ bool Shot::getMetadatasFromVideo()
             {
                 if (media->tracks_others[i])
                 {
-                    const MediaStream_t *t = media->tracks_others[i];
+                    MediaStream_t *t = media->tracks_others[i];
 
                     if (t->stream_type == stream_TMCD && timecode.isEmpty())
                     {
@@ -713,4 +714,151 @@ bool Shot::getMetadatasFromVideo()
 #endif // ENABLE_MINIVIDEO
 
     return false;
+}
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+void Shot::updateSpeedsSerie(QLineSeries *serie)
+{
+    if (serie == nullptr)
+        return;
+
+    float current;
+    minSpeed = 500000;
+    avgSpeed = 0;
+    maxSpeed = -500000;
+
+    int id = 0;
+    QVector<QPointF> points;
+    for (unsigned i = 0; i < m_speed.size(); i++) //; i+=18)
+    {
+        current = m_speed.at(i);
+        avgSpeed += current;
+
+        if (current < minSpeed)
+            minSpeed = current;
+        else if (current > maxSpeed)
+            maxSpeed = current;
+
+        points.insert(id, QPointF(id, current));
+        id++;
+        //qDebug() << "v:" << m_speed.at(i);
+    }
+
+    avgSpeed /= m_speed.size();
+
+    //https://doc.qt.io/qt-5/qxyseries.html#replace-5
+    serie->replace(points);
+/*
+    QVector<QPointF> *points = new QVector<QPointF>;
+    points->insert(0, QPointF(1,1));
+    points->insert(1, QPointF(2,2));
+    points->insert(2, QPointF(3,3));
+
+    //https://doc.qt.io/qt-5/qxyseries.html#replace-5
+    ptr->replace(*points);
+*/
+}
+
+void Shot::updateAltiSerie(QLineSeries *serie)
+{
+    if (serie == nullptr)
+        return;
+
+    float current;
+    minAlti = 500000;
+    avgAlti = 0;
+    maxAlti = -500000;
+
+    int id = 0;
+    QVector<QPointF> points;
+    for (unsigned i = 0; i < m_alti.size(); i++) //; i+=18)
+    {
+        current = m_alti.at(i);
+        avgAlti += current;
+
+        if (current < minAlti)
+            minAlti = current;
+        else if (current > maxAlti)
+            maxAlti = current;
+
+        points.insert(id, QPointF(id, current));
+        id++;
+    }
+
+    avgAlti /= m_alti.size();
+
+    serie->replace(points);
+}
+
+void Shot::updateAcclSeries(QLineSeries *x, QLineSeries *y, QLineSeries *z)
+{
+    if (x == nullptr || y == nullptr || z == nullptr)
+        return;
+
+    maxG = 1;
+
+    QVector<QPointF> pointsX;
+    QVector<QPointF> pointsY;
+    QVector<QPointF> pointsZ;
+
+    int id = 0;
+    for (unsigned i = 0; i < m_accelero.size(); i+=200)
+    {
+        pointsX.insert(id, QPointF(id, m_accelero.at(i).x));
+        pointsY.insert(id, QPointF(id, m_accelero.at(i).y));
+        pointsZ.insert(id, QPointF(id, m_accelero.at(i).z));
+        id++;
+    }
+
+    x->replace(pointsX);
+    y->replace(pointsY);
+    z->replace(pointsZ);
+}
+
+void Shot::updateGyroSeries(QLineSeries *x, QLineSeries *y, QLineSeries *z)
+{
+    if (x == nullptr || y == nullptr || z == nullptr)
+        return;
+
+    QVector<QPointF> pointsX;
+    QVector<QPointF> pointsY;
+    QVector<QPointF> pointsZ;
+
+    int id = 0;
+    for (unsigned i = 0; i < m_gyro.size(); i+=200)
+    {
+        pointsX.insert(id, QPointF(id, m_gyro.at(i).x));
+        pointsY.insert(id, QPointF(id, m_gyro.at(i).y));
+        pointsZ.insert(id, QPointF(id, m_gyro.at(i).z));
+        id++;
+    }
+
+    x->replace(pointsX);
+    y->replace(pointsY);
+    z->replace(pointsZ);
+}
+
+QGeoCoordinate Shot::getGpsCoordinates(unsigned index)
+{
+    QGeoCoordinate c;
+    if (index < m_gps.size())
+    {
+        c.setLatitude(m_gps.at(index).first);
+        c.setLongitude(m_gps.at(index).second);
+
+        //qDebug() << "GPS (" << index << ")" << m_gps.at(index).first << m_gps.at(index).second;
+    }
+    else
+    {
+        // return last point?
+        if (m_gps.size() > 0)
+        {
+            c.setLatitude(m_gps.at(m_gps.size()-1).first);
+            c.setLongitude(m_gps.at(m_gps.size()-1).second);
+        }
+    }
+
+    return c;
 }

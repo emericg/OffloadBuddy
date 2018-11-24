@@ -45,20 +45,37 @@ Rectangle {
                 codecVideo.source = "qrc:/badges/JPEG.svg"
             }
 
-            buttonMetadata.visible = false
-            buttonMetadata.width = -16
+            if (shot.hasGpmf) {
+                buttonMetadata.visible = true
+                buttonMetadata.width = 110
+
+                // if (not static)
+                //{
+                    contentMetadatas.updateMetadatas()
+                    buttonMap.visible = false
+                    buttonMap.width = -16
+                //} else {
+                //    buttonMap.visible = true
+                //    buttonMap.width = 64
+                //
+                //    contentMap.updateMap()
+                //}
+            } else {
+                buttonMetadata.visible = false
+                buttonMetadata.width = -16
+
+                if (shot.latitude !== 0.0) {
+                    buttonMap.visible = true
+                    buttonMap.width = 64
+
+                    contentMap.updateMap()
+                } else {
+                    buttonMap.visible = false
+                    buttonMap.width = -16
+                }
+            }
 
             contentOverview.updateOverview()
-            contentMetadatas.updateMetadatas()
-            contentMap.updateMap()
-
-            if (shot.latitude !== 0.0) {
-                buttonMap.visible = true
-                buttonMap.width = 64
-            } else {
-                buttonMap.visible = false
-                buttonMap.width = -16
-            }
         }
     }
 
@@ -137,7 +154,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
 
             text: qsTr("Metadatas")
-            //onClicked: screenDeviceShotDetails.state = "metadatas"
+            onClicked: screenDeviceShotDetails.state = "metadatas"
         }
         Button {
             id: buttonMap
@@ -172,7 +189,7 @@ Rectangle {
                 target: contentMap
                 visible: false
             }
-        },/*
+        },
         State {
             name: "metadatas"
 
@@ -188,7 +205,7 @@ Rectangle {
                 target: contentMap
                 visible: false
             }
-        },*/
+        },
         State {
             name: "map"
 

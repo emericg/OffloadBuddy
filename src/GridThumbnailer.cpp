@@ -32,6 +32,9 @@ extern "C"
     #include <libavutil/parseutils.h>
 }
 #endif // __cplusplus
+
+#include "utils_maths.h"
+#include "utils_ffmpeg.h"
 #endif // ENABLE_FFMPEG
 
 #ifdef ENABLE_MINIVIDEO
@@ -194,49 +197,6 @@ bool GridThumbnailer::getImage_withMinivideo(const QString &path, QImage &img,
 /* ************************************************************************** */
 
 #ifdef ENABLE_FFMPEG
-
-// to work around av_err2str() in C++
-#undef av_err2str
-#ifdef _MSC_VER
-#define av_err2str(errnum) av_make_error_string((char*)_alloca(AV_ERROR_MAX_STRING_SIZE), AV_ERROR_MAX_STRING_SIZE, errnum)
-#else
-#define av_err2str(errnum) av_make_error_string((char*)__builtin_alloca(AV_ERROR_MAX_STRING_SIZE), AV_ERROR_MAX_STRING_SIZE, errnum)
-#endif
-
-static bool ffmpeg_get_keyframes(const AVStream *stream, const int64_t target,
-                                 int64_t &prev, int64_t &next)
-{
-    bool status = false;
-
-    if (stream && stream->nb_index_entries > 1)
-    {
-        for (int i = 0; i < stream->nb_index_entries; i++)
-        {
-            if ((stream->index_entries[i].flags & AVINDEX_KEYFRAME) == 1)
-            {
-                if (next < 0 && stream->index_entries[i].timestamp > target)
-                {
-                    next = stream->index_entries[i].timestamp;
-                    status = true;
-                    break;
-                }
-
-                if (stream->index_entries[i].timestamp > prev)
-                {
-                    prev = stream->index_entries[i].timestamp;
-                }
-            }
-        }
-    }
-
-    return status;
-}
-
-// align buffer sizes to multiples of 'roundTo'
-static int roundTo(const int value, const int roundTo)
-{
-    return (value + (roundTo - 1)) & ~(roundTo - 1);
-}
 
 bool decode_packet(AVPacket *pPacket, AVCodecContext *pCodecContext, AVFrame *pFrame,
                    QImage &img, const int width, const int height)

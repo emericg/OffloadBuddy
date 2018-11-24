@@ -32,6 +32,10 @@
 #include <QDateTime>
 #include <QAbstractListModel>
 
+#include <QGeoCoordinate>
+#include <QtCharts/QLineSeries>
+QT_CHARTS_USE_NAMESPACE
+
 /* ************************************************************************** */
 
 namespace Shared
@@ -199,8 +203,85 @@ class Shot: public QObject
     double framerate = 0.0;
     unsigned bitrate = 0;
 
-    bool getMetadatasFromPicture();
-    bool getMetadatasFromVideo();
+    bool getMetadatasFromPicture(int index = 0);
+    bool getMetadatasFromVideo(int index = 0);
+
+
+
+
+    /// GPMF WIP /////////////////////////
+
+    typedef struct TripleDouble {
+        double x;
+        double y;
+        double z;
+    } TripleDouble;
+    uint32_t global_offset_ms = 0;
+
+    std::vector <std::pair<double, double>> m_gps;
+    std::vector <std::pair<std::string, unsigned>> m_gps_params;
+    double m_gps_altitude_offset = 0;
+    std::vector <double> m_alti;
+    std::vector <double> m_speed;
+/*
+    QVector<QPointF> m_alti_points;
+    QVector<QPointF> m_speed_points;
+    QVector<QPointF> m_gps_points;
+*/
+    std::vector <TripleDouble> m_gyro;
+    std::vector <TripleDouble> m_accelero;
+    std::vector <TripleDouble> m_magneto;
+    std::vector <double> m_compass;
+
+    bool parseGpmfSample(GpmfBuffer &buf, int &devc_count);
+    void parseData_gps5(GpmfBuffer &buf, GpmfKLV &klv, const double scales[16],
+                        std::string &gps_tmcd, unsigned gps_fix, unsigned gps_dop);
+    void parseData_triplet(GpmfBuffer &buf, GpmfKLV &klv, const double scales[16],
+                           std::vector <TripleDouble> &datalist);
+
+    bool has_gpmf = false;
+    bool hasGpmf() { return has_gpmf; }
+    Q_PROPERTY(bool hasGpmf READ hasGpmf NOTIFY shotUpdated)
+
+    float minAlti;
+    float maxAlti;
+    float avgAlti;
+    float getMinAlti() { return minAlti; }
+    float getMaxAlti() { return maxAlti; }
+    float getAvgAlti() { return avgAlti; }
+    Q_PROPERTY(float minAlti READ getMinAlti NOTIFY shotUpdated)
+    Q_PROPERTY(float maxAlti READ getMaxAlti NOTIFY shotUpdated)
+    Q_PROPERTY(float avgAlti READ getAvgAlti NOTIFY shotUpdated)
+
+    float minSpeed;
+    float maxSpeed;
+    float avgSpeed;
+    float getMinSpeed() { return minSpeed; }
+    float getMaxSpeed() { return maxSpeed; }
+    float getAvgSpeed() { return avgSpeed; }
+    Q_PROPERTY(float minSpeed READ getMinSpeed NOTIFY shotUpdated)
+    Q_PROPERTY(float maxSpeed READ getMaxSpeed NOTIFY shotUpdated)
+    Q_PROPERTY(float avgSpeed READ getAvgSpeed NOTIFY shotUpdated)
+
+    float maxG = 1;
+    float getMaxG() { return maxG; }
+    Q_PROPERTY(float maxG READ getMaxG NOTIFY shotUpdated)
+
+    double distance_km = 0;
+    double getDistanceKm() { return distance_km; }
+    Q_PROPERTY(double distanceKm READ getDistanceKm NOTIFY shotUpdated)
+
+public slots:
+    Q_INVOKABLE void updateSpeedsSerie(QLineSeries *serie);
+    Q_INVOKABLE void updateAltiSerie(QLineSeries *serie);
+    Q_INVOKABLE void updateAcclSeries(QLineSeries *x, QLineSeries *y, QLineSeries *z);
+    Q_INVOKABLE void updateGyroSeries(QLineSeries *x, QLineSeries *y, QLineSeries *z);
+    Q_INVOKABLE QGeoCoordinate getGpsCoordinates(unsigned index);
+
+    /// GPMF WIP /////////////////////////
+
+
+
 
 public:
     Shot(QObject *parent = nullptr);
@@ -265,6 +346,7 @@ public slots:
 Q_SIGNALS:
     void shotUpdated();
     void stateUpdated();
+    void datasUpdated();
 };
 
 //Q_DECLARE_METATYPE(Shot*);

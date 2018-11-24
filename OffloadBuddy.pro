@@ -42,7 +42,9 @@ SOURCES  += src/main.cpp \
             src/ShotFilter.cpp \
             src/GenericFileModel.cpp \
             src/GoProFileModel.cpp \
-            src/GridThumbnailer.cpp
+            src/GridThumbnailer.cpp \
+            src/utils_ffmpeg.cpp \
+            src/utils_maths.cpp
 
 HEADERS  += src/SettingsManager.h \
             src/JobManager.h \
@@ -58,7 +60,9 @@ HEADERS  += src/SettingsManager.h \
             src/ShotFilter.h \
             src/GenericFileModel.h \
             src/GoProFileModel.h \
-            src/GridThumbnailer.h
+            src/GridThumbnailer.h \
+            src/utils_ffmpeg.h \
+            src/utils_maths.h
 
 RESOURCES += qml/qml.qrc \
              resources.qrc
