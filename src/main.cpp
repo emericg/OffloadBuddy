@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     //SingleApplication app(argc, argv);
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
     app.setApplicationDisplayName("OffloadBuddy");
 
     QIcon appIcon(":/appicons/offloadbuddy.svg");

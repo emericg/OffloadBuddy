@@ -88,9 +88,9 @@ Rectangle {
 
             MediaPlayer {
                 id: mediaPlayer
-                volume: 0.5
-                autoPlay: false
-                notifyInterval: 66
+                volume: 0.0 // will be set to 0.5 immediately
+                autoPlay: true // will be paused immediately
+                notifyInterval: 33
                 //source: "file://" + "/home/emeric/Videos/equi/VIDEO_1927.mp4"
 
                 property bool isRunning: false
@@ -298,6 +298,14 @@ Rectangle {
 
     ////////////////////////////////////////////////////////////////////////////
 
+    function setPause() {
+        if (mediaPlayer.isRunning) {
+            mediaPlayer.pause()
+            mediaPlayer.isRunning = false
+            buttonPlay.text = "▷"
+        }
+    }
+
     function updateOverview() {
 
         textFileList.text = shot.fileList
@@ -340,6 +348,9 @@ Rectangle {
                 mediaPlayer.source = "file:///" + shot.previewVideo
             else
                 image.source = "qrc:/resources/other/placeholder_video.svg"
+
+            mediaPlayer.pause()
+            mediaPlayer.volume = 0.5
 
             codecVideo.visible = true
             if (shot.codecVideo === "H.264")

@@ -16,9 +16,9 @@ Rectangle {
 
     function updateMap() {
         if (shot.latitude !== 0.0) {
-            mapGPS.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
-            mapGPS.zoomLevel = 12
-            mapGPS.anchors.topMargin = 48
+            mapPointGPS.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
+            mapPointGPS.zoomLevel = 12
+            mapPointGPS.anchors.topMargin = 48
             mapMarker.visible = true
             mapMarker.coordinate = QtPositioning.coordinate(shot.latitude, shot.longitude)
             button_map_dezoom.enabled = true
@@ -30,9 +30,9 @@ Rectangle {
             coordinates.text = shot.latitudeString + "    " + shot.longitudeString
             altitude.text = shot.altitudeString
         } else {
-            mapGPS.center = QtPositioning.coordinate(45.5, 6)
-            mapGPS.zoomLevel = 2
-            mapGPS.anchors.topMargin = 16
+            mapPointGPS.center = QtPositioning.coordinate(45.5, 6)
+            mapPointGPS.zoomLevel = 2
+            mapPointGPS.anchors.topMargin = 16
             mapMarker.visible = false
             rectangleCoordinates.visible = false
             button_map_dezoom.enabled = false
@@ -42,7 +42,7 @@ Rectangle {
     }
 
     Map {
-        id: mapGPS
+        id: mapPointGPS
         copyrightsVisible: false
         anchors.topMargin: 48
         anchors.fill: parent

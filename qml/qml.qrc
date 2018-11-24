@@ -3,7 +3,7 @@
         <file>MainWindow.qml</file>
         <file>ThemeEngine.qml</file>
         <file>StringUtils.js</file>
-        <file>ScreenMedias.qml</file>
+        <file>ScreenLibrary.qml</file>
         <file>ScreenDevice.qml</file>
         <file>ScreenDeviceShots.qml</file>
         <file>ScreenDeviceShotDetails.qml</file>

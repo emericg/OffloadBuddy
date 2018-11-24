@@ -26,10 +26,8 @@ Rectangle {
     }
 
     onVisibleChanged: {
-        if (visible === false) {
-            if (typeof mediaPlayer !== "undefined")
-                mediaPlayer.pause()
-        }
+        if (visible === false)
+            contentOverview.setPause()
     }
 
     function restoreState() {

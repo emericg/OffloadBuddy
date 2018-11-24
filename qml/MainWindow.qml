@@ -50,7 +50,6 @@ ApplicationWindow {
         }
     }
 */
-
     property var currentDevicePtr
 
     Connections {
@@ -288,9 +287,9 @@ ApplicationWindow {
         anchors.top: parent.top
         anchors.topMargin: 0
 
-        ScreenMedias {
+        ScreenLibrary {
             anchors.fill: parent
-            id: screenMedias
+            id: screenLibrary
         }
         ScreenDevice {
             anchors.fill: parent
@@ -320,7 +319,7 @@ ApplicationWindow {
                     anchors.verticalCenter: button_media.verticalCenter
                 }
                 PropertyChanges {
-                    target: screenMedias
+                    target: screenLibrary
                     visible: true
                 }
                 PropertyChanges {
@@ -348,7 +347,7 @@ ApplicationWindow {
                     anchors.verticalCenter: undefined
                 }
                 PropertyChanges {
-                    target: screenMedias
+                    target: screenLibrary
                     visible: false
                 }
                 PropertyChanges {
@@ -376,7 +375,7 @@ ApplicationWindow {
                     anchors.verticalCenter: button_jobs.verticalCenter
                 }
                 PropertyChanges {
-                    target: screenMedias
+                    target: screenLibrary
                     visible: false
                 }
                 PropertyChanges {
@@ -404,7 +403,7 @@ ApplicationWindow {
                     anchors.verticalCenter: button_settings.verticalCenter
                 }
                 PropertyChanges {
-                    target: screenMedias
+                    target: screenLibrary
                     visible: false
                 }
                 PropertyChanges {
@@ -432,7 +431,7 @@ ApplicationWindow {
                     anchors.verticalCenter: button_about.verticalCenter
                 }
                 PropertyChanges {
-                    target: screenMedias
+                    target: screenLibrary
                     visible: false
                 }
                 PropertyChanges {
