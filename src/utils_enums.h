@@ -19,20 +19,52 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#ifndef UTILS_MATHS_H
-#define UTILS_MATHS_H
+#ifndef UTILS_ENUMS_H
+#define UTILS_ENUMS_H
 /* ************************************************************************** */
 
-//! Align buffer sizes to multiples of 'roundTo'
-int roundTo(const int value, const int roundTo);
+#include <QMetaType>
+
+namespace Shared
+{
+    Q_NAMESPACE
+
+    enum FileType
+    {
+        FILE_UNKNOWN = 0,
+        FILE_VIDEO = 8,
+        FILE_PICTURE = 16,
+    };
+    Q_ENUM_NS(FileType)
+
+    enum ShotType
+    {
+        SHOT_UNKNOWN = 0,
+
+        SHOT_VIDEO = 8,
+        SHOT_VIDEO_LOOPING,
+        SHOT_VIDEO_TIMELAPSE,
+        SHOT_VIDEO_NIGHTLAPSE,
+        SHOT_VIDEO_3D,
+
+        SHOT_PICTURE = 16,
+        SHOT_PICTURE_MULTI,
+        SHOT_PICTURE_BURST,
+        SHOT_PICTURE_TIMELAPSE,
+        SHOT_PICTURE_NIGHTLAPSE,
+    };
+    Q_ENUM_NS(ShotType)
+
+    enum ShotState
+    {
+        SHOT_STATE_DEFAULT = 0,
+        SHOT_STATE_QUEUED,
+        SHOT_STATE_OFFLOADING,
+        SHOT_STATE_ENCODING,
+        SHOT_STATE_DONE,
+    };
+    Q_ENUM_NS(ShotState)
+}
 
 /* ************************************************************************** */
-
-//! Calculate haversine distance for linear distance (km)
-double haversine_km(double lat1, double long1, double lat2, double long2);
-
-//! Calculate haversine distance for linear distance (miles)
-double haversine_mi(double lat1, double long1, double lat2, double long2);
-
-/* ************************************************************************** */
-#endif // UTILS_MATHS_H
+#endif // UTILS_ENUMS_H

@@ -81,13 +81,22 @@ Rectangle {
         var i
         for (i = 0; i <= mapTrace.pathLength(); i++)
             mapTrace.removeCoordinate(mapTrace.coordinateAt(i))
+
+        // Zoom
+        if (shot.distanceKm < 1)
+            mapTraceGPS.zoomLevel = 18
+        else if (shot.distanceKm < 10)
+            mapTraceGPS.zoomLevel = 12
+        else if (shot.distanceKm < 50)
+            mapTraceGPS.zoomLevel = 10
+        else if (shot.distanceKm < 100)
+            mapTraceGPS.zoomLevel = 8
 /*
-        console.log("polyline size before:" + mapTrace.pathLength())
+        // clean gps trace // FIXME
         for (i = 0; i < mapTrace.pathLength()+1; i++)
             mapTrace.removeCoordinate(mapTrace.coordinateAt(i))
         for (i = 0; i < mapTrace.pathLength()+1; i++)
             mapTrace.removeCoordinate(mapTrace.coordinateAt(i))
-        console.log("polyline size after:" + mapTrace.pathLength())
 */
         for (i = 0; i < 18000; i+=18) // FIXME
             mapTrace.addCoordinate(shot.getGpsCoordinates(i))
@@ -449,7 +458,7 @@ Rectangle {
 
                 LineSeries {
                     id: altiSeries
-                    color: green
+                    color: "green"
                     axisX: ValueAxis { id: axisAltiX0; visible: false; gridVisible: false; }
                     axisY: ValueAxis { id: axisAltiY0; visible: true; gridVisible: true;
                                        labelsFont.pixelSize: 12; labelFormat: "%i"; }
@@ -467,9 +476,9 @@ Rectangle {
                 ValueAxis { id: axisAcclY0; visible: true; gridVisible: true;
                             labelsFont.pixelSize: 12; labelFormat: "%i"; }
 
-                LineSeries { id: acclX; axisX: axisAcclX0; axisY: axisAcclY0; color: red; }
-                LineSeries { id: acclY; axisX: axisAcclX0; axisY: axisAcclY0; color: green; }
-                LineSeries { id: acclZ; axisX: axisAcclX0; axisY: axisAcclY0; color: blue; }
+                SplineSeries { id: acclX; axisX: axisAcclX0; axisY: axisAcclY0; }
+                SplineSeries { id: acclY; axisX: axisAcclX0; axisY: axisAcclY0; }
+                SplineSeries { id: acclZ; axisX: axisAcclX0; axisY: axisAcclY0; }
             }
 
             ChartView {
@@ -484,9 +493,9 @@ Rectangle {
                 ValueAxis { id: axisGyroY0; visible: true; gridVisible: true;
                             labelsFont.pixelSize: 12; labelFormat: "%i"; }
 
-                LineSeries { id: gyroX; axisX: axisGyroX0; axisY: axisGyroY0; color: red; }
-                LineSeries { id: gyroY; axisX: axisGyroX0; axisY: axisGyroY0; color: green; }
-                LineSeries { id: gyroZ; axisX: axisGyroX0; axisY: axisGyroY0; color: blue; }
+                LineSeries { id: gyroX; axisX: axisGyroX0; axisY: axisGyroY0; color: "red"; }
+                LineSeries { id: gyroY; axisX: axisGyroX0; axisY: axisGyroY0; color: "green"; }
+                LineSeries { id: gyroZ; axisX: axisGyroX0; axisY: axisGyroY0; color: "blue"; }
             }
         }
     }

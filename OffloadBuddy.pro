@@ -43,6 +43,9 @@ SOURCES  += src/main.cpp \
             src/GenericFileModel.cpp \
             src/GoProFileModel.cpp \
             src/GridThumbnailer.cpp \
+            src/GpmfBuffer.cpp \
+            src/GpmfKLV.cpp \
+            src/GpmfTags.cpp \
             src/utils_ffmpeg.cpp \
             src/utils_maths.cpp
 
@@ -61,8 +64,12 @@ HEADERS  += src/SettingsManager.h \
             src/GenericFileModel.h \
             src/GoProFileModel.h \
             src/GridThumbnailer.h \
+            src/GpmfBuffer.h \
+            src/GpmfKLV.h \
+            src/GpmfTags.h \
             src/utils_ffmpeg.h \
-            src/utils_maths.h
+            src/utils_maths.h \
+            src/utils_enums.h
 
 RESOURCES += qml/qml.qrc \
              resources.qrc
@@ -82,7 +89,7 @@ unix {
     #QMAKE_CXXFLAGS += -fsanitize=address,undefined
     #QMAKE_LFLAGS += -fsanitize=address,undefined
 
-    QMAKE_CXXFLAGS += -Wno-nullability-completeness
+    #QMAKE_CXXFLAGS += -Wno-nullability-completeness
 }
 
 DEFINES += QT_DEPRECATED_WARNINGS

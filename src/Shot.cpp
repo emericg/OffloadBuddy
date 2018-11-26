@@ -20,7 +20,11 @@
  */
 
 #include "Shot.h"
+#include "GpmfTags.h"
 #include "utils_maths.h"
+
+#define _USE_MATH_DEFINES
+#include <cmath>
 
 #include <QDir>
 #include <QFile>
@@ -699,6 +703,62 @@ bool Shot::getMetadatasFromVideo(int index)
                                         .arg(t->time_reference[2], 2, 'u', 0, '0')\
                                         .arg(t->time_reference[3], 2, 'u', 0, '0');
                     }
+                    else if (t->stream_fcc == fourcc_be("gpmd"))
+                    {
+                        bool status = false;
+                        uint32_t gpmf_sample_count = t->sample_count;
+                        //int64_t trim_in = -1, trim_out = -1;
+                        int devc_count = 0;
+
+                        for (int32_t sp_index = 0; sp_index < gpmf_sample_count; sp_index++)
+                        {
+                            // Get GPMF sample from MP4
+                            MediaSample_t *sp = minivideo_get_sample(media, t, sp_index);
+
+                            // Validate timestamp
+                            //if ((int64_t)(sp->pts + global_offset_ms) > trim_out)
+                            //    return status;
+                            //if ((int64_t)(sp->pts + global_offset_ms) >= trim_in)
+                            {
+                                // Load GPMF datas
+                                GpmfBuffer buf;
+                                status = buf.loadBuffer(sp->data, sp->size);
+                                if (status == false)
+                                {
+                                    std::cerr << "buf.loadBuffer(#" << sp_index << ") FAILED" << std::endl;
+                                    minivideo_destroy_sample(&sp);
+                                    return false; // FIXME
+                                }
+
+                                // Parse GPMF datas
+                                status = parseGpmfSample(buf, devc_count);
+                                if (status == false)
+                                {
+                                    std::cerr << "parseGpmfSample(#" << sp_index << ") FAILED" << std::endl;
+                                    minivideo_destroy_sample(&sp);
+                                    return false; // FIXME
+                                }
+                                else
+                                    has_gpmf = true;
+                            }
+
+                            minivideo_destroy_sample(&sp);
+                        }
+
+                        //
+                        if (global_offset_ms == 0)
+                        {
+                            gps_lat = m_gps.at(m_gps.size() / 2).first;
+                            gps_long = m_gps.at(m_gps.size() / 2).second;
+                            gps_alt = m_alti.at(m_alti.size() / 2);
+                            //QDateTime gps_ts; // TODO
+                        }
+
+                        // update time offset
+                        global_offset_ms += t->stream_duration_ms;
+
+                        //qDebug() << "GPMF SAMPLES:" << m_gps.size();
+                    }
                 }
             }
         }
@@ -714,6 +774,260 @@ bool Shot::getMetadatasFromVideo(int index)
 #endif // ENABLE_MINIVIDEO
 
     return false;
+}
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+bool Shot::parseGpmfSample(GpmfBuffer &buf, int &devc_count)
+{
+    //std::cout << ">>> parseGpmfSample()" << std::endl;
+
+    bool status = true;
+
+    bool parsing = true;
+    GpmfKLV toplevel_klv;
+
+    devc_count = 0;
+    double scales[16];
+    char stnm[64];
+    int e = 0;
+
+    while (parsing == true &&
+           buf.getBytesLeft() > 8 &&
+           readKLV(toplevel_klv, buf) == 0)
+    {
+        if (toplevel_klv.fcc == GPMF_TAG_DEVICE)
+        {
+            devc_count++;
+
+            GpmfKLV sub_key;
+            while (parsing == true &&
+                   buf.getBytesLeft() > 8 &&
+                   buf.getBytesIndex() < toplevel_klv.offset_end &&
+                   readKLV(sub_key, buf) == 0)
+            {
+                uint32_t gps_fix = 0;
+                uint32_t gps_dop = 0;
+                std::string gps_tmcd = "000000000000.000";
+
+                switch (sub_key.fcc)
+                {
+                case GPMF_TAG_STREAM:
+                {
+                    // ALWAYS reset scales when parsing a new stream
+                    for (int sc = 0; sc < 16; sc++)
+                        scales[sc] = 1.0;
+
+                    GpmfKLV strm;
+                    while (parsing == true &&
+                           buf.getBytesLeft() > 8 &&
+                           buf.getBytesIndex() < sub_key.offset_end &&
+                           readKLV(strm, buf) == 0)
+                    {
+                        switch (strm.fcc)
+                        {
+                        case GPMF_TAG_SCALE:
+                        {
+                            uint64_t i = 0;
+                            for (i = 0; i < strm.datacount && i < 16; i++)
+                                scales[i] = buf.readData_double(strm, e);
+                            for (; i < 16; i++)
+                                scales[i] = scales[0];
+                        } break;
+
+                        case GPMF_TAG_STREAM_NAME:
+                        {
+                            uint64_t i = 0;
+                            for (i = 0; i < strm.datacount && i < 64; i++)
+                                stnm[i] = buf.read_c(e);
+                        } break;
+
+                        case GPMF_TAG_GPSF:
+                            gps_fix = buf.read_u32(e);
+                            break;
+                        case GPMF_TAG_GPSP:
+                            gps_dop = buf.read_u16(e);
+                            break;
+                        case GPMF_TAG_GPSU:
+                        {
+                            // ex: '161222124837.150'
+                            char *gpsu = (char *)buf.readBytes(strm.datacount, e);
+                            if (gpsu != nullptr)
+                            {
+                                std::string str(gpsu);
+                                gps_tmcd.clear();
+                                gps_tmcd += "20" + str.substr(0,2) + "-" + str.substr(2,2) + "-" + str.substr(4,2) + "T";
+                                gps_tmcd += str.substr(6,2) + ":" + str.substr(8,2) + ":" + str.substr(10,2) + "Z";
+                            }
+                        } break;
+                        case GPMF_TAG_GPS5:
+                            parseData_gps5(buf, strm, scales, gps_tmcd, gps_fix, gps_dop);
+                            break;
+
+                        case GPMF_TAG_GYRO:
+                            parseData_triplet(buf, strm, scales, m_gyro);
+                            break;
+                        case GPMF_TAG_ACCL:
+                            parseData_triplet(buf, strm, scales, m_accelero);
+                            break;
+                        case GPMF_TAG_MAGN:
+                        {
+                            parseData_triplet(buf, strm, scales, m_magneto);
+
+                            // Generate compass data from magnetometer
+                            {
+                                // Calculate the angle of the vector y,x
+                                double heading = (std::atan2(m_magneto.back().y,m_magneto.back().x) * 180.0) / M_PI;
+                                // Normalize to 0-360
+                                if (heading < 0) heading += 360.0;
+                                m_compass.push_back(heading);
+                            }
+                        } break;
+
+                        default:
+                            break;
+                        }
+
+                        if (buf.gotoIndex(strm.offset_end) == false)
+                            parsing = false;
+                    }
+                }
+                break;
+
+                default:
+                    break;
+                }
+
+                if (buf.gotoIndex(sub_key.offset_end) == false)
+                    parsing = false;
+            }
+        }
+        else
+        {
+            parsing = false;
+            status = false;
+        }
+    }
+
+    return status;
+}
+
+/* ************************************************************************** */
+
+void Shot::parseData_gps5(GpmfBuffer &buf, GpmfKLV &klv,
+                          const double scales[16],
+                          std::string &gps_tmcd, unsigned gps_fix, unsigned gps_dop)
+{
+    // Validate GPS5 format first
+    if (klv.fcc != GPMF_TAG_GPS5 || klv.type != GPMF_TYPE_SIGNED_LONG || klv.structsize != 20)
+        return;
+
+    int e = 0;
+
+    std::pair<std::string, double> gps_params;
+    gps_params.first = gps_tmcd;
+    gps_params.second = gps_fix;
+    Q_UNUSED(gps_dop);
+
+    for (uint64_t i = 0; i < klv.repeat; i++)
+    {
+        std::pair<double, double> gps_coord;
+        gps_coord.first = static_cast<double>(buf.read_i32(e)) / scales[0]; // latitude
+        gps_coord.second = static_cast<double>(buf.read_i32(e)) / scales[1]; // longitude
+        m_gps.push_back(gps_coord);
+        m_gps_params.push_back(gps_params);
+
+        if (m_gps.size() == 1)
+        {
+            m_gps_altitude_offset = 0; // TODO
+        }
+        m_alti.push_back(static_cast<double>((buf.read_i32(e)) / scales[2]) + m_gps_altitude_offset); // altitude
+
+        buf.read_i32(e); // speed 2D // but we don't care
+        m_speed.push_back(static_cast<double>(buf.read_i32(e)) / scales[4]); // speed 3D
+
+        // Compute distance between this point and the previous one
+        if (m_gps.size() > 1)
+        {
+            distance_km += haversine_km(gps_coord.first, gps_coord.second,
+                                        m_gps.at(m_gps.size()-2).first, m_gps.at(m_gps.size()-2).second);
+        }
+    }
+}
+
+/* ************************************************************************** */
+
+void Shot::parseData_triplet(GpmfBuffer &buf, GpmfKLV &klv,
+                             const double scales[16],
+                             std::vector <TripleDouble> &datalist)
+{
+    int e = 0;
+    int datasize = klv.structsize / getGpmfTypeSize((GpmfType_e)klv.type);
+
+    if (klv.type == GPMF_TYPE_NESTED || datasize != 3)
+        return;
+
+    for (uint64_t i = 0; i < klv.repeat; i++)
+    {
+        TripleDouble triplet;
+
+        switch (klv.type)
+        {
+            case GPMF_TYPE_UNSIGNED_BYTE: {
+                triplet.x = static_cast<double>(buf.read_u8(e)) / scales[0];
+                triplet.y = static_cast<double>(buf.read_u8(e)) / scales[1];
+                triplet.z = static_cast<double>(buf.read_u8(e)) / scales[2];
+            } break;
+            case GPMF_TYPE_SIGNED_BYTE: {
+                triplet.x = static_cast<double>(buf.read_i8(e)) / scales[0];
+                triplet.y = static_cast<double>(buf.read_i8(e)) / scales[1];
+                triplet.z = static_cast<double>(buf.read_i8(e)) / scales[2];
+            } break;
+            case GPMF_TYPE_UNSIGNED_SHORT: {
+                triplet.x = static_cast<double>(buf.read_u16(e)) / scales[0];
+                triplet.y = static_cast<double>(buf.read_u16(e)) / scales[1];
+                triplet.z = static_cast<double>(buf.read_u16(e)) / scales[2];
+            } break;
+            case GPMF_TYPE_SIGNED_SHORT: {
+                triplet.x = static_cast<double>(buf.read_i16(e)) / scales[0];
+                triplet.y = static_cast<double>(buf.read_i16(e)) / scales[1];
+                triplet.z = static_cast<double>(buf.read_i16(e)) / scales[2];
+            } break;
+            case GPMF_TYPE_UNSIGNED_LONG: {
+                triplet.x = static_cast<double>(buf.read_u32(e)) / scales[0];
+                triplet.y = static_cast<double>(buf.read_u32(e)) / scales[1];
+                triplet.z = static_cast<double>(buf.read_u32(e)) / scales[2];
+            } break;
+            case GPMF_TYPE_SIGNED_LONG: {
+                triplet.x = static_cast<double>(buf.read_i32(e)) / scales[0];
+                triplet.y = static_cast<double>(buf.read_i32(e)) / scales[1];
+                triplet.z = static_cast<double>(buf.read_i32(e)) / scales[2];
+            } break;
+            case GPMF_TYPE_UNSIGNED_64BIT: {
+                triplet.x = static_cast<double>(buf.read_u64(e)) / scales[0];
+                triplet.y = static_cast<double>(buf.read_u64(e)) / scales[1];
+                triplet.z = static_cast<double>(buf.read_u64(e)) / scales[2];
+            } break;
+            case GPMF_TYPE_SIGNED_64BIT: {
+                triplet.x = static_cast<double>(buf.read_i64(e)) / scales[0];
+                triplet.y = static_cast<double>(buf.read_i64(e)) / scales[1];
+                triplet.z = static_cast<double>(buf.read_i64(e)) / scales[2];
+            } break;
+            case GPMF_TYPE_FLOAT: {
+                triplet.x = static_cast<double>(buf.read_float(e)) / scales[0];
+                triplet.y = static_cast<double>(buf.read_float(e)) / scales[1];
+                triplet.z = static_cast<double>(buf.read_float(e)) / scales[2];
+            } break;
+            case GPMF_TYPE_DOUBLE: {
+                triplet.x = buf.read_double(e) / scales[0];
+                triplet.y = buf.read_double(e) / scales[1];
+                triplet.z = buf.read_double(e) / scales[2];
+            } break;
+        }
+
+        datalist.push_back(triplet);
+    }
 }
 
 /* ************************************************************************** */

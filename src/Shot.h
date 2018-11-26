@@ -23,52 +23,22 @@
 #define SHOT_H
 /* ************************************************************************** */
 
+#include "utils_enums.h"
+
+#include "GpmfKLV.h"
+#include "GpmfBuffer.h"
+
 #ifdef ENABLE_LIBMTP
 #include <libmtp.h>
 #endif
 
 #include <QObject>
-#include <QMetaType>
 #include <QDateTime>
 #include <QAbstractListModel>
 
 #include <QGeoCoordinate>
 #include <QtCharts/QLineSeries>
 QT_CHARTS_USE_NAMESPACE
-
-/* ************************************************************************** */
-
-namespace Shared
-{
-    Q_NAMESPACE
-    enum ShotType
-    {
-        SHOT_UNKNOWN = 0,
-
-        SHOT_VIDEO,
-        SHOT_VIDEO_LOOPING,
-        SHOT_VIDEO_TIMELAPSE,
-        SHOT_VIDEO_NIGHTLAPSE,
-        SHOT_VIDEO_3D,
-
-        SHOT_PICTURE,
-        SHOT_PICTURE_MULTI,
-        SHOT_PICTURE_BURST,
-        SHOT_PICTURE_TIMELAPSE,
-        SHOT_PICTURE_NIGHTLAPSE,
-    };
-    Q_ENUM_NS(ShotType)
-
-    enum ShotState
-    {
-        SHOT_STATE_DEFAULT = 0,
-        SHOT_STATE_QUEUED,
-        SHOT_STATE_OFFLOADING,
-        SHOT_STATE_ENCODING,
-        SHOT_STATE_DONE,
-    };
-    Q_ENUM_NS(ShotState)
-}
 
 /* ************************************************************************** */
 
@@ -92,8 +62,9 @@ struct ofb_file
 struct ofb_shot
 {
     Shared::ShotType file_type = Shared::SHOT_UNKNOWN;
-    int camera_id = 0;              //!< for multi camera system
+    //Shared::ShotType shot_type = Shared::SHOT_UNKNOWN;
     int shot_id = -1;
+    int camera_id = 0;              //!< for multi camera system
 
     int file_number = -1;
     int group_number = -1;
@@ -207,8 +178,6 @@ class Shot: public QObject
     bool getMetadatasFromVideo(int index = 0);
 
 
-
-
     /// GPMF WIP /////////////////////////
 
     typedef struct TripleDouble {
@@ -232,6 +201,12 @@ class Shot: public QObject
     std::vector <TripleDouble> m_accelero;
     std::vector <TripleDouble> m_magneto;
     std::vector <double> m_compass;
+
+    bool parseGpmfSample(GpmfBuffer &buf, int &devc_count);
+    void parseData_gps5(GpmfBuffer &buf, GpmfKLV &klv, const double scales[16],
+                        std::string &gps_tmcd, unsigned gps_fix, unsigned gps_dop);
+    void parseData_triplet(GpmfBuffer &buf, GpmfKLV &klv, const double scales[16],
+                           std::vector <TripleDouble> &datalist);
 
     bool has_gpmf = false;
     bool hasGpmf() { return has_gpmf; }
@@ -273,8 +248,6 @@ public slots:
     Q_INVOKABLE QGeoCoordinate getGpsCoordinates(unsigned index);
 
     /// GPMF WIP /////////////////////////
-
-
 
 
 public:

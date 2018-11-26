@@ -10,7 +10,7 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   sodipodi:docname="menu_media.svg"
+   sodipodi:docname="media.svg"
    inkscape:export-filename="/home/sam/source-symbolic.png"
    inkscape:export-xdpi="270"
    inkscape:export-ydpi="270"
@@ -27,8 +27,8 @@
      borderlayer="false"
      borderopacity="1"
      inkscape:current-layer="layer12"
-     inkscape:cx="3.796744"
-     inkscape:cy="32.498812"
+     inkscape:cx="30.306082"
+     inkscape:cy="31.320329"
      gridtolerance="10"
      inkscape:guide-bbox="true"
      guidetolerance="10"
@@ -62,7 +62,7 @@
      inkscape:window-width="1920"
      inkscape:window-x="0"
      inkscape:window-y="0"
-     inkscape:zoom="8"
+     inkscape:zoom="22.627417"
      inkscape:pagecheckerboard="true">
     <inkscape:grid
        color="#000000"
@@ -119,8 +119,9 @@
        style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:Sans;-inkscape-font-specification:Sans;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;baseline-shift:baseline;text-anchor:start;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#bebebe;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:8.00858307;marker:none;enable-background:new" />
     <path
        inkscape:connector-curvature="0"
-       d="m 408.67452,65.029061 v 4.004291 h 4.00428 v -4.004291 z m 8.00858,0 v 4.004291 h 4.00428 v -4.004291 z m 8.00858,0 v 4.004291 h 4.00429 v -4.004291 z m 8.00858,0 v 4.004291 h 4.00429 v -4.004291 z m 8.00859,0 v 4.004291 h 4.00429 v -4.004291 z m 8.00858,0 v 4.004291 h 4.0043 v -4.004291 z m 8.00858,0 v 4.004291 h 4.0043 v -4.004291 z m 8.00858,0 v 4.004291 h 4.0043 v -4.004291 z"
+       d="m 407.71963,64.710549 v 4.541791 h 4.54178 v -4.541791 z m 9.08358,0 v 4.541791 h 4.54178 v -4.541791 z m 9.08358,0 v 4.541791 h 4.54179 v -4.541791 z m 9.08358,0 v 4.541791 h 4.54179 v -4.541791 z m 9.08359,0 v 4.541791 h 4.54179 v -4.541791 z m 9.08358,0 v 4.541791 h 4.5418 v -4.541791 z m 9.08358,0 v 4.541791 h 4.5418 v -4.541791 z"
        id="path5935-5"
-       style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:Sans;-inkscape-font-specification:Sans;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;baseline-shift:baseline;text-anchor:start;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#e6e6e6;fill-opacity:1;stroke:none;stroke-width:4.00429153;marker:none;enable-background:accumulate" />
+       style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:Sans;-inkscape-font-specification:Sans;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;baseline-shift:baseline;text-anchor:start;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#e6e6e6;fill-opacity:1;stroke:none;stroke-width:4.00429153;marker:none;enable-background:accumulate"
+       sodipodi:nodetypes="ccccccccccccccccccccccccccccccccccc" />
   </g>
 </svg>
