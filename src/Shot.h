@@ -233,12 +233,6 @@ class Shot: public QObject
     std::vector <TripleDouble> m_magneto;
     std::vector <double> m_compass;
 
-    bool parseGpmfSample(GpmfBuffer &buf, int &devc_count);
-    void parseData_gps5(GpmfBuffer &buf, GpmfKLV &klv, const double scales[16],
-                        std::string &gps_tmcd, unsigned gps_fix, unsigned gps_dop);
-    void parseData_triplet(GpmfBuffer &buf, GpmfKLV &klv, const double scales[16],
-                           std::vector <TripleDouble> &datalist);
-
     bool has_gpmf = false;
     bool hasGpmf() { return has_gpmf; }
     Q_PROPERTY(bool hasGpmf READ hasGpmf NOTIFY shotUpdated)
