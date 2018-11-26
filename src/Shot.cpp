@@ -19,12 +19,12 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 #include "Shot.h"
 #include "GpmfTags.h"
 #include "utils_maths.h"
-
-#define _USE_MATH_DEFINES
-#include <cmath>
 
 #include <QDir>
 #include <QFile>
