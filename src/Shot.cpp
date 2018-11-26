@@ -20,11 +20,11 @@
  */
 
 #include "Shot.h"
+#include "utils_maths.h"
 
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
-
 #include <QDebug>
 
 #ifdef ENABLE_LIBEXIF

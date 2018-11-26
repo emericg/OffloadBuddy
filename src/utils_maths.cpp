@@ -21,6 +21,7 @@
 
 #include "utils_maths.h"
 
+#define _USE_MATH_DEFINES
 #include <cmath>
 
 /* ************************************************************************** */
