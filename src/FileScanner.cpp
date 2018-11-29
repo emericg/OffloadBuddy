@@ -68,7 +68,12 @@ void FileScanner::scanFilesystem()
         return;
     }
 
-    QString dcim_path = m_selected_filesystem + QDir::separator() + "DCIM";
+    QString dcim_path = m_selected_filesystem;
+
+    if (!m_selected_filesystem.contains("/home") &&
+        !m_selected_filesystem.contains("/Users") &&
+        !m_selected_filesystem.contains("C:/Users"))
+        dcim_path = m_selected_filesystem + QDir::separator() + "DCIM";
 
     //qDebug() << "> SCANNING STARTED (filesystem)";
     //qDebug() << "  * DCIM:" << dcim_path;

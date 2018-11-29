@@ -18,7 +18,7 @@ Rectangle {
         if (!libraryStateList[myDevice.uniqueId]) {
             libraryStateList[myDevice.uniqueId] = ({ orderBy: 0,
                                                     zoomLevel: 2.0,
-                                                    mainState: "shotsview",
+                                                    mainState: "stateMediaGrid",
                                                     selectedIndex: 0,
                                                     detail_shot: null,
                                                     detail_state: "overview" })
@@ -54,28 +54,28 @@ Rectangle {
 
         onClicked: {
             if (mouse.button === Qt.BackButton) {
-                if (screenLibrary.state === "shotdetails")
-                    screenLibrary.state = "shotsview"
+                if (screenLibrary.state === "stateMediaDetails")
+                    screenLibrary.state = "stateMediaGrid"
             } else if (mouse.button === Qt.ForwardButton) {
-                if (screenLibrary.state === "shotsview")
+                if (screenLibrary.state === "stateMediaGrid")
                     if (screenLibraryGrid.selectedItemIndex >= 0)
-                        screenLibrary.state = "shotdetails"
+                        screenLibrary.state = "stateMediaDetails"
             }
         }
     }
     Shortcut {
         sequence: StandardKey.Back
         onActivated: {
-            if (screenLibrary.state === "shotdetails")
-                screenLibrary.state = "shotsview"
+            if (screenLibrary.state === "stateMediaDetails")
+                screenLibrary.state = "stateMediaGrid"
         }
     }
     Shortcut {
         sequence: StandardKey.Forward
         onActivated: {
-            if (screenLibrary.state === "shotsview")
+            if (screenLibrary.state === "stateMediaGrid")
                 if (screenLibraryGrid.selectedItemIndex >= 0)
-                    screenLibrary.state = "shotdetails"
+                    screenLibrary.state = "stateMediaDetails"
         }
     }
 
@@ -84,10 +84,10 @@ Rectangle {
          // save state
          libraryState.mainState = state
     }
-    state: "shotsview"
+    state: "stateMediaGrid"
     states: [
         State {
-            name: "shotsview"
+            name: "stateMediaGrid"
 
             PropertyChanges {
                 target: screenLibraryGrid
@@ -99,7 +99,7 @@ Rectangle {
             }
         },
         State {
-            name: "shotdetails"
+            name: "stateMediaDetails"
 
             PropertyChanges {
                 target: screenLibraryGrid

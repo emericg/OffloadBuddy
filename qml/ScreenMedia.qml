@@ -22,7 +22,10 @@ Rectangle {
         updateDeviceDetails()
 
         // save state
-        deviceState.detail_shot = shot
+        if (deviceState)
+            deviceState.detail_shot = shot
+        else
+            libraryState.detail_shot = shot
     }
 
     onVisibleChanged: {
@@ -101,8 +104,8 @@ Rectangle {
             font.bold: true
             font.pixelSize: ThemeEngine.fontSizeHeaderTitle
             onClicked: {
-                screenLibrary.state = "shotsview"
-                screenDevice.state = "shotsview"
+                screenLibrary.state = "stateMediaGrid"
+                screenDevice.state = "stateMediaGrid"
             }
         }
         Text {
@@ -172,6 +175,7 @@ Rectangle {
 
     onStateChanged: {
         // save state
+        //libraryState.detail_state = state
         deviceState.detail_state = state
     }
 

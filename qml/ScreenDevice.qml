@@ -32,8 +32,8 @@ Rectangle {
 
         screenDeviceGrid.restoreState()
         screenDeviceGrid.updateDeviceHeader()
-        screenDeviceGrid.initstateMediaGridSettings()
-        screenDeviceGrid.updatestateMediaGridSettings()
+        screenDeviceGrid.initGridViewSettings()
+        screenDeviceGrid.updateGridViewSettings()
 
         screenMedia.restoreState()
     }

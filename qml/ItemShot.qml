@@ -197,8 +197,10 @@ Rectangle {
             actionMenu.visible = false
             shotsview.currentIndex = index
 
-            screenLibrary.state = "shotdetails"
-            screenDevice.state = "shotdetails"
+            if (shotDevice)
+                screenDevice.state = "stateMediaDetails"
+            else
+                screenLibrary.state = "stateMediaDetails"
         }
     }
 
