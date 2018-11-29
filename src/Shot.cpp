@@ -1112,6 +1112,7 @@ void Shot::updateAcclSeries(QLineSeries *x, QLineSeries *y, QLineSeries *z)
         return;
 
     maxG = 1;
+    double currentG = 1;
 
     QVector<QPointF> pointsX;
     QVector<QPointF> pointsY;
@@ -1124,6 +1125,10 @@ void Shot::updateAcclSeries(QLineSeries *x, QLineSeries *y, QLineSeries *z)
         pointsY.insert(id, QPointF(id, m_accelero.at(i).y));
         pointsZ.insert(id, QPointF(id, m_accelero.at(i).z));
         id++;
+
+        currentG = sqrt(pow(m_accelero.at(i).x, 2) + pow(m_accelero.at(i).y, 2) + pow(m_accelero.at(i).z, 2));
+        if (currentG > maxG)
+            maxG = currentG;
     }
 
     x->replace(pointsX);

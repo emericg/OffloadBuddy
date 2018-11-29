@@ -52,7 +52,7 @@ Rectangle {
 
         trackDuration.text = StringUtils.durationToString(shot.duration)
         trackDistance.text = shot.distanceKm.toFixed(1) + " km"
-        acclMAX.text = shot.maxG.toFixed(1) + " G's"
+        acclMAX.text = (shot.maxG / 9.81).toFixed(1) + " G's"
 
         // Graphs axis
         axisSpeedY0.min = shot.minSpeed * 0.9;
