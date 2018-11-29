@@ -189,7 +189,7 @@ bool Device::addStorage_filesystem(const QString &path)
                     storage->m_storage.isReadOnly() == false)
                 {
                     storage->m_writable = true;
-#if __linux
+#ifdef __linux
 /*
                     // adanced permission checks
                     QFileInfo fi(storage->m_path);

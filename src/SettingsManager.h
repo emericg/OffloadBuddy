@@ -90,12 +90,12 @@ public:
     ~MediaDirectory();
 
 public slots:
-    QString getPath();
+    QString getPath() { return m_path; }
     void setPath(QString path);
-    int getContent();
+    int getContent() { return m_content_type; }
     void setContent(int content);
 
-    bool isAvailable();
+    bool isAvailable() { return m_available; }
     bool isAvailableFor(unsigned shotType, int64_t shotSize);
 
     int64_t getSpaceTotal();
@@ -115,6 +115,7 @@ class SettingsManager: public QObject
     Q_OBJECT
 
     Q_PROPERTY(uint apptheme READ getAppTheme WRITE setAppTheme NOTIFY appThemeChanged)
+    Q_PROPERTY(uint appunits READ getAppUnits WRITE setAppUnits NOTIFY appUnitsChanged)
     Q_PROPERTY(bool autolaunch READ getAutoLaunch WRITE setAutoLaunch NOTIFY autoLaunchChanged)
     Q_PROPERTY(bool automerge READ getAutoMerge WRITE setAutoMerge NOTIFY autoMergeChanged)
     Q_PROPERTY(bool autometadata READ getAutoMetadata WRITE setAutoMetadata NOTIFY autoMetadataChanged)
@@ -130,11 +131,12 @@ class SettingsManager: public QObject
 
     // Global
     unsigned m_appTheme = 0;
+    unsigned m_appUnits = 0;
     bool m_autoLaunch = false;
     bool m_ignoreJunk = true;
     bool m_ignoreHdAudio = false;
     bool m_autoMerge = true;
-    bool m_autoMetadata = true;
+    bool m_autoTelemetry = true;
     bool m_autoDelete = false;
     unsigned m_contentHierarchy = 0;
 
@@ -148,6 +150,7 @@ class SettingsManager: public QObject
 
 Q_SIGNALS:
     void appThemeChanged();
+    void appUnitsChanged();
     void autoLaunchChanged();
     void autoMergeChanged();
     void autoMetadataChanged();
@@ -163,14 +166,17 @@ public:
     unsigned getAppTheme() const { return m_appTheme; }
     void setAppTheme(unsigned value) { m_appTheme = value; writeSettings(); }
 
+    unsigned getAppUnits() const { return m_appUnits; }
+    void setAppUnits(unsigned value) { m_appUnits = value; writeSettings(); }
+
     bool getAutoLaunch() const { return m_autoLaunch; }
     void setAutoLaunch(bool value) { m_autoLaunch = value; writeSettings(); }
 
     bool getAutoMerge() const { return m_autoMerge; }
     void setAutoMerge(bool value) { m_autoMerge = value; writeSettings(); }
 
-    bool getAutoMetadata() const { return m_autoMetadata; }
-    void setAutoMetadata(bool value) { m_autoMetadata = value; writeSettings(); }
+    bool getAutoMetadata() const { return m_autoTelemetry; }
+    void setAutoMetadata(bool value) { m_autoTelemetry = value; writeSettings(); }
 
     bool getAutoDelete() const { return m_autoDelete; }
     void setAutoDelete(bool value) { m_autoDelete = value; writeSettings(); }

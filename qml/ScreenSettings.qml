@@ -22,8 +22,6 @@ Rectangle {
 
         Text {
             id: textHeader
-            y: 20
-            width: 223
             height: 40
             anchors.left: parent.left
             anchors.leftMargin: 16
@@ -122,7 +120,7 @@ Rectangle {
             y: 128
             width: 350
             height: 40
-            text: qsTr("Automatically extract metadatas")
+            text: qsTr("Automatically extract telemetry")
             enabled: false
             anchors.verticalCenter: checkAutoMerge.verticalCenter
             anchors.left: checkAutoMerge.right
@@ -152,34 +150,6 @@ Rectangle {
             }
         }
 
-        ComboBox {
-            id: comboBoxContentHierarchy
-            y: 174
-            width: 256
-            height: 40
-            anchors.verticalCenter: text4.verticalCenter
-            anchors.left: text4.right
-            anchors.leftMargin: 32
-
-            model: ListModel {
-                id: cbItemsContentHierarchy
-                ListElement { text: qsTr("/ date / FILES"); }
-                ListElement { text: qsTr("/ date / device / FILES"); }
-            }
-
-            Component.onCompleted: {
-                currentIndex = settingsManager.contenthierarchy;
-                if (currentIndex === -1) { currentIndex = 0 }
-            }
-            property bool cbinit: false
-            onCurrentIndexChanged: {
-                if (cbinit)
-                    settingsManager.contenthierarchy = currentIndex;
-                else
-                    cbinit = true;
-            }
-        }
-
         Text {
             id: text4
             height: 40
@@ -189,16 +159,17 @@ Rectangle {
             anchors.leftMargin: 24
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignLeft
-            text: qsTr("Import hierarchy:")
+            text: qsTr("Units in:")
             font.pixelSize: ThemeEngine.fontSizeContentText
             color: ThemeEngine.colorContentText
         }
 
         Text {
             id: text1
-            y: 8
             height: 40
             text: qsTr("Application theme:")
+            anchors.top: parent.top
+            anchors.topMargin: 16
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignLeft
             anchors.left: parent.left
@@ -246,8 +217,8 @@ Rectangle {
 
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 16
-            anchors.top: comboBoxContentHierarchy.bottom
-            anchors.topMargin: 32
+            anchors.top: text4.bottom
+            anchors.topMargin: 16
             anchors.right: parent.right
             anchors.rightMargin: 16
             anchors.left: parent.left
@@ -309,6 +280,80 @@ Rectangle {
                 anchors.leftMargin: 16
                 anchors.right: parent.right
                 anchors.rightMargin: 16
+            }
+
+            ComboBox {
+                id: comboBoxContentHierarchy
+                y: 61
+                width: 256
+                height: 40
+                anchors.left: text2.right
+                anchors.leftMargin: 32
+                anchors.verticalCenter: text2.verticalCenter
+
+                model: ListModel {
+                    id: cbItemsContentHierarchy
+                    ListElement { text: qsTr("/ date / FILES"); }
+                    ListElement { text: qsTr("/ date / device / FILES"); }
+                }
+
+                Component.onCompleted: {
+                    currentIndex = settingsManager.contenthierarchy;
+                    if (currentIndex === -1) { currentIndex = 0 }
+                }
+                property bool cbinit: false
+                onCurrentIndexChanged: {
+                    if (cbinit)
+                        settingsManager.contenthierarchy = currentIndex;
+                    else
+                        cbinit = true;
+                }
+            }
+
+            Text {
+                id: text2
+                text: qsTr("Media hierarchy:")
+                anchors.verticalCenter: textMediasTitle.verticalCenter
+                anchors.left: buttonNew.right
+                anchors.leftMargin: 64
+                font.pixelSize: ThemeEngine.fontSizeContentText
+                color: ThemeEngine.colorContentText
+            }
+        }
+
+        RadioButton {
+            id: radioButtonMetric
+            text: qsTr("Metric")
+            anchors.left: text4.right
+            anchors.leftMargin: 16
+            anchors.verticalCenter: text4.verticalCenter
+
+            Component.onCompleted: {
+                if (settingsManager.appunits === 0) {
+                    checked = true;
+                }
+            }
+            onCheckedChanged: {
+                if (checked === true)
+                    settingsManager.appunits = 0;
+            }
+        }
+
+        RadioButton {
+            id: radioButtonImperial
+            text: qsTr("Imperial")
+            anchors.left: radioButtonMetric.right
+            anchors.leftMargin: 16
+            anchors.verticalCenter: text4.verticalCenter
+
+            Component.onCompleted: {
+                if (settingsManager.appunits === 1) {
+                    checked = true;
+                }
+            }
+            onCheckedChanged: {
+                if (checked === true)
+                    settingsManager.appunits = 1;
             }
         }
     }

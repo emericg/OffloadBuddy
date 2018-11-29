@@ -71,6 +71,9 @@ bool SettingsManager::readSettings()
         if (settings.contains("global/appTheme"))
             m_appTheme = settings.value("global/appTheme").toUInt();
 
+        if (settings.contains("global/appUnits"))
+            m_appUnits = settings.value("global/appUnits").toUInt();
+
         if (settings.contains("global/autoLaunch"))
             m_autoLaunch = settings.value("global/autoLaunch").toBool();
 
@@ -78,7 +81,7 @@ bool SettingsManager::readSettings()
             m_autoMerge = settings.value("global/autoMerge").toBool();
 
         if (settings.contains("global/autoMetadata"))
-            m_autoMetadata = settings.value("global/autoMetadata").toBool();
+            m_autoTelemetry = settings.value("global/autoMetadata").toBool();
 
         if (settings.contains("global/autoDelete"))
             m_autoDelete = settings.value("global/autoDelete").toBool();
@@ -144,9 +147,10 @@ bool SettingsManager::writeSettings()
     if (settings.isWritable())
     {
         settings.setValue("global/appTheme", m_appTheme);
+        settings.setValue("global/appUnits", m_appUnits);
         settings.setValue("global/autoLaunch", m_autoLaunch);
         settings.setValue("global/autoMerge", m_autoMerge);
-        settings.setValue("global/autoMetadata", m_autoMetadata);
+        settings.setValue("global/autoMetadata", m_autoTelemetry);
         settings.setValue("global/autoDelete", m_autoDelete);
         settings.setValue("global/ignoreJunk", m_ignoreJunk);
         settings.setValue("global/ignoreHdAudio", m_ignoreHdAudio);
@@ -236,6 +240,7 @@ MediaDirectory::MediaDirectory()
     // Use default path
     // Windows 'C:/Users/USERNAME/Videos/GoPro'
     // Linux '/home/USERNAME/Videos/GoPro'
+    // macOS '/Users/USERNAME/Movies/GoPro'
 
     QString path = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + "/OffloadBuddy";
 
@@ -281,11 +286,6 @@ MediaDirectory::~MediaDirectory()
 
 /* ************************************************************************** */
 
-QString MediaDirectory::getPath()
-{
-    return m_path;
-}
-
 /*!
  * \brief MediaDirectory::setPath
  * \param path: The path of this MediaDirectory
@@ -327,7 +327,7 @@ void MediaDirectory::setPath(QString path)
             {
                 m_available = true;
 
-#if __linux
+#ifdef __linux
                 // adanced permission checks
                 QFileInfo fi(m_path);
                 QFile::Permissions  e = fi.permissions();
@@ -354,19 +354,9 @@ void MediaDirectory::setPath(QString path)
     }
 }
 
-int MediaDirectory::getContent()
-{
-    return m_content_type;
-}
-
 void MediaDirectory::setContent(int content)
 {
     m_content_type = content;
-}
-
-bool MediaDirectory::isAvailable()
-{
-    return m_available;
 }
 
 bool MediaDirectory::isAvailableFor(unsigned shotType, int64_t shotSize)
@@ -407,7 +397,7 @@ void MediaDirectory::refreshMediaDirectory()
         if (m_storage->bytesAvailable() > 128*1024*1024 &&
             m_storage->isReadOnly() == false)
         {
-#if __linux
+#ifdef __linux
             // adanced permission checks
             QFileInfo fi(m_path);
             QFile::Permissions  e = fi.permissions();

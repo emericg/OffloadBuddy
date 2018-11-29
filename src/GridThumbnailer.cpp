@@ -148,7 +148,7 @@ QQuickTextureFactory *GridThumbnailer::requestTexture(const QString &id, QSize *
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-#if defined(ENABLE_MINIVIDEO)
+#ifdef ENABLE_MINIVIDEO
 
 bool GridThumbnailer::getImage_withMinivideo(const QString &path, QImage &img,
                                              const int timecode_s,
