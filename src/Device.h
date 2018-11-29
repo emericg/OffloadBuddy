@@ -26,6 +26,7 @@
 #include "Shot.h"
 #include "ShotModel.h"
 #include "ShotFilter.h"
+#include "utils_enums.h"
 
 #ifdef ENABLE_LIBMTP
 #include <libmtp.h>
@@ -116,21 +117,6 @@ typedef enum deviceModel_e
         DEVICE_YI_4Kp,
 
 } deviceModel_e;
-
-typedef enum deviceStorage_e
-{
-    STORAGE_FILESYSTEM = 0,
-    STORAGE_VIRTUAL_FILESYSTEM = 1,
-    STORAGE_MTP = 2,
-
-} deviceStorage_e;
-
-typedef enum deviceState_e
-{
-    DEVICE_STATE_IDLE = 0,
-    DEVICE_STATE_SCANNING = 1,
-
-} deviceState_e;
 
 /* ************************************************************************** */
 
@@ -246,7 +232,6 @@ class Device: public QObject
 
     Q_PROPERTY(QString brand READ getBrand NOTIFY deviceUpdated)
     Q_PROPERTY(QString model READ getModel NOTIFY deviceUpdated)
-    Q_PROPERTY(QString stringId READ getStringId NOTIFY deviceUpdated)
     Q_PROPERTY(QString serial READ getSerial NOTIFY deviceUpdated)
     Q_PROPERTY(QString firmware READ getFirmware NOTIFY deviceUpdated)
 
@@ -271,7 +256,7 @@ class Device: public QObject
     QString m_serial;
     QString m_firmware;
 
-    // HW infos
+    // MTP infos
     LIBMTP_mtpdevice_t *m_mtpDevice = nullptr;
     uint32_t m_devBus = 0;
     uint32_t m_devNum = 0;
@@ -323,7 +308,6 @@ public slots:
     int getDeviceStorage() const { return m_deviceStorage; }
     QString getBrand() const { return m_brand; }
     QString getModel() const { return m_model; }
-    QString getStringId() const { return m_stringId; }
     QString getSerial() const { return m_serial; }
     QString getFirmware() const { return m_firmware; }
 

@@ -12,6 +12,7 @@ Rectangle {
     color: "#eef0f1"
 
     property Shot shot: pointer
+    property var shotDevice: myDevice
     property var itemPassedWidth
 
     function handleState() {
@@ -175,11 +176,11 @@ Rectangle {
                 } else if (shot.type > Shared.SHOT_PICTURE) {
                     encode = true
                 }
-                if (myDevice.deviceStorage === 2) { // MTP
+                if (shotDevice.deviceStorage === 2) { // MTP
                     merge = false
                     encode = false
                 }
-                if (myDevice.readOnly) {
+                if (shotDevice.readOnly) {
                     remove = false
                 }
                 actionMenu.setMenuButtons(merge, encode, remove)
@@ -195,6 +196,8 @@ Rectangle {
             // Show the "shot details" screen
             actionMenu.visible = false
             shotsview.currentIndex = index
+
+            screenLibrary.state = "shotdetails"
             screenDevice.state = "shotdetails"
         }
     }

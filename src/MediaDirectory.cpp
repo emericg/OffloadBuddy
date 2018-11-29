@@ -1,0 +1,256 @@
+/*!
+ * This file is part of OffloadBuddy.
+ * COPYRIGHT (C) 2018 Emeric Grange - All Rights Reserved
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * \date      2018
+ * \author    Emeric Grange <emeric.grange@gmail.com>
+ */
+
+#include "MediaDirectory.h"
+#include "Shot.h"
+
+#include <QStandardPaths>
+#include <QStorageInfo>
+#include <QDir>
+
+#include <QSettings>
+#include <QDebug>
+
+/* ************************************************************************** */
+
+/*!
+ * \brief Used when there is no saved MediaDirectory.
+ */
+MediaDirectory::MediaDirectory()
+{
+    // Use default path
+    // Windows 'C:/Users/USERNAME/Videos/OffloadBuddy'
+    // Linux '/home/USERNAME/Videos/OffloadBuddy'
+    // macOS '/Users/USERNAME/Movies/OffloadBuddy'
+
+    QString path = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + "/OffloadBuddy";
+
+    QDir path_dir(path);
+    if (!path_dir.exists())
+    {
+        path_dir.mkpath(path);
+    }
+
+    if (path_dir.exists())
+    {
+        setPath(path);
+        setContent(CONTENT_ALL);
+
+        m_updateTimer.setInterval(MEDIA_DIRECTORIES_REFRESH_INTERVAL * 1000);
+        connect(&m_updateTimer, &QTimer::timeout, this, &MediaDirectory::refreshMediaDirectory);
+        m_updateTimer.start();
+    }
+}
+
+/*!
+ * \brief Used when loading a saved MediaDirectory.
+ */
+MediaDirectory::MediaDirectory(QString &path, int content)
+{
+    QDir path_dir(path);
+
+    if (path_dir.exists())
+    {
+        setPath(path);
+        setContent(content);
+
+        m_updateTimer.setInterval(MEDIA_DIRECTORIES_REFRESH_INTERVAL * 1000);
+        connect(&m_updateTimer, &QTimer::timeout, this, &MediaDirectory::refreshMediaDirectory);
+        m_updateTimer.start();
+    }
+}
+
+MediaDirectory::~MediaDirectory()
+{
+    delete m_storage;
+}
+
+/* ************************************************************************** */
+
+/*!
+ * \brief MediaDirectory::setPath
+ * \param path: The path of this MediaDirectory
+ *
+ * We could 'force create' the directory here, but there are many cases were it
+ * could lead to unintended behavior.
+ * Ex: A user set its output directory to E:/Videos.
+ * Next time the soft is opened, E:/ exists, but Videos doesn't anymore, because
+ * E:/ was a removable media and it is not the same disk anymore. Do we want to take
+ * the risk to inadvertantly use another disk or just let the user know that its
+ * output directory is now invalid?
+ */
+void MediaDirectory::setPath(QString path)
+{
+    m_path = path;
+    emit directoryUpdated();
+
+    if (m_storage)
+    {
+        delete m_storage;
+        m_storage = nullptr;
+    }
+
+    QDir d(m_path);
+    if (d.exists())
+    {
+        m_storage = new QStorageInfo(m_path);
+        if (m_storage &&
+            m_storage->isValid() && m_storage->isReady())
+        {
+            emit spaceUpdated(); // useful when path is changed?
+
+            //qDebug() << "MediaDirectory(" << m_path << "/" << m_content_type << ")";
+            //qDebug() << "MediaDirectory(" << m_storage->bytesAvailable() << "/" << m_storage->bytesTotal() << ")";
+
+            // basic checks
+            if (m_storage->bytesAvailable() > 128*1024*1024 &&
+                m_storage->isReadOnly() == false)
+            {
+                m_available = true;
+
+#ifdef __linux
+                // adanced permission checks
+                QFileInfo fi(m_path);
+                QFile::Permissions  e = fi.permissions();
+                if (!e.testFlag(QFileDevice::WriteUser))
+                {
+                    m_available = false;
+                    qDebug() << "PERMS error:" << e << (unsigned)e;
+                }
+#endif // __linux
+
+                emit availableUpdated();
+            }
+        }
+        else
+        {
+            m_available = false;
+            emit availableUpdated();
+        }
+    }
+    else
+    {
+        m_available = false;
+        emit availableUpdated();
+    }
+}
+
+void MediaDirectory::setContent(int content)
+{
+    m_content_type = content;
+}
+
+bool MediaDirectory::isAvailableFor(unsigned shotType, int64_t shotSize)
+{
+    bool available = false;
+
+    refreshMediaDirectory();
+
+    if (m_available)
+    {
+        if (shotSize < getSpaceAvailable())
+        {
+            if ((shotType == Shared::SHOT_UNKNOWN && m_content_type == CONTENT_ALL) ||
+                (shotType < Shared::SHOT_PICTURE && (m_content_type == CONTENT_VIDEOS || m_content_type == CONTENT_ALL)) ||
+                (shotType >= Shared::SHOT_PICTURE && (m_content_type == CONTENT_PICTURES || m_content_type == CONTENT_ALL)))
+            {
+                available = true;
+            }
+        }
+    }
+
+    return available;
+}
+
+/* ************************************************************************** */
+
+void MediaDirectory::refreshMediaDirectory()
+{
+    //qDebug() << "refreshMediaDirectory(" << m_storage->rootPath() << ")";
+
+    if (m_storage &&
+        m_storage->isValid() && m_storage->isReady())
+    {
+        m_storage->refresh();
+        emit spaceUpdated();
+
+        // basic checks
+        if (m_storage->bytesAvailable() > 128*1024*1024 &&
+            m_storage->isReadOnly() == false)
+        {
+#ifdef __linux
+            // adanced permission checks
+            QFileInfo fi(m_path);
+            QFile::Permissions  e = fi.permissions();
+            if (!e.testFlag(QFileDevice::WriteUser))
+            {
+                m_available = false;
+                emit availableUpdated();
+            }
+#endif // __linux
+        }
+    }
+    else
+    {
+        m_available = false;
+        emit availableUpdated();
+    }
+}
+
+int64_t MediaDirectory::getSpaceTotal()
+{
+    if (m_storage)
+        return m_storage->bytesTotal();
+
+    return 0;
+}
+
+int64_t MediaDirectory::getSpaceUsed()
+{
+    if (m_storage)
+        return (m_storage->bytesTotal() - m_storage->bytesAvailable());
+
+    return 0;
+}
+
+double MediaDirectory::getSpaceUsed_percent()
+{
+    if (m_storage)
+        return static_cast<double>(getSpaceUsed()) / static_cast<double>(m_storage->bytesTotal());
+
+    return 0.0;
+}
+
+int64_t MediaDirectory::getSpaceAvailable()
+{
+    if (m_storage)
+        return m_storage->bytesAvailable();
+
+    return 0;
+}
+
+int64_t MediaDirectory::getSpaceAvailable_withrefresh()
+{
+    refreshMediaDirectory();
+    return getSpaceAvailable();
+}
+
+/* ************************************************************************** */

@@ -20,6 +20,8 @@
  */
 
 #include "JobManager.h"
+#include "SettingsManager.h"
+#include "utils_enums.h"
 
 #ifdef ENABLE_LIBMTP
 #include <libmtp.h>

@@ -30,85 +30,14 @@
 #include <QTimer>
 
 class QStorageInfo;
-
-/* ************************************************************************** */
-
-#define MEDIA_DIRECTORIES_MAX_COUNT 16
-#define MEDIA_DIRECTORIES_REFRESH_INTERVAL 30
-
-typedef enum content_types
-{
-    CONTENT_ALL = 0,
-    CONTENT_VIDEOS,
-    CONTENT_PICTURES,
-
-} content_types;
-
-typedef enum content_hierarchy
-{
-    HIERARCHY_DATE = 0,
-    HIERARCHY_DATE_DEVICE,
-
-} content_hierarchy;
-
-/* ************************************************************************** */
-
-/*!
- * \brief The MediaDirectory class
- */
-class MediaDirectory: public QObject
-{
-    Q_OBJECT
-
-    Q_PROPERTY(QString directoryPath READ getPath WRITE setPath NOTIFY directoryUpdated)
-    Q_PROPERTY(int directoryContent READ getContent WRITE setContent NOTIFY directoryUpdated)
-    Q_PROPERTY(bool available READ isAvailable NOTIFY availableUpdated)
-
-    Q_PROPERTY(qint64 spaceTotal READ getSpaceTotal NOTIFY spaceUpdated)
-    Q_PROPERTY(qint64 spaceUsed READ getSpaceUsed NOTIFY spaceUpdated)
-    Q_PROPERTY(double spaceUsedPercent READ getSpaceUsed_percent NOTIFY spaceUpdated)
-    Q_PROPERTY(qint64 spaceAvailable READ getSpaceAvailable NOTIFY spaceUpdated)
-
-    QString m_path;
-    int m_content_type = 0;
-
-    QStorageInfo *m_storage = nullptr;
-    bool m_available = false;
-    QTimer m_updateTimer;
-
-Q_SIGNALS:
-    void directoryUpdated();
-    void availableUpdated();
-    void spaceUpdated();
-
-private slots:
-    void refreshMediaDirectory();
-
-public:
-    MediaDirectory();
-    MediaDirectory(QString &path, int content);
-    ~MediaDirectory();
-
-public slots:
-    QString getPath() { return m_path; }
-    void setPath(QString path);
-    int getContent() { return m_content_type; }
-    void setContent(int content);
-
-    bool isAvailable() { return m_available; }
-    bool isAvailableFor(unsigned shotType, int64_t shotSize);
-
-    int64_t getSpaceTotal();
-    int64_t getSpaceUsed();
-    double getSpaceUsed_percent();
-    int64_t getSpaceAvailable();
-    int64_t getSpaceAvailable_withrefresh();
-};
+class MediaDirectory;
 
 /* ************************************************************************** */
 
 /*!
  * \brief The SettingsManager class
+ *
+ * Handle application settings, and syncing with associated settings file.
  */
 class SettingsManager: public QObject
 {

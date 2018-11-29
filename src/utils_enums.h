@@ -23,6 +23,39 @@
 #define UTILS_ENUMS_H
 /* ************************************************************************** */
 
+typedef enum content_types
+{
+    CONTENT_ALL = 0,
+    CONTENT_VIDEOS,
+    CONTENT_PICTURES,
+
+} content_types;
+
+typedef enum content_hierarchy
+{
+    HIERARCHY_DATE = 0,
+    HIERARCHY_DATE_DEVICE,
+
+} content_hierarchy;
+
+
+typedef enum deviceStorage_e
+{
+    STORAGE_FILESYSTEM = 0,
+    STORAGE_VIRTUAL_FILESYSTEM = 1,
+    STORAGE_MTP = 2,
+
+} deviceStorage_e;
+
+typedef enum deviceState_e
+{
+    DEVICE_STATE_IDLE = 0,
+    DEVICE_STATE_SCANNING = 1,
+
+} deviceState_e;
+
+/* ************************************************************************** */
+
 #include <QMetaType>
 
 namespace Shared

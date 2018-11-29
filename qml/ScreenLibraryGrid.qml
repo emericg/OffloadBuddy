@@ -1,0 +1,327 @@
+import QtQuick 2.10
+import QtQuick.Controls 2.3
+
+import com.offloadbuddy.style 1.0
+
+Rectangle {
+    width: 1280
+    height: 720
+
+    property var selectedItem : shotsview.currentItem
+    property int selectedItemIndex : shotsview.currentIndex
+    property string selectedItemName : shotsview.currentItem.shot.name
+
+    property var selectionList : [] // TODO
+
+    function initGridViewSettings() {
+        actionMenu.visible = false
+    }
+
+    function updateGridViewSettings() {
+        //console.log("updateGridViewSettings() [device "+ myDevice + "] (state " + myDevice.libraryState + ") (shotcount: " + shotsview.count + ")")
+
+        // restore state
+        shotsview.currentIndex = libraryState.selectedIndex
+
+        if (shotsview.count == 0) {
+            selectionList = []
+            shotsview.currentIndex = -1
+        }
+/*
+        if (myDevice) {
+            if (myDevice.libraryState === 1) { // scanning
+                circleEmpty.visible = true
+                loadingFader.start()
+            } else if (myDevice.libraryState === 0) { // idle
+                loadingFader.stop()
+                if (shotsview.count > 0) {
+                    circleEmpty.visible = false
+                    rectangleTransfer.visible = true
+
+                    if (myDevice.readOnly === true)
+                        rectangleDelete.visible = false
+                    else
+                        rectangleDelete.visible = true
+                }
+            }
+        }
+*/
+    }
+
+    // POPUPS //////////////////////////////////////////////////////////////////
+
+    Popup {
+        id: popupEncode
+        modal: true
+        focus: true
+        x: (parent.width - panelEncode.width) / 2
+        y: (parent.height - panelEncode.height) / 2
+        closePolicy: Popup.CloseOnEscape /*| Popup.CloseOnPressOutsideParent*/
+
+        PanelEncode {
+            id: panelEncode
+        }
+    }
+
+    // HEADER //////////////////////////////////////////////////////////////////
+
+    Rectangle {
+        id: rectangleHeader
+        height: 128
+        color: ThemeEngine.colorHeaderBackground
+        anchors.top: parent.top
+        anchors.topMargin: 0
+        anchors.left: parent.left
+        anchors.leftMargin: 0
+        anchors.right: parent.right
+        anchors.rightMargin: 0
+
+        Text {
+            id: textHeader
+            width: 200
+            height: 40
+            anchors.right: parent.right
+            anchors.rightMargin: 16
+            anchors.top: parent.top
+            anchors.topMargin: 16
+
+            color: ThemeEngine.colorHeaderTitle
+            text: qsTr("MEDIA LIBRARY")
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignRight
+            font.bold: true
+            font.pixelSize: ThemeEngine.fontSizeHeaderTitle
+        }
+
+        ComboBox {
+            id: comboBox_directories
+            y: 16
+            width: 300
+            height: 40
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 16
+            anchors.right: parent.right
+            anchors.rightMargin: 16
+            displayText: qsTr("Show ALL media directories")
+
+            model: ListModel {
+                id: cbMediaDirectories
+                ListElement { text: qsTr("ALL media directories"); }
+            }
+        }
+
+        ComboBox {
+            id: comboBox_orderby
+            width: 256
+            anchors.top: parent.top
+            anchors.topMargin: 16
+            anchors.left: parent.left
+            anchors.leftMargin: 16
+            displayText: qsTr("Order by: Date")
+/*
+            //displayText: qsTr("Filter by: No filters")
+            model: ListModel {
+                id: cbMediaFilters
+                ListElement { text: qsTr("No filters"); }
+                ListElement { text: qsTr("Shot types"); }
+                ListElement { text: qsTr("Camera models"); }
+            }
+*/
+/*
+            model: ListModel {
+                id: cbMediaOrders
+                ListElement { text: qsTr("Date"); }
+                ListElement { text: qsTr("Duration"); }
+                //ListElement { text: qsTr("GPS location"); }
+                ListElement { text: qsTr("Alphabetical"); }
+            }
+*/
+        }
+
+        Slider {
+            id: sliderZoom
+            y: 72
+            width: 200
+            anchors.verticalCenter: comboBox_orderby.verticalCenter
+            anchors.left: textZoom.right
+            anchors.leftMargin: 16
+            stepSize: 1
+            to: 3
+            from: 1
+            value: 2
+        }
+
+        Text {
+            id: textZoom
+            height: 40
+            anchors.verticalCenter: comboBox_orderby.verticalCenter
+            anchors.left: comboBox_orderby.right
+            anchors.leftMargin: 16
+
+            text: qsTr("Zoom:")
+            font.pixelSize: ThemeEngine.fontSizeHeaderText
+            color: ThemeEngine.colorHeaderText
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+        }
+    }
+
+    // CONTENT /////////////////////////////////////////////////////////////////
+
+    Rectangle {
+        id: rectangleLibraryGrid
+        color: ThemeEngine.colorContentBackground
+
+        anchors.top: rectangleHeader.bottom
+        anchors.topMargin: 0
+        anchors.right: parent.right
+        anchors.rightMargin: 0
+        anchors.left: parent.left
+        anchors.leftMargin: 0
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 0
+
+        Rectangle {
+            id: circleEmpty
+            width: 350
+            height: 350
+            radius: width*0.5
+            color: ThemeEngine.colorHeaderBackground
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            Image {
+                id: imageEmpty
+                width: 256
+                height: 256
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                fillMode: Image.PreserveAspectFit
+                source: "qrc:/icons/disk.svg"
+            }
+
+            NumberAnimation on opacity {
+                id: loadingFader;
+                from: 1;
+                to: 0;
+                duration: 2000;
+                loops: Animation.Infinite;
+                onStopped: imageEmpty.opacity = 1;
+            }
+        }
+
+        Component {
+            id: highlight
+            Rectangle {
+                width: shotsview.cellSize;
+                height: shotsview.cellSize
+                color: "#00000000"
+                border.width : 4
+                border.color: ThemeEngine.colorApproved
+                x: {
+                    if (shotsview.currentItem.x) {
+                        x = shotsview.currentItem.x
+                    } else {
+                        x = 0
+                    }
+                }
+                y: {
+                    if (shotsview.currentItem.y) {
+                        y = shotsview.currentItem.y
+                    } else {
+                        y = 0
+                    }
+                }
+                z: 6
+            }
+        }
+
+        ActionMenu {
+            id: actionMenu
+            z: 7
+        }
+        Connections {
+            target: actionMenu
+            onMenuSelected: rectangleLibraryGrid.actionMenuTriggered(index)
+            onVisibleChanged: shotsview.interactive = !shotsview.interactive
+        }
+        function actionMenuTriggered(index) {
+            //console.log("actionMenuTriggered(" + index + ") selected shot: '" + selectedItemName + "'")
+/*
+            if (index === 1)
+                myDevice.offloadCopySelected(selectedItemName)
+            if (index === 2)
+                myDevice.offloadMergeSelected(selectedItemName)
+            if (index === 3) {
+                panelEncode.updateEncodePanel(selectedItem.shot)
+                popupEncode.open()
+            }
+            if (index === 4)
+                myDevice.deleteSelected(selectedItemName)
+*/
+            actionMenu.visible = false
+        }
+
+        ScrollView {
+            id: scrollView
+            anchors.fill: parent
+            anchors.topMargin: banner.height
+
+            GridView {
+                id: shotsview
+
+                //Component.onCompleted: initGridViewStuff()
+                onCountChanged: updateGridViewSettings()
+                onCurrentIndexChanged: {
+                    // save state
+                    if (shotsview.currentIndex != 0)
+                        libraryState.selectedIndex = shotsview.currentIndex
+                }
+
+                flickableChildren: MouseArea {
+                    id: mouseAreaInsideView
+                    anchors.fill: parent
+
+                    acceptedButtons: Qt.AllButtons
+                    onClicked: {
+                        screenLibraryGrid.selectionList = []
+                        shotsview.currentIndex = -1
+                        actionMenu.visible = false
+                    }
+                }
+
+                property int cellSize: 272
+                property int cellMargin: 16
+                //property int cellMargin: (parent.width%cellSize) / Math.floor(parent.width/cellSize);
+                cellWidth: cellSize + cellMargin
+                cellHeight: cellSize + 16
+
+                anchors.rightMargin: 16
+                anchors.leftMargin: 16
+                anchors.bottomMargin: 16
+                anchors.topMargin: 16
+                anchors.fill: parent
+
+                interactive: true
+                //snapMode: GridView.SnapToRow
+                //clip: true
+                //keyNavigationEnabled: true
+
+                model: mediaLibrary.shotFilter
+                delegate: ItemShot { width: shotsview.cellSize }
+
+                highlight: highlight
+                highlightFollowsCurrentItem: true
+                highlightMoveDuration: 0
+                focus: true
+            }
+        }
+
+        MouseArea {
+            id: mouseAreaOutsideView
+            anchors.fill: parent
+            acceptedButtons: Qt.RightButton
+            propagateComposedEvents: true
+        }
+    }
+}

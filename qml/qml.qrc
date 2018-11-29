@@ -4,9 +4,10 @@
         <file>ThemeEngine.qml</file>
         <file>StringUtils.js</file>
         <file>ScreenLibrary.qml</file>
+        <file>ScreenLibraryGrid.qml</file>
         <file>ScreenDevice.qml</file>
-        <file>ScreenDeviceShots.qml</file>
-        <file>ScreenDeviceShotDetails.qml</file>
+        <file>ScreenDeviceGrid.qml</file>
+        <file>ScreenMedia.qml</file>
         <file>ScreenJobs.qml</file>
         <file>ScreenSettings.qml</file>
         <file>ScreenAbout.qml</file>

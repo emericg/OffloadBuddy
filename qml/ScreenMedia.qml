@@ -10,7 +10,7 @@ import com.offloadbuddy.shared 1.0
 import "StringUtils.js" as StringUtils
 
 Rectangle {
-    id: screenDeviceShotDetails
+    id: screenMedia
     width: 1280
     height: 720
     anchors.fill: parent
@@ -18,7 +18,7 @@ Rectangle {
     property Shot shot
     onShotChanged: {
         // if we 'just' changed shot, we reset the state // FIXME forward/backward reset's it too
-        screenDeviceShotDetails.state = "overview"
+        screenMedia.state = "overview"
         updateDeviceDetails()
 
         // save state
@@ -32,7 +32,7 @@ Rectangle {
 
     function restoreState() {
         shot = deviceState.detail_shot
-        screenDeviceShotDetails.state = deviceState.detail_state
+        screenMedia.state = deviceState.detail_state
     }
 
     function updateDeviceDetails() {
@@ -100,7 +100,10 @@ Rectangle {
             text: "<"
             font.bold: true
             font.pixelSize: ThemeEngine.fontSizeHeaderTitle
-            onClicked: screenDevice.state = "shotsview"
+            onClicked: {
+                screenLibrary.state = "shotsview"
+                screenDevice.state = "shotsview"
+            }
         }
         Text {
             id: textShotName
@@ -145,7 +148,7 @@ Rectangle {
             anchors.rightMargin: 16
 
             text: qsTr("Overview")
-            onClicked: screenDeviceShotDetails.state = "overview"
+            onClicked: screenMedia.state = "overview"
         }
         Button {
             id: buttonMetadata
@@ -154,7 +157,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
 
             text: qsTr("Metadatas")
-            onClicked: screenDeviceShotDetails.state = "metadatas"
+            onClicked: screenMedia.state = "metadatas"
         }
         Button {
             id: buttonMap
@@ -163,7 +166,7 @@ Rectangle {
             anchors.verticalCenter: buttonOverview.verticalCenter
 
             text: qsTr("Map")
-            onClicked: screenDeviceShotDetails.state = "map"
+            onClicked: screenMedia.state = "map"
         }
     }
 

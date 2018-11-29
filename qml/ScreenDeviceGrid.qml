@@ -6,7 +6,7 @@ import com.offloadbuddy.style 1.0
 import "StringUtils.js" as StringUtils
 
 Rectangle {
-    id: screenDeviceShots
+    id: screenDeviceGrid
     width: 1280
     height: 720
     anchors.fill: parent
@@ -585,7 +585,7 @@ Rectangle {
 
                     acceptedButtons: Qt.AllButtons
                     onClicked: {
-                        screenDeviceShots.selectionList = []
+                        screenDeviceGrid.selectionList = []
                         shotsview.currentIndex = -1
                         actionMenu.visible = false
                     }

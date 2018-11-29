@@ -32,7 +32,8 @@ SOURCES  += src/main.cpp \
             src/JobManager.cpp \
             src/JobWorkerAsync.cpp \
             src/JobWorkerSync.cpp \
-            src/MediaManager.cpp \
+            src/MediaDirectory.cpp \
+            src/MediaLibrary.cpp \
             src/DeviceScanner.cpp \
             src/DeviceManager.cpp \
             src/Device.cpp \
@@ -53,7 +54,8 @@ HEADERS  += src/SettingsManager.h \
             src/JobManager.h \
             src/JobWorkerAsync.h \
             src/JobWorkerSync.h \
-            src/MediaManager.h \
+            src/MediaDirectory.h \
+            src/MediaLibrary.h \
             src/DeviceScanner.h \
             src/DeviceManager.h \
             src/Device.h \

@@ -22,8 +22,9 @@
 /* ************************************************************************** */
 
 #include "SettingsManager.h"
-#include "JobManager.h"
+#include "MediaLibrary.h"
 #include "DeviceManager.h"
+#include "JobManager.h"
 
 #include <singleapplication.h>
 
@@ -108,6 +109,9 @@ int main(int argc, char *argv[])
     JobManager *j = JobManager::getInstance();
     atexit(exithandler); // will stop running job on exit
 
+    MediaLibrary *m = new MediaLibrary;
+    m->searchMediaDirectories();
+
     DeviceManager *d = new DeviceManager;
     d->searchDevices();
 
@@ -129,8 +133,9 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     QQmlContext *engine_context = engine.rootContext();
     engine_context->setContextProperty("settingsManager", s);
-    engine_context->setContextProperty("jobManager", j);
+    engine_context->setContextProperty("mediaLibrary", m);
     engine_context->setContextProperty("deviceManager", d);
+    engine_context->setContextProperty("jobManager", j);
 
     engine.addImageProvider("GridThumbnailer", new GridThumbnailer);
 

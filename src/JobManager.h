@@ -23,7 +23,7 @@
 #define JOB_MANAGER_H
 /* ************************************************************************** */
 
-#include "SettingsManager.h"
+#include "MediaDirectory.h"
 #include "Device.h"
 #include "Shot.h"
 #include "JobWorkerAsync.h"

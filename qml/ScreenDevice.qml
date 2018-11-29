@@ -9,16 +9,16 @@ Rectangle {
     width: 1280
     height: 720
 
-    property var myDevice
-
     property var deviceStateList: []
     property var deviceState
+
+    property var myDevice
 
     onMyDeviceChanged: {
         if (!deviceStateList[myDevice.uniqueId]) {
             deviceStateList[myDevice.uniqueId] = ({ orderBy: 0,
                                                     zoomLevel: 2.0,
-                                                    mainState: "shotsview",
+                                                    mainState: "stateMediaGrid",
                                                     selectedIndex: 0,
                                                     detail_shot: null,
                                                     detail_state: "overview" })
@@ -30,21 +30,21 @@ Rectangle {
         deviceState = deviceStateList[myDevice.uniqueId]
         state = deviceState.mainState
 
-        screenDeviceShots.restoreState()
-        screenDeviceShots.updateDeviceHeader()
-        screenDeviceShots.initGridViewSettings()
-        screenDeviceShots.updateGridViewSettings()
+        screenDeviceGrid.restoreState()
+        screenDeviceGrid.updateDeviceHeader()
+        screenDeviceGrid.initstateMediaGridSettings()
+        screenDeviceGrid.updatestateMediaGridSettings()
 
-        screenDeviceShotDetails.restoreState()
+        screenMedia.restoreState()
     }
 
-    ScreenDeviceShots {
+    ScreenDeviceGrid {
         anchors.fill: parent
-        id: screenDeviceShots
+        id: screenDeviceGrid
     }
-    ScreenDeviceShotDetails {
+    ScreenMedia {
         anchors.fill: parent
-        id: screenDeviceShotDetails
+        id: screenMedia
     }
 
     MouseArea {
@@ -54,60 +54,61 @@ Rectangle {
 
         onClicked: {
             if (mouse.button === Qt.BackButton) {
-                if (screenDevice.state === "shotdetails")
-                    screenDevice.state = "shotsview"
+                if (screenDevice.state === "stateMediaDetails")
+                    screenDevice.state = "stateMediaGrid"
             } else if (mouse.button === Qt.ForwardButton) {
-                if (screenDevice.state === "shotsview")
-                    if (screenDeviceShots.selectedItemIndex >= 0)
-                        screenDevice.state = "shotdetails"
+                if (screenDevice.state === "stateMediaGrid")
+                    if (screenDeviceGrid.selectedItemIndex >= 0)
+                        screenDevice.state = "stateMediaDetails"
             }
         }
     }
     Shortcut {
         sequence: StandardKey.Back
         onActivated: {
-            if (screenDevice.state === "shotdetails")
-                screenDevice.state = "shotsview"
+            if (screenDevice.state === "stateMediaDetails")
+                screenDevice.state = "stateMediaGrid"
         }
     }
     Shortcut {
         sequence: StandardKey.Forward
         onActivated: {
-            if (screenDevice.state === "shotsview")
-                if (screenDeviceShots.selectedItemIndex >= 0)
-                    screenDevice.state = "shotdetails"
+            if (screenDevice.state === "stateMediaGrid")
+                if (screenDeviceGrid.selectedItemIndex >= 0)
+                    screenDevice.state = "stateMediaDetails"
         }
     }
 
     onStateChanged: {
+        console.log("screendevice onStateChanged")
          // save state
          deviceState.mainState = state
     }
-    state: "shotsview"
+    state: "stateMediaGrid"
     states: [
         State {
-            name: "shotsview"
+            name: "stateMediaGrid"
 
             PropertyChanges {
-                target: screenDeviceShots
+                target: screenDeviceGrid
                 visible: true
             }
             PropertyChanges {
-                target: screenDeviceShotDetails
+                target: screenMedia
                 visible: false
             }
         },
         State {
-            name: "shotdetails"
+            name: "stateMediaDetails"
 
             PropertyChanges {
-                target: screenDeviceShots
+                target: screenDeviceGrid
                 visible: false
             }
             PropertyChanges {
-                target: screenDeviceShotDetails
+                target: screenMedia
                 visible: true
-                shot: myDevice.getShot(screenDeviceShots.selectedItemName)
+                shot: myDevice.getShot(screenDeviceGrid.selectedItemName)
             }
         }
     ]
