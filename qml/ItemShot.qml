@@ -7,7 +7,7 @@ import "StringUtils.js" as StringUtils
 
 Rectangle {
     id: itemShot
-    width: 256
+    width: 272
     height: width
     color: "#eef0f1"
 

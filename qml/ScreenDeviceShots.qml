@@ -121,7 +121,7 @@ Rectangle {
 
                     if (myDevice.readOnly === true)
                         rectangleDelete.visible = false
-                     else
+                    else
                         rectangleDelete.visible = true
                 }
             }
@@ -410,7 +410,6 @@ Rectangle {
 
         Slider {
             id: sliderZoom
-            y: 72
             width: 200
             height: 40
             anchors.verticalCenter: comboBox_orderby.verticalCenter
@@ -423,9 +422,9 @@ Rectangle {
 
             onValueChanged: {
                 if (value == 1.0) {
-                    shotsview.cellSize = 160;
+                    shotsview.cellSize = 200;
                 } else  if (value == 2.0) {
-                    shotsview.cellSize = 256;
+                    shotsview.cellSize = 272;
                 } else  if (value == 3.0) {
                     shotsview.cellSize = 400;
                 }
@@ -592,7 +591,7 @@ Rectangle {
                     }
                 }
 
-                property int cellSize: 256
+                property int cellSize: 272
                 property int cellMargin: 16
                 //property int cellMargin: (parent.width%cellSize) / Math.floor(parent.width/cellSize);
                 cellWidth: cellSize + cellMargin
