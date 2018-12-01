@@ -19,7 +19,7 @@ Rectangle {
 
     Connections {
         target: currentDevice
-        onStateUpdated: updateGridViewSettings()
+        onStateUpdated: screenDeviceGrid.updateGridViewSettings()
     }
 
     function restoreState() {

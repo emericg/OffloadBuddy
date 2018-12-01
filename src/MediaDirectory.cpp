@@ -29,6 +29,8 @@
 #include <QSettings>
 #include <QDebug>
 
+#define MEDIA_DIRECTORIES_REFRESH_INTERVAL 30
+
 /* ************************************************************************** */
 
 /*!
@@ -36,10 +38,10 @@
  */
 MediaDirectory::MediaDirectory()
 {
-    // Use default path
-    // Windows 'C:/Users/USERNAME/Videos/OffloadBuddy'
+    // Use default path:
     // Linux '/home/USERNAME/Videos/OffloadBuddy'
     // macOS '/Users/USERNAME/Movies/OffloadBuddy'
+    // Windows 'C:/Users/USERNAME/Videos/OffloadBuddy'
 
     QString path = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + "/OffloadBuddy";
 
@@ -112,13 +114,23 @@ void MediaDirectory::setPath(QString path)
     if (d.exists())
     {
         m_storage = new QStorageInfo(m_path);
-        if (m_storage &&
-            m_storage->isValid() && m_storage->isReady())
+        if (m_storage && m_storage->isValid() && m_storage->isReady())
         {
             emit spaceUpdated(); // useful when path is changed?
 
             //qDebug() << "MediaDirectory(" << m_path << "/" << m_content_type << ")";
             //qDebug() << "MediaDirectory(" << m_storage->bytesAvailable() << "/" << m_storage->bytesTotal() << ")";
+
+            if (m_storage->fileSystemType().contains("nfs") ||
+                m_storage->fileSystemType().contains("samba") ||
+                m_storage->rootPath().contains("smb-share"))
+            {
+                m_storage_type = DEVICE_NETWORK;
+            }
+            else
+            {
+                m_storage_type = DEVICE_COMPUTER;
+            }
 
             // basic checks
             if (m_storage->bytesAvailable() > 128*1024*1024 &&
@@ -213,6 +225,14 @@ void MediaDirectory::refreshMediaDirectory()
         m_available = false;
         emit availableUpdated();
     }
+}
+
+bool MediaDirectory::isReadOnly()
+{
+    if (m_storage)
+        return m_storage->isReadOnly();
+
+    return false;
 }
 
 int64_t MediaDirectory::getSpaceTotal()

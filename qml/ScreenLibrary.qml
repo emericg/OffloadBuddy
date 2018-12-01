@@ -9,32 +9,9 @@ Rectangle {
     width: 1280
     height: 720
 
-    property var librarySavedState
-
-    Component.onCompleted: {
-        librarySavedState = ({ orderBy: 0,
-                               zoomLevel: 2.0,
-                               mainState: "stateMediaGrid",
-                               selectedIndex: 0,
-                               detail_shot: null,
-                               detail_state: "overview" })
-    }
-
-    onStateChanged: {
-/*
-         // save state
-         librarySavedState.mainState = state
-
-        // restore state
-        state = librarySavedState.mainState
-
-        screenLibraryGrid.restoreState()
-        screenLibraryGrid.updateDeviceHeader()
-        screenLibraryGrid.initGridViewSettings()
-        screenLibraryGrid.updateGridViewSettings()
-
-        screenMedia.restoreState()
-*/
+    Connections {
+        target: mediaLibrary
+        onStateUpdated: screenLibraryGrid.updateGridViewSettings()
     }
 
     // CONTENT /////////////////////////////////////////////////////////////////

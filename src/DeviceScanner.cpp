@@ -175,7 +175,8 @@ void DeviceScanner::scanVirtualFilesystems()
     // Check if we have new device(s)
     foreach (const QStorageInfo &storage, QStorageInfo::mountedVolumes())
     {
-        if (storage.fileSystemType() == "tmpfs")
+        if (storage.fileSystemType() == "tmpfs" ||
+            storage.fileSystemType() == "fuse.gvfsd-fuse")
         {
             //qDebug() << "> MOUNTPOINT(" << storage.fileSystemType() << ") > " << storage.rootPath();
 
@@ -183,6 +184,11 @@ void DeviceScanner::scanVirtualFilesystems()
                 storage.rootPath() == "/tmp")
             {
                 //qDebug() << "> skipping OS internal filesystem";
+                continue;
+            }
+            if (storage.rootPath().contains("smb-share"))
+            {
+                qDebug() << "> skipping network filesystem";
                 continue;
             }
 

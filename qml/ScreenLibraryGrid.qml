@@ -18,8 +18,6 @@ Rectangle {
     }
 
     function updateGridViewSettings() {
-        // restore state
-        shotsview.currentIndex = librarySavedState.selectedIndex
 
         if (shotsview.count == 0) {
             selectionList = []
@@ -60,6 +58,7 @@ Rectangle {
         id: rectangleHeader
         height: 128
         color: ThemeEngine.colorHeaderBackground
+        z: 1
         anchors.top: parent.top
         anchors.topMargin: 0
         anchors.left: parent.left
@@ -135,9 +134,6 @@ Rectangle {
                     cbinit = true;
 
                 displayText = qsTr("Order by:") + " " + cbShotsOrderby.get(currentIndex).text
-
-                // save state
-                librarySavedState.orderBy = currentIndex
             }
         }
 /*
@@ -169,9 +165,6 @@ Rectangle {
                 } else  if (value == 3.0) {
                     shotsview.cellSize = 400;
                 }
-
-                // save state
-                librarySavedState.zoomLevel = value
             }
         }
 
@@ -295,11 +288,6 @@ Rectangle {
 
                 //Component.onCompleted: initGridViewStuff()
                 onCountChanged: updateGridViewSettings()
-                onCurrentIndexChanged: {
-                    // save state
-                    if (shotsview.currentIndex != 0)
-                        librarySavedState.selectedIndex = shotsview.currentIndex
-                }
 
                 flickableChildren: MouseArea {
                     id: mouseAreaInsideView

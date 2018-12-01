@@ -24,8 +24,6 @@ Rectangle {
         // save state
         if (typeof deviceSavedState !== "undefined")
             deviceSavedState.detail_shot = shot
-        else
-            librarySavedState.detail_shot = shot
     }
 
     onVisibleChanged: {

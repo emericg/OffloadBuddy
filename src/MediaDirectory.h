@@ -33,15 +33,11 @@ class QStorageInfo;
 
 /* ************************************************************************** */
 
-#define MEDIA_DIRECTORIES_MAX_COUNT 16
-#define MEDIA_DIRECTORIES_REFRESH_INTERVAL 30
-
-/* ************************************************************************** */
-
 /*!
  * \brief The MediaDirectory class
  *
  * Media directories are parts of the media library.
+ * You can add or delete them from the settings screen.
  */
 class MediaDirectory: public QObject
 {
@@ -51,6 +47,7 @@ class MediaDirectory: public QObject
     Q_PROPERTY(int directoryContent READ getContent WRITE setContent NOTIFY directoryUpdated)
     Q_PROPERTY(bool available READ isAvailable NOTIFY availableUpdated)
 
+    Q_PROPERTY(bool readOnly READ isReadOnly NOTIFY spaceUpdated)
     Q_PROPERTY(qint64 spaceTotal READ getSpaceTotal NOTIFY spaceUpdated)
     Q_PROPERTY(qint64 spaceUsed READ getSpaceUsed NOTIFY spaceUpdated)
     Q_PROPERTY(double spaceUsedPercent READ getSpaceUsed_percent NOTIFY spaceUpdated)
@@ -58,6 +55,7 @@ class MediaDirectory: public QObject
 
     QString m_path;
     int m_content_type = 0;
+    int m_storage_type = 0;
 
     QStorageInfo *m_storage = nullptr;
     bool m_available = false;
@@ -85,6 +83,8 @@ public slots:
     bool isAvailable() { return m_available; }
     bool isAvailableFor(unsigned shotType, int64_t shotSize);
 
+    //
+    bool isReadOnly();
     int64_t getSpaceTotal();
     int64_t getSpaceUsed();
     double getSpaceUsed_percent();

@@ -30,6 +30,8 @@
 #include <QSettings>
 #include <QDebug>
 
+#define MEDIA_DIRECTORIES_MAX_COUNT 16
+
 /* ************************************************************************** */
 
 SettingsManager *SettingsManager::instance = nullptr;
