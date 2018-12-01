@@ -491,7 +491,7 @@ Item {
                 if (sliderFps.value.toFixed(3) !== currentShot.framerate.toFixed(3))
                     fps = sliderFps.value
 
-                myDevice.reencodeSelected(currentShotName, codec,
+                currentDevice.reencodeSelected(currentShotName, codec,
                                           sliderQuality.value,
                                           sliderSpeed.value,
                                           fps,

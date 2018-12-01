@@ -63,6 +63,7 @@ HEADERS  += src/SettingsManager.h \
             src/Shot.h \
             src/ShotModel.h \
             src/ShotFilter.h \
+            src/ShotProvider.h \
             src/GenericFileModel.h \
             src/GoProFileModel.h \
             src/GridThumbnailer.h \

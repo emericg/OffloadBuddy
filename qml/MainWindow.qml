@@ -258,7 +258,7 @@ ApplicationWindow {
             if (typeof devicePtr !== "undefined") {
                 //console.log(devicePtr + ' component was triggered')
                 content.state = "device"
-                screenDevice.myDevice = devicePtr
+                screenDevice.currentDevice = devicePtr
                 currentDevicePtr = devicePtr // save current device
             }
         }

@@ -19,13 +19,13 @@ Rectangle {
     onShotChanged: {
         // if we 'just' changed shot, we reset the state // FIXME forward/backward reset's it too
         screenMedia.state = "overview"
-        updateDeviceDetails()
+        updateShotDetails()
 
         // save state
-        if (deviceState)
-            deviceState.detail_shot = shot
+        if (typeof deviceSavedState !== "undefined")
+            deviceSavedState.detail_shot = shot
         else
-            libraryState.detail_shot = shot
+            librarySavedState.detail_shot = shot
     }
 
     onVisibleChanged: {
@@ -34,11 +34,11 @@ Rectangle {
     }
 
     function restoreState() {
-        shot = deviceState.detail_shot
-        screenMedia.state = deviceState.detail_state
+        shot = deviceSavedState.detail_shot
+        screenMedia.state = deviceSavedState.detail_state
     }
 
-    function updateDeviceDetails() {
+    function updateShotDetails() {
         if (shot) {
             textShotName.text = shot.name
 
@@ -175,8 +175,8 @@ Rectangle {
 
     onStateChanged: {
         // save state
-        //libraryState.detail_state = state
-        deviceState.detail_state = state
+        if (currentDevice)
+            deviceSavedState.detail_state = state
     }
 
     state: "overview"

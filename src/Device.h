@@ -23,9 +23,7 @@
 #define DEVICE_H
 /* ************************************************************************** */
 
-#include "Shot.h"
-#include "ShotModel.h"
-#include "ShotFilter.h"
+#include "ShotProvider.h"
 #include "utils_enums.h"
 
 #ifdef ENABLE_LIBMTP
@@ -45,78 +43,6 @@ typedef void LIBMTP_devicestorage_t;
 
 #include <QStorageInfo>
 #include <QTimer>
-
-/* ************************************************************************** */
-
-typedef enum deviceType_e
-{
-    DEVICE_UNKNOWN = 0,
-
-    DEVICE_COMPUTER,
-    DEVICE_SMARTPHONE,
-    DEVICE_CAMERA,
-    DEVICE_ACTIONCAM,
-
-} deviceType_e;
-
-typedef enum deviceModel_e
-{
-    MODEL_UNKNOWN = 0,
-
-    DEVICE_GOPRO = 128,
-        DEVICE_HERO2,
-        DEVICE_HERO3_WHITE,
-        DEVICE_HERO3_SILVER,
-        DEVICE_HERO3_BLACK,
-        DEVICE_HERO3p_WHITE,
-        DEVICE_HERO3p_SILVER,
-        DEVICE_HERO3p_BLACK,
-        DEVICE_HERO,
-        DEVICE_HEROp,
-        DEVICE_HEROpLCD,
-        DEVICE_HERO4_SILVER,
-        DEVICE_HERO4_BLACK,
-        DEVICE_HERO4_SESSION,
-        DEVICE_HERO5_SESSION,
-        DEVICE_HERO5_WHITE,
-        DEVICE_HERO5_BLACK,
-        DEVICE_HERO6_BLACK,
-        DEVICE_HERO7_WHITE,
-        DEVICE_HERO7_SILVER,
-        DEVICE_HERO7_BLACK,
-        DEVICE_FUSION,
-
-    DEVICE_SONY = 256,
-        DEVICE_HDR_AS300R,
-        DEVICE_FDR_X1000VR,
-        DEVICE_FDR_X3000R,
-
-    DEVICE_GARMIN = 270,
-        DEVICE_VIRB_ELITE,
-        DEVICE_VIRB_X,
-        DEVICE_VIRB_XE,
-        DEVICE_VIRB_ULTRA30,
-        DEVICE_VIRB_360,
-
-    DEVICE_OLYMPUS = 280,
-        DEVICE_TG_TRACKER,
-
-    DEVICE_CONTOUR = 290,
-        DEVICE_CONTOUR_ROAM3,
-        DEVICE_CONTOUR_ROAM1600,
-        DEVICE_CONTOUR_4K,
-
-    DEVICE_KODAK = 300,
-        DEVICE_PIXPRO_SP1,
-        DEVICE_PIXPRO_SPZ1,
-
-    DEVICE_YI = 310,
-        DEVICE_YI_DISCOVERY_4K,
-        DEVICE_YI_LITE,
-        DEVICE_YI_4K,
-        DEVICE_YI_4Kp,
-
-} deviceModel_e;
 
 /* ************************************************************************** */
 
@@ -218,8 +144,11 @@ struct ofb_mtp_device
 
 /*!
  * \brief The Device class
+ *
+ * A device object represent a physicaly connected MTP device like a camera or
+ * a connected SD card from such a device.
  */
-class Device: public QObject
+class Device: public ShotProvider
 {
     Q_OBJECT
 
@@ -240,9 +169,6 @@ class Device: public QObject
     Q_PROPERTY(qint64 spaceUsed READ getSpaceUsed NOTIFY spaceUpdated)
     Q_PROPERTY(double spaceUsedPercent READ getSpaceUsed_percent NOTIFY spaceUpdated)
     Q_PROPERTY(qint64 spaceAvailable READ getSpaceAvailable NOTIFY spaceUpdated)
-
-    Q_PROPERTY(ShotModel *shotModel READ getShotModel NOTIFY shotModelUpdated)
-    Q_PROPERTY(ShotFilter *shotFilter READ getShotFilter NOTIFY shotModelUpdated)
 
     deviceType_e m_deviceType = DEVICE_UNKNOWN;
     deviceModel_e m_deviceModel = MODEL_UNKNOWN;
@@ -267,19 +193,12 @@ class Device: public QObject
     QList <StorageFilesystem *> m_filesystemStorages;
     QList <StorageMtp *> m_mtpStorages;
 
-    // Shot(s)
-    ShotModel *m_shotModel = nullptr;
-    ShotFilter *m_shotFilter = nullptr;
-    Shot *findShot(Shared::ShotType type, int file_id, int camera_id) const;
-
 private slots:
     void refreshBatteryInfos();
     void refreshStorageInfos();
 
 Q_SIGNALS:
     void deviceUpdated();
-    void shotModelUpdated();
-    void shotsUpdated();
     void stateUpdated();
     void spaceUpdated();
 
@@ -344,17 +263,8 @@ public slots:
     void deleteSelected(const QString shot_name);
 
     //
-    void addShot(Shot *shot);
-    void deleteShot(Shot *shot);
-
     void workerScanningStarted(QString s);
     void workerScanningFinished(QString s);
-
-    //
-    ShotModel *getShotModel() const { return m_shotModel; }
-    ShotFilter *getShotFilter() const { return m_shotFilter; }
-    //QVariant getShot(const int index) const { return QVariant::fromValue(m_shotModel->getShotAt(index)); }
-    QVariant getShot(const QString name) const { return QVariant::fromValue(m_shotModel->getShotAt(name)); }
 };
 
 /* ************************************************************************** */

@@ -9,26 +9,24 @@ Rectangle {
     width: 1280
     height: 720
 
-    property var libraryStateList: []
-    property var libraryState
+    property var librarySavedState
+
+    Component.onCompleted: {
+        librarySavedState = ({ orderBy: 0,
+                               zoomLevel: 2.0,
+                               mainState: "stateMediaGrid",
+                               selectedIndex: 0,
+                               detail_shot: null,
+                               detail_state: "overview" })
+    }
+
+    onStateChanged: {
 /*
-    property var myDevice
-
-    onMyDeviceChanged: {
-        if (!libraryStateList[myDevice.uniqueId]) {
-            libraryStateList[myDevice.uniqueId] = ({ orderBy: 0,
-                                                    zoomLevel: 2.0,
-                                                    mainState: "stateMediaGrid",
-                                                    selectedIndex: 0,
-                                                    detail_shot: null,
-                                                    detail_state: "overview" })
-        }
-
-        //console.log("Device is now " + myDevice.uniqueId)
+         // save state
+         librarySavedState.mainState = state
 
         // restore state
-        libraryState = libraryStateList[myDevice.uniqueId]
-        state = libraryState.mainState
+        state = librarySavedState.mainState
 
         screenLibraryGrid.restoreState()
         screenLibraryGrid.updateDeviceHeader()
@@ -36,16 +34,10 @@ Rectangle {
         screenLibraryGrid.updateGridViewSettings()
 
         screenMedia.restoreState()
-    }
 */
-    ScreenLibraryGrid {
-        anchors.fill: parent
-        id: screenLibraryGrid
     }
-    ScreenMedia {
-        anchors.fill: parent
-        id: screenMedia
-    }
+
+    // CONTENT /////////////////////////////////////////////////////////////////
 
     MouseArea {
         anchors.fill: parent
@@ -79,11 +71,15 @@ Rectangle {
         }
     }
 
-    onStateChanged: {
-        console.log("onStateChanged")
-         // save state
-         libraryState.mainState = state
+    ScreenLibraryGrid {
+        anchors.fill: parent
+        id: screenLibraryGrid
     }
+    ScreenMedia {
+        anchors.fill: parent
+        id: screenMedia
+    }
+
     state: "stateMediaGrid"
     states: [
         State {

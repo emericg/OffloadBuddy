@@ -44,13 +44,6 @@ Device::Device(const deviceType_e type, const deviceStorage_e storage,
     m_serial = serial;
     m_firmware = version;
 
-    m_shotModel = new ShotModel;
-    m_shotFilter = new ShotFilter;
-
-    m_shotFilter->setSourceModel(m_shotModel);
-    m_shotFilter->setSortRole(ShotModel::DateRole);
-    m_shotFilter->sort(0, Qt::AscendingOrder);
-
     connect(&m_updateStorageTimer, &QTimer::timeout, this, &Device::refreshStorageInfos);
     if (m_deviceStorage == STORAGE_MTP)
         connect(&m_updateStorageTimer, &QTimer::timeout, this, &Device::refreshBatteryInfos);
@@ -60,9 +53,6 @@ Device::Device(const deviceType_e type, const deviceStorage_e storage,
 
 Device::~Device()
 {
-    delete m_shotModel;
-    delete m_shotFilter;
-
     qDeleteAll(m_filesystemStorages);
     m_filesystemStorages.clear();
 
@@ -450,25 +440,6 @@ int64_t Device::getSpaceAvailable()
 #endif // ENABLE_LIBMTP
 
     return s;
-}
-
-/* ************************************************************************** */
-/* ************************************************************************** */
-
-void Device::addShot(Shot *shot)
-{
-    if (m_shotModel)
-    {
-        m_shotModel->addShot(shot);
-    }
-}
-
-void Device::deleteShot(Shot *shot)
-{
-    if (m_shotModel)
-    {
-        m_shotModel->removeShot(shot);
-    }
 }
 
 /* ************************************************************************** */

@@ -18,34 +18,25 @@ Rectangle {
     }
 
     function updateGridViewSettings() {
-        //console.log("updateGridViewSettings() [device "+ myDevice + "] (state " + myDevice.libraryState + ") (shotcount: " + shotsview.count + ")")
-
         // restore state
-        shotsview.currentIndex = libraryState.selectedIndex
+        shotsview.currentIndex = librarySavedState.selectedIndex
 
         if (shotsview.count == 0) {
             selectionList = []
             shotsview.currentIndex = -1
         }
-/*
-        if (myDevice) {
-            if (myDevice.libraryState === 1) { // scanning
+
+        if (mediaLibrary) {
+            if (mediaLibrary.libraryState === 1) { // scanning
                 circleEmpty.visible = true
                 loadingFader.start()
-            } else if (myDevice.libraryState === 0) { // idle
+            } else if (mediaLibrary.libraryState === 0) { // idle
                 loadingFader.stop()
                 if (shotsview.count > 0) {
                     circleEmpty.visible = false
-                    rectangleTransfer.visible = true
-
-                    if (myDevice.readOnly === true)
-                        rectangleDelete.visible = false
-                    else
-                        rectangleDelete.visible = true
                 }
             }
         }
-*/
     }
 
     // POPUPS //////////////////////////////////////////////////////////////////
@@ -113,35 +104,55 @@ Rectangle {
         ComboBox {
             id: comboBox_orderby
             width: 256
+            height: 40
             anchors.top: parent.top
             anchors.topMargin: 16
             anchors.left: parent.left
             anchors.leftMargin: 16
             displayText: qsTr("Order by: Date")
-/*
-            //displayText: qsTr("Filter by: No filters")
+
             model: ListModel {
-                id: cbMediaFilters
-                ListElement { text: qsTr("No filters"); }
-                ListElement { text: qsTr("Shot types"); }
-                ListElement { text: qsTr("Camera models"); }
-            }
-*/
-/*
-            model: ListModel {
-                id: cbMediaOrders
+                id: cbShotsOrderby
                 ListElement { text: qsTr("Date"); }
                 ListElement { text: qsTr("Duration"); }
+                ListElement { text: qsTr("Shot type"); }
                 //ListElement { text: qsTr("GPS location"); }
-                ListElement { text: qsTr("Alphabetical"); }
+                ListElement { text: qsTr("Name"); }
             }
-*/
-        }
 
+            property bool cbinit: false
+            onCurrentIndexChanged: {
+                if (cbinit) {
+                    if (currentIndex == 0)
+                        mediaLibrary.orderByDate()
+                    else if (currentIndex == 1)
+                        mediaLibrary.orderByDuration()
+                    else if (currentIndex == 2)
+                        mediaLibrary.orderByShotType()
+                    else if (currentIndex == 3)
+                        mediaLibrary.orderByName()
+                } else
+                    cbinit = true;
+
+                displayText = qsTr("Order by:") + " " + cbShotsOrderby.get(currentIndex).text
+
+                // save state
+                librarySavedState.orderBy = currentIndex
+            }
+        }
+/*
+        //displayText: qsTr("Filter by: No filters")
+        model: ListModel {
+            id: cbMediaFilters
+            ListElement { text: qsTr("No filters"); }
+            ListElement { text: qsTr("Shot types"); }
+            ListElement { text: qsTr("Camera models"); }
+        }
+*/
         Slider {
             id: sliderZoom
-            y: 72
             width: 200
+            height: 40
             anchors.verticalCenter: comboBox_orderby.verticalCenter
             anchors.left: textZoom.right
             anchors.leftMargin: 16
@@ -149,6 +160,19 @@ Rectangle {
             to: 3
             from: 1
             value: 2
+
+            onValueChanged: {
+                if (value == 1.0) {
+                    shotsview.cellSize = 200;
+                } else  if (value == 2.0) {
+                    shotsview.cellSize = 272;
+                } else  if (value == 3.0) {
+                    shotsview.cellSize = 400;
+                }
+
+                // save state
+                librarySavedState.zoomLevel = value
+            }
         }
 
         Text {
@@ -265,7 +289,6 @@ Rectangle {
         ScrollView {
             id: scrollView
             anchors.fill: parent
-            anchors.topMargin: banner.height
 
             GridView {
                 id: shotsview
@@ -275,7 +298,7 @@ Rectangle {
                 onCurrentIndexChanged: {
                     // save state
                     if (shotsview.currentIndex != 0)
-                        libraryState.selectedIndex = shotsview.currentIndex
+                        librarySavedState.selectedIndex = shotsview.currentIndex
                 }
 
                 flickableChildren: MouseArea {

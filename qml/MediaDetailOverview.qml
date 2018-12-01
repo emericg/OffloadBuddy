@@ -352,6 +352,11 @@ Rectangle {
             mediaPlayer.pause()
             mediaPlayer.volume = 0.5
 
+            preview.startLimit = -1
+            preview.stopLimit = -1
+            timelineLimitStart.width = 0
+            timelineLimitStop.width = 0
+
             codecVideo.visible = true
             if (shot.codecVideo === "H.264")
                 codecVideo.source = "qrc:/badges/H264.svg"

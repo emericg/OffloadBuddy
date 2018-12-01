@@ -9,26 +9,26 @@ Rectangle {
     width: 1280
     height: 720
 
-    property var deviceStateList: []
-    property var deviceState
+    property var deviceSavedStateList: []
+    property var deviceSavedState
 
-    property var myDevice
+    property var currentDevice
 
-    onMyDeviceChanged: {
-        if (!deviceStateList[myDevice.uniqueId]) {
-            deviceStateList[myDevice.uniqueId] = ({ orderBy: 0,
-                                                    zoomLevel: 2.0,
-                                                    mainState: "stateMediaGrid",
-                                                    selectedIndex: 0,
-                                                    detail_shot: null,
-                                                    detail_state: "overview" })
+    onCurrentDeviceChanged: {
+        if (!deviceSavedStateList[currentDevice.uniqueId]) {
+            deviceSavedStateList[currentDevice.uniqueId] = ({ orderBy: 0,
+                                                              zoomLevel: 2.0,
+                                                              mainState: "stateMediaGrid",
+                                                              selectedIndex: 0,
+                                                              detail_shot: null,
+                                                              detail_state: "overview" })
         }
 
         //console.log("Device is now " + myDevice.uniqueId)
 
         // restore state
-        deviceState = deviceStateList[myDevice.uniqueId]
-        state = deviceState.mainState
+        deviceSavedState = deviceSavedStateList[currentDevice.uniqueId]
+        state = deviceSavedState.mainState
 
         screenDeviceGrid.restoreState()
         screenDeviceGrid.updateDeviceHeader()
@@ -38,14 +38,12 @@ Rectangle {
         screenMedia.restoreState()
     }
 
-    ScreenDeviceGrid {
-        anchors.fill: parent
-        id: screenDeviceGrid
+    onStateChanged: {
+         // save state
+         deviceSavedState.mainState = state
     }
-    ScreenMedia {
-        anchors.fill: parent
-        id: screenMedia
-    }
+
+    // CONTENT /////////////////////////////////////////////////////////////////
 
     MouseArea {
         anchors.fill: parent
@@ -79,11 +77,15 @@ Rectangle {
         }
     }
 
-    onStateChanged: {
-        console.log("screendevice onStateChanged")
-         // save state
-         deviceState.mainState = state
+    ScreenDeviceGrid {
+        anchors.fill: parent
+        id: screenDeviceGrid
     }
+    ScreenMedia {
+        anchors.fill: parent
+        id: screenMedia
+    }
+
     state: "stateMediaGrid"
     states: [
         State {
@@ -108,7 +110,7 @@ Rectangle {
             PropertyChanges {
                 target: screenMedia
                 visible: true
-                shot: myDevice.getShot(screenDeviceGrid.selectedItemName)
+                shot: currentDevice.getShot(screenDeviceGrid.selectedItemName)
             }
         }
     ]

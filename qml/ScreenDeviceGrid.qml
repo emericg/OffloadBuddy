@@ -18,50 +18,50 @@ Rectangle {
     property var selectionList : [] // TODO
 
     Connections {
-        target: myDevice
+        target: currentDevice
         onStateUpdated: updateGridViewSettings()
     }
 
     function restoreState() {
-        sliderZoom.value = deviceState.zoomLevel
-        comboBox_orderby.currentIndex = deviceState.orderBy
-        shotsview.currentIndex = deviceState.selectedIndex
+        sliderZoom.value = deviceSavedState.zoomLevel
+        comboBox_orderby.currentIndex = deviceSavedState.orderBy
+        shotsview.currentIndex = deviceSavedState.selectedIndex
     }
 
     function updateDeviceHeader() {
-        deviceModelText.text = myDevice.brand + " " + myDevice.model;
-        deviceSpaceText.text = StringUtils.bytesToString_short(myDevice.spaceUsed) + " used of " + StringUtils.bytesToString_short(myDevice.spaceTotal)
-        deviceSpaceBar.value = myDevice.spaceUsedPercent
+        deviceModelText.text = currentDevice.brand + " " + currentDevice.model;
+        deviceSpaceText.text = StringUtils.bytesToString_short(currentDevice.spaceUsed) + " used of " + StringUtils.bytesToString_short(currentDevice.spaceTotal)
+        deviceSpaceBar.value = currentDevice.spaceUsedPercent
 
-        if (myDevice.model.includes("HERO7 White") ||
-            myDevice.model.includes("HERO7 Silver")) {
+        if (currentDevice.model.includes("HERO7 White") ||
+            currentDevice.model.includes("HERO7 Silver")) {
             deviceImage.source = "qrc:/cameras/H7w.svg"
-        } else if (myDevice.model.includes("HERO7") ||
-            myDevice.model.includes("HERO6")) {
+        } else if (currentDevice.model.includes("HERO7") ||
+            currentDevice.model.includes("HERO6")) {
             deviceImage.source = "qrc:/cameras/H6.svg"
-        } else if (myDevice.model.includes("HERO5")) {
+        } else if (currentDevice.model.includes("HERO5")) {
             deviceImage.source = "qrc:/cameras/H5.svg"
-        } else if (myDevice.model.includes("Session")) {
+        } else if (currentDevice.model.includes("Session")) {
             deviceImage.source = "qrc:/cameras/session.svg"
-        } else if (myDevice.model.includes("HERO4")) {
+        } else if (currentDevice.model.includes("HERO4")) {
             deviceImage.source = "qrc:/cameras/H4.svg"
-        } else if (myDevice.model.includes("HERO3") ||
-                   myDevice.model.includes("Hero3")) {
+        } else if (currentDevice.model.includes("HERO3") ||
+                   currentDevice.model.includes("Hero3")) {
             deviceImage.source = "qrc:/cameras/H3.svg"
-        } else if (myDevice.model.includes("FUSION")) {
+        } else if (currentDevice.model.includes("FUSION")) {
             deviceImage.source = "qrc:/cameras/fusion.svg"
-        } else if (myDevice.model.includes("HD2")) {
+        } else if (currentDevice.model.includes("HD2")) {
             deviceImage.source = "qrc:/cameras/H2.svg"
         } else {
-            if (myDevice.deviceType === 2)
+            if (currentDevice.deviceType === 2)
                 deviceImage.source = "qrc:/cameras/generic_smartphone.svg"
-            else if (myDevice.deviceType === 3)
+            else if (currentDevice.deviceType === 3)
                 deviceImage.source = "qrc:/cameras/generic_camera.svg"
             else
                 deviceImage.source = "qrc:/cameras/generic_actioncam.svg"
         }
 
-        if (myDevice.readOnly === true) {
+        if (currentDevice.readOnly === true) {
             deviceSpaceLocked.visible = true
             deviceSpaceLocked.width = 24
         } else {
@@ -71,12 +71,12 @@ Rectangle {
 
         banner.visible = false
         banner.height = 0
-        if (myDevice.deviceStorage === 1) { // VFS
+        if (currentDevice.deviceStorage === 1) { // VFS
             banner.visible = true
             banner.height = 56
             bannerText.text = qsTr("Previews are not available (yet) with MTP devices...")
         }
-        if (myDevice.deviceStorage === 2) { // MTP
+        if (currentDevice.deviceStorage === 2) { // MTP
             banner.visible = true
             banner.height = 56
             bannerText.text = qsTr("Previews and metadatas are not available (yet) with MTP devices...")
@@ -89,8 +89,8 @@ Rectangle {
         rectangleDelete.visible = false
         actionMenu.visible = false
 
-        if (myDevice && myDevice.deviceStorage === 0)
-            if (myDevice.deviceType === 2)
+        if (currentDevice && currentDevice.deviceStorage === 0)
+            if (currentDevice.deviceType === 2)
                 imageEmpty.source = "qrc:/icons/card.svg"
             else
                 imageEmpty.source = "qrc:/icons/phone.svg"
@@ -102,24 +102,24 @@ Rectangle {
         //console.log("updateGridViewSettings() [device "+ myDevice + "] (state " + myDevice.deviceState + ") (shotcount: " + shotsview.count + ")")
 
         // restore state
-        shotsview.currentIndex = deviceState.selectedIndex
+        shotsview.currentIndex = deviceSavedState.selectedIndex
 
         if (shotsview.count == 0) {
             selectionList = []
             shotsview.currentIndex = -1
         }
 
-        if (myDevice) {
-            if (myDevice.deviceState === 1) { // scanning
+        if (currentDevice) {
+            if (currentDevice.deviceState === 1) { // scanning
                 circleEmpty.visible = true
                 loadingFader.start()
-            } else if (myDevice.deviceState === 0) { // idle
+            } else if (currentDevice.deviceState === 0) { // idle
                 loadingFader.stop()
                 if (shotsview.count > 0) {
                     circleEmpty.visible = false
                     rectangleTransfer.visible = true
 
-                    if (myDevice.readOnly === true)
+                    if (currentDevice.readOnly === true)
                         rectangleDelete.visible = false
                     else
                         rectangleDelete.visible = true
@@ -262,7 +262,7 @@ Rectangle {
                     rectangleTransferDecorated.height = rectangleTransferDecorated.height + 8
                 }
                 onClicked: {
-                    myDevice.offloadAll();
+                    currentDevice.offloadAll();
                 }
             }
 
@@ -295,7 +295,7 @@ Rectangle {
                 if (weAreBlinking === true) {
                     if ((new Date().getTime() - startTime) > 500) {
                         stopTheBlink();
-                        myDevice.deleteAll();
+                        currentDevice.deleteAll();
                     }
                 } else {
                     startTime = new Date().getTime()
@@ -391,20 +391,21 @@ Rectangle {
             onCurrentIndexChanged: {
                 if (cbinit) {
                     if (currentIndex == 0)
-                        myDevice.orderByDate()
+                        currentDevice.orderByDate()
                     else if (currentIndex == 1)
-                        myDevice.orderByDuration()
+                        currentDevice.orderByDuration()
                     else if (currentIndex == 2)
-                        myDevice.orderByShotType()
+                        currentDevice.orderByShotType()
                     else if (currentIndex == 3)
-                        myDevice.orderByName()
+                        currentDevice.orderByName()
                 } else
                     cbinit = true;
 
                 displayText = qsTr("Order by:") + " " + cbShotsOrderby.get(currentIndex).text
 
                 // save state
-                deviceState.orderBy = currentIndex
+                if (currentDevice)
+                    deviceSavedState.orderBy = currentIndex
             }
         }
 
@@ -430,7 +431,7 @@ Rectangle {
                 }
 
                 // save state
-                deviceState.zoomLevel = value
+                deviceSavedState.zoomLevel = value
             }
         }
 
@@ -527,15 +528,15 @@ Rectangle {
             //console.log("actionMenuTriggered(" + index + ") selected shot: '" + selectedItemName + "'")
 
             if (index === 1)
-                myDevice.offloadCopySelected(selectedItemName)
+                currentDevice.offloadCopySelected(selectedItemName)
             if (index === 2)
-                myDevice.offloadMergeSelected(selectedItemName)
+                currentDevice.offloadMergeSelected(selectedItemName)
             if (index === 3) {
                 panelEncode.updateEncodePanel(selectedItem.shot)
                 popupEncode.open()
             }
             if (index === 4)
-                myDevice.deleteSelected(selectedItemName)
+                currentDevice.deleteSelected(selectedItemName)
 
             actionMenu.visible = false
         }
@@ -574,9 +575,24 @@ Rectangle {
                 //Component.onCompleted: initGridViewStuff()
                 onCountChanged: updateGridViewSettings()
                 onCurrentIndexChanged: {
+                    //console.log("onCurrentIndexChanged() selected index: " + shotsview.currentIndex)
+                    //console.log("onCurrentIndexChanged() selected row/column: " + shotsview.childAt())
+
+                    //console.log("onCurrentIndexChanged() selected shot: " + shotsview.currentIndex)
+                    //console.log("onCurrentIndexChanged() selected shots [ " + selectionList + "]")
+
+                    //console.log("highlight: " + rectangleDeviceShots.highlight.x + "/" + rectangleDeviceShots.highlight.y)
+
                     // save state
                     if (shotsview.currentIndex != 0)
-                        deviceState.selectedIndex = shotsview.currentIndex
+                        deviceSavedState.selectedIndex = shotsview.currentIndex
+                }
+                onCurrentItemChanged: {
+                    //console.log("onCurrentItemChanged() item: " + shotsview.currentItem)
+                    //shotsview.currentItem.visible = false;
+                    //console.log("onCurrentItemChanged() item: " + shotsview.currentItem.shot.name)
+
+                    //screenDeviceShots.selectionList.push(shotsview.currentItem.shot.name)
                 }
 
                 flickableChildren: MouseArea {
@@ -608,7 +624,7 @@ Rectangle {
                 //clip: true
                 //keyNavigationEnabled: true
 
-                model: myDevice.shotFilter
+                model: currentDevice.shotFilter
                 delegate: ItemShot { width: shotsview.cellSize }
 
                 highlight: highlight

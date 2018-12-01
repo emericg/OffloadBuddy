@@ -23,6 +23,78 @@
 #define UTILS_ENUMS_H
 /* ************************************************************************** */
 
+typedef enum deviceType_e
+{
+    DEVICE_UNKNOWN = 0,
+
+    DEVICE_COMPUTER,
+    DEVICE_SMARTPHONE,
+    DEVICE_CAMERA,
+    DEVICE_ACTIONCAM,
+
+} deviceType_e;
+
+typedef enum deviceModel_e
+{
+    MODEL_UNKNOWN = 0,
+
+    DEVICE_GOPRO = 128,
+        DEVICE_HERO2,
+        DEVICE_HERO3_WHITE,
+        DEVICE_HERO3_SILVER,
+        DEVICE_HERO3_BLACK,
+        DEVICE_HERO3p_WHITE,
+        DEVICE_HERO3p_SILVER,
+        DEVICE_HERO3p_BLACK,
+        DEVICE_HERO,
+        DEVICE_HEROp,
+        DEVICE_HEROpLCD,
+        DEVICE_HERO4_SILVER,
+        DEVICE_HERO4_BLACK,
+        DEVICE_HERO4_SESSION,
+        DEVICE_HERO5_SESSION,
+        DEVICE_HERO5_WHITE,
+        DEVICE_HERO5_BLACK,
+        DEVICE_HERO6_BLACK,
+        DEVICE_HERO7_WHITE,
+        DEVICE_HERO7_SILVER,
+        DEVICE_HERO7_BLACK,
+        DEVICE_FUSION,
+
+    DEVICE_SONY = 256,
+        DEVICE_HDR_AS300R,
+        DEVICE_FDR_X1000VR,
+        DEVICE_FDR_X3000R,
+
+    DEVICE_GARMIN = 270,
+        DEVICE_VIRB_ELITE,
+        DEVICE_VIRB_X,
+        DEVICE_VIRB_XE,
+        DEVICE_VIRB_ULTRA30,
+        DEVICE_VIRB_360,
+
+    DEVICE_OLYMPUS = 280,
+        DEVICE_TG_TRACKER,
+
+    DEVICE_CONTOUR = 290,
+        DEVICE_CONTOUR_ROAM3,
+        DEVICE_CONTOUR_ROAM1600,
+        DEVICE_CONTOUR_4K,
+
+    DEVICE_KODAK = 300,
+        DEVICE_PIXPRO_SP1,
+        DEVICE_PIXPRO_SPZ1,
+
+    DEVICE_YI = 310,
+        DEVICE_YI_DISCOVERY_4K,
+        DEVICE_YI_LITE,
+        DEVICE_YI_4K,
+        DEVICE_YI_4Kp,
+
+} deviceModel_e;
+
+/* ************************************************************************** */
+
 typedef enum content_types
 {
     CONTENT_ALL = 0,

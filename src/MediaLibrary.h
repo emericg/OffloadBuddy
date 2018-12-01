@@ -23,9 +23,7 @@
 #define LIBRARY_MANAGER_H
 /* ************************************************************************** */
 
-#include "Shot.h"
-#include "ShotModel.h"
-#include "ShotFilter.h"
+#include "ShotProvider.h"
 
 #include <QDebug>
 #include <QObject>
@@ -38,59 +36,9 @@ class MediaDirectory;
 /* ************************************************************************** */
 
 /*!
- * \brief The ShotProvider class
- */
-class ShotProvider: public QObject
-{
-    Q_OBJECT
-
-protected:
-    Q_PROPERTY(ShotModel *shotModel READ getShotModel NOTIFY shotModelUpdated)
-    Q_PROPERTY(ShotFilter *shotFilter READ getShotFilter NOTIFY shotModelUpdated)
-
-    // Shot(s)
-    ShotModel *m_shotModel = nullptr;
-    ShotFilter *m_shotFilter = nullptr;
-    Shot *findShot(Shared::ShotType type, int file_id, int camera_id) const;
-
-Q_SIGNALS:
-    void shotModelUpdated();
-    void shotsUpdated();
-
-public:
-    ShotProvider()
-    {
-        m_shotModel = new ShotModel;
-        m_shotFilter = new ShotFilter;
-
-        m_shotFilter->setSourceModel(m_shotModel);
-        m_shotFilter->setSortRole(ShotModel::DateRole);
-        m_shotFilter->sort(0, Qt::AscendingOrder);
-    }
-
-    virtual ~ShotProvider()
-    {
-        delete m_shotModel;
-        delete m_shotFilter;
-    }
-
-    //
-    void addShot(Shot *shot);
-    void deleteShot(Shot *shot);
-
-    //
-    ShotModel *getShotModel() const { return m_shotModel; }
-    ShotFilter *getShotFilter() const { return m_shotFilter; }
-
-public slots:
-    //QVariant getShot(const int index) const { return QVariant::fromValue(m_shotModel->getShotAt(index)); }
-    QVariant getShot(const QString name) const { return QVariant::fromValue(m_shotModel->getShotAt(name)); }
-};
-
-/* ************************************************************************** */
-
-/*!
  * \brief The MediaLibrary class
+ *
+ * Handle all of your MediaDirectories and their files.
  */
 class MediaLibrary: public ShotProvider
 {
@@ -120,4 +68,5 @@ public slots:
     void workerScanningFinished(QString s);
 };
 
+/* ************************************************************************** */
 #endif // LIBRARY_MANAGER_H
