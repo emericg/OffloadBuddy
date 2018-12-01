@@ -96,12 +96,12 @@ bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot)
 
     if (file.name.size() != 8)
     {
-        qWarning() << "-" << file.name << ": filename is not 8 chars... Probably not a GoPro file...";
+        //qWarning() << "-" << file.name << ": filename is not 8 chars... Probably not a GoPro file...";
         return false;
     }
     if (file.name.startsWith("G") == false)
     {
-        qWarning() << "-" << file.name << ": filename doesn't start by 'G'... Probably not a GoPro file...";
+        //qWarning() << "-" << file.name << ": filename doesn't start by 'G'... Probably not a GoPro file...";
         return false;
     }
 

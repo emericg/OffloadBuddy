@@ -216,7 +216,7 @@ bool Device::addStorage_filesystem(const QString &path)
             fs->chooseFilesystem(path);
             fs->moveToThread(thread);
 
-            connect(thread, SIGNAL(started()), fs, SLOT(scanFilesystem()));
+            connect(thread, SIGNAL(started()), fs, SLOT(scanFilesystemDCIM()));
             connect(fs, SIGNAL(fileFound(ofb_file *, ofb_shot *)), m_shotModel, SLOT(addFile(ofb_file *, ofb_shot *)));
             connect(fs, SIGNAL(scanningStarted(QString)), this, SLOT(workerScanningStarted(QString)));
             connect(fs, SIGNAL(scanningFinished(QString)), this, SLOT(workerScanningFinished(QString)));
@@ -440,37 +440,6 @@ int64_t Device::getSpaceAvailable()
 #endif // ENABLE_LIBMTP
 
     return s;
-}
-
-/* ************************************************************************** */
-/* ************************************************************************** */
-
-void Device::orderByDate()
-{
-    m_shotFilter->setSortRole(ShotModel::DateRole);
-    m_shotFilter->sort(0, Qt::AscendingOrder);
-    m_shotFilter->invalidate();
-}
-
-void Device::orderByDuration()
-{
-    m_shotFilter->setSortRole(ShotModel::DurationRole);
-    m_shotFilter->sort(0, Qt::DescendingOrder);
-    m_shotFilter->invalidate();
-}
-
-void Device::orderByShotType()
-{
-    m_shotFilter->setSortRole(ShotModel::TypeRole);
-    m_shotFilter->sort(0, Qt::AscendingOrder);
-    m_shotFilter->invalidate();
-}
-
-void Device::orderByName()
-{
-    m_shotFilter->setSortRole(ShotModel::NameRole);
-    m_shotFilter->sort(0, Qt::AscendingOrder);
-    m_shotFilter->invalidate();
 }
 
 /* ************************************************************************** */

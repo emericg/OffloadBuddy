@@ -46,51 +46,48 @@ FileScanner::~FileScanner()
 
 void FileScanner::chooseFilesystem(const QString &path)
 {
+    m_abort_scan = false;
     m_selected_filesystem = path;
 }
 
 void FileScanner::chooseMtpStorage(StorageMtp *mtpStorage)
 {
 #ifdef ENABLE_LIBMTP
+    m_abort_scan = false;
     m_selected_mtpDevice = mtpStorage->m_device;
     m_selected_mtpStorage = mtpStorage->m_storage;
 #endif
 }
 
 /* ************************************************************************** */
+
+//void FileScanner::chooseFilesystems(QList<StorageFilesystem *> *storages)
+
+//void FileScanner::chooseMtpStorages(QList<StorageMtp *> *storages)
+
+/* ************************************************************************** */
 /* ************************************************************************** */
 
-void FileScanner::scanFilesystem()
+void FileScanner::scanFilesystemElement(QString &dir_path)
 {
-    if (m_selected_filesystem.isEmpty())
+    //qDebug() << "  * Scanning subdir:" << dir_path;
+
+    QDir dir(dir_path);
+    foreach (QString subelement_name, dir.entryList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot))
     {
-        qWarning() << "> SCANNING FAILED (filesystem) no path provided...";
-        return;
-    }
+        //qDebug() << "  * Scanning subelement:" << subelement_name;
+        QString subelement_path = dir_path + QDir::separator() + subelement_name;
 
-    QString dcim_path = m_selected_filesystem;
+        if (m_abort_scan)
+            return;
 
-    if (!m_selected_filesystem.contains("/home") &&
-        !m_selected_filesystem.contains("/Users") &&
-        !m_selected_filesystem.contains("C:/Users"))
-        dcim_path = m_selected_filesystem + QDir::separator() + "DCIM";
-
-    //qDebug() << "> SCANNING STARTED (filesystem)";
-    //qDebug() << "  * DCIM:" << dcim_path;
-    emit scanningStarted(m_selected_filesystem);
-
-    QDir dcim;
-    dcim.setPath(dcim_path);
-    foreach (QString subdir_name, dcim.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
-    {
-        //qDebug() << "  * Scanning subdir:" << subdir_name;
-
-        QDir subdir;
-        subdir.setPath(dcim_path + QDir::separator() + subdir_name);
-
-        foreach (QString file_name, subdir.entryList(QDir::Files| QDir::NoDotAndDotDot))
+        QFileInfo fi(subelement_path);
+        if (fi.isDir())
         {
-            QFileInfo fi(dcim_path + QDir::separator() + subdir_name + QDir::separator() + file_name);
+            scanFilesystemElement(subelement_path);
+        }
+        else
+        {
             if (fi.exists() && fi.isReadable())
             {
                 ofb_file *f = new ofb_file;
@@ -112,11 +109,54 @@ void FileScanner::scanFilesystem()
             }
         }
     }
+}
+
+void FileScanner::scanFilesystem()
+{
+    if (m_selected_filesystem.isEmpty())
+    {
+        qWarning() << "> SCANNING FAILED (filesystem) no path provided...";
+        return;
+    }
+
+    //qDebug() << "> SCANNING STARTED (filesystem)";
+    emit scanningStarted(m_selected_filesystem);
+
+    scanFilesystemElement(m_selected_filesystem);
 
     //qDebug() << "> SCANNING FINISHED";
     emit scanningFinished(m_selected_filesystem);
 }
 
+void FileScanner::scanFilesystemDCIM()
+{
+    if (m_selected_filesystem.isEmpty())
+    {
+        qWarning() << "> SCANNING FAILED (filesystem DCIM) no path provided...";
+        return;
+    }
+
+    QString dcim_path = m_selected_filesystem + QDir::separator() + "DCIM";
+
+    //qDebug() << "> SCANNING STARTED (filesystem)";
+    //qDebug() << "  * DCIM:" << dcim_path;
+    emit scanningStarted(m_selected_filesystem);
+
+    scanFilesystemElement(dcim_path);
+
+    //qDebug() << "> SCANNING FINISHED";
+    emit scanningFinished(m_selected_filesystem);
+}
+
+/* ************************************************************************** */
+
+void FileScanner::abortScan()
+{
+    qWarning() << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> abortScan()";
+    m_abort_scan = true;
+}
+
+/* ************************************************************************** */
 /* ************************************************************************** */
 
 void FileScanner::scanMtpDevice()

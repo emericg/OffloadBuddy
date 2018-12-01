@@ -43,7 +43,6 @@ protected:
     Q_PROPERTY(ShotModel *shotModel READ getShotModel NOTIFY shotModelUpdated)
     Q_PROPERTY(ShotFilter *shotFilter READ getShotFilter NOTIFY shotModelUpdated)
 
-    // Shot(s)
     ShotModel *m_shotModel = nullptr;
     ShotFilter *m_shotFilter = nullptr;
     Shot *findShot(Shared::ShotType type, int file_id, int camera_id) const;
@@ -53,50 +52,21 @@ Q_SIGNALS:
     void shotsUpdated();
 
 public:
-    ShotProvider()
-    {
-        m_shotModel = new ShotModel;
-        m_shotFilter = new ShotFilter;
+    ShotProvider();
+    virtual ~ShotProvider();
 
-        if (m_shotFilter)
-        {
-            m_shotFilter->setSourceModel(m_shotModel);
-            m_shotFilter->setSortRole(ShotModel::DateRole);
-            m_shotFilter->sort(0, Qt::AscendingOrder);
-        }
-    }
-
-    virtual ~ShotProvider()
-    {
-        delete m_shotModel;
-        delete m_shotFilter;
-    }
-
-    //
-    //void addShot(Shot *shot);
-    //void deleteShot(Shot *shot);
-
-    void addShot(Shot *shot)
-    {
-        if (m_shotModel)
-        {
-            m_shotModel->addShot(shot);
-        }
-    }
-
-    void deleteShot(Shot *shot)
-    {
-        if (m_shotModel)
-        {
-            m_shotModel->removeShot(shot);
-        }
-    }
-
-    //
     ShotModel *getShotModel() const { return m_shotModel; }
     ShotFilter *getShotFilter() const { return m_shotFilter; }
 
+    void addShot(Shot *shot);
+    void deleteShot(Shot *shot);
+
 public slots:
+    void orderByDate();
+    void orderByDuration();
+    void orderByShotType();
+    void orderByName();
+
     //QVariant getShot(const int index) const { return QVariant::fromValue(m_shotModel->getShotAt(index)); }
     QVariant getShot(const QString name) const { return QVariant::fromValue(m_shotModel->getShotAt(name)); }
 };

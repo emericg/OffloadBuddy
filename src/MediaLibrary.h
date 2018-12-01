@@ -62,7 +62,6 @@ public:
     void searchMediaDirectories();
 
 public slots:
-    //
     int getLibraryState() const { return m_libraryState; }
     void workerScanningStarted(QString s);
     void workerScanningFinished(QString s);

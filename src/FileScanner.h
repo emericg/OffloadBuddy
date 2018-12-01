@@ -43,7 +43,10 @@ class FileScanner: public QObject
 {
     Q_OBJECT
 
+    bool m_abort_scan = false;
     QString m_selected_filesystem;
+
+    void scanFilesystemElement(QString &dir);
 
 #ifdef ENABLE_LIBMTP
     LIBMTP_mtpdevice_t *m_selected_mtpDevice = nullptr;
@@ -66,7 +69,10 @@ public slots:
     //void chooseMtpStorages(QList<StorageMtp *> *storages);
 
     void scanFilesystem();
+    void scanFilesystemDCIM();
     void scanMtpDevice();
+
+    void abortScan();
 
 signals:
     void fileFound(ofb_file *, ofb_shot *);

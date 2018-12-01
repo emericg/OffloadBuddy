@@ -246,12 +246,6 @@ public slots:
     std::pair<unsigned, unsigned> getMtpIds() const;
 
     //
-    void orderByDate();
-    void orderByDuration();
-    void orderByShotType();
-    void orderByName();
-
-    //
     void offloadAll();
     void deleteAll();
 

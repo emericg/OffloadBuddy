@@ -438,7 +438,7 @@ bool Shot::getMetadatasFromPicture(int index)
     ExifData *ed = exif_data_new_from_file(m_pictures.at(index)->filesystemPath.toLatin1());
     if (!ed)
     {
-        qWarning() << "File not readable or no EXIF data in file";
+        //qWarning() << "File not readable or no EXIF data in file";
         return false;
     }
 
@@ -746,7 +746,7 @@ bool Shot::getMetadatasFromVideo(int index)
                         }
 
                         //
-                        if (global_offset_ms == 0)
+                        if (global_offset_ms == 0 && m_gps.size() > 0)
                         {
                             gps_lat = m_gps.at(m_gps.size() / 2).first;
                             gps_long = m_gps.at(m_gps.size() / 2).second;

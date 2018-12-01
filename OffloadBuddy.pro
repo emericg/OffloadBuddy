@@ -41,6 +41,7 @@ SOURCES  += src/main.cpp \
             src/Shot.cpp \
             src/ShotModel.cpp \
             src/ShotFilter.cpp \
+            src/ShotProvider.cpp \
             src/GenericFileModel.cpp \
             src/GoProFileModel.cpp \
             src/GridThumbnailer.cpp \
