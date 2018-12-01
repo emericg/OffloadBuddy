@@ -1089,15 +1089,20 @@ void Shot::updateAltiSerie(QLineSeries *serie)
     QVector<QPointF> points;
     for (unsigned i = 0; i < m_alti.size(); i++) //; i+=18)
     {
-        current = m_alti.at(i);
-        avgAlti += current;
+        if (m_gps_params.at(i).second >= 3) // we need at least a 3D lock
+        {
+            current = m_alti.at(i);
+            avgAlti += current;
 
-        if (current < minAlti)
-            minAlti = current;
-        else if (current > maxAlti)
-            maxAlti = current;
+            if (current < minAlti)
+                minAlti = current;
+            else if (current > maxAlti)
+                maxAlti = current;
+        }
+        else
+            current = 0;
 
-        points.insert(id, QPointF(id, current));
+        points.insert(id, QPointF(id, 0));
         id++;
     }
 
@@ -1164,14 +1169,21 @@ QGeoCoordinate Shot::getGpsCoordinates(unsigned index)
     QGeoCoordinate c;
     if (index < m_gps.size())
     {
-        c.setLatitude(m_gps.at(index).first);
-        c.setLongitude(m_gps.at(index).second);
+        if (m_gps_params.at(index).second >= 2) // we need at least a 2D lock
+        {
+            c.setLatitude(m_gps.at(index).first);
+            c.setLongitude(m_gps.at(index).second);
+        }
+        else // FIXME // return last point?
+        {
+            c.setLatitude(m_gps.at(m_gps.size()-1).first);
+            c.setLongitude(m_gps.at(m_gps.size()-1).second);
+        }
 
         //qDebug() << "GPS (" << index << ")" << m_gps.at(index).first << m_gps.at(index).second;
     }
-    else
+    else // return last point?
     {
-        // return last point?
         if (m_gps.size() > 0)
         {
             c.setLatitude(m_gps.at(m_gps.size()-1).first);
