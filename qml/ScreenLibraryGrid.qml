@@ -136,15 +136,42 @@ Rectangle {
                 displayText = qsTr("Order by:") + " " + cbShotsOrderby.get(currentIndex).text
             }
         }
-/*
-        //displayText: qsTr("Filter by: No filters")
-        model: ListModel {
-            id: cbMediaFilters
-            ListElement { text: qsTr("No filters"); }
-            ListElement { text: qsTr("Shot types"); }
-            ListElement { text: qsTr("Camera models"); }
+
+        ComboBox {
+            id: comboBox_filterby
+            width: 256
+            height: 40
+            anchors.top: comboBox_orderby.bottom
+            anchors.topMargin: 16
+            anchors.left: parent.left
+            anchors.leftMargin: 16
+            displayText: qsTr("Filter by: No filter")
+
+            model: ListModel {
+                id: cbMediaFilters
+                ListElement { text: qsTr("No filters"); }
+                ListElement { text: qsTr("Shot types"); }
+                ListElement { text: qsTr("Camera models"); }
+            }
+            /*
+            property bool cbinit: false
+            onCurrentIndexChanged: {
+                if (cbinit) {
+                    if (currentIndex == 0)
+                        mediaLibrary.orderByDate()
+                    else if (currentIndex == 1)
+                        mediaLibrary.orderByDuration()
+                    else if (currentIndex == 2)
+                        mediaLibrary.orderByShotType()
+                    else if (currentIndex == 3)
+                        mediaLibrary.orderByName()
+                } else
+                    cbinit = true;
+
+                displayText = qsTr("Order by:") + " " + cbShotsOrderby.get(currentIndex).text
+            }*/
         }
-*/
+
         Slider {
             id: sliderZoom
             width: 200
@@ -265,15 +292,13 @@ Rectangle {
         function actionMenuTriggered(index) {
             //console.log("actionMenuTriggered(" + index + ") selected shot: '" + selectedItemName + "'")
 /*
-            if (index === 1)
-                myDevice.offloadCopySelected(selectedItemName)
             if (index === 2)
                 myDevice.offloadMergeSelected(selectedItemName)
             if (index === 3) {
                 panelEncode.updateEncodePanel(selectedItem.shot)
                 popupEncode.open()
             }
-            if (index === 4)
+            if (index === 16)
                 myDevice.deleteSelected(selectedItemName)
 */
             actionMenu.visible = false

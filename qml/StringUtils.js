@@ -50,9 +50,9 @@ function bytesToString_short(bytes) {
     var text
 
     if (bytes/1000000000 >= 1.0)
-        text = (bytes/1000000000).toFixed(0) + qsTr("GB")
+        text = (bytes/1000000000).toFixed(0) + " " + qsTr("GB")
     else
-        text = (bytes/1000000).toFixed(1) + qsTr("MB")
+        text = (bytes/1000000).toFixed(1) + " " + qsTr("MB")
 
     return text
 }
@@ -273,10 +273,76 @@ function framerateToString(framerate) {
     var text = ''
 
     if (framerate > 0) {
-        text = framerate.toFixed(2) + qsTr(" fps")
+        text = framerate.toFixed(2) + " " + qsTr("fps")
     } else {
         text = qsTr("NULL framerate");
     }
 
     return text;
 }
+
+/*!
+ * altitudeToString()
+ */
+function altitudeToString(value, precision, unit) {
+    var text = ''
+
+    if (unit === 0) {
+        text = value.toFixed(precision) + " " + qsTr("m")
+    } else {
+        text = (value / 0.3048).toFixed(precision) + " " + qsTr("ft")
+    }
+
+    return text;
+}
+
+/*!
+ * altitudeUnit()
+ */
+function altitudeUnit(unit) {
+    var text = ''
+
+    if (unit === 0) {
+        text = qsTr("meter")
+    } else {
+        text = qsTr("feet")
+    }
+
+    return text;
+}
+
+/*!
+ * distanceToString()
+ */
+function distanceToString(value, precision, unit) {
+    var text = ''
+
+    if (unit === 0) {
+        text = value.toFixed(precision) + " " + qsTr("km")
+    } else {
+        text = (value / 1609.344).toFixed(precision) + " " + qsTr("mi")
+    }
+
+    return text;
+}
+
+/*!
+ * speedToString()
+ */
+function speedToString(value, precision, unit) {
+    return distanceToString(value, precision, unit) + "/h";
+}
+
+/*!
+ * speedUnit()
+ */
+function speedToString(value, precision, unit) {
+    var text = ''
+
+    if (unit === 0) {
+        text = qsTr("km/h")
+    } else {
+        text = qsTr("mi/h")
+    }
+
+    return text;}

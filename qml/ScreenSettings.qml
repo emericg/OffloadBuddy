@@ -287,8 +287,8 @@ Rectangle {
                 y: 61
                 width: 256
                 height: 40
-                anchors.left: text2.right
-                anchors.leftMargin: 32
+                anchors.right: parent.right
+                anchors.rightMargin: 16
                 anchors.verticalCenter: text2.verticalCenter
 
                 model: ListModel {
@@ -313,9 +313,9 @@ Rectangle {
             Text {
                 id: text2
                 text: qsTr("Media hierarchy:")
+                anchors.right: comboBoxContentHierarchy.left
+                anchors.rightMargin: 16
                 anchors.verticalCenter: textMediasTitle.verticalCenter
-                anchors.left: buttonNew.right
-                anchors.leftMargin: 64
                 font.pixelSize: ThemeEngine.fontSizeContentText
                 color: ThemeEngine.colorContentText
             }

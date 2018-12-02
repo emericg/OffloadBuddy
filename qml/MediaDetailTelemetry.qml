@@ -10,7 +10,7 @@ import com.offloadbuddy.shared 1.0
 import "StringUtils.js" as StringUtils
 
 Rectangle {
-    id: contentMetadatas
+    id: contentTelemetry
     width: 1500
     height: 700
     anchors.fill: parent
@@ -42,6 +42,18 @@ Rectangle {
         shot.updateGyroSeries(gyroX, gyroY, gyroZ);
 
         // Text datas
+        speedMIN.text = StringUtils.speedToString(shot.minSpeed, 2, settingsManager.appunits)
+        speedAVG.text = StringUtils.speedToString(shot.avgSpeed, 2, settingsManager.appunits)
+        speedMAX.text = StringUtils.speedToString(shot.maxSpeed, 2, settingsManager.appunits)
+
+        altiMIN.text = StringUtils.altitudeToString(shot.minAlti, 0, settingsManager.appunits)
+        altiAVG.text = StringUtils.altitudeToString(shot.avgAlti, 0, settingsManager.appunits)
+        altiMAX.text = StringUtils.altitudeToString(shot.maxAlti, 0, settingsManager.appunits)
+
+        trackDuration.text = StringUtils.durationToString(shot.duration)
+        trackDistance.text = StringUtils.distanceToString(shot.distanceKm, 1, settingsManager.appunits)
+        acclMAX.text = (shot.maxG / 9.80665).toFixed(1) + " G's"
+/*
         speedMIN.text = shot.minSpeed.toFixed(2) + " km/h"
         speedAVG.text = shot.avgSpeed.toFixed(2) + " km/h"
         speedMAX.text = shot.maxSpeed.toFixed(2) + " km/h"
@@ -52,8 +64,8 @@ Rectangle {
 
         trackDuration.text = StringUtils.durationToString(shot.duration)
         trackDistance.text = shot.distanceKm.toFixed(1) + " km"
-        acclMAX.text = (shot.maxG / 9.81).toFixed(1) + " G's"
-
+        acclMAX.text = (shot.maxG / 9.80665).toFixed(1) + " G's"
+*/
         // Graphs axis
         axisSpeedY0.min = shot.minSpeed * 0.9;
         axisSpeedY0.max = shot.maxSpeed * 1.1;
@@ -430,7 +442,7 @@ Rectangle {
                 id: speedsGraph
                 width: 302
                 height: 173
-                title: "Speed (km/h)"
+                title: "Speed (" + StringUtils.speedUnit(settingsManager.appunits) + ")"
 
                 antialiasing: true
                 //legend.visible: false // Qt 5.10+
@@ -449,7 +461,7 @@ Rectangle {
                 id: altiGraph
                 width: 304
                 height: 173
-                title: "Altitude (meter)"
+                title: "Altitude (" + StringUtils.altitudeUnit(settingsManager.appunits) + ")"
 
                 antialiasing: true
                 //legend.visible: false // Qt 5.10+

@@ -28,7 +28,7 @@ Rectangle {
 
             rectangleCoordinates.visible = true
             coordinates.text = shot.latitudeString + "    " + shot.longitudeString
-            altitude.text = shot.altitudeString
+            altitude.text = StringUtils.altitudeToString(shot.altitude, 0, settingsManager.appunits)
         } else {
             mapPointGPS.center = QtPositioning.coordinate(45.5, 6)
             mapPointGPS.zoomLevel = 2

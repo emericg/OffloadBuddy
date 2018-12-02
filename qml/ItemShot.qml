@@ -12,7 +12,7 @@ Rectangle {
     color: "#eef0f1"
 
     property Shot shot: pointer
-    property var shotDevice: currentDevice
+    property var shotDevice
     property var itemPassedWidth
 
     function handleState() {
@@ -42,8 +42,10 @@ Rectangle {
         text_top.text = name
         text_top.visible = false
 
-        handleState()
+        if (typeof currentDevice !== "undefined")
+            shotDevice = currentDevice
 
+        handleState()
         if (shot.previewVideo)
             image.source = "image://GridThumbnailer/" + shot.previewVideo
         else if (preview)
@@ -165,8 +167,11 @@ Rectangle {
             shotsview.currentIndex = index
 
             if (mouse.button === Qt.RightButton) {
+                var copy = true
                 var merge = false
                 var encode = false
+                var telemetry_gpmf = false
+                var telemetry_gps = false
                 var remove = true
 
                 if (shot.type < Shared.SHOT_PICTURE) {
@@ -184,8 +189,13 @@ Rectangle {
                     if (shotDevice.readOnly) {
                         remove = false
                     }
+                } else {
+                    copy = false
+                    merge = false
+                    encode = true
                 }
-                actionMenu.setMenuButtons(merge, encode, remove)
+
+                actionMenu.setMenuButtons(copy, merge, encode, remove)
 
                 actionMenu.visible = true
                 actionMenu.x = mouseAreaOutsideView.mouseX + 8

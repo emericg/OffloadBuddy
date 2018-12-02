@@ -11,7 +11,11 @@ Rectangle {
     signal menuSelected(int index)
     property bool isOpen: false
 
-    function setMenuButtons(merge, encode, remove) {
+    function setMenuButtons(copy, merge, encode, remove) {
+        if (copy)
+            offloadCopy.visible = true
+        else
+            offloadCopy.visible = false
         if (merge)
             offloadMerge.visible = true
         else
@@ -20,6 +24,22 @@ Rectangle {
             offloadReencode.visible = true
         else
             offloadReencode.visible = false
+/*
+        if (telemetryGPMF) {
+            telemetrySeparator.visible = true
+            telemetryGPMF.visible = true
+        } else {
+            telemetrySeparator.visible = false
+            telemetryGPMF.visible = false
+        }
+        if (telemetryGPS) {
+            telemetrySeparator.visible = true
+            telemetryGPS.visible = true
+        } else {
+            telemetrySeparator.visible = false
+            telemetryGPS.visible = false
+        }
+*/
         if (remove) {
             removeSeparator.visible = true
             removeSelected.visible = true
@@ -54,11 +74,38 @@ Rectangle {
             button_text: qsTr("Reencode")
             onButtonClicked: menuSelected(index)
         }
+/*
+        Item {
+            id: telemetrySeparator
+            height: 2
+            anchors.left: parent.left
+            anchors.leftMargin: 10
+            anchors.right: parent.right
+            anchors.rightMargin: 20
+            Rectangle {
+                height: 2
+                width: parent.width
+                color: "#c3c3c3"
+            }
+        }
+        ActionButton {
+            id: telemetryGPMF
+            index: 8
+            button_text: qsTr("Extract telemetry")
+            onButtonClicked: menuSelected(index)
+        }
+        ActionButton {
+            id: telemetryGPS
+            index: 9
+            button_text: qsTr("Extract GPS trace")
+            onButtonClicked: menuSelected(index)
+        }
+*/
         Item {
             id: removeSeparator
             height: 2
             anchors.left: parent.left
-            anchors.leftMargin:  10
+            anchors.leftMargin: 10
             anchors.right: parent.right
             anchors.rightMargin: 20
             Rectangle {
@@ -69,7 +116,7 @@ Rectangle {
         }
         ActionButton {
             id: removeSelected
-            index: 4
+            index: 16
             button_text: qsTr("DELETE")
             onButtonClicked: menuSelected(index)
         }

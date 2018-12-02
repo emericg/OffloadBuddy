@@ -19,7 +19,7 @@
         <file>ActionButton.qml</file>
         <file>PanelEncode.qml</file>
         <file>MediaDetailMap.qml</file>
-        <file>MediaDetailMetadatas.qml</file>
+        <file>MediaDetailTelemetry.qml</file>
         <file>MediaDetailOverview.qml</file>
         <file>WindowStateSaver.qml</file>
     </qresource>

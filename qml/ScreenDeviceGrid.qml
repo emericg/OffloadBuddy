@@ -535,7 +535,7 @@ Rectangle {
                 panelEncode.updateEncodePanel(selectedItem.shot)
                 popupEncode.open()
             }
-            if (index === 4)
+            if (index === 16)
                 currentDevice.deleteSelected(selectedItemName)
 
             actionMenu.visible = false

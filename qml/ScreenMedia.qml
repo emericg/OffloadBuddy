@@ -47,12 +47,12 @@ Rectangle {
             }
 
             if (shot.hasGpmf) {
-                buttonMetadata.visible = true
-                buttonMetadata.width = 110
+                buttonTelemetry.visible = true
+                buttonTelemetry.width = 110
 
                 // if (not static)
                 //{
-                    contentMetadatas.updateMetadatas()
+                    contentTelemetry.updateMetadatas()
                     buttonMap.visible = false
                     buttonMap.width = -16
                 //} else {
@@ -62,8 +62,8 @@ Rectangle {
                 //    contentMap.updateMap()
                 //}
             } else {
-                buttonMetadata.visible = false
-                buttonMetadata.width = -16
+                buttonTelemetry.visible = false
+                buttonTelemetry.width = -16
 
                 if (shot.latitude !== 0.0) {
                     buttonMap.visible = true
@@ -145,19 +145,19 @@ Rectangle {
         Button {
             id: buttonOverview
             anchors.verticalCenter: parent.verticalCenter
-            anchors.right: buttonMetadata.left
+            anchors.right: buttonTelemetry.left
             anchors.rightMargin: 16
 
             text: qsTr("Overview")
             onClicked: screenMedia.state = "overview"
         }
         Button {
-            id: buttonMetadata
+            id: buttonTelemetry
             anchors.right: buttonMap.left
             anchors.rightMargin: 16
             anchors.verticalCenter: parent.verticalCenter
 
-            text: qsTr("Metadatas")
+            text: qsTr("Telemetry")
             onClicked: screenMedia.state = "metadatas"
         }
         Button {
@@ -173,7 +173,7 @@ Rectangle {
 
     onStateChanged: {
         // save state
-        if (currentDevice)
+        if (typeof currentDevice !== "undefined")
             deviceSavedState.detail_state = state
     }
 
@@ -187,7 +187,7 @@ Rectangle {
                 visible: true
             }
             PropertyChanges {
-                target: contentMetadatas
+                target: contentTelemetry
                 visible: false
             }
             PropertyChanges {
@@ -203,7 +203,7 @@ Rectangle {
                 visible: false
             }
             PropertyChanges {
-                target: contentMetadatas
+                target: contentTelemetry
                 visible: true
             }
             PropertyChanges {
@@ -219,7 +219,7 @@ Rectangle {
                 visible: false
             }
             PropertyChanges {
-                target: contentMetadatas
+                target: contentTelemetry
                 visible: false
             }
             PropertyChanges {
@@ -243,8 +243,8 @@ Rectangle {
             id: contentOverview
         }
 
-        MediaDetailMetadatas {
-            id: contentMetadatas
+        MediaDetailTelemetry {
+            id: contentTelemetry
             visible: false
         }
 
