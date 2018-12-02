@@ -98,6 +98,8 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     app.setApplicationName("OffloadBuddy");
     app.setApplicationDisplayName("OffloadBuddy");
+    app.setOrganizationDomain("OffloadBuddy");
+    app.setOrganizationName("OffloadBuddy");
 
     QIcon appIcon(":/appicons/offloadbuddy.svg");
     app.setWindowIcon(appIcon);

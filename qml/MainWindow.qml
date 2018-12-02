@@ -30,11 +30,14 @@ ApplicationWindow {
     //flags: Qt.FramelessWindowHint | Qt.Window
 
     title: "OffloadBuddy"
-    width: 1280
-    height: 720
+    visible: true
     minimumWidth: 1280
     minimumHeight: 720
-    visible: true
+
+    WindowStateSaver {
+        window: applicationWindow
+        windowName: "mainWindow"
+    }
 /*
     menuBar: MenuBar {
         Menu {
