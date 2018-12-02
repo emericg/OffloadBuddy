@@ -101,6 +101,17 @@ Rectangle {
             text: "<"
             font.bold: true
             font.pixelSize: ThemeEngine.fontSizeHeaderTitle
+
+            contentItem: Text {
+                text: rectangleBack.text
+                font: rectangleBack.font
+                opacity: enabled ? 1.0 : 0.3
+                color: rectangleBack.down ? ThemeEngine.colorHeaderTitle : ThemeEngine.colorHeaderTitle
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                elide: Text.ElideRight
+            }
+
             onClicked: {
                 screenLibrary.state = "stateMediaGrid"
                 screenDevice.state = "stateMediaGrid"

@@ -1053,9 +1053,9 @@ void Shot::updateSpeedsSerie(QLineSeries *serie)
 
     int id = 0;
     QVector<QPointF> points;
-    for (unsigned i = 0; i < m_speed.size(); i++) //; i+=18)
+    for (unsigned i = 0; i < m_speed.size(); i++)
     {
-        if (m_gps_params.at(i).second >= 2) // we need at least a 2D lock for speed
+        if (m_gps_params.at(i).second >= 3) // we need at the very least2D a  lock for speed
         {
             current = m_speed.at(i);
             avgSpeed += current;
@@ -1092,7 +1092,7 @@ void Shot::updateAltiSerie(QLineSeries *serie)
 
     int id = 0;
     QVector<QPointF> points;
-    for (unsigned i = 0; i < m_alti.size(); i++) //; i+=18)
+    for (unsigned i = 0; i < m_alti.size(); i++)
     {
         if (m_gps_params.at(i).second >= 3) // we need at least a 3D lock for altitude
         {

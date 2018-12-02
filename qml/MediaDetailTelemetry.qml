@@ -74,31 +74,26 @@ Rectangle {
         axisGyroX0.min = 0;
         axisGyroX0.max = gyroX.count
 
-        // Center map
+        // GPS trace
         mapTrace.visible = true
 
-        // GPS trace
-        var i
-        for (i = 0; i <= mapTrace.pathLength(); i++)
-            mapTrace.removeCoordinate(mapTrace.coordinateAt(i))
-
-        // Zoom
-        if (shot.distanceKm < 1)
+        if (shot.distanceKm < 0.5)
             mapTraceGPS.zoomLevel = 18
+        else if (shot.distanceKm < 2)
+            mapTraceGPS.zoomLevel = 15
         else if (shot.distanceKm < 10)
             mapTraceGPS.zoomLevel = 12
         else if (shot.distanceKm < 50)
             mapTraceGPS.zoomLevel = 10
         else if (shot.distanceKm < 100)
             mapTraceGPS.zoomLevel = 8
-/*
-        // clean gps trace // FIXME
-        for (i = 0; i < mapTrace.pathLength()+1; i++)
-            mapTrace.removeCoordinate(mapTrace.coordinateAt(i))
-        for (i = 0; i < mapTrace.pathLength()+1; i++)
-            mapTrace.removeCoordinate(mapTrace.coordinateAt(i))
-*/
-        for (i = 0; i < 18000; i+=18) // FIXME
+
+        // clean GPS points
+        while (mapTrace.pathLength() > 0)
+            mapTrace.removeCoordinate(mapTrace.coordinateAt(0))
+
+        // add new GPS points // FIXME
+        for (var i = 0; i < 18000; i+=18)
             mapTrace.addCoordinate(shot.getGpsCoordinates(i))
     }
 
@@ -121,6 +116,8 @@ Rectangle {
     Rectangle {
         id: rectangleMap
         width: 500
+        color: ThemeEngine.colorContentBackground
+
         anchors.top: parent.top
         anchors.topMargin: 0
         anchors.bottom: parent.bottom
