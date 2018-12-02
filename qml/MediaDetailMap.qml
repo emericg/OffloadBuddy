@@ -145,7 +145,7 @@ Rectangle {
 
         Text {
             id: coordinates
-            text: qsTr("Text")
+            text: "text"
             anchors.left: labelCoodrinates.right
             anchors.leftMargin: 16
             anchors.verticalCenter: parent.verticalCenter
@@ -155,7 +155,7 @@ Rectangle {
 
         Text {
             id: altitude
-            text: qsTr("Text")
+            text: "text"
             anchors.left: labelAltitude.right
             anchors.leftMargin: 16
             anchors.verticalCenter: parent.verticalCenter

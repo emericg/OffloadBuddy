@@ -950,8 +950,14 @@ void Shot::parseData_gps5(GpmfBuffer &buf, GpmfKLV &klv,
         // Compute distance between this point and the previous one
         if (m_gps.size() > 1)
         {
-            distance_km += haversine_km(gps_coord.first, gps_coord.second,
-                                        m_gps.at(m_gps.size()-2).first, m_gps.at(m_gps.size()-2).second);
+            unsigned previous_point_id = m_gps.size() - 2;
+
+            if (gps_fix >= 2 && m_gps_params.at(previous_point_id).second >= 2)
+            {
+                distance_km += haversine_km(gps_coord.first, gps_coord.second,
+                                            m_gps.at(previous_point_id).first,
+                                            m_gps.at(previous_point_id).second);
+            }
         }
     }
 }
@@ -1043,36 +1049,33 @@ void Shot::updateSpeedsSerie(QLineSeries *serie)
     avgSpeed = 0;
     maxSpeed = -500000;
 
+    int speed_sync = 0;
+
     int id = 0;
     QVector<QPointF> points;
     for (unsigned i = 0; i < m_speed.size(); i++) //; i+=18)
     {
-        current = m_speed.at(i);
-        avgSpeed += current;
+        if (m_gps_params.at(i).second >= 2) // we need at least a 2D lock for speed
+        {
+            current = m_speed.at(i);
+            avgSpeed += current;
+            speed_sync++;
 
-        if (current < minSpeed)
-            minSpeed = current;
-        else if (current > maxSpeed)
-            maxSpeed = current;
+            if (current < minSpeed)
+                minSpeed = current;
+            else if (current > maxSpeed)
+                maxSpeed = current;
+        }
+        else
+            current = 0;
 
         points.insert(id, QPointF(id, current));
         id++;
-        //qDebug() << "v:" << m_speed.at(i);
     }
 
-    avgSpeed /= m_speed.size();
+    avgSpeed /= speed_sync;
 
-    //https://doc.qt.io/qt-5/qxyseries.html#replace-5
     serie->replace(points);
-/*
-    QVector<QPointF> *points = new QVector<QPointF>;
-    points->insert(0, QPointF(1,1));
-    points->insert(1, QPointF(2,2));
-    points->insert(2, QPointF(3,3));
-
-    //https://doc.qt.io/qt-5/qxyseries.html#replace-5
-    ptr->replace(*points);
-*/
 }
 
 void Shot::updateAltiSerie(QLineSeries *serie)
@@ -1085,14 +1088,17 @@ void Shot::updateAltiSerie(QLineSeries *serie)
     avgAlti = 0;
     maxAlti = -500000;
 
+    int alti_sync = 0;
+
     int id = 0;
     QVector<QPointF> points;
     for (unsigned i = 0; i < m_alti.size(); i++) //; i+=18)
     {
-        if (m_gps_params.at(i).second >= 3) // we need at least a 3D lock
+        if (m_gps_params.at(i).second >= 3) // we need at least a 3D lock for altitude
         {
             current = m_alti.at(i);
             avgAlti += current;
+            alti_sync++;
 
             if (current < minAlti)
                 minAlti = current;
@@ -1102,11 +1108,11 @@ void Shot::updateAltiSerie(QLineSeries *serie)
         else
             current = 0;
 
-        points.insert(id, QPointF(id, 0));
+        points.insert(id, QPointF(id, current));
         id++;
     }
 
-    avgAlti /= m_alti.size();
+    avgAlti /= alti_sync;
 
     serie->replace(points);
 }
@@ -1174,14 +1180,9 @@ QGeoCoordinate Shot::getGpsCoordinates(unsigned index)
             c.setLatitude(m_gps.at(index).first);
             c.setLongitude(m_gps.at(index).second);
         }
-        else // FIXME // return last point?
-        {
-            c.setLatitude(m_gps.at(m_gps.size()-1).first);
-            c.setLongitude(m_gps.at(m_gps.size()-1).second);
-        }
 
         //qDebug() << "GPS (" << index << ")" << m_gps.at(index).first << m_gps.at(index).second;
-    }
+    }/*
     else // return last point?
     {
         if (m_gps.size() > 0)
@@ -1189,7 +1190,7 @@ QGeoCoordinate Shot::getGpsCoordinates(unsigned index)
             c.setLatitude(m_gps.at(m_gps.size()-1).first);
             c.setLongitude(m_gps.at(m_gps.size()-1).second);
         }
-    }
+    }*/
 
     return c;
 }

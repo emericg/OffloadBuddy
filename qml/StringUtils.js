@@ -50,7 +50,7 @@ function bytesToString_short(bytes) {
     var text
 
     if (bytes/1000000000 >= 1.0)
-        text = (bytes/1000000000).toFixed(0) + " " + qsTr("GB")
+        text = (bytes/1000000000).toFixed(1) + " " + qsTr("GB")
     else
         text = (bytes/1000000).toFixed(1) + " " + qsTr("MB")
 
@@ -336,7 +336,7 @@ function speedToString(value, precision, unit) {
 /*!
  * speedUnit()
  */
-function speedToString(value, precision, unit) {
+function speedUnit(value, precision, unit) {
     var text = ''
 
     if (unit === 0) {

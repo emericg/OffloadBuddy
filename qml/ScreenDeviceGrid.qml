@@ -558,7 +558,7 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.leftMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
-                text: qsTr("Text")
+                text: "banner text"
                 color: ThemeEngine.colorInfoBannerText
                 font.pixelSize: ThemeEngine.fontSizeBannerText
             }

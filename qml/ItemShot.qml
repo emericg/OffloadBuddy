@@ -227,7 +227,7 @@ Rectangle {
         anchors.topMargin: 8
 
         color: "#ffffff"
-        clip: false
+        clip: true
         text: name
         style: Text.Raised
         horizontalAlignment: Text.AlignLeft
@@ -279,7 +279,7 @@ Rectangle {
             anchors.bottomMargin: 0
             font.bold: true
             anchors.left: icon_left.right
-            anchors.leftMargin: 4
+            anchors.leftMargin: 8
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
             font.pixelSize: 13

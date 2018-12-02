@@ -63,7 +63,7 @@ class SettingsManager: public QObject
     unsigned m_appUnits = 0;
     bool m_autoLaunch = false;
     bool m_ignoreJunk = true;
-    bool m_ignoreHdAudio = false;
+    bool m_ignoreHdAudio = true;
     bool m_autoMerge = true;
     bool m_autoTelemetry = true;
     bool m_autoDelete = false;

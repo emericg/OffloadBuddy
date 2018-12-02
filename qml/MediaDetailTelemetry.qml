@@ -53,19 +53,7 @@ Rectangle {
         trackDuration.text = StringUtils.durationToString(shot.duration)
         trackDistance.text = StringUtils.distanceToString(shot.distanceKm, 1, settingsManager.appunits)
         acclMAX.text = (shot.maxG / 9.80665).toFixed(1) + " G's"
-/*
-        speedMIN.text = shot.minSpeed.toFixed(2) + " km/h"
-        speedAVG.text = shot.avgSpeed.toFixed(2) + " km/h"
-        speedMAX.text = shot.maxSpeed.toFixed(2) + " km/h"
 
-        altiMIN.text = shot.minAlti.toFixed(0) + " m"
-        altiAVG.text = shot.avgAlti.toFixed(0) + " m"
-        altiMAX.text = shot.maxAlti.toFixed(0) + " m"
-
-        trackDuration.text = StringUtils.durationToString(shot.duration)
-        trackDistance.text = shot.distanceKm.toFixed(1) + " km"
-        acclMAX.text = (shot.maxG / 9.80665).toFixed(1) + " G's"
-*/
         // Graphs axis
         axisSpeedY0.min = shot.minSpeed * 0.9;
         axisSpeedY0.max = shot.maxSpeed * 1.1;
@@ -224,7 +212,8 @@ Rectangle {
 
     Rectangle {
         id: rectangleGraphs
-        color: "#ffffff"
+        color: ThemeEngine.colorContentBackground
+
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0
         anchors.right: rectangleMap.left
@@ -236,8 +225,8 @@ Rectangle {
 
         Rectangle {
             id: rectangleText
-            height: 132
-            color: "#f2f2f2"
+            height: 138
+            color: ThemeEngine.colorContentSubBox
             anchors.top: parent.top
             anchors.topMargin: 16
             anchors.right: parent.right
@@ -248,34 +237,37 @@ Rectangle {
             Text {
                 id: labelMaxSpeed
                 y: 10
-                text: qsTr("Max speed")
+                text: qsTr("Max speed:")
                 anchors.left: speedAVG.right
                 anchors.leftMargin: 32
                 anchors.verticalCenter: labelAvgSpeed.verticalCenter
                 font.bold: true
-                font.pixelSize: 14
+                font.pixelSize: ThemeEngine.fontSizeContentText
+                color: ThemeEngine.colorContentText
             }
 
             Text {
                 id: labelAvgSpeed
                 text: qsTr("Average speed:")
-                font.bold: true
                 anchors.top: labelDistance.bottom
                 anchors.topMargin: 8
                 anchors.left: parent.left
                 anchors.leftMargin: 8
-                font.pixelSize: 14
+                font.bold: true
+                font.pixelSize: ThemeEngine.fontSizeContentText
+                color: ThemeEngine.colorContentText
             }
 
             Text {
                 id: labelMaxAltitude
                 y: 32
-                text: qsTr("Max altitude")
+                text: qsTr("Max altitude:")
                 anchors.left: altiAVG.right
                 anchors.leftMargin: 32
                 anchors.verticalCenter: labelAvgAltitude.verticalCenter
                 font.bold: true
-                font.pixelSize: 14
+                font.pixelSize: ThemeEngine.fontSizeContentText
+                color: ThemeEngine.colorContentText
             }
 
             Text {
@@ -283,32 +275,35 @@ Rectangle {
                 text: qsTr("Average altitude:")
                 anchors.top: labelAvgSpeed.bottom
                 anchors.topMargin: 8
-                font.bold: true
                 anchors.left: parent.left
                 anchors.leftMargin: 8
-                font.pixelSize: 14
+                font.bold: true
+                font.pixelSize: ThemeEngine.fontSizeContentText
+                color: ThemeEngine.colorContentText
             }
 
             Text {
                 id: labelMinSpeed
                 y: 8
-                text: qsTr("Min speed")
+                text: qsTr("Min speed:")
                 anchors.left: speedMAX.right
                 anchors.leftMargin: 32
                 anchors.verticalCenter: labelAvgSpeed.verticalCenter
                 font.bold: true
-                font.pixelSize: 14
+                font.pixelSize: ThemeEngine.fontSizeContentText
+                color: ThemeEngine.colorContentText
             }
 
             Text {
                 id: labelMinAltitude
                 y: 35
-                text: qsTr("Min altitude")
+                text: qsTr("Min altitude:")
                 anchors.left: altiMAX.right
                 anchors.leftMargin: 32
                 anchors.verticalCenter: labelAvgAltitude.verticalCenter
                 font.bold: true
-                font.pixelSize: 14
+                font.pixelSize: ThemeEngine.fontSizeContentText
+                color: ThemeEngine.colorContentText
             }
 
             Text {
@@ -319,7 +314,8 @@ Rectangle {
                 font.bold: true
                 anchors.left: parent.left
                 anchors.leftMargin: 8
-                font.pixelSize: 14
+                font.pixelSize: ThemeEngine.fontSizeContentText
+                color: ThemeEngine.colorContentText
             }
 
             Text {
@@ -327,102 +323,113 @@ Rectangle {
                 text: qsTr("AVG")
                 anchors.verticalCenter: labelAvgSpeed.verticalCenter
                 anchors.left: labelAvgSpeed.right
-                anchors.leftMargin: 16
-                font.pixelSize: 12
+                anchors.leftMargin: 12
+                font.pixelSize: ThemeEngine.fontSizeContentText
+                color: ThemeEngine.colorContentText
             }
 
             Text {
                 id: speedMAX
                 text: qsTr("MAX")
                 anchors.left: labelMaxSpeed.right
-                anchors.leftMargin: 16
+                anchors.leftMargin: 12
                 anchors.verticalCenter: labelMaxSpeed.verticalCenter
-                font.pixelSize: 12
+                font.pixelSize: ThemeEngine.fontSizeContentText
+                color: ThemeEngine.colorContentText
             }
 
             Text {
                 id: speedMIN
                 text: qsTr("MIN")
                 anchors.left: labelMinSpeed.right
-                anchors.leftMargin: 16
+                anchors.leftMargin: 12
                 anchors.verticalCenter: labelMinSpeed.verticalCenter
-                font.pixelSize: 12
+                font.pixelSize: ThemeEngine.fontSizeContentText
+                color: ThemeEngine.colorContentText
             }
 
             Text {
                 id: altiAVG
                 text: qsTr("AVG")
                 anchors.left: labelAvgAltitude.right
-                anchors.leftMargin: 16
+                anchors.leftMargin: 12
                 anchors.verticalCenter: labelAvgAltitude.verticalCenter
-                font.pixelSize: 12
+                font.pixelSize: ThemeEngine.fontSizeContentText
+                color: ThemeEngine.colorContentText
             }
 
             Text {
                 id: altiMAX
                 text: qsTr("MAX")
                 anchors.left: labelMaxAltitude.right
-                anchors.leftMargin: 16
+                anchors.leftMargin: 12
                 anchors.verticalCenter: labelMaxAltitude.verticalCenter
-                font.pixelSize: 12
+                font.pixelSize: ThemeEngine.fontSizeContentText
+                color: ThemeEngine.colorContentText
             }
 
             Text {
                 id: altiMIN
                 text: qsTr("MIN")
                 anchors.left: labelMinAltitude.right
-                anchors.leftMargin: 16
+                anchors.leftMargin: 12
                 anchors.verticalCenter: labelMinAltitude.verticalCenter
-                font.pixelSize: 12
+                font.pixelSize: ThemeEngine.fontSizeContentText
+                color: ThemeEngine.colorContentText
             }
 
             Text {
                 id: acclMAX
                 text: qsTr("MAX")
                 anchors.left: labelGforce.right
-                anchors.leftMargin: 16
+                anchors.leftMargin: 12
                 anchors.verticalCenter: labelGforce.verticalCenter
-                font.pixelSize: 12
+                font.pixelSize: ThemeEngine.fontSizeContentText
+                color: ThemeEngine.colorContentText
             }
 
             Text {
                 id: labelDuration
                 text: qsTr("Duration:")
-                font.bold: true
                 anchors.top: parent.top
                 anchors.topMargin: 8
                 anchors.left: parent.left
                 anchors.leftMargin: 8
-                font.pixelSize: 14
+                font.bold: true
+                font.pixelSize: ThemeEngine.fontSizeContentText
+                color: ThemeEngine.colorContentText
             }
 
             Text {
                 id: trackDuration
-                text: qsTr("Text")
+                text: "text"
                 anchors.left: labelDuration.right
-                anchors.leftMargin: 16
+                anchors.leftMargin: 12
                 anchors.verticalCenter: labelDuration.verticalCenter
-                font.pixelSize: 12
+                font.pixelSize: ThemeEngine.fontSizeContentText
+                color: ThemeEngine.colorContentText
             }
 
             Text {
                 id: labelDistance
                 text: qsTr("Distance traveled:")
-                font.bold: true
                 anchors.top: labelDuration.bottom
                 anchors.topMargin: 8
                 anchors.left: parent.left
                 anchors.leftMargin: 8
-                font.pixelSize: 14
+                font.bold: true
+                font.pixelSize: ThemeEngine.fontSizeContentText
+                color: ThemeEngine.colorContentText
             }
 
             Text {
                 id: trackDistance
-                text: qsTr("Text")
+                text: "text"
                 anchors.left: labelDistance.right
-                anchors.leftMargin: 16
+                anchors.leftMargin: 12
                 anchors.verticalCenter: labelDistance.verticalCenter
-                font.pixelSize: 12
+                font.pixelSize: ThemeEngine.fontSizeContentText
+                color: ThemeEngine.colorContentText
             }
         }
 

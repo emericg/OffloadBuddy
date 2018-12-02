@@ -472,7 +472,7 @@ Rectangle {
                 id: duration
                 height: 32
                 anchors.verticalCenter: parent.verticalCenter
-                text: qsTr("Text")
+                text: "text"
                 anchors.left: parent.right
                 anchors.leftMargin: 16
                 horizontalAlignment: Text.AlignRight
@@ -587,7 +587,7 @@ Rectangle {
                 id: ar
                 width: 128
                 height: 32
-                text: qsTr("Text")
+                text: "text"
                 anchors.right: parent.right
                 anchors.rightMargin: 0
                 anchors.verticalCenter: parent.verticalCenter
@@ -758,7 +758,7 @@ Rectangle {
                     id: timecode
                     width: 128
                     height: 32
-                    text: qsTr("Text")
+                    text: "text"
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
                     anchors.right: parent.right
@@ -787,7 +787,7 @@ Rectangle {
                     id: codec
                     width: 128
                     height: 32
-                    text: qsTr("Text")
+                    text: "text"
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
                     anchors.right: parent.right
@@ -815,7 +815,7 @@ Rectangle {
                     id: bitrate
                     width: 128
                     height: 32
-                    text: qsTr("Text")
+                    text: "text"
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
@@ -844,7 +844,7 @@ Rectangle {
                     id: framerate
                     width: 128
                     height: 32
-                    text: qsTr("Text")
+                    text: "text"
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
@@ -896,7 +896,7 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.topMargin: 0
 
-                text: qsTr("Text")
+                text: "text"
                 //color: ThemeEngine.colorContentText
                 font.pixelSize: ThemeEngine.fontSizeContentText
             }
