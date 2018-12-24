@@ -48,6 +48,7 @@ extern "C"
 }
 #endif // __cplusplus
 
+#include <QString>
 #include <QDebug>
 
 /* ************************************************************************** */

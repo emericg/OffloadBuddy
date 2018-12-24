@@ -64,20 +64,18 @@ MediaDirectory::MediaDirectory()
 
 /*!
  * \brief Used when loading a saved MediaDirectory.
+ *
+ * Do not check if the path exists, we are allow to save paths that have been
+ * disconnected since (ex: removable medias).
  */
 MediaDirectory::MediaDirectory(QString &path, int content)
 {
-    QDir path_dir(path);
+    setPath(path);
+    setContent(content);
 
-    if (path_dir.exists())
-    {
-        setPath(path);
-        setContent(content);
-
-        m_updateTimer.setInterval(MEDIA_DIRECTORIES_REFRESH_INTERVAL * 1000);
-        connect(&m_updateTimer, &QTimer::timeout, this, &MediaDirectory::refreshMediaDirectory);
-        m_updateTimer.start();
-    }
+    m_updateTimer.setInterval(MEDIA_DIRECTORIES_REFRESH_INTERVAL * 1000);
+    connect(&m_updateTimer, &QTimer::timeout, this, &MediaDirectory::refreshMediaDirectory);
+    m_updateTimer.start();
 }
 
 MediaDirectory::~MediaDirectory()
@@ -102,6 +100,11 @@ MediaDirectory::~MediaDirectory()
 void MediaDirectory::setPath(QString path)
 {
     m_path = path;
+
+    // Make sure the path is terminated with a separator.
+    if (!m_path.endsWith('/'))
+        m_path += '/';
+
     emit directoryUpdated();
 
     if (m_storage)
@@ -110,59 +113,7 @@ void MediaDirectory::setPath(QString path)
         m_storage = nullptr;
     }
 
-    QDir d(m_path);
-    if (d.exists())
-    {
-        m_storage = new QStorageInfo(m_path);
-        if (m_storage && m_storage->isValid() && m_storage->isReady())
-        {
-            emit spaceUpdated(); // useful when path is changed?
-
-            //qDebug() << "MediaDirectory(" << m_path << "/" << m_content_type << ")";
-            //qDebug() << "MediaDirectory(" << m_storage->bytesAvailable() << "/" << m_storage->bytesTotal() << ")";
-
-            if (m_storage->fileSystemType().contains("nfs") ||
-                m_storage->fileSystemType().contains("samba") ||
-                m_storage->rootPath().contains("smb-share"))
-            {
-                m_storage_type = DEVICE_NETWORK;
-            }
-            else
-            {
-                m_storage_type = DEVICE_COMPUTER;
-            }
-
-            // basic checks
-            if (m_storage->bytesAvailable() > 128*1024*1024 &&
-                m_storage->isReadOnly() == false)
-            {
-                m_available = true;
-
-#ifdef __linux
-                // adanced permission checks
-                QFileInfo fi(m_path);
-                QFile::Permissions  e = fi.permissions();
-                if (!e.testFlag(QFileDevice::WriteUser))
-                {
-                    m_available = false;
-                    qDebug() << "PERMS error:" << e << (unsigned)e;
-                }
-#endif // __linux
-
-                emit availableUpdated();
-            }
-        }
-        else
-        {
-            m_available = false;
-            emit availableUpdated();
-        }
-    }
-    else
-    {
-        m_available = false;
-        emit availableUpdated();
-    }
+    refreshMediaDirectory();
 }
 
 void MediaDirectory::setContent(int content)
@@ -196,15 +147,33 @@ bool MediaDirectory::isAvailableFor(unsigned shotType, int64_t shotSize)
 
 void MediaDirectory::refreshMediaDirectory()
 {
-    //qDebug() << "refreshMediaDirectory(" << m_storage->rootPath() << ")";
-
-    if (m_storage &&
-        m_storage->isValid() && m_storage->isReady())
+    if (m_storage)
     {
-        m_storage->refresh();
-        emit spaceUpdated();
+        // If there was a storage available, but it disappeared since, delete it
+        if (m_storage->rootPath().isEmpty())
+        {
+            delete m_storage;
+            m_storage = nullptr;
+        }
+        else
+        {
+            // If there is a storage available, refresh it
+            m_storage->refresh();
+            emit spaceUpdated();
+        }
+    }
 
-        // basic checks
+    // Otherwise, try to recreate one
+    if (!m_storage)
+    {
+        m_storage = new QStorageInfo(m_path);
+    }
+
+    if (m_storage && m_storage->isValid() && m_storage->isReady())
+    {
+        //qDebug() << "refreshMediaDirectory(" << m_storage->rootPath() << ")";
+
+        // basic checks // need at least 128MB
         if (m_storage->bytesAvailable() > 128*1024*1024 &&
             m_storage->isReadOnly() == false)
         {
@@ -217,7 +186,17 @@ void MediaDirectory::refreshMediaDirectory()
                 m_available = false;
                 emit availableUpdated();
             }
+            else
 #endif // __linux
+            {
+                m_available = true;
+                emit availableUpdated();
+            }
+        }
+        else
+        {
+            m_available = false;
+            emit availableUpdated();
         }
     }
     else

@@ -55,9 +55,6 @@ class SettingsManager: public QObject
 
     Q_PROPERTY(QVariant directoriesList READ getDirectories NOTIFY directoriesUpdated)
 
-    bool readSettings();
-    bool writeSettings();
-
     // Global
     unsigned m_appTheme = 0;
     unsigned m_appUnits = 0;
@@ -76,6 +73,9 @@ class SettingsManager: public QObject
     static SettingsManager *instance;
     SettingsManager();
     ~SettingsManager();
+
+    bool readSettings();
+    bool writeSettings();
 
 Q_SIGNALS:
     void appThemeChanged();

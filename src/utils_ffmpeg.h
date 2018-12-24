@@ -31,16 +31,14 @@ extern "C"
 }
 #endif // __cplusplus
 
-#include <QString>
-
 /* ************************************************************************** */
 
 #undef av_err2str
 #ifdef _MSC_VER
 //! to work around av_err2str() in C++
-#define av_err2str(errnum) av_make_error_string((char*)_alloca(AV_ERROR_MAX_STRING_SIZE), AV_ERROR_MAX_STRING_SIZE, errnum)
+#define av_err2str(errnum) av_make_error_string(static_cast<char*>(_alloca(AV_ERROR_MAX_STRING_SIZE)), AV_ERROR_MAX_STRING_SIZE, errnum)
 #else
-#define av_err2str(errnum) av_make_error_string((char*)__builtin_alloca(AV_ERROR_MAX_STRING_SIZE), AV_ERROR_MAX_STRING_SIZE, errnum)
+#define av_err2str(errnum) av_make_error_string(static_cast<char*>(__builtin_alloca(AV_ERROR_MAX_STRING_SIZE)), AV_ERROR_MAX_STRING_SIZE, errnum)
 #endif
 
 /* ************************************************************************** */

@@ -163,23 +163,24 @@ bool GridThumbnailer::getImage_withMinivideo(const QString &path, QImage &img,
         {
             unsigned tid = 0, sid = 0;
 
-            if (media && tid < media->tracks_video_count)
+            if (media && media->tracks_video_count > tid)
             {
                 MediaStream_t *track = media->tracks_video[tid];
-                if (track && sid < track->sample_count)
+                if (track && track->sample_count > tid)
                 {
                     // TODO seek
                     Q_UNUSED(timecode_s);
 
-                    // TODO check if sid is a keyframe
+                    // TODO make sure sid is a keyframe
                     //track->sample_type[sid] == sample_VIDEO_SYNC)
 
                     OutputSurface_t *out = minivideo_decode_frame(media, sid);
                     if (out)
                     {
-                        status = true;
                         img = QImage(out->surface, out->width, out->height, QImage::Format_RGB888, &free).scaled(width*2, height);
                         minivideo_destroy_frame(&out);
+
+                        status = true;
                     }
                 }
             }
@@ -264,7 +265,7 @@ bool decode_packet(AVPacket *pPacket, AVCodecContext *pCodecContext, AVFrame *pF
                     break;
             }
 
-            int dst_w = roundTo(std::round(width * src_ar), 8);
+            int dst_w = roundTo(std::round(width * src_ar), 32);
             int dst_h = height;
             int dstRange;
             enum AVPixelFormat dst_pix_fmt = AV_PIX_FMT_RGB24;
@@ -331,11 +332,11 @@ bool GridThumbnailer::getImage_withFfmpeg(const QString &path, QImage &img,
 {
     bool status = false;
 
-    AVStream *pStreamContext = nullptr;
-    AVCodec *pCodec = nullptr;
-    AVCodecParameters *pCodecParameters =  nullptr;
-    AVCodecContext *pCodecContext = nullptr;
-    int video_stream_index = -1;
+    AVStream *videoStreamContext = nullptr;
+    AVCodec *videoCodec = nullptr;
+    AVCodecParameters *videoCodecParameters =  nullptr;
+    AVCodecContext *videoCodecContext = nullptr;
+    int videoStreamIndex = -1;
 
     AVFrame *pFrame = nullptr;
     AVPacket *pPacket = nullptr;
@@ -343,28 +344,28 @@ bool GridThumbnailer::getImage_withFfmpeg(const QString &path, QImage &img,
 
     /// DEMUX //////////////////////////////////////////////////////////////////
 
-    AVFormatContext *pFormatContext = avformat_alloc_context();
-    if (!pFormatContext)
+    AVFormatContext *demuxContext = avformat_alloc_context();
+    if (!demuxContext)
     {
         qDebug() << "ERROR could not allocate memory for Format Context";
         return status;
     }
-    if (avformat_open_input(&pFormatContext, path.toLocal8Bit(), nullptr, nullptr) != 0)
+    if (avformat_open_input(&demuxContext, path.toLocal8Bit(), nullptr, nullptr) != 0)
     {
         qDebug() << "ERROR could not open the file:" << path;
         goto abort_stage1;
     }
-    if (avformat_find_stream_info(pFormatContext,  nullptr) < 0)
+    if (avformat_find_stream_info(demuxContext,  nullptr) < 0)
     {
         qDebug() << "ERROR could not get the stream infos";
     }
 
     /// LOCATE VIDEO STREAM ////////////////////////////////////////////////////
 
-    for (unsigned i = 0; i < pFormatContext->nb_streams; i++)
+    for (unsigned i = 0; i < demuxContext->nb_streams; i++)
     {
         AVCodecParameters *pLocalCodecParameters = nullptr;
-        pLocalCodecParameters = pFormatContext->streams[i]->codecpar;
+        pLocalCodecParameters = demuxContext->streams[i]->codecpar;
 
         if (!pLocalCodecParameters)
             continue;
@@ -382,10 +383,10 @@ bool GridThumbnailer::getImage_withFfmpeg(const QString &path, QImage &img,
         // when the stream is a video we store its index, codec parameters and codec
         if (pLocalCodecParameters->codec_type == AVMEDIA_TYPE_VIDEO)
         {
-            video_stream_index = (int)i;
-            pCodec = pLocalCodec;
-            pCodecParameters = pLocalCodecParameters;
-            pStreamContext = pFormatContext->streams[i];
+            videoStreamIndex = static_cast<int>(i);
+            videoCodec = pLocalCodec;
+            videoCodecParameters = pLocalCodecParameters;
+            videoStreamContext = demuxContext->streams[i];
         }
 
         //qDebug() << "STREAM #" << i;
@@ -395,33 +396,37 @@ bool GridThumbnailer::getImage_withFfmpeg(const QString &path, QImage &img,
         //qDebug() << "Bitrate:" << pCodecParameters->bit_rate;
     }
 
-    /// ALLOCATIONS ////////////////////////////////////////////////////////////
+    qDebug() << "FMT:" << fmt;
+    /// CONTEXES ALLOCATIONS ///////////////////////////////////////////////////
 
-    pCodecContext = avcodec_alloc_context3(pCodec);
-    if (!pCodecContext)
+    videoCodecContext = avcodec_alloc_context3(videoCodec);
+    if (!videoCodecContext)
     {
         qDebug() << "ERROR failed to allocated memory for AVCodecContext";
         goto abort_stage2;
     }
-    if (avcodec_parameters_to_context(pCodecContext, pCodecParameters) < 0)
+    if (avcodec_parameters_to_context(videoCodecContext, videoCodecParameters) < 0)
     {
         qDebug() << "ERROR failed to copy codec params to codec context";
         goto abort_stage2;
     }
 
     // SPEED FLAGS // "ain't nobody got time for that"
-    pCodecContext->skip_loop_filter = AVDISCARD_ALL;
-    pCodecContext->flags2 |= AV_CODEC_FLAG2_FAST;
+    videoCodecContext->skip_loop_filter = AVDISCARD_ALL;
+    videoCodecContext->flags2 |= AV_CODEC_FLAG2_FAST;
 
-    pCodecContext->thread_count = 4;
-    pCodecContext->thread_type = FF_THREAD_SLICE;
-    //pCodecContext->thread_type = FF_THREAD_FRAME | FF_THREAD_SLICE;
+    videoCodecContext->thread_count = 4;
+    videoCodecContext->thread_type = FF_THREAD_SLICE;
+    //videoCodecContext->thread_type = FF_THREAD_FRAME | FF_THREAD_SLICE;
 
-    if (avcodec_open2(pCodecContext, pCodec, nullptr) < 0)
+    if (avcodec_open2(videoCodecContext, videoCodec, nullptr) < 0)
     {
         qDebug() << "ERROR failed to open codec through avcodec_open2";
         goto abort_stage2;
     }
+
+    /// FRAMES ALLOCATIONS /////////////////////////////////////////////////////
+
     pFrame = av_frame_alloc();
     if (!pFrame)
     {
@@ -438,35 +443,35 @@ bool GridThumbnailer::getImage_withFfmpeg(const QString &path, QImage &img,
     /// SEEK ///////////////////////////////////////////////////////////////////
 
     // do not try to seek on images...
-    if (strcmp(pFormatContext->iformat->name, "image2") != 0)
+    if (strcmp(demuxContext->iformat->name, "image2") != 0)
     {
         AVRational timebase_s = {1, 1};
-        int64_t target_opt = av_rescale_q(timecode_s, timebase_s, pStreamContext->time_base);
+        int64_t target_opt = av_rescale_q(timecode_s, timebase_s, videoStreamContext->time_base);
 
         // Keyframe around optimal seek point
         int64_t prev_keyframe = -1;
         int64_t next_keyframe = -1;
-        ffmpeg_get_keyframes(pStreamContext, target_opt, prev_keyframe, next_keyframe);
+        ffmpeg_get_keyframes(videoStreamContext, target_opt, prev_keyframe, next_keyframe);
 
-        int ret_seek = av_seek_frame(pFormatContext, video_stream_index, prev_keyframe, 0);
+        int ret_seek = av_seek_frame(demuxContext, videoStreamIndex, prev_keyframe, 0);
         if (ret_seek < 0)
         {
             qDebug() << "ERROR couldn't seek at" << timecode_s << "sec into the stream...";
         }
         else
         {
-            avcodec_flush_buffers(pCodecContext);
+            avcodec_flush_buffers(videoCodecContext);
         }
     }
 
     /// DECODE /////////////////////////////////////////////////////////////////
 
     // fill the Packet with data from the Stream
-    while (av_read_frame(pFormatContext, pPacket) >= 0)
+    while (av_read_frame(demuxContext, pPacket) >= 0)
     {
-        if (pPacket->stream_index == video_stream_index)
+        if (pPacket->stream_index == videoStreamIndex)
         {
-            status = decode_packet(pPacket, pCodecContext, pFrame,
+            status = decode_packet(pPacket, videoCodecContext, pFrame,
                                    img, width, height);
 
             // we have a picture!
@@ -487,11 +492,11 @@ abort_stage3:
     av_frame_free(&pFrame);
 
 abort_stage2:
-    avcodec_free_context(&pCodecContext);
+    avcodec_free_context(&videoCodecContext);
 
 abort_stage1:
-    avformat_close_input(&pFormatContext);
-    avformat_free_context(pFormatContext);
+    avformat_close_input(&demuxContext);
+    avformat_free_context(demuxContext);
 
     return status;
 }
