@@ -396,7 +396,6 @@ bool GridThumbnailer::getImage_withFfmpeg(const QString &path, QImage &img,
         //qDebug() << "Bitrate:" << pCodecParameters->bit_rate;
     }
 
-    qDebug() << "FMT:" << fmt;
     /// CONTEXES ALLOCATIONS ///////////////////////////////////////////////////
 
     videoCodecContext = avcodec_alloc_context3(videoCodec);
