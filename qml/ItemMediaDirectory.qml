@@ -7,8 +7,9 @@ import "StringUtils.js" as StringUtils
 
 Rectangle {
     id: itemMediaDirectory
-    height: 48
     width: parent.width
+    height: 48
+    radius: 8
 
     property var directory
     property bool directoryAvailable: directory.available
@@ -18,13 +19,13 @@ Rectangle {
         if (directory.available === false)
             color = ThemeEngine.colorSomethingsWrong
         else
-            color = ThemeEngine.colorContentSubBox
+            color = "transparent"
     }
     onDirectoryAvailableChanged: {
         if (directory.available === false)
             color = ThemeEngine.colorSomethingsWrong
         else
-            color = ThemeEngine.colorContentSubBox
+            color = "transparent"
     }
 
     TextField {
@@ -97,15 +98,33 @@ Rectangle {
         }
     }
 
-    ProgressBar {
+    ProgressBarThemed {
         id: progressBar
-        height: 20
+        height: 8
         anchors.right: rectangleDelete.left
         anchors.rightMargin: 16
         anchors.left: comboBox_content.right
         anchors.leftMargin: 16
         anchors.verticalCenter: parent.verticalCenter
         value: directory.spaceUsedPercent
+        visible: directory.available
+    }
+    Text {
+        id: textError
+        height: 20
+        visible: !directory.available
+        anchors.right: rectangleDelete.left
+        anchors.rightMargin: 16
+        anchors.left: comboBox_content.right
+        anchors.leftMargin: 16
+        anchors.verticalCenter: parent.verticalCenter
+
+        text: qsTr("Directory is not available right now :/")
+        color: "white"
+        font.bold: true
+        font.pixelSize: 18
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
     }
 
     Rectangle {
@@ -125,6 +144,8 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
             source: "qrc:/icons/process_stop.svg"
+            sourceSize.width: 40
+            sourceSize.height: 40
         }
 
         MouseArea {

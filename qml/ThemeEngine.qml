@@ -31,6 +31,7 @@ Item {
 
         LAST_THEME
     }
+    property int currentTheme: -1
 
     // Colors
     property string colorSidebar: "#4E596E"
@@ -50,19 +51,23 @@ Item {
     property string colorContentText: "#000000"
     property string colorContentSubBox: "#eef0f1"
     property string colorContentSubTitle: "#000000"
+
     property string colorContentSubText: "#000000"
+    property string colorText: "#ffffff"
+    property string colorTextDisabled: "#dddddd"
 
     property string colorApproved: "#46b0f4"
     property string colorDangerZone: "#FF5F5F"
-    property string colorSomethingsWrong: "#FFDB63"
+    property string colorSomethingsWrong: "#FFE15E"
 
     // Qt Quick controls theming
     property string colorButton: "#e0e0e0"
     property string colorButtonText: "#ffffff"
     property string colorButtonDown: "#bdbdbd"
     property string colorButtonHover: "#f6f6f6"
-    property string colorButtonBackground: "#ffffff"
-    property string colorProgressBar: "#583837"
+    property string colorButtonBg: "#ffffff"
+    property string colorProgressBar: "#46b0f4"
+    property string colorProgressBarBg: "#bdbdbd"
 
     // Fonts (sizes in pixel)
     readonly property int fontSizeHeaderTitle: 30
@@ -77,6 +82,8 @@ Item {
             themeIndex = 0
             console.log("ThemeEngine::loadTheme(" + themeIndex + ") ERROR Unknown theme!")
         }
+
+        currentTheme = themeIndex
 
         if (themeIndex === ThemeEngine.PLAIN_AND_BORING) {
 
@@ -96,14 +103,21 @@ Item {
             colorContentText =      "#000000"
             colorContentSubBox =    "#eef0f1"
             colorContentSubTitle =  "#000000"
+
             colorContentSubText =   "#000000"
+            colorText =             "#000000"
+            colorTextDisabled =     "#000000"
 
             colorApproved =         "#46b0f4"
             colorDangerZone =       "#FF5F5F"
-            colorSomethingsWrong =  "#FFDB63"
+            colorSomethingsWrong =  "#FFE15E"
 
-            colorButtonText =       "#ffffff"
-            colorProgressbar =      "#000000"
+            colorButton =           "#e0e0e0"
+            colorButtonText =       "#000000"
+            colorButtonDown =       "#bdbdbd"
+            colorButtonHover =      "#E4E4E4"
+            colorProgressBar =      "#46b0f4"
+            colorProgressBarBg =    "#E4E4E4"
 
         } else if (themeIndex === ThemeEngine.DARK_AND_SPOOKY) {
 
@@ -123,14 +137,21 @@ Item {
             colorContentText =      "#ffffff"
             colorContentSubBox =    "#848484"
             colorContentSubTitle =  "#353637"
+
             colorContentSubText =   "#405a73"
+            colorText =             "#ffffff"
+            colorTextDisabled =     "#eeeeee"
 
             colorApproved =         "#f0544c"
             colorDangerZone =       "#ee2b57"
             colorSomethingsWrong =  "#FFDB63"
 
-            colorButtonText =       "#ffffff"
-            colorProgressbar =      "#000000"
+            colorButton =           "#e0e0e0"
+            colorButtonText =       "#000000"
+            colorButtonDown =       "#bdbdbd"
+            colorButtonHover =      "#E4E4E4"
+            colorProgressBar =      "#f0544c"
+            colorProgressBarBg =    "#E4E4E4"
 
         } else if (themeIndex === ThemeEngine.BLOOD_AND_TEARS) {
 
@@ -150,14 +171,21 @@ Item {
             colorContentText =      "#a3a3a0"
             colorContentSubBox =    "#565656"
             colorContentSubTitle =  "#ffffff"
+
             colorContentSubText =   "#a3a3a0"
+            colorText =             "#a3a3a0"
+            colorTextDisabled =     "#000000"
 
             colorApproved =         "#009ee2"
             colorDangerZone =       "#fa6871"
             colorSomethingsWrong =  "#FFDB63"
 
-            colorButtonText =       "#ffffff"
-            colorProgressbar =      "#009ee2"
+            colorButton =           "#e0e0e0"
+            colorButtonText =       "#000000"
+            colorButtonDown =       "#bdbdbd"
+            colorButtonHover =      "#E4E4E4"
+            colorProgressBar =      "#009ee2"
+            colorProgressBarBg =    "#E4E4E4"
 
         } else if (themeIndex === ThemeEngine.MIGHTY_KITTEN) {
 
@@ -177,14 +205,21 @@ Item {
             colorContentText =      "#000000"
             colorContentSubBox =    "#ffe7f3"
             colorContentSubTitle =  "#f5b404"
+
             colorContentSubText =   "#000000"
+            colorText =             "#000000"
+            colorTextDisabled =     "#000000"
 
             colorApproved =         "#f5b404"
             colorDangerZone =       "#ed164f"
             colorSomethingsWrong =  "#FFDB63"
 
+            colorButton =           "#e0e0e0"
             colorButtonText =       "#ffffff"
-            colorProgressbar =      "#ffe617"
+            colorButtonDown =       "#bdbdbd"
+            colorButtonHover =      "#E4E4E4"
+            colorProgressBar =      "#ffe617"
+            colorProgressBarBg =    "#E4E4E4"
         }
     }
 }

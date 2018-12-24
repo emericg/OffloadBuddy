@@ -5,8 +5,7 @@ import com.offloadbuddy.style 1.0
 
 ComboBox {
     id: control
-    model: ["First", "Second", "Third"]
-
+/*
     delegate: ItemDelegate {
         width: control.width
         contentItem: Text {
@@ -53,20 +52,20 @@ ComboBox {
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
     }
-
+*/
     background: Rectangle {
         implicitWidth: 120
         implicitHeight: 40
-        border.color: control.pressed ? "#17a81a" : "#21be2b"
-        border.width: control.visualFocus ? 2 : 1
-        radius: 2
+        color: ThemeEngine.colorButton
+        //border.color: control.pressed ? "#17a81a" : "#21be2b"
+        //border.width: control.visualFocus ? 2 : 1
     }
 
     popup: Popup {
-        y: control.height - 1
+        y: control.height
         width: control.width
         implicitHeight: contentItem.implicitHeight
-        padding: 1
+        padding: 0
 
         contentItem: ListView {
             clip: true
@@ -78,8 +77,9 @@ ComboBox {
         }
 
         background: Rectangle {
-            border.color: "#21be2b"
-            radius: 2
+            color: "white"
+            border.color: ThemeEngine.colorButton
         }
     }
+
 }

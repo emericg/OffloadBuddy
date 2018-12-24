@@ -87,6 +87,46 @@ ApplicationWindow {
         anchors.topMargin: 0
         transformOrigin: Item.Center
 
+        // SELECTOR
+
+        property var currenttheme: ThemeEngine.currentTheme
+        onCurrentthemeChanged: {
+            selectorArrow.visible = ThemeEngine.currentTheme !== ThemeEngine.BLOOD_AND_TEARS ? 1 : 0
+            selectorBar.visible = ThemeEngine.currentTheme === ThemeEngine.BLOOD_AND_TEARS ? 1 : 0
+        }
+
+        Image {
+            id: selectorArrow
+            width: 12
+            height: 12
+            anchors.right: parent.right
+            anchors.rightMargin: 0
+            source: "qrc:/resources/menus/selector_arrow.svg"
+            visible: ThemeEngine.currentTheme !== ThemeEngine.BLOOD_AND_TEARS ? 1 : 0
+
+            ColorOverlay {
+                anchors.fill: parent
+                source: parent
+                color: ThemeEngine.colorSidebarIcons
+                visible: ThemeEngine.colorSidebarIcons === "#ffffff" ? true : false
+            }
+        }
+
+        Rectangle {
+            id: selectorBar
+            width: parent.width
+            height: 64
+            color: "black"//ThemeEngine.colorHeaderBackground
+
+            Rectangle {
+                width: 4
+                height: parent.height
+                color: ThemeEngine.colorApproved
+            }
+        }
+
+        // MENUS
+
         Rectangle {
             id: button_media
             width: 64
@@ -94,7 +134,7 @@ ApplicationWindow {
             color: "#00000000"
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top
-            anchors.topMargin: 16
+            anchors.topMargin: 24
 
             MouseArea {
                 anchors.fill: parent
@@ -105,6 +145,8 @@ ApplicationWindow {
             Image {
                 anchors.fill: parent
                 source: "qrc:/resources/menus/media.svg"
+                sourceSize.width: 64
+                sourceSize.height: 64
 
                 ColorOverlay {
                     anchors.fill: parent
@@ -209,6 +251,8 @@ ApplicationWindow {
                 anchors.fill: parent
                 fillMode: Image.PreserveAspectFit
                 source: "qrc:/resources/menus/settings.svg"
+                sourceSize.width: 50
+                sourceSize.height: 50
 
                 ColorOverlay {
                     anchors.fill: parent
@@ -236,6 +280,8 @@ ApplicationWindow {
             Image {
                 anchors.fill: parent
                 source: "qrc:/resources/menus/about.svg"
+                sourceSize.width: 50
+                sourceSize.height: 50
 
                 ColorOverlay {
                     anchors.fill: parent
@@ -253,7 +299,7 @@ ApplicationWindow {
             color: "#00000000"
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 23
+            anchors.bottomMargin: 24
 
             MouseArea {
                 anchors.fill: parent
@@ -263,6 +309,8 @@ ApplicationWindow {
                 anchors.fill: parent
                 fillMode: Image.PreserveAspectFit
                 source: "qrc:/resources/menus/exit.svg"
+                sourceSize.width: 50
+                sourceSize.height: 50
 
                 ColorOverlay {
                     anchors.fill: parent
@@ -273,38 +321,6 @@ ApplicationWindow {
             }
         }
 
-        Image {
-            id: selectorArrow
-            width: 12
-            height: 12
-            anchors.right: parent.right
-            anchors.rightMargin: 0
-            source: "qrc:/resources/menus/selector_arrow.svg"
-
-            ColorOverlay {
-                anchors.fill: parent
-                source: parent
-                color: ThemeEngine.colorSidebarIcons
-                visible: ThemeEngine.colorSidebarIcons === "#ffffff" ? true : false
-            }
-        }
-/*
-        Image {
-            id: selectorBar
-            width: 4
-            height: 40
-            anchors.right: parent.right
-            anchors.rightMargin: 0
-            source: "qrc:/resources/menus/selector_bar.svg"
-
-            ColorOverlay {
-                anchors.fill: parent
-                source: parent
-                color: ThemeEngine.colorSidebarIcons
-                visible: ThemeEngine.colorSidebarIcons === "#ffffff" ? true : false
-            }
-        }
-*/
         signal myDeviceClicked(var devicePtr)
         onMyDeviceClicked: {
             if (typeof devicePtr !== "undefined") {
@@ -373,6 +389,12 @@ ApplicationWindow {
                     anchors.verticalCenter: button_media.verticalCenter
                 }
                 PropertyChanges {
+                    target: selectorBar
+                    height: 68
+                    anchors.verticalCenter: button_media.verticalCenter
+                }
+
+                PropertyChanges {
                     target: screenLibrary
                     visible: true
                 }
@@ -400,6 +422,12 @@ ApplicationWindow {
                     target: selectorArrow
                     anchors.verticalCenter: undefined
                 }
+                PropertyChanges {
+                    target: selectorBar
+                    height: 68
+                    anchors.verticalCenter: undefined
+                }
+
                 PropertyChanges {
                     target: screenLibrary
                     visible: false
@@ -429,6 +457,12 @@ ApplicationWindow {
                     anchors.verticalCenter: button_jobs.verticalCenter
                 }
                 PropertyChanges {
+                    target: selectorBar
+                    height: 54
+                    anchors.verticalCenter: button_jobs.verticalCenter
+                }
+
+                PropertyChanges {
                     target: screenLibrary
                     visible: false
                 }
@@ -457,6 +491,12 @@ ApplicationWindow {
                     anchors.verticalCenter: button_settings.verticalCenter
                 }
                 PropertyChanges {
+                    target: selectorBar
+                    height: 54
+                    anchors.verticalCenter: button_settings.verticalCenter
+                }
+
+                PropertyChanges {
                     target: screenLibrary
                     visible: false
                 }
@@ -484,6 +524,12 @@ ApplicationWindow {
                     target: selectorArrow
                     anchors.verticalCenter: button_about.verticalCenter
                 }
+                PropertyChanges {
+                    target: selectorBar
+                    height: 54
+                    anchors.verticalCenter: button_about.verticalCenter
+                }
+
                 PropertyChanges {
                     target: screenLibrary
                     visible: false

@@ -308,6 +308,8 @@ Rectangle {
             id: icon_left
             width: 24
             height: 24
+            sourceSize.width: 24
+            sourceSize.height: 24
             fillMode: Image.PreserveAspectFit
             anchors.left: parent.left
             anchors.leftMargin: 8
@@ -318,6 +320,8 @@ Rectangle {
             id: icon_right
             width: 24
             height: 24
+            sourceSize.width: 24
+            sourceSize.height: 24
             fillMode: Image.PreserveAspectFit
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right

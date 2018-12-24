@@ -141,6 +141,12 @@ Rectangle {
                 sourceSize.height: 64
                 sourceSize.width: 64
                 source: "../resources/other/GitHub-Mark-64px.png"
+
+                ColorOverlay {
+                    anchors.fill: parent
+                    source: parent
+                    color: ThemeEngine.colorContentText
+                }
             }
         }
 

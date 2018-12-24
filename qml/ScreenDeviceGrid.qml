@@ -166,14 +166,17 @@ Rectangle {
             id: deviceImage
             width: 128
             antialiasing: true
-            fillMode: Image.PreserveAspectFit
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 8
             anchors.right: parent.right
             anchors.rightMargin: 8
             anchors.top: parent.top
             anchors.topMargin: 8
+
             source: "qrc:/cameras/generic_actioncam.svg"
+            sourceSize.width: deviceImage.width
+            sourceSize.height: deviceImage.height
+            fillMode: Image.PreserveAspectFit
         }
 
         Text {

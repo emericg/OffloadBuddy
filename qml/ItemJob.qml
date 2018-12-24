@@ -32,6 +32,8 @@ Rectangle {
             width: 40
             height: 40
             source: "qrc:/resources/minicons/job_queued.svg"
+            sourceSize.width: 40
+            sourceSize.height: 40
 
             NumberAnimation on rotation {
                 id: encodeAnimation
@@ -133,6 +135,8 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
             source: "qrc:/resources/minicons/job_open.svg"
+            sourceSize.width: 40
+            sourceSize.height: 40
         }
 
         MouseArea {
@@ -168,6 +172,8 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
             source: "qrc:/icons/process_stop.svg"
+            sourceSize.width: 40
+            sourceSize.height: 40
         }
         MouseArea {
             id: mouseAreaDelete
@@ -202,6 +208,8 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
             source: "qrc:/icons/process_pause.svg"
+            sourceSize.width: 40
+            sourceSize.height: 40
         }
 
         MouseArea {

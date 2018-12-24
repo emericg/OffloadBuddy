@@ -24,6 +24,8 @@ Rectangle {
         anchors.top: parent.top
         fillMode: Image.PreserveAspectCrop
         source: "qrc:/resources/menus/device.svg"
+        sourceSize.width: 64
+        sourceSize.height: 64
 
         ColorOverlay {
             anchors.fill: parent
@@ -57,8 +59,10 @@ Rectangle {
         onClicked: {
             //console.log("SIDEBAR deviceClick: " + myDevice.serial);
             itemDeviceMenu.myDeviceClicked(myDevice)
-            selectorArrow.anchors.verticalCenter= undefined
+            selectorArrow.anchors.verticalCenter = undefined
             selectorArrow.y = menuDevice.y + itemDeviceMenu.y + 34
+            selectorBar.anchors.verticalCenter = undefined
+            selectorBar.y = menuDevice.y + itemDeviceMenu.y + 34
         }
     }
 }

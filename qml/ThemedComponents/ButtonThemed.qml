@@ -7,6 +7,13 @@ Button {
     id: control
 
     // theming
+    background: Rectangle {
+        implicitWidth: 100
+        implicitHeight: 40
+        opacity: enabled ? 1 : 0.3
+        color: control.down ? ThemeEngine.colorButtonDown : ThemeEngine.colorButton
+    }
+
     contentItem: Text {
         text: control.text
         font: control.font
@@ -15,12 +22,5 @@ Button {
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
-    }
-
-    background: Rectangle {
-        implicitWidth: 100
-        implicitHeight: 40
-        opacity: enabled ? 1 : 0.3
-        color: control.down ? ThemeEngine.colorButtonDown : ThemeEngine.colorButton
     }
 }
