@@ -66,6 +66,11 @@ Rectangle {
         anchors.right: parent.right
         anchors.rightMargin: 0
 
+        MouseArea {
+            id: mouseArea
+            anchors.fill: parent
+        }
+
         Text {
             id: textHeader
             width: 200

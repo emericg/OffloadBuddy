@@ -35,6 +35,7 @@ Item {
     // Colors
     property string colorSidebar: "#4E596E"
     property string colorSidebarText: "#ffffff"
+    property string colorSidebarIcons: ""
 
     property string colorHeaderBackground: "#ebedee"
     property string colorHeaderTitle: "#353637"
@@ -55,8 +56,13 @@ Item {
     property string colorDangerZone: "#FF5F5F"
     property string colorSomethingsWrong: "#FFDB63"
 
+    // Qt Quick controls theming
+    property string colorButton: "#e0e0e0"
     property string colorButtonText: "#ffffff"
-    property string colorProgressbar: "#000000"
+    property string colorButtonDown: "#bdbdbd"
+    property string colorButtonHover: "#f6f6f6"
+    property string colorButtonBackground: "#ffffff"
+    property string colorProgressBar: "#583837"
 
     // Fonts (sizes in pixel)
     readonly property int fontSizeHeaderTitle: 30
@@ -78,6 +84,7 @@ Item {
 
             colorSidebar =          "#4E596E"
             colorSidebarText =      "#ffffff"
+            colorSidebarIcons =     ""
 
             colorHeaderBackground = "#ebedee"
             colorHeaderTitle =      "#353637"
@@ -104,6 +111,7 @@ Item {
 
             colorSidebar =          "#2e2e2e"
             colorSidebarText =      "#ffffff"
+            colorSidebarIcons =     ""
 
             colorHeaderBackground = "#444444"
             colorHeaderTitle =      "#8b8e8f"
@@ -130,6 +138,7 @@ Item {
 
             colorSidebar =          "#181818"
             colorSidebarText =      "#bebebe"
+            colorSidebarIcons =     "#ffffff"
 
             colorHeaderBackground = "#141414"
             colorHeaderTitle =      "#ffffff"
@@ -156,6 +165,7 @@ Item {
 
             colorSidebar =          "#ed164f"
             colorSidebarText =      "#ffffff"
+            colorSidebarIcons =     "#ffffff"
 
             colorHeaderBackground = "#faa7d1"
             colorHeaderTitle =      "#ed164f"

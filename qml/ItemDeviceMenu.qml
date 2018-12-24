@@ -1,5 +1,6 @@
 import QtQuick 2.10
 import QtQuick.Controls 2.3
+import QtGraphicalEffects 1.12
 
 import com.offloadbuddy.style 1.0
 
@@ -23,6 +24,13 @@ Rectangle {
         anchors.top: parent.top
         fillMode: Image.PreserveAspectCrop
         source: "qrc:/resources/menus/device.svg"
+
+        ColorOverlay {
+            anchors.fill: parent
+            source: parent
+            color: ThemeEngine.colorSidebarIcons
+            visible: ThemeEngine.colorSidebarIcons === "#ffffff" ? true : false
+        }
     }
 
     Text {

@@ -157,6 +157,11 @@ Rectangle {
         anchors.right: parent.right
         anchors.rightMargin: 0
 
+        MouseArea {
+            id: mouseArea
+            anchors.fill: parent
+        }
+
         Image {
             id: deviceImage
             width: 128

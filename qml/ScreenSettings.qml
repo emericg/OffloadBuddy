@@ -1,6 +1,6 @@
 import QtQuick 2.10
-import QtQuick.Dialogs 1.1
 import QtQuick.Controls 2.3
+import QtQuick.Dialogs 1.1
 
 import com.offloadbuddy.style 1.0
 import "StringUtils.js" as StringUtils
@@ -48,7 +48,7 @@ Rectangle {
         anchors.right: parent.right
         anchors.rightMargin: 0
 
-        CheckBox {
+        CheckBoxThemed {
             id: checkAutoLaunch
             width: 500
             height: 40
@@ -65,7 +65,7 @@ Rectangle {
             }
         }
 
-        CheckBox {
+        CheckBoxThemed {
             id: checkIgnoreJunk
             width: 350
             height: 40
@@ -81,7 +81,7 @@ Rectangle {
             }
         }
 
-        CheckBox {
+        CheckBoxThemed {
             id: checkIgnoreAudio
             y: 72
             width: 350
@@ -97,7 +97,7 @@ Rectangle {
             }
         }
 
-        CheckBox {
+        CheckBoxThemed {
             id: checkAutoMerge
             width: 350
             height: 40
@@ -114,7 +114,7 @@ Rectangle {
             }
         }
 
-        CheckBox {
+        CheckBoxThemed {
             id: checkAutoMetadatas
             x: 7
             y: 128
@@ -132,7 +132,7 @@ Rectangle {
             }
         }
 
-        CheckBox {
+        CheckBoxThemed {
             id: checkAutoDelete
             y: 128
             width: 350
@@ -178,7 +178,7 @@ Rectangle {
             color: ThemeEngine.colorContentText
         }
 
-        ComboBox {
+        ComboBoxThemed {
             id: comboBoxAppTheme
             y: 18
             width: 256
@@ -207,6 +207,42 @@ Rectangle {
                     cbinit = true;
 
                 ThemeEngine.loadTheme(currentIndex)
+            }
+        }
+
+        RadioButtonThemed {
+            id: radioButtonMetric
+            text: qsTr("Metric")
+            anchors.left: text4.right
+            anchors.leftMargin: 16
+            anchors.verticalCenter: text4.verticalCenter
+
+            Component.onCompleted: {
+                if (settingsManager.appunits === 0) {
+                    checked = true;
+                }
+            }
+            onCheckedChanged: {
+                if (checked === true)
+                    settingsManager.appunits = 0;
+            }
+        }
+
+        RadioButtonThemed {
+            id: radioButtonImperial
+            text: qsTr("Imperial")
+            anchors.left: radioButtonMetric.right
+            anchors.leftMargin: 16
+            anchors.verticalCenter: text4.verticalCenter
+
+            Component.onCompleted: {
+                if (settingsManager.appunits === 1) {
+                    checked = true;
+                }
+            }
+            onCheckedChanged: {
+                if (checked === true)
+                    settingsManager.appunits = 1;
             }
         }
 
@@ -239,7 +275,7 @@ Rectangle {
                 color: ThemeEngine.colorContentTitle
             }
 
-            Button {
+            ButtonThemed {
                 id: buttonNew
                 text: qsTr("Add new")
                 anchors.left: textMediasTitle.right
@@ -282,7 +318,7 @@ Rectangle {
                 anchors.rightMargin: 16
             }
 
-            ComboBox {
+            ComboBoxThemed {
                 id: comboBoxContentHierarchy
                 y: 61
                 width: 256
@@ -318,42 +354,6 @@ Rectangle {
                 anchors.verticalCenter: textMediasTitle.verticalCenter
                 font.pixelSize: ThemeEngine.fontSizeContentText
                 color: ThemeEngine.colorContentText
-            }
-        }
-
-        RadioButton {
-            id: radioButtonMetric
-            text: qsTr("Metric")
-            anchors.left: text4.right
-            anchors.leftMargin: 16
-            anchors.verticalCenter: text4.verticalCenter
-
-            Component.onCompleted: {
-                if (settingsManager.appunits === 0) {
-                    checked = true;
-                }
-            }
-            onCheckedChanged: {
-                if (checked === true)
-                    settingsManager.appunits = 0;
-            }
-        }
-
-        RadioButton {
-            id: radioButtonImperial
-            text: qsTr("Imperial")
-            anchors.left: radioButtonMetric.right
-            anchors.leftMargin: 16
-            anchors.verticalCenter: text4.verticalCenter
-
-            Component.onCompleted: {
-                if (settingsManager.appunits === 1) {
-                    checked = true;
-                }
-            }
-            onCheckedChanged: {
-                if (checked === true)
-                    settingsManager.appunits = 1;
             }
         }
     }

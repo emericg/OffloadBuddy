@@ -22,6 +22,7 @@
 import QtQuick 2.10
 import QtQuick.Controls 2.3
 import QtQuick.Window 2.2
+import QtGraphicalEffects 1.12
 
 import com.offloadbuddy.style 1.0
 
@@ -104,6 +105,13 @@ ApplicationWindow {
             Image {
                 anchors.fill: parent
                 source: "qrc:/resources/menus/media.svg"
+
+                ColorOverlay {
+                    anchors.fill: parent
+                    source: parent
+                    color: ThemeEngine.colorSidebarIcons
+                    visible: ThemeEngine.colorSidebarIcons === "#ffffff" ? true : false
+                }
             }
         }
 
@@ -157,6 +165,12 @@ ApplicationWindow {
                 source: "qrc:/resources/menus/jobs.svg"
                 opacity: 0
 
+                ColorOverlay {
+                    anchors.fill: parent
+                    source: parent
+                    color: ThemeEngine.colorSidebarIcons
+                }
+
                 NumberAnimation on opacity {
                     id: button_jobs_fadein
                     running: false
@@ -195,6 +209,13 @@ ApplicationWindow {
                 anchors.fill: parent
                 fillMode: Image.PreserveAspectFit
                 source: "qrc:/resources/menus/settings.svg"
+
+                ColorOverlay {
+                    anchors.fill: parent
+                    source: parent
+                    color: ThemeEngine.colorSidebarIcons
+                    visible: ThemeEngine.colorSidebarIcons === "#ffffff" ? true : false
+                }
             }
         }
 
@@ -215,6 +236,13 @@ ApplicationWindow {
             Image {
                 anchors.fill: parent
                 source: "qrc:/resources/menus/about.svg"
+
+                ColorOverlay {
+                    anchors.fill: parent
+                    source: parent
+                    color: ThemeEngine.colorSidebarIcons
+                    visible: ThemeEngine.colorSidebarIcons === "#ffffff" ? true : false
+                }
             }
         }
 
@@ -235,6 +263,13 @@ ApplicationWindow {
                 anchors.fill: parent
                 fillMode: Image.PreserveAspectFit
                 source: "qrc:/resources/menus/exit.svg"
+
+                ColorOverlay {
+                    anchors.fill: parent
+                    source: parent
+                    color: ThemeEngine.colorSidebarIcons
+                    visible: ThemeEngine.colorSidebarIcons === "#ffffff" ? true : false
+                }
             }
         }
 
@@ -245,6 +280,13 @@ ApplicationWindow {
             anchors.right: parent.right
             anchors.rightMargin: 0
             source: "qrc:/resources/menus/selector_arrow.svg"
+
+            ColorOverlay {
+                anchors.fill: parent
+                source: parent
+                color: ThemeEngine.colorSidebarIcons
+                visible: ThemeEngine.colorSidebarIcons === "#ffffff" ? true : false
+            }
         }
 /*
         Image {
@@ -254,6 +296,13 @@ ApplicationWindow {
             anchors.right: parent.right
             anchors.rightMargin: 0
             source: "qrc:/resources/menus/selector_bar.svg"
+
+            ColorOverlay {
+                anchors.fill: parent
+                source: parent
+                color: ThemeEngine.colorSidebarIcons
+                visible: ThemeEngine.colorSidebarIcons === "#ffffff" ? true : false
+            }
         }
 */
         signal myDeviceClicked(var devicePtr)

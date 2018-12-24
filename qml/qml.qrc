@@ -22,5 +22,10 @@
         <file>MediaDetailTelemetry.qml</file>
         <file>MediaDetailOverview.qml</file>
         <file>WindowStateSaver.qml</file>
+        <file alias="ButtonThemed.qml">ThemedComponents/ButtonThemed.qml</file>
+        <file alias="CheckBoxThemed.qml">ThemedComponents/CheckBoxThemed.qml</file>
+        <file alias="ComboBoxThemed.qml">ThemedComponents/ComboBoxThemed.qml</file>
+        <file alias="ProgressBarThemed.qml">ThemedComponents/ProgressBarThemed.qml</file>
+        <file alias="RadioButtonThemed.qml">ThemedComponents/RadioButtonThemed.qml</file>
     </qresource>
 </RCC>
