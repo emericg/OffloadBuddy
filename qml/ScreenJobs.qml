@@ -24,7 +24,6 @@ Rectangle {
 
         Text {
             id: textHeader
-            y: 20
             height: 40
             anchors.left: parent.left
             anchors.leftMargin: 16
@@ -37,10 +36,8 @@ Rectangle {
             color: ThemeEngine.colorHeaderTitle
         }
 
-        Button {
+        ButtonThemed {
             id: buttonClear
-            x: 967
-            y: 7
             width: 256
             text: qsTr("Clear finished jobs")
             anchors.right: parent.right

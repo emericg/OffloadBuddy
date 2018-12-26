@@ -22,7 +22,7 @@
 import QtQuick 2.10
 import QtQuick.Controls 2.3
 import QtQuick.Window 2.2
-import QtGraphicalEffects 1.12
+import QtGraphicalEffects 1.0
 
 import com.offloadbuddy.style 1.0
 

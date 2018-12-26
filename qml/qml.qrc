@@ -27,6 +27,7 @@
         <file alias="ComboBoxThemed.qml">ThemedComponents/ComboBoxThemed.qml</file>
         <file alias="ProgressBarThemed.qml">ThemedComponents/ProgressBarThemed.qml</file>
         <file alias="RadioButtonThemed.qml">ThemedComponents/RadioButtonThemed.qml</file>
+        <file alias="SliderThemed.qml">ThemedComponents/SliderThemed.qml</file>
         <file alias="TextFieldThemed.qml">ThemedComponents/TextFieldThemed.qml</file>
     </qresource>
 </RCC>

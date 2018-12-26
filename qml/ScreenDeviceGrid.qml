@@ -410,11 +410,11 @@ Rectangle {
             }
         }
 
-        Slider {
+        SliderThemed {
             id: sliderZoom
             width: 200
             height: 40
-            anchors.verticalCenter: comboBox_orderby.verticalCenter
+            anchors.verticalCenter: textZoom.verticalCenter
             anchors.left: textZoom.right
             anchors.leftMargin: 16
             stepSize: 1

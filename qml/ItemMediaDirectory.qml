@@ -55,7 +55,7 @@ Rectangle {
             }
         }
 
-        Button {
+        ButtonThemed {
             id: button_change
             width: 80
             height: 36

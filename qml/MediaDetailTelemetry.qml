@@ -169,26 +169,26 @@ Rectangle {
                 anchors.rightMargin: 16
                 spacing: 16
 
-                Button {
+                ButtonThemed {
                     id: button_map_dezoom
                     width: 40
                     height: 40
                     text: "-"
                     font.bold: true
                     font.pointSize: 16
-                    opacity: 1
+                    opacity: 0.8
 
                     onClicked: parent.parent.zoomLevel--
                 }
 
-                Button {
+                ButtonThemed {
                     id: button_map_zoom
                     width: 40
                     height: 40
                     text: "+"
                     font.bold: true
-                    font.pointSize: 14
-                    opacity: 1
+                    font.pointSize: 16
+                    opacity: 0.8
 
                     onClicked: parent.parent.zoomLevel++
                 }
