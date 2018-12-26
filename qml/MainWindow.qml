@@ -87,7 +87,7 @@ ApplicationWindow {
         anchors.topMargin: 0
         transformOrigin: Item.Center
 
-        // SELECTOR
+        // SELECTORS
 
         property var currenttheme: ThemeEngine.currentTheme
         onCurrentthemeChanged: {

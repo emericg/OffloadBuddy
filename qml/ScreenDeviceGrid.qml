@@ -231,13 +231,6 @@ Rectangle {
             anchors.top: deviceSpaceText.bottom
             anchors.topMargin: 8
             value: 0.5
-/*
-            contentItem: Rectangle {
-                    width: deviceSpaceBar.visualPosition * deviceSpaceBar.width
-                    height: deviceSpaceBar.height
-                    color: ThemeEngine.colorProgressbar
-                }
-*/
         }
 
         Rectangle {
@@ -280,7 +273,7 @@ Rectangle {
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
                 text: qsTr("Offload content")
-                color: ThemeEngine.colorButtonText
+                color: "white"
                 font.bold: true
                 font.pixelSize: 16
             }
@@ -366,7 +359,7 @@ Rectangle {
 
             Text {
                 id: textReset
-                color: ThemeEngine.colorButtonText
+                color: "white"
                 text: qsTr("Delete ALL content")
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter

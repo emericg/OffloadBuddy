@@ -35,6 +35,13 @@ Rectangle {
             sourceSize.width: 40
             sourceSize.height: 40
 
+            ColorOverlay {
+                anchors.fill: parent
+                source: parent
+                color: ThemeEngine.colorSidebarIcons
+                visible: ThemeEngine.colorSidebarIcons === "#ffffff" ? true : false
+            }
+
             NumberAnimation on rotation {
                 id: encodeAnimation
                 running: false
@@ -87,6 +94,7 @@ Rectangle {
         id: jobType
         height: 40
         text: job.type
+        color: ThemeEngine.colorText
         font.bold: true
         verticalAlignment: Text.AlignVCenter
         anchors.left: rectangleStatus.right
@@ -100,6 +108,7 @@ Rectangle {
         y: 25
         height: 40
         text: job.name
+        color: ThemeEngine.colorText
         verticalAlignment: Text.AlignVCenter
         anchors.left: jobType.right
         anchors.leftMargin: 8
@@ -107,10 +116,9 @@ Rectangle {
         font.pixelSize: 12
     }
 
-    ProgressBar {
+    ProgressBarThemed {
         id: progressBar
-        y: 20
-        height: 20
+        height: 12
         anchors.right: rectangleOpen.left
         anchors.rightMargin: 8
         anchors.left: jobName.right
@@ -130,13 +138,20 @@ Rectangle {
 
         Image {
             id: imageOpen
-            width: 40
-            height: 40
+            width: 32
+            height: 32
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
             source: "qrc:/resources/minicons/job_open.svg"
-            sourceSize.width: 40
-            sourceSize.height: 40
+            sourceSize.width: 32
+            sourceSize.height: 32
+
+            ColorOverlay {
+                anchors.fill: parent
+                source: parent
+                color: ThemeEngine.colorSidebarIcons
+                visible: ThemeEngine.colorSidebarIcons === "#ffffff" ? true : false
+            }
         }
 
         MouseArea {

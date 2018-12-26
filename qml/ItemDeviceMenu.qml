@@ -59,10 +59,11 @@ Rectangle {
         onClicked: {
             //console.log("SIDEBAR deviceClick: " + myDevice.serial);
             itemDeviceMenu.myDeviceClicked(myDevice)
+
             selectorArrow.anchors.verticalCenter = undefined
             selectorArrow.y = menuDevice.y + itemDeviceMenu.y + 34
             selectorBar.anchors.verticalCenter = undefined
-            selectorBar.y = menuDevice.y + itemDeviceMenu.y + 34
+            selectorBar.y = menuDevice.y + itemDeviceMenu.y + 10
         }
     }
 }
