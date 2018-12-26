@@ -41,22 +41,22 @@ ComboBox {
             context.fill();
         }
     }
-
+*/
     contentItem: Text {
-        leftPadding: 0
-        rightPadding: control.indicator.width + control.spacing
+        leftPadding: 8
+        rightPadding: 8
 
         text: control.displayText
         font: control.font
-        color: control.pressed ? "#17a81a" : "#21be2b"
+        color: ThemeEngine.colorComboBoxText
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
     }
-*/
+
     background: Rectangle {
         implicitWidth: 120
         implicitHeight: 40
-        color: ThemeEngine.colorButton
+        color: ThemeEngine.colorComboBox
         //border.color: control.pressed ? "#17a81a" : "#21be2b"
         //border.width: control.visualFocus ? 2 : 1
     }
@@ -78,7 +78,7 @@ ComboBox {
 
         background: Rectangle {
             color: "white"
-            border.color: ThemeEngine.colorButton
+            //border.color: ThemeEngine.colorButton
         }
     }
 

@@ -51,8 +51,8 @@ Item {
     property string colorContentText: "#000000"
     property string colorContentSubBox: "#eef0f1"
     property string colorContentSubTitle: "#000000"
-
     property string colorContentSubText: "#000000"
+
     property string colorText: "#ffffff"
     property string colorTextDisabled: "#dddddd"
 
@@ -66,6 +66,8 @@ Item {
     property string colorButtonDown: "#bdbdbd"
     property string colorButtonHover: "#f6f6f6"
     property string colorButtonBg: "#ffffff"
+    property string colorComboBox: "#e0e0e0"
+    property string colorComboBoxText: "#ffffff"
     property string colorProgressBar: "#46b0f4"
     property string colorProgressBarBg: "#bdbdbd"
 
@@ -103,8 +105,8 @@ Item {
             colorContentText =      "#000000"
             colorContentSubBox =    "#eef0f1"
             colorContentSubTitle =  "#000000"
-
             colorContentSubText =   "#000000"
+
             colorText =             "#000000"
             colorTextDisabled =     "#000000"
 
@@ -116,6 +118,8 @@ Item {
             colorButtonText =       "#000000"
             colorButtonDown =       "#bdbdbd"
             colorButtonHover =      "#E4E4E4"
+            colorComboBox =         "#e0e0e0"
+            colorComboBoxText =     "#000000"
             colorProgressBar =      "#46b0f4"
             colorProgressBarBg =    "#E4E4E4"
 
@@ -136,9 +140,9 @@ Item {
             colorContentTitle =     "#a0a29c"
             colorContentText =      "#ffffff"
             colorContentSubBox =    "#848484"
-            colorContentSubTitle =  "#353637"
+            colorContentSubTitle =  "#403F3C"
+            colorContentSubText =   "#ffffff"
 
-            colorContentSubText =   "#405a73"
             colorText =             "#ffffff"
             colorTextDisabled =     "#eeeeee"
 
@@ -150,6 +154,8 @@ Item {
             colorButtonText =       "#000000"
             colorButtonDown =       "#bdbdbd"
             colorButtonHover =      "#E4E4E4"
+            colorComboBox =         "#e0e0e0"
+            colorComboBoxText =     "#000000"
             colorProgressBar =      "#f0544c"
             colorProgressBarBg =    "#E4E4E4"
 
@@ -171,8 +177,8 @@ Item {
             colorContentText =      "#a3a3a0"
             colorContentSubBox =    "#565656"
             colorContentSubTitle =  "#ffffff"
-
             colorContentSubText =   "#a3a3a0"
+
             colorText =             "#a3a3a0"
             colorTextDisabled =     "#000000"
 
@@ -184,41 +190,53 @@ Item {
             colorButtonText =       "#000000"
             colorButtonDown =       "#bdbdbd"
             colorButtonHover =      "#E4E4E4"
+            colorComboBox =         "#ffffff"
+            colorComboBoxText =     "#000000"
             colorProgressBar =      "#009ee2"
             colorProgressBarBg =    "#E4E4E4"
 
         } else if (themeIndex === ThemeEngine.MIGHTY_KITTEN) {
 
             // "MIGHTY KITTEN"
+            // pink "#ED65A7"
+            // pink bright "#E21F8D"
+            // purple "#944197"
+            // green "#81BD41"
+            // light green "#A5CD52"
+            // blue "#0DBED4"
+            // light blue "#44C5DA"
+            // yellow "#FCCD13"
 
-            colorSidebar =          "#ed164f"
+            colorSidebar =          "#E31D8D"
             colorSidebarText =      "#ffffff"
             colorSidebarIcons =     "#ffffff"
 
             colorHeaderBackground = "#faa7d1"
-            colorHeaderTitle =      "#ed164f"
-            colorHeaderText =       "#ffe617"
+            colorHeaderTitle =      "#E31D8D"
+            colorHeaderText =       "#8F4594"
 
             colorContentBackground ="#ffffff"
             colorContentBox =       "#fff5fa"
-            colorContentTitle =     "#ffe617"
+            colorContentTitle =     "#A4CC44"
             colorContentText =      "#000000"
             colorContentSubBox =    "#ffe7f3"
-            colorContentSubTitle =  "#f5b404"
+            colorContentSubTitle =  "#0DB8D4"
+            colorContentSubText =   "#7BD5E3"
 
-            colorContentSubText =   "#000000"
             colorText =             "#000000"
             colorTextDisabled =     "#000000"
 
-            colorApproved =         "#f5b404"
-            colorDangerZone =       "#ed164f"
+            colorApproved =         "#FFCB02"
+            colorDangerZone =       "#944197"
             colorSomethingsWrong =  "#FFDB63"
 
-            colorButton =           "#e0e0e0"
+            colorButton =           "#F592C1"
             colorButtonText =       "#ffffff"
-            colorButtonDown =       "#bdbdbd"
+            colorButtonDown =       "#FAA6D2"
             colorButtonHover =      "#E4E4E4"
-            colorProgressBar =      "#ffe617"
+            colorComboBox =         "#F592C1"
+            colorComboBoxText =     "#ffffff"
+            colorProgressBar =      "#FFCB02"
             colorProgressBarBg =    "#E4E4E4"
         }
     }

@@ -8,27 +8,31 @@ import "StringUtils.js" as StringUtils
 Rectangle {
     id: itemMediaDirectory
     width: parent.width
+    implicitWidth: 800
     height: 48
     radius: 8
 
     property var directory
     property bool directoryAvailable: directory.available
+    property bool directorySpace: directory.spaceAvailable
     property var settingsMgr
 
-    Component.onCompleted: {
+    Component.onCompleted: updateInfos()
+    onDirectoryAvailableChanged: updateInfos()
+    onDirectorySpaceChanged: updateInfos()
+
+    function updateInfos() {
         if (directory.available === false)
-            color = ThemeEngine.colorSomethingsWrong
+            itemMediaDirectory.color = ThemeEngine.colorSomethingsWrong
         else
-            color = "transparent"
-    }
-    onDirectoryAvailableChanged: {
-        if (directory.available === false)
-            color = ThemeEngine.colorSomethingsWrong
-        else
-            color = "transparent"
+            itemMediaDirectory.color = "transparent"
+
+        deviceSpaceText.text = StringUtils.bytesToString_short(directory.spaceUsed) + " used / "
+                                + StringUtils.bytesToString_short(directory.spaceAvailable) + " available / "
+                                + StringUtils.bytesToString_short(directory.spaceTotal) + " total"
     }
 
-    TextField {
+    TextFieldThemed {
         id: textField_path
         width: 400
         height: 40
@@ -54,10 +58,10 @@ Rectangle {
         Button {
             id: button_change
             width: 80
-            height: 24
+            height: 36
             text: qsTr("change")
             anchors.right: parent.right
-            anchors.rightMargin: 8
+            anchors.rightMargin: 2
             anchors.verticalCenter: parent.verticalCenter
 
             onClicked: {
@@ -69,9 +73,9 @@ Rectangle {
         }
     }
 
-    ComboBox {
+    ComboBoxThemed {
         id: comboBox_content
-        width: 140
+        width: 128
         height: 40
         anchors.left: textField_path.right
         anchors.leftMargin: 16
@@ -98,6 +102,20 @@ Rectangle {
         }
     }
 
+    Text {
+        id: deviceSpaceText
+        anchors.right: rectangleDelete.left
+        anchors.rightMargin: 16
+        anchors.left: comboBox_content.right
+        anchors.leftMargin: 16
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.verticalCenterOffset: -8
+
+        text: StringUtils.bytesToString_short(directory.spaceUsed) + " used / " + StringUtils.bytesToString_short(directory.spaceAvailable) + " available / " + StringUtils.bytesToString_short(directory.spaceTotal) + " total"
+        color: ThemeEngine.colorText
+        visible: directory.available
+    }
+
     ProgressBarThemed {
         id: progressBar
         height: 8
@@ -106,6 +124,7 @@ Rectangle {
         anchors.left: comboBox_content.right
         anchors.leftMargin: 16
         anchors.verticalCenter: parent.verticalCenter
+        anchors.verticalCenterOffset: 8
         value: directory.spaceUsedPercent
         visible: directory.available
     }

@@ -83,7 +83,6 @@ Rectangle {
 
         CheckBoxThemed {
             id: checkIgnoreAudio
-            y: 72
             width: 350
             height: 40
             text: qsTr("Ignore HD audio files")
@@ -116,8 +115,6 @@ Rectangle {
 
         CheckBoxThemed {
             id: checkAutoMetadatas
-            x: 7
-            y: 128
             width: 350
             height: 40
             text: qsTr("Automatically extract telemetry")
@@ -180,7 +177,6 @@ Rectangle {
 
         ComboBoxThemed {
             id: comboBoxAppTheme
-            y: 18
             width: 256
             height: 40
             anchors.left: text1.right
@@ -218,13 +214,14 @@ Rectangle {
             anchors.verticalCenter: text4.verticalCenter
 
             Component.onCompleted: {
-                if (settingsManager.appunits === 0) {
+                if (settingsManager.appunits === 0)
                     checked = true;
-                }
             }
             onCheckedChanged: {
-                if (checked === true)
-                    settingsManager.appunits = 0;
+                if (checked === true) {
+                    settingsManager.appunits = 0
+                    settingsManager.changeAppUnits()
+                }
             }
         }
 
@@ -236,13 +233,14 @@ Rectangle {
             anchors.verticalCenter: text4.verticalCenter
 
             Component.onCompleted: {
-                if (settingsManager.appunits === 1) {
+                if (settingsManager.appunits === 1)
                     checked = true;
-                }
             }
             onCheckedChanged: {
-                if (checked === true)
-                    settingsManager.appunits = 1;
+                if (checked === true) {
+                    settingsManager.appunits = 1
+                    settingsManager.changeAppUnits()
+                }
             }
         }
 
@@ -320,7 +318,6 @@ Rectangle {
 
             ComboBoxThemed {
                 id: comboBoxContentHierarchy
-                y: 61
                 width: 256
                 height: 40
                 anchors.right: parent.right

@@ -241,8 +241,8 @@ class Shot: public QObject
     Q_PROPERTY(double distanceKm READ getDistanceKm NOTIFY shotUpdated)
 
 public slots:
-    Q_INVOKABLE void updateSpeedsSerie(QLineSeries *serie);
-    Q_INVOKABLE void updateAltiSerie(QLineSeries *serie);
+    Q_INVOKABLE void updateSpeedsSerie(QLineSeries *serie, int appUnit);
+    Q_INVOKABLE void updateAltiSerie(QLineSeries *serie, int appUnit);
     Q_INVOKABLE void updateAcclSeries(QLineSeries *x, QLineSeries *y, QLineSeries *z);
     Q_INVOKABLE void updateGyroSeries(QLineSeries *x, QLineSeries *y, QLineSeries *z);
     Q_INVOKABLE QGeoCoordinate getGpsCoordinates(unsigned index);

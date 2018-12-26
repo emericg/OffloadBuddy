@@ -1039,7 +1039,7 @@ void Shot::parseData_triplet(GpmfBuffer &buf, GpmfKLV &klv,
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void Shot::updateSpeedsSerie(QLineSeries *serie)
+void Shot::updateSpeedsSerie(QLineSeries *serie, int appUnit)
 {
     if (serie == nullptr)
         return;
@@ -1078,7 +1078,7 @@ void Shot::updateSpeedsSerie(QLineSeries *serie)
     serie->replace(points);
 }
 
-void Shot::updateAltiSerie(QLineSeries *serie)
+void Shot::updateAltiSerie(QLineSeries *serie, int appUnit)
 {
     if (serie == nullptr)
         return;

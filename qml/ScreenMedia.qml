@@ -1,6 +1,7 @@
 import QtQuick 2.10
 import QtQuick.Controls 2.3
 
+import QtGraphicalEffects 1.12
 import QtLocation 5.10
 import QtPositioning 5.10
 import QtMultimedia 5.10
@@ -91,7 +92,7 @@ Rectangle {
         anchors.top: parent.top
         color: ThemeEngine.colorHeaderBackground
 
-        Button {
+        ButtonThemed {
             id: rectangleBack
             width: 40
             height: 40
@@ -140,7 +141,16 @@ Rectangle {
             anchors.rightMargin: 16
             anchors.verticalCenterOffset: 0
             anchors.verticalCenter: parent.verticalCenter
+
             source: "qrc:/badges/AAC.svg"
+            sourceSize.width: 64
+            sourceSize.height: 24
+/*
+            ColorOverlay {
+                anchors.fill: parent
+                source: parent
+                color: ThemeEngine.colorContentText
+            }*/
         }
         Image {
             id: codecVideo
@@ -150,10 +160,19 @@ Rectangle {
             anchors.rightMargin: 16
             anchors.verticalCenterOffset: 0
             anchors.verticalCenter: parent.verticalCenter
+
             source: "qrc:/badges/H264.svg"
+            sourceSize.width: 64
+            sourceSize.height: 24
+/*
+            ColorOverlay {
+                anchors.fill: parent
+                source: parent
+                color: ThemeEngine.colorContentText
+            }*/
         }
 
-        Button {
+        ButtonThemed {
             id: buttonOverview
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: buttonTelemetry.left
@@ -162,7 +181,7 @@ Rectangle {
             text: qsTr("Overview")
             onClicked: screenMedia.state = "overview"
         }
-        Button {
+        ButtonThemed {
             id: buttonTelemetry
             anchors.right: buttonMap.left
             anchors.rightMargin: 16
@@ -171,7 +190,7 @@ Rectangle {
             text: qsTr("Telemetry")
             onClicked: screenMedia.state = "metadatas"
         }
-        Button {
+        ButtonThemed {
             id: buttonMap
             anchors.right: parent.right
             anchors.rightMargin: 16

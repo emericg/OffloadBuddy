@@ -104,7 +104,7 @@ Rectangle {
             }
 
             Text {
-                id: text1
+                id: textVersion
                 width: 112
                 height: 16
                 text: qsTr("Version 0.1 (git)")
@@ -118,7 +118,7 @@ Rectangle {
             }
 
             Text {
-                id: text2
+                id: textGitHub
                 anchors.verticalCenter: imageGitHub.verticalCenter
                 anchors.left: imageGitHub.right
                 anchors.leftMargin: 8
@@ -131,22 +131,54 @@ Rectangle {
 
             Image {
                 id: imageGitHub
-                y: 224
                 width: 32
                 height: 32
                 anchors.left: parent.left
                 anchors.leftMargin: 16
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 12
+
+                source: "../resources/other/GitHub-Mark-64px.png"
                 sourceSize.height: 64
                 sourceSize.width: 64
-                source: "../resources/other/GitHub-Mark-64px.png"
 
                 ColorOverlay {
                     anchors.fill: parent
                     source: parent
                     color: ThemeEngine.colorContentText
                 }
+            }
+
+            Image {
+                id: imageIssues
+                width: 32
+                height: 32
+                anchors.left: textGitHub.right
+                anchors.bottomMargin: 12
+
+                source: "qrc:/icons_material/baseline-bug_report-24px.svg"
+                sourceSize.height: 32
+                sourceSize.width: 32
+
+                ColorOverlay {
+                    color: ThemeEngine.colorContentText
+                    source: parent
+                    anchors.fill: parent
+                }
+                anchors.bottom: parent.bottom
+                anchors.leftMargin: 24
+            }
+
+            Text {
+                id: textIssues
+                anchors.left: imageIssues.right
+                anchors.verticalCenter: imageIssues.verticalCenter
+                anchors.leftMargin: 8
+
+                text: qsTr("Report bugs or post feature request on our <html><style type=\"text/css\"></style><a href=\"https://github.com/emericg/OffloadBuddy/issues\">issue tracker</a></html>!")
+                color: ThemeEngine.colorContentText
+                font.pixelSize: ThemeEngine.fontSizeContentText
+                onLinkActivated: Qt.openUrlExternally("https://github.com/emericg/OffloadBuddy/issues")
             }
         }
 
@@ -251,6 +283,7 @@ Rectangle {
 
                     readOnly: true
                     text: qsTr("Main developer. Likes animals and flowers. Also, ponies. You know, the ones with horns and wings.")
+                    color: ThemeEngine.colorContentSubText
                     font.pixelSize: ThemeEngine.fontSizeContentText
                     wrapMode: Text.WordWrap
                     verticalAlignment: Text.AlignTop
@@ -260,3 +293,8 @@ Rectangle {
         }
     }
 }
+
+/*##^## Designer {
+    D{i:23;anchors_y:7}
+}
+ ##^##*/

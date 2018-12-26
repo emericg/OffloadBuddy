@@ -76,6 +76,7 @@ HEADERS  += src/SettingsManager.h \
             src/utils_enums.h
 
 RESOURCES += qml/qml.qrc \
+             assets/assets.qrc \
              resources.qrc
 
 include(src/thirdparty/SingleApplication/singleapplication.pri)

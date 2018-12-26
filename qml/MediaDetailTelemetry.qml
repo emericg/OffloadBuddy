@@ -16,6 +16,17 @@ Rectangle {
     anchors.fill: parent
     color: "#00000000"
 
+    Connections {
+        target: settingsManager
+        onAppUnitsChanged: updateUnits()
+    }
+
+    function updateUnits() {
+        speedsGraph.title = "Speed (" + StringUtils.speedUnit(settingsManager.appunits) + ")"
+        altiGraph.title = "Altitude (" + StringUtils.altitudeUnit(settingsManager.appunits) + ")"
+        updateMetadatas()
+    }
+
     function updateMetadatas() {
 
         // Graphs sizes
@@ -36,8 +47,10 @@ Rectangle {
         }
 
         // Graphs datas
-        shot.updateSpeedsSerie(speedsSeries)
-        shot.updateAltiSerie(altiSeries);
+        speedsGraph.title = "Speed (" + StringUtils.speedUnit(settingsManager.appunits) + ")"
+        shot.updateSpeedsSerie(speedsSeries, settingsManager.appunits)
+        altiGraph.title = "Altitude (" + StringUtils.altitudeUnit(settingsManager.appunits) + ")"
+        shot.updateAltiSerie(altiSeries, settingsManager.appunits);
         shot.updateAcclSeries(acclX, acclY, acclZ);
         shot.updateGyroSeries(gyroX, gyroY, gyroZ);
 
@@ -233,7 +246,6 @@ Rectangle {
 
             Text {
                 id: labelMaxSpeed
-                y: 10
                 text: qsTr("Max speed:")
                 anchors.left: speedAVG.right
                 anchors.leftMargin: 32
@@ -281,7 +293,6 @@ Rectangle {
 
             Text {
                 id: labelMinSpeed
-                y: 8
                 text: qsTr("Min speed:")
                 anchors.left: speedMAX.right
                 anchors.leftMargin: 32
@@ -293,7 +304,6 @@ Rectangle {
 
             Text {
                 id: labelMinAltitude
-                y: 35
                 text: qsTr("Min altitude:")
                 anchors.left: altiMAX.right
                 anchors.leftMargin: 32

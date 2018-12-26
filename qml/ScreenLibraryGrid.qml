@@ -88,7 +88,7 @@ Rectangle {
             font.pixelSize: ThemeEngine.fontSizeHeaderTitle
         }
 
-        ComboBox {
+        ComboBoxThemed {
             id: comboBox_directories
             y: 16
             width: 300
@@ -105,7 +105,7 @@ Rectangle {
             }
         }
 
-        ComboBox {
+        ComboBoxThemed {
             id: comboBox_orderby
             width: 256
             height: 40
@@ -142,7 +142,7 @@ Rectangle {
             }
         }
 
-        ComboBox {
+        ComboBoxThemed {
             id: comboBox_filterby
             width: 256
             height: 40

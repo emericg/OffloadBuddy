@@ -126,6 +126,7 @@ public slots:
     void addDirectory(QString path);
     void deleteDirectory(QString path);
     void directoryModified();
+    void changeAppUnits() { emit appUnitsChanged(); }
 };
 
 /* ************************************************************************** */

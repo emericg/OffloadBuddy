@@ -369,7 +369,7 @@ Rectangle {
             }
         }
 
-        ComboBox {
+        ComboBoxThemed {
             id: comboBox_orderby
             width: 256
             height: 40

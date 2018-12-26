@@ -336,7 +336,7 @@ function speedToString(value, precision, unit) {
 /*!
  * speedUnit()
  */
-function speedUnit(value, precision, unit) {
+function speedUnit(unit) {
     var text = ''
 
     if (unit === 0) {
@@ -345,4 +345,5 @@ function speedUnit(value, precision, unit) {
         text = qsTr("mi/h")
     }
 
-    return text;}
+    return text;
+}
