@@ -211,6 +211,7 @@ ApplicationWindow {
                     anchors.fill: parent
                     source: parent
                     color: ThemeEngine.colorSidebarIcons
+                    visible: ThemeEngine.colorSidebarIcons ? 1 : 0
                 }
 
                 NumberAnimation on opacity {

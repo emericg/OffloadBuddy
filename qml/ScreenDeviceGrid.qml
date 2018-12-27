@@ -1,6 +1,6 @@
 import QtQuick 2.10
 import QtQuick.Controls 2.3
-//import QtQuick.Controls.Styles 1.3
+import QtGraphicalEffects 1.0
 
 import com.offloadbuddy.style 1.0
 import "StringUtils.js" as StringUtils
@@ -199,37 +199,45 @@ Rectangle {
             id: deviceSpaceLocked
             width: 24
             height: 24
-            anchors.top: deviceModelText.bottom
-            anchors.topMargin: 2
+            anchors.bottom: deviceSpaceText.bottom
+            anchors.bottomMargin: 2
             anchors.right: deviceModelText.right
             anchors.rightMargin: 0
+
             source: "qrc:/resources/minicons/locked.svg"
+            sourceSize.width: 24
+            sourceSize.height: 24
+
+            ColorOverlay {
+                anchors.fill: parent
+                source: parent
+                color: ThemeEngine.colorHeaderText
+            }
         }
 
         Text {
             id: deviceSpaceText
             width: 232
-            height: 16
+            height: 24
             anchors.right: deviceSpaceLocked.left
             anchors.rightMargin: 8
             anchors.top: deviceModelText.bottom
-            anchors.topMargin: 8
+            anchors.topMargin: 4
 
             text: "64GB available of 128GB"
             color: ThemeEngine.colorHeaderText
             font.pixelSize: ThemeEngine.fontSizeHeaderText
             horizontalAlignment: Text.AlignRight
-            verticalAlignment: Text.AlignVCenter
+            verticalAlignment: Text.AlignBottom
         }
 
-        ProgressBar {
+        ProgressBarThemed {
             id: deviceSpaceBar
             width: 256
-            height: 16
+            anchors.top: deviceSpaceText.bottom
+            anchors.topMargin: 4
             anchors.right: deviceModelText.right
             anchors.rightMargin: 0
-            anchors.top: deviceSpaceText.bottom
-            anchors.topMargin: 8
             value: 0.5
         }
 

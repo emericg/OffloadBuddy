@@ -15,7 +15,7 @@ Slider {
         width: control.availableWidth
         height: implicitHeight
         radius: 2
-        color: ThemeEngine.colorButtonDown
+        color: ThemeEngine.colorProgressBarBg
 
         Rectangle {
             width: control.visualPosition * parent.width

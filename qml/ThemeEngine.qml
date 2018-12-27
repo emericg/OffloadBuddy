@@ -65,7 +65,6 @@ Item {
     property string colorButtonText: "#ffffff"
     property string colorButtonDown: "#bdbdbd"
     property string colorButtonHover: "#f6f6f6"
-    property string colorButtonBg: "#ffffff"
     property string colorComboBox: "#e0e0e0"
     property string colorComboBoxText: "#ffffff"
     property string colorProgressBar: "#46b0f4"
@@ -208,7 +207,7 @@ Item {
             // yellow "#FCCD13"
 
             colorSidebar =          "#E31D8D"
-            colorSidebarText =      "#ffffff"
+            colorSidebarText =      "#FCCD13"
             colorSidebarIcons =     "#ffffff"
 
             colorHeaderBackground = "#faa7d1"

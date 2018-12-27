@@ -5,7 +5,6 @@ import com.offloadbuddy.style 1.0
 
 ProgressBar {
     id: control
-    anchors.verticalCenter: parent.verticalCenter
     implicitHeight: 8
 
     // theming

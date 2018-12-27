@@ -75,7 +75,7 @@ Rectangle {
 
     ComboBoxThemed {
         id: comboBox_content
-        width: 128
+        width: 140
         height: 40
         anchors.left: textField_path.right
         anchors.leftMargin: 16
