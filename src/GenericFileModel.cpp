@@ -150,7 +150,7 @@ bool getGenericShotInfos(const ofb_file &file, ofb_shot &shot)
     }
     else
     {
-        qWarning() << "Unknown file extension:" << file.extension;
+        //qDebug() << "Unsupported file extension:" << file.extension;
         status = false;
     }
 /*

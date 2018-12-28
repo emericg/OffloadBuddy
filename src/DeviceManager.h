@@ -74,6 +74,8 @@ public:
 
     static bool getMtpDeviceName(const uint32_t busNum, const uint32_t devNum,
                                  QString &brand, QString &model);
+    static bool getMtpDeviceName(const QString &stringId,
+                                 QString &brand, QString &model);
 
 public slots:
     void searchDevices();

@@ -95,7 +95,7 @@ public:
 
 struct ofb_fs_device
 {
-    QString brand = "unknown";
+    QString brand = "Unknown";
     QString model = "device";
     QString stringId;
     QString serial;
@@ -107,8 +107,8 @@ struct ofb_fs_device
 
 struct ofb_vfs_device
 {
-    QString brand = "brand";
-    QString model = "MODEL";
+    QString brand = "Unknown";
+    QString model = "device";
     QString stringId;
     QString serial;
     QString firmware;
@@ -123,8 +123,8 @@ struct ofb_vfs_device
 
 struct ofb_mtp_device
 {
-    QString brand = "brand";
-    QString model = "MODEL";
+    QString brand = "Unknown";
+    QString model = "device";
     QString stringId;
     QString serial;
     QString firmware;
@@ -176,8 +176,8 @@ class Device: public ShotProvider
     deviceState_e m_deviceState = DEVICE_STATE_IDLE;
 
     // Generic infos
-    QString m_brand = "brand";  //!< Device brand
-    QString m_model = "MODEL";  //!< Device model
+    QString m_brand = "Unknown";//!< Device brand
+    QString m_model = "device"; //!< Device model
     QString m_stringId;         //!< A backup string that describe the device in case neither brand/model can be identified
     QString m_serial;
     QString m_firmware;

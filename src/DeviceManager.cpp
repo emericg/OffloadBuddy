@@ -62,7 +62,7 @@ DeviceManager::~DeviceManager()
  * \param device[out]: Device model.
  * \return true if brand and device strings have been found.
  *
- * This function will only be used on linux.
+ * This function will only be used on Linux platforms.
  * This is used to match virtual filesystem with (at least) a brand and model.
  * Not much more can be found through libMTP if GVFS is already connected to the device.
  */
@@ -102,6 +102,72 @@ bool DeviceManager::getMtpDeviceName(const uint32_t busNum, const uint32_t devNu
     return status;
 }
 
+/* ************************************************************************** */
+
+/*!
+ * \brief Get the brand and model of a device from its device path string.
+ * \param stringId[in]: device path string.
+ * \param brand[out]: Device brand.
+ * \param device[out]: Device model.
+ * \return true if brand and device strings have been found.
+ *
+ * This function will only be used on libMTP supported platforms.
+ * This is used to match virtual filesystem with (at least) a brand and model.
+ * Not much more can be found through libMTP if GVFS is already connected to the device.
+ */
+bool DeviceManager::getMtpDeviceName(const QString &stringId,
+                                     QString &brand, QString &model)
+{
+    bool status = false;
+
+#ifdef ENABLE_LIBMTP
+
+    int numrawdevices;
+    LIBMTP_raw_device_t *rawdevices;
+
+    LIBMTP_error_number_t err = LIBMTP_Detect_Raw_Devices(&rawdevices, &numrawdevices);
+    if (err == LIBMTP_ERROR_NONE)
+    {
+        for (int i = 0; i < numrawdevices; i++)
+        {
+            if (rawdevices[i].device_entry.vendor != nullptr ||
+                rawdevices[i].device_entry.product != nullptr)
+            {
+                bool accepted = false;
+
+                if (numrawdevices == 1)
+                    accepted = true;
+                else
+                {
+                    QString v(rawdevices[i].device_entry.vendor);
+                    QString p(rawdevices[i].device_entry.product);
+
+                    QStringList a = stringId.split("_");
+
+                    for (auto b: a)
+                    {
+                        if (v.contains(b) || p.contains(v))
+                            accepted = true;
+                    }
+                }
+
+                if (accepted)
+                {
+                    brand = rawdevices[i].device_entry.vendor;
+                    model = rawdevices[i].device_entry.product;
+                    status = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    free(rawdevices);
+
+#endif // ENABLE_LIBMTP
+
+    return status;
+}
 /* ************************************************************************** */
 /* ************************************************************************** */
 
@@ -279,7 +345,6 @@ void DeviceManager::addFsDeviceGeneric(QString path, generic_device_infos *infos
 
     if (deviceExists == false)
     {
-        QString brand = "Unknown";
         d = new Device(infos->device_type,
                        STORAGE_FILESYSTEM,
                        infos->device_brand,

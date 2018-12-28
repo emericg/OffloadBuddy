@@ -234,8 +234,8 @@ void DeviceScanner::scanVirtualFilesystems()
                         DeviceManager::getMtpDeviceName(deviceInfos->devBus, deviceInfos->devNum,
                                                         deviceInfos->brand, deviceInfos->model);
 
-                        //qDebug() << "MTP infos:" << deviceInfos->devBus << "/" << deviceInfos->devNum;
-                        //qDebug() << "MTP infos:" << deviceInfos->brand << "/" << deviceInfos->model;
+                        //qDebug() << "MTP device infos:" << deviceInfos->devBus << "/" << deviceInfos->devNum;
+                        //qDebug() << "MTP device infos:" << deviceInfos->brand << "/" << deviceInfos->model;
                     }
 
                     // as a fallback, try to get a string able to 'identify' the device
@@ -244,10 +244,13 @@ void DeviceScanner::scanVirtualFilesystems()
                         if (subdir_device.startsWith("mtp:host="))
                             deviceInfos->stringId = subdir_device.mid(9);
 
-                        //qDebug() << "MTP infos:" << deviceInfos->stringId;
+                        //qDebug() << "MTP device infos:" << deviceInfos->stringId;
 
-                        // Manual associations
-                        if (deviceInfos->stringId.contains("GoPro"))
+                        DeviceManager::getMtpDeviceName(deviceInfos->stringId,
+                                                        deviceInfos->brand, deviceInfos->model);
+
+                        // Backup: manual associations
+                        if (deviceInfos->stringId.contains("GoPro", Qt::CaseInsensitive))
                         {
                             deviceInfos->brand = "GoPro";
 
@@ -267,15 +270,15 @@ void DeviceScanner::scanVirtualFilesystems()
                             if (deviceInfos->stringId.contains("BLACK", Qt::CaseInsensitive))
                                 deviceInfos->model += " BLACK";
                         }
-                        else if (deviceInfos->stringId.contains("Sony"))
+                        else if (deviceInfos->stringId.contains("Sony", Qt::CaseInsensitive))
                         {
                             deviceInfos->brand = "Sony";
                         }
-                        else if (deviceInfos->stringId.contains("Garmin"))
+                        else if (deviceInfos->stringId.contains("Garmin", Qt::CaseInsensitive))
                         {
                             deviceInfos->brand = "Garmin";
                         }
-                        else if (deviceInfos->stringId.contains("Xiaomi"))
+                        else if (deviceInfos->stringId.contains("Xiaomi", Qt::CaseInsensitive))
                         {
                             deviceInfos->brand = "Xiaomi";
                         }
@@ -398,20 +401,20 @@ void DeviceScanner::scanMtpDevices()
     switch (err)
     {
     case LIBMTP_ERROR_NONE:
-        //qDebug() << "MTP: Found %d device(s):" << numrawdevices;
+        //qDebug() << "MTP: Found" << numrawdevices << "device(s)";
         break;
     case LIBMTP_ERROR_NO_DEVICE_ATTACHED:
         break;
 
     case LIBMTP_ERROR_CONNECTING:
-        qDebug() << "MTP: There has been a connection error!";
+        qWarning() << "MTP: There has been a connection error!";
         break;
     case LIBMTP_ERROR_MEMORY_ALLOCATION:
-        qDebug() << "MTP: Encountered a Memory Allocation Error!";
+        qWarning() << "MTP: Encountered a Memory Allocation Error!";
         break;
     case LIBMTP_ERROR_GENERAL:
     default:
-        qDebug() << "MTP: Unknown connection error!";
+        qWarning() << "MTP: Unknown connection error!";
         break;
     }
 
@@ -435,7 +438,7 @@ void DeviceScanner::scanMtpDevices()
         LIBMTP_mtpdevice_t *mtpDevice = LIBMTP_Open_Raw_Device_Uncached(&rawdevices[i]);
         if (mtpDevice == nullptr)
         {
-            qDebug() << "MTP: Unable to open raw device #" << i;
+            qWarning() << "MTP: Unable to open raw device #" << i;
             continue;
         }
 /*

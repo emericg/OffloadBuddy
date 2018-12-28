@@ -46,7 +46,7 @@ Rectangle {
         anchors.bottomMargin: 0
 
         color: ThemeEngine.colorSidebarText
-        text: myDevice.model
+        text: (myDevice.model === "device")? myDevice.brand : myDevice.model
         font.bold: true
         font.pixelSize: 11
         horizontalAlignment: Text.AlignHCenter

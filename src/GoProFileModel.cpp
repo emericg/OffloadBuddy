@@ -194,12 +194,12 @@ bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot)
         // 3D Recording Video
         shot.file_type = Shared::SHOT_VIDEO_3D;
 
-        qWarning() << "Unhandled file name format:" << file.name;
+        qDebug() << "Unhandled file name format:" << file.name;
         return false;
     }
     else
     {
-        qWarning() << "Unknown file name format:" << file.name;
+        qDebug() << "Unsupported file name format:" << file.name;
         return false;
     }
 
