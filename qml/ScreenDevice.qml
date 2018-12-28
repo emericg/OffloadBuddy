@@ -12,35 +12,37 @@ Rectangle {
     property var deviceSavedStateList: []
     property var deviceSavedState
 
-    property var currentDevice
+    property var currentDevice: null
 
     onCurrentDeviceChanged: {
-        if (!deviceSavedStateList[currentDevice.uniqueId]) {
+        if (deviceSavedStateList && deviceSavedStateList.length > 0) {
+            //console.log("Device is now " + myDevice.uniqueId)
+
             deviceSavedStateList[currentDevice.uniqueId] = ({ orderBy: 0,
                                                               zoomLevel: 2.0,
                                                               mainState: "stateMediaGrid",
                                                               selectedIndex: 0,
                                                               detail_shot: null,
                                                               detail_state: "overview" })
+
+            // restore state
+            deviceSavedState = deviceSavedStateList[currentDevice.uniqueId]
+            state = deviceSavedState.mainState
+
+            screenDeviceGrid.restoreState()
+            screenDeviceGrid.updateDeviceHeader()
+            screenDeviceGrid.initGridViewSettings()
+            screenDeviceGrid.updateGridViewSettings()
+
+            screenMedia.restoreState()
         }
-
-        //console.log("Device is now " + myDevice.uniqueId)
-
-        // restore state
-        deviceSavedState = deviceSavedStateList[currentDevice.uniqueId]
-        state = deviceSavedState.mainState
-
-        screenDeviceGrid.restoreState()
-        screenDeviceGrid.updateDeviceHeader()
-        screenDeviceGrid.initGridViewSettings()
-        screenDeviceGrid.updateGridViewSettings()
-
-        screenMedia.restoreState()
     }
 
     onStateChanged: {
-         // save state
-         deviceSavedState.mainState = state
+        if (deviceSavedStateList && deviceSavedStateList.length > 0) {
+             // save state
+             deviceSavedState.mainState = state
+        }
     }
 
     // CONTENT /////////////////////////////////////////////////////////////////

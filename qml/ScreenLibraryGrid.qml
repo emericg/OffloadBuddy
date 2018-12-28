@@ -9,7 +9,7 @@ Rectangle {
 
     property var selectedItem : shotsview.currentItem
     property int selectedItemIndex : shotsview.currentIndex
-    property string selectedItemName : shotsview.currentItem.shot.name
+    property string selectedItemName : shotsview.currentItem ? shotsview.currentItem.shot.name : ""
 
     property var selectionList : [] // TODO
 

@@ -15,7 +15,7 @@ Rectangle {
     color: "#00000000"
 
     property var selectedShot : shot
-    property string selectedItemName : shot.name
+    property string selectedItemName : shot ? shot.name : ""
 
     // POPUPS //////////////////////////////////////////////////////////////////
 

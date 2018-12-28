@@ -13,7 +13,7 @@ Rectangle {
 
     property var selectedItem : shotsview.currentItem
     property int selectedItemIndex : shotsview.currentIndex
-    property string selectedItemName : shotsview.currentItem.shot.name
+    property string selectedItemName : shotsview.currentItem ? shotsview.currentItem.shot.name : ""
 
     property var selectionList : [] // TODO
 
@@ -102,7 +102,8 @@ Rectangle {
         //console.log("updateGridViewSettings() [device "+ myDevice + "] (state " + myDevice.deviceState + ") (shotcount: " + shotsview.count + ")")
 
         // restore state
-        shotsview.currentIndex = deviceSavedState.selectedIndex
+        if (deviceSavedState)
+            shotsview.currentIndex = deviceSavedState.selectedIndex
 
         if (shotsview.count == 0) {
             selectionList = []
@@ -633,7 +634,7 @@ Rectangle {
                 //clip: true
                 //keyNavigationEnabled: true
 
-                model: currentDevice.shotFilter
+                model: currentDevice ? currentDevice.shotFilter : null
                 delegate: ItemShot { width: shotsview.cellSize }
 
                 highlight: highlight

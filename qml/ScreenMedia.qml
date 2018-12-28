@@ -203,7 +203,7 @@ Rectangle {
 
     onStateChanged: {
         // save state
-        if (typeof currentDevice !== "undefined")
+        if (typeof deviceSavedState !== "undefined")
             deviceSavedState.detail_state = state
     }
 

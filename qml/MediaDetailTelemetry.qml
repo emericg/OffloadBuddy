@@ -37,77 +37,79 @@ Rectangle {
         onWidthChanged()
         onHeightChanged()
 
-        if (shot.latitude !== 0.0) {
-            mapTraceGPS.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
-            mapTraceGPS.zoomLevel = 12
-            mapMarker.visible = false
-            mapMarker.coordinate = QtPositioning.coordinate(shot.latitude, shot.longitude)
-            button_map_dezoom.enabled = true
-            button_map_zoom.enabled = true
+        if (shot) {
+            if (shot.latitude !== 0.0) {
+                mapTraceGPS.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
+                mapTraceGPS.zoomLevel = 12
+                mapMarker.visible = false
+                mapMarker.coordinate = QtPositioning.coordinate(shot.latitude, shot.longitude)
+                button_map_dezoom.enabled = true
+                button_map_zoom.enabled = true
+            }
+
+            // Graphs datas
+            speedsGraph.title = "Speed (" + StringUtils.speedUnit(settingsManager.appunits) + ")"
+            shot.updateSpeedsSerie(speedsSeries, settingsManager.appunits)
+            altiGraph.title = "Altitude (" + StringUtils.altitudeUnit(settingsManager.appunits) + ")"
+            shot.updateAltiSerie(altiSeries, settingsManager.appunits);
+            shot.updateAcclSeries(acclX, acclY, acclZ);
+            shot.updateGyroSeries(gyroX, gyroY, gyroZ);
+
+            // Text datas
+            speedMIN.text = StringUtils.speedToString(shot.minSpeed, 2, settingsManager.appunits)
+            speedAVG.text = StringUtils.speedToString(shot.avgSpeed, 2, settingsManager.appunits)
+            speedMAX.text = StringUtils.speedToString(shot.maxSpeed, 2, settingsManager.appunits)
+
+            altiMIN.text = StringUtils.altitudeToString(shot.minAlti, 0, settingsManager.appunits)
+            altiAVG.text = StringUtils.altitudeToString(shot.avgAlti, 0, settingsManager.appunits)
+            altiMAX.text = StringUtils.altitudeToString(shot.maxAlti, 0, settingsManager.appunits)
+
+            trackDuration.text = StringUtils.durationToString(shot.duration)
+            trackDistance.text = StringUtils.distanceToString(shot.distanceKm, 1, settingsManager.appunits)
+            acclMAX.text = (shot.maxG / 9.80665).toFixed(1) + " G's"
+
+            // Graphs axis
+            axisSpeedY0.min = shot.minSpeed * 0.9;
+            axisSpeedY0.max = shot.maxSpeed * 1.1;
+            axisAltiY0.min = shot.minAlti * 0.9;
+            axisAltiY0.max = shot.maxAlti * 1.1;
+            axisAcclY0.min = -12;
+            axisAcclY0.max = 12;
+            axisGyroY0.min = -8;
+            axisGyroY0.max = 8;
+            //axisGyroY0.applyNiceNumbers()
+
+            axisSpeedX0.min = 0;
+            axisSpeedX0.max = speedsSeries.count;
+            axisAltiX0.min = 0;
+            axisAltiX0.max = altiSeries.count;
+            axisAcclX0.min = 0;
+            axisAcclX0.max = acclX.count
+            axisGyroX0.min = 0;
+            axisGyroX0.max = gyroX.count
+
+            // GPS trace
+            mapTrace.visible = true
+
+            if (shot.distanceKm < 0.5)
+                mapTraceGPS.zoomLevel = 18
+            else if (shot.distanceKm < 2)
+                mapTraceGPS.zoomLevel = 15
+            else if (shot.distanceKm < 10)
+                mapTraceGPS.zoomLevel = 12
+            else if (shot.distanceKm < 50)
+                mapTraceGPS.zoomLevel = 10
+            else if (shot.distanceKm < 100)
+                mapTraceGPS.zoomLevel = 8
+
+            // clean GPS points
+            while (mapTrace.pathLength() > 0)
+                mapTrace.removeCoordinate(mapTrace.coordinateAt(0))
+
+            // add new GPS points // FIXME
+            for (var i = 0; i < 18000; i+=18)
+                mapTrace.addCoordinate(shot.getGpsCoordinates(i))
         }
-
-        // Graphs datas
-        speedsGraph.title = "Speed (" + StringUtils.speedUnit(settingsManager.appunits) + ")"
-        shot.updateSpeedsSerie(speedsSeries, settingsManager.appunits)
-        altiGraph.title = "Altitude (" + StringUtils.altitudeUnit(settingsManager.appunits) + ")"
-        shot.updateAltiSerie(altiSeries, settingsManager.appunits);
-        shot.updateAcclSeries(acclX, acclY, acclZ);
-        shot.updateGyroSeries(gyroX, gyroY, gyroZ);
-
-        // Text datas
-        speedMIN.text = StringUtils.speedToString(shot.minSpeed, 2, settingsManager.appunits)
-        speedAVG.text = StringUtils.speedToString(shot.avgSpeed, 2, settingsManager.appunits)
-        speedMAX.text = StringUtils.speedToString(shot.maxSpeed, 2, settingsManager.appunits)
-
-        altiMIN.text = StringUtils.altitudeToString(shot.minAlti, 0, settingsManager.appunits)
-        altiAVG.text = StringUtils.altitudeToString(shot.avgAlti, 0, settingsManager.appunits)
-        altiMAX.text = StringUtils.altitudeToString(shot.maxAlti, 0, settingsManager.appunits)
-
-        trackDuration.text = StringUtils.durationToString(shot.duration)
-        trackDistance.text = StringUtils.distanceToString(shot.distanceKm, 1, settingsManager.appunits)
-        acclMAX.text = (shot.maxG / 9.80665).toFixed(1) + " G's"
-
-        // Graphs axis
-        axisSpeedY0.min = shot.minSpeed * 0.9;
-        axisSpeedY0.max = shot.maxSpeed * 1.1;
-        axisAltiY0.min = shot.minAlti * 0.9;
-        axisAltiY0.max = shot.maxAlti * 1.1;
-        axisAcclY0.min = -12;
-        axisAcclY0.max = 12;
-        axisGyroY0.min = -8;
-        axisGyroY0.max = 8;
-        //axisGyroY0.applyNiceNumbers()
-
-        axisSpeedX0.min = 0;
-        axisSpeedX0.max = speedsSeries.count;
-        axisAltiX0.min = 0;
-        axisAltiX0.max = altiSeries.count;
-        axisAcclX0.min = 0;
-        axisAcclX0.max = acclX.count
-        axisGyroX0.min = 0;
-        axisGyroX0.max = gyroX.count
-
-        // GPS trace
-        mapTrace.visible = true
-
-        if (shot.distanceKm < 0.5)
-            mapTraceGPS.zoomLevel = 18
-        else if (shot.distanceKm < 2)
-            mapTraceGPS.zoomLevel = 15
-        else if (shot.distanceKm < 10)
-            mapTraceGPS.zoomLevel = 12
-        else if (shot.distanceKm < 50)
-            mapTraceGPS.zoomLevel = 10
-        else if (shot.distanceKm < 100)
-            mapTraceGPS.zoomLevel = 8
-
-        // clean GPS points
-        while (mapTrace.pathLength() > 0)
-            mapTrace.removeCoordinate(mapTrace.coordinateAt(0))
-
-        // add new GPS points // FIXME
-        for (var i = 0; i < 18000; i+=18)
-            mapTrace.addCoordinate(shot.getGpsCoordinates(i))
     }
 
     onWidthChanged: {
