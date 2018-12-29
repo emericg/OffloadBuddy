@@ -62,6 +62,7 @@ Rectangle {
             anchors.right: button_change.left
             anchors.rightMargin: 2
             anchors.verticalCenter: parent.verticalCenter
+            enabled: directory.available
 
             imageSource: "qrc:/icons_material/baseline-refresh-24px.svg"
             onClicked: {

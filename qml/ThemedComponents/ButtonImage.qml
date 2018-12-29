@@ -31,8 +31,7 @@ Button {
         ColorOverlay {
             anchors.fill: parent
             source: parent
-            //color: ThemeEngine.colorHeaderText
-            color: control.down ? ThemeEngine.colorButtonDown : ThemeEngine.colorButtonText
+            color: enabled ? ThemeEngine.colorButtonText : ThemeEngine.colorButtonDown
         }
     }
 }
