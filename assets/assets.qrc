@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>icons_material/baseline-bug_report-24px.svg</file>
+        <file>icons_material/baseline-refresh-24px.svg</file>
+        <file>icons_material/outline-folder-24px.svg</file>
     </qresource>
 </RCC>

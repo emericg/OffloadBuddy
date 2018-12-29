@@ -48,12 +48,50 @@ ShotModel::~ShotModel()
 }
 
 /* ************************************************************************** */
+/* ************************************************************************** */
+
+void ShotModel::sanetize()
+{
+    // Check if each files of the shot still exists
+    for (auto shot: m_shots)
+    {
+        QList <ofb_file *> files = shot->getFiles();
+
+        for (auto file: files)
+        {
+            QFile f(file->filesystemPath);
+            if (!f.exists())
+            {
+                // Remove the shot alltogether if one file is missing
+                removeShot(shot);
+                return;
+            }
+        }
+    }
+}
+
+/* ************************************************************************** */
 
 void ShotModel::addFile(ofb_file *f, ofb_shot *s)
 {
     //qDebug() << "ShotModel::addFile()";
 
-    Shot *shot = getShotAt(s->file_type, s->shot_id, s->camera_id);
+    Shot *shot = nullptr;
+
+    if (s->shot_id)
+    {
+        shot = getShotAt(s->file_type, s->shot_id, s->camera_id);
+    }
+    else
+    {
+        shot = getShotWithPath(f->filesystemPath);
+        if (shot)
+        {
+            delete s;
+            return;
+        }
+    }
+
     if (shot)
     {
         //qDebug() << "Adding file:" << f->name << "to an existing shot";
@@ -61,7 +99,7 @@ void ShotModel::addFile(ofb_file *f, ofb_shot *s)
     }
     else
     {
-        //qDebug() << "file:" << file_name << "is a new shot";
+        //qDebug() << "file:" << f->name << "is a new shot";
         shot = new Shot(s->file_type, this);
         if (shot)
         {
@@ -74,7 +112,7 @@ void ShotModel::addFile(ofb_file *f, ofb_shot *s)
             }
             else // FIXME what if the THM arrives first?
             {
-                qDebug() << "Invalid shot: " << shot->getName();
+                qWarning() << "Invalid shot: " << shot->getName();
                 delete shot;
             }
         }
@@ -123,7 +161,7 @@ void ShotModel::getShots(QList<Shot *> &shots)
  */
 Shot *ShotModel::getShotAt(int listIndex)
 {
-    //qDebug() << "ShotModel::index:" << index(0, listIndex);
+    //qDebug() << "ShotModel::getShotAt:" << index(0, listIndex);
 
     if (listIndex >= 0 && listIndex < m_shots.size())
     {
@@ -134,14 +172,12 @@ Shot *ShotModel::getShotAt(int listIndex)
 }
 
 /*!
- * \brief ShotModel::getShotAt
+ * \brief ShotModel::getShotWithName
  * \param name
  * \return
  */
-Shot *ShotModel::getShotAt(QString name)
+Shot *ShotModel::getShotWithName(const QString name)
 {
-    //qDebug() << "ShotModel::name:" << name;
-
     if (!name.isEmpty())
     {
         for (int i = 0; i < m_shots.size(); i++)
@@ -153,7 +189,39 @@ Shot *ShotModel::getShotAt(QString name)
             }
         }
 
-        //qDebug() << "No shot found for id" << file_id;
+        //qDebug() << "No shot found for name" << name;
+    }
+
+    return nullptr;
+}
+
+/*!
+ * \brief ShotModel::getShotWithPath
+ * \param path
+ * \return
+ */
+Shot *ShotModel::getShotWithPath(const QString path)
+{
+    if (!path.isEmpty())
+    {
+        for (int i = 0; i < m_shots.size(); i++)
+        {
+            Shot *search = qobject_cast<Shot*>(m_shots.at(i));
+            if (search)
+            {
+                QList <ofb_file *> files = search->getFiles();
+
+                for (auto file: files)
+                {
+                    if (file->filesystemPath == path)
+                    {
+                        return search;
+                    }
+                }
+            }
+        }
+
+        //qDebug() << "No shot found for path" << path;
     }
 
     return nullptr;
@@ -231,7 +299,10 @@ QVariant ShotModel::data(const QModelIndex & index, int role) const
         else if (role == PointerRole)
             return QVariant::fromValue(shot);
         else if (role == PathRole)
-            return shot->getFiles().at(0)->filesystemPath;
+        {
+            if (shot->getFiles().size() > 0)
+                return shot->getFiles().at(0)->filesystemPath;
+        }
         else
             qDebug() << "Ooops missing ShotModel role !!!";
     }
@@ -253,6 +324,7 @@ QHash<int, QByteArray> ShotModel::roleNames() const
     roles[CameraRole] = "camera";
 
     roles[PointerRole] = "pointer";
+    roles[PathRole] = "path";
 
     return roles;
 }

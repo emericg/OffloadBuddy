@@ -104,6 +104,7 @@ Rectangle {
 
             model: cbMediaDirectories
             displayText: qsTr("Show ALL media directories")
+            visible: (cbMediaDirectories.count > 2)
 
             Component.onCompleted: updateDirectories()
             Connections {

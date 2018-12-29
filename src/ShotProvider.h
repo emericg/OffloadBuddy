@@ -71,7 +71,7 @@ public slots:
     void filterByFolder(const QString path);
 
     //QVariant getShot(const int index) const { return QVariant::fromValue(m_shotModel->getShotAt(index)); }
-    QVariant getShot(const QString name) const { return QVariant::fromValue(m_shotModel->getShotAt(name)); }
+    QVariant getShot(const QString name) const { return QVariant::fromValue(m_shotModel->getShotWithName(name)); }
 };
 
 /* ************************************************************************** */

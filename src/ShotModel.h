@@ -66,14 +66,16 @@ public:
 
     void getShots(QList<Shot *> &shots);
     Shot *getShotAt(int index);
-    Shot *getShotAt(QString name);
     Shot *getShotAt(Shared::ShotType type, int file_id, int camera_id) const;
+    Shot *getShotWithName(const QString name);
+    Shot *getShotWithPath(const QString path);
     int getShotCount() const;
 
 public slots:
     void addFile(ofb_file *f, ofb_shot *s);
     void addShot(Shot *shot);
     void removeShot(Shot *shot);
+    void sanetize();
 };
 
 //Q_DECLARE_METATYPE(ShotModel*)

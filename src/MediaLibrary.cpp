@@ -42,6 +42,62 @@ MediaLibrary::~MediaLibrary()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
+void MediaLibrary::scanMediaDirectory(MediaDirectory *md)
+{
+    if (md && md->isAvailable())
+    {
+        QThread *thread = new QThread();
+        FileScanner *fs = new FileScanner();
+
+        if (thread && fs)
+        {
+            fs->chooseFilesystem(md->getPath());
+            fs->moveToThread(thread);
+
+            connect(thread, SIGNAL(started()), fs, SLOT(scanFilesystem()));
+            connect(fs, SIGNAL(fileFound(ofb_file *, ofb_shot *)), m_shotModel, SLOT(addFile(ofb_file *, ofb_shot *)));
+            connect(fs, SIGNAL(scanningStarted(QString)), this, SLOT(workerScanningStarted(QString)));
+            connect(fs, SIGNAL(scanningFinished(QString)), this, SLOT(workerScanningFinished(QString)));
+
+            // automatically delete thread and everything when the work is done
+            connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+            connect(fs, SIGNAL (scanningFinished(QString)), fs, SLOT (deleteLater()));
+            connect(fs, SIGNAL(scanningFinished(QString)), thread, SLOT(quit()));
+
+            thread->start();
+        }
+    }
+}
+
+/* ************************************************************************** */
+
+void MediaLibrary::searchMediaDirectory(const QString path)
+{
+    if (m_shotModel)
+    {
+        if (m_libraryState != DEVICE_STATE_SCANNING)
+        {
+            SettingsManager *s = SettingsManager::getInstance();
+            if (s)
+            {
+                const QList <QObject *> *mediaDirectories = s->getDirectoriesList();
+
+                for (auto d: *mediaDirectories)
+                {
+                    MediaDirectory *dd = qobject_cast<MediaDirectory*>(d);
+                    if (dd && dd->getPath() == path)
+                    {
+                        m_shotModel->sanetize();
+                        scanMediaDirectory(dd);
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* ************************************************************************** */
+
 void MediaLibrary::searchMediaDirectories()
 {
     SettingsManager *s = SettingsManager::getInstance();
@@ -54,34 +110,12 @@ void MediaLibrary::searchMediaDirectories()
         for (auto d: *mediaDirectories)
         {
             MediaDirectory *dd = qobject_cast<MediaDirectory*>(d);
-
-            if (dd->isAvailable())
-            {
-                QThread *thread = new QThread();
-                FileScanner *fs = new FileScanner();
-
-                if (thread && fs)
-                {
-                    fs->chooseFilesystem(dd->getPath());
-                    fs->moveToThread(thread);
-
-                    connect(thread, SIGNAL(started()), fs, SLOT(scanFilesystem()));
-                    connect(fs, SIGNAL(fileFound(ofb_file *, ofb_shot *)), m_shotModel, SLOT(addFile(ofb_file *, ofb_shot *)));
-                    connect(fs, SIGNAL(scanningStarted(QString)), this, SLOT(workerScanningStarted(QString)));
-                    connect(fs, SIGNAL(scanningFinished(QString)), this, SLOT(workerScanningFinished(QString)));
-
-                    // automatically delete thread and everything when the work is done
-                    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-                    connect(fs, SIGNAL (scanningFinished(QString)), fs, SLOT (deleteLater()));
-                    connect(fs, SIGNAL(scanningFinished(QString)), thread, SLOT(quit()));
-
-                    thread->start();
-                }
-            }
+            scanMediaDirectory(dd);
         }
     }
 }
 
+/* ************************************************************************** */
 /* ************************************************************************** */
 
 void MediaLibrary::workerScanningStarted(QString s)

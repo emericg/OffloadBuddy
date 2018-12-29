@@ -48,9 +48,7 @@ class MediaLibrary: public ShotProvider
 
     deviceState_e m_libraryState = DEVICE_STATE_IDLE;
 
-    // Storage(s)
-    QTimer m_updateStorageTimer;
-    QList <MediaDirectory *> m_mediaDirectories;
+    void scanMediaDirectory(MediaDirectory *md);
 
 Q_SIGNALS:
     void stateUpdated();
@@ -59,9 +57,10 @@ public:
     MediaLibrary();
     ~MediaLibrary();
 
-    void searchMediaDirectories();
-
 public slots:
+    void searchMediaDirectories();
+    void searchMediaDirectory(const QString path);
+
     int getLibraryState() const { return m_libraryState; }
     void workerScanningStarted(QString s);
     void workerScanningFinished(QString s);

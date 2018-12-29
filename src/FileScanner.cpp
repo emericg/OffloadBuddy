@@ -91,6 +91,7 @@ void FileScanner::scanFilesystemElement(QString &dir_path)
             if (fi.exists() && fi.isReadable())
             {
                 ofb_file *f = new ofb_file;
+                if (f)
                 {
                     f->name = fi.baseName();
                     f->extension = fi.suffix().toLower();

@@ -90,7 +90,7 @@ class Shot: public QObject
 
     Q_PROPERTY(QString preview READ getPreviewPicture NOTIFY shotUpdated)
     Q_PROPERTY(QString previewVideo READ getPreviewVideo NOTIFY shotUpdated)
-    Q_PROPERTY(QString fileList READ getFileList NOTIFY shotUpdated)
+    Q_PROPERTY(QString fileList READ getFilesQString NOTIFY shotUpdated)
 
     Q_PROPERTY(qint64 duration READ getDuration NOTIFY shotUpdated)
     Q_PROPERTY(QDateTime date READ getDate NOTIFY shotUpdated)
@@ -270,6 +270,9 @@ public slots:
     unsigned getState() const { return m_state; }
     void setState(Shared::ShotState state) { m_state = state; emit stateUpdated(); }
 
+    QString getFilesQString() const;
+    QStringList getFilesQStringList() const;
+
     QString getName() const { return m_name; }
     qint64 getDuration() const;
     qint64 getSize() const;
@@ -303,7 +306,6 @@ public slots:
     double getAltitude() const { return gps_alt; }
 
     int getHighlightCount() const { return m_highlights.size(); }
-    QString getFileList() const;
 
     int getFileId() const { return m_shot_id; }
     void setFileId(int id) { m_shot_id = id; }
