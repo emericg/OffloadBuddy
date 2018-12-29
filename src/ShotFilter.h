@@ -34,9 +34,18 @@ class ShotFilter : public QSortFilterProxyModel
 {
     Q_OBJECT
 
+    QList<int> m_acceptedTypes;
+    QString m_acceptedFolder;
+
+protected:
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
+
 public:
     ShotFilter(QObject *parent = nullptr);
     ~ShotFilter();
+
+    void setAcceptedTypes(const QList<int> acceptedTypes) { m_acceptedTypes = acceptedTypes; }
+    void setAcceptedFolder(const QString acceptedFolder) { m_acceptedFolder = acceptedFolder; }
 };
 
 //Q_DECLARE_METATYPE(ShotFilter*)

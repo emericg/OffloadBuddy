@@ -103,3 +103,36 @@ void ShotProvider::orderByName()
 }
 
 /* ************************************************************************** */
+
+void ShotProvider::filterByType(const QString type)
+{
+    if (m_shotFilter)
+    {
+        QList <int> types;
+
+        if (type == "Videos")
+            types << Shared::SHOT_VIDEO << Shared::SHOT_VIDEO_LOOPING << Shared::SHOT_VIDEO_3D;
+        else if (type == "Photos")
+            types << Shared::SHOT_PICTURE << Shared::SHOT_PICTURE_BURST;
+        else if (type == "Timelapses")
+            types << Shared::SHOT_VIDEO_TIMELAPSE << Shared::SHOT_VIDEO_NIGHTLAPSE
+                  << Shared::SHOT_PICTURE_MULTI
+                  << Shared::SHOT_PICTURE_TIMELAPSE << Shared::SHOT_PICTURE_NIGHTLAPSE;
+
+        m_shotFilter->setAcceptedTypes(types);
+        m_shotFilter->invalidate();
+    }
+}
+
+/* ************************************************************************** */
+
+void ShotProvider::filterByFolder(const QString path)
+{
+    if (m_shotFilter)
+    {
+        m_shotFilter->setAcceptedFolder(path);
+        m_shotFilter->invalidate();
+    }
+}
+
+/* ************************************************************************** */

@@ -52,8 +52,9 @@ Item {
 
         for (var child in settingsManager.directoriesList) {
             //console.log("destination: " + settingsManager.directoriesList[child].directoryPath)
-            if (settingsManager.directoriesList[child].directoryContent < 2)
-                cbDestinations.append( { "text": settingsManager.directoriesList[child].directoryPath } )
+            if (settingsManager.directoriesList[child].available)
+                if (settingsManager.directoriesList[child].directoryContent < 2)
+                    cbDestinations.append( { "text": settingsManager.directoriesList[child].directoryPath } )
         }
         comboBoxDestination.currentIndex = 0
         comboBoxDestination.enabled = false

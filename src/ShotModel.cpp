@@ -230,6 +230,8 @@ QVariant ShotModel::data(const QModelIndex & index, int role) const
             return shot->getDate();
         else if (role == PointerRole)
             return QVariant::fromValue(shot);
+        else if (role == PathRole)
+            return shot->getFiles().at(0)->filesystemPath;
         else
             qDebug() << "Ooops missing ShotModel role !!!";
     }

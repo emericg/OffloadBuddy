@@ -54,6 +54,7 @@ public:
         CameraRole,
 
         PointerRole,
+        PathRole,
     };
 
     ShotModel(QObject *parent = nullptr);

@@ -55,7 +55,7 @@ void MediaLibrary::searchMediaDirectories()
         {
             MediaDirectory *dd = qobject_cast<MediaDirectory*>(d);
 
-            //if (dd->isAvailable())
+            if (dd->isAvailable())
             {
                 QThread *thread = new QThread();
                 FileScanner *fs = new FileScanner();

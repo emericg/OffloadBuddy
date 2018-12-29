@@ -90,24 +90,55 @@ Rectangle {
 
         ComboBoxThemed {
             id: comboBox_directories
-            y: 16
             width: 300
             height: 40
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 16
             anchors.right: parent.right
             anchors.rightMargin: 16
-            displayText: qsTr("Show ALL media directories")
 
-            model: ListModel {
+            ListModel {
                 id: cbMediaDirectories
                 ListElement { text: qsTr("ALL media directories"); }
+            }
+
+            model: cbMediaDirectories
+            displayText: qsTr("Show ALL media directories")
+
+            Component.onCompleted: updateDirectories()
+            Connections {
+                target: settingsManager
+                onDirectoriesUpdated: updateDirectories()
+            }
+
+            function updateDirectories() {
+                cbMediaDirectories.clear()
+                cbMediaDirectories.append( { text: qsTr("ALL media directories") } );
+
+                for (var child in settingsManager.directoriesList) {
+                    if (settingsManager.directoriesList[child].available)
+                        cbMediaDirectories.append( { "text": settingsManager.directoriesList[child].directoryPath } )
+                }
+            }
+
+            property bool cbinit: false
+            onCurrentIndexChanged: {
+                if (cbinit) {
+                    if (currentIndex == 0) {
+                        mediaLibrary.filterByFolder("")
+                        displayText = qsTr("Show") + " " + cbMediaDirectories.get(currentIndex).text
+                    } else {
+                        mediaLibrary.filterByFolder(cbMediaDirectories.get(currentIndex).text)
+                        displayText = cbMediaDirectories.get(currentIndex).text
+                    }
+                } else
+                    cbinit = true;
             }
         }
 
         ComboBoxThemed {
             id: comboBox_orderby
-            width: 256
+            width: 200
             height: 40
             anchors.top: parent.top
             anchors.topMargin: 16
@@ -144,37 +175,34 @@ Rectangle {
 
         ComboBoxThemed {
             id: comboBox_filterby
-            width: 256
+            width: 200
             height: 40
-            anchors.top: comboBox_orderby.bottom
+            anchors.top: parent.top
             anchors.topMargin: 16
-            anchors.left: parent.left
+            anchors.left: comboBox_orderby.right
             anchors.leftMargin: 16
-            displayText: qsTr("Filter by: No filter")
+            displayText: qsTr("No filter")
 
             model: ListModel {
                 id: cbMediaFilters
-                ListElement { text: qsTr("No filters"); }
-                ListElement { text: qsTr("Shot types"); }
-                ListElement { text: qsTr("Camera models"); }
+                ListElement { text: qsTr("No filter"); }
+                ListElement { text: qsTr("Videos"); }
+                ListElement { text: qsTr("Photos"); }
+                ListElement { text: qsTr("Timelapses"); }
             }
-            /*
+
             property bool cbinit: false
             onCurrentIndexChanged: {
                 if (cbinit) {
+                    mediaLibrary.filterByType(cbMediaFilters.get(currentIndex).text)
+
                     if (currentIndex == 0)
-                        mediaLibrary.orderByDate()
-                    else if (currentIndex == 1)
-                        mediaLibrary.orderByDuration()
-                    else if (currentIndex == 2)
-                        mediaLibrary.orderByShotType()
-                    else if (currentIndex == 3)
-                        mediaLibrary.orderByName()
+                        displayText = cbMediaFilters.get(currentIndex).text
+                    else
+                        displayText = qsTr("Filter by:") + " " + cbMediaFilters.get(currentIndex).text
                 } else
                     cbinit = true;
-
-                displayText = qsTr("Order by:") + " " + cbShotsOrderby.get(currentIndex).text
-            }*/
+            }
         }
 
         SliderThemed {
@@ -183,7 +211,7 @@ Rectangle {
             height: 40
             anchors.verticalCenter: textZoom.verticalCenter
             anchors.left: textZoom.right
-            anchors.leftMargin: 16
+            anchors.leftMargin: 4
             stepSize: 1
             to: 3
             from: 1
@@ -204,10 +232,10 @@ Rectangle {
             id: textZoom
             height: 40
             anchors.verticalCenter: comboBox_orderby.verticalCenter
-            anchors.left: comboBox_orderby.right
+            anchors.left: comboBox_filterby.right
             anchors.leftMargin: 16
 
-            text: qsTr("Zoom:")
+            text: qsTr("ZOOM")
             font.pixelSize: ThemeEngine.fontSizeHeaderText
             color: ThemeEngine.colorHeaderText
             horizontalAlignment: Text.AlignHCenter

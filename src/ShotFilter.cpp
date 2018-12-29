@@ -38,3 +38,31 @@ ShotFilter::~ShotFilter()
 }
 
 /* ************************************************************************** */
+
+bool ShotFilter::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
+{
+    bool accepted = true;
+
+    if (m_acceptedTypes.size() == 0 && m_acceptedFolder.isEmpty())
+        return accepted;
+
+    QModelIndex index = sourceModel()->index(sourceRow, 0, sourceParent);
+
+    if (!m_acceptedFolder.isEmpty())
+    {
+        QString path = sourceModel()->data(index, ShotModel::PathRole).toString();
+        if (!path.contains(m_acceptedFolder))
+            accepted = false;
+    }
+
+    if (m_acceptedTypes.size() != 0)
+    {
+        int type = sourceModel()->data(index, ShotModel::TypeRole).toInt();
+        if (!m_acceptedTypes.contains(type))
+            accepted = false;
+    }
+
+    return accepted;
+}
+
+/* ************************************************************************** */
