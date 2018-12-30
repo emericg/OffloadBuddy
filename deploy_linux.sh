@@ -20,15 +20,15 @@ upload_package=false
 while [[ $# -gt 0 ]]
 do
 case $1 in
-    -c|--contribs)
-    use_contribs=true
-    ;;
-    -u|--upload)
-    upload_package=true
-    ;;
-    *)
-    echo "> Unknown argument '$1'"
-    ;;
+  -c|--contribs)
+  use_contribs=true
+  ;;
+  -u|--upload)
+  upload_package=true
+  ;;
+  *)
+  echo "> Unknown argument '$1'"
+  ;;
 esac
 shift # skip argument or value
 done

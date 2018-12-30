@@ -122,6 +122,7 @@ contains(DEFINES, USE_CONTRIBS) {
     contains(DEFINES, ENABLE_LIBEXIF) { LIBS += -lexif }
     contains(DEFINES, ENABLE_MINIVIDEO) { LIBS += -lminivideo }
     contains(DEFINES, ENABLE_FFMPEG) { LIBS += -lavformat -lavcodec -lswscale -lswresample -lavutil }
+    linux { contains(DEFINES, ENABLE_FFMPEG) { PKGCONFIG += libavformat libavcodec libswscale libswresample libavutil }
 
 } else {
 
@@ -129,19 +130,12 @@ contains(DEFINES, USE_CONTRIBS) {
 
     CONFIG += link_pkgconfig
     macx { PKG_CONFIG = /usr/local/bin/pkg-config } # use pkg-config from brew
+    macx { INCLUDEPATH += /usr/local/include/ }
 
-    contains(DEFINES, ENABLE_LIBMTP) {
-        PKGCONFIG += libusb-1.0 libmtp
-    }
-    contains(DEFINES, ENABLE_LIBEXIF) {
-        PKGCONFIG += libexif
-    }
-    contains(DEFINES, ENABLE_MINIVIDEO) {
-        PKGCONFIG += libminivideo
-    }
-    contains(DEFINES, ENABLE_FFMPEG) {
-        PKGCONFIG += libavformat libavcodec libswscale libswresample libavutil
-    }
+    contains(DEFINES, ENABLE_LIBMTP) { PKGCONFIG += libusb-1.0 libmtp }
+    contains(DEFINES, ENABLE_LIBEXIF) { PKGCONFIG += libexif }
+    contains(DEFINES, ENABLE_MINIVIDEO) { PKGCONFIG += libminivideo }
+    contains(DEFINES, ENABLE_FFMPEG) { PKGCONFIG += libavformat libavcodec libswscale libswresample libavutil }
 }
 
 # Deploy #######################################################################

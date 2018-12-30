@@ -293,6 +293,7 @@ for TARGET in TARGETS:
         FFMPEG_key = "macos64"
     if OS_TARGET == "linux":
         FFMPEG_key = "macos64" # hack, we only need headers
+        #continue
 
     opener = urllib.request.build_opener()
     opener.addheaders = [('User-agent', 'Mozilla/5.0')]
@@ -338,8 +339,18 @@ for TARGET in TARGETS:
         if os.path.exists(FFMPEG_FOLDER):
             print("> Installing " + FFMPEG_FILE)
             if OS_TARGET == "macOS":
-                copytree_wildcard(FFMPEG_FOLDER + "/bin/*.dylib", env_dir + "/usr/lib")
                 copytree_wildcard(FFMPEG_FOLDER + "/bin/ffmpeg", env_dir + "/usr/bin")
+                copytree_wildcard(FFMPEG_FOLDER + "/bin/*.dylib", env_dir + "/usr/lib")
+                os.chdir(env_dir + "/usr/lib")
+                os.symlink("libavcodec.58.dylib", "libavcodec.dylib")
+                os.symlink("libavdevice.58.dylib", "libavdevice.dylib")
+                os.symlink("libavfilter.7.dylib", "libavfilter.dylib")
+                os.symlink("libavformat.58.dylib", "libavformat.dylib")
+                os.symlink("libavutil.56.dylib", "libavutil.dylib")
+                os.symlink("libpostproc.55.dylib", "libpostproc.dylib")
+                os.symlink("libswresample.3.dylib", "libswresample.dylib")
+                os.symlink("libswscale.5.dylib", "libswscale.dylib")
+
             if OS_TARGET == "windows":
                 copytree_wildcard(FFMPEG_FOLDER + "/bin/*.dll", env_dir + "/usr/lib")
                 copytree_wildcard(FFMPEG_FOLDER + "/bin/ffmpeg.exe", env_dir + "/usr/bin")

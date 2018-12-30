@@ -20,26 +20,26 @@ upload_package=false
 while [[ $# -gt 0 ]]
 do
 case $1 in
-    -c|--contribs)
-    use_contribs=true
-    ;;
-    -u|--upload)
-    upload_package=true
-    ;;
-    *)
-    echo "> Unknown argument '$1'"
-    ;;
+  -c|--contribs)
+  use_contribs=true
+  ;;
+  -u|--upload)
+  upload_package=true
+  ;;
+  *)
+  echo "> Unknown argument '$1'"
+  ;;
 esac
 shift # skip argument or value
 done
 
 ## APP INSTALL #################################################################
 
-echo '---- Running make install'
-make install;
+#echo '---- Running make install'
+#make INSTALL_ROOT=bin/ install;
 
-echo '---- Installation directory content recap:'
-find bin/;
+#echo '---- Installation directory content recap:'
+#find bin/;
 
 ## PACKAGE #####################################################################
 
@@ -51,9 +51,13 @@ else
   export LD_LIBRARY_PATH=/usr/local/lib/;
 fi
 
-# (already run by the make install)
-#echo '---- Running macdeployqt'
-#macdeployqt bin/OffloadBuddy.app -qmldir=qml/;
+echo '---- Running macdeployqt'
+macdeployqt bin/OffloadBuddy.app -qmldir=qml/;
+
+mv contribs/env/macos_x86_64/usr/bin/ffmpeg bin/OffloadBuddy.app/Contents/MacOS/
+
+echo '---- Installation directory content recap:'
+find bin/;
 
 echo '---- Compressing package'
 cd bin/;
