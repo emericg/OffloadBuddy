@@ -2,9 +2,6 @@
 # resources/app/
 - offloadbuddy.*            // Emeric Grange        // CC BY-SA 4.0
 
-# resources/badges:
-*.*                         // Emeric Grange        // CC BY-SA 4.0
-
 # resources/icons/
 - card.svg                  // Lüv icon theme       // CC BY-SA 4.0
 - disk.svg                  // Lüv icon theme       // CC BY-SA 4.0

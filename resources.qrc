@@ -22,15 +22,6 @@
         <file>resources/other/placeholder_picture_multi.svg</file>
         <file>resources/other/placeholder_video.svg</file>
     </qresource>
-    <qresource prefix="/badges">
-        <file alias="GPR.svg">resources/badges/GPR.svg</file>
-        <file alias="PNG.svg">resources/badges/PNG.svg</file>
-        <file alias="JPEG.svg">resources/badges/JPEG.svg</file>
-        <file alias="AAC.svg">resources/badges/AAC.svg</file>
-        <file alias="MP3.svg">resources/badges/MP3.svg</file>
-        <file alias="H264.svg">resources/badges/H264.svg</file>
-        <file alias="H265.svg">resources/badges/H265.svg</file>
-    </qresource>
     <qresource prefix="/icons">
         <file alias="disk.svg">resources/icons/disk.svg</file>
         <file alias="card.svg">resources/icons/card.svg</file>

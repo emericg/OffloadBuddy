@@ -44,7 +44,7 @@ Rectangle {
             if (shot.type >= Shared.SHOT_PICTURE) {
                 codecAudio.visible = false
                 codecVideo.visible = true
-                codecVideo.source = "qrc:/badges/JPEG.svg"
+                codecVideoText.text = "JPEG"
             }
 
             if (shot.hasGpmf) {
@@ -104,10 +104,11 @@ Rectangle {
             font.pixelSize: ThemeEngine.fontSizeHeaderTitle
 
             contentItem: Text {
+                anchors.fill: parent
                 text: rectangleBack.text
                 font: rectangleBack.font
                 opacity: enabled ? 1.0 : 0.3
-                color: rectangleBack.down ? ThemeEngine.colorHeaderTitle : ThemeEngine.colorHeaderTitle
+                color: rectangleBack.down ? ThemeEngine.colorHeaderTitle : ThemeEngine.colorButtonText
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideRight
@@ -131,45 +132,6 @@ Rectangle {
             font.bold: true
             font.pixelSize: ThemeEngine.fontSizeHeaderTitle
             verticalAlignment: Text.AlignVCenter
-        }
-
-        Image {
-            id: codecAudio
-            width: 64
-            height: 24
-            anchors.right: codecVideo.left
-            anchors.rightMargin: 16
-            anchors.verticalCenterOffset: 0
-            anchors.verticalCenter: parent.verticalCenter
-
-            source: "qrc:/badges/AAC.svg"
-            sourceSize.width: 64
-            sourceSize.height: 24
-/*
-            ColorOverlay {
-                anchors.fill: parent
-                source: parent
-                color: ThemeEngine.colorContentText
-            }*/
-        }
-        Image {
-            id: codecVideo
-            width: 64
-            height: 24
-            anchors.right: buttonOverview.left
-            anchors.rightMargin: 16
-            anchors.verticalCenterOffset: 0
-            anchors.verticalCenter: parent.verticalCenter
-
-            source: "qrc:/badges/H264.svg"
-            sourceSize.width: 64
-            sourceSize.height: 24
-/*
-            ColorOverlay {
-                anchors.fill: parent
-                source: parent
-                color: ThemeEngine.colorContentText
-            }*/
         }
 
         ButtonThemed {
@@ -198,6 +160,52 @@ Rectangle {
 
             text: qsTr("Map")
             onClicked: screenMedia.state = "map"
+        }
+
+        Rectangle {
+            id: codecVideo
+            width: 80
+            height: 28
+            anchors.right: codecAudio.left
+            anchors.rightMargin: 16
+            anchors.verticalCenter: parent.verticalCenter
+
+            color: "#dfdfdf"
+            Text {
+                id: codecVideoText
+                anchors.fill: parent
+
+                text: qsTr("CODEC")
+                color: "grey"
+                font.capitalization: Font.AllUppercase
+                font.pixelSize: 16
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
+        }
+
+        Rectangle {
+            id: codecAudio
+            width: 80
+            height: 28
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.right: buttonOverview.left
+            anchors.rightMargin: 16
+
+            color: "#dfdfdf"
+            Text {
+                id: codecAudioText
+                anchors.fill: parent
+
+                text: qsTr("CODEC")
+                color: "grey"
+                font.capitalization: Font.AllUppercase
+                font.pixelSize: 16
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
         }
     }
 

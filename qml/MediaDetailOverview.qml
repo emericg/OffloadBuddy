@@ -358,18 +358,14 @@ Rectangle {
             timelineLimitStop.width = 0
 
             codecVideo.visible = true
-            if (shot.codecVideo === "H.264")
-                codecVideo.source = "qrc:/badges/H264.svg"
-            else if (shot.codecVideo === "H.265")
-                codecVideo.source = "qrc:/badges/H265.svg"
+            if (shot.codecVideo.length)
+                codecVideoText.text = shot.codecVideo
             else
                 codecVideo.visible = false
 
             codecAudio.visible = true
-            if (shot.codecAudio === "MP3")
-                codecAudio.source = "qrc:/badges/MP3.svg"
-            else if (shot.codecAudio === "AAC")
-                codecAudio.source = "qrc:/badges/AAC.svg"
+            if (shot.codecAudio.length)
+                codecAudioText.text = shot.codecAudio
             else
                 codecAudio.visible = false
 
