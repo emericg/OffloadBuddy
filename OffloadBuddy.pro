@@ -122,7 +122,7 @@ contains(DEFINES, USE_CONTRIBS) {
     contains(DEFINES, ENABLE_LIBEXIF) { LIBS += -lexif }
     contains(DEFINES, ENABLE_MINIVIDEO) { LIBS += -lminivideo }
     contains(DEFINES, ENABLE_FFMPEG) { LIBS += -lavformat -lavcodec -lswscale -lswresample -lavutil }
-    linux { contains(DEFINES, ENABLE_FFMPEG) { PKGCONFIG += libavformat libavcodec libswscale libswresample libavutil }
+    linux { contains(DEFINES, ENABLE_FFMPEG) { PKGCONFIG += libavformat libavcodec libswscale libswresample libavutil } }
 
 } else {
 
