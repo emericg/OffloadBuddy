@@ -121,53 +121,66 @@ Rectangle {
         anchors.topMargin: 8
 
         Text {
-            id: labelCoodrinates
-            text: qsTr("GPS coordinates:")
-            verticalAlignment: Text.AlignVCenter
-            font.bold: true
+            id: labelCoordinates
+            height: parent.height
             anchors.left: parent.left
-            anchors.leftMargin: 0
+            anchors.leftMargin: 16
             anchors.verticalCenter: parent.verticalCenter
+
+            text: qsTr("GPS coordinates:")
             font.pixelSize: 16
+            font.bold: true
+            color: ThemeEngine.colorText
+            verticalAlignment: Text.AlignVCenter
         }
 
         Text {
             id: labelAltitude
-            text: qsTr("Altitude:")
+            height: parent.height
             anchors.verticalCenterOffset: 0
             anchors.left: coordinates.right
             anchors.verticalCenter: parent.verticalCenter
-            font.pixelSize: 16
             anchors.leftMargin: 64
-            verticalAlignment: Text.AlignVCenter
+
+            text: qsTr("Altitude:")
+            font.pixelSize: 16
             font.bold: true
+            color: ThemeEngine.colorText
+            verticalAlignment: Text.AlignVCenter
         }
 
         Text {
             id: coordinates
-            text: "text"
-            anchors.left: labelCoodrinates.right
+            height: parent.height
+            anchors.left: labelCoordinates.right
             anchors.leftMargin: 16
             anchors.verticalCenter: parent.verticalCenter
-            verticalAlignment: Text.AlignVCenter
+
+            text: "text"
             font.pixelSize: 16
+            color: ThemeEngine.colorText
+            verticalAlignment: Text.AlignVCenter
         }
 
         Text {
             id: altitude
-            text: "text"
+            height: parent.height
             anchors.left: labelAltitude.right
             anchors.leftMargin: 16
             anchors.verticalCenter: parent.verticalCenter
+
+            text: "text"
             font.pixelSize: 16
+            color: ThemeEngine.colorText
+            verticalAlignment: Text.AlignVCenter
         }
 
         ButtonThemed {
             id: button_gps_export
-            text: qsTr("Export GPS trace")
             anchors.right: parent.right
             anchors.rightMargin: 0
             anchors.verticalCenter: parent.verticalCenter
+            text: qsTr("Export GPS trace")
         }
     }
 }

@@ -23,7 +23,7 @@ Rectangle {
         updateShotDetails()
 
         // save state
-        if (typeof deviceSavedState !== "undefined")
+        if (deviceSavedState && typeof deviceSavedState !== "undefined")
             deviceSavedState.detail_shot = shot
     }
 
@@ -203,7 +203,7 @@ Rectangle {
 
     onStateChanged: {
         // save state
-        if (typeof deviceSavedState !== "undefined")
+        if (deviceSavedState && typeof deviceSavedState !== "undefined")
             deviceSavedState.detail_state = state
     }
 

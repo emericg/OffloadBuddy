@@ -10,15 +10,16 @@ Rectangle {
     height: 720
 
     property var deviceSavedStateList: []
-    property var deviceSavedState
+    property var deviceSavedState : null
 
     property var currentDevice: null
 
     onCurrentDeviceChanged: {
-        if (deviceSavedStateList && deviceSavedStateList.length > 0) {
-            //console.log("Device is now " + myDevice.uniqueId)
+        if (currentDevice && !deviceSavedStateList[currentDevice.uniqueId]) {
+            //console.log("Device is now " + currentDevice.uniqueId)
 
             deviceSavedStateList[currentDevice.uniqueId] = ({ orderBy: 0,
+                                                              filterBy: 0,
                                                               zoomLevel: 2.0,
                                                               mainState: "stateMediaGrid",
                                                               selectedIndex: 0,
@@ -39,10 +40,9 @@ Rectangle {
     }
 
     onStateChanged: {
-        if (deviceSavedStateList && deviceSavedStateList.length > 0) {
-             // save state
+        // save state
+        if (deviceSavedState)
              deviceSavedState.mainState = state
-        }
     }
 
     // CONTENT /////////////////////////////////////////////////////////////////

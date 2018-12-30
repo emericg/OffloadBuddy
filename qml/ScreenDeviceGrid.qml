@@ -25,6 +25,7 @@ Rectangle {
     function restoreState() {
         sliderZoom.value = deviceSavedState.zoomLevel
         comboBox_orderby.currentIndex = deviceSavedState.orderBy
+        comboBox_filterby.currentIndex = deviceSavedState.filterBy
         shotsview.currentIndex = deviceSavedState.selectedIndex
     }
 
@@ -99,7 +100,7 @@ Rectangle {
     }
 
     function updateGridViewSettings() {
-        //console.log("updateGridViewSettings() [device "+ myDevice + "] (state " + myDevice.deviceState + ") (shotcount: " + shotsview.count + ")")
+        //console.log("updateGridViewSettings() [device "+ currentDevice + "] (state " + currentDevice.deviceState + ") (shotcount: " + shotsview.count + ")")
 
         // restore state
         if (deviceSavedState)
@@ -380,7 +381,7 @@ Rectangle {
 
         ComboBoxThemed {
             id: comboBox_orderby
-            width: 256
+            width: 200
             height: 40
             anchors.top: parent.top
             anchors.topMargin: 16
@@ -414,8 +415,44 @@ Rectangle {
                 displayText = qsTr("Order by:") + " " + cbShotsOrderby.get(currentIndex).text
 
                 // save state
-                if (currentDevice)
+                if (deviceSavedState)
                     deviceSavedState.orderBy = currentIndex
+            }
+        }
+
+        ComboBoxThemed {
+            id: comboBox_filterby
+            width: 200
+            height: 40
+            anchors.top: parent.top
+            anchors.topMargin: 16
+            anchors.left: comboBox_orderby.right
+            anchors.leftMargin: 16
+            displayText: qsTr("No filter")
+
+            model: ListModel {
+                id: cbMediaFilters
+                ListElement { text: qsTr("No filter"); }
+                ListElement { text: qsTr("Videos"); }
+                ListElement { text: qsTr("Photos"); }
+                ListElement { text: qsTr("Timelapses"); }
+            }
+
+            property bool cbinit: false
+            onCurrentIndexChanged: {
+                if (cbinit) {
+                    currentDevice.filterByType(cbMediaFilters.get(currentIndex).text)
+
+                    if (currentIndex == 0)
+                        displayText = cbMediaFilters.get(currentIndex).text
+                    else
+                        displayText = qsTr("Filter by:") + " " + cbMediaFilters.get(currentIndex).text
+                } else
+                    cbinit = true;
+
+                // save state
+                if (deviceSavedState)
+                    deviceSavedState.filterBy = currentIndex
             }
         }
 
@@ -425,7 +462,7 @@ Rectangle {
             height: 40
             anchors.verticalCenter: textZoom.verticalCenter
             anchors.left: textZoom.right
-            anchors.leftMargin: 16
+            anchors.leftMargin: 4
             stepSize: 1
             to: 3
             from: 1
@@ -441,18 +478,19 @@ Rectangle {
                 }
 
                 // save state
-                deviceSavedState.zoomLevel = value
+                if (deviceSavedState)
+                    deviceSavedState.zoomLevel = value
             }
         }
 
         Text {
             id: textZoom
             height: 40
-            anchors.verticalCenter: comboBox_orderby.verticalCenter
-            anchors.left: comboBox_orderby.right
+            anchors.verticalCenter: comboBox_filterby.verticalCenter
+            anchors.left: comboBox_filterby.right
             anchors.leftMargin: 16
 
-            text: qsTr("Zoom:")
+            text: qsTr("ZOOM")
             font.pixelSize: ThemeEngine.fontSizeHeaderText
             color: ThemeEngine.colorHeaderText
             horizontalAlignment: Text.AlignHCenter
@@ -594,7 +632,7 @@ Rectangle {
                     //console.log("highlight: " + rectangleDeviceShots.highlight.x + "/" + rectangleDeviceShots.highlight.y)
 
                     // save state
-                    if (shotsview.currentIndex != 0)
+                    if (deviceSavedState && shotsview.currentIndex != 0)
                         deviceSavedState.selectedIndex = shotsview.currentIndex
                 }
                 onCurrentItemChanged: {
