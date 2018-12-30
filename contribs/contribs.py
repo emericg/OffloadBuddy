@@ -9,6 +9,7 @@ if sys.version_info < (3, 0):
 
 import platform
 import multiprocessing
+import glob
 import shutil
 import zipfile
 import tarfile
@@ -124,6 +125,12 @@ def copytree(src, dst, symlinks=False, ignore=None):
             if not os.path.exists(d) or os.stat(s).st_mtime - os.stat(d).st_mtime > 1:
                 shutil.copy2(s, d)
 
+def copytree_wildcard(src, dst, symlinks=False, ignore=None):
+    if not os.path.exists(dst):
+        os.makedirs(dst)
+    for item in glob.glob(src):
+        shutil.copy2(item, dst)
+
 ## SOFTWARES ###################################################################
 
 if not os.path.exists(src_dir):
@@ -168,11 +175,6 @@ DIR_minivideo = "MiniVideo-master"
 if not os.path.exists("src/" + FILE_minivideo):
     print("> Downloading " + FILE_minivideo + "...")
     urllib.request.urlretrieve("https://github.com/emericg/MiniVideo/archive/master.zip", src_dir + FILE_minivideo)
-
-## ffmpeg (src & bin urls)
-ffmpeg_VERSION="ffmpeg-4.1.0"
-ffmpeg_SRC="https://www.ffmpeg.org/releases/" + ffmpeg_VERSION + ".tar.xz"
-ffmpeg_BIN_BASEURL="https://drive.google.com/open?id=1NVL5wc0GSLEaaLnCwoCW84N-BVgnEqFv"
 
 ## linuxdeployqt
 ## version: git
@@ -282,15 +284,62 @@ for TARGET in TARGETS:
     ############################################################################
 
     ## ffmpeg binaries download & install
-    ## target windows and macOS only
+    FFMPEG_version = "4.1"
+    FFMPEG_key = ""
+
+    if OS_TARGET == "windows":
+        FFMPEG_key = "win64"
+    if OS_TARGET == "macOS":
+        FFMPEG_key = "macos64"
+    if OS_TARGET == "linux":
+        FFMPEG_key = "macos64" # hack, we only need headers
+
+    opener = urllib.request.build_opener()
+    opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+    urllib.request.install_opener(opener)
+
+    ## HEADERS
+
+    FFMPEG_FOLDER = build_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-dev"
+    FFMPEG_FILE = src_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-dev.zip"
+    FFMPEG_URL = "https://ffmpeg.zeranoe.com/builds/" + FFMPEG_key + "/dev/" + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-dev.zip"
+
+    if not os.path.exists(FFMPEG_FILE):
+        print("> Downloading " + FFMPEG_URL)
+        urllib.request.urlretrieve(FFMPEG_URL, FFMPEG_FILE)
+
+    if not os.path.exists(FFMPEG_FOLDER):
+        print("> Extracting " + FFMPEG_FILE)
+        zipFF = zipfile.ZipFile(FFMPEG_FILE)
+        zipFF.extractall(build_dir)
+
+    if os.path.exists(FFMPEG_FOLDER):
+        print("> Installing " + FFMPEG_FILE)
+        copytree(FFMPEG_FOLDER + "/include/", env_dir + "/usr/include")
+        if OS_TARGET == "windows":
+            copytree_wildcard(FFMPEG_FOLDER + "/lib/*.lib", env_dir + "/usr/lib")
+
+    ## LIBS
+
     if OS_TARGET == "windows" or OS_TARGET == "macOS":
+        FFMPEG_FOLDER = build_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-shared"
+        FFMPEG_FILE = src_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-shared.zip"
+        FFMPEG_URL = "https://ffmpeg.zeranoe.com/builds/" + FFMPEG_key + "/shared/" + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-shared.zip"
 
-        FFMPEG_FILE_DST=src_dir + "ffmpeg-contribs.tar.xz"
-        if not os.path.exists(FFMPEG_FILE_DST):
-            print("> Downloading " + FFMPEG_FILE_DST)
-            urllib.request.urlretrieve(ffmpeg_BIN_BASEURL, FFMPEG_FILE_DST)
+        if not os.path.exists(FFMPEG_FILE):
+            print("> Downloading " + FFMPEG_URL)
+            urllib.request.urlretrieve(FFMPEG_URL, FFMPEG_FILE)
 
-        if os.path.exists(FFMPEG_FILE_DST):
-            print("> Installing " + FFMPEG_FILE_DST)
-            zipFF = tarfile.open(FFMPEG_FILE_DST)
-            zipFF.extractall(contribs_dir + "env/")
+        if not os.path.exists(FFMPEG_FOLDER):
+            print("> Extracting " + FFMPEG_FILE)
+            zipFF = zipfile.ZipFile(FFMPEG_FILE)
+            zipFF.extractall(build_dir)
+
+        if os.path.exists(FFMPEG_FOLDER):
+            print("> Installing " + FFMPEG_FILE)
+            if OS_TARGET == "macOS":
+                copytree_wildcard(FFMPEG_FOLDER + "/bin/*.dylib", env_dir + "/usr/lib")
+                copytree_wildcard(FFMPEG_FOLDER + "/bin/ffmpeg", env_dir + "/usr/bin")
+            if OS_TARGET == "windows":
+                copytree_wildcard(FFMPEG_FOLDER + "/bin/*.dll", env_dir + "/usr/lib")
+                copytree_wildcard(FFMPEG_FOLDER + "/bin/ffmpeg.exe", env_dir + "/usr/bin")
