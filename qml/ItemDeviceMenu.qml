@@ -23,7 +23,7 @@ Rectangle {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         fillMode: Image.PreserveAspectCrop
-        source: "qrc:/resources/menus/device.svg"
+        source: "qrc:/menus/device.svg"
         sourceSize.width: 64
         sourceSize.height: 64
 

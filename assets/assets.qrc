@@ -4,4 +4,31 @@
         <file>icons_material/baseline-refresh-24px.svg</file>
         <file>icons_material/outline-folder-24px.svg</file>
     </qresource>
+
+    <qresource prefix="/menus">
+        <file alias="selector_arrow.svg">menus/selector_arrow.svg</file>
+        <file alias="selector_bar.svg">menus/selector_bar.svg</file>
+        <file alias="media.svg">menus/media.svg</file>
+        <file alias="device.svg">menus/device.svg</file>
+        <file alias="jobs.svg">menus/jobs.svg</file>
+        <file alias="settings.svg">menus/settings.svg</file>
+        <file alias="about.svg">menus/about.svg</file>
+        <file alias="exit.svg">menus/exit.svg</file>
+    </qresource>
+    <qresource prefix="/cameras">
+        <file alias="generic_actioncam.svg">cameras/generic_actioncam.svg</file>
+        <file alias="generic_camera.svg">cameras/generic_camera.svg</file>
+        <file alias="generic_smartphone.svg">cameras/generic_smartphone.svg</file>
+        <file alias="H7w.svg">cameras/H7w.svg</file>
+        <file alias="H6.svg">cameras/H6.svg</file>
+        <file alias="H5.svg">cameras/H5.svg</file>
+        <file alias="H4.svg">cameras/H4.svg</file>
+        <file alias="H3.svg">cameras/H3.svg</file>
+        <file alias="H2.svg">cameras/H2.svg</file>
+        <file alias="session.svg">cameras/session.svg</file>
+        <file alias="fusion.svg">cameras/fusion.svg</file>
+    </qresource>
+    <qresource prefix="/authors">
+        <file alias="emeric.jpg">authors/emeric.jpg</file>
+    </qresource>
 </RCC>

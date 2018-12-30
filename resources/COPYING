@@ -1,20 +1,9 @@
+
 # resources/app/
 - offloadbuddy.*            // Emeric Grange        // CC BY-SA 4.0
 
 # resources/badges:
 *.*                         // Emeric Grange        // CC BY-SA 4.0
-
-# resources/cameras/
-- generic_smartphone.svg    // Lüv icon theme       // CC BY-SA 4.0
-- generic_camera.svg        // Yosa Max icon theme  // GPL v3
-- generic_actioncam.svg     // Faenza icon theme    // GPL v3
-- H6.svg                    // Emeric Grange        // CC BY-SA 4.0
-- H5.svg                    // Emeric Grange        // CC BY-SA 4.0
-- H4.svg                    // Emeric Grange        // CC BY-SA 4.0
-- H3.svg                    // Emeric Grange        // CC BY-SA 4.0
-- H2.svg                    // Emeric Grange        // CC BY-SA 4.0
-- session.svg               // Emeric Grange        // CC BY-SA 4.0
-- fusion.svg                // Emeric Grange        // CC BY-SA 4.0
 
 # resources/icons/
 - card.svg                  // Lüv icon theme       // CC BY-SA 4.0
@@ -24,16 +13,6 @@
 - play.svg                  // Lüv icon theme       // CC BY-SA 4.0
 - working.svg               // Lüv icon theme       // CC BY-SA 4.0
 - done.svg                  // Lüv icon theme       // CC BY-SA 4.0
-
-# resources/menus:
-- selector_arrow.svg        // Emeric Grange        // CC BY-SA 4.0
-- selector_bar.svg          // Emeric Grange        // CC BY-SA 4.0
-- jobs.svg                  // Emeric Grange        // CC BY-SA 4.0
-- about.svg                 // Emeric Grange        // CC BY-SA 4.0
-- device.svg                // Yosa Max icon theme  // GPL v3
-- media.svg                 // Paper icon theme     // CC BY-SA 4.0
-- settings.svg              // Paper icon theme     // CC BY-SA 4.0
-- exit.svg                  // Paper icon theme     // CC BY-SA 4.0
 
 # resources/minicons:
 - bookmark.svg              // Emeric Grange        // CC BY-SA 4.0

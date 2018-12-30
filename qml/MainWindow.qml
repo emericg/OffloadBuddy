@@ -101,7 +101,7 @@ ApplicationWindow {
             height: 12
             anchors.right: parent.right
             anchors.rightMargin: 0
-            source: "qrc:/resources/menus/selector_arrow.svg"
+            source: "qrc:/menus/selector_arrow.svg"
             visible: ThemeEngine.currentTheme !== ThemeEngine.BLOOD_AND_TEARS ? 1 : 0
 
             ColorOverlay {
@@ -116,7 +116,7 @@ ApplicationWindow {
             id: selectorBar
             width: parent.width
             height: 64
-            color: "black"//ThemeEngine.colorHeaderBackground
+            color: "black"
 
             Rectangle {
                 width: 4
@@ -144,7 +144,7 @@ ApplicationWindow {
 
             Image {
                 anchors.fill: parent
-                source: "qrc:/resources/menus/media.svg"
+                source: "qrc:/menus/media.svg"
                 sourceSize.width: 64
                 sourceSize.height: 64
 
@@ -204,7 +204,7 @@ ApplicationWindow {
                 id: button_jobs_image
                 anchors.fill: parent
                 fillMode: Image.PreserveAspectFit
-                source: "qrc:/resources/menus/jobs.svg"
+                source: "qrc:/menus/jobs.svg"
                 opacity: 0
 
                 ColorOverlay {
@@ -251,7 +251,7 @@ ApplicationWindow {
             Image {
                 anchors.fill: parent
                 fillMode: Image.PreserveAspectFit
-                source: "qrc:/resources/menus/settings.svg"
+                source: "qrc:/menus/settings.svg"
                 sourceSize.width: 50
                 sourceSize.height: 50
 
@@ -280,7 +280,7 @@ ApplicationWindow {
             }
             Image {
                 anchors.fill: parent
-                source: "qrc:/resources/menus/about.svg"
+                source: "qrc:/menus/about.svg"
                 sourceSize.width: 50
                 sourceSize.height: 50
 
@@ -309,7 +309,7 @@ ApplicationWindow {
             Image {
                 anchors.fill: parent
                 fillMode: Image.PreserveAspectFit
-                source: "qrc:/resources/menus/exit.svg"
+                source: "qrc:/menus/exit.svg"
                 sourceSize.width: 50
                 sourceSize.height: 50
 

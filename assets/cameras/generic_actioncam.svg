@@ -19,6 +19,8 @@
    sodipodi:docname="generic_actioncam.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    style="display:inline">
+  <title
+     id="title904">Faenza icon theme</title>
   <defs
      id="defs4">
     <linearGradient
@@ -598,9 +600,9 @@
      borderopacity="1"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.6600005"
-     inkscape:cx="42.329372"
-     inkscape:cy="30.631585"
+     inkscape:zoom="5.6600004"
+     inkscape:cx="9.9616659"
+     inkscape:cy="89.304299"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -608,8 +610,8 @@
      showguides="false"
      inkscape:guide-bbox="true"
      inkscape:window-width="1920"
-     inkscape:window-height="1016"
-     inkscape:window-x="1920"
+     inkscape:window-height="1056"
+     inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:pagecheckerboard="true"
@@ -658,7 +660,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title>Faenza icon theme</dc:title>
         <cc:license
            rdf:resource="http://creativecommons.org/licenses/by-sa/4.0/" />
       </cc:Work>
@@ -687,9 +689,9 @@
      transform="translate(0,106)">
     <path
        style="display:inline;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:1"
-       d="m 17.500001,-90 v 7.750001 H 9.75 c -4.2935,0 -7.75,2.964808 -7.75,6.78125 v 71.6874989 c 0,3.8164416 3.4565,6.7812512 7.75,6.7812512 h 108.49999 c 4.2935,0 7.75,-2.9648096 7.75,-6.7812512 V -75.468749 c 0,-3.816442 -3.4565,-6.78125 -7.75,-6.78125 H 40.750001 V -90 Z m 0,15.500001 h 23.25 V -66.75 h -23.25 z M 87.249992,-66.75 c 17.120828,0 30.999998,13.879173 30.999998,31 0,17.120829 -13.87917,31 -30.999998,31 -17.120827,0 -30.999997,-13.879171 -30.999997,-31 0,-17.120827 13.87917,-31 30.999997,-31 z m 0,15.500001 c -8.560409,0 -15.499999,6.93959 -15.499999,15.499999 0,8.56041 6.93959,15.500001 15.499999,15.500001 8.560411,0 15.499998,-6.939591 15.499998,-15.500001 0,-8.560409 -6.939587,-15.499999 -15.499998,-15.499999 z"
+       d="m 9.75,-82.249999 c -4.2935,0 -7.75,2.964808 -7.75,6.78125 v 71.6874989 c 0,3.8164416 3.4565,6.7812512 7.75,6.7812512 h 108.49999 c 4.2935,0 7.75,-2.9648096 7.75,-6.7812512 V -75.468749 c 0,-3.816442 -3.4565,-6.78125 -7.75,-6.78125 z m 6.336574,12.191696 h 23.956714 v 27.749999 H 16.086574 Z M 87.249992,-66.75 c 17.120828,0 30.999998,13.879173 30.999998,31 0,17.120829 -13.87917,31 -30.999998,31 -17.120827,0 -30.999997,-13.879171 -30.999997,-31 0,-17.120827 13.87917,-31 30.999997,-31 z m 0,15.500001 c -8.560409,0 -15.499999,6.93959 -15.499999,15.499999 0,8.56041 6.93959,15.500001 15.499999,15.500001 8.560411,0 15.499998,-6.939591 15.499998,-15.500001 0,-8.560409 -6.939587,-15.499999 -15.499998,-15.499999 z"
        id="rect2915"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccssssssssccccccccssssssssss" />
+       sodipodi:nodetypes="csssssscccccccssssssssss" />
   </g>
 </svg>

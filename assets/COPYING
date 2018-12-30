@@ -1,2 +1,26 @@
+
+# assets/menus:
+- about.svg                 // Emeric Grange        // CC BY-SA 4.0
+- device.svg                // Yosa Max icon theme  // GPL v3
+- exit.svg                  // Paper icon theme     // CC BY-SA 4.0
+- jobs.svg                  // Emeric Grange        // CC BY-SA 4.0
+- media.svg                 // Paper icon theme     // CC BY-SA 4.0
+- selector_arrow.svg        // Emeric Grange        // CC BY-SA 4.0
+- selector_bar.svg          // Emeric Grange        // CC BY-SA 4.0
+- settings.svg              // Paper icon theme     // CC BY-SA 4.0
+
+# assets/cameras:
+- generic_actioncam.svg     // Faenza icon theme    // GPL v3
+- generic_camera.svg        // Yosa Max icon theme  // GPL v3
+- generic_smartphone.svg    // Lüv icon theme       // CC BY-SA 4.0
+- fusion.svg                // Emeric Grange        // CC BY-SA 4.0
+- H2.svg                    // Emeric Grange        // CC BY-SA 4.0
+- H3.svg                    // Emeric Grange        // CC BY-SA 4.0
+- H4.svg                    // Emeric Grange        // CC BY-SA 4.0
+- H5.svg                    // Emeric Grange        // CC BY-SA 4.0
+- H6.svg                    // Emeric Grange        // CC BY-SA 4.0
+- H7w.svg                   // Emeric Grange        // CC BY-SA 4.0
+- session.svg               // Emeric Grange        // CC BY-SA 4.0
+
 # assets/icons_material
-- baseline-bug_report-24px.svg            // Google Material Design icons     // CC BY-SA 4.0
+- *                         // Google Material Design icons // CC BY-SA 4.0
