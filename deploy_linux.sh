@@ -81,4 +81,5 @@ if [[ $upload_package = true ]] ; then
   echo '---- Uploading to transfer.sh'
   find appdir -executable -type f -exec ldd {} \; | grep " => $USRDIR" | cut -d " " -f 2-3 | sort | uniq;
   curl --upload-file OffloadBuddy*.AppImage https://transfer.sh/OffloadBuddy-git.$GIT_VERSION-linux64.AppImage;
+  echo '---- Uploaded...'
 fi

@@ -68,4 +68,5 @@ mv bin OffloadBuddy-$GIT_VERSION-win64
 if [[ $upload_package = true ]] ; then
   echo '---- Uploading to transfer.sh'
   curl --upload-file OffloadBuddy*.zip https://transfer.sh/OffloadBuddy-git.$GIT_VERSION-win64.zip;
+  echo '---- Uploaded...'
 fi

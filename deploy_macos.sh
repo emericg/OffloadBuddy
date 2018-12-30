@@ -68,4 +68,5 @@ zip -r -X OffloadBuddy-$GIT_VERSION-macos.zip OffloadBuddy.app;
 if [[ $upload_package = true ]] ; then
   echo '---- Uploading to transfer.sh'
   curl --upload-file OffloadBuddy*.zip https://transfer.sh/OffloadBuddy-git.$GIT_VERSION-macOS.zip;
+  echo '---- Uploaded...'
 fi
