@@ -169,23 +169,10 @@ if not os.path.exists("src/" + FILE_minivideo):
     print("> Downloading " + FILE_minivideo + "...")
     urllib.request.urlretrieve("https://github.com/emericg/MiniVideo/archive/master.zip", src_dir + FILE_minivideo)
 
-## ffmpeg
-## version: 4.0.3
-ffmpeg_VERSION="ffmpeg-4.0.3"
-DIR_ffmpeg = ffmpeg_VERSION
-FILE_ffmpeg = ffmpeg_VERSION + ".tar.xz"
-
-if not os.path.exists("src/" + FILE_ffmpeg):
-    print("> Downloading " + FILE_ffmpeg + "...")
-    urllib.request.urlretrieve("http://www.ffmpeg.org/releases/" + FILE_ffmpeg, src_dir + FILE_ffmpeg)
-
-## ffmpeg (src & bin)
+## ffmpeg (src & bin urls)
+ffmpeg_VERSION="ffmpeg-4.1.0"
 ffmpeg_SRC="https://www.ffmpeg.org/releases/" + ffmpeg_VERSION + ".tar.xz"
-ffmpeg_BIN_BASEURL="https://sourceforge.net/projects/avbuild/files/"
-ffmpeg_BIN_PF1=["windows-desktop", "windows-desktop", "windows-store", "macOS", "iOS", "linux", "android"]
-ffmpeg_BIN_PF2=["desktop-VS2017", "desktop-MINGW", "store-VS2017", "macOS", "iOS", "linux-gcc", "android-clang"]
-ffmpeg_BIN_EDITION="-lite"
-ffmpeg_BIN_EXT=[".7z", ".7z", ".7z", ".tar.xz", ".tar.xz", ".tar.xz", ".tar.xz"]
+ffmpeg_BIN_BASEURL="https://drive.google.com/open?id=1NVL5wc0GSLEaaLnCwoCW84N-BVgnEqFv"
 
 ## linuxdeployqt
 ## version: git
@@ -201,7 +188,7 @@ TARGETS = []
 
 if OS_HOST == "Linux":
     TARGETS.append(["linux", "x86_64"])
-    #TARGETS.append(["windows", "x86_64"])
+    #TARGETS.append(["windows", "x86_64"]) # Windows cross compilation
 
 if OS_HOST == "Darwin":
     TARGETS.append(["macOS", "x86_64"])
@@ -247,17 +234,6 @@ for TARGET in TARGETS:
             CMAKE_gen = "Visual Studio 15 2017 ARM"
         else:
             CMAKE_gen = "Visual Studio 15 2017"
-
-    ## ffmpeg archive selection
-    if OS_HOST == "Linux":
-        if OS_TARGET == "windows":
-            pfid = 7
-        else:
-            pfid = 5
-    if OS_HOST == "Darwin":
-        pfid = 3
-    if OS_HOST == "Windows":
-        pfid = 0
 
     ############################################################################
 
@@ -306,34 +282,15 @@ for TARGET in TARGETS:
     ############################################################################
 
     ## ffmpeg binaries download & install
-    FFMPEG_FILE_DST=src_dir + ffmpeg_VERSION + "-" + ffmpeg_BIN_PF2[pfid] + ffmpeg_BIN_EDITION + ffmpeg_BIN_EXT[pfid]
-    FFMPEG_FILE_DIR=build_dir + ffmpeg_VERSION + "-" + ffmpeg_BIN_PF2[pfid] + ffmpeg_BIN_EDITION
-    FFMPEG_FILE_URL=ffmpeg_BIN_BASEURL + ffmpeg_BIN_PF1[pfid] + "/" + ffmpeg_VERSION + "-" + ffmpeg_BIN_PF2[pfid] + ffmpeg_BIN_EDITION + ffmpeg_BIN_EXT[pfid] + "/download"
+    ## target windows and macOS only
+    if OS_TARGET == "windows" or OS_TARGET == "macOS":
 
-    if not os.path.exists(FFMPEG_FILE_DST):
-        print("> Downloading " + FFMPEG_FILE_DST)
-        urllib.request.urlretrieve(FFMPEG_FILE_URL, FFMPEG_FILE_DST)
+        FFMPEG_FILE_DST=src_dir + "ffmpeg-contribs.tar.xz"
+        if not os.path.exists(FFMPEG_FILE_DST):
+            print("> Downloading " + FFMPEG_FILE_DST)
+            urllib.request.urlretrieve(ffmpeg_BIN_BASEURL, FFMPEG_FILE_DST)
 
-    if not os.path.isdir(FFMPEG_FILE_DIR):
-        if ffmpeg_BIN_EXT[pfid] == ".tar.xz":
+        if os.path.exists(FFMPEG_FILE_DST):
+            print("> Installing " + FFMPEG_FILE_DST)
             zipFF = tarfile.open(FFMPEG_FILE_DST)
-            zipFF.extractall(build_dir)
-        elif ffmpeg_BIN_EXT[pfid] == ".7z":
-            if os.path.isfile("C:\\Program Files\\7-Zip\\7z.exe"):
-                os.system('"C:\\Program Files\\7-Zip\\7z.exe" x ' + FFMPEG_FILE_DST + " -aos -o" + build_dir)
-            else:
-                print("!!! CANNOT EXTRACT 7z files AUTOMATICALLY, PLEASE DO IT YOURSELF !!!")
-                sys.exit(0)
-
-    copytree(FFMPEG_FILE_DIR + "/include/", env_dir + "/usr/include")
-    if TARGET[0] == "android":
-        if TARGET[1] == "armv7":
-            copytree(FFMPEG_FILE_DIR + "/lib/armeabi-v7a/", env_dir + "/usr/lib")
-        elif TARGET[1] == "armv8":
-            copytree(FFMPEG_FILE_DIR + "/lib/arm64-v8a/", env_dir + "/usr/lib")
-    if TARGET[0] == "windows":
-        if TARGET[1] == "x86_64":
-            copytree(FFMPEG_FILE_DIR + "/bin/x64/", env_dir + "/usr/lib")
-            copytree(FFMPEG_FILE_DIR + "/lib/x64/", env_dir + "/usr/lib")
-    else:
-        copytree(FFMPEG_FILE_DIR + "/lib/", env_dir + "/usr/lib")
+            zipFF.extractall(contribs_dir + "env/")
