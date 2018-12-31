@@ -1,5 +1,5 @@
-import QtQuick 2.10
-import QtQuick.Controls 2.3
+import QtQuick 2.9
+import QtQuick.Controls 2.2
 
 import com.offloadbuddy.style 1.0
 import com.offloadbuddy.shared 1.0

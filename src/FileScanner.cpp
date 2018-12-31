@@ -96,7 +96,9 @@ void FileScanner::scanFilesystemElement(QString &dir_path)
                     f->name = fi.baseName();
                     f->extension = fi.suffix().toLower();
                     f->size = static_cast<uint64_t>(fi.size());
+#if (QT_VERSION_MINOR >= 10)
                     f->creation_date = fi.birthTime();
+#endif
                     f->modification_date = fi.lastModified();
 
                     f->filesystemPath = fi.filePath();

@@ -14,8 +14,8 @@ unix {
 }
 
 # Validate Qt version
-if (lessThan(QT_MAJOR_VERSION, 5) | lessThan(QT_MINOR_VERSION, 10)) {
-    error("You need Qt 5.10 to build $${TARGET}...")
+if (lessThan(QT_MAJOR_VERSION, 5) | lessThan(QT_MINOR_VERSION, 9)) {
+    error("You need Qt 5.9 to build $${TARGET}...")
 }
 
 # Build artifacts

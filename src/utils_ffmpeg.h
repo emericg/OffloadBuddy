@@ -51,12 +51,16 @@ void ffmpeg_version();
 /*!
  * \brief List decoders available through linked version of ffmpeg.
  * \param hw_only: List HW decoders only.
+ *
+ * Needs ffmpeg 4+.
  */
 void ffmpeg_list_decoders(bool hw_only = false);
 
 /*!
  * \brief List encoders available through linked version of ffmpeg.
  * \param hw_only: List HW encoders only.
+ *
+ * Needs ffmpeg 4+.
  */
 void ffmpeg_list_encoders(bool hw_only = false);
 

@@ -35,18 +35,18 @@ FEATURES (WIP):
 
 ### Dependencies
 
-You will need a C++14 capable compiler and Qt 5.10+ (with QtMultimedia, QtLocation and QtCharts)
+You will need a C++14 capable compiler and Qt 5.9+ (with QtMultimedia, QtLocation and QtCharts)
 
 Build dependencies:
-- Qt 5.10+  
+- Qt 5.9+  
 - cmake  
 - pkg-config  
 
 Optional dependencies:
 - libusb and libmtp  
 - libexif  
-- ffmpeg  
-- minivideo  
+- ffmpeg (3.4 or better)  
+- minivideo (0.11)  
 
 ### Building OffloadBuddy
 

@@ -70,6 +70,7 @@ void ffmpeg_version()
 
 void ffmpeg_list_decoders(bool hw_only)
 {
+#if (LIBAVCODEC_VERSION_MAJOR >= 58)
     const AVCodec *codec = nullptr;
     void *opaque = nullptr;
 
@@ -80,10 +81,12 @@ void ffmpeg_list_decoders(bool hw_only)
         else if (hw_only == false)
             qDebug() << "DECODER:" << codec->name;
     }
+#endif
 }
 
 void ffmpeg_list_encoders(bool hw_only)
 {
+#if (LIBAVCODEC_VERSION_MAJOR >= 58)
     const AVCodec *codec = nullptr;
     void *opaque = nullptr;
 
@@ -100,6 +103,7 @@ void ffmpeg_list_encoders(bool hw_only)
                 qDebug() << "ENCODER:" << codec->name;
         }
     }
+#endif
 }
 
 /* ************************************************************************** */
