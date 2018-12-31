@@ -79,6 +79,8 @@ RESOURCES += qml/qml.qrc \
              assets/assets.qrc \
              resources.qrc
 
+OTHER_FILES += .travis.yml
+
 include(src/thirdparty/SingleApplication/singleapplication.pri)
 DEFINES += QAPPLICATION_CLASS=QApplication
 
@@ -124,6 +126,7 @@ contains(DEFINES, USE_CONTRIBS) {
     linux {
         CONFIG += link_pkgconfig
         contains(DEFINES, ENABLE_FFMPEG) { PKGCONFIG += libavformat libavcodec libswscale libswresample libavutil }
+        INCLUDEPATH += /usr/include/
     } else {
         contains(DEFINES, ENABLE_FFMPEG) { LIBS += -lavformat -lavcodec -lswscale -lswresample -lavutil }
     }

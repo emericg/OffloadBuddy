@@ -88,16 +88,21 @@ Rectangle {
                 volume: 0.0 // will be set to 0.5 immediately
                 autoPlay: true // will be paused immediately
                 notifyInterval: 33
-                //source: "file://" + "/home/emeric/Videos/equi/VIDEO_1927.mp4"
 
                 property bool isRunning: false
-
+                onError: {
+                    if (platform.os === "windows")
+                        mediaBanner.openMessage(qsTr("Codec pack installed?"))
+                    else
+                        mediaBanner.openMessage(qsTr("Oooops..."))
+                }
                 onStopped: {
                     isRunning = false
                 }
                 onSourceChanged: {
                     stop()
                     isRunning = false
+                    mediaBanner.close()
                 }
                 onVolumeChanged: {
                     soundlinePosition.width = (soundline.width * volume)
@@ -105,6 +110,10 @@ Rectangle {
                 onPositionChanged: {
                     timelinePosition.width = timeline.width * (mediaPlayer.position / mediaPlayer.duration);
                 }
+            }
+
+            ItemBanner {
+                id: mediaBanner
             }
 
             Rectangle {

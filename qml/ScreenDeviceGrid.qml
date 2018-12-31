@@ -31,7 +31,8 @@ Rectangle {
 
     function updateDeviceHeader() {
         deviceModelText.text = currentDevice.brand + " " + currentDevice.model;
-        deviceSpaceText.text = StringUtils.bytesToString_short(currentDevice.spaceUsed) + " used of " + StringUtils.bytesToString_short(currentDevice.spaceTotal)
+        deviceSpaceText.text = StringUtils.bytesToString_short(currentDevice.spaceUsed)
+                + " used of " + StringUtils.bytesToString_short(currentDevice.spaceTotal)
         deviceSpaceBar.value = currentDevice.spaceUsedPercent
 
         if (currentDevice.model.includes("HERO7 White") ||
@@ -70,17 +71,12 @@ Rectangle {
             deviceSpaceLocked.width = 0
         }
 
-        banner.visible = false
-        banner.height = 0
+        banner.close()
         if (currentDevice.deviceStorage === 1) { // VFS
-            banner.visible = true
-            banner.height = 56
-            bannerText.text = qsTr("Previews are not available (yet) with MTP devices...")
+            banner.openMessage(qsTr("Previews are not available (yet) with MTP devices..."))
         }
         if (currentDevice.deviceStorage === 2) { // MTP
-            banner.visible = true
-            banner.height = 56
-            bannerText.text = qsTr("Previews and metadatas are not available (yet) with MTP devices...")
+            banner.openMessage(qsTr("Previews and metadatas are not available (yet) with MTP devices..."))
         }
     }
 
@@ -100,7 +96,8 @@ Rectangle {
     }
 
     function updateGridViewSettings() {
-        //console.log("updateGridViewSettings() [device "+ currentDevice + "] (state " + currentDevice.deviceState + ") (shotcount: " + shotsview.count + ")")
+        //console.log("updateGridViewSettings() [device "+ currentDevice + "]
+        //    (state " + currentDevice.deviceState + ") (shotcount: " + shotsview.count + ")")
 
         // restore state
         if (deviceSavedState)
@@ -589,27 +586,8 @@ Rectangle {
             actionMenu.visible = false
         }
 
-        Rectangle {
+        ItemBanner {
             id: banner
-            z: 1
-            height: 56
-            color: ThemeEngine.colorInfoBanner
-            anchors.top: parent.top
-            anchors.topMargin: 0
-            anchors.left: parent.left
-            anchors.leftMargin: 0
-            anchors.right: parent.right
-            anchors.rightMargin: 0
-
-            Text {
-                id: bannerText
-                anchors.left: parent.left
-                anchors.leftMargin: 16
-                anchors.verticalCenter: parent.verticalCenter
-                text: "banner text"
-                color: ThemeEngine.colorInfoBannerText
-                font.pixelSize: ThemeEngine.fontSizeBannerText
-            }
         }
 
         ScrollView {

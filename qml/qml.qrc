@@ -11,6 +11,7 @@
         <file>ScreenJobs.qml</file>
         <file>ScreenSettings.qml</file>
         <file>ScreenAbout.qml</file>
+        <file>ItemBanner.qml</file>
         <file>ItemDeviceMenu.qml</file>
         <file>ItemMediaDirectory.qml</file>
         <file>ItemJob.qml</file>
