@@ -292,8 +292,7 @@ for TARGET in TARGETS:
     if OS_TARGET == "macOS":
         FFMPEG_key = "macos64"
     if OS_TARGET == "linux":
-        FFMPEG_key = "macos64" # hack, we only need headers
-        #continue
+        continue
 
     opener = urllib.request.build_opener()
     opener.addheaders = [('User-agent', 'Mozilla/5.0')]
@@ -322,35 +321,34 @@ for TARGET in TARGETS:
 
     ## LIBS
 
-    if OS_TARGET == "windows" or OS_TARGET == "macOS":
-        FFMPEG_FOLDER = build_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-shared"
-        FFMPEG_FILE = src_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-shared.zip"
-        FFMPEG_URL = "https://ffmpeg.zeranoe.com/builds/" + FFMPEG_key + "/shared/" + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-shared.zip"
+    FFMPEG_FOLDER = build_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-shared"
+    FFMPEG_FILE = src_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-shared.zip"
+    FFMPEG_URL = "https://ffmpeg.zeranoe.com/builds/" + FFMPEG_key + "/shared/" + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-shared.zip"
 
-        if not os.path.exists(FFMPEG_FILE):
-            print("> Downloading " + FFMPEG_URL)
-            urllib.request.urlretrieve(FFMPEG_URL, FFMPEG_FILE)
+    if not os.path.exists(FFMPEG_FILE):
+        print("> Downloading " + FFMPEG_URL)
+        urllib.request.urlretrieve(FFMPEG_URL, FFMPEG_FILE)
 
-        if not os.path.exists(FFMPEG_FOLDER):
-            print("> Extracting " + FFMPEG_FILE)
-            zipFF = zipfile.ZipFile(FFMPEG_FILE)
-            zipFF.extractall(build_dir)
+    if not os.path.exists(FFMPEG_FOLDER):
+        print("> Extracting " + FFMPEG_FILE)
+        zipFF = zipfile.ZipFile(FFMPEG_FILE)
+        zipFF.extractall(build_dir)
 
-        if os.path.exists(FFMPEG_FOLDER):
-            print("> Installing " + FFMPEG_FILE)
-            if OS_TARGET == "macOS":
-                copytree_wildcard(FFMPEG_FOLDER + "/bin/ffmpeg", env_dir + "/usr/bin")
-                copytree_wildcard(FFMPEG_FOLDER + "/bin/*.dylib", env_dir + "/usr/lib")
-                os.chdir(env_dir + "/usr/lib")
-                os.symlink("libavcodec.58.dylib", "libavcodec.dylib")
-                os.symlink("libavdevice.58.dylib", "libavdevice.dylib")
-                os.symlink("libavfilter.7.dylib", "libavfilter.dylib")
-                os.symlink("libavformat.58.dylib", "libavformat.dylib")
-                os.symlink("libavutil.56.dylib", "libavutil.dylib")
-                os.symlink("libpostproc.55.dylib", "libpostproc.dylib")
-                os.symlink("libswresample.3.dylib", "libswresample.dylib")
-                os.symlink("libswscale.5.dylib", "libswscale.dylib")
+    if os.path.exists(FFMPEG_FOLDER):
+        print("> Installing " + FFMPEG_FILE)
+        if OS_TARGET == "macOS":
+            copytree_wildcard(FFMPEG_FOLDER + "/bin/ffmpeg", env_dir + "/usr/bin")
+            copytree_wildcard(FFMPEG_FOLDER + "/bin/*.dylib", env_dir + "/usr/lib")
+            os.chdir(env_dir + "/usr/lib")
+            os.symlink("libavcodec.58.dylib", "libavcodec.dylib")
+            os.symlink("libavdevice.58.dylib", "libavdevice.dylib")
+            os.symlink("libavfilter.7.dylib", "libavfilter.dylib")
+            os.symlink("libavformat.58.dylib", "libavformat.dylib")
+            os.symlink("libavutil.56.dylib", "libavutil.dylib")
+            os.symlink("libpostproc.55.dylib", "libpostproc.dylib")
+            os.symlink("libswresample.3.dylib", "libswresample.dylib")
+            os.symlink("libswscale.5.dylib", "libswscale.dylib")
 
-            if OS_TARGET == "windows":
-                copytree_wildcard(FFMPEG_FOLDER + "/bin/*.dll", env_dir + "/usr/lib")
-                copytree_wildcard(FFMPEG_FOLDER + "/bin/ffmpeg.exe", env_dir + "/usr/bin")
+        if OS_TARGET == "windows":
+            copytree_wildcard(FFMPEG_FOLDER + "/bin/*.dll", env_dir + "/usr/lib")
+            copytree_wildcard(FFMPEG_FOLDER + "/bin/ffmpeg.exe", env_dir + "/usr/bin")

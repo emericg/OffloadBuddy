@@ -53,8 +53,8 @@ Item {
     property string colorContentSubTitle: "#000000"
     property string colorContentSubText: "#000000"
 
-    property string colorText: "#ffffff"
-    property string colorTextDisabled: "#dddddd"
+    property string colorText: "#000000"
+    property string colorTextDisabled: "#000000"
 
     property string colorApproved: "#46b0f4"
     property string colorDangerZone: "#FF5F5F"
@@ -62,13 +62,13 @@ Item {
 
     // Qt Quick controls theming
     property string colorButton: "#e0e0e0"
-    property string colorButtonText: "#ffffff"
+    property string colorButtonText: "#000000"
     property string colorButtonDown: "#bdbdbd"
-    property string colorButtonHover: "#f6f6f6"
+    property string colorButtonHover: "#E4E4E4"
     property string colorComboBox: "#e0e0e0"
-    property string colorComboBoxText: "#ffffff"
+    property string colorComboBoxText: "#000000"
     property string colorProgressBar: "#46b0f4"
-    property string colorProgressBarBg: "#bdbdbd"
+    property string colorProgressBarBg: "#E4E4E4"
 
     // Selector (arrow or bar)
     property string selector: "arrow"
