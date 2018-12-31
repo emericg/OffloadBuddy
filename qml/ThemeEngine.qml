@@ -70,6 +70,9 @@ Item {
     property string colorProgressBar: "#46b0f4"
     property string colorProgressBarBg: "#bdbdbd"
 
+    // Selector (arrow or bar)
+    property string selector: "arrow"
+
     // Fonts (sizes in pixel)
     readonly property int fontSizeHeaderTitle: 30
     readonly property int fontSizeHeaderText: 17
@@ -122,6 +125,8 @@ Item {
             colorProgressBar =      "#46b0f4"
             colorProgressBarBg =    "#E4E4E4"
 
+            selector =              "arrow"
+
         } else if (themeIndex === ThemeEngine.DARK_AND_SPOOKY) {
 
             // "DARK AND SPOOKY"
@@ -158,6 +163,8 @@ Item {
             colorProgressBar =      "#f0544c"
             colorProgressBarBg =    "#E4E4E4"
 
+            selector =              "arrow"
+
         } else if (themeIndex === ThemeEngine.BLOOD_AND_TEARS) {
 
             // "BLOOD AND TEARS"
@@ -193,6 +200,8 @@ Item {
             colorComboBoxText =     "#000000"
             colorProgressBar =      "#009ee2"
             colorProgressBarBg =    "#E4E4E4"
+
+            selector =              "bar"
 
         } else if (themeIndex === ThemeEngine.MIGHTY_KITTEN) {
 
@@ -237,6 +246,8 @@ Item {
             colorComboBoxText =     "#ffffff"
             colorProgressBar =      "#FFCB02"
             colorProgressBarBg =    "#E4E4E4"
+
+            selector =              "arrow"
         }
     }
 }

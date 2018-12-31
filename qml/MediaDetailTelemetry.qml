@@ -2,8 +2,8 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 
 import QtCharts 2.2
-import QtLocation 5.10
-import QtPositioning 5.10
+import QtLocation 5.9
+import QtPositioning 5.9
 
 import com.offloadbuddy.style 1.0
 import com.offloadbuddy.shared 1.0
@@ -461,7 +461,7 @@ Rectangle {
                 title: "Speed (" + StringUtils.speedUnit(settingsManager.appunits) + ")"
 
                 antialiasing: true
-                //legend.visible: false // Qt 5.10+
+                //legend.visible: false // Needs Qt 5.10+ / Qt Charts 2.3
                 //backgroundRoundness: 0
                 //backgroundColor: "#00000000"
 
@@ -480,7 +480,7 @@ Rectangle {
                 title: "Altitude (" + StringUtils.altitudeUnit(settingsManager.appunits) + ")"
 
                 antialiasing: true
-                //legend.visible: false // Qt 5.10+
+                //legend.visible: false // Needs Qt 5.10+ / Qt Charts 2.3
                 //backgroundRoundness: 0
                 //backgroundColor: "#00000000"
 

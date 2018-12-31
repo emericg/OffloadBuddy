@@ -89,20 +89,15 @@ ApplicationWindow {
 
         // SELECTORS
 
-        property var currenttheme: ThemeEngine.currentTheme
-        onCurrentthemeChanged: {
-            selectorArrow.visible = ThemeEngine.currentTheme !== ThemeEngine.BLOOD_AND_TEARS ? 1 : 0
-            selectorBar.visible = ThemeEngine.currentTheme === ThemeEngine.BLOOD_AND_TEARS ? 1 : 0
-        }
-
         Image {
             id: selectorArrow
             width: 12
             height: 12
             anchors.right: parent.right
             anchors.rightMargin: 0
+
+            visible: (ThemeEngine.selector === "arrow")
             source: "qrc:/menus/selector_arrow.svg"
-            visible: ThemeEngine.currentTheme !== ThemeEngine.BLOOD_AND_TEARS ? 1 : 0
 
             ColorOverlay {
                 anchors.fill: parent
@@ -116,6 +111,8 @@ ApplicationWindow {
             id: selectorBar
             width: parent.width
             height: 64
+
+            visible: (ThemeEngine.selector === "bar")
             color: "black"
 
             Rectangle {

@@ -1,9 +1,9 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 
-import QtLocation 5.10
-import QtPositioning 5.10
-import QtMultimedia 5.10
+import QtLocation 5.9
+import QtPositioning 5.9
+import QtMultimedia 5.9
 
 import com.offloadbuddy.style 1.0
 import com.offloadbuddy.shared 1.0
