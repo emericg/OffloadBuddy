@@ -80,7 +80,7 @@ void ShotModel::addFile(ofb_file *f, ofb_shot *s)
 
     if (s->shot_id)
     {
-        shot = getShotAt(s->file_type, s->shot_id, s->camera_id);
+        shot = getShotAt(s->shot_type, s->shot_id, s->camera_id);
     }
     else
     {
@@ -100,7 +100,7 @@ void ShotModel::addFile(ofb_file *f, ofb_shot *s)
     else
     {
         //qDebug() << "file:" << f->name << "is a new shot";
-        shot = new Shot(s->file_type, this);
+        shot = new Shot(s->shot_type, this);
         if (shot)
         {
             shot->addFile(f);
@@ -289,7 +289,7 @@ QVariant ShotModel::data(const QModelIndex & index, int role) const
         else if (role == TypeRole)
             return shot->getType();
         else if (role == PreviewRole)
-            return shot->getPreviewPicture();
+            return shot->getPreviewPhoto();
         else if (role == SizeRole)
             return shot->getSize();
         else if (role == DurationRole)

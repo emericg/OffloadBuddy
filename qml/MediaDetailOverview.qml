@@ -328,16 +328,16 @@ Rectangle {
                 labelDuration.height = 40
                 duration.text = shot.duration + " " + qsTr("pictures")
 
-                if (shot.preview)
-                    image.source = "file:///" + shot.preview
+                if (shot.previewPhoto)
+                    image.source = "file:///" + shot.previewPhoto
                 else
                     image.source = "qrc:/resources/other/placeholder_picture_multi.svg"
             } else {
                 labelDuration.visible = false
                 labelDuration.height = 0
 
-                if (shot.preview)
-                    image.source = "file:///" + shot.preview
+                if (shot.previewPhoto)
+                    image.source = "file:///" + shot.previewPhoto
                 else
                     image.source = "qrc:/resources/other/placeholder_picture.svg"
             }
@@ -348,7 +348,7 @@ Rectangle {
             image.visible = false
             mediaOutput.visible = true
 
-            //console.log("shot.preview :" + shot.previewVideo)
+            //console.log("shot.previewPhoto :" + shot.previewVideo)
 
             if (shot.previewVideo)
                 mediaPlayer.source = "file:///" + shot.previewVideo

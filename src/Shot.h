@@ -61,8 +61,8 @@ struct ofb_file
 
 struct ofb_shot
 {
-    Shared::ShotType file_type = Shared::SHOT_UNKNOWN;
-    //Shared::ShotType shot_type = Shared::SHOT_UNKNOWN;
+    Shared::ShotType shot_type = Shared::SHOT_UNKNOWN;
+    Shared::FileType file_type = Shared::FILE_UNKNOWN;
     int shot_id = -1;
     int camera_id = 0;              //!< for multi camera system
 
@@ -80,6 +80,7 @@ class Shot: public QObject
     Q_PROPERTY(unsigned state READ getState NOTIFY stateUpdated)
 
     Q_PROPERTY(unsigned type READ getType NOTIFY shotUpdated)
+    //Q_PROPERTY(unsigned subType READ getType NOTIFY shotUpdated)
 
     Q_PROPERTY(QString name READ getName NOTIFY shotUpdated)
     Q_PROPERTY(QString camera READ getCameraSource NOTIFY shotUpdated)
@@ -88,8 +89,9 @@ class Shot: public QObject
     Q_PROPERTY(int chapters READ getChapterCount NOTIFY shotUpdated)
     Q_PROPERTY(int highlightCount READ getHighlightCount NOTIFY shotUpdated)
 
-    Q_PROPERTY(QString preview READ getPreviewPicture NOTIFY shotUpdated)
+    Q_PROPERTY(QString previewPhoto READ getPreviewPhoto NOTIFY shotUpdated)
     Q_PROPERTY(QString previewVideo READ getPreviewVideo NOTIFY shotUpdated)
+    Q_PROPERTY(QImage previewMtp READ getPreviewMtp NOTIFY shotUpdated)
     Q_PROPERTY(QString fileList READ getFilesQString NOTIFY shotUpdated)
 
     Q_PROPERTY(qint64 duration READ getDuration NOTIFY shotUpdated)
@@ -118,7 +120,7 @@ class Shot: public QObject
 
     //Q_PROPERTY(QString gps READ getGPS NOTIFY shotUpdated)
 
-    bool m_onCamera = false;        //!< Shot datas currently located on a device
+    bool m_onCamera = false; // TODO remove? //!< Shot datas currently located on a device
 
     Shared::ShotType m_type = Shared::SHOT_UNKNOWN;
     Shared::ShotState m_state = Shared::SHOT_STATE_DEFAULT;
@@ -280,8 +282,9 @@ public slots:
     qint64 getFullSize() const;
     int getChapterCount() const;    //!< 0 means no notion of chapter
     QDateTime getDate() const { return m_date; }
-    QString getPreviewPicture() const;
+    QString getPreviewPhoto() const;
     QString getPreviewVideo() const;
+    QImage getPreviewMtp();
     QString getCameraSource() const { return m_camera_source; }
 
     QString getOrientation() const { return orientation; }

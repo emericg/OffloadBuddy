@@ -35,6 +35,10 @@
 #include <libexif/exif-data.h>
 #endif
 
+#ifdef ENABLE_LIBMTP
+#include <libmtp.h>
+#endif
+
 #ifdef ENABLE_MINIVIDEO
 #include <minivideo.h>
 #endif
@@ -186,6 +190,12 @@ void Shot::addFile(ofb_file *file)
                 qWarning() << "Shot::addFile(" << file->extension << ") UNKNOWN FORMAT";
             }
         }
+
+        // Associat mtpDevice
+        if (file->mtpDevice && !m_mtpDevice)
+        {
+            m_mtpDevice = file->mtpDevice;
+        }
     }
     else
     {
@@ -276,7 +286,7 @@ qint64 Shot::getDataSize() const
     return size;
 }
 
-QString Shot::getPreviewPicture() const
+QString Shot::getPreviewPhoto() const
 {
     if (m_pictures.size() > 0 && !m_pictures.at(0)->filesystemPath.isEmpty())
     {
@@ -298,6 +308,72 @@ QString Shot::getPreviewVideo() const
     }
 
     return QString();
+}
+
+QImage Shot::getPreviewMtp()
+{
+    QImage img;
+
+    if (m_videos.size() > 0 || m_pictures.size() > 0)
+    {
+        unsigned mtp_object_id = 0;
+        unsigned char *mtp_buffer = nullptr;
+        unsigned mtp_buffer_size = 0;
+
+        if (m_videos.size() > 0 && m_videos.at(0)->mtpDevice)
+        {
+            mtp_object_id = m_videos.at(0)->mtpObjectId;
+            m_mtpDevice = m_videos.at(0)->mtpDevice;
+        }
+        else if (m_pictures.size() > 0 && m_pictures.at(0)->mtpDevice)
+        {
+            mtp_object_id = m_pictures.at(0)->mtpObjectId;
+            m_mtpDevice = m_pictures.at(0)->mtpDevice;
+        }
+        else
+        {
+            return img;
+        }
+
+        bool status = false;
+        int retcode = 0;
+
+        // primary method using LIBMTP_Get_Representative_Sample()
+        {
+            LIBMTP_filetype_t ft = LIBMTP_FILETYPE_JPEG;
+            LIBMTP_filesampledata_t *fsd = nullptr;
+
+            int retcode = LIBMTP_Get_Representative_Sample_Format(m_mtpDevice, ft, &fsd);
+            if (retcode == 0 && fsd)
+            {
+                retcode =  LIBMTP_Get_Representative_Sample(m_mtpDevice, mtp_object_id, fsd);
+
+                if (img.loadFromData((const uchar *)fsd->data, fsd->size))
+                {
+                    status = true;
+                }
+
+                LIBMTP_destroy_filesampledata_t(fsd);
+            }
+        }
+
+        // backup method, using LIBMTP_Get_Thumbnail()
+        if (!status)
+        {
+            retcode = LIBMTP_Get_Thumbnail(m_mtpDevice, mtp_object_id,  &mtp_buffer, &mtp_buffer_size);
+            if (retcode == 0)
+            {
+                if (img.loadFromData(mtp_buffer, mtp_buffer_size))
+                {
+                    status = true;
+                }
+            }
+
+            free(mtp_buffer);
+        }
+    }
+
+    return img;
 }
 
 qint64 Shot::getDuration() const

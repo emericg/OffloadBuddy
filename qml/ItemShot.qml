@@ -48,15 +48,20 @@ Rectangle {
         handleState()
         if (shot.previewVideo)
             image.source = "image://GridThumbnailer/" + shot.previewVideo
-        else if (preview)
-            image.source = "image://GridThumbnailer/" + preview
+        else if (shot.previewPhoto)
+            image.source = "image://GridThumbnailer/" + shot.previewPhoto
+        else if (shotDevice && shotDevice.deviceStorage === Shared.STORAGE_MTP)
+        {
+            imageMtp.visible = true
+            imageMtp.image = shot.getPreviewMtp()
+        }
 
         text_right.visible = false
         text_left.visible = false
         if (type === Shared.SHOT_UNKNOWN) {
             icon_left.source = "qrc:/resources/minicons/unknown.svg"
 
-            if (!preview && !shot.previewVideo)
+            if (!shot.previewPhoto && !shot.previewVideo)
                 image.source = "qrc:/resources/other/placeholder_video.svg"
         } else if (type < Shared.SHOT_PICTURE) {
             if (duration > 0) {
@@ -65,7 +70,7 @@ Rectangle {
             }
             icon_left.source = "qrc:/resources/minicons/video.svg"
 
-            if (!preview && !shot.previewVideo)
+            if (!shot.previewPhoto && !shot.previewVideo)
                 image.source = "qrc:/resources/other/placeholder_video.svg"
         } else {
             if (type >= Shared.SHOT_PICTURE_MULTI) {
@@ -73,12 +78,12 @@ Rectangle {
                 text_left.text = duration
                 icon_left.source = "qrc:/resources/minicons/picture_multi.svg"
 
-                if (!preview)
+                if (!shot.previewPhoto)
                     image.source = "qrc:/resources/other/placeholder_picture_multi.svg"
             } else {
                 icon_left.source = "qrc:/resources/minicons/picture.svg"
 
-                if (!preview)
+                if (!shot.previewPhoto)
                     image.source = "qrc:/resources/other/placeholder_picture.svg"
             }
         }
@@ -103,6 +108,12 @@ Rectangle {
 
         sourceSize.width: 512
         sourceSize.height: 512
+    }
+
+    ItemImage {
+        id: imageMtp
+        visible: false
+        anchors.fill: parent
     }
 
     Image {
@@ -140,26 +151,28 @@ Rectangle {
 
                     if (shot.previewVideo)
                         image.source = "image://GridThumbnailer/" + shot.previewVideo + "@" + timecode_s
-                    else if (preview)
-                        image.source = "image://GridThumbnailer/" + preview + "@" + timecode_s
+                    else if (shot.previewPhoto)
+                        image.source = "image://GridThumbnailer/" + shot.previewPhoto
                 }
             }
         }
         onEntered: {
-            if (shot.type > Shared.SHOT_UNKNOWN &&
-                shot.type < Shared.SHOT_PICTURE) {
-                thumbTimer.start()
+            if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== Shared.STORAGE_MTP)) {
+                if (shot.type > Shared.SHOT_UNKNOWN && shot.type < Shared.SHOT_PICTURE) {
+                    thumbTimer.start()
+                }
             }
         }
         onExited: {
-            if (shot.type > Shared.SHOT_UNKNOWN &&
-                shot.type < Shared.SHOT_PICTURE) {
-                thumbId = 1
-                thumbTimer.stop()
-                if (shot.previewVideo)
-                    image.source = "image://GridThumbnailer/" + shot.previewVideo
-                else if (preview)
-                    image.source = "image://GridThumbnailer/" + preview
+            if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== Shared.STORAGE_MTP)) {
+                if (shot.type > Shared.SHOT_UNKNOWN && shot.type < Shared.SHOT_PICTURE) {
+                    thumbId = 1
+                    thumbTimer.stop()
+                    if (shot.previewVideo)
+                        image.source = "image://GridThumbnailer/" + shot.previewVideo
+                    else if (shot.previewPhoto)
+                        image.source = "image://GridThumbnailer/" + shot.previewPhoto
+                }
             }
         }
 
@@ -182,7 +195,7 @@ Rectangle {
                     encode = true
                 }
                 if (shotDevice) {
-                    if (shotDevice.deviceStorage === 2) { // MTP
+                    if (shotDevice.deviceStorage === Shared.STORAGE_MTP) {
                         merge = false
                         encode = false
                     }
@@ -205,14 +218,16 @@ Rectangle {
             }
         }
         onDoubleClicked: {
-            // Show the "shot details" screen
-            actionMenu.visible = false
-            shotsview.currentIndex = index
+            if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== Shared.STORAGE_MTP)) {
+                // Show the "shot details" screen
+                actionMenu.visible = false
+                shotsview.currentIndex = index
 
-            if (shotDevice)
-                screenDevice.state = "stateMediaDetails"
-            else
-                screenLibrary.state = "stateMediaDetails"
+                if (shotDevice)
+                    screenDevice.state = "stateMediaDetails"
+                else
+                    screenLibrary.state = "stateMediaDetails"
+            }
         }
     }
 

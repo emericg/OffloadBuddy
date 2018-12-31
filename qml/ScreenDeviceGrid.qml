@@ -76,7 +76,7 @@ Rectangle {
             banner.openMessage(qsTr("Previews are not available (yet) with MTP devices..."))
         }
         if (currentDevice.deviceStorage === 2) { // MTP
-            banner.openMessage(qsTr("Previews and metadatas are not available (yet) with MTP devices..."))
+            banner.openMessage(qsTr("Metadatas are not available (yet) with MTP devices..."))
         }
     }
 

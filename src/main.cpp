@@ -26,9 +26,10 @@
 #include "DeviceManager.h"
 #include "JobManager.h"
 
-#include <singleapplication.h>
-
 #include "GridThumbnailer.h"
+#include "ItemImage.h"
+
+#include <singleapplication.h>
 
 #ifdef ENABLE_MINIVIDEO
 #include <minivideo.h>
@@ -131,6 +132,7 @@ int main(int argc, char *argv[])
         "Error: only enums"); // error in case someone tries to create a MyNamespace object
 
     qmlRegisterType<Shot>("com.offloadbuddy.shared", 1, 0, "Shot");
+    qmlRegisterType<ItemImage>("com.offloadbuddy.shared", 1, 0, "ItemImage");
 
     QQmlApplicationEngine engine;
     QQmlContext *engine_context = engine.rootContext();

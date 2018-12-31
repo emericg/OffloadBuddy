@@ -38,6 +38,7 @@ SOURCES  += src/main.cpp \
             src/DeviceManager.cpp \
             src/Device.cpp \
             src/FileScanner.cpp \
+            src/ItemImage.cpp \
             src/Shot.cpp \
             src/ShotModel.cpp \
             src/ShotFilter.cpp \
@@ -61,6 +62,7 @@ HEADERS  += src/SettingsManager.h \
             src/DeviceManager.h \
             src/Device.h \
             src/FileScanner.h \
+            src/ItemImage.h \
             src/Shot.h \
             src/ShotModel.h \
             src/ShotFilter.h \

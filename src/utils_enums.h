@@ -160,6 +160,14 @@ namespace Shared
     };
     Q_ENUM_NS(ShotType)
 
+    enum StorageType
+    {
+        STORAGE_FILESYSTEM = 0,
+        STORAGE_VIRTUAL_FILESYSTEM = 1,
+        STORAGE_MTP = 2,
+    };
+    Q_ENUM_NS(StorageType)
+
     enum ShotState
     {
         SHOT_STATE_DEFAULT = 0,

@@ -110,12 +110,12 @@ bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot)
         if (file.extension == "jpg" || file.extension == "gpr")
         {
             // Single Photo
-            shot.file_type = Shared::SHOT_PICTURE;
+            shot.shot_type = Shared::SHOT_PICTURE;
         }
         else if (file.extension == "mp4")
         {
             // Single Video
-            shot.file_type = Shared::SHOT_VIDEO;
+            shot.shot_type = Shared::SHOT_VIDEO;
         }
     }
     else if (file.name.startsWith("GPBK") ||
@@ -124,12 +124,12 @@ bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot)
         // Fusion Video
         if (file.extension == "jpg" || file.extension == "gpr")
         {
-            shot.file_type = Shared::SHOT_PICTURE;
+            shot.shot_type = Shared::SHOT_PICTURE;
         }
         else if (file.extension == "mp4" || file.extension == "lrv" ||
                  file.extension == "thm"  || file.extension == "wav")
         {
-            shot.file_type = Shared::SHOT_VIDEO;
+            shot.shot_type = Shared::SHOT_VIDEO;
         }
 
         if (file.name.startsWith("GPBK"))
@@ -138,7 +138,7 @@ bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot)
     else if (file.name.startsWith("GP"))
     {
         // Chaptered Video
-        shot.file_type = Shared::SHOT_VIDEO;
+        shot.shot_type = Shared::SHOT_VIDEO;
         group_string = file.name.mid(2, 2);
         shot.group_number = group_string.toInt();
     }
@@ -147,7 +147,7 @@ bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot)
              file.name.startsWith("GL"))
     {
         // HERO6 Video
-        shot.file_type = Shared::SHOT_VIDEO;
+        shot.shot_type = Shared::SHOT_VIDEO;
         group_string = file.name.mid(2, 2);
         shot.group_number = group_string.toInt();
     }
@@ -155,18 +155,18 @@ bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot)
              file.name.startsWith("GF"))
     {
         // Chaptered Fusion Video
-        shot.file_type = Shared::SHOT_VIDEO;
+        shot.shot_type = Shared::SHOT_VIDEO;
         group_string = file.name.mid(2, 2);
         shot.group_number = group_string.toInt();
 
         if (file.extension == "jpg" || file.extension == "gpr")
         {
-            shot.file_type = Shared::SHOT_PICTURE_MULTI;
+            shot.shot_type = Shared::SHOT_PICTURE_MULTI;
         }
         else if (file.extension == "mp4" || file.extension == "lrv" ||
                  file.extension == "thm"  || file.extension == "wav")
         {
-            shot.file_type = Shared::SHOT_VIDEO;
+            shot.shot_type = Shared::SHOT_VIDEO;
         }
 
         if (file.name.startsWith("GB"))
@@ -177,13 +177,13 @@ bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot)
         if (file.extension == "jpg" || file.extension == "gpr")
         {
             // Burst or Time-Lapse Photo
-            shot.file_type = Shared::SHOT_PICTURE_MULTI;
+            shot.shot_type = Shared::SHOT_PICTURE_MULTI;
         }
         else if (file.extension == "mp4" || file.extension == "lrv" ||
                  file.extension == "thm"  || file.extension == "wav")
         {
             // Looping Video
-            shot.file_type = Shared::SHOT_VIDEO;
+            shot.shot_type = Shared::SHOT_VIDEO;
         }
 
         group_string = file.name.mid(1, 3);
@@ -192,7 +192,7 @@ bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot)
     else if (file.name.startsWith("3D_"))
     {
         // 3D Recording Video
-        shot.file_type = Shared::SHOT_VIDEO_3D;
+        shot.shot_type = Shared::SHOT_VIDEO_3D;
 
         qDebug() << "Unhandled file name format:" << file.name;
         return false;
@@ -204,11 +204,12 @@ bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot)
     }
 
     shot.file_number = file.name.mid(4, 4).toInt();
-    shot.shot_id = (shot.file_type == Shared::SHOT_VIDEO) ? shot.file_number : shot.group_number;
+    shot.shot_id = (shot.shot_type == Shared::SHOT_VIDEO) ? shot.file_number : shot.group_number;
 /*
     qDebug() << "* FILE:" << file.name;
     qDebug() << "- " << file.extension;
     qDebug() << "- " << shot.file_type;
+    qDebug() << "- " << shot.shot_type;
     qDebug() << "- " << shot.group_number;
     qDebug() << "- " << shot.file_number;
     qDebug() << "- " << shot.shot_id;

@@ -105,10 +105,14 @@ void FileScanner::scanFilesystemElement(QString &dir_path)
                 }
 
                 ofb_shot *s = new ofb_shot;
-                if (getGoProShotInfos(*f, *s) == false)
-                    getGenericShotInfos(*f, *s);
+                bool shotStatus = getGoProShotInfos(*f, *s);
+                if (!shotStatus)
+                    shotStatus = getGenericShotInfos(*f, *s);
 
-                emit fileFound(f, s);
+                if (shotStatus)
+                    emit fileFound(f, s);
+                else
+                    delete s;
             }
         }
     }
@@ -293,10 +297,14 @@ void FileScanner::mtpFileRec(LIBMTP_mtpdevice_t *device, uint32_t storageid, uin
                 }
 
                 ofb_shot *s = new ofb_shot;
-                if (getGoProShotInfos(*f, *s) == false)
-                    getGenericShotInfos(*f, *s);
+                bool shotStatus = getGoProShotInfos(*f, *s);
+                if (!shotStatus)
+                    shotStatus = getGenericShotInfos(*f, *s);
 
-                emit fileFound(f, s);
+                if (shotStatus)
+                    emit fileFound(f, s);
+                else
+                    delete s;
             }
 
             tmp = mtpFile;
