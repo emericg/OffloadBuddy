@@ -14,7 +14,7 @@ before_install:
 
 install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-      sudo apt-get install qt511base qt511quickcontrols2 qt511svg qt511imageformats qt511tools qt511charts-no-lgpl qt511location qt511multimedia -y;
+      sudo apt-get install qt511base qt511quickcontrols2 qt511graphicaleffects qt511svg qt511imageformats qt511tools qt511charts-no-lgpl qt511location qt511multimedia -y;
       sudo apt-get install libgl1-mesa-dev libva-dev libvdpau-dev -y;
       sudo apt-get install ffmpeg libavcodec-dev libavdevice-dev -y;
       sudo apt-get install libtool automake m4 -y;

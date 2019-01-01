@@ -78,7 +78,7 @@ void ShotModel::addFile(ofb_file *f, ofb_shot *s)
 
     Shot *shot = nullptr;
 
-    if (s->shot_id)
+    if (s->shot_id > 0)
     {
         shot = getShotAt(s->shot_type, s->shot_id, s->camera_id);
     }
@@ -106,15 +106,7 @@ void ShotModel::addFile(ofb_file *f, ofb_shot *s)
             shot->addFile(f);
             shot->setFileId(s->shot_id);
             shot->setCameraId(s->camera_id);
-            if (shot->isValid())
-            {
-                addShot(shot);
-            }
-            else // FIXME what if the THM arrives first?
-            {
-                qWarning() << "Invalid shot: " << shot->getName();
-                delete shot;
-            }
+            addShot(shot);
         }
     }
 

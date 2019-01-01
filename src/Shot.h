@@ -259,7 +259,6 @@ public:
 
     Shot(const Shot &other);
 
-    bool isValid();
     void addFile(ofb_file *file);
 #ifdef ENABLE_LIBMTP
     void attachMtpStorage(LIBMTP_mtpdevice_t *device, LIBMTP_devicestorage_t *storage);

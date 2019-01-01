@@ -211,6 +211,13 @@ bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list,
 
     // CREATE JOB //////////////////////////////////////////////////////////////
 
+    if (d->getModel() == "FUSION")
+    {
+        // Fusion Studio needs every files
+        getPreviews = true;
+        getHdAudio = true;
+    }
+
     if (type == JOB_DELETE)
     {
         // Delete everything, MP4, LRVs...

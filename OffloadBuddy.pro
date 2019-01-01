@@ -81,7 +81,11 @@ RESOURCES += qml/qml.qrc \
              assets/assets.qrc \
              resources.qrc
 
-OTHER_FILES += .travis.yml
+OTHER_FILES += .travis.yml \
+               contribs/contribs.py \
+               deploy_linux.sh \
+               deploy_macos.sh \
+               deploy_windows.sh
 
 include(src/thirdparty/SingleApplication/singleapplication.pri)
 DEFINES += QAPPLICATION_CLASS=QApplication

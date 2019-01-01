@@ -109,19 +109,16 @@ void Shot::addFile(ofb_file *file)
             else
                 m_date = file->modification_date;
 
-            if (file->extension == "jpg" ||
-                file->extension == "jpeg" ||
+            if (file->extension == "jpg" || file->extension == "jpeg" ||
                 file->extension == "png" ||
                 file->extension == "gpr")
             {
                 m_pictures.push_front(file);
                 getMetadatasFromPicture();
             }
-            else if (file->extension == "mp4" ||
-                     file->extension == "m4v" ||
+            else if (file->extension == "mp4" || file->extension == "m4v" ||
                      file->extension == "mov" ||
-                     file->extension == "mkv" ||
-                     file->extension == "webm")
+                     file->extension == "mkv" || file->extension == "webm")
             {
                 m_videos.push_front(file);
                 getMetadatasFromVideo();
@@ -191,11 +188,13 @@ void Shot::addFile(ofb_file *file)
             }
         }
 
+#ifdef ENABLE_LIBMTP
         // Associat mtpDevice
         if (file->mtpDevice && !m_mtpDevice)
         {
             m_mtpDevice = file->mtpDevice;
         }
+#endif
     }
     else
     {
@@ -213,13 +212,6 @@ void Shot::attachMtpStorage(LIBMTP_mtpdevice_t *device, LIBMTP_devicestorage_t *
 
 /* ************************************************************************** */
 
-bool Shot::isValid()
-{
-    if (m_pictures.size() > 0 || m_videos.size() > 0)
-        return true;
-
-    return false;
-}
 /*
 unsigned Shot::getType() const
 {
@@ -314,6 +306,8 @@ QImage Shot::getPreviewMtp()
 {
     QImage img;
 
+#ifdef ENABLE_LIBMTP
+
     if (m_videos.size() > 0 || m_pictures.size() > 0)
     {
         unsigned mtp_object_id = 0;
@@ -372,6 +366,8 @@ QImage Shot::getPreviewMtp()
             free(mtp_buffer);
         }
     }
+
+#endif
 
     return img;
 }
