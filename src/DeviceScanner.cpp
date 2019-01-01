@@ -464,7 +464,7 @@ void DeviceScanner::scanMtpDevices()
             int ret = LIBMTP_Get_Batterylevel(mtpDevice, &maxbattlevel, &currbattlevel);
             if (ret == 0 && maxbattlevel > 0)
             {
-                deviceInfos->battery = (static_cast<double>(currbattlevel) / static_cast<double>(maxbattlevel)) * 100.0;
+                deviceInfos->battery = (static_cast<float>(currbattlevel) / static_cast<float>(maxbattlevel)) * 100.f;
                 //qDebug() << "MTP Battery level:" << deviceInfos->battery << "%";
             }
             else
@@ -492,7 +492,7 @@ void DeviceScanner::scanMtpDevices()
                     {
                         //qDebug() << "-" << file->filename;
 
-                        if (strcmp(file->filename, "DCIM"))
+                        if (strcmp(file->filename, "DCIM") == 0)
                         {
                             StorageMtp *s = new StorageMtp;
                             s->m_device = mtpDevice;

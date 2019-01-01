@@ -83,12 +83,39 @@ bool Device::isValid()
 
 /* ************************************************************************** */
 
-double Device::getSpaceUsed_percent()
+float Device::getStorageLevel(const int index)
 {
-    if (getSpaceTotal() > 0)
-        return static_cast<double>(getSpaceUsed()) / static_cast<double>(getSpaceTotal());
+    float level = 0;
 
-    return 0.0;
+    if (index == 0)
+    {
+        if (getSpaceTotal() > 0)
+            level = static_cast<float>(getSpaceUsed()) / static_cast<float>(getSpaceTotal());
+    }
+    else
+    {
+        int64_t su = 0, sf = 0;
+        int i = (index - 1);
+
+        if (m_filesystemStorages.size() > i)
+        {
+            auto st = m_filesystemStorages.at(i);
+            su += (st->m_storage.bytesTotal() - st->m_storage.bytesAvailable());
+            sf += st->m_storage.bytesTotal();
+        }
+#ifdef ENABLE_LIBMTP
+        else if (m_mtpStorages.size() > i)
+        {
+            auto st = m_mtpStorages.at(i);
+            su += st->m_storage->MaxCapacity - st->m_storage->FreeSpaceInBytes;
+            sf += st->m_storage->MaxCapacity;
+        }
+#endif // ENABLE_LIBMTP
+
+        level = static_cast<float>(su) / static_cast<float>(sf);
+    }
+
+    return level;
 }
 
 int64_t Device::getSpaceAvailable_withrefresh()
@@ -100,14 +127,14 @@ int64_t Device::getSpaceAvailable_withrefresh()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void Device::setMtpInfos(LIBMTP_mtpdevice_t *device, double battery,
+void Device::setMtpInfos(LIBMTP_mtpdevice_t *device, float battery,
                          uint32_t devBus, uint32_t devNum)
 {
     m_deviceStorage = STORAGE_MTP;
     m_mtpDevice = device;
     m_mtpBattery = battery;
-    m_devBus = devBus;
-    m_devNum = devNum;
+    m_mtpDevBus = devBus;
+    m_mtpDevNum = devNum;
 }
 
 bool Device::addStorages_filesystem(ofb_fs_device *device)
@@ -151,9 +178,6 @@ bool Device::addStorages_mtp(ofb_mtp_device *device)
 
                 thread->start();
             }
-
-            // FIXME scan first storage only! Can't do them all at once, needs to be serialized
-            break;
         }
     }
 
@@ -263,13 +287,13 @@ QString Device::getPath(const int index) const
 
 void Device::getMtpIds(unsigned &devBus, unsigned &devNum) const
 {
-    devBus = m_devBus;
-    devNum = m_devNum;
+    devBus = m_mtpDevBus;
+    devNum = m_mtpDevNum;
 }
 
 std::pair<unsigned, unsigned> Device::getMtpIds() const
 {
-    return std::make_pair(m_devBus, m_devNum);
+    return std::make_pair(m_mtpDevBus, m_mtpDevNum);
 }
 
 QString Device::getUniqueId() const
@@ -280,8 +304,8 @@ QString Device::getUniqueId() const
         id = m_serial;
     else if (getPath(0).isEmpty() == false)
         id = getPath(0);
-    else if (m_devBus || m_devNum)
-        id = "MTP-" + QString::number(m_devBus) + "-" + QString::number(m_devBus);
+    else if (m_mtpDevBus || m_mtpDevNum)
+        id = "MTP-" + QString::number(m_mtpDevBus) + "-" + QString::number(m_mtpDevBus);
     else
     {
         qWarning() << "getUniqueId() unable to get unique Id !!!";
@@ -296,6 +320,8 @@ QString Device::getUniqueId() const
 void Device::workerScanningStarted(QString s)
 {
     //qDebug() << "> Device::workerScanningStarted(" << s << ")";
+    Q_UNUSED(s);
+
     m_deviceState = DEVICE_STATE_SCANNING;
     emit stateUpdated();
 }
@@ -303,6 +329,8 @@ void Device::workerScanningStarted(QString s)
 void Device::workerScanningFinished(QString s)
 {
     //qDebug() << "> Device::workerScanningFinished(" << s << ")";
+    Q_UNUSED(s);
+
     m_deviceState = DEVICE_STATE_IDLE;
     emit stateUpdated();
 }
@@ -320,8 +348,9 @@ void Device::refreshBatteryInfos()
         int ret = LIBMTP_Get_Batterylevel(m_mtpDevice, &maxbattlevel, &currbattlevel);
         if (ret == 0 && maxbattlevel > 0)
         {
-            m_mtpBattery = (static_cast<double>(currbattlevel) / static_cast<double>(maxbattlevel)) * 100.0;
+            m_mtpBattery = (static_cast<float>(currbattlevel) / static_cast<float>(maxbattlevel)) * 100.f;
             //qDebug() << "MTP Battery level:" << m_mtpBattery << "%";
+            emit batteryUpdated();
         }
         else
         {
@@ -329,7 +358,7 @@ void Device::refreshBatteryInfos()
             LIBMTP_Clear_Errorstack(m_mtpDevice);
         }
     }
-#endif
+#endif // ENABLE_LIBMTP
 }
 
 void Device::refreshStorageInfos()
@@ -366,10 +395,12 @@ void Device::refreshStorageInfos()
     }
 #endif // ENABLE_LIBMTP
 
-    emit spaceUpdated();
+    emit storageUpdated();
 }
 
-bool Device::isReadOnly()
+/* ************************************************************************** */
+
+bool Device::isReadOnly() const
 {
     bool ro = false;
 
@@ -380,6 +411,17 @@ bool Device::isReadOnly()
     }
 
     return ro;
+}
+
+int Device::getStorageCount() const
+{
+    int count = m_filesystemStorages.count();
+
+#ifdef ENABLE_LIBMTP
+    count += m_mtpStorages.count();
+#endif
+
+    return count;
 }
 
 int64_t Device::getSpaceTotal()

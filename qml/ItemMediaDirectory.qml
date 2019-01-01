@@ -1,6 +1,6 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
-import QtQuick.Dialogs 1.1
+import QtQuick.Dialogs 1.2
 
 import com.offloadbuddy.style 1.0
 import "StringUtils.js" as StringUtils
@@ -137,7 +137,7 @@ Rectangle {
         anchors.leftMargin: 16
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: 8
-        value: directory.spaceUsedPercent
+        value: directory.storageLevel
         visible: directory.available
     }
     Text {

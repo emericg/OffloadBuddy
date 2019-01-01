@@ -133,7 +133,7 @@ struct ofb_mtp_device
     uint32_t devBus = 0;
     uint32_t devNum = 0;
 
-    double battery = 0.0;
+    float battery = 0.0;
 
     LIBMTP_mtpdevice_t *device = nullptr;
 
@@ -164,11 +164,13 @@ class Device: public ShotProvider
     Q_PROPERTY(QString serial READ getSerial NOTIFY deviceUpdated)
     Q_PROPERTY(QString firmware READ getFirmware NOTIFY deviceUpdated)
 
-    Q_PROPERTY(bool readOnly READ isReadOnly NOTIFY spaceUpdated)
-    Q_PROPERTY(qint64 spaceTotal READ getSpaceTotal NOTIFY spaceUpdated)
-    Q_PROPERTY(qint64 spaceUsed READ getSpaceUsed NOTIFY spaceUpdated)
-    Q_PROPERTY(double spaceUsedPercent READ getSpaceUsed_percent NOTIFY spaceUpdated)
-    Q_PROPERTY(qint64 spaceAvailable READ getSpaceAvailable NOTIFY spaceUpdated)
+    Q_PROPERTY(float batteryLevel READ getBatteryLevel NOTIFY batteryUpdated)
+    Q_PROPERTY(float storageLevel READ getStorageLevel NOTIFY storageUpdated)
+
+    Q_PROPERTY(bool readOnly READ isReadOnly NOTIFY storageUpdated)
+    Q_PROPERTY(qint64 spaceTotal READ getSpaceTotal NOTIFY storageUpdated)
+    Q_PROPERTY(qint64 spaceUsed READ getSpaceUsed NOTIFY storageUpdated)
+    Q_PROPERTY(qint64 spaceAvailable READ getSpaceAvailable NOTIFY storageUpdated)
 
     deviceType_e m_deviceType = DEVICE_UNKNOWN;
     deviceModel_e m_deviceModel = MODEL_UNKNOWN;
@@ -184,9 +186,9 @@ class Device: public ShotProvider
 
     // MTP infos
     LIBMTP_mtpdevice_t *m_mtpDevice = nullptr;
-    uint32_t m_devBus = 0;
-    uint32_t m_devNum = 0;
-    double m_mtpBattery = 0.0;
+    uint32_t m_mtpDevBus = 0;
+    uint32_t m_mtpDevNum = 0;
+    float m_mtpBattery = 0.0;
 
     // Storage(s)
     QTimer m_updateStorageTimer;
@@ -200,7 +202,8 @@ private slots:
 Q_SIGNALS:
     void deviceUpdated();
     void stateUpdated();
-    void spaceUpdated();
+    void batteryUpdated();
+    void storageUpdated();
 
 public:
     Device(const deviceType_e type, const deviceStorage_e storage,
@@ -216,7 +219,7 @@ public:
     bool addStorages_filesystem(ofb_fs_device *device);
     bool addStorages_mtp(ofb_mtp_device *device);
 
-    void setMtpInfos(LIBMTP_mtpdevice_t *device, double battery,
+    void setMtpInfos(LIBMTP_mtpdevice_t *device, float battery,
                      uint32_t devBus, uint32_t devNum);
 
 public slots:
@@ -233,10 +236,14 @@ public slots:
     QString getUniqueId() const;
 
     //
-    bool isReadOnly();
+    float getBatteryLevel() const { return m_mtpBattery / 100.f; }
+
+    //
+    bool isReadOnly() const;
+    int getStorageCount() const;
+    float getStorageLevel(const int index = 0);
     int64_t getSpaceTotal();
     int64_t getSpaceUsed();
-    double getSpaceUsed_percent();
     int64_t getSpaceAvailable();
     int64_t getSpaceAvailable_withrefresh();
 

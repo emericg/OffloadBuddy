@@ -47,11 +47,11 @@ class MediaDirectory: public QObject
     Q_PROPERTY(int directoryContent READ getContent WRITE setContent NOTIFY directoryUpdated)
     Q_PROPERTY(bool available READ isAvailable NOTIFY availableUpdated)
 
-    Q_PROPERTY(bool readOnly READ isReadOnly NOTIFY spaceUpdated)
-    Q_PROPERTY(qint64 spaceTotal READ getSpaceTotal NOTIFY spaceUpdated)
-    Q_PROPERTY(qint64 spaceUsed READ getSpaceUsed NOTIFY spaceUpdated)
-    Q_PROPERTY(double spaceUsedPercent READ getSpaceUsed_percent NOTIFY spaceUpdated)
-    Q_PROPERTY(qint64 spaceAvailable READ getSpaceAvailable NOTIFY spaceUpdated)
+    Q_PROPERTY(bool readOnly READ isReadOnly NOTIFY storageUpdated)
+    Q_PROPERTY(qint64 spaceTotal READ getSpaceTotal NOTIFY storageUpdated)
+    Q_PROPERTY(qint64 spaceUsed READ getSpaceUsed NOTIFY storageUpdated)
+    Q_PROPERTY(double storageLevel READ getSpaceUsed_percent NOTIFY storageUpdated)
+    Q_PROPERTY(qint64 spaceAvailable READ getSpaceAvailable NOTIFY storageUpdated)
 
     QString m_path;
     int m_content_type = 0;
@@ -64,7 +64,7 @@ class MediaDirectory: public QObject
 Q_SIGNALS:
     void directoryUpdated();
     void availableUpdated();
-    void spaceUpdated();
+    void storageUpdated();
 
 private slots:
     void refreshMediaDirectory();

@@ -159,7 +159,7 @@ void MediaDirectory::refreshMediaDirectory()
         {
             // If there is a storage available, refresh it
             m_storage->refresh();
-            emit spaceUpdated();
+            emit storageUpdated();
         }
     }
 

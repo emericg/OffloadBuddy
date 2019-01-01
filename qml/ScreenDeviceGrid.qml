@@ -20,6 +20,8 @@ Rectangle {
     Connections {
         target: currentDevice
         onStateUpdated: screenDeviceGrid.updateGridViewSettings()
+        onStorageUpdated: updateStorage()
+        onBatteryUpdated: updateBattery()
     }
 
     function restoreState() {
@@ -29,11 +31,46 @@ Rectangle {
         shotsview.currentIndex = deviceSavedState.selectedIndex
     }
 
-    function updateDeviceHeader() {
-        deviceModelText.text = currentDevice.brand + " " + currentDevice.model;
+    function updateBattery() {
+        //console.log("currentDevice.batteryLevel" + currentDevice.batteryLevel)
+        if (currentDevice.batteryLevel > 0.0) {
+            deviceModelText.anchors.topMargin = 20
+            deviceBatteryIcon.visible = true
+            deviceBatteryBar.visible = true
+            deviceBatteryBar.value = currentDevice.batteryLevel
+        } else {
+            deviceModelText.anchors.topMargin = 28
+            deviceBatteryIcon.visible = false
+            deviceBatteryBar.visible = false
+        }
+    }
+
+    function updateStorage() {
+        //console.log("currentDevice.storageLevel" + currentDevice.storageLevel)
         deviceSpaceText.text = StringUtils.bytesToString_short(currentDevice.spaceUsed)
                 + " used of " + StringUtils.bytesToString_short(currentDevice.spaceTotal)
-        deviceSpaceBar.value = currentDevice.spaceUsedPercent
+
+        if (currentDevice.readOnly === true) {
+            deviceStorageImage.source = "qrc:/icons_material/outline-https-24px.svg"
+        } else {
+            deviceStorageImage.source = "qrc:/icons_material/outline-sd_card-24px.svg"
+        }
+
+        if (currentDevice.getStorageCount() > 1) {
+            deviceSpaceBar1.visible = true
+            deviceSpaceBar1.value = currentDevice.getStorageLevel(2)
+            deviceSpaceBar2.value = currentDevice.getStorageLevel(1)
+        } else {
+            deviceSpaceBar1.visible = false
+            deviceSpaceBar2.value = currentDevice.storageLevel
+        }
+    }
+
+    function updateDeviceHeader() {
+        updateStorage()
+        updateBattery()
+
+        deviceModelText.text = currentDevice.brand + " " + currentDevice.model;
 
         if (currentDevice.model.includes("HERO7 White") ||
             currentDevice.model.includes("HERO7 Silver")) {
@@ -61,14 +98,6 @@ Rectangle {
                 deviceImage.source = "qrc:/cameras/generic_camera.svg"
             else
                 deviceImage.source = "qrc:/cameras/generic_actioncam.svg"
-        }
-
-        if (currentDevice.readOnly === true) {
-            deviceSpaceLocked.visible = true
-            deviceSpaceLocked.width = 24
-        } else {
-            deviceSpaceLocked.visible = false
-            deviceSpaceLocked.width = 0
         }
 
         banner.close()
@@ -175,7 +204,7 @@ Rectangle {
             source: "qrc:/cameras/generic_actioncam.svg"
             sourceSize.width: deviceImage.width
             sourceSize.height: deviceImage.height
-            fillMode: Image.PreserveAspectFit
+            fillMode: Image.PreserveAspectCrop
         }
 
         Text {
@@ -184,7 +213,7 @@ Rectangle {
             height: 32
             text: "Camera brand & model"
             anchors.top: parent.top
-            anchors.topMargin: 28
+            anchors.topMargin: 20
             anchors.right: deviceImage.left
             anchors.rightMargin: 8
             verticalAlignment: Text.AlignVCenter
@@ -195,15 +224,16 @@ Rectangle {
         }
 
         Image {
-            id: deviceSpaceLocked
-            width: 24
-            height: 24
-            anchors.bottom: deviceSpaceText.bottom
-            anchors.bottomMargin: 2
+            id: deviceStorageImage
+            width: 20
+            height: 20
+            fillMode: Image.PreserveAspectCrop
+            anchors.top: deviceSpaceText.bottom
+            anchors.topMargin: 2
             anchors.right: deviceModelText.right
-            anchors.rightMargin: 0
+            anchors.rightMargin: -2
 
-            source: "qrc:/resources/minicons/locked.svg"
+            source: "qrc:/icons_material/outline-sd_card-24px.svg"
             sourceSize.width: 24
             sourceSize.height: 24
 
@@ -213,30 +243,70 @@ Rectangle {
                 color: ThemeEngine.colorHeaderText
             }
         }
+        Image {
+            id: deviceBatteryIcon
+            width: 20
+            height: 20
+            fillMode: Image.PreserveAspectCrop
+            anchors.top: deviceStorageImage.bottom
+            anchors.topMargin: 0
+            anchors.right: deviceModelText.right
+            anchors.rightMargin: -2
+
+            source: "qrc:/icons_material/outline-power-24px.svg"
+            sourceSize.width: 24
+            sourceSize.height: 24
+
+            ColorOverlay {
+                source: parent
+                color: ThemeEngine.colorHeaderText
+                anchors.fill: parent
+            }
+        }
 
         Text {
             id: deviceSpaceText
             width: 232
-            height: 24
-            anchors.right: deviceSpaceLocked.left
+            height: 20
+            anchors.right: deviceImage.left
             anchors.rightMargin: 8
             anchors.top: deviceModelText.bottom
-            anchors.topMargin: 4
+            anchors.topMargin: 0
 
             text: "64GB available of 128GB"
             color: ThemeEngine.colorHeaderText
             font.pixelSize: ThemeEngine.fontSizeHeaderText
             horizontalAlignment: Text.AlignRight
-            verticalAlignment: Text.AlignBottom
+            verticalAlignment: Text.AlignVCenter
         }
 
         ProgressBarThemed {
-            id: deviceSpaceBar
+            id: deviceSpaceBar1
             width: 256
-            anchors.top: deviceSpaceText.bottom
-            anchors.topMargin: 4
-            anchors.right: deviceModelText.right
-            anchors.rightMargin: 0
+            anchors.top: deviceStorageImage.top
+            anchors.topMargin: 2
+            anchors.rightMargin: 2
+            anchors.right: deviceStorageImage.left
+            value: 0.5
+        }
+        ProgressBarThemed {
+            id: deviceSpaceBar2
+            width: 256
+            anchors.bottom: deviceStorageImage.bottom
+            anchors.bottomMargin: 0
+            anchors.right: deviceStorageImage.left
+            anchors.rightMargin: 2
+            value: 0.5
+        }
+
+        ProgressBarThemed {
+            id: deviceBatteryBar
+            x: 858
+            width: 256
+            anchors.verticalCenterOffset: 6
+            anchors.verticalCenter: deviceBatteryIcon.verticalCenter
+            anchors.right: deviceBatteryIcon.left
+            anchors.rightMargin: 2
             value: 0.5
         }
 

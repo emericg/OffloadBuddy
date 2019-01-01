@@ -179,9 +179,9 @@ void FileScanner::scanMtpDevice()
     //qDebug() << "> SCANNING STARTED (MTP device)";
     emit scanningStarted(m_selected_filesystem);
 
-    mtpFileRec(m_selected_mtpDevice,
-               m_selected_mtpStorage->id,
-               LIBMTP_FILES_AND_FOLDERS_ROOT);
+    mtpFileLvl1(m_selected_mtpDevice,
+                m_selected_mtpStorage->id,
+                LIBMTP_FILES_AND_FOLDERS_ROOT);
 
     //qDebug() << "> SCANNING FINISHED";
     emit scanningFinished(m_selected_filesystem);
@@ -210,43 +210,13 @@ void FileScanner::mtpFileLvl1(LIBMTP_mtpdevice_t *device, uint32_t storageid, ui
         {
             if (mtpFile->filetype == LIBMTP_FILETYPE_FOLDER)
             {
-                qDebug() << "- (folder lvl1) " << mtpFile->filename;
+                //qDebug() << "- (folder lvl1) " << mtpFile->filename;
 
-                if (strcmp(mtpFile->filename, "DCIM"))
+                if (strcmp(mtpFile->filename, "DCIM") == 0)
                 {
-                    qDebug() << "- (folder DCIM yes) " << mtpFile->filename;
+                    //qDebug() << "- (folder DCIM found)";
                     mtpFileRec(device, storageid, mtpFile->item_id);
                 }
-            }
-
-            tmp = mtpFile;
-            mtpFile = mtpFile->next;
-            LIBMTP_destroy_file_t(tmp);
-        }
-    }
-}
-void FileScanner::mtpFileUseless(LIBMTP_mtpdevice_t *device, uint32_t storageid, uint32_t leaf)
-{
-    LIBMTP_file_t *mtpFiles;
-
-    // Get file listing
-    mtpFiles = LIBMTP_Get_Files_And_Folders(device, storageid, leaf);
-
-    if (mtpFiles == nullptr)
-    {
-        LIBMTP_Dump_Errorstack(device);
-        LIBMTP_Clear_Errorstack(device);
-    }
-    else
-    {
-        LIBMTP_file_t *mtpFile, *tmp;
-        mtpFile = mtpFiles;
-
-        while (mtpFile != nullptr)
-        {
-            if (mtpFile->filetype == LIBMTP_FILETYPE_FOLDER)
-            {
-                mtpFileUseless(device, storageid, mtpFile->item_id);
             }
 
             tmp = mtpFile;
@@ -313,6 +283,7 @@ void FileScanner::mtpFileRec(LIBMTP_mtpdevice_t *device, uint32_t storageid, uin
         }
     }
 }
+
 #endif // ENABLE_LIBMTP
 
 /* ************************************************************************** */
