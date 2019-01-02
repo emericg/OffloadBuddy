@@ -168,7 +168,7 @@ void Shot::addFile(ofb_file *file)
                      file->extension == "webm")
             {
                 m_videos.push_back(file);
-                getMetadatasFromVideo(m_videos.count() - 1);
+                getMetadatasFromVideo(m_videos.size() - 1);
             }
             else if (file->extension == "lrv")
             {
@@ -377,7 +377,7 @@ qint64 Shot::getDuration() const
     if (m_type < Shared::SHOT_PICTURE)
         return m_duration;
     else
-        return m_pictures.count();
+        return m_pictures.size();
 }
 
 /* ************************************************************************** */

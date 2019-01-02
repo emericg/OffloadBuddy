@@ -45,10 +45,15 @@ Device::Device(const deviceType_e type, const deviceStorage_e storage,
     m_firmware = version;
 
     connect(&m_updateStorageTimer, &QTimer::timeout, this, &Device::refreshStorageInfos);
-    if (m_deviceStorage == STORAGE_MTP)
-        connect(&m_updateStorageTimer, &QTimer::timeout, this, &Device::refreshBatteryInfos);
-    m_updateStorageTimer.setInterval(5 * 1000);
+    m_updateStorageTimer.setInterval(10 * 1000);
     m_updateStorageTimer.start();
+
+    if (m_deviceStorage == STORAGE_MTP)
+    {
+        connect(&m_updateBatteryTimer, &QTimer::timeout, this, &Device::refreshBatteryInfos);
+        m_updateBatteryTimer.setInterval(60 * 1000);
+        m_updateBatteryTimer.start();
+    }
 }
 
 Device::~Device()
@@ -60,18 +65,38 @@ Device::~Device()
     qDeleteAll(m_mtpStorages);
     m_mtpStorages.clear();
 
-    if (m_mtpDevice)
-        LIBMTP_Release_Device(m_mtpDevice);
+    qDeleteAll(m_mtpDevices);
+    m_mtpDevices.clear();
 #endif // ENABLE_LIBMTP
 }
 
-void Device::rename(const QString name)
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+QString Device::getUniqueId() const
 {
-    m_model = name;
+    QString id;
+
+    if (m_serial.isEmpty() == false)
+        id = m_serial;
+    else if (m_filesystemStorages.size() > 0 && getPath(0).isEmpty() == false)
+        id = getPath(0);
+    else if (m_mtpDevices.size())
+        id = "MTP-" + QString::number(m_mtpDevices.at(0)->devNum) + "-" + QString::number(m_mtpDevices.at(0)->devNum);
+    else
+    {
+        qWarning() << "getUniqueId() unable to get unique Id !!!";
+        id = m_model;
+    }
+
+    return id;
 }
 
-/* ************************************************************************** */
-/* ************************************************************************** */
+void Device::setName(const QString name)
+{
+    m_model = name;
+    emit deviceUpdated();
+}
 
 bool Device::isValid()
 {
@@ -87,107 +112,72 @@ bool Device::isValid()
 }
 
 /* ************************************************************************** */
-
-float Device::getStorageLevel(const int index)
-{
-    float level = 0;
-
-    if (index == 0)
-    {
-        if (getSpaceTotal() > 0)
-            level = static_cast<float>(getSpaceUsed()) / static_cast<float>(getSpaceTotal());
-    }
-    else
-    {
-        int64_t su = 0, sf = 0;
-        int i = (index - 1);
-
-        if (m_filesystemStorages.size() > i)
-        {
-            auto st = m_filesystemStorages.at(i);
-            su += (st->m_storage.bytesTotal() - st->m_storage.bytesAvailable());
-            sf += st->m_storage.bytesTotal();
-        }
-#ifdef ENABLE_LIBMTP
-        else if (m_mtpStorages.size() > i)
-        {
-            auto st = m_mtpStorages.at(i);
-            su += st->m_storage->MaxCapacity - st->m_storage->FreeSpaceInBytes;
-            sf += st->m_storage->MaxCapacity;
-        }
-#endif // ENABLE_LIBMTP
-
-        level = static_cast<float>(su) / static_cast<float>(sf);
-    }
-
-    return level;
-}
-
-int64_t Device::getSpaceAvailable_withrefresh()
-{
-    refreshStorageInfos();
-    return getSpaceAvailable();
-}
-
 /* ************************************************************************** */
-/* ************************************************************************** */
-
-void Device::setMtpInfos(LIBMTP_mtpdevice_t *device, float battery,
-                         uint32_t devBus, uint32_t devNum)
-{
-    m_deviceStorage = STORAGE_MTP;
-    m_mtpDevice = device;
-    m_mtpBattery = battery;
-    m_mtpDevBus = devBus;
-    m_mtpDevNum = devNum;
-}
 
 bool Device::addStorages_filesystem(ofb_fs_device *device)
 {
+    //qDebug() << "addStorages_filesystem" << device->storages.size();
     bool status = false;
 
-    //qDebug() << "addStorages_filesystem" << device->storages.size();
+    if (!device)
+        return status;
 
     return status;
 }
 
+/* ************************************************************************** */
+
 bool Device::addStorages_mtp(ofb_mtp_device *device)
 {
-    bool status = true;
-
     //qDebug() << "addStorages_mtp" << device->storages.size();
+    bool status = false;
 
+    if (!device)
+        return status;
+
+    m_deviceStorage = STORAGE_MTP;
+
+    // Device
+    if (!m_mtpDevices.contains(device))
+    {
+        m_mtpDevices.push_back(device);
+        emit deviceUpdated();
+    }
+
+    // Storage
     for (auto st: device->storages)
     {
         m_mtpStorages.push_back(st);
+        emit storageUpdated();
+        status = true;
 
-        if (status == true)
+        // Start initial scan
+        QThread *thread = new QThread();
+        FileScanner *fs = new FileScanner();
+
+        if (thread && fs)
         {
-            QThread *thread = new QThread();
-            FileScanner *fs = new FileScanner();
+            fs->chooseMtpStorage(st);
+            fs->moveToThread(thread);
 
-            if (thread && fs)
-            {
-                fs->chooseMtpStorage(st);
-                fs->moveToThread(thread);
+            connect(thread, SIGNAL(started()), fs, SLOT(scanMtpDevice()));
+            connect(fs, SIGNAL(fileFound(ofb_file *, ofb_shot *)), m_shotModel, SLOT(addFile(ofb_file *, ofb_shot *)));
+            connect(fs, SIGNAL(scanningStarted(QString)), this, SLOT(workerScanningStarted(QString)));
+            connect(fs, SIGNAL(scanningFinished(QString)), this, SLOT(workerScanningFinished(QString)));
 
-                connect(thread, SIGNAL(started()), fs, SLOT(scanMtpDevice()));
-                connect(fs, SIGNAL(fileFound(ofb_file *, ofb_shot *)), m_shotModel, SLOT(addFile(ofb_file *, ofb_shot *)));
-                connect(fs, SIGNAL(scanningStarted(QString)), this, SLOT(workerScanningStarted(QString)));
-                connect(fs, SIGNAL(scanningFinished(QString)), this, SLOT(workerScanningFinished(QString)));
+            // automatically delete thread and everything when the work is done
+            connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+            connect(fs, SIGNAL (scanningFinished(QString)), fs, SLOT (deleteLater()));
+            connect(fs, SIGNAL(scanningFinished(QString)), thread, SLOT(quit()));
 
-                // automatically delete thread and everything when the work is done
-                connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-                connect(fs, SIGNAL (scanningFinished(QString)), fs, SLOT (deleteLater()));
-                connect(fs, SIGNAL(scanningFinished(QString)), thread, SLOT(quit()));
-
-                thread->start();
-            }
+            thread->start();
         }
     }
 
     return status;
 }
+
+/* ************************************************************************** */
 
 bool Device::addStorage_filesystem(const QString &path)
 {
@@ -225,6 +215,8 @@ bool Device::addStorage_filesystem(const QString &path)
                 m_filesystemStorages.push_back(storage);
                 m_deviceStorage = STORAGE_FILESYSTEM;
                 status = true;
+
+                emit storageUpdated();
             }
             else
             {
@@ -235,6 +227,7 @@ bool Device::addStorage_filesystem(const QString &path)
         }
     }
 
+    // Start initial scan
     if (status == true)
     {
         QThread *thread = new QThread();
@@ -262,6 +255,27 @@ bool Device::addStorage_filesystem(const QString &path)
     return status;
 }
 
+/* ************************************************************************** */
+
+void Device::workerScanningStarted(QString s)
+{
+    //qDebug() << "> Device::workerScanningStarted(" << s << ")";
+    Q_UNUSED(s);
+
+    m_deviceState = DEVICE_STATE_SCANNING;
+    emit stateUpdated();
+}
+
+void Device::workerScanningFinished(QString s)
+{
+    //qDebug() << "> Device::workerScanningFinished(" << s << ")";
+    Q_UNUSED(s);
+
+    m_deviceState = DEVICE_STATE_IDLE;
+    emit stateUpdated();
+}
+
+/* ************************************************************************** */
 /* ************************************************************************** */
 
 QString Device::getPath(const int index) const
@@ -308,56 +322,79 @@ QStringList Device::getPathList() const
     return paths;
 }
 
-void Device::getMtpIds(unsigned &devBus, unsigned &devNum) const
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+int Device::getMtpDeviceCount() const
 {
-    devBus = m_mtpDevBus;
-    devNum = m_mtpDevNum;
+    return m_mtpDevices.size();
 }
 
-std::pair<unsigned, unsigned> Device::getMtpIds() const
+void Device::getMtpIds(unsigned &devBus, unsigned &devNum, const int index) const
 {
-    return std::make_pair(m_mtpDevBus, m_mtpDevNum);
-}
-
-QString Device::getUniqueId() const
-{
-    QString id;
-
-    if (m_serial.isEmpty() == false)
-        id = m_serial;
-    else if (getPath(0).isEmpty() == false)
-        id = getPath(0);
-    else if (m_mtpDevBus || m_mtpDevNum)
-        id = "MTP-" + QString::number(m_mtpDevBus) + "-" + QString::number(m_mtpDevBus);
+    if (index >= m_mtpDevices.size())
+    {
+        devBus = m_mtpDevices.at(index)->devBus;
+        devNum = m_mtpDevices.at(index)->devNum;
+    }
     else
     {
-        qWarning() << "getUniqueId() unable to get unique Id !!!";
-        id = m_model;
+        devBus = 0;
+        devNum = 0;
+    }
+}
+
+std::pair<unsigned, unsigned> Device::getMtpIds(const int index) const
+{
+    if (index >= m_mtpDevices.size())
+    {
+        return std::make_pair(m_mtpDevices.at(index)->devBus, m_mtpDevices.at(index)->devNum);
     }
 
-    return id;
+    return std::make_pair(0, 0);
+}
+
+int Device::getMtpBatteryCount() const
+{
+    int batteries = 0;
+
+    for (auto d: m_mtpDevices)
+    {
+        if (d->battery > 0.f)
+            batteries++;
+    }
+
+    return batteries;
+}
+
+float Device::getMtpBatteryLevel(const int index) const
+{
+    float level = 0.f;
+
+    if (index == 0)
+    {
+        int total = 0;
+        for (auto d: m_mtpDevices)
+        {
+            if (d->battery > 0.f)
+            {
+                level += d->battery / 100.f;
+                total++;
+            }
+        }
+        if (total > 0)
+            level /= static_cast<float>(total);
+    }
+    else if (index <= getMtpBatteryCount())
+    {
+        auto d = m_mtpDevices.at(index);
+        level = d->battery / 100.f;
+    }
+
+    return level;
 }
 
 /* ************************************************************************** */
-
-void Device::workerScanningStarted(QString s)
-{
-    //qDebug() << "> Device::workerScanningStarted(" << s << ")";
-    Q_UNUSED(s);
-
-    m_deviceState = DEVICE_STATE_SCANNING;
-    emit stateUpdated();
-}
-
-void Device::workerScanningFinished(QString s)
-{
-    //qDebug() << "> Device::workerScanningFinished(" << s << ")";
-    Q_UNUSED(s);
-
-    m_deviceState = DEVICE_STATE_IDLE;
-    emit stateUpdated();
-}
-
 /* ************************************************************************** */
 
 void Device::refreshBatteryInfos()
@@ -365,20 +402,23 @@ void Device::refreshBatteryInfos()
     //qDebug() << "refreshBatteryInfos()";
 
 #ifdef ENABLE_LIBMTP
-    if (m_mtpDevice)
+    for (auto d: m_mtpDevices)
     {
-        uint8_t maxbattlevel, currbattlevel;
-        int ret = LIBMTP_Get_Batterylevel(m_mtpDevice, &maxbattlevel, &currbattlevel);
-        if (ret == 0 && maxbattlevel > 0)
+        if (d && d->device)
         {
-            m_mtpBattery = (static_cast<float>(currbattlevel) / static_cast<float>(maxbattlevel)) * 100.f;
-            //qDebug() << "MTP Battery level:" << m_mtpBattery << "%";
-            emit batteryUpdated();
-        }
-        else
-        {
-            // Silently ignore. Some devices does not support getting the battery level.
-            LIBMTP_Clear_Errorstack(m_mtpDevice);
+            uint8_t maxbattlevel, currbattlevel;
+            int ret = LIBMTP_Get_Batterylevel(d->device, &maxbattlevel, &currbattlevel);
+            if (ret == 0 && maxbattlevel > 0)
+            {
+                d->battery = (static_cast<float>(currbattlevel) / static_cast<float>(maxbattlevel)) * 100.f;
+                //qDebug() << "MTP Battery level:" << d->battery << "%";
+                emit batteryUpdated();
+            }
+            else
+            {
+                // Silently ignore. Some devices does not support getting the battery level.
+                LIBMTP_Clear_Errorstack(d->device);
+            }
         }
     }
 #endif // ENABLE_LIBMTP
@@ -422,6 +462,53 @@ void Device::refreshStorageInfos()
 }
 
 /* ************************************************************************** */
+/* ************************************************************************** */
+
+int Device::getStorageCount() const
+{
+    int count = m_filesystemStorages.size();
+
+#ifdef ENABLE_LIBMTP
+    count += m_mtpStorages.size();
+#endif
+
+    return count;
+}
+
+float Device::getStorageLevel(const int index)
+{
+    float level = 0;
+
+    if (index == 0)
+    {
+        if (getSpaceTotal() > 0)
+            level = static_cast<float>(getSpaceUsed()) / static_cast<float>(getSpaceTotal());
+    }
+    else
+    {
+        int64_t su = 0, sf = 0;
+        int i = (index - 1);
+
+        if (m_filesystemStorages.size() > i)
+        {
+            auto st = m_filesystemStorages.at(i);
+            su += (st->m_storage.bytesTotal() - st->m_storage.bytesAvailable());
+            sf += st->m_storage.bytesTotal();
+        }
+#ifdef ENABLE_LIBMTP
+        else if (m_mtpStorages.size() > i)
+        {
+            auto st = m_mtpStorages.at(i);
+            su += st->m_storage->MaxCapacity - st->m_storage->FreeSpaceInBytes;
+            sf += st->m_storage->MaxCapacity;
+        }
+#endif // ENABLE_LIBMTP
+
+        level = static_cast<float>(su) / static_cast<float>(sf);
+    }
+
+    return level;
+}
 
 bool Device::isReadOnly() const
 {
@@ -434,17 +521,6 @@ bool Device::isReadOnly() const
     }
 
     return ro;
-}
-
-int Device::getStorageCount() const
-{
-    int count = m_filesystemStorages.count();
-
-#ifdef ENABLE_LIBMTP
-    count += m_mtpStorages.count();
-#endif
-
-    return count;
 }
 
 int64_t Device::getSpaceTotal()
@@ -507,6 +583,12 @@ int64_t Device::getSpaceAvailable()
     return s;
 }
 
+int64_t Device::getSpaceAvailable_withrefresh()
+{
+    refreshStorageInfos();
+    return getSpaceAvailable();
+}
+
 /* ************************************************************************** */
 /* ************************************************************************** */
 
@@ -521,7 +603,7 @@ void Device::offloadAll()
     QList<Shot *> shots;
     m_shotModel->getShots(shots);
 
-    if (jm && shots.count() > 0)
+    if (jm && shots.size() > 0)
     {
         //if (sm->getAutoMerge())
         //    jm->addJobs(JOB_MERGE, this, shots);
@@ -540,7 +622,7 @@ void Device::deleteAll()
     QList<Shot *> shots;
     m_shotModel->getShots(shots);
 
-    if (jm && shots.count() > 0)
+    if (jm && shots.size() > 0)
         jm->addJobs(JOB_DELETE, this, shots);
 }
 

@@ -80,10 +80,10 @@ public:
 public slots:
     void searchDevices();
 
-    void addFsDeviceGoPro(QString path, gopro_device_infos *infos);
-    void addFsDeviceGeneric(QString path, generic_device_infos *infos);
-    void addVfsDevice(ofb_vfs_device *infos);
-    void addMtpDevice(ofb_mtp_device *infos);
+    void addFsDeviceGoPro(QString path, gopro_device_infos *deviceInfos);
+    void addFsDeviceGeneric(QString path, generic_device_infos *deviceInfos);
+    void addVfsDevice(ofb_vfs_device *deviceInfos);
+    void addMtpDevice(ofb_mtp_device *deviceInfos);
 
     void removeFsDevice(const QString &path);
     void removeMtpDevice(const unsigned devBus, const unsigned devNum);

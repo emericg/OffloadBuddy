@@ -212,7 +212,7 @@ bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list,
     // CREATE JOB //////////////////////////////////////////////////////////////
 
     // FUSION hack
-    if (d->getModel() == "FUSION")
+    if (d->getModel().contains("Fusion", Qt::CaseInsensitive))
     {
         // Fusion Studio needs every files
         getPreviews = true;
@@ -278,6 +278,7 @@ bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list,
 
         if (m_job_cpu)
         {
+            // FIXME not threaded the first time?
             m_job_cpu->queueWork(job);
             m_job_cpu->work();
         }

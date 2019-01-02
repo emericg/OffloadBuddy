@@ -113,7 +113,6 @@ struct ofb_vfs_device
     QString serial;
     QString firmware;
 
-    //std::pair<uint32_t, uint32_t> currentMtpDevice;
     uint32_t devBus = 0;
     uint32_t devNum = 0;
 
@@ -129,7 +128,6 @@ struct ofb_mtp_device
     QString serial;
     QString firmware;
 
-    //std::pair<uint32_t, uint32_t> currentMtpDevice;
     uint32_t devBus = 0;
     uint32_t devNum = 0;
 
@@ -164,7 +162,7 @@ class Device: public ShotProvider
     Q_PROPERTY(QString serial READ getSerial NOTIFY deviceUpdated)
     Q_PROPERTY(QString firmware READ getFirmware NOTIFY deviceUpdated)
 
-    Q_PROPERTY(float batteryLevel READ getBatteryLevel NOTIFY batteryUpdated)
+    Q_PROPERTY(float batteryLevel READ getMtpBatteryLevel NOTIFY batteryUpdated)
     Q_PROPERTY(float storageLevel READ getStorageLevel NOTIFY storageUpdated)
 
     Q_PROPERTY(bool readOnly READ isReadOnly NOTIFY storageUpdated)
@@ -185,10 +183,8 @@ class Device: public ShotProvider
     QString m_firmware;
 
     // MTP infos
-    LIBMTP_mtpdevice_t *m_mtpDevice = nullptr;
-    uint32_t m_mtpDevBus = 0;
-    uint32_t m_mtpDevNum = 0;
-    float m_mtpBattery = 0.0;
+    QList <ofb_mtp_device *> m_mtpDevices;
+    QTimer m_updateBatteryTimer;
 
     // Storage(s)
     QTimer m_updateStorageTimer;
@@ -211,18 +207,14 @@ public:
            const QString &serial, const QString &version);
     ~Device();
 
+    void setName(const QString name);
     bool isValid();
 
-    void rename(const QString name);
-
     bool addStorage_filesystem(const QString &path);
-    bool addStorage_mtp(LIBMTP_mtpdevice_t *m_mtpDevice);
+    bool addStorage_mtp(LIBMTP_mtpdevice_t *m_mtpDevice); // TODO
 
-    bool addStorages_filesystem(ofb_fs_device *device);
+    bool addStorages_filesystem(ofb_fs_device *device); // TODO
     bool addStorages_mtp(ofb_mtp_device *device);
-
-    void setMtpInfos(LIBMTP_mtpdevice_t *device, float battery,
-                     uint32_t devBus, uint32_t devNum);
 
 public slots:
     //
@@ -238,22 +230,26 @@ public slots:
     QString getUniqueId() const;
 
     //
-    float getBatteryLevel() const { return m_mtpBattery / 100.f; }
-
-    //
-    bool isReadOnly() const;
     int getStorageCount() const;
     float getStorageLevel(const int index = 0);
+
+    bool isReadOnly() const;
     int64_t getSpaceTotal();
     int64_t getSpaceUsed();
     int64_t getSpaceAvailable();
     int64_t getSpaceAvailable_withrefresh();
 
-    //
+    // FS specifics
     QString getPath(const int index = 0) const;
     QStringList getPathList() const;
-    void getMtpIds(unsigned &devBus, unsigned &devNum) const;
-    std::pair<unsigned, unsigned> getMtpIds() const;
+
+    // MTP specifics
+    int getMtpDeviceCount() const;
+    void getMtpIds(unsigned &devBus, unsigned &devNum, const int index = 0) const;
+    std::pair<unsigned, unsigned> getMtpIds(const int index = 0) const;
+
+    int getMtpBatteryCount() const;
+    float getMtpBatteryLevel(const int index = 0) const;
 
     //
     void offloadAll();

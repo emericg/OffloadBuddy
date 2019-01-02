@@ -263,7 +263,7 @@ int ShotModel::getShotCount() const
 int ShotModel::rowCount(const QModelIndex & parent) const
 {
     Q_UNUSED(parent);
-    return m_shots.count();
+    return m_shots.size();
 }
 
 QVariant ShotModel::data(const QModelIndex & index, int role) const
