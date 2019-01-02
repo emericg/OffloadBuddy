@@ -790,7 +790,7 @@ bool Shot::getMetadatasFromVideo(int index)
                                     return false; // FIXME
                                 }
                                 else
-                                    has_gpmf = true;
+                                    hasGPMF = true;
                             }
 
                             minivideo_destroy_sample(&sp);
@@ -1005,6 +1005,7 @@ void Shot::parseData_gps5(GpmfBuffer &buf, GpmfKLV &klv,
 
             if (gps_fix >= 2 && m_gps_params.at(previous_point_id).second >= 2)
             {
+                hasGPS = true;
                 distance_km += haversine_km(gps_coord.first, gps_coord.second,
                                             m_gps.at(previous_point_id).first,
                                             m_gps.at(previous_point_id).second);

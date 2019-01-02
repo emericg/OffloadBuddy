@@ -239,6 +239,7 @@ Rectangle {
             id: rectangleText
             height: 138
             color: ThemeEngine.colorContentSubBox
+            clip: true
             anchors.top: parent.top
             anchors.topMargin: 16
             anchors.right: parent.right

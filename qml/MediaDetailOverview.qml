@@ -323,6 +323,11 @@ Rectangle {
             image.visible = true
             mediaOutput.visible = false
 
+            codecAudio.visible = false
+            codecVideo.visible = true
+            codecVideo.anchors.right = buttonOverview.left
+            codecVideoText.text = "JPEG" // HACK
+
             if (shot.duration > 1) {
                 labelDuration.visible = true
                 labelDuration.height = 40
@@ -369,11 +374,14 @@ Rectangle {
             else
                 codecVideo.visible = false
 
-            codecAudio.visible = true
-            if (shot.codecAudio.length)
+            if (shot.codecAudio.length) {
+                codecAudio.visible = true
                 codecAudioText.text = shot.codecAudio
-            else
+                codecVideo.anchors.right = codecAudio.left
+            } else {
+                codecVideo.anchors.right = buttonOverview.left
                 codecAudio.visible = false
+            }
 
             labelDuration.visible = true
             labelDuration.height = 40

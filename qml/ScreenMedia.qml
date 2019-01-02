@@ -38,13 +38,7 @@ Rectangle {
         if (shot) {
             textShotName.text = shot.name
 
-            if (shot.type >= Shared.SHOT_PICTURE) {
-                codecAudio.visible = false
-                codecVideo.visible = true
-                codecVideoText.text = "JPEG"
-            }
-
-            if (shot.hasGpmf) {
+            if (shot.hasGPMF && shot.hasGPS) {
                 buttonTelemetry.visible = true
                 buttonTelemetry.width = 110
 

@@ -211,9 +211,13 @@ class Shot: public QObject
     void parseData_triplet(GpmfBuffer &buf, GpmfKLV &klv, const double scales[16],
                            std::vector <TripleDouble> &datalist);
 
-    bool has_gpmf = false;
-    bool hasGpmf() { return has_gpmf; }
-    Q_PROPERTY(bool hasGpmf READ hasGpmf NOTIFY shotUpdated)
+    bool hasGPS = false;
+    bool hasGpsSync() { return hasGPS; }
+    Q_PROPERTY(bool hasGPS READ hasGpsSync NOTIFY shotUpdated)
+
+    bool hasGPMF = false;
+    bool hasGpmf() { return hasGPMF; }
+    Q_PROPERTY(bool hasGPMF READ hasGpmf NOTIFY shotUpdated)
 
     float minAlti;
     float maxAlti;
