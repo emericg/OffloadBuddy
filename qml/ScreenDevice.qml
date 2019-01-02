@@ -15,7 +15,7 @@ Rectangle {
     property var currentDevice: null
 
     onCurrentDeviceChanged: {
-        /*if (currentDevice && !deviceSavedStateList[currentDevice.uniqueId])*/ {
+        if (currentDevice && !deviceSavedStateList[currentDevice.uniqueId]) {
             //console.log("Device is now " + currentDevice.uniqueId)
 
             deviceSavedStateList[currentDevice.uniqueId] = ({ orderBy: 0,

@@ -8,6 +8,8 @@ import "StringUtils.js" as StringUtils
 
 Rectangle {
     id: contentOverview
+    width: 1280
+    height: 720
     anchors.fill: parent
     color: "#00000000"
 
@@ -118,7 +120,7 @@ Rectangle {
 
             Rectangle {
                 id: mediaControls
-                height: 32
+                height: 40
                 color: "#d9d9d9"
                 anchors.right: parent.right
                 anchors.rightMargin: 0
@@ -129,8 +131,8 @@ Rectangle {
 
                 Button {
                     id: buttonPlay
-                    width: 32
-                    height: 32
+                    width: 40
+                    height: 40
                     text: "▶"
                     anchors.left: parent.left
                     anchors.leftMargin: 0
@@ -151,8 +153,8 @@ Rectangle {
 
                 Button {
                     id: buttonStop
-                    width: 32
-                    height: 32
+                    width: 40
+                    height: 40
                     text: "■"
                     anchors.left: buttonPlay.right
                     anchors.leftMargin: 0
@@ -166,8 +168,8 @@ Rectangle {
 
                 Button {
                     id: buttonStartCut
-                    width: 32
-                    height: 32
+                    width: 40
+                    height: 40
                     text: "["
                     anchors.left: buttonStop.right
                     anchors.leftMargin: 0
@@ -182,8 +184,8 @@ Rectangle {
                 }
                 Button {
                     id: buttonStopCut
-                    width: 32
-                    height: 32
+                    width: 40
+                    height: 40
                     text: "]"
                     anchors.right: buttonScreenshot.left
                     anchors.rightMargin: 0
@@ -198,8 +200,8 @@ Rectangle {
                 }
                 Button {
                     id: buttonScreenshot
-                    width: 32
-                    height: 32
+                    width: 40
+                    height: 40
                     text: "⎔"
                     anchors.right: soundline.left
                     anchors.rightMargin: 0
@@ -213,8 +215,8 @@ Rectangle {
                 }
                 Button {
                     id: buttonFullscreen
-                    width: 32
-                    height: 32
+                    width: 40
+                    height: 40
                     text: "⇱"
                     anchors.right: parent.right
                     anchors.rightMargin: 0
@@ -225,8 +227,8 @@ Rectangle {
 
                 Rectangle {
                     id: timeline
-                    height: 32
-                    color: "#e0e0e0"
+                    height: 40
+                    color: "#d0d0d0"
                     anchors.left: buttonStartCut.right
                     anchors.leftMargin: 0
                     anchors.right: buttonStopCut.left
@@ -236,8 +238,8 @@ Rectangle {
                     Rectangle {
                         id: timelinePosition
                         width: 0
-                        height: 32
-                        color: "#addfff"
+                        height: 40
+                        color: ThemeEngine.colorApproved
                         anchors.left: parent.left
                         anchors.leftMargin: 0
                         anchors.verticalCenter: parent.verticalCenter
@@ -256,7 +258,7 @@ Rectangle {
 
                     Rectangle {
                         id: timelineLimitStart
-                        height: 32
+                        height: 40
                         color: "#cfa9ff"
                         anchors.left: parent.left
                         anchors.leftMargin: 0
@@ -265,7 +267,7 @@ Rectangle {
 
                     Rectangle {
                         id: timelineLimitStop
-                        height: 32
+                        height: 40
                         color: "#cfa9ff"
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.right: parent.right
@@ -276,8 +278,8 @@ Rectangle {
                 Rectangle {
                     id: soundline
                     width: 80
-                    height: 32
-                    color: "#ffffff"
+                    height: 40
+                    color: "#d0d0d0"
                     anchors.right: buttonFullscreen.left
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
@@ -285,7 +287,7 @@ Rectangle {
                     Rectangle {
                         id: soundlinePosition
                         width: 0
-                        height: 32
+                        height: 40
                         color: "#ffe695"
                         anchors.left: parent.left
                         anchors.leftMargin: 0
@@ -881,7 +883,7 @@ Rectangle {
                 id: labelFileCount
                 height: 32
                 anchors.left: parent.left
-                anchors.leftMargin: 8
+                anchors.leftMargin: 16
                 anchors.top: parent.top
                 anchors.topMargin: 8
                 anchors.right: parent.right
@@ -897,8 +899,8 @@ Rectangle {
 
             Text {
                 id: textFileList
-                anchors.rightMargin: 8
-                anchors.leftMargin: 8
+                anchors.rightMargin: 16
+                anchors.leftMargin: 16
                 anchors.bottomMargin: 8
                 anchors.top: labelFileCount.bottom
                 anchors.right: parent.right
@@ -907,6 +909,8 @@ Rectangle {
                 anchors.topMargin: 0
 
                 text: "text"
+                clip: true
+                horizontalAlignment: Text.AlignRight
                 //color: ThemeEngine.colorContentText
                 font.pixelSize: ThemeEngine.fontSizeContentText
             }

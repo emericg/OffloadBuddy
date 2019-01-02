@@ -118,7 +118,7 @@ Rectangle {
         anchors.left: parent.left
         anchors.leftMargin: 16
         anchors.top: parent.top
-        anchors.topMargin: 8
+        anchors.topMargin: 16
 
         Text {
             id: labelCoordinates

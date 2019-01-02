@@ -213,11 +213,10 @@ function aspectratioToString(width, height) {
         text = "2.39:1";
     } else if (ar_d > 2.54 && ar_d < 2.56) {
         text = "2.55:1";
-    } else if (ar_d > 2.75 && ar_d < 2.77)
-    {
+    } else if (ar_d > 2.75 && ar_d < 2.77) {
         text = "2.76:1";
     } else {
-        //text = QString::number(ar_d, 'g', 4) + ":1";
+        text = ar_d.toFixed(2) + ":1";
     }
 
     return text;
