@@ -142,11 +142,19 @@ bool DeviceManager::getMtpDeviceName(const QString &stringId,
                     QString v(rawdevices[i].device_entry.vendor);
                     QString p(rawdevices[i].device_entry.product);
 
-                    QStringList a = stringId.split("_");
+                    QStringList mtp_string_parts = stringId.split("_");
 
-                    for (auto b: a)
+                    for (auto part: mtp_string_parts)
                     {
-                        if (v.contains(b) || p.contains(v))
+                        // FUSION hack
+                        if (p.contains("FUSION"))
+                        {
+                            if (stringId.contains("frnt") && p.contains("front"))
+                                accepted = true;
+                            else if (stringId.contains("back") && p.contains("back"))
+                                accepted = true;
+                        }
+                        else if (v.contains(part) || p.contains(v))
                             accepted = true;
                     }
                 }
@@ -263,6 +271,7 @@ void DeviceManager::addFsDeviceGoPro(QString path, gopro_device_infos *infos)
                      d->getPath(0) != path &&
                      (d->getSerial() == infos->camera_serial_number))
             {
+                // FUSION hack
                 // we only want to merge two SD cards from a same FUSION device
                 deviceMerge = true;
                 break;
@@ -276,11 +285,9 @@ void DeviceManager::addFsDeviceGoPro(QString path, gopro_device_infos *infos)
         {
             if (d)
             {
-                qDebug() << ">>>> MERGING DEVICE";
+                qDebug() << ">>>> Fusioooooooon";
 
-                // fusioooooooon
                 d->addStorage_filesystem(path);
-
                 emit deviceListUpdated();
                 emit devicesAdded();
             }
@@ -306,7 +313,7 @@ void DeviceManager::addFsDeviceGoPro(QString path, gopro_device_infos *infos)
                     }
                     else
                     {
-                        qDebug() << "> INVALID DEVICE";
+                        qDebug() << "> INVALID (FS) DEVICE";
                         delete d;
                     }
                 }
@@ -378,54 +385,85 @@ void DeviceManager::addFsDeviceGeneric(QString path, generic_device_infos *infos
     delete infos;
 }
 
-void DeviceManager::addVfsDevice(ofb_vfs_device *deviceInfos)
+void DeviceManager::addVfsDevice(ofb_vfs_device *infos)
 {
-    if (m_devices.size() >= MAX_DEVICES || !deviceInfos)
+    if (m_devices.size() >= MAX_DEVICES || !infos)
     {
-        delete deviceInfos;
+        delete infos;
         return;
     }
 
     Device *d = nullptr;
     bool deviceExists = false;
     bool deviceMerge = false;
-/*
-    for (auto dd: m_devices)
+
+    // FUSION hack
+    if (infos->model.contains("FUSION"))
     {
-        d = qobject_cast<Device*>(dd);
-        if (d)
+        // search for another FUSION device
+        for (auto dd: m_devices)
         {
-            //if ((d->getPath(0) == path || d->getPath(1) == path) &&
-            //    (d->getSerial() == infos->camera_serial_number))
-            //{
-            //    deviceExists = true;
-            //    break;
-            //}
+            d = qobject_cast<Device*>(dd);
+            if (d)
+            {
+                //if (d->getPathList().contains(infos->paths))
+                //    deviceExists = true;
+
+                // TODO // handle more than one fusion
+                if (d->getModel().contains("FUSION") && d->getStorageCount() < 2)
+                {
+                    deviceMerge = true;
+                    break;
+                }
+            }
         }
     }
-*/
+
     if (deviceExists == false)
     {
-        d = new Device(DEVICE_UNKNOWN,
-                       STORAGE_VIRTUAL_FILESYSTEM,
-                       deviceInfos->brand, deviceInfos->model,
-                       deviceInfos->firmware, deviceInfos->serial);
-
-        for (auto fs: deviceInfos->paths)
+        if (deviceMerge == true)
         {
-            d->addStorage_filesystem(fs);
+            if (d)
+            {
+                qDebug() << ">>>> Fusioooooooon";
+
+                for (auto fs: infos->paths)
+                {
+                    d->rename("FUSION");
+                    d->addStorage_filesystem(fs);
+                }
+                emit deviceListUpdated();
+                emit devicesAdded();
+            }
         }
-
-        if (d->isValid())
+        else
         {
-            m_devices.push_back(d);
+            d = new Device(DEVICE_UNKNOWN,
+                           STORAGE_VIRTUAL_FILESYSTEM,
+                           infos->brand, infos->model,
+                           infos->firmware, infos->serial);
 
-            emit deviceListUpdated();
-            emit devicesAdded();
+            for (auto fs: infos->paths)
+            {
+                d->addStorage_filesystem(fs);
+            }
+
+            if (d->isValid())
+            {
+                m_devices.push_back(d);
+
+                emit deviceListUpdated();
+                emit devicesAdded();
+            }
+            else
+            {
+                qDebug() << "> INVALID (VFS) DEVICE";
+                delete d;
+            }
         }
     }
 
-    delete deviceInfos;
+    delete infos;
 }
 
 void DeviceManager::addMtpDevice(ofb_mtp_device *deviceInfos)
@@ -467,6 +505,11 @@ void DeviceManager::addMtpDevice(ofb_mtp_device *deviceInfos)
 
             emit deviceListUpdated();
             emit devicesAdded();
+        }
+        else
+        {
+            qDebug() << "> INVALID (MTP) DEVICE";
+            delete d;
         }
     }
 

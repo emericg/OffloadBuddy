@@ -121,7 +121,7 @@ Rectangle {
         anchors.left: comboBox_content.right
         anchors.leftMargin: 16
         anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: -8
+        anchors.verticalCenterOffset: -6
 
         text: StringUtils.bytesToString_short(directory.spaceUsed) + " used / " + StringUtils.bytesToString_short(directory.spaceAvailable) + " available / " + StringUtils.bytesToString_short(directory.spaceTotal) + " total"
         color: ThemeEngine.colorText
@@ -136,7 +136,7 @@ Rectangle {
         anchors.left: comboBox_content.right
         anchors.leftMargin: 16
         anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: 8
+        anchors.verticalCenterOffset: 10
         value: directory.storageLevel
         visible: directory.available
     }

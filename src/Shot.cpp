@@ -100,7 +100,7 @@ void Shot::addFile(ofb_file *file)
     {
         // TODO // File already in the list?
 
-        // Fusion "first file" hack...
+        // FUSION hack // "first file" is actually not the first file
         if (file->name.startsWith("GPFR") || file->name.startsWith("GPBK"))
         {
             m_name = file->name;
@@ -215,7 +215,7 @@ void Shot::attachMtpStorage(LIBMTP_mtpdevice_t *device, LIBMTP_devicestorage_t *
 /*
 unsigned Shot::getType() const
 {
-    // Fusion hack:
+    // FUSION hack
     if (m_type == Shared::SHOT_PICTURE_MULTI && m_jpg.size() == 1)
     {
         m_type = Shared::SHOT_PICTURE;

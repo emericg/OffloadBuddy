@@ -211,6 +211,7 @@ bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list,
 
     // CREATE JOB //////////////////////////////////////////////////////////////
 
+    // FUSION hack
     if (d->getModel() == "FUSION")
     {
         // Fusion Studio needs every files

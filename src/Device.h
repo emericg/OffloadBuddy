@@ -213,6 +213,8 @@ public:
 
     bool isValid();
 
+    void rename(const QString name);
+
     bool addStorage_filesystem(const QString &path);
     bool addStorage_mtp(LIBMTP_mtpdevice_t *m_mtpDevice);
 
@@ -249,6 +251,7 @@ public slots:
 
     //
     QString getPath(const int index = 0) const;
+    QStringList getPathList() const;
     void getMtpIds(unsigned &devBus, unsigned &devNum) const;
     std::pair<unsigned, unsigned> getMtpIds() const;
 

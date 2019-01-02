@@ -65,6 +65,11 @@ Device::~Device()
 #endif // ENABLE_LIBMTP
 }
 
+void Device::rename(const QString name)
+{
+    m_model = name;
+}
+
 /* ************************************************************************** */
 /* ************************************************************************** */
 
@@ -283,6 +288,24 @@ QString Device::getPath(const int index) const
     }
 
     return QString();
+}
+
+QStringList Device::getPathList() const
+{
+    QStringList paths;
+
+    for (auto st: m_filesystemStorages)
+    {
+        if (st) paths += st->m_path;
+    }
+#ifdef ENABLE_LIBMTP
+    for (auto st: m_mtpStorages)
+    {
+        //if (st) st->m_storage->VolumeIdentifier;
+    }
+#endif // ENABLE_LIBMTP
+
+    return paths;
 }
 
 void Device::getMtpIds(unsigned &devBus, unsigned &devNum) const
