@@ -133,10 +133,19 @@ void JobWorkerAsync::queueWork(Job *job)
 
             QString file_extension = "mp4";
 
+            SettingsManager *sm = SettingsManager::getInstance();
+
             // FFMPEG binary
-            ptiwrap->command = "ffmpeg";
 #ifdef Q_OS_WIN
-            ptiwrap->command = QDir::currentPath() + "/ffmpeg.exe";
+            ptiwrap->command = sm->getAppPath() + "/ffmpeg.exe";
+#else
+            ptiwrap->command = sm->getAppPath() + "/ffmpeg";
+
+            if (!QFileInfo::exists(ptiwrap->command))
+            {
+                // No ffmpeg bundled? Just try to use ffmpeg from the system...
+                ptiwrap->command = "ffmpeg";
+            }
 #endif
             // FFMPEG arguments
             ptiwrap->arguments << "-y" /*<< "-loglevel" << "warning" << "-stats"*/;

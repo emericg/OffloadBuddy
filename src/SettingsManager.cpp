@@ -61,6 +61,15 @@ SettingsManager::~SettingsManager()
 }
 
 /* ************************************************************************** */
+
+void SettingsManager::setAppPath(QString &path)
+{
+    QDir p(path);
+    p.cdUp();
+    m_appPath = p.absolutePath();
+}
+
+/* ************************************************************************** */
 /* ************************************************************************** */
 
 bool SettingsManager::readSettings()

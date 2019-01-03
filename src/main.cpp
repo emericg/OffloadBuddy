@@ -108,6 +108,14 @@ int main(int argc, char *argv[])
     ////////////////////////////////////////////////////////////////////////////
 
     SettingsManager *s = SettingsManager::getInstance();
+    if (s)
+    {
+        if (argc > 0 && argv[0])
+        {
+            QString path = QString::fromLocal8Bit(argv[0]);
+            s->setAppPath(path);
+        }
+    }
 
     JobManager *j = JobManager::getInstance();
     atexit(exithandler); // will stop running job on exit

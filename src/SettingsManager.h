@@ -55,6 +55,8 @@ class SettingsManager: public QObject
 
     Q_PROPERTY(QVariant directoriesList READ getDirectories NOTIFY directoriesUpdated)
 
+    QString m_appPath;
+
     // Global
     unsigned m_appTheme = 0;
     unsigned m_appUnits = 0;
@@ -91,6 +93,9 @@ Q_SIGNALS:
 
 public:
     static SettingsManager *getInstance();
+
+    QString getAppPath() const { return m_appPath; }
+    void setAppPath(QString &path);
 
     unsigned getAppTheme() const { return m_appTheme; }
     void setAppTheme(unsigned value) { m_appTheme = value; writeSettings(); }
