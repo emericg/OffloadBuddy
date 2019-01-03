@@ -167,7 +167,7 @@ Rectangle {
                 anchors.fill: parent
 
                 text: qsTr("CODEC")
-                color: "grey"
+                color: "dimgrey"
                 font.capitalization: Font.AllUppercase
                 font.pixelSize: 16
                 font.bold: true
@@ -190,7 +190,7 @@ Rectangle {
                 anchors.fill: parent
 
                 text: qsTr("CODEC")
-                color: "grey"
+                color: "dimgrey"
                 font.capitalization: Font.AllUppercase
                 font.pixelSize: 16
                 font.bold: true

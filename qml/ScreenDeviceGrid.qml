@@ -200,7 +200,6 @@ Rectangle {
     Rectangle {
         id: rectangleHeader
         height: 128
-        opacity: 0.8
         color: ThemeEngine.colorHeaderBackground
         z: 1
         anchors.top: parent.top
@@ -217,6 +216,7 @@ Rectangle {
 
         Image {
             id: deviceImage
+            opacity: 0.8
             width: 128
             antialiasing: true
             anchors.bottom: parent.bottom

@@ -1,6 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtMultimedia 5.9
+import QtGraphicalEffects 1.0
 
 import com.offloadbuddy.style 1.0
 import com.offloadbuddy.shared 1.0
@@ -332,7 +333,7 @@ Rectangle {
 
             if (shot.duration > 1) {
                 labelDuration.visible = true
-                labelDuration.height = 40
+                labelDefinition.anchors.top = labelDuration.bottom
                 duration.text = shot.duration + " " + qsTr("pictures")
 
                 if (shot.previewPhoto)
@@ -341,7 +342,7 @@ Rectangle {
                     image.source = "qrc:/resources/other/placeholder_picture_multi.svg"
             } else {
                 labelDuration.visible = false
-                labelDuration.height = 0
+                labelDefinition.anchors.top = labelCamera.bottom
 
                 if (shot.previewPhoto)
                     image.source = "file:///" + shot.previewPhoto
@@ -386,7 +387,7 @@ Rectangle {
             }
 
             labelDuration.visible = true
-            labelDuration.height = 40
+            labelDefinition.anchors.top = labelDuration.bottom
             duration.text = StringUtils.durationToString(shot.duration)
 
             bitrate.text = StringUtils.bitrateToString(shot.bitrate)
@@ -395,18 +396,14 @@ Rectangle {
             timecode.text = shot.timecode
         }
 
-        ar.text = StringUtils.aspectratioToString(shot.width, shot.height)
-
         if (shot.size !== shot.datasize) {
-            labelSizeFull.visible = true
-        } else {
-            labelSizeFull.visible = false
+            size.text = StringUtils.bytesToString_short(shot.datasize) + "   (" + qsTr("full: ") + StringUtils.bytesToString_short(shot.size) + ")"
         }
     }
 
     Rectangle {
         id: rectangleMetadatas
-        width: 560
+        width: 320
         color: ThemeEngine.colorContentBox
         anchors.bottomMargin: 0
         anchors.rightMargin: 0
@@ -415,26 +412,34 @@ Rectangle {
         anchors.topMargin: 0
         anchors.top: parent.top
 
-        Text {
+        Image {
             id: labelDate
-            height: 40
-            color: ThemeEngine.colorContentText
-            text: qsTr("Date:")
+            width: 28
+            height: 28
             anchors.top: parent.top
-            anchors.topMargin: 24
+            anchors.topMargin: 16
             anchors.left: parent.left
-            anchors.leftMargin: 24
-            verticalAlignment: Text.AlignVCenter
-            font.bold: true
-            font.pixelSize: ThemeEngine.fontSizeContentText
+            anchors.leftMargin: 16
+
+            source: "qrc:/icons_material/baseline-date_range-24px.svg"
+            sourceSize.width: width
+            sourceSize.height: height
+
+            ColorOverlay {
+                anchors.fill: parent
+                source: parent
+                color: ThemeEngine.colorContentText
+                visible: ThemeEngine.colorContentText !== "#000000" ? true : false
+            }
 
             Text {
                 id: date
-                height: 32
-                color: ThemeEngine.colorContentText
-                text: shot.date.toUTCString()
+                height: 28
                 anchors.left: parent.right
                 anchors.leftMargin: 16
+
+                color: ThemeEngine.colorContentText
+                text: shot.date.toUTCString()
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignLeft
                 anchors.verticalCenter: parent.verticalCenter
@@ -442,25 +447,34 @@ Rectangle {
             }
         }
 
-        Text {
+        Image {
             id: labelCamera
-            height: 40
+            width: 28
+            height: 28
             anchors.top: labelDate.bottom
+            anchors.topMargin: 8
             anchors.left: parent.left
-            anchors.leftMargin: 24
-            color: ThemeEngine.colorContentText
-            text: qsTr("Camera:")
-            verticalAlignment: Text.AlignVCenter
-            font.bold: true
-            font.pixelSize: ThemeEngine.fontSizeContentText
+            anchors.leftMargin: 16
+
+            source: "qrc:/icons_material/baseline-camera-24px.svg"
+            sourceSize.width: width
+            sourceSize.height: height
+
+            ColorOverlay {
+                anchors.fill: parent
+                source: parent
+                color: ThemeEngine.colorContentText
+                visible: ThemeEngine.colorContentText !== "#000000" ? true : false
+            }
 
             Text {
                 id: camera
-                height: 32
-                text: shot.camera
+                height: 28
                 anchors.left: parent.right
                 anchors.leftMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
+
+                text: shot.camera
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignLeft
                 font.pixelSize: ThemeEngine.fontSizeContentText
@@ -468,145 +482,108 @@ Rectangle {
             }
         }
 
-        Text {
+        Image {
             id: labelDuration
-            height: 40
-            text: qsTr("Duration:")
+            width: 28
+            height: 28
             anchors.top: labelCamera.bottom
+            anchors.topMargin: 8
             anchors.left: parent.left
-            anchors.leftMargin: 24
-            verticalAlignment: Text.AlignVCenter
-            font.bold: true
-            font.pixelSize: ThemeEngine.fontSizeContentText
-            color: ThemeEngine.colorContentText
+            anchors.leftMargin: 16
+
+            source: "qrc:/icons_material/baseline-timer-24px.svg"
+            sourceSize.width: width
+            sourceSize.height: height
+
+            ColorOverlay {
+                anchors.fill: parent
+                source: parent
+                color: ThemeEngine.colorContentText
+                visible: ThemeEngine.colorContentText !== "#000000" ? true : false
+            }
 
             Text {
                 id: duration
-                height: 32
+                height: 28
                 anchors.verticalCenter: parent.verticalCenter
-                text: "text"
                 anchors.left: parent.right
                 anchors.leftMargin: 16
                 horizontalAlignment: Text.AlignRight
+
+                text: ""
                 verticalAlignment: Text.AlignVCenter
                 color: ThemeEngine.colorContentText
                 font.pixelSize: ThemeEngine.fontSizeContentText
             }
         }
 
-        Text {
+        Image {
             id: labelDefinition
-            width: 240
-            height: 40
+            width: 28
+            height: 28
             anchors.top: labelDuration.bottom
-            anchors.topMargin: 0
+            anchors.topMargin: 8
             anchors.left: parent.left
-            anchors.leftMargin: 24
+            anchors.leftMargin: 16
 
-            color: ThemeEngine.colorContentText
-            text: qsTr("Definition:")
-            verticalAlignment: Text.AlignVCenter
-            font.bold: true
-            font.pixelSize: ThemeEngine.fontSizeContentText
+            source: "qrc:/icons_material/baseline-aspect_ratio-24px.svg"
+            sourceSize.width: width
+            sourceSize.height: height
+
+            ColorOverlay {
+                anchors.fill: parent
+                source: parent
+                color: ThemeEngine.colorContentText
+                visible: ThemeEngine.colorContentText !== "#000000" ? true : false
+            }
 
             Text {
                 id: definition
-                width: 128
-                height: 32
-                text: shot.width + "x" + shot.height
+                height: 28
+                anchors.left: parent.right
+                anchors.leftMargin: 16
+                anchors.verticalCenter: parent.verticalCenter
+
+                text: shot.width + "x" + shot.height + "   (" + StringUtils.aspectratioToString(shot.width, shot.height) + ")"
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignRight
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.right: parent.right
-                anchors.rightMargin: 0
                 font.pixelSize: ThemeEngine.fontSizeContentText
                 color: ThemeEngine.colorContentText
             }
         }
 
-        Text {
+        Image {
             id: labelSize
-            width: 240
-            height: 40
-            anchors.left: parent.left
-            anchors.leftMargin: 24
+            width: 28
+            height: 28
             anchors.top: labelDefinition.bottom
-            anchors.topMargin: 0
+            anchors.topMargin: 8
+            anchors.left: parent.left
+            anchors.leftMargin: 16
 
-            color: ThemeEngine.colorContentText
-            text: qsTr("Size:")
-            verticalAlignment: Text.AlignVCenter
-            font.bold: true
-            font.pixelSize: ThemeEngine.fontSizeContentText
+            source: "qrc:/icons_material/baseline-folder-24px.svg"
+            sourceSize.width: width
+            sourceSize.height: height
+
+            ColorOverlay {
+                anchors.fill: parent
+                source: parent
+                color: ThemeEngine.colorContentText
+                visible: ThemeEngine.colorContentText !== "#000000" ? true : false
+            }
 
             Text {
                 id: size
-                width: 128
-                height: 32
+                height: 28
+                anchors.left: parent.right
+                anchors.leftMargin: 16
+                anchors.verticalCenter: parent.verticalCenter
+
                 color: ThemeEngine.colorContentText
                 text: StringUtils.bytesToString_short(shot.datasize)
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignRight
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.right: parent.right
-                anchors.rightMargin: 0
                 font.pixelSize: ThemeEngine.fontSizeContentText
-            }
-        }
-        Text {
-            id: labelSizeFull
-            width: 240
-            height: 40
-            anchors.right: parent.right
-            anchors.rightMargin: 24
-            anchors.verticalCenter: labelSize.verticalCenter
-
-            color: ThemeEngine.colorContentText
-            text: qsTr("Full size:")
-            verticalAlignment: Text.AlignVCenter
-            font.bold: true
-            font.pixelSize: ThemeEngine.fontSizeContentText
-
-            Text {
-                id: sizefull
-                width: 128
-                height: 32
-                color: ThemeEngine.colorContentText
-                text: StringUtils.bytesToString_short(shot.size)
-                horizontalAlignment: Text.AlignRight
-                verticalAlignment: Text.AlignVCenter
-                anchors.right: parent.right
-                anchors.rightMargin: 0
-                anchors.verticalCenter: parent.verticalCenter
-                font.pixelSize: ThemeEngine.fontSizeContentText
-            }
-        }
-
-        Text {
-            id: labelAR
-            width: 240
-            height: 40
-            color: ThemeEngine.colorContentText
-            text: qsTr("Aspect Ratio:")
-            anchors.right: parent.right
-            anchors.rightMargin: 24
-            anchors.verticalCenter: labelDefinition.verticalCenter
-            verticalAlignment: Text.AlignVCenter
-            font.bold: true
-            font.pixelSize: ThemeEngine.fontSizeContentText
-
-            Text {
-                id: ar
-                width: 128
-                height: 32
-                text: "text"
-                anchors.right: parent.right
-                anchors.rightMargin: 0
-                anchors.verticalCenter: parent.verticalCenter
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignRight
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
             }
         }
 
@@ -621,29 +598,34 @@ Rectangle {
             anchors.right: parent.right
             anchors.rightMargin: 0
 
-            Text {
+            Image {
                 id: labelISO
-                width: 240
-                height: 40
-                color: ThemeEngine.colorContentText
-                text: qsTr("ISO:")
+                width: 28
+                height: 28
                 anchors.top: parent.top
-                anchors.topMargin: 0
+                anchors.topMargin: 8
                 anchors.left: parent.left
-                anchors.leftMargin: 24
-                verticalAlignment: Text.AlignVCenter
-                font.bold: true
-                font.pixelSize: ThemeEngine.fontSizeContentText
+                anchors.leftMargin: 16
+
+                source: "qrc:/icons_material/baseline-iso-24px.svg"
+                sourceSize.width: width
+                sourceSize.height: height
+
+                ColorOverlay {
+                    anchors.fill: parent
+                    source: parent
+                    color: ThemeEngine.colorContentText
+                    visible: ThemeEngine.colorContentText !== "#000000" ? true : false
+                }
 
                 Text {
                     id: iso
-                    width: 128
-                    height: 32
-                    anchors.right: parent.right
-                    anchors.rightMargin: 0
+                    height: 28
+                    anchors.left: parent.right
+                    anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: shot.iso
+                    text: qsTr("ISO") + " " + shot.iso
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
                     font.pixelSize: ThemeEngine.fontSizeContentText
@@ -651,27 +633,31 @@ Rectangle {
                 }
             }
 
-            Text {
+            Image {
                 id: labelFocal
-                width: 240
-                height: 40
-                anchors.left: parent.left
-                anchors.leftMargin: 24
+                width: 28
+                height: 28
                 anchors.top: labelISO.bottom
-                anchors.topMargin: 0
+                anchors.topMargin: 8
+                anchors.left: parent.left
+                anchors.leftMargin: 16
 
-                color: ThemeEngine.colorContentText
-                text: qsTr("Focal:")
-                verticalAlignment: Text.AlignVCenter
-                font.bold: true
-                font.pixelSize: ThemeEngine.fontSizeContentText
+                source: "qrc:/icons_material/baseline-center_focus_weak-24px.svg"
+                sourceSize.width: width
+                sourceSize.height: height
+
+                ColorOverlay {
+                    anchors.fill: parent
+                    source: parent
+                    color: ThemeEngine.colorContentText
+                    visible: ThemeEngine.colorContentText !== "#000000" ? true : false
+                }
 
                 Text {
                     id: focal
-                    width: 128
-                    height: 32
-                    anchors.right: parent.right
-                    anchors.rightMargin: 0
+                    height: 28
+                    anchors.left: parent.right
+                    anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: shot.focal
@@ -681,27 +667,31 @@ Rectangle {
                     color: ThemeEngine.colorContentText
                 }
             }
-            Text {
+            Image {
                 id: labelExposure
-                width: 240
-                height: 40
-                anchors.left: parent.left
-                anchors.leftMargin: 24
+                width: 28
+                height: 28
                 anchors.top: labelFocal.bottom
-                anchors.topMargin: 0
+                anchors.topMargin: 8
+                anchors.left: parent.left
+                anchors.leftMargin: 16
 
-                color: ThemeEngine.colorContentText
-                text: qsTr("Exposure time:")
-                verticalAlignment: Text.AlignVCenter
-                font.bold: true
-                font.pixelSize: ThemeEngine.fontSizeContentText
+                source: "qrc:/icons_material/baseline-shutter_speed-24px.svg"
+                sourceSize.width: width
+                sourceSize.height: height
+
+                ColorOverlay {
+                    anchors.fill: parent
+                    source: parent
+                    color: ThemeEngine.colorContentText
+                    visible: ThemeEngine.colorContentText !== "#000000" ? true : false
+                }
 
                 Text {
                     id: exposure
-                    width: 128
-                    height: 32
-                    anchors.right: parent.right
-                    anchors.rightMargin: 0
+                    height: 28
+                    anchors.left: parent.right
+                    anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: shot.exposure
@@ -726,13 +716,14 @@ Rectangle {
 
             Text {
                 id: labelChapter
-                width: 240
-                height: 40
+                width: 290
+                height: 28
                 color: ThemeEngine.colorContentText
                 text: qsTr("Chapters:")
-                anchors.right: parent.right
-                anchors.rightMargin: 24
-                anchors.verticalCenter: labelTimecode.verticalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 16
+                anchors.top: labelTimecode.bottom
+                anchors.topMargin: 0
                 verticalAlignment: Text.AlignVCenter
                 font.bold: true
                 font.pixelSize: ThemeEngine.fontSizeContentText
@@ -754,12 +745,12 @@ Rectangle {
 
             Text {
                 id: labelTimecode
-                width: 240
-                height: 40
+                width: 290
+                height: 28
                 text: qsTr("Timecode:")
                 anchors.left: parent.left
-                anchors.leftMargin: 24
-                anchors.top: labelFramerate.bottom
+                anchors.leftMargin: 16
+                anchors.top: labelBitrate.bottom
                 anchors.topMargin: 0
                 verticalAlignment: Text.AlignVCenter
                 font.bold: true
@@ -770,7 +761,7 @@ Rectangle {
                     id: timecode
                     width: 128
                     height: 32
-                    text: "text"
+                    text: ""
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
                     anchors.right: parent.right
@@ -783,13 +774,13 @@ Rectangle {
 
             Text {
                 id: labelCodec
-                width: 240
-                height: 40
+                width: 290
+                height: 28
                 text: qsTr("Codec:")
                 anchors.top: parent.top
                 anchors.topMargin: 0
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: 16
                 verticalAlignment: Text.AlignVCenter
                 font.bold: true
                 font.pixelSize: ThemeEngine.fontSizeContentText
@@ -799,7 +790,7 @@ Rectangle {
                     id: codec
                     width: 128
                     height: 32
-                    text: "text"
+                    text: ""
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
                     anchors.right: parent.right
@@ -812,13 +803,14 @@ Rectangle {
 
             Text {
                 id: labelBitrate
-                width: 240
-                height: 40
+                width: 290
+                height: 28
                 color: ThemeEngine.colorContentText
                 text: qsTr("Bitrate:")
-                anchors.right: parent.right
-                anchors.rightMargin: 24
-                anchors.verticalCenter: labelFramerate.verticalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 16
+                anchors.top: labelFramerate.bottom
+                anchors.topMargin: 0
                 verticalAlignment: Text.AlignVCenter
                 font.bold: true
                 font.pixelSize: ThemeEngine.fontSizeContentText
@@ -827,7 +819,7 @@ Rectangle {
                     id: bitrate
                     width: 128
                     height: 32
-                    text: "text"
+                    text: ""
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
@@ -840,12 +832,12 @@ Rectangle {
 
             Text {
                 id: labelFramerate
-                width: 240
-                height: 40
+                width: 290
+                height: 28
                 color: ThemeEngine.colorContentText
                 text: qsTr("Framerate:")
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: 16
                 anchors.top: labelCodec.bottom
                 anchors.topMargin: 0
                 verticalAlignment: Text.AlignVCenter
@@ -856,7 +848,7 @@ Rectangle {
                     id: framerate
                     width: 128
                     height: 32
-                    text: "text"
+                    text: ""
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
@@ -889,7 +881,7 @@ Rectangle {
                 anchors.right: parent.right
                 anchors.rightMargin: 8
 
-                text: qsTr("Files:")
+                text: qsTr("File(s):")
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
                 color: ThemeEngine.colorContentText
@@ -908,10 +900,10 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.topMargin: 0
 
-                text: "text"
+                text: ""
                 clip: true
                 horizontalAlignment: Text.AlignRight
-                //color: ThemeEngine.colorContentText
+                color: ThemeEngine.colorContentText
                 font.pixelSize: ThemeEngine.fontSizeContentText
             }
         }
