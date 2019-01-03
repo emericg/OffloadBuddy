@@ -212,9 +212,9 @@ bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list,
     // CREATE JOB //////////////////////////////////////////////////////////////
 
     // FUSION hack
-    if (d->getModel().contains("Fusion", Qt::CaseInsensitive))
+    if (type == JOB_COPY && d->getModel().contains("Fusion", Qt::CaseInsensitive))
     {
-        // Fusion Studio needs every files
+        // Fusion Studio needs every files from a shot to work
         getPreviews = true;
         getHdAudio = true;
     }

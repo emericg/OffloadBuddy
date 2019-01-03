@@ -103,9 +103,9 @@ Rectangle {
         smooth: false
         antialiasing: false
         asynchronous: true
+
         fillMode: Image.PreserveAspectCrop
         source: "qrc:/resources/other/placeholder_loading.svg"
-
         sourceSize.width: 512
         sourceSize.height: 512
     }
@@ -120,6 +120,8 @@ Rectangle {
         id: icon_state
         width: 24
         height: 24
+        sourceSize.width: 24
+        sourceSize.height: 24
         anchors.top: parent.top
         anchors.topMargin: 8
         anchors.right: parent.right
@@ -262,6 +264,8 @@ Rectangle {
             y: 96
             width: 64
             height: 64
+            sourceSize.width: 64
+            sourceSize.height: 64
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
             fillMode: Image.PreserveAspectCrop

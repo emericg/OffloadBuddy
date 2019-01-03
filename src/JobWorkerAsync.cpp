@@ -122,7 +122,7 @@ void JobWorkerAsync::queueWork(Job *job)
             if (element->parent_shots->getType() <= Shared::SHOT_PICTURE &&
                 element->files.size() != 1)
             {
-                qDebug() << "This async job element got more (or less actually) than 1 file, it should not happen...";
+                qDebug() << "This async job element got" << element->files.size() << "file(s), should not happen...";
                 continue;
             }
 
