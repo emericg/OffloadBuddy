@@ -15,6 +15,7 @@ fi
 ## SETTINGS ####################################################################
 
 use_contribs=false
+create_package=false
 upload_package=false
 
 while [[ $# -gt 0 ]]
@@ -22,6 +23,9 @@ do
 case $1 in
   -c|--contribs)
   use_contribs=true
+  ;;
+  -p|--package)
+  create_package=true
   ;;
   -u|--upload)
   upload_package=true
@@ -41,7 +45,7 @@ make INSTALL_ROOT=appdir -j$(nproc) install;
 echo '---- Installation directory content recap:'
 find appdir/;
 
-## PACKAGE #####################################################################
+## DEPLOY ######################################################################
 
 export GIT_VERSION=$(git rev-parse --short HEAD);
 
@@ -67,15 +71,22 @@ fi
 chmod a+x contribs/src/linuxdeployqt-continuous-x86_64.AppImage;
 
 echo '---- Running linuxdeployqt'
-mkdir -p appdir/$USRDIR/plugins/imageformats/ appdir/$USRDIR/plugins/iconengines/;
+mkdir -p appdir/$USRDIR/plugins/imageformats/ appdir/$USRDIR/plugins/iconengines/ appdir/$USRDIR/plugins/geoservices/ appdir/$USRDIR/plugins/mediaservice/;
 cp $QTDIR/plugins/imageformats/libqsvg.so appdir/$USRDIR/plugins/imageformats/;
 cp $QTDIR/plugins/iconengines/libqsvgicon.so appdir/$USRDIR/plugins/iconengines/;
 cp $QTDIR/plugins/geoservices/*.so appdir/$USRDIR/plugins/geoservices/;
 cp $QTDIR/plugins/mediaservice/*.so appdir/$USRDIR/plugins/mediaservice/;
 ./contribs/src/linuxdeployqt-continuous-x86_64.AppImage appdir/$USRDIR/share/applications/*.desktop -qmldir=qml/ -bundle-non-qt-libs -extra-plugins=geoservices,mediaservice,imageformats/libqsvg.so,iconengines/libqsvgicon.so;
 
-echo '---- Running appimage packager'
-./contribs/src/linuxdeployqt-continuous-x86_64.AppImage appdir/$USRDIR/share/applications/*.desktop -qmldir=qml/ -appimage;
+echo '---- Installation directory content recap:'
+find appdir/;
+
+## PACKAGE #####################################################################
+
+if [[ $create_package = true ]] ; then
+  echo '---- Running appimage packager'
+  ./contribs/src/linuxdeployqt-continuous-x86_64.AppImage appdir/$USRDIR/share/applications/*.desktop -qmldir=qml/ -appimage;
+fi
 
 ## UPLOAD ######################################################################
 

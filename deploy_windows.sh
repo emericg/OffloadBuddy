@@ -10,6 +10,7 @@ fi
 ## SETTINGS ####################################################################
 
 use_contribs=false
+create_package=false
 upload_package=false
 
 while [[ $# -gt 0 ]]
@@ -17,6 +18,9 @@ do
 case $1 in
   -c|--contribs)
   use_contribs=true
+  ;;
+  -p|--package)
+  create_package=true
   ;;
   -u|--upload)
   upload_package=true
@@ -36,32 +40,36 @@ done
 #echo '---- Installation directory content recap:'
 #find bin/;
 
-## PACKAGE #####################################################################
+## DEPLOY ######################################################################
 
 export GIT_VERSION=$(git rev-parse --short HEAD);
 
 #echo '---- Running windeployqt'
 windeployqt bin/ --qmldir qml/
 
-mv contribs/env/windows_x86_64/usr/lib/exif.dll bin/
-mv contribs/env/windows_x86_64/usr/lib/minivideo.dll bin/
+cp contribs/env/windows_x86_64/usr/lib/exif.dll bin/
+cp contribs/env/windows_x86_64/usr/lib/minivideo.dll bin/
 
-mv contribs/env/windows_x86_64/usr/lib/avcodec-*.dll bin/
-mv contribs/env/windows_x86_64/usr/lib/avdevice-*.dll bin/
-mv contribs/env/windows_x86_64/usr/lib/avfilter-*.dll bin/
-mv contribs/env/windows_x86_64/usr/lib/avformat-*.dll bin/
-mv contribs/env/windows_x86_64/usr/lib/avutil-*.dll bin/
-mv contribs/env/windows_x86_64/usr/lib/swresample-*.dll bin/
-mv contribs/env/windows_x86_64/usr/lib/swscale-*.dll bin/
+cp contribs/env/windows_x86_64/usr/lib/avcodec-*.dll bin/
+cp contribs/env/windows_x86_64/usr/lib/avdevice-*.dll bin/
+cp contribs/env/windows_x86_64/usr/lib/avfilter-*.dll bin/
+cp contribs/env/windows_x86_64/usr/lib/avformat-*.dll bin/
+cp contribs/env/windows_x86_64/usr/lib/avutil-*.dll bin/
+cp contribs/env/windows_x86_64/usr/lib/swresample-*.dll bin/
+cp contribs/env/windows_x86_64/usr/lib/swscale-*.dll bin/
 
-mv contribs/env/windows_x86_64/usr/bin/ffmpeg.exe bin/
+cp contribs/env/windows_x86_64/usr/bin/ffmpeg.exe bin/
 
 echo '---- Installation directory content recap:'
 find bin/;
 
-echo '---- Compressing package'
-mv bin OffloadBuddy-$GIT_VERSION-win64
-7z a OffloadBuddy-$GIT_VERSION-win64.zip OffloadBuddy-$GIT_VERSION-win64
+## PACKAGE #####################################################################
+
+if [[ $create_package = true ]] ; then
+  echo '---- Compressing package'
+  mv bin OffloadBuddy-$GIT_VERSION-win64
+  7z a OffloadBuddy-$GIT_VERSION-win64.zip OffloadBuddy-$GIT_VERSION-win64
+fi
 
 ## UPLOAD ######################################################################
 
