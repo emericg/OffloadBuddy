@@ -270,6 +270,7 @@ Rectangle {
 
         MediaDetailOverview {
             id: contentOverview
+            visible: true
         }
 
         MediaDetailTelemetry {

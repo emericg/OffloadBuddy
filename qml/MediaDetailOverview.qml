@@ -331,6 +331,9 @@ Rectangle {
             codecVideo.anchors.right = buttonOverview.left
             codecVideoText.text = "JPEG" // HACK
 
+            if (shot.iso.length === 0 && shot.focal.length === 0 && shot.exposure.length === 0)
+                rectanglePicture.visible = false
+
             if (shot.duration > 1) {
                 labelDuration.visible = true
                 labelDefinition.anchors.top = labelDuration.bottom
