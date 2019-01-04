@@ -23,6 +23,7 @@
 #include "GenericFileModel.h"
 #include "GoProFileModel.h"
 #include "ShotModel.h"
+#include "SettingsManager.h"
 
 #include <QStorageInfo>
 #include <QFile>
@@ -203,6 +204,13 @@ void FileScanner::mtpFileLvl1(LIBMTP_mtpdevice_t *device, uint32_t storageid, ui
     }
     else
     {
+        bool fullscan = false;
+        SettingsManager *sm = SettingsManager::getInstance();
+        if (sm)
+        {
+            fullscan = sm->getMtpFullScan();
+        }
+
         LIBMTP_file_t *mtpFile, *tmp;
         mtpFile = mtpFiles;
 
@@ -212,10 +220,19 @@ void FileScanner::mtpFileLvl1(LIBMTP_mtpdevice_t *device, uint32_t storageid, ui
             {
                 //qDebug() << "- (folder lvl1) " << mtpFile->filename;
 
-                if (strcmp(mtpFile->filename, "DCIM") == 0)
+                if (fullscan)
                 {
-                    //qDebug() << "- (folder DCIM found)";
                     mtpFileRec(device, storageid, mtpFile->item_id);
+                }
+                else
+                {
+                    if (strcmp(mtpFile->filename, "DCIM") == 0 ||
+                        strcmp(mtpFile->filename, "Pictures") == 0 ||
+                        strcmp(mtpFile->filename, "Movies") == 0)
+                    {
+                        //qDebug() << "- (folder DCIM found)";
+                        mtpFileRec(device, storageid, mtpFile->item_id);
+                    }
                 }
             }
 

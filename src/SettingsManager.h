@@ -51,6 +51,7 @@ class SettingsManager: public QObject
     Q_PROPERTY(bool autodelete READ getAutoDelete WRITE setAutoDelete NOTIFY autoDeleteChanged)
     Q_PROPERTY(bool ignorejunk READ getIgnoreJunk WRITE setIgnoreJunk NOTIFY ignoreJunkChanged)
     Q_PROPERTY(bool ignorehdaudio READ getIgnoreHdAudio WRITE setIgnoreHdAudio NOTIFY ignoreHdAudioChanged)
+    Q_PROPERTY(bool mtpfullscan READ getMtpFullScan WRITE setMtpFullScan NOTIFY mtpFullScanChanged)
     Q_PROPERTY(uint contenthierarchy READ getContentHierarchy WRITE setContentHierarchy NOTIFY contentHierarchyChanged)
 
     Q_PROPERTY(QVariant directoriesList READ getDirectories NOTIFY directoriesUpdated)
@@ -66,6 +67,7 @@ class SettingsManager: public QObject
     bool m_autoMerge = true;
     bool m_autoTelemetry = true;
     bool m_autoDelete = false;
+    bool m_mtpFullScan = false;
     unsigned m_contentHierarchy = 0;
 
     // Media directories
@@ -88,6 +90,7 @@ Q_SIGNALS:
     void autoDeleteChanged();
     void ignoreJunkChanged();
     void ignoreHdAudioChanged();
+    void mtpFullScanChanged();
     void contentHierarchyChanged();
     void directoriesUpdated();
 
@@ -120,6 +123,9 @@ public:
 
     bool getIgnoreHdAudio() const { return m_ignoreHdAudio; }
     void setIgnoreHdAudio(bool value) { m_ignoreHdAudio = value; writeSettings(); }
+
+    bool getMtpFullScan() const { return m_mtpFullScan; }
+    void setMtpFullScan(bool value) { m_mtpFullScan = value; }
 
     unsigned getContentHierarchy() const { return m_contentHierarchy; }
     void setContentHierarchy(unsigned value) { m_contentHierarchy = value; writeSettings(); }

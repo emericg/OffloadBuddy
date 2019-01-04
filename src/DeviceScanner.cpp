@@ -492,7 +492,9 @@ void DeviceScanner::scanMtpDevices()
                     {
                         //qDebug() << "-" << file->filename;
 
-                        if (strcmp(file->filename, "DCIM") == 0)
+                        if (strcmp(file->filename, "DCIM") == 0 ||
+                            strcmp(file->filename, "Pictures") == 0 ||
+                            strcmp(file->filename, "Movies") == 0)
                         {
                             StorageMtp *s = new StorageMtp;
                             s->m_device = mtpDevice;
@@ -506,6 +508,9 @@ void DeviceScanner::scanMtpDevices()
                             qDebug() << "-" << s->m_storage->id;
 */
                             deviceInfos->storages.push_back(s);
+
+                            LIBMTP_destroy_file_t(file);
+                            break;
                         }
 
                         tmp = file;
