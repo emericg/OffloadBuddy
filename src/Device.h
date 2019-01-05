@@ -218,6 +218,10 @@ public:
 
 public slots:
     //
+    void workerScanningStarted(QString s);
+    void workerScanningFinished(QString s);
+
+    //
     int getDeviceState() const { return m_deviceState; }
     int getDeviceModel() const { return m_deviceModel; }
     int getDeviceType() const { return m_deviceType; }
@@ -261,10 +265,6 @@ public slots:
                           float quality, float speed, float fps,
                           int start, int duration);
     void deleteSelected(const QString shot_name);
-
-    //
-    void workerScanningStarted(QString s);
-    void workerScanningFinished(QString s);
 };
 
 /* ************************************************************************** */

@@ -27,10 +27,12 @@
 #include "utils_maths.h"
 
 #include <QDir>
+#include <QUrl>
 #include <QFile>
 #include <QFileInfo>
 #include <QDateTime>
 #include <QImageReader>
+#include <QDesktopServices>
 #include <QDebug>
 
 #ifdef ENABLE_LIBEXIF
@@ -456,6 +458,31 @@ QString Shot::getFilesQString() const
 #endif // ENABLE_LIBMTP
 
     return list;
+}
+
+void Shot::openFolder() const
+{
+    QString folder;
+
+    if (m_pictures.size() > 0)
+    {
+        folder = m_pictures.at(0)->filesystemPath;
+    }
+    else if (m_videos.size() > 0)
+    {
+        folder = m_videos.at(0)->filesystemPath;
+    }
+
+    QDir p(folder);
+    p.cdUp();
+    folder = p.absolutePath();
+
+    QFileInfo d(folder);
+    if (!folder.isEmpty() && d.exists())
+    {
+        //qDebug() << "openFolder:" << folder;
+        QDesktopServices::openUrl(QUrl::fromLocalFile(folder));
+    }
 }
 
 /* ************************************************************************** */
@@ -1182,7 +1209,7 @@ void Shot::updateSpeedsSerie(QLineSeries *serie, int appUnit)
     QVector<QPointF> points;
     for (unsigned i = 0; i < m_speed.size(); i++)
     {
-        if (m_gps_params.at(i).second >= 3) // we need at the very least2D a  lock for speed
+        if (m_gps_params.at(i).second >= 3) // we need at the very least a 2D lock for accurate speed
         {
             current = m_speed.at(i);
             avgSpeed += current;
@@ -1221,7 +1248,7 @@ void Shot::updateAltiSerie(QLineSeries *serie, int appUnit)
     QVector<QPointF> points;
     for (unsigned i = 0; i < m_alti.size(); i++)
     {
-        if (m_gps_params.at(i).second >= 3) // we need at least a 3D lock for altitude
+        if (m_gps_params.at(i).second >= 3) // we need at least a 3D lock for accurate altitude
         {
             current = m_alti.at(i);
             avgAlti += current;

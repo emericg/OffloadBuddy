@@ -654,7 +654,7 @@ void Device::reencodeSelected(const QString shot_name, const QString codec,
                               float quality, float speed, float fps,
                               int start, int duration)
 {
-    qDebug() << "reencodeSelected(" << shot_name << ")";
+    qDebug() << "Device::reencodeSelected(" << shot_name << ")";
 
     JobManager *jm = JobManager::getInstance();
     Shot *shot = m_shotModel->getShotWithName(shot_name);
@@ -674,7 +674,7 @@ void Device::reencodeSelected(const QString shot_name, const QString codec,
 
 void Device::deleteSelected(const QString shot_name)
 {
-    qDebug() << "deleteSelected(" << shot_name << ")";
+    qDebug() << "Device::deleteSelected(" << shot_name << ")";
 
     JobManager *jm = JobManager::getInstance();
     Shot *shot = m_shotModel->getShotWithName(shot_name);

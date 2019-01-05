@@ -182,6 +182,7 @@ Rectangle {
             shotsview.currentIndex = index
 
             if (mouse.button === Qt.RightButton) {
+                var folder = true
                 var copy = true
                 var merge = false
                 var encode = false
@@ -196,21 +197,23 @@ Rectangle {
                 } else if (shot.type > Shared.SHOT_PICTURE) {
                     encode = true
                 }
+                if (shot.hasGPMF)
+                    telemetry_gpmf = true
+                if (shot.hasGPS)
+                    telemetry_gps = true
                 if (shotDevice) {
                     if (shotDevice.deviceStorage === Shared.STORAGE_MTP) {
+                        folder = false
                         merge = false
                         encode = false
                     }
-                    if (shotDevice.readOnly) {
+                    if (shotDevice.readOnly)
                         remove = false
-                    }
                 } else {
                     copy = false
-                    merge = false
-                    encode = true
                 }
 
-                actionMenu.setMenuButtons(copy, merge, encode, remove)
+                actionMenu.setMenuButtons(folder, copy, merge, encode, telemetry_gpmf, telemetry_gps, remove)
 
                 actionMenu.visible = true
                 actionMenu.x = mouseAreaOutsideView.mouseX + 8

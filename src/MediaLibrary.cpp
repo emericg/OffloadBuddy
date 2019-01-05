@@ -23,6 +23,7 @@
 #include "SettingsManager.h"
 #include "MediaDirectory.h"
 #include "FileScanner.h"
+#include "JobManager.h"
 
 #include <QThread>
 #include <QDebug>
@@ -131,3 +132,41 @@ void MediaLibrary::workerScanningFinished(QString s)
     m_libraryState = DEVICE_STATE_IDLE;
     emit stateUpdated();
 }
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+void MediaLibrary::reencodeSelected(const QString shot_name, const QString codec,
+                                    float quality, float speed, float fps,
+                                    int start, int duration)
+{
+    qDebug() << "MediaLibrary::reencodeSelected(" << shot_name << ")";
+
+    JobManager *jm = JobManager::getInstance();
+    Shot *shot = m_shotModel->getShotWithName(shot_name);
+
+    JobEncodeSettings sett;
+    sett.codec = codec;
+    sett.quality = quality;
+    sett.speed = speed;
+    if (fps > 0) sett.fps = fps;
+
+    if (start > 0) sett.startMs = start;
+    if (duration > 0) sett.durationMs = duration;
+
+    if (jm && shot)
+        jm->addJob(JOB_REENCODE, nullptr, shot, nullptr, &sett);
+}
+
+void MediaLibrary::deleteSelected(const QString shot_name)
+{
+    qDebug() << "MediaLibrary::deleteSelected(" << shot_name << ")";
+
+    JobManager *jm = JobManager::getInstance();
+    Shot *shot = m_shotModel->getShotWithName(shot_name);
+
+    if (jm && shot)
+        jm->addJob(JOB_DELETE, nullptr, shot);
+}
+
+/* ************************************************************************** */

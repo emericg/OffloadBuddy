@@ -66,7 +66,8 @@ Rectangle {
                     preview.anchors.right = parent.parent.right
                 }
 
-                timelinePosition.width = timeline.width * (mediaPlayer.position / mediaPlayer.duration)
+                if (mediaPlayer.position > 0)
+                    timelinePosition.width = timeline.width * (mediaPlayer.position / mediaPlayer.duration)
             }
         }
 
@@ -90,7 +91,7 @@ Rectangle {
 
             MediaPlayer {
                 id: mediaPlayer
-                volume: 0.0 // will be set to 0.5 immediately
+                volume: 0.5
                 autoPlay: true // will be paused immediately
                 notifyInterval: 33
 
@@ -109,11 +110,16 @@ Rectangle {
                 }
                 onStopped: {
                     isRunning = false
+                    timelinePosition.width = 0
                     buttonPlay.imageSource = "qrc:/icons_material/baseline-play_arrow-24px.svg"
                 }
                 onSourceChanged: {
                     stop()
                     isRunning = false
+                    preview.startLimit = -1
+                    preview.stopLimit = -1
+                    timelineLimitStart.width = 0
+                    timelineLimitStop.width = 0
                     timelinePosition.width = 0
                     mediaBanner.close()
                 }
@@ -217,7 +223,7 @@ Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
                     imageSource: "qrc:/icons_material/baseline-volume_up-24px.svg"
 
-                    property real savedVolume: 0.5
+                    property real savedVolume: mediaPlayer.volume
                     onClicked: {
                         if (mediaPlayer.volume) {
                             savedVolume = mediaPlayer.volume
@@ -324,7 +330,7 @@ Rectangle {
                     height: 28
                     //color: "#d0d0d0"
                     border.width: 2
-                    border.color: "#ffe695"
+                    border.color: ThemeEngine.colorApproved
                     anchors.right: buttonScreenshot.left
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
@@ -333,7 +339,7 @@ Rectangle {
                         id: soundlinePosition
                         width: 0
                         height: 28
-                        color: "#ffe695"
+                        color: ThemeEngine.colorApproved
                         anchors.left: parent.left
                         anchors.leftMargin: 0
                         anchors.verticalCenter: parent.verticalCenter
@@ -411,12 +417,6 @@ Rectangle {
                 image.source = "qrc:/resources/other/placeholder_video.svg"
 
             mediaPlayer.pause()
-            mediaPlayer.volume = 0.5
-
-            preview.startLimit = -1
-            preview.stopLimit = -1
-            timelineLimitStart.width = 0
-            timelineLimitStop.width = 0
 
             codecVideo.visible = true
             if (shot.codecVideo.length)

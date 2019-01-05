@@ -64,6 +64,12 @@ public slots:
     int getLibraryState() const { return m_libraryState; }
     void workerScanningStarted(QString s);
     void workerScanningFinished(QString s);
+
+    //
+    void reencodeSelected(const QString shot_name, const QString codec,
+                          float quality, float speed, float fps,
+                          int start, int duration);
+    void deleteSelected(const QString shot_name);
 };
 
 /* ************************************************************************** */

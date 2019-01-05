@@ -11,7 +11,11 @@ Rectangle {
     signal menuSelected(int index)
     property bool isOpen: false
 
-    function setMenuButtons(copy, merge, encode, remove) {
+    function setMenuButtons(folder, copy, merge, encode, gpmf, gps, remove) {
+        if (folder)
+            openFolder.visible = true
+        else
+            openFolder.visible = false
         if (copy)
             offloadCopy.visible = true
         else
@@ -24,22 +28,20 @@ Rectangle {
             offloadReencode.visible = true
         else
             offloadReencode.visible = false
-/*
-        if (telemetryGPMF) {
+        if (gpmf) {
             telemetrySeparator.visible = true
             telemetryGPMF.visible = true
         } else {
             telemetrySeparator.visible = false
             telemetryGPMF.visible = false
         }
-        if (telemetryGPS) {
+        if (gps) {
             telemetrySeparator.visible = true
             telemetryGPS.visible = true
         } else {
             telemetrySeparator.visible = false
             telemetryGPS.visible = false
         }
-*/
         if (remove) {
             removeSeparator.visible = true
             removeSelected.visible = true
@@ -55,6 +57,13 @@ Rectangle {
         width: parent.width
         height: children.height * children.length
         anchors { verticalCenter: parent.verticalCenter; left: parent.left; leftMargin: 4 }
+
+        ActionButton {
+            id: openFolder
+            index: 0
+            button_text: qsTr("Open folder")
+            onButtonClicked: menuSelected(index)
+        }
 
         ActionButton {
             id: offloadCopy
@@ -74,7 +83,7 @@ Rectangle {
             button_text: qsTr("Reencode")
             onButtonClicked: menuSelected(index)
         }
-/*
+
         Item {
             id: telemetrySeparator
             height: 2
@@ -97,10 +106,10 @@ Rectangle {
         ActionButton {
             id: telemetryGPS
             index: 9
-            button_text: qsTr("Extract GPS trace")
+            button_text: qsTr("Extract GPX trace")
             onButtonClicked: menuSelected(index)
         }
-*/
+
         Item {
             id: removeSeparator
             height: 2

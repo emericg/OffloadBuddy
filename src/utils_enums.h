@@ -23,20 +23,20 @@
 #define UTILS_ENUMS_H
 /* ************************************************************************** */
 
-typedef enum content_types
+typedef enum contentTypes_e
 {
     CONTENT_ALL = 0,
     CONTENT_VIDEOS,
     CONTENT_PICTURES,
 
-} content_types;
+} contentTypes_e;
 
-typedef enum content_hierarchy
+typedef enum contentHierarchy_e
 {
     HIERARCHY_DATE = 0,
     HIERARCHY_DATE_DEVICE,
 
-} content_hierarchy;
+} contentHierarchy_e;
 
 /* ************************************************************************** */
 

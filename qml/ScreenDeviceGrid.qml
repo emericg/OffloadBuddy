@@ -690,6 +690,8 @@ Rectangle {
         function actionMenuTriggered(index) {
             //console.log("actionMenuTriggered(" + index + ") selected shot: '" + selectedItemName + "'")
 
+            if (index === 0)
+                shotsview.currentItem.shot.openFolder()
             if (index === 1)
                 currentDevice.offloadCopySelected(selectedItemName)
             if (index === 2)

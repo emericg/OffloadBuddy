@@ -119,24 +119,25 @@ QString JobManager::getandmakeDestination(Shot *s, Device *d)
 
     QString destDir;
 
-    if (s && d && sm)
+    if (s && sm)
     {
         destDir = getAutoDestinationString(s);
 
         // Destination directory and its subdirectories
-        if (sm->getContentHierarchy() == HIERARCHY_DATE_DEVICE)
+
+        if (sm->getContentHierarchy() >= HIERARCHY_DATE)
         {
             destDir += QDir::separator();
             destDir += s->getDate().toString("yyyy-MM-dd");
-            destDir += QDir::separator();
-            destDir += d->getModel();
             destDir += QDir::separator();
         }
-        else if (sm->getContentHierarchy() == HIERARCHY_DATE)
+        if (sm->getContentHierarchy() >= HIERARCHY_DATE_DEVICE)
         {
-            destDir += QDir::separator();
-            destDir += s->getDate().toString("yyyy-MM-dd");
-            destDir += QDir::separator();
+            if (d)
+            {
+                destDir += d->getModel();
+                destDir += QDir::separator();
+            }
         }
 
         // Put chaptered videos in there own directory?
@@ -187,7 +188,7 @@ bool JobManager::addJob(JobType type, Device *d, Shot *s,
 {
     bool status = false;
 
-    if (type == 0 || !d || !s)
+    if (type == 0 || !s)
         return status;
 
     QList<Shot *> list;
@@ -201,7 +202,10 @@ bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list,
 {
     bool status = false;
 
-    if (type == 0 || !d)
+    if (type == 0)
+        return status;
+
+    if (list.empty())
         return status;
 
     SettingsManager *sm = SettingsManager::getInstance();
@@ -212,7 +216,7 @@ bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list,
     // CREATE JOB //////////////////////////////////////////////////////////////
 
     // FUSION hack
-    if (type == JOB_COPY && d->getModel().contains("Fusion", Qt::CaseInsensitive))
+    if (type == JOB_COPY && (d && d->getModel().contains("Fusion", Qt::CaseInsensitive)))
     {
         // Fusion Studio needs every files from a shot to work
         getPreviews = true;

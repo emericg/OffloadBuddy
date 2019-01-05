@@ -330,6 +330,8 @@ public slots:
     int getCameraId() const { return m_camera_id; }
     void setCameraId(int id) { m_camera_id = id; }
 
+    void openFolder() const;
+
 Q_SIGNALS:
     void shotUpdated();
     void stateUpdated();

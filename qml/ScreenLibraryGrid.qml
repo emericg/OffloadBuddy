@@ -325,16 +325,16 @@ Rectangle {
         }
         function actionMenuTriggered(index) {
             //console.log("actionMenuTriggered(" + index + ") selected shot: '" + selectedItemName + "'")
-/*
-            if (index === 2)
-                myDevice.offloadMergeSelected(selectedItemName)
+
+            if (index === 0)
+                selectedItem.shot.openFolder()
             if (index === 3) {
                 panelEncode.updateEncodePanel(selectedItem.shot)
                 popupEncode.open()
             }
             if (index === 16)
-                myDevice.deleteSelected(selectedItemName)
-*/
+                mediaLibrary.deleteSelected(selectedItemName)
+
             actionMenu.visible = false
         }
 

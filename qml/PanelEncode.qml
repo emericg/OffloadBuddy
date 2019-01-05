@@ -9,8 +9,9 @@ Item {
     width: 600
     height: 500
 
-    property var currentShot
-    property string currentShotName
+    property var mediaProvider: null
+    property var currentShot: null
+    property string currentShotName: ""
     property int clipStartMs: -1
     property int clipDurationMs: -1
 
@@ -37,10 +38,23 @@ Item {
             sliderFps.stepSize = 1
         } else {
             // videos
-            sliderFps.value = (shot.framerate).toFixed(3)
-            sliderFps.from = (shot.framerate/2).toFixed(3)
-            sliderFps.to = (shot.framerate).toFixed(3)
-            sliderFps.stepSize = (shot.framerate/2).toFixed(3)
+            var divider = 1
+            if (shot.framerate >= 220)
+                divider = 8
+            else if (shot.framerate >= 110)
+                divider = 4
+            else if (shot.framerate >= 48)
+                divider = 2
+
+            if (divider > 1) {
+                sliderFps.visible = true
+                sliderFps.value = (shot.framerate).toFixed(3)
+                sliderFps.from = (shot.framerate/divider).toFixed(3)
+                sliderFps.to = (shot.framerate).toFixed(3)
+                sliderFps.stepSize = (shot.framerate/divider).toFixed(3)
+            } else {
+                sliderFps.visible = false
+            }
         }
 
         // Clip handler
@@ -486,7 +500,12 @@ Item {
                 if (sliderFps.value.toFixed(3) !== currentShot.framerate.toFixed(3))
                     fps = sliderFps.value
 
-                currentDevice.reencodeSelected(currentShotName, codec,
+                if (typeof currentDevice !== "undefined")
+                    mediaProvider = currentDevice
+                else if (typeof mediaLibrary !== "undefined")
+                    mediaProvider = mediaLibrary
+
+                mediaProvider.reencodeSelected(currentShotName, codec,
                                           sliderQuality.value,
                                           sliderSpeed.value,
                                           fps,
