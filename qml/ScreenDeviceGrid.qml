@@ -585,11 +585,11 @@ Rectangle {
 
             onValueChanged: {
                 if (value == 1.0) {
-                    shotsview.cellSize = 200;
+                    shotsview.cellSize = 214;
                 } else  if (value == 2.0) {
                     shotsview.cellSize = 272;
                 } else  if (value == 3.0) {
-                    shotsview.cellSize = 400;
+                    shotsview.cellSize = 367;
                 }
 
                 // save state
@@ -753,11 +753,13 @@ Rectangle {
                     }
                 }
 
+                property real cellFormat: 4/3
                 property int cellSize: 272
                 property int cellMargin: 16
+
                 //property int cellMargin: (parent.width%cellSize) / Math.floor(parent.width/cellSize);
                 cellWidth: cellSize + cellMargin
-                cellHeight: cellSize + 16
+                cellHeight: cellSize / cellFormat + cellMargin
 
                 anchors.rightMargin: 16
                 anchors.leftMargin: 16
@@ -771,7 +773,7 @@ Rectangle {
                 //keyNavigationEnabled: true
 
                 model: currentDevice ? currentDevice.shotFilter : null
-                delegate: ItemShot { width: shotsview.cellSize }
+                delegate: ItemShot { width: shotsview.cellSize; cellFormat: shotsview.cellFormat }
 
                 highlight: highlight
                 highlightFollowsCurrentItem: true

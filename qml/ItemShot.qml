@@ -8,12 +8,12 @@ import "StringUtils.js" as StringUtils
 Rectangle {
     id: itemShot
     width: 272
-    height: width
+    height: width / cellFormat
     color: "#eef0f1"
 
     property Shot shot: pointer
     property var shotDevice
-    property var itemPassedWidth
+    property real cellFormat: 4/3
 
     function handleState() {
         icon_state.visible = true
@@ -106,8 +106,8 @@ Rectangle {
 
         fillMode: Image.PreserveAspectCrop
         source: "qrc:/resources/other/placeholder_loading.svg"
-        sourceSize.width: 512
-        sourceSize.height: 512
+        sourceSize.width: 400
+        sourceSize.height: 400
     }
 
     ItemImage {
