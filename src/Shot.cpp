@@ -29,6 +29,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QDateTime>
 #include <QImageReader>
 #include <QDebug>
 
@@ -69,28 +70,13 @@ Shot::~Shot()
     m_videos_thumbnails.clear();
     qDeleteAll(m_videos_hdAudio);
     m_videos_hdAudio.clear();
-}
 
-Shot::Shot(const Shot &other) : QObject()
-{
-    m_onCamera = other.m_onCamera;
-
-    m_type = other.m_type;
-    m_camera_source = other.m_camera_source;
-    m_camera_id = other.m_camera_id;
-    m_shot_id = other.m_shot_id;
-
-    m_name = other.m_name;
-    m_date = other.m_date;
-    m_duration = other.m_duration;
-    m_highlights = other.m_highlights;
-
-    m_pictures = other.m_pictures;
-
-    m_videos = other.m_videos;
-    m_videos_previews = other.m_videos_previews;
-    m_videos_thumbnails = other.m_videos_thumbnails;
-    m_videos_hdAudio = other.m_videos_hdAudio;
+    for (auto media: m_minivideos)
+    {
+        minivideo_close(&media);
+        media = nullptr;
+    }
+    m_minivideos.clear();
 }
 
 /* ************************************************************************** */
@@ -107,9 +93,9 @@ void Shot::addFile(ofb_file *file)
         {
             m_name = file->name;
             if (file->creation_date.isValid())
-                m_date = file->creation_date;
+                m_date_file = file->creation_date;
             else
-                m_date = file->modification_date;
+                m_date_file = file->modification_date;
 
             if (file->extension == "jpg" || file->extension == "jpeg" ||
                 file->extension == "png" ||
@@ -147,12 +133,12 @@ void Shot::addFile(ofb_file *file)
             if (m_name.isEmpty())
                 m_name = file->name;
 
-            if (!m_date.isValid())
+            if (!m_date_file.isValid())
             {
                 if (file->creation_date.isValid())
-                    m_date = file->creation_date;
+                    m_date_file = file->creation_date;
                 else
-                    m_date = file->modification_date;
+                    m_date_file = file->modification_date;
             }
 
             if (file->extension == "jpg" ||
@@ -213,7 +199,6 @@ void Shot::attachMtpStorage(LIBMTP_mtpdevice_t *device, LIBMTP_devicestorage_t *
 #endif
 
 /* ************************************************************************** */
-
 /*
 unsigned Shot::getType() const
 {
@@ -229,6 +214,16 @@ unsigned Shot::getType() const
 int Shot::getChapterCount() const
 {
     return m_videos.size();
+}
+
+QDateTime Shot::getDate() const
+{
+    if (m_date_gps.isValid())
+        return m_date_gps;
+    else if (m_date_metadatas.isValid())
+        return m_date_metadatas;
+
+    return m_date_file;
 }
 
 qint64 Shot::getDuration() const
@@ -493,6 +488,7 @@ bool Shot::getMetadatasFromPicture(int index)
     ExifData *ed = exif_data_new_from_file(m_pictures.at(index)->filesystemPath.toLocal8Bit());
     if (ed)
     {
+        hasEXIF = true;
 
         // Parse tags
         ExifEntry *entry;
@@ -566,13 +562,12 @@ bool Shot::getMetadatasFromPicture(int index)
 
         QDate gpsDate;
         QTime gpsTime;
-        QDateTime exif_ts;
         entry = exif_content_get_entry(ed->ifd[EXIF_IFD_0], EXIF_TAG_DATE_TIME);
         if (entry)
         {
             // ex: DateTime: 2018:08:10 10:37:08
             exif_entry_get_value(entry, buf, sizeof(buf));
-            exif_ts = QDateTime::fromString(buf, "yyyy:MM:dd hh:mm:ss");
+            m_date_metadatas = QDateTime::fromString(buf, "yyyy:MM:dd hh:mm:ss");
         }
         entry = exif_content_get_entry(ed->ifd[EXIF_IFD_GPS],
                                        static_cast<ExifTag>(EXIF_TAG_GPS_DATE_STAMP));
@@ -590,16 +585,15 @@ bool Shot::getMetadatasFromPicture(int index)
             exif_entry_get_value(entry, buf, sizeof(buf));
             gpsTime = QTime::fromString(buf, "hh:mm:ss,z");
         }
-        gps_ts = QDateTime(gpsDate, gpsTime);
 
-    /*
-        qDebug() << "gps_ts:" << gps_ts;
-        qDebug() << "exif_ts:" << exif_ts;
-    */
+        if (gpsDate.isValid() && gpsTime.isValid())
+            m_date_gps = QDateTime(gpsDate, gpsTime);
 
         // GPS infos ///////////////////////////////////////////////////////////////
         if (gps_ts.isValid())
         {
+            hasGPS = true;
+
             entry = exif_content_get_entry(ed->ifd[EXIF_IFD_GPS],
                                            static_cast<ExifTag>(EXIF_TAG_GPS_LATITUDE));
             if (entry)
@@ -673,6 +667,7 @@ bool Shot::getMetadatasFromPicture(int index)
             qDebug() << "gps_lat:" << gps_lat;
             qDebug() << "gps_long:" << gps_long;
             qDebug() << "gps_alt:" << gps_alt;
+            qDebug() << "gps_timestamp:" << m_date_gps;
 */
         }
 
@@ -681,16 +676,6 @@ bool Shot::getMetadatasFromPicture(int index)
         if (mn)
         {
             //qDebug() << "WE HAVE MAKERNOTEs";
-        }
-
-        // Adjust picture timestamp
-        if (gps_ts.isValid())
-        {
-            m_date = gps_ts;
-        }
-        else if (exif_ts.isValid())
-        {
-            m_date = exif_ts;
         }
 
         exif_data_unref(ed);
@@ -703,11 +688,12 @@ bool Shot::getMetadatasFromPicture(int index)
         //qWarning() << "File not readable or no EXIF data in file";
         //qWarning() << "Backup path with QImageReader";
 
-        QImageReader img_infos( m_pictures.at(index)->filesystemPath );
+        QImageReader img_infos(m_pictures.at(index)->filesystemPath);
         if (img_infos.canRead())
         {
             width = img_infos.size().rwidth();
             height = img_infos.size().rheight();
+            quality = img_infos.quality();
             return true;
         }
     }
@@ -717,6 +703,8 @@ bool Shot::getMetadatasFromPicture(int index)
 
 bool Shot::getMetadatasFromVideo(int index)
 {
+    //qDebug() << "Shot::getMetadatasFromVideoGPMF(" << index << " " << m_videos.at(index)->filesystemPath;
+
     if (m_videos.size() <= 0)
         return false;
     if (m_videos.at(index)->filesystemPath.isEmpty())
@@ -724,20 +712,23 @@ bool Shot::getMetadatasFromVideo(int index)
 
 #ifdef ENABLE_MINIVIDEO
 
-    // MINIVIDEO ///////////////////////////////////////////////////////////////
     MediaFile_t *media = nullptr;
-    int minivideo_retcode = minivideo_open(m_videos.at(index)->filesystemPath.toLocal8Bit(), &media);
 
+    int minivideo_retcode = minivideo_open(m_videos.at(index)->filesystemPath.toLocal8Bit(), &media);
     if (minivideo_retcode == 1)
     {
         minivideo_retcode = minivideo_parse(media, true, false);
-
         if (minivideo_retcode != 1)
         {
             qDebug() << "minivideo_parse() failed with retcode: " << minivideo_retcode;
+            minivideo_close(&media);
         }
         else
         {
+            m_minivideos.push_back(media);
+
+            m_date_metadatas = QDateTime::fromTime_t(media->creation_time);
+
             if (media->tracks_audio_count > 0)
             {
                 acodec = QString::fromLocal8Bit(getCodecString(stream_AUDIO, media->tracks_audio[0]->stream_codec, false));
@@ -751,9 +742,6 @@ bool Shot::getMetadatasFromVideo(int index)
                 vcodec = QString::fromLocal8Bit(getCodecString(stream_VIDEO, media->tracks_video[0]->stream_codec, false));
                 framerate = media->tracks_video[0]->framerate;
                 bitrate = media->tracks_video[0]->bitrate_avg;
-
-                //QDateTime vt = QDateTime::fromTime_t(media->creation_time);
-                //qDebug() << "media->creation_time:" << vt;
             }
             for (unsigned i = 0; i < media->tracks_others_count; i++)
             {
@@ -771,72 +759,139 @@ bool Shot::getMetadatasFromVideo(int index)
                     }
                     else if (t->stream_fcc == fourcc_be("gpmd"))
                     {
-                        bool status = false;
-                        uint32_t gpmf_sample_count = t->sample_count;
-                        //int64_t trim_in = -1, trim_out = -1;
-                        int devc_count = 0;
-
-                        for (int32_t sp_index = 0; sp_index < gpmf_sample_count; sp_index++)
-                        {
-                            // Get GPMF sample from MP4
-                            MediaSample_t *sp = minivideo_get_sample(media, t, sp_index);
-
-                            // Validate timestamp
-                            //if ((int64_t)(sp->pts + global_offset_ms) > trim_out)
-                            //    return status;
-                            //if ((int64_t)(sp->pts + global_offset_ms) >= trim_in)
-                            {
-                                // Load GPMF datas
-                                GpmfBuffer buf;
-                                status = buf.loadBuffer(sp->data, sp->size);
-                                if (status == false)
-                                {
-                                    std::cerr << "buf.loadBuffer(#" << sp_index << ") FAILED" << std::endl;
-                                    minivideo_destroy_sample(&sp);
-                                    return false; // FIXME
-                                }
-
-                                // Parse GPMF datas
-                                status = parseGpmfSample(buf, devc_count);
-                                if (status == false)
-                                {
-                                    std::cerr << "parseGpmfSample(#" << sp_index << ") FAILED" << std::endl;
-                                    minivideo_destroy_sample(&sp);
-                                    return false; // FIXME
-                                }
-                                else
-                                    hasGPMF = true;
-                            }
-
-                            minivideo_destroy_sample(&sp);
-                        }
-
-                        //
-                        if (global_offset_ms == 0 && m_gps.size() > 0)
-                        {
-                            gps_lat = m_gps.at(m_gps.size() / 2).first;
-                            gps_long = m_gps.at(m_gps.size() / 2).second;
-                            gps_alt = m_alti.at(m_alti.size() / 2);
-                            //QDateTime gps_ts; // TODO
-                        }
-
-                        // update time offset
-                        global_offset_ms += t->stream_duration_ms;
-
-                        //qDebug() << "GPMF SAMPLES:" << m_gps.size();
+                        hasGPMF = true;
                     }
                 }
             }
-        }
 
-        minivideo_close(&media);
+            return true;
+        }
     }
     else
     {
         qDebug() << "minivideo_open() failed with retcode: " << minivideo_retcode;
     }
 
+#endif // ENABLE_MINIVIDEO
+
+    return false;
+}
+
+bool Shot::getMetadatasFromVideoGPMF(int index)
+{
+    //qDebug() << "Shot::getMetadatasFromVideoGPMF()";
+
+    if (gpmf_parsed)
+        return true;
+
+    if (m_videos.size() <= 0)
+        return false;
+    if (m_videos.at(index)->filesystemPath.isEmpty())
+        return false;
+
+#ifdef ENABLE_MINIVIDEO
+
+    for (int i = 0; i < m_videos.size(); i++)
+    {
+        gpmf_parsed = true;
+
+        // OPEN MEDIA //////////////////////////////////////////////////////////
+
+        MediaFile_t *media = nullptr;
+
+        if (m_minivideos.size() > i)
+        {
+            media = m_minivideos.at(i);
+        }
+        else
+        {
+            int minivideo_retcode = minivideo_open(m_videos.at(index)->filesystemPath.toLocal8Bit(), &media);
+
+            if (minivideo_retcode == 1)
+            {
+                minivideo_retcode = minivideo_parse(media, true, false);
+
+                if (minivideo_retcode == 1)
+                {
+                    m_minivideos.push_back(media);
+                }
+                else
+                {
+                    qDebug() << "minivideo_parse() failed with retcode: " << minivideo_retcode;
+                }
+            }
+            else
+            {
+                qDebug() << "minivideo_open() failed with retcode: " << minivideo_retcode;
+            }
+        }
+
+        // PARSE METADATAS /////////////////////////////////////////////////////
+
+        if (media)
+        {
+            for (unsigned i = 0; i < media->tracks_others_count; i++)
+            {
+                if (media->tracks_others[i] && media->tracks_others[i]->stream_fcc == fourcc_be("gpmd"))
+                {
+                    MediaStream_t *t = media->tracks_others[i];
+
+                    bool status = false;
+                    uint32_t gpmf_sample_count = t->sample_count;
+                    int devc_count = 0;
+
+                    for (int32_t sp_index = 0; sp_index < gpmf_sample_count; sp_index++)
+                    {
+                        // Get GPMF sample from MP4
+                        MediaSample_t *sp = minivideo_get_sample(media, t, sp_index);
+
+                        // Load that sample into a GpmfBuffer
+                        GpmfBuffer buf;
+                        status = buf.loadBuffer(sp->data, sp->size);
+                        if (status == false)
+                        {
+                            qWarning() << "buf.loadBuffer(#" << sp_index << ") FAILED";
+                            minivideo_destroy_sample(&sp);
+                            return false; // FIXME
+                        }
+
+                        // Parse GPMF datas
+                        status = parseGpmfSample(buf, devc_count);
+                        if (status == false)
+                        {
+                            qWarning() << "parseGpmfSample(#" << sp_index << ") FAILED";
+                            minivideo_destroy_sample(&sp);
+                            return false; // FIXME
+                        }
+                        else
+                            hasGPMF = true;
+
+                        minivideo_destroy_sample(&sp);
+                    }
+
+                    //
+                    if (global_offset_ms == 0 && m_gps.size() > 0)
+                    {
+                        gps_lat = m_gps.at(m_gps.size() / 2).first;
+                        gps_long = m_gps.at(m_gps.size() / 2).second;
+                        gps_alt = m_alti.at(m_alti.size() / 2);
+                        //QDateTime gps_ts; // TODO
+                    }
+
+                    // update time offset
+                    global_offset_ms += t->stream_duration_ms;
+
+                    //qDebug() << "GPMF SAMPLES:" << m_gps.size();
+                }
+            }
+        }
+    }
+
+    emit shotUpdated();
+    emit metadatasUpdated();
+
     return true;
+
 #endif // ENABLE_MINIVIDEO
 
     return false;
@@ -847,8 +902,6 @@ bool Shot::getMetadatasFromVideo(int index)
 
 bool Shot::parseGpmfSample(GpmfBuffer &buf, int &devc_count)
 {
-    //std::cout << ">>> parseGpmfSample()" << std::endl;
-
     bool status = true;
 
     bool parsing = true;
@@ -996,9 +1049,16 @@ void Shot::parseData_gps5(GpmfBuffer &buf, GpmfKLV &klv,
     gps_params.second = gps_fix;
     Q_UNUSED(gps_dop);
 
+    if (gps_fix > 1 && !m_date_gps.isValid())
+    {
+        QString dt = QString::fromStdString(gps_tmcd);
+        m_date_gps = QDateTime::fromString(dt, "yyyy-MM-ddThh:mm:ssZ");
+        emit shotUpdated();
+    }
+
+    std::pair<double, double> gps_coord;
     for (uint64_t i = 0; i < klv.repeat; i++)
     {
-        std::pair<double, double> gps_coord;
         gps_coord.first = static_cast<double>(buf.read_i32(e)) / scales[0]; // latitude
         gps_coord.second = static_cast<double>(buf.read_i32(e)) / scales[1]; // longitude
         m_gps.push_back(gps_coord);

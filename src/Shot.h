@@ -28,6 +28,8 @@
 #include "GpmfKLV.h"
 #include "GpmfBuffer.h"
 
+#include "minivideo.h"
+
 #ifdef ENABLE_LIBMTP
 #include <libmtp.h>
 #endif
@@ -97,9 +99,9 @@ class Shot: public QObject
     Q_PROPERTY(qint64 duration READ getDuration NOTIFY shotUpdated)
     Q_PROPERTY(QDateTime date READ getDate NOTIFY shotUpdated)
 
-    Q_PROPERTY(QString orientation READ getOrientation NOTIFY shotUpdated)
     Q_PROPERTY(unsigned width READ getWidth NOTIFY shotUpdated)
     Q_PROPERTY(unsigned height READ getHeight NOTIFY shotUpdated)
+    Q_PROPERTY(QString orientation READ getOrientation NOTIFY shotUpdated)
 
     Q_PROPERTY(QString iso READ getIso NOTIFY shotUpdated)
     Q_PROPERTY(QString focal READ getFocal NOTIFY shotUpdated)
@@ -131,7 +133,9 @@ class Shot: public QObject
     int m_camera_id = 0;            //!< Shot is part of a multi camera systems
 
     QString m_name;
-    QDateTime m_date;
+    QDateTime m_date_file;
+    QDateTime m_date_metadatas;
+    QDateTime m_date_gps;
     qint64 m_duration = 0;
 
     QList <QTime> m_highlights;
@@ -147,6 +151,7 @@ class Shot: public QObject
 
     // VIDEOS files
     QList <ofb_file *> m_videos;
+    QList <MediaFile_t *> m_minivideos;
     QList <ofb_file *> m_videos_previews;
     QList <ofb_file *> m_videos_thumbnails;
     QList <ofb_file *> m_videos_hdAudio;
@@ -166,6 +171,7 @@ class Shot: public QObject
     QDateTime gps_ts;
 
     // PICTURES metadatas
+    int quality = 0;
     QString focal;
     QString iso;
     QString esposure_time;
@@ -182,6 +188,8 @@ class Shot: public QObject
 
 
     /// GPMF WIP /////////////////////////
+
+    bool gpmf_parsed = false;
 
     typedef struct TripleDouble {
         double x;
@@ -211,13 +219,17 @@ class Shot: public QObject
     void parseData_triplet(GpmfBuffer &buf, GpmfKLV &klv, const double scales[16],
                            std::vector <TripleDouble> &datalist);
 
+    bool hasEXIF = false;
+    bool hasExif() { return hasEXIF; }
+    Q_PROPERTY(bool hasEXIF READ hasExif NOTIFY metadatasUpdated)
+
     bool hasGPS = false;
     bool hasGpsSync() { return hasGPS; }
-    Q_PROPERTY(bool hasGPS READ hasGpsSync NOTIFY shotUpdated)
+    Q_PROPERTY(bool hasGPS READ hasGpsSync NOTIFY metadatasUpdated)
 
     bool hasGPMF = false;
     bool hasGpmf() { return hasGPMF; }
-    Q_PROPERTY(bool hasGPMF READ hasGpmf NOTIFY shotUpdated)
+    Q_PROPERTY(bool hasGPMF READ hasGpmf NOTIFY metadatasUpdated)
 
     float minAlti;
     float maxAlti;
@@ -225,9 +237,9 @@ class Shot: public QObject
     float getMinAlti() { return minAlti; }
     float getMaxAlti() { return maxAlti; }
     float getAvgAlti() { return avgAlti; }
-    Q_PROPERTY(float minAlti READ getMinAlti NOTIFY shotUpdated)
-    Q_PROPERTY(float maxAlti READ getMaxAlti NOTIFY shotUpdated)
-    Q_PROPERTY(float avgAlti READ getAvgAlti NOTIFY shotUpdated)
+    Q_PROPERTY(float minAlti READ getMinAlti NOTIFY metadatasUpdated)
+    Q_PROPERTY(float maxAlti READ getMaxAlti NOTIFY metadatasUpdated)
+    Q_PROPERTY(float avgAlti READ getAvgAlti NOTIFY metadatasUpdated)
 
     float minSpeed;
     float maxSpeed;
@@ -235,19 +247,20 @@ class Shot: public QObject
     float getMinSpeed() { return minSpeed; }
     float getMaxSpeed() { return maxSpeed; }
     float getAvgSpeed() { return avgSpeed; }
-    Q_PROPERTY(float minSpeed READ getMinSpeed NOTIFY shotUpdated)
-    Q_PROPERTY(float maxSpeed READ getMaxSpeed NOTIFY shotUpdated)
-    Q_PROPERTY(float avgSpeed READ getAvgSpeed NOTIFY shotUpdated)
+    Q_PROPERTY(float minSpeed READ getMinSpeed NOTIFY metadatasUpdated)
+    Q_PROPERTY(float maxSpeed READ getMaxSpeed NOTIFY metadatasUpdated)
+    Q_PROPERTY(float avgSpeed READ getAvgSpeed NOTIFY metadatasUpdated)
 
     float maxG = 1;
     float getMaxG() { return maxG; }
-    Q_PROPERTY(float maxG READ getMaxG NOTIFY shotUpdated)
+    Q_PROPERTY(float maxG READ getMaxG NOTIFY metadatasUpdated)
 
     double distance_km = 0;
     double getDistanceKm() { return distance_km; }
-    Q_PROPERTY(double distanceKm READ getDistanceKm NOTIFY shotUpdated)
+    Q_PROPERTY(double distanceKm READ getDistanceKm NOTIFY metadatasUpdated)
 
 public slots:
+    Q_INVOKABLE bool getMetadatasFromVideoGPMF(int index = 0);
     Q_INVOKABLE void updateSpeedsSerie(QLineSeries *serie, int appUnit);
     Q_INVOKABLE void updateAltiSerie(QLineSeries *serie, int appUnit);
     Q_INVOKABLE void updateAcclSeries(QLineSeries *x, QLineSeries *y, QLineSeries *z);
@@ -261,8 +274,6 @@ public:
     Shot(QObject *parent = nullptr);
     Shot(Shared::ShotType type, QObject *parent = nullptr);
     ~Shot();
-
-    Shot(const Shot &other);
 
     void addFile(ofb_file *file);
 #ifdef ENABLE_LIBMTP
@@ -285,7 +296,7 @@ public slots:
     qint64 getDataSize() const;
     qint64 getFullSize() const;
     int getChapterCount() const;    //!< 0 means no notion of chapter
-    QDateTime getDate() const { return m_date; }
+    QDateTime getDate() const;
     QString getPreviewPhoto() const;
     QString getPreviewVideo() const;
     QImage getPreviewMtp();
@@ -322,6 +333,7 @@ public slots:
 Q_SIGNALS:
     void shotUpdated();
     void stateUpdated();
+    void metadatasUpdated();
     void datasUpdated();
 };
 
