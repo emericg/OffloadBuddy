@@ -6,8 +6,8 @@ import "StringUtils.js" as StringUtils
 
 Item {
     id: itemEncode
-    width: 640
-    height: 640
+    width: 600
+    height: 500
 
     property var currentShot
     property string currentShotName
@@ -45,6 +45,9 @@ Item {
 
         // Clip handler
         setClip(-1, -1)
+
+        // Filters
+        rectangleFilter.visible = false
 
         // Handle destination(s)
         cbDestinations.clear()
@@ -133,8 +136,6 @@ Item {
 
         Rectangle {
             id: rectangleCodec
-            x: 0
-            y: 53
             height: 40
             color: "#ffffff"
             anchors.top: titleEncode.bottom
@@ -200,12 +201,10 @@ Item {
 
         Rectangle {
             id: rectangleSpeed
-            x: 0
-            y: 101
             height: 40
             color: "#ffffff"
             anchors.top: rectangleCodec.bottom
-            anchors.topMargin: 8
+            anchors.topMargin: 0
             anchors.left: parent.left
             anchors.leftMargin: 0
             anchors.right: parent.right
@@ -240,7 +239,7 @@ Item {
             height: 40
             color: "#ffffff"
             anchors.top: rectangleSpeed.bottom
-            anchors.topMargin: 8
+            anchors.topMargin: 0
             anchors.left: parent.left
             anchors.leftMargin: 0
             anchors.right: parent.right
@@ -275,7 +274,7 @@ Item {
             height: 40
             color: "#ffffff"
             anchors.top: rectangleQuality.bottom
-            anchors.topMargin: 8
+            anchors.topMargin: 0
             anchors.left: parent.left
             anchors.leftMargin: 0
             anchors.right: parent.right
@@ -315,12 +314,10 @@ Item {
 
         Rectangle {
             id: rectangleClip
-            x: 0
-            y: 238
             height: 48
             color: "#ffffff"
             anchors.top: rectangleFramerate.bottom
-            anchors.topMargin: 4
+            anchors.topMargin: 8
             anchors.right: parent.right
             anchors.rightMargin: 0
             anchors.left: parent.left
@@ -328,7 +325,6 @@ Item {
 
             Text {
                 id: titleClip
-                x: 16
                 text: qsTr("Clip video")
                 anchors.verticalCenter: parent.verticalCenter
                 font.bold: false
@@ -367,8 +363,6 @@ Item {
 
         Rectangle {
             id: rectangleFilter
-            x: 0
-            y: 286
             height: 96
             color: "#ffffff"
             anchors.top: rectangleClip.bottom
@@ -504,7 +498,6 @@ Item {
 
         Button {
             id: buttonCancel
-            y: 12
             text: qsTr("Cancel")
             font.pixelSize: 16
             anchors.left: buttonStart.right

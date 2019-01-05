@@ -24,7 +24,7 @@ Rectangle {
         modal: true
         focus: true
         x: (parent.width - panelEncode.width) / 2
-        y: (parent.height - panelEncode.height) / 2
+        y: (parent.height - 64 - panelEncode.height) / 2
         closePolicy: Popup.CloseOnEscape /*| Popup.CloseOnPressOutsideParent*/
 
         PanelEncode {
@@ -57,14 +57,16 @@ Rectangle {
                 preview.isFullScreen = !preview.isFullScreen
 
                 if (preview.isFullScreen) {
-                    buttonFullscreen.text = "⇱"
+                    buttonFullscreen.imageSource = "qrc:/icons_material/baseline-fullscreen-24px.svg"
                     rectangleMetadatas.visible = true
                     preview.anchors.right = rectangleMetadatas.left
                 } else {
-                    buttonFullscreen.text = "⇲"
+                    buttonFullscreen.imageSource = "qrc:/icons_material/baseline-fullscreen_exit-24px.svg"
                     rectangleMetadatas.visible = false
                     preview.anchors.right = parent.parent.right
                 }
+
+                timelinePosition.width = timeline.width * (mediaPlayer.position / mediaPlayer.duration)
             }
         }
 
@@ -99,19 +101,27 @@ Rectangle {
                     else
                         mediaBanner.openMessage(qsTr("Oooops..."))
                 }
+                onPlaying: {
+                    buttonPlay.imageSource = "qrc:/icons_material/baseline-pause-24px.svg"
+                }
+                onPaused: {
+                    buttonPlay.imageSource = "qrc:/icons_material/baseline-play_arrow-24px.svg"
+                }
                 onStopped: {
                     isRunning = false
+                    buttonPlay.imageSource = "qrc:/icons_material/baseline-play_arrow-24px.svg"
                 }
                 onSourceChanged: {
                     stop()
                     isRunning = false
+                    timelinePosition.width = 0
                     mediaBanner.close()
                 }
                 onVolumeChanged: {
                     soundlinePosition.width = (soundline.width * volume)
                 }
                 onPositionChanged: {
-                    timelinePosition.width = timeline.width * (mediaPlayer.position / mediaPlayer.duration);
+                    timelinePosition.width = timeline.width * (mediaPlayer.position / mediaPlayer.duration)
                 }
             }
 
@@ -122,7 +132,8 @@ Rectangle {
             Rectangle {
                 id: mediaControls
                 height: 40
-                color: "#d9d9d9"
+                opacity: 1
+                color: ThemeEngine.colorButton
                 anchors.right: parent.right
                 anchors.rightMargin: 0
                 anchors.left: parent.left
@@ -130,33 +141,29 @@ Rectangle {
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 0
 
-                Button {
+                ButtonImage {
                     id: buttonPlay
                     width: 40
                     height: 40
-                    text: "▶"
                     anchors.left: parent.left
                     anchors.leftMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
 
+                    imageSource: "qrc:/icons_material/baseline-play_arrow-24px.svg"
                     onClicked: {
                         if (mediaPlayer.isRunning) {
                             mediaPlayer.pause()
                             mediaPlayer.isRunning = false
-                            buttonPlay.text = "▷"
                         } else {
                             mediaPlayer.play()
                             mediaPlayer.isRunning = true
-                            buttonPlay.text = "▶"
                         }
                     }
                 }
-
-                Button {
+                ButtonImage {
                     id: buttonStop
                     width: 40
                     height: 40
-                    text: "■"
                     anchors.left: buttonPlay.right
                     anchors.leftMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
@@ -165,6 +172,8 @@ Rectangle {
                         mediaPlayer.stop()
                         mediaPlayer.isRunning = false
                     }
+
+                    imageSource: "qrc:/icons_material/baseline-stop-24px.svg"
                 }
 
                 Button {
@@ -188,7 +197,7 @@ Rectangle {
                     width: 40
                     height: 40
                     text: "]"
-                    anchors.right: buttonScreenshot.left
+                    anchors.right: buttonSound.left
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
 
@@ -199,14 +208,47 @@ Rectangle {
                         timelineLimitStop.width = timeline.width * (((mediaPlayer.duration - mediaPlayer.position) / mediaPlayer.duration));
                     }
                 }
-                Button {
-                    id: buttonScreenshot
+                ButtonImage {
+                    id: buttonSound
                     width: 40
                     height: 40
-                    text: "⎔"
                     anchors.right: soundline.left
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
+                    imageSource: "qrc:/icons_material/baseline-volume_up-24px.svg"
+
+                    property real savedVolume: 0.5
+                    onClicked: {
+                        if (mediaPlayer.volume) {
+                            savedVolume = mediaPlayer.volume
+                            mediaPlayer.volume = 0
+                        } else {
+                            mediaPlayer.volume = savedVolume
+                        }
+                    }
+                }
+
+                ButtonImage {
+                    id: buttonScreenshot
+                    width: 40
+                    height: 40
+                    anchors.right: buttonEncode.left
+                    anchors.rightMargin: 0
+                    anchors.verticalCenter: parent.verticalCenter
+                    imageSource: "qrc:/icons_material/outline-camera_alt-24px.svg"
+
+                    onClicked: {
+                        //
+                    }
+                }
+                ButtonImage {
+                    id: buttonEncode
+                    width: 40
+                    height: 40
+                    anchors.right: buttonFullscreen.left
+                    anchors.rightMargin: 0
+                    anchors.verticalCenter: parent.verticalCenter
+                    imageSource: "qrc:/icons_material/baseline-settings_applications-24px.svg"
 
                     onClicked: {
                         panelEncode.updateEncodePanel(shot)
@@ -214,14 +256,14 @@ Rectangle {
                         popupEncode.open()
                     }
                 }
-                Button {
+                ButtonImage {
                     id: buttonFullscreen
                     width: 40
                     height: 40
-                    text: "⇱"
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
+                    imageSource: "qrc:/icons_material/baseline-fullscreen-24px.svg"
 
                     onClicked: previewFullScreen.toogleFullScreen()
                 }
@@ -229,7 +271,7 @@ Rectangle {
                 Rectangle {
                     id: timeline
                     height: 40
-                    color: "#d0d0d0"
+                    color: ThemeEngine.colorButton
                     anchors.left: buttonStartCut.right
                     anchors.leftMargin: 0
                     anchors.right: buttonStopCut.left
@@ -279,16 +321,18 @@ Rectangle {
                 Rectangle {
                     id: soundline
                     width: 80
-                    height: 40
-                    color: "#d0d0d0"
-                    anchors.right: buttonFullscreen.left
+                    height: 28
+                    //color: "#d0d0d0"
+                    border.width: 2
+                    border.color: "#ffe695"
+                    anchors.right: buttonScreenshot.left
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
 
                     Rectangle {
                         id: soundlinePosition
                         width: 0
-                        height: 40
+                        height: 28
                         color: "#ffe695"
                         anchors.left: parent.left
                         anchors.leftMargin: 0

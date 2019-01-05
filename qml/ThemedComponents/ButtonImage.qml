@@ -8,6 +8,7 @@ Button {
     id: control
 
     property string imageSource: ""
+    property int imageSize: 24
 
     // theming
     background: Rectangle {
@@ -18,8 +19,8 @@ Button {
     }
 
     contentItem: Image {
-        width: 24
-        height: 24
+        width: imageSize
+        height: imageSize
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
 

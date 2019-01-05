@@ -125,7 +125,7 @@ ApplicationWindow {
         // MENUS
 
         Rectangle {
-            id: button_media
+            id: button_library
             width: 64
             height: 64
             color: "#00000000"
@@ -136,7 +136,7 @@ ApplicationWindow {
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
-                onClicked: content.state = "medias"
+                onClicked: content.state = "library"
             }
 
             Image {
@@ -160,7 +160,7 @@ ApplicationWindow {
 
             anchors.bottom: button_settings.top
             anchors.bottomMargin: 16
-            anchors.top: button_media.bottom
+            anchors.top: button_library.bottom
             anchors.topMargin: 16
             anchors.left: parent.left
             anchors.leftMargin: 0
@@ -336,7 +336,7 @@ ApplicationWindow {
                 //console.log("deviceRemoved(" + devicePtr + ") and currentDevice(" + currentDevicePtr + ")")
                 if (typeof devicePtr !== "undefined")
                     if (devicePtr === currentDevicePtr)
-                        content.state = "medias"
+                        content.state = "library"
             }
         }
     }
@@ -377,19 +377,19 @@ ApplicationWindow {
             id: screenAbout
         }
 
-        state: "medias"
+        state: "library"
         states: [
             State {
-                name: "medias"
+                name: "library"
 
                 PropertyChanges {
                     target: selectorArrow
-                    anchors.verticalCenter: button_media.verticalCenter
+                    anchors.verticalCenter: button_library.verticalCenter
                 }
                 PropertyChanges {
                     target: selectorBar
                     height: 68
-                    anchors.verticalCenter: button_media.verticalCenter
+                    anchors.verticalCenter: button_library.verticalCenter
                 }
 
                 PropertyChanges {

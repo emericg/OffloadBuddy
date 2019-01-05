@@ -83,36 +83,25 @@ Rectangle {
         anchors.top: parent.top
         color: ThemeEngine.colorHeaderBackground
 
-        ButtonThemed {
+        ButtonImage {
             id: rectangleBack
             width: 40
             height: 40
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             anchors.leftMargin: 16
-            text: "<"
-            font.bold: true
-            font.pixelSize: ThemeEngine.fontSizeHeaderTitle
 
-            contentItem: Text {
-                anchors.fill: parent
-                text: rectangleBack.text
-                font: rectangleBack.font
-                opacity: enabled ? 1.0 : 0.3
-                color: rectangleBack.down ? ThemeEngine.colorHeaderTitle : ThemeEngine.colorButtonText
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                elide: Text.ElideRight
-            }
-
+            imageSource: "qrc:/icons_material/baseline-keyboard_arrow_left-24px.svg"
             onClicked: {
-                screenLibrary.state = "stateMediaGrid"
-                screenDevice.state = "stateMediaGrid"
+                if (content.state == "library")
+                    screenLibrary.state = "stateMediaGrid"
+                else if (content.state == "device")
+                    screenDevice.state = "stateMediaGrid"
             }
         }
+
         Text {
             id: textShotName
-            width: 582
             height: 40
             anchors.leftMargin: 16
             anchors.left: rectangleBack.right
