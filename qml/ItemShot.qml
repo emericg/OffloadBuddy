@@ -47,9 +47,9 @@ Rectangle {
 
         handleState()
         if (shot.previewVideo)
-            image.source = "image://GridThumbnailer/" + shot.previewVideo
+            imageFs.source = "image://GridThumbnailer/" + shot.previewVideo
         else if (shot.previewPhoto)
-            image.source = "image://GridThumbnailer/" + shot.previewPhoto
+            imageFs.source = "image://GridThumbnailer/" + shot.previewPhoto
         else if (shotDevice && shotDevice.deviceStorage === Shared.STORAGE_MTP)
         {
             imageMtp.visible = true
@@ -62,7 +62,7 @@ Rectangle {
             icon_left.source = "qrc:/resources/minicons/unknown.svg"
 
             if (!shot.previewPhoto && !shot.previewVideo)
-                image.source = "qrc:/resources/other/placeholder_video.svg"
+                imageFs.source = "qrc:/resources/other/placeholder_video.svg"
         } else if (type < Shared.SHOT_PICTURE) {
             if (duration > 0) {
                 text_left.visible = true
@@ -71,7 +71,7 @@ Rectangle {
             icon_left.source = "qrc:/resources/minicons/video.svg"
 
             if (!shot.previewPhoto && !shot.previewVideo)
-                image.source = "qrc:/resources/other/placeholder_video.svg"
+                imageFs.source = "qrc:/resources/other/placeholder_video.svg"
         } else {
             if (type >= Shared.SHOT_PICTURE_MULTI) {
                 text_left.visible = true
@@ -79,12 +79,12 @@ Rectangle {
                 icon_left.source = "qrc:/resources/minicons/picture_multi.svg"
 
                 if (!shot.previewPhoto)
-                    image.source = "qrc:/resources/other/placeholder_picture_multi.svg"
+                    imageFs.source = "qrc:/resources/other/placeholder_picture_multi.svg"
             } else {
                 icon_left.source = "qrc:/resources/minicons/picture.svg"
 
                 if (!shot.previewPhoto)
-                    image.source = "qrc:/resources/other/placeholder_picture.svg"
+                    imageFs.source = "qrc:/resources/other/placeholder_picture.svg"
             }
         }
 
@@ -98,7 +98,7 @@ Rectangle {
     }
 
     Image {
-        id: image
+        id: imageFs
         anchors.fill: parent
         smooth: false
         antialiasing: false
@@ -106,8 +106,8 @@ Rectangle {
 
         fillMode: Image.PreserveAspectCrop
         source: "qrc:/resources/other/placeholder_loading.svg"
-        sourceSize.width: 400
-        sourceSize.height: 400
+        sourceSize.width: 512
+        sourceSize.height: 512
     }
 
     ItemImage {
@@ -152,9 +152,9 @@ Rectangle {
                     if (++mouseAreaItem.thumbId > 3) mouseAreaItem.thumbId = 1
 
                     if (shot.previewVideo)
-                        image.source = "image://GridThumbnailer/" + shot.previewVideo + "@" + timecode_s
+                        imageFs.source = "image://GridThumbnailer/" + shot.previewVideo + "@" + timecode_s
                     else if (shot.previewPhoto)
-                        image.source = "image://GridThumbnailer/" + shot.previewPhoto
+                        imageFs.source = "image://GridThumbnailer/" + shot.previewPhoto
                 }
             }
         }
@@ -171,9 +171,9 @@ Rectangle {
                     thumbId = 1
                     thumbTimer.stop()
                     if (shot.previewVideo)
-                        image.source = "image://GridThumbnailer/" + shot.previewVideo
+                        imageFs.source = "image://GridThumbnailer/" + shot.previewVideo
                     else if (shot.previewPhoto)
-                        image.source = "image://GridThumbnailer/" + shot.previewPhoto
+                        imageFs.source = "image://GridThumbnailer/" + shot.previewPhoto
                 }
             }
         }
@@ -265,8 +265,6 @@ Rectangle {
 
         Image {
             id: image_overlay
-            x: 96
-            y: 96
             width: 64
             height: 64
             sourceSize.width: 64
@@ -311,7 +309,6 @@ Rectangle {
 
         Text {
             id: text_right
-            x: 142
             width: 124
             color: "#ffffff"
             text: qsTr("right")

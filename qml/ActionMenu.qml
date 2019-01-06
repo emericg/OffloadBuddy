@@ -3,7 +3,7 @@ import QtQuick.Controls 2.2
 
 Rectangle {
     id: actionMenuItem
-    width: 165
+    width: 180
     height: menuHolder.height + 12
     visible: isOpen
     focus: isOpen
@@ -53,7 +53,7 @@ Rectangle {
 
     Column {
         id: menuHolder
-        spacing: 1
+        spacing: 4
         width: parent.width
         height: children.height * children.length
         anchors { verticalCenter: parent.verticalCenter; left: parent.left; leftMargin: 4 }

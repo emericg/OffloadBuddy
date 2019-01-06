@@ -368,10 +368,10 @@ Rectangle {
                 cellWidth: cellSize + cellMargin
                 cellHeight: cellSize / cellFormat + cellMargin
 
-                anchors.rightMargin: 16
-                anchors.leftMargin: 16
-                anchors.bottomMargin: 16
-                anchors.topMargin: 16
+                anchors.rightMargin: cellMargin
+                anchors.leftMargin: cellMargin
+                anchors.bottomMargin: cellMargin
+                anchors.topMargin: cellMargin
                 anchors.fill: parent
 
                 interactive: true

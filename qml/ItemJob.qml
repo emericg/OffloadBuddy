@@ -22,7 +22,7 @@ Rectangle {
         width: 40
         height: 40
         anchors.left: parent.left
-        anchors.leftMargin: 16
+        anchors.leftMargin: 12
         anchors.verticalCenter: parent.verticalCenter
         color: "#00000000"
         clip: true
@@ -98,9 +98,9 @@ Rectangle {
         font.bold: true
         verticalAlignment: Text.AlignVCenter
         anchors.left: rectangleStatus.right
-        anchors.leftMargin: 16
+        anchors.leftMargin: 12
         anchors.verticalCenter: parent.verticalCenter
-        font.pixelSize: 12
+        font.pixelSize: 14
     }
 
     Text {
@@ -113,7 +113,7 @@ Rectangle {
         anchors.left: jobType.right
         anchors.leftMargin: 8
         anchors.verticalCenter: parent.verticalCenter
-        font.pixelSize: 12
+        font.pixelSize: 14
     }
 
     ProgressBarThemed {
@@ -176,7 +176,7 @@ Rectangle {
         height: 40
         color: "#00000000"
         anchors.right: parent.right
-        anchors.rightMargin: 8
+        anchors.rightMargin: 12
         anchors.verticalCenter: parent.verticalCenter
 
         Image {
