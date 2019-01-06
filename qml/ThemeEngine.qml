@@ -34,7 +34,7 @@ Item {
     property int currentTheme: -1
 
     // Colors
-    property string colorSidebar: "#4E596E"
+    property string colorSidebar: "#4E598C"
     property string colorSidebarText: "#ffffff"
     property string colorSidebarIcons: ""
 
@@ -93,7 +93,7 @@ Item {
 
             // "PLAIN AND BORING"
 
-            colorSidebar =          "#4E596E"
+            colorSidebar =          "#4E598C"
             colorSidebarText =      "#ffffff"
             colorSidebarIcons =     ""
 

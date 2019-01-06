@@ -7,7 +7,7 @@ import "StringUtils.js" as StringUtils
 
 Rectangle {
     id: itemShot
-    width: 272
+    width: 279
     height: width / cellFormat
     color: "#eef0f1"
 
@@ -100,6 +100,7 @@ Rectangle {
     Image {
         id: imageFs
         anchors.fill: parent
+        autoTransform: true
         smooth: false
         antialiasing: false
         asynchronous: true

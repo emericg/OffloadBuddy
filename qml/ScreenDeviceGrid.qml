@@ -585,11 +585,11 @@ Rectangle {
 
             onValueChanged: {
                 if (value == 1.0) {
-                    shotsview.cellSize = 214;
+                    shotsview.cellSize = 221;
                 } else  if (value == 2.0) {
-                    shotsview.cellSize = 272;
+                    shotsview.cellSize = 279;
                 } else  if (value == 3.0) {
-                    shotsview.cellSize = 367;
+                    shotsview.cellSize = 376;
                 }
 
                 // save state
@@ -754,18 +754,16 @@ Rectangle {
                 }
 
                 property real cellFormat: 4/3
-                property int cellSize: 272
-                property int cellMargin: 16
+                property int cellSize: 279
+                property int cellMargin: 12
+                anchors.leftMargin: 16
+                anchors.topMargin: 16
+                anchors.fill: parent
 
                 //property int cellMargin: (parent.width%cellSize) / Math.floor(parent.width/cellSize);
                 cellWidth: cellSize + cellMargin
                 cellHeight: cellSize / cellFormat + cellMargin
 
-                anchors.rightMargin: cellMargin
-                anchors.leftMargin: cellMargin
-                anchors.bottomMargin: cellMargin
-                anchors.topMargin: cellMargin
-                anchors.fill: parent
 
                 interactive: true
                 //snapMode: GridView.SnapToRow
