@@ -63,12 +63,13 @@ GridThumbnailer::GridThumbnailer() :
 QImage GridThumbnailer::requestImage(const QString &id, QSize *size,
                                      const QSize &requestedSize)
 {
-    QImage thumb;
+    bool decoding_status = false;
 
     QString path = id;
-    int width = requestedSize.width() > 0 ? requestedSize.width() : DEFAULT_THUMB_SIZE;
-    int height = requestedSize.height() > 0 ? requestedSize.height() : DEFAULT_THUMB_SIZE;
+    int target_width = requestedSize.width() > 0 ? requestedSize.width() : DEFAULT_THUMB_SIZE;
+    int target_height = requestedSize.height() > 0 ? requestedSize.height() : DEFAULT_THUMB_SIZE;
 
+    // Get timecode from string id, and remove it from string path
     int timecode_s = 0;
     if (id.lastIndexOf('@') > 0)
     {
@@ -82,32 +83,34 @@ QImage GridThumbnailer::requestImage(const QString &id, QSize *size,
     qDebug() << "@ requestedTimecode: " << timecode_s;
     qDebug() << "@ requestedSize: " << requestedSize;
 */
-#if defined(ENABLE_FFMPEG)
-    bool decoding_status = getImage_withFfmpeg(path, thumb, timecode_s, width, height);
-#elif defined(ENABLE_MINIVIDEO)
-    bool decoding_status = getImage_withMinivideo(path, thumb, timecode, width, height);
-#else
-    Q_UNUSED(width)
-    Q_UNUSED(height)
-    Q_UNUSED(timecode)
-    bool decoding_status = false;
-#endif
+    QImageReader img_infos(path);
+    QImage thumb;
 
-    // QImage fallback
+    // First, try QImageReader
+    if (img_infos.canRead())
+    {
+        // check size first, don't even try to thumbnail very big (>10K) pictures
+        if (img_infos.size().rwidth() > 0 && img_infos.size().rheight() > 0 &&
+            img_infos.size().rwidth() < 10000 && img_infos.size().rheight() < 10000)
+        {
+            // load datas into the QImage
+            img_infos.setAutoTransform(true);
+            decoding_status = img_infos.read(&thumb);
+
+            // scale down (not up)
+            if (target_width < img_infos.size().rwidth() && target_height < img_infos.size().rheight())
+                thumb = thumb.scaled(target_width, target_height, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        }
+    }
+
+    // Video file fallback
     if (decoding_status == false)
     {
-        QImageReader img_infos(path);
-
-        // do we really have an image?
-        if (img_infos.canRead())
-        {
-            // check size first, don't even try to thumbnail very big (>10K) pictures
-            if (img_infos.size().rwidth() < 10000 && img_infos.size().rheight() < 10000)
-            {
-                decoding_status = thumb.load(path);
-                thumb = thumb.scaled(width, height, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-            }
-        }
+#if defined(ENABLE_FFMPEG)
+        decoding_status = getImage_withFfmpeg(path, thumb, timecode_s, target_width, target_height);
+#elif defined(ENABLE_MINIVIDEO)
+        decoding_status = getImage_withMinivideo(path, thumb, timecode, target_width, target_height);
+#endif
     }
 
     // Use our own static fallback pictures

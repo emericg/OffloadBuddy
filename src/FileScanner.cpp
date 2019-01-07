@@ -69,7 +69,7 @@ void FileScanner::chooseMtpStorage(StorageMtp *mtpStorage)
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void FileScanner::scanFilesystemElement(QString &dir_path)
+void FileScanner::scanFilesystemDirectory(QString &dir_path)
 {
     //qDebug() << "  * Scanning subdir:" << dir_path;
 
@@ -85,7 +85,7 @@ void FileScanner::scanFilesystemElement(QString &dir_path)
         QFileInfo fi(subelement_path);
         if (fi.isDir())
         {
-            scanFilesystemElement(subelement_path);
+            scanFilesystemDirectory(subelement_path);
         }
         else
         {
@@ -99,24 +99,59 @@ void FileScanner::scanFilesystemElement(QString &dir_path)
                     f->size = static_cast<uint64_t>(fi.size());
 #if (QT_VERSION_MINOR >= 10)
                     f->creation_date = fi.birthTime();
+#else
+                    f->creation_date = fi.created();
 #endif
                     f->modification_date = fi.lastModified();
 
                     f->filesystemPath = fi.filePath();
+
+                    ofb_shot *s = new ofb_shot;
+                    bool shotStatus = getGoProShotInfos(*f, *s);
+                    if (!shotStatus)
+                        shotStatus = getGenericShotInfos(*f, *s);
+
+                    if (shotStatus)
+                        emit fileFound(f, s);
+                    else
+                    {
+                        delete f;
+                        delete s;
+                    }
                 }
-
-                ofb_shot *s = new ofb_shot;
-                bool shotStatus = getGoProShotInfos(*f, *s);
-                if (!shotStatus)
-                    shotStatus = getGenericShotInfos(*f, *s);
-
-                if (shotStatus)
-                    emit fileFound(f, s);
-                else
-                    delete s;
             }
         }
     }
+}
+
+bool FileScanner::scanFilesystemFile(QString &file_path, ofb_file *f, ofb_shot *s)
+{
+    //qDebug() << "  * Scanning file:" << file_path;
+
+    bool shotStatus = false;
+
+    if (f && s)
+    {
+        QFileInfo fi(file_path);
+        if (fi.isFile() && fi.exists() && fi.isReadable())
+        {
+            f->filesystemPath = fi.filePath();
+            f->name = fi.baseName();
+
+            f->extension = fi.suffix().toLower();
+            f->size = static_cast<uint64_t>(fi.size());
+#if (QT_VERSION_MINOR >= 10)
+            f->creation_date = fi.birthTime();
+#endif
+            f->modification_date = fi.lastModified();
+
+            shotStatus = getGoProShotInfos(*f, *s);
+            if (!shotStatus)
+                shotStatus = getGenericShotInfos(*f, *s);
+        }
+    }
+
+    return shotStatus;
 }
 
 void FileScanner::scanFilesystem()
@@ -130,7 +165,7 @@ void FileScanner::scanFilesystem()
     //qDebug() << "> SCANNING STARTED (filesystem)";
     emit scanningStarted(m_selected_filesystem);
 
-    scanFilesystemElement(m_selected_filesystem);
+    scanFilesystemDirectory(m_selected_filesystem);
 
     //qDebug() << "> SCANNING FINISHED";
     emit scanningFinished(m_selected_filesystem);
@@ -150,7 +185,7 @@ void FileScanner::scanFilesystemDCIM()
     //qDebug() << "  * DCIM:" << dcim_path;
     emit scanningStarted(m_selected_filesystem);
 
-    scanFilesystemElement(dcim_path);
+    scanFilesystemDirectory(dcim_path);
 
     //qDebug() << "> SCANNING FINISHED";
     emit scanningFinished(m_selected_filesystem);

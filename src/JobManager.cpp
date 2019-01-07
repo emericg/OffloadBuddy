@@ -20,7 +20,11 @@
  */
 
 #include "JobManager.h"
+#include "JobWorkerAsync.h"
+#include "JobWorkerSync.h"
 #include "SettingsManager.h"
+#include "FileScanner.h"
+#include "MediaLibrary.h"
 #include "utils_enums.h"
 
 #ifdef ENABLE_LIBMTP
@@ -69,6 +73,11 @@ void JobManager::cleanup()
     m_job_instant = nullptr;
     m_job_cpu = nullptr;
     m_job_web = nullptr;
+}
+
+void JobManager::attachLibrary(MediaLibrary *l)
+{
+    m_library = l;
 }
 
 /* ************************************************************************** */
@@ -278,6 +287,7 @@ bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list,
 
             connect(m_job_cpu, SIGNAL(shotStarted(int, Shot *)), this, SLOT(shotStarted(int, Shot *)));
             connect(m_job_cpu, SIGNAL(shotFinished(int, Shot *)), this, SLOT(shotFinished(int, Shot *)));
+            connect(m_job_cpu, SIGNAL(fileProduced(QString)), this, SLOT(newFile(QString)));
         }
 
         if (m_job_cpu)
@@ -322,6 +332,7 @@ bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list,
                     connect(m_selected_worker, SIGNAL(jobFinished(int, int)), this, SLOT(jobFinished(int, int)));
                     connect(m_selected_worker, SIGNAL(shotStarted(int, Shot *)), this, SLOT(shotStarted(int, Shot *)));
                     connect(m_selected_worker, SIGNAL(shotFinished(int, Shot *)), this, SLOT(shotFinished(int, Shot *)));
+                    connect(m_selected_worker, SIGNAL(fileProduced(QString)), this, SLOT(newFile(QString)));
 
                     m_selected_worker->thread->start();
                     status = true;
@@ -352,6 +363,7 @@ bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list,
                 connect(m_selected_worker, SIGNAL(jobFinished(int, int)), this, SLOT(jobFinished(int, int)));
                 connect(m_selected_worker, SIGNAL(shotStarted(int, Shot *)), this, SLOT(shotStarted(int, Shot *)));
                 connect(m_selected_worker, SIGNAL(shotFinished(int, Shot *)), this, SLOT(shotFinished(int, Shot *)));
+                connect(m_selected_worker, SIGNAL(fileProduced(QString)), this, SLOT(newFile(QString)));
 
                 m_selected_worker->thread->start();
                 status = true;
@@ -487,6 +499,25 @@ void JobManager::shotFinished(int jobId, Shot *shot)
                 // TODO create new shot
                 // TODO add new shot to media library
             }
+        }
+    }
+}
+
+void JobManager::newFile(QString path)
+{
+    if (m_library)
+    {
+        ofb_file *f = new ofb_file();
+        ofb_shot *s = new ofb_shot();
+
+        if (FileScanner::scanFilesystemFile(path, f, s))
+        {
+            m_library->getShotModel()->addFile(f, s);
+        }
+        else
+        {
+            delete f;
+            delete s;
         }
     }
 }

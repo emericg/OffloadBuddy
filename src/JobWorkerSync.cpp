@@ -20,12 +20,18 @@
  */
 
 #include "JobWorkerSync.h"
+#include "JobManager.h"
 #include "SettingsManager.h"
+#include "Shot.h"
+
+#ifdef ENABLE_LIBMTP
+#include <libmtp.h>
+#endif
 
 #include <QFileInfo>
 #include <QFile>
+#include <QThread>
 #include <QMutexLocker>
-
 #include <QDebug>
 
 /* ************************************************************************** */
@@ -141,6 +147,8 @@ void JobWorkerSync::work()
                                 {
                                     //qDebug() << "COPIED: " << destFile;
                                     stuff_done += fi_src.size();
+
+                                    emit fileProduced(destFile);
                                 }
                                 else
                                 {
@@ -176,6 +184,8 @@ void JobWorkerSync::work()
                                 {
                                     //qDebug() << "COPIED: " << destFile;
                                     stuff_done += file.size;
+
+                                    emit fileProduced(destFile);
                                 }
                             }
                             else

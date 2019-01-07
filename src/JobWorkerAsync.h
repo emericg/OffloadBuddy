@@ -19,17 +19,18 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#ifndef JOB_SUPER_WORKER_H
-#define JOB_SUPER_WORKER_H
+#ifndef JOB_WORKER_ASYNC_H
+#define JOB_WORKER_ASYNC_H
 /* ************************************************************************** */
-
-#include "Shot.h"
-#include "JobWorkerSync.h"
 
 #include <QObject>
 #include <QString>
+#include <QTime>
 #include <QQueue>
-#include <QProcess>
+
+class QProcess;
+class Shot;
+struct Job;
 
 /* ************************************************************************** */
 
@@ -37,6 +38,8 @@ typedef struct commandWrapper
 {
     Job *job = nullptr;
     int job_element_index = -1;
+
+    QString destFile;
 
     QString command;
     QStringList arguments;
@@ -86,7 +89,9 @@ signals:
 
     void shotStarted(int, Shot *);
     void shotFinished(int, Shot *);
+
+    void fileProduced(QString);
 };
 
 /* ************************************************************************** */
-#endif // JOB_SUPER_WORKER_H
+#endif // JOB_WORKER_ASYNC_H

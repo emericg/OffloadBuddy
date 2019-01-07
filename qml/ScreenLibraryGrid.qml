@@ -372,7 +372,6 @@ Rectangle {
                 cellWidth: cellSize + cellMargin
                 cellHeight: cellSize / cellFormat + cellMargin
 
-
                 interactive: true
                 //snapMode: GridView.SnapToRow
                 //clip: true

@@ -46,7 +46,7 @@ class FileScanner: public QObject
     bool m_abort_scan = false;
     QString m_selected_filesystem;
 
-    void scanFilesystemElement(QString &dir);
+    void scanFilesystemDirectory(QString &dir);
 
 #ifdef ENABLE_LIBMTP
     LIBMTP_mtpdevice_t *m_selected_mtpDevice = nullptr;
@@ -60,6 +60,8 @@ class FileScanner: public QObject
 public:
     FileScanner();
     ~FileScanner();
+
+    static bool scanFilesystemFile(QString &file, ofb_file *f, ofb_shot *s);
 
 public slots:
     void chooseFilesystem(const QString &m_selected_filesystem);

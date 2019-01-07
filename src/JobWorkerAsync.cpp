@@ -20,8 +20,11 @@
  */
 
 #include "JobWorkerAsync.h"
+#include "JobManager.h"
+#include "Shot.h"
 #include "SettingsManager.h"
 
+#include <QProcess>
 #include <QFileInfo>
 #include <QFile>
 #include <QDir>
@@ -252,7 +255,8 @@ void JobWorkerAsync::queueWork(Job *job)
                 ptiwrap->arguments << "-r" << QString::number(job->settings.fps);
             }
 
-            ptiwrap->arguments << element->destination_dir + element->files.front().name + reencode_or_clipped + "." + file_extension;
+            ptiwrap->destFile = element->destination_dir + element->files.front().name + reencode_or_clipped + "." + file_extension;
+            ptiwrap->arguments << ptiwrap->destFile;
 
             m_ffmpegjobs.push_back(ptiwrap);
 /*
@@ -322,6 +326,7 @@ void JobWorkerAsync::processFinished()
         if (m_ffmpegcurrent->job &&
             m_ffmpegcurrent->job->elements.size() > m_ffmpegcurrent->job_element_index)
         {
+            emit fileProduced(m_ffmpegcurrent->destFile);
             emit shotFinished(m_ffmpegcurrent->job->id, m_ffmpegcurrent->job->elements.at(m_ffmpegcurrent->job_element_index)->parent_shots);
             emit jobFinished(m_ffmpegcurrent->job->id, js);
         }

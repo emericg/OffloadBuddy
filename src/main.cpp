@@ -117,14 +117,15 @@ int main(int argc, char *argv[])
         }
     }
 
-    JobManager *j = JobManager::getInstance();
-    atexit(exithandler); // will stop running job on exit
-
     MediaLibrary *m = new MediaLibrary;
     m->searchMediaDirectories();
 
     DeviceManager *d = new DeviceManager;
     d->searchDevices();
+
+    JobManager *j = JobManager::getInstance();
+    j->attachLibrary(m);
+    atexit(exithandler); // will stop running job on exit
 
     ////////////////////////////////////////////////////////////////////////////
 

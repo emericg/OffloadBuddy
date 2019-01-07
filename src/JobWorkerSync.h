@@ -19,95 +19,18 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#ifndef JOB_WORKER_H
-#define JOB_WORKER_H
+#ifndef JOB_WORKER_SYNC_H
+#define JOB_WORKER_SYNC_H
 /* ************************************************************************** */
-
-#include "Shot.h"
-
-#ifdef ENABLE_LIBMTP
-#include <libmtp.h>
-#endif
 
 #include <QObject>
-#include <QString>
 #include <QQueue>
-#include <QThread>
 #include <QMutex>
 
-/* ************************************************************************** */
+class QThread;
+class Shot;
+struct Job;
 
-typedef enum JobType
-{
-    JOB_INVALID = 0,
-
-    JOB_METADATAS,
-
-    JOB_FORMAT,
-    JOB_DELETE,
-
-    JOB_COPY,
-    JOB_MERGE,
-
-    JOB_CLIP,
-    JOB_TIMELAPSE_TO_VIDEO,
-    JOB_REENCODE,
-    JOB_STAB,
-
-    JOB_FIRMWARE_DOWNLOAD,
-    JOB_FIRMWARE_UPLOAD,
-
-} JobType;
-
-typedef enum JobState
-{
-    JOB_STATE_QUEUED = 0,
-    JOB_STATE_WORKING,
-    JOB_STATE_PAUSED,
-
-    JOB_STATE_DONE = 8,
-    JOB_STATE_ERRORED
-
-} JobState;
-
-/* ************************************************************************** */
-
-typedef struct JobEncodeSettings
-{
-    QString codec = "H.264";
-    int quality = 3; // [1:5]
-    int speed = 2; // [1:3]
-    float fps = -1;
-
-    int startMs = -1;
-    int durationMs = -1;
-
-} JobEncodeSettings;
-
-typedef struct JobElement
-{
-    Shot *parent_shots;
-    QString destination_dir;
-
-    std::vector <ofb_file> files;
-
-} JobElement;
-
-typedef struct Job
-{
-    int id = -1;
-    JobType type = JOB_INVALID;
-    JobEncodeSettings settings;
-
-    std::vector<JobElement *> elements;
-
-    JobState state = JOB_STATE_QUEUED;
-    int totalFiles = 0;
-    int64_t totalSize = 0;
-
-} Job;
-
-/* ************************************************************************** */
 /* ************************************************************************** */
 
 /*!
@@ -138,7 +61,9 @@ signals:
 
     void shotStarted(int, Shot *);
     void shotFinished(int, Shot *);
+
+    void fileProduced(QString);
 };
 
 /* ************************************************************************** */
-#endif // JOB_WORKER_H
+#endif // JOB_WORKER_SYNC_H
