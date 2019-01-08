@@ -188,7 +188,7 @@ void DeviceScanner::scanVirtualFilesystems()
             }
             if (storage.rootPath().contains("smb-share"))
             {
-                qDebug() << "> skipping network filesystem";
+                //qDebug() << "> skipping network filesystem";
                 continue;
             }
 
@@ -290,7 +290,7 @@ void DeviceScanner::scanVirtualFilesystems()
                         // FIXME m_watchedMtpDevices is never cleaned but bus ids are dynamic anyway
                         if (m_watchedMtpDevices.contains(std::make_pair(deviceInfos->devBus, deviceInfos->devNum)))
                         {
-                            //qDebug() << "> skipping device @ bus" << currentMtpDevice.first << ", dev" << currentMtpDevice.second << ", already handled";
+                            //qDebug() << "> skipping device @ bus" << deviceInfos->devBus << ", dev" << deviceInfos->devNum << ", already handled";
                             delete deviceInfos;
                             continue;
                         }
@@ -308,7 +308,7 @@ void DeviceScanner::scanVirtualFilesystems()
                         }
                         if (devicefound)
                         {
-                            //qDebug() << "> skipping device @ " << virtual_mountpoint;
+                            //qDebug() << "> skipping device @ " << deviceInfos->stringId << ", already handled";
                             delete deviceInfos;
                             continue;
                         }
@@ -325,9 +325,10 @@ void DeviceScanner::scanVirtualFilesystems()
                     QDir gvfsSubDirectory(virtual_mountpoint);
                     foreach (QString subdir_volume, gvfsSubDirectory.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
                     {
-                        //qDebug() << "Scanning MTP subdir_volume:" << subdir_volume;
-                        //qDebug() << "deviceRootpath:" << deviceRootpath;
                         QString devicePath = virtual_mountpoint + "/" + subdir_volume;
+
+                        //qDebug() << "Scanning MTP subdir_volume:" << subdir_volume;
+                        //qDebug() << "deviceRootpath:" << devicePath;
 
                         QDir dcim(devicePath + "/DCIM");
                         if (dcim.exists() && dcim.isReadable())

@@ -236,7 +236,7 @@ void DeviceManager::workerScanningFinished()
     // We use single shot timer restarted after each scan because we don't want
     // a scanning started while the previous one is still running (ex: blocked
     // more than SCANNING_INTERVAL on a buggy unresponding MTP device...)
-    m_deviceScannerTimer.setInterval(SCANNING_INTERVAL);
+    m_deviceScannerTimer.setInterval(SCANNING_INTERVAL * 1000);
     m_deviceScannerTimer.setSingleShot(true);
     m_deviceScannerTimer.start();
 }
@@ -310,13 +310,13 @@ void DeviceManager::addFsDeviceGoPro(QString path, gopro_device_infos *deviceInf
                     }
                     else
                     {
-                        qDebug() << "> INVALID (FS) DEVICE";
+                        qWarning() << "> INVALID (FS) DEVICE";
                         delete d;
                     }
                 }
                 else
                 {
-                    qDebug() << "> INVALID DEVICE FILESYSTEM";
+                    qWarning() << "> INVALID DEVICE FILESYSTEM";
                     delete d;
                 }
             }
@@ -367,13 +367,13 @@ void DeviceManager::addFsDeviceGeneric(QString path, generic_device_infos *devic
                 }
                 else
                 {
-                    qDebug() << "> INVALID DEVICE";
+                    qWarning() << "> INVALID DEVICE";
                     delete d;
                 }
             }
             else
             {
-                qDebug() << "> INVALID DEVICE FILESYSTEM";
+                qWarning() << "> INVALID DEVICE FILESYSTEM";
                 delete d;
             }
         }
@@ -385,7 +385,7 @@ void DeviceManager::addFsDeviceGeneric(QString path, generic_device_infos *devic
 void DeviceManager::addVfsDevice(ofb_vfs_device *deviceInfos)
 {
     if (m_devices.size() >= MAX_DEVICES ||
-        !deviceInfos || deviceInfos->storages.size() == 0)
+        !deviceInfos || deviceInfos->paths.size() == 0)
     {
         delete deviceInfos;
         return;
@@ -452,7 +452,7 @@ void DeviceManager::addVfsDevice(ofb_vfs_device *deviceInfos)
             }
             else
             {
-                qDebug() << "> INVALID (VFS) DEVICE";
+                qWarning() << "> INVALID (VFS) DEVICE";
                 delete d;
             }
         }
@@ -525,7 +525,7 @@ void DeviceManager::addMtpDevice(ofb_mtp_device *deviceInfos)
             }
             else
             {
-                qDebug() << "> INVALID (MTP) DEVICE";
+                qWarning() << "> INVALID (MTP) DEVICE";
                 delete d;
             }
         }

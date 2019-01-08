@@ -20,6 +20,7 @@ Rectangle {
     Connections {
         target: currentDevice
         onStateUpdated: screenDeviceGrid.updateGridViewSettings()
+        onDeviceUpdated: screenDeviceGrid.updateDeviceHeader()
         onStorageUpdated: updateStorage()
         onBatteryUpdated: updateBattery()
     }

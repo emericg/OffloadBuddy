@@ -114,6 +114,18 @@ Rectangle {
         }
     }
 
+    ProgressBarThemed {
+        id: progressBar
+        height: 8
+        anchors.right: rectangleDelete.left
+        anchors.rightMargin: 16
+        anchors.left: comboBox_content.right
+        anchors.leftMargin: 16
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.verticalCenterOffset: 10
+        value: directory.storageLevel
+        visible: directory.available
+    }
     Text {
         id: deviceSpaceText
         anchors.right: rectangleDelete.left
@@ -125,19 +137,6 @@ Rectangle {
 
         text: StringUtils.bytesToString_short(directory.spaceUsed) + " used / " + StringUtils.bytesToString_short(directory.spaceAvailable) + " available / " + StringUtils.bytesToString_short(directory.spaceTotal) + " total"
         color: ThemeEngine.colorText
-        visible: directory.available
-    }
-
-    ProgressBarThemed {
-        id: progressBar
-        height: 8
-        anchors.right: rectangleDelete.left
-        anchors.rightMargin: 16
-        anchors.left: comboBox_content.right
-        anchors.leftMargin: 16
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: 10
-        value: directory.storageLevel
         visible: directory.available
     }
     Text {

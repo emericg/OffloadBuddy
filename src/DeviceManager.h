@@ -39,7 +39,7 @@
 #include <QFileSystemWatcher>
 
 #define MAX_DEVICES         8
-#define SCANNING_INTERVAL   10000
+#define SCANNING_INTERVAL  10 // seconds
 
 /* ************************************************************************** */
 

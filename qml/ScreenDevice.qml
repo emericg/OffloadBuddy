@@ -11,13 +11,17 @@ Rectangle {
 
     property var deviceSavedStateList: []
     property var deviceSavedState : null
-
     property var currentDevice: null
 
     onCurrentDeviceChanged: {
-        if (currentDevice && !deviceSavedStateList[currentDevice.uniqueId]) {
+        if (currentDevice) {
             //console.log("Device is now " + currentDevice.uniqueId)
+            screenDeviceGrid.updateDeviceHeader()
+            screenDeviceGrid.initGridViewSettings()
+            screenDeviceGrid.updateGridViewSettings()
+        }
 
+        if (currentDevice && !deviceSavedStateList[currentDevice.uniqueId]) {
             deviceSavedStateList[currentDevice.uniqueId] = ({ orderBy: 0,
                                                               filterBy: 0,
                                                               zoomLevel: 2.0,
@@ -25,16 +29,13 @@ Rectangle {
                                                               selectedIndex: 0,
                                                               detail_shot: null,
                                                               detail_state: "overview" })
+        }
 
+        if (currentDevice && deviceSavedStateList[currentDevice.uniqueId]) {
             // restore state
             deviceSavedState = deviceSavedStateList[currentDevice.uniqueId]
             state = deviceSavedState.mainState
-
             screenDeviceGrid.restoreState()
-            screenDeviceGrid.updateDeviceHeader()
-            screenDeviceGrid.initGridViewSettings()
-            screenDeviceGrid.updateGridViewSettings()
-
             screenMedia.restoreState()
         }
     }
