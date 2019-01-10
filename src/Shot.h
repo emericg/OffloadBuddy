@@ -101,7 +101,7 @@ class Shot: public QObject
 
     Q_PROPERTY(unsigned width READ getWidth NOTIFY shotUpdated)
     Q_PROPERTY(unsigned height READ getHeight NOTIFY shotUpdated)
-    Q_PROPERTY(QString orientation READ getOrientation NOTIFY shotUpdated)
+    Q_PROPERTY(unsigned orientation READ getOrientation NOTIFY shotUpdated)
 
     Q_PROPERTY(QString iso READ getIso NOTIFY shotUpdated)
     Q_PROPERTY(QString focal READ getFocal NOTIFY shotUpdated)
@@ -157,7 +157,7 @@ class Shot: public QObject
     QList <ofb_file *> m_videos_hdAudio;
 
     // GLOBAL metadatas
-    QString orientation;
+    unsigned orientation = 0;
     unsigned width = 0;
     unsigned height = 0;
 
@@ -171,7 +171,6 @@ class Shot: public QObject
     QDateTime gps_ts;
 
     // PICTURES metadatas
-    int quality = 0;
     QString focal;
     QString iso;
     QString esposure_time;
@@ -302,9 +301,9 @@ public slots:
     QImage getPreviewMtp();
     QString getCameraSource() const { return m_camera_source; }
 
-    QString getOrientation() const { return orientation; }
-    int getWidth() const { return width; }
-    int getHeight() const { return height; }
+    unsigned getOrientation() const { return orientation; }
+    unsigned getWidth() const { return width; }
+    unsigned getHeight() const { return height; }
 
     QString getIso() const { return iso; }
     QString getFocal() const { return focal; }
@@ -314,7 +313,7 @@ public slots:
     QString getCodecVideo() const { return vcodec; }
     QString getTimecode() const { return timecode; }
     double getFramerate() const { return framerate; }
-    int getBitrate() const { return bitrate; }
+    unsigned getBitrate() const { return bitrate; }
 
     QString getLatitudeStr() const { return gps_lat_str; }
     QString getLongitudeStr() const { return gps_long_str; }

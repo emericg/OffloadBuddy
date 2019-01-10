@@ -22,6 +22,7 @@
         <file>MediaDetailMap.qml</file>
         <file>MediaDetailTelemetry.qml</file>
         <file>MediaDetailOverview.qml</file>
+        <file>MediaPreview.qml</file>
         <file>WindowStateSaver.qml</file>
         <file alias="ButtonImage.qml">ThemedComponents/ButtonImage.qml</file>
         <file alias="ButtonThemed.qml">ThemedComponents/ButtonThemed.qml</file>

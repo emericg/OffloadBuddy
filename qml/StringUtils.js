@@ -259,6 +259,34 @@ function framerateToString(framerate) {
 }
 
 /*!
+ * orientationToString()
+ */
+function orientationToString(orientation) {
+    var text = ''
+
+    if (orientation > 0) {
+        if (orientation === 1)
+            text = qsTr("Mirror")
+        else if (orientation === 2)
+            text = qsTr("Flip")
+        else if (orientation === 3)
+            text = qsTr("Rotate 180°")
+        else if (orientation === 4)
+            text = qsTr("Rotate 90°")
+        else if (orientation === 5)
+            text = qsTr("Mirror and rotate 90°")
+        else if (orientation === 6)
+            text = qsTr("Flip and rotate 90°")
+        else if (orientation === 7)
+            text = qsTr("Rotate 270°")
+    } else {
+        text = qsTr("No transformation");
+    }
+
+    return text;
+}
+
+/*!
  * altitudeToString()
  */
 function altitudeToString(value, precision, unit) {

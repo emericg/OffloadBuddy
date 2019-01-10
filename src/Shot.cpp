@@ -504,6 +504,8 @@ static void show_tag(ExifData *d, ExifIfd ifd, ExifTag tag)
 
 bool Shot::getMetadatasFromPicture(int index)
 {
+    bool status = false;
+
     if (m_pictures.size() <= 0)
         return false;
     if (m_pictures.at(index)->filesystemPath.isEmpty())
@@ -561,11 +563,11 @@ bool Shot::getMetadatasFromPicture(int index)
         if (entry)
         {
             exif_entry_get_value(entry, buf, sizeof(buf));
-            orientation = buf;
+            //orientation = buf;
 
             if (strncmp(buf, "Top-left", sizeof(buf)) == 0)
             {
-                //
+                // TODO
             }
         }
         entry = exif_content_get_entry(ed->ifd[EXIF_IFD_EXIF], EXIF_TAG_FNUMBER);
@@ -707,25 +709,29 @@ bool Shot::getMetadatasFromPicture(int index)
 
         exif_data_unref(ed);
 
-        return true;
+        status = true;
     }
     else
-#endif // ENABLE_LIBEXIF
     {
         //qWarning() << "File not readable or no EXIF data in file";
-        //qWarning() << "Backup path with QImageReader";
+    }
+#endif // ENABLE_LIBEXIF
 
-        QImageReader img_infos(m_pictures.at(index)->filesystemPath);
-        if (img_infos.canRead())
-        {
-            width = img_infos.size().rwidth();
-            height = img_infos.size().rheight();
-            quality = img_infos.quality();
-            return true;
-        }
+    // Gather additional infos
+    QImageReader img_infos(m_pictures.at(index)->filesystemPath);
+    if (img_infos.canRead())
+    {
+        //qDebug() << "Backup path with QImageReader";
+
+        vcodec = img_infos.format();
+        width = img_infos.size().rwidth();
+        height = img_infos.size().rheight();
+        orientation = img_infos.transformation();
+
+        status = true;
     }
 
-    return false;
+    return status;
 }
 
 bool Shot::getMetadatasFromVideo(int index)

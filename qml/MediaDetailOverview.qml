@@ -34,390 +34,67 @@ Rectangle {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    Rectangle {
-        id: preview
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.right: rectangleMetadatas.left
-        anchors.margins: 16
-        color: "black"
+    MediaPreview {
+        id: mediaPreview
+    }
 
-        property bool isFullScreen: false
-        property int startLimit: -1
-        property int stopLimit: -1
-
-        MouseArea {
-            id: previewFullScreen
-            anchors.fill: parent
-
-            onDoubleClicked: toogleFullScreen()
-
-            function toogleFullScreen() {
-                preview.isFullScreen = !preview.isFullScreen
-
-                if (preview.isFullScreen) {
-                    buttonFullscreen.imageSource = "qrc:/icons_material/baseline-fullscreen-24px.svg"
-                    rectangleMetadatas.visible = true
-                    preview.anchors.right = rectangleMetadatas.left
-                } else {
-                    buttonFullscreen.imageSource = "qrc:/icons_material/baseline-fullscreen_exit-24px.svg"
-                    rectangleMetadatas.visible = false
-                    preview.anchors.right = parent.parent.right
-                }
-
-                if (mediaPlayer.position > 0)
-                    timelinePosition.width = timeline.width * (mediaPlayer.position / mediaPlayer.duration)
-            }
-        }
-
-        Image {
-            id: image
-            anchors.fill: parent
-            autoTransform: true
-            fillMode: Image.PreserveAspectFit
-            //source: "qrc:/resources/other/placeholder_picture.svg"
-
-            sourceSize.width: shot.width / 2
-            sourceSize.height: shot.height / 2
-        }
-
-        VideoOutput {
-            id: mediaOutput
-            anchors.fill: parent
-            source: mediaPlayer
-
-            property int clipStart: 0
-            property int clipStop: shot.duration
-
-            MediaPlayer {
-                id: mediaPlayer
-                volume: 0.5
-                autoPlay: true // will be paused immediately
-                notifyInterval: 33
-
-                property bool isRunning: false
-                onError: {
-                    if (platform.os === "windows")
-                        mediaBanner.openMessage(qsTr("Codec pack installed?"))
-                    else
-                        mediaBanner.openMessage(qsTr("Oooops..."))
-                }
-                onPlaying: {
-                    buttonPlay.imageSource = "qrc:/icons_material/baseline-pause-24px.svg"
-                }
-                onPaused: {
-                    buttonPlay.imageSource = "qrc:/icons_material/baseline-play_arrow-24px.svg"
-                }
-                onStopped: {
-                    isRunning = false
-                    timelinePosition.width = 0
-                    buttonPlay.imageSource = "qrc:/icons_material/baseline-play_arrow-24px.svg"
-                }
-                onSourceChanged: {
-                    stop()
-                    isRunning = false
-                    preview.startLimit = -1
-                    preview.stopLimit = -1
-                    timelineLimitStart.width = 0
-                    timelineLimitStop.width = 0
-                    timelinePosition.width = 0
-                    mediaBanner.close()
-                }
-                onVolumeChanged: {
-                    soundlinePosition.width = (soundline.width * volume)
-                }
-                onPositionChanged: {
-                    timelinePosition.width = timeline.width * (mediaPlayer.position / mediaPlayer.duration)
-                }
-            }
-
-            ItemBanner {
-                id: mediaBanner
-            }
-
-            Rectangle {
-                id: mediaControls
-                height: 40
-                opacity: 1
-                color: ThemeEngine.colorButton
-                anchors.right: parent.right
-                anchors.rightMargin: 0
-                anchors.left: parent.left
-                anchors.leftMargin: 0
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 0
-
-                ButtonImage {
-                    id: buttonPlay
-                    width: 40
-                    height: 40
-                    anchors.left: parent.left
-                    anchors.leftMargin: 0
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    imageSource: "qrc:/icons_material/baseline-play_arrow-24px.svg"
-                    onClicked: {
-                        if (mediaPlayer.isRunning) {
-                            mediaPlayer.pause()
-                            mediaPlayer.isRunning = false
-                        } else {
-                            mediaPlayer.play()
-                            mediaPlayer.isRunning = true
-                        }
-                    }
-                }
-                ButtonImage {
-                    id: buttonStop
-                    width: 40
-                    height: 40
-                    anchors.left: buttonPlay.right
-                    anchors.leftMargin: 0
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    onClicked: {
-                        mediaPlayer.stop()
-                        mediaPlayer.isRunning = false
-                    }
-
-                    imageSource: "qrc:/icons_material/baseline-stop-24px.svg"
-                }
-
-                Button {
-                    id: buttonStartCut
-                    width: 40
-                    height: 40
-                    text: "["
-                    anchors.left: buttonStop.right
-                    anchors.leftMargin: 0
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    onClicked: {
-                        preview.startLimit = mediaPlayer.position
-                        //clipStart = mediaPlayer.position
-                        //console.log("clipStart: " + clipStart)
-                        timelineLimitStart.width = timeline.width * (mediaPlayer.position / mediaPlayer.duration);
-                    }
-                }
-                Button {
-                    id: buttonStopCut
-                    width: 40
-                    height: 40
-                    text: "]"
-                    anchors.right: buttonSound.left
-                    anchors.rightMargin: 0
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    onClicked: {
-                        preview.stopLimit = mediaPlayer.position
-                        //clipStop = mediaPlayer.position
-                        //console.log("clipStop: " + clipStart)
-                        timelineLimitStop.width = timeline.width * (((mediaPlayer.duration - mediaPlayer.position) / mediaPlayer.duration));
-                    }
-                }
-                ButtonImage {
-                    id: buttonSound
-                    width: 40
-                    height: 40
-                    anchors.right: soundline.left
-                    anchors.rightMargin: 0
-                    anchors.verticalCenter: parent.verticalCenter
-                    imageSource: "qrc:/icons_material/baseline-volume_up-24px.svg"
-
-                    property real savedVolume: mediaPlayer.volume
-                    onClicked: {
-                        if (mediaPlayer.volume) {
-                            savedVolume = mediaPlayer.volume
-                            mediaPlayer.volume = 0
-                        } else {
-                            mediaPlayer.volume = savedVolume
-                        }
-                    }
-                }
-
-                ButtonImage {
-                    id: buttonScreenshot
-                    width: 40
-                    height: 40
-                    anchors.right: buttonEncode.left
-                    anchors.rightMargin: 0
-                    anchors.verticalCenter: parent.verticalCenter
-                    imageSource: "qrc:/icons_material/outline-camera_alt-24px.svg"
-
-                    onClicked: {
-                        //
-                    }
-                }
-                ButtonImage {
-                    id: buttonEncode
-                    width: 40
-                    height: 40
-                    anchors.right: buttonFullscreen.left
-                    anchors.rightMargin: 0
-                    anchors.verticalCenter: parent.verticalCenter
-                    imageSource: "qrc:/icons_material/baseline-settings_applications-24px.svg"
-
-                    onClicked: {
-                        panelEncode.updateEncodePanel(shot)
-                        panelEncode.setClip(preview.startLimit, preview.stopLimit)
-                        popupEncode.open()
-                    }
-                }
-                ButtonImage {
-                    id: buttonFullscreen
-                    width: 40
-                    height: 40
-                    anchors.right: parent.right
-                    anchors.rightMargin: 0
-                    anchors.verticalCenter: parent.verticalCenter
-                    imageSource: "qrc:/icons_material/baseline-fullscreen-24px.svg"
-
-                    onClicked: previewFullScreen.toogleFullScreen()
-                }
-
-                Rectangle {
-                    id: timeline
-                    height: 40
-                    color: ThemeEngine.colorButton
-                    anchors.left: buttonStartCut.right
-                    anchors.leftMargin: 0
-                    anchors.right: buttonStopCut.left
-                    anchors.rightMargin: 0
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    Rectangle {
-                        id: timelinePosition
-                        width: 0
-                        height: 40
-                        color: ThemeEngine.colorApproved
-                        anchors.left: parent.left
-                        anchors.leftMargin: 0
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-
-                    MouseArea {
-                        id: timelineSeeker
-                        anchors.fill: parent
-
-                        onClicked: {
-                            var fff = mouseX / timeline.width
-                            //if (mediaPlayer.isRunning)
-                            mediaPlayer.seek(mediaPlayer.duration * fff)
-                        }
-                    }
-
-                    Rectangle {
-                        id: timelineLimitStart
-                        height: 40
-                        color: "#cfa9ff"
-                        anchors.left: parent.left
-                        anchors.leftMargin: 0
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-
-                    Rectangle {
-                        id: timelineLimitStop
-                        height: 40
-                        color: "#cfa9ff"
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.right: parent.right
-                        anchors.rightMargin: 0
-                    }
-                }
-
-                Rectangle {
-                    id: soundline
-                    width: 80
-                    height: 28
-                    //color: "#d0d0d0"
-                    border.width: 2
-                    border.color: ThemeEngine.colorApproved
-                    anchors.right: buttonScreenshot.left
-                    anchors.rightMargin: 0
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    Rectangle {
-                        id: soundlinePosition
-                        width: 0
-                        height: 28
-                        color: ThemeEngine.colorApproved
-                        anchors.left: parent.left
-                        anchors.leftMargin: 0
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-
-                    MouseArea {
-                        id: mouseArea
-                        anchors.fill: parent
-                        onClicked: mediaPlayer.volume = (mouseX / soundline.width)
-                    }
-                }
-            }
-        }
+    function setPause() {
+        mediaPreview.setPause()
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
-    function setPause() {
-        if (mediaPlayer.isRunning) {
-            mediaPlayer.pause()
-            mediaPlayer.isRunning = false
-            buttonPlay.text = "▷"
-        }
-    }
 
     function updateOverview() {
 
         textFileList.text = shot.fileList
 
+        if (shot.camera) {
+            labelCamera.visible = true
+            labelCamera.anchors.topMargin = 8
+        } else {
+            labelCamera.visible = false
+            labelCamera.anchors.topMargin = -24
+        }
+
+        if (shot.orientation) {
+            labelOrientation.visible = true
+            labelOrientation.anchors.topMargin = 8
+        } else {
+            labelOrientation.visible = false
+            labelOrientation.anchors.topMargin = -24
+        }
+
         if (shot.type >= Shared.SHOT_PICTURE) {
+
+            mediaPreview.setImageMode()
+
             rectanglePicture.visible = true
             rectangleVideo.visible = false
-
-            image.visible = true
-            mediaOutput.visible = false
 
             codecAudio.visible = false
             codecVideo.visible = true
             codecVideo.anchors.right = buttonOverview.left
-            codecVideoText.text = "JPEG" // HACK
+            codecVideoText.text = shot.codecVideo
 
-            if (shot.iso.length === 0 && shot.focal.length === 0 && shot.exposure.length === 0)
+            if (shot.iso.length === 0 && shot.focal.length === 0 && shot.exposure.length === 0) {
                 rectanglePicture.visible = false
+            }
 
             if (shot.duration > 1) {
                 labelDuration.visible = true
-                labelDefinition.anchors.top = labelDuration.bottom
+                labelDuration.anchors.topMargin = 8
                 duration.text = shot.duration + " " + qsTr("pictures")
-
-                if (shot.previewPhoto)
-                    image.source = "file:///" + shot.previewPhoto
-                else
-                    image.source = "qrc:/resources/other/placeholder_picture_multi.svg"
             } else {
                 labelDuration.visible = false
-                labelDefinition.anchors.top = labelCamera.bottom
-
-                if (shot.previewPhoto)
-                    image.source = "file:///" + shot.previewPhoto
-                else
-                    image.source = "qrc:/resources/other/placeholder_picture.svg"
+                labelDuration.anchors.topMargin = -24
             }
         } else {
+            mediaPreview.setVideoMode()
+
             rectanglePicture.visible = false
             rectangleVideo.visible = true
 
-            image.visible = false
-            mediaOutput.visible = true
-
             //console.log("shot.previewPhoto :" + shot.previewVideo)
-
-            if (shot.previewVideo)
-                mediaPlayer.source = "file:///" + shot.previewVideo
-            else
-                image.source = "qrc:/resources/other/placeholder_video.svg"
-
-            mediaPlayer.pause()
 
             codecVideo.visible = true
             if (shot.codecVideo.length)
@@ -435,7 +112,7 @@ Rectangle {
             }
 
             labelDuration.visible = true
-            labelDefinition.anchors.top = labelDuration.bottom
+            labelDuration.anchors.topMargin = 8
             duration.text = StringUtils.durationToString(shot.duration)
 
             bitrate.text = StringUtils.bitrateToString(shot.bitrate)
@@ -601,10 +278,45 @@ Rectangle {
         }
 
         Image {
-            id: labelSize
+            id: labelOrientation
             width: 28
             height: 28
             anchors.top: labelDefinition.bottom
+            anchors.topMargin: 8
+            anchors.left: parent.left
+            anchors.leftMargin: 16
+
+            source: "qrc:/icons_material/baseline-screen_rotation-24px.svg"
+            sourceSize.width: width
+            sourceSize.height: height
+
+            ColorOverlay {
+                anchors.fill: parent
+                source: parent
+                color: ThemeEngine.colorContentText
+                visible: ThemeEngine.colorContentText !== "#000000" ? true : false
+            }
+
+            Text {
+                id: orientation
+                height: 28
+                anchors.left: parent.right
+                anchors.leftMargin: 16
+                anchors.verticalCenter: parent.verticalCenter
+
+                color: ThemeEngine.colorContentText
+                text: StringUtils.orientationToString(shot.orientation)
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignRight
+                font.pixelSize: ThemeEngine.fontSizeContentText
+            }
+        }
+
+        Image {
+            id: labelSize
+            width: 28
+            height: 28
+            anchors.top: labelOrientation.bottom
             anchors.topMargin: 8
             anchors.left: parent.left
             anchors.leftMargin: 16
@@ -715,6 +427,7 @@ Rectangle {
                     color: ThemeEngine.colorContentText
                 }
             }
+
             Image {
                 id: labelExposure
                 width: 28
