@@ -8,7 +8,7 @@ import "StringUtils.js" as StringUtils
 Rectangle {
     id: itemShot
     width: 279
-    height: width / cellFormat
+    height: Math.round(width / cellFormat)
     color: "#eef0f1"
 
     property Shot shot: pointer

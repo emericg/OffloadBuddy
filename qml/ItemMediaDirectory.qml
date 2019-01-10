@@ -39,7 +39,7 @@ Rectangle {
         text: directory.directoryPath
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
-        anchors.leftMargin: 4
+        anchors.leftMargin: 0
 
         FileDialog {
             id: fileDialogChange
@@ -163,7 +163,7 @@ Rectangle {
         height: 40
         color: "#00000000"
         anchors.right: parent.right
-        anchors.rightMargin: 12
+        anchors.rightMargin: 0
         anchors.verticalCenter: parent.verticalCenter
 
         Image {

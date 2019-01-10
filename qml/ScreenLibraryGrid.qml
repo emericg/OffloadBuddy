@@ -370,7 +370,7 @@ Rectangle {
 
                 //property int cellMargin: (parent.width%cellSize) / Math.floor(parent.width/cellSize);
                 cellWidth: cellSize + cellMargin
-                cellHeight: cellSize / cellFormat + cellMargin
+                cellHeight: Math.round(cellSize / cellFormat) + cellMargin
 
                 interactive: true
                 //snapMode: GridView.SnapToRow
