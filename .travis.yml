@@ -7,14 +7,14 @@ os:
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-      sudo apt-add-repository ppa:beineri/opt-qt-5.11.2-xenial -y;
+      sudo apt-add-repository ppa:beineri/opt-qt-5.12-xenial -y;
       sudo add-apt-repository ppa:jonathonf/ffmpeg-4 -y;
       sudo apt-get update -q;
     fi
 
 install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-      sudo apt-get install qt511base qt511tools qt511quickcontrols qt511quickcontrols2 qt511graphicaleffects qt511svg qt511imageformats qt511charts-no-lgpl qt511location qt511multimedia -y;
+      sudo apt-get install qt512base qt512tools qt512quickcontrols qt512quickcontrols2 qt512graphicaleffects qt512svg qt512imageformats qt512charts-no-lgpl qt512location qt512multimedia -y;
       sudo apt-get install libgl1-mesa-dev libva-dev libvdpau-dev -y;
       sudo apt-get install ffmpeg libavcodec-dev libavdevice-dev -y;
       sudo apt-get install libtool automake m4 -y;
@@ -28,8 +28,8 @@ install:
     fi
 
 before_script:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then source /opt/qt511/bin/qt511-env.sh; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export PATH=$PATH:/usr/local/opt/qt5/bin:/usr/local/bin; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then source /opt/qt512/bin/qt512-env.sh; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export PATH=$PATH:/usr/local/opt/qt/bin:/usr/local/bin; fi
   - cd contribs/; python3 contribs.py; cd ..;
   - qmake DEFINES+=USE_CONTRIBS CONFIG+=release PREFIX=/usr
 

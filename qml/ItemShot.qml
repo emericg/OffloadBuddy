@@ -101,14 +101,12 @@ Rectangle {
         id: imageFs
         anchors.fill: parent
         autoTransform: true
-        smooth: false
-        antialiasing: false
         asynchronous: true
 
         fillMode: Image.PreserveAspectCrop
         source: "qrc:/resources/other/placeholder_loading.svg"
-        sourceSize.width: 512
-        sourceSize.height: 512 // or: 512 / cellFormat
+        sourceSize.width: 400
+        sourceSize.height: 400 // or: 400 / cellFormat
     }
 
     ItemImage {

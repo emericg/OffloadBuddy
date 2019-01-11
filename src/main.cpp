@@ -38,6 +38,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QQuickWindow>
 #include <QIcon>
 
 /* ************************************************************************** */
@@ -59,7 +60,7 @@ void print_build_infos()
     qDebug() << "* Built with an unknown compiler";
 #endif
 
-#ifndef NDEBUG
+#ifndef QT_NO_DEBUG
     qDebug() << "* This is a DEBUG build";
 #endif
 
@@ -80,10 +81,12 @@ void print_build_infos()
 #endif
 }
 
+/* ************************************************************************** */
+
 static void exithandler()
 {
     JobManager *jm = JobManager::getInstance();
-    jm->cleanup();
+    if (jm) jm->cleanup();
 }
 
 /* ************************************************************************** */
@@ -95,8 +98,12 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
-    //SingleApplication app(argc, argv);
+#ifdef QT_NO_DEBUG
+    SingleApplication app(argc, argv);
+#else
     QApplication app(argc, argv);
+#endif
+
     app.setApplicationName("OffloadBuddy");
     app.setApplicationDisplayName("OffloadBuddy");
     app.setOrganizationDomain("OffloadBuddy");
@@ -156,8 +163,11 @@ int main(int argc, char *argv[])
     if (engine.rootObjects().isEmpty())
         return -1;
 
-    //QObject::connect(&app, &SingleApplication::instanceStarted, view, &QQuickView::show);
-    //QObject::connect(&app, &SingleApplication::instanceStarted, view, &QQuickView::raise);
+#ifdef QT_NO_DEBUG
+    QQuickWindow *window = qobject_cast<QQuickWindow *>(engine.rootObjects().value(0));
+    QObject::connect(&app, &SingleApplication::instanceStarted, window, &QQuickWindow::show);
+    QObject::connect(&app, &SingleApplication::instanceStarted, window, &QQuickWindow::raise);
+#endif
 
     return app.exec();
 }

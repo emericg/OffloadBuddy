@@ -13,15 +13,16 @@ It's designed to remove the hassle of handling and transferring the many videos 
 
 Works with Linux, macOS and Windows!
 
-FEATURES (WIP):
+FEATURES:
+
 * Import datas from SD cards, mass storage or MTP devices
-  * Copy, merge or reencode medias
-  * Consult and export shots metadatas
   * Organize your media library
+  * Copy, merge or reencode medias
+  * Show and export telemetry
 * Create short video clips or extract photos from your videos
-* Create timeplapse from videos
+* Create timelapse from videos
 * Assemble photo timelapses into videos
-* GoPro firmware updates
+* GoPro firmware updates (WIP)
 
 
 ### Screenshots!
@@ -38,15 +39,15 @@ FEATURES (WIP):
 You will need a C++14 capable compiler and Qt 5.9+ (with QtMultimedia, QtLocation and QtCharts)
 
 Build dependencies:
-- Qt 5.9+  
+- Qt (5.9+)  
 - cmake  
 - pkg-config  
 
 Optional dependencies:
 - libusb and libmtp  
 - libexif  
-- ffmpeg (3.4 or better)  
-- minivideo (0.11)  
+- ffmpeg (3.4+)  
+- MiniVideo (0.11+)  
 
 ### Building OffloadBuddy
 
@@ -63,15 +64,25 @@ OffloadBuddy:
 ## Licensing
 
 OffloadBuddy is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.  
-Read [LICENSE](LICENSE) or [consult the licence on the FSF website](http://www.gnu.org/licenses/gpl-3.0.txt) directly.
+Read [LICENSE](LICENSE) or [consult the licence on the FSF website](https://www.gnu.org/licenses/gpl-3.0.txt) directly.
 
 Emeric Grange <emeric.grange@gmail.com>
+
+
+## Third party projects
+
+* Qt [website](https://www.qt.io) [LGPL 3](https://www.gnu.org/licenses/lgpl-3.0.txt)
+* ffmpeg [website](https://www.ffmpeg.org/) [LGPL 2.1](https://www.gnu.org/licenses/lgpl-2.1.txt)
+* MiniVideo [website](https://github.com/emericg/MiniVideo) [LGPL 3](https://www.gnu.org/licenses/lgpl-3.0.txt)
+* libexif [website](https://github.com/libexif/libexif/) [LGPL 2.1](https://www.gnu.org/licenses/lgpl-2.1.txt)
+* libmtp [website](http://libmtp.sourceforge.net/) [LGPL 2.1](https://www.gnu.org/licenses/lgpl-2.1.txt)
+* SingleApplication [website](https://github.com/itay-grudev/SingleApplication) [MIT](https://opensource.org/licenses/MIT)
+* Graphical resources: please read [assets/COPYING](assets/COPYING)
 
 
 ## Special thanks
 
 * Mickael Heudre <mickheudre@gmail.com> for his invaluable QML expertise!
-* Graphical resources: read [resources/COPYING](resources/COPYING)
 
 
 ## Get involved!

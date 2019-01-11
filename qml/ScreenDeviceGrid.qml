@@ -361,7 +361,7 @@ Rectangle {
 
         Rectangle {
             id: rectangleTransfer
-            width: 256
+            width: 240
             height: 40
             color: "#00000000"
             anchors.bottom: parent.bottom
@@ -401,13 +401,13 @@ Rectangle {
                 text: qsTr("Offload content")
                 color: "white"
                 font.bold: true
-                font.pixelSize: 16
+                font.pixelSize: 15
             }
         }
 
         Rectangle {
             id: rectangleDelete
-            width: 256
+            width: 240
             height: 40
             color: "#00000000"
             anchors.left: rectangleTransfer.right
@@ -489,7 +489,7 @@ Rectangle {
                 text: qsTr("Delete ALL content")
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
-                font.pixelSize: 16
+                font.pixelSize: 15
                 font.bold: true
                 anchors.fill: parent
             }
