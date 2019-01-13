@@ -55,6 +55,7 @@ cp contribs/env/windows_x86_64/usr/lib/avdevice-*.dll bin/
 cp contribs/env/windows_x86_64/usr/lib/avfilter-*.dll bin/
 cp contribs/env/windows_x86_64/usr/lib/avformat-*.dll bin/
 cp contribs/env/windows_x86_64/usr/lib/avutil-*.dll bin/
+cp contribs/env/windows_x86_64/usr/lib/postproc-*.dll bin/
 cp contribs/env/windows_x86_64/usr/lib/swresample-*.dll bin/
 cp contribs/env/windows_x86_64/usr/lib/swscale-*.dll bin/
 
