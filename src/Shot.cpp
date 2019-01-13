@@ -376,7 +376,7 @@ QImage Shot::getPreviewMtp()
         }
     }
 
-#endif
+#endif // ENABLE_LIBMTP
 
     return img;
 }

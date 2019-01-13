@@ -102,9 +102,9 @@ Rectangle {
         anchors.fill: parent
         autoTransform: true
         asynchronous: true
+        visible: (imageFs.progress === 1.0)
 
         fillMode: Image.PreserveAspectCrop
-        source: "qrc:/resources/other/placeholder_loading.svg"
         sourceSize.width: 400
         sourceSize.height: 400 // or: 400 / cellFormat
     }

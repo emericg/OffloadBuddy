@@ -183,40 +183,54 @@ function aspectratioToString(width, height) {
 
     var ar_d = width / height;
 
-    if (ar_d > 1.24 && ar_d < 1.26) {
-        text = "5:4";
-    } else if (ar_d > 1.323 && ar_d < 1.343) {
-        text = "4:3";
-    } else if (ar_d > 1.42 && ar_d < 1.44) {
-        text = "1.43:1";
-    } else if (ar_d > 1.49 && ar_d < 1.51) {
-        text = "3:2";
-    } else if (ar_d > 1.545 && ar_d < 1.565) {
-        text = "14:9";
-    } else if (ar_d > 1.59 && ar_d < 1.61) {
-        text = "16:10";
-    } else if (ar_d > 1.656 && ar_d < 1.676) {
-        text = "5:3";
-    } else if (ar_d > 1.767 && ar_d < 1.787) {
-        text = "16:9";
-    } else if (ar_d > 1.84 && ar_d < 1.86) {
-        text = "1.85:1";
-    } else if (ar_d > 1.886 && ar_d < 1.906) {
-        text = "1.896:1";
-    } else if (ar_d > 1.99 && ar_d < 2.01) {
-        text = "2.0:1";
-    } else if (ar_d > 2.19 && ar_d < 2.22) {
-        text = "2.20:1";
-    } else if (ar_d > 2.34 && ar_d < 2.36) {
-        text = "2.35:1";
-    } else if (ar_d > 2.38 && ar_d < 2.40) {
-        text = "2.39:1";
-    } else if (ar_d > 2.54 && ar_d < 2.56) {
-        text = "2.55:1";
-    } else if (ar_d > 2.75 && ar_d < 2.77) {
-        text = "2.76:1";
+    if (width >= height) {
+        if (ar_d > 1.24 && ar_d < 1.26) {
+            text = "5:4";
+        } else if (ar_d > 1.323 && ar_d < 1.343) {
+            text = "4:3";
+        } else if (ar_d > 1.42 && ar_d < 1.44) {
+            text = "1.43:1";
+        } else if (ar_d > 1.49 && ar_d < 1.51) {
+            text = "3:2";
+        } else if (ar_d > 1.545 && ar_d < 1.565) {
+            text = "14:9";
+        } else if (ar_d > 1.59 && ar_d < 1.61) {
+            text = "16:10";
+        } else if (ar_d > 1.656 && ar_d < 1.676) {
+            text = "5:3";
+        } else if (ar_d > 1.767 && ar_d < 1.787) {
+            text = "16:9";
+        } else if (ar_d > 1.84 && ar_d < 1.86) {
+            text = "1.85:1";
+        } else if (ar_d > 1.886 && ar_d < 1.906) {
+            text = "1.896:1";
+        } else if (ar_d > 1.99 && ar_d < 2.01) {
+            text = "2.0:1";
+        } else if (ar_d > 2.19 && ar_d < 2.22) {
+            text = "2.20:1";
+        } else if (ar_d > 2.34 && ar_d < 2.36) {
+            text = "2.35:1";
+        } else if (ar_d > 2.38 && ar_d < 2.40) {
+            text = "2.39:1";
+        } else if (ar_d > 2.54 && ar_d < 2.56) {
+            text = "2.55:1";
+        } else if (ar_d > 2.75 && ar_d < 2.77) {
+            text = "2.76:1";
+        } else {
+            text = ar_d.toFixed(2) + ":1";
+        }
     } else {
-        text = ar_d.toFixed(2) + ":1";
+        if (ar_d > 0.55 && ar_d < 0.57) {
+            text = "9:16";
+        } else if (ar_d > 0.65 && ar_d < 0.67) {
+            text = "2:3";
+        } else if (ar_d > 0.74 && ar_d < 0.76) {
+            text = "3:4";
+        } else if (ar_d > 0.79 && ar_d < 0.81) {
+            text = "4:5";
+        } else {
+            text = ar_d.toFixed(2) + ":1";
+        }
     }
 
     return text;

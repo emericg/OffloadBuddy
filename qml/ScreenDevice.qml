@@ -10,7 +10,7 @@ Rectangle {
     height: 720
 
     property var deviceSavedStateList: []
-    property var deviceSavedState : null
+    property var deviceSavedState: null
     property var currentDevice: null
 
     onCurrentDeviceChanged: {

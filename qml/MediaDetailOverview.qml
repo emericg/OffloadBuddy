@@ -121,8 +121,9 @@ Rectangle {
             timecode.text = shot.timecode
         }
 
+        size.text = StringUtils.bytesToString_short(shot.datasize)
         if (shot.size !== shot.datasize) {
-            size.text = StringUtils.bytesToString_short(shot.datasize) + "   (" + qsTr("full: ") + StringUtils.bytesToString_short(shot.size) + ")"
+            size.text += "   (" + qsTr("full: ") + StringUtils.bytesToString_short(shot.size) + ")"
         }
     }
 
