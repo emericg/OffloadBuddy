@@ -25,14 +25,19 @@
 
 #include "utils_enums.h"
 
-#include "GpmfKLV.h"
-#include "GpmfBuffer.h"
-
-#include "minivideo.h"
-
 #ifdef ENABLE_LIBMTP
 #include <libmtp.h>
 #endif
+
+#ifdef ENABLE_LIBEXIF
+#include <libexif/exif-data.h>
+#endif
+
+#ifdef ENABLE_MINIVIDEO
+#include <minivideo.h>
+#endif
+#include "GpmfKLV.h"
+#include "GpmfBuffer.h"
 
 #include <QObject>
 #include <QDateTime>
@@ -46,26 +51,31 @@ QT_CHARTS_USE_NAMESPACE
 
 struct ofb_file
 {
+    // Generic infos
     QString name;                   //!< File base name only, no extension
     QString extension;              //!< Extension only, lowercase, no dot or anything
-
     uint64_t size = 0;              //!< Size in bytes
     QDateTime creation_date;
     QDateTime modification_date;
 
+    // File
     QString filesystemPath;         //!< Absolute file path, if available
 
 #ifdef ENABLE_LIBMTP
     LIBMTP_mtpdevice_t *mtpDevice = nullptr;
     uint32_t mtpObjectId = 0;
 #endif
+
+    // Metadatas
+    MediaFile_t *media = nullptr;
+    ExifData *ed = nullptr;
 };
 
 struct ofb_shot
 {
     Shared::ShotType shot_type = Shared::SHOT_UNKNOWN;
-    Shared::FileType file_type = Shared::FILE_UNKNOWN;
     int shot_id = -1;
+
     int camera_id = 0;              //!< for multi camera system
 
     int file_number = -1;
@@ -120,41 +130,34 @@ class Shot: public QObject
     Q_PROPERTY(double longitude READ getLongitude NOTIFY shotUpdated)
     Q_PROPERTY(double altitude READ getAltitude NOTIFY shotUpdated)
 
-    //Q_PROPERTY(QString gps READ getGPS NOTIFY shotUpdated)
-
-    bool m_onCamera = false; // TODO remove? //!< Shot datas currently located on a device
-
     Shared::ShotType m_type = Shared::SHOT_UNKNOWN;
     Shared::ShotState m_state = Shared::SHOT_STATE_DEFAULT;
-    QString m_camera_source;        //!< Model of the camera that produced the shot
-    QString m_camera_firmware;      //!< Firmware of the camera that produced the shot
 
+    QString m_shot_name;
     int m_shot_id = -1;
     int m_camera_id = 0;            //!< Shot is part of a multi camera systems
-
-    QString m_name;
-    QDateTime m_date_file;
-    QDateTime m_date_metadatas;
-    QDateTime m_date_gps;
-    qint64 m_duration = 0;
-
-    QList <QTime> m_highlights;
-
-#ifdef ENABLE_LIBMTP
-    // FIXME // remove this?
-    LIBMTP_mtpdevice_t *m_mtpDevice = nullptr;
-    LIBMTP_devicestorage_t *m_mtpStorage = nullptr;
-#endif
 
     // PICTURES files
     QList <ofb_file *> m_pictures;
 
     // VIDEOS files
     QList <ofb_file *> m_videos;
-    QList <MediaFile_t *> m_minivideos;
     QList <ofb_file *> m_videos_previews;
     QList <ofb_file *> m_videos_thumbnails;
     QList <ofb_file *> m_videos_hdAudio;
+
+
+
+
+
+    //
+    QString m_camera_source;        //!< Model of the camera that produced the shot
+    QString m_camera_firmware;      //!< Firmware of the camera that produced the shot
+
+    QDateTime m_date_file;
+    QDateTime m_date_metadatas;
+    QDateTime m_date_gps;
+    qint64 m_duration = 0;
 
     // GLOBAL metadatas
     unsigned orientation = 0;
@@ -185,6 +188,11 @@ class Shot: public QObject
     bool getMetadatasFromPicture(int index = 0);
     bool getMetadatasFromVideo(int index = 0);
 
+
+
+
+
+    QList <QTime> m_highlights;
 
     /// GPMF WIP /////////////////////////
 
@@ -259,7 +267,7 @@ class Shot: public QObject
     Q_PROPERTY(double distanceKm READ getDistanceKm NOTIFY metadatasUpdated)
 
 public slots:
-    Q_INVOKABLE bool getMetadatasFromVideoGPMF(int index = 0);
+    Q_INVOKABLE bool getMetadatasFromVideoGPMF();
     Q_INVOKABLE void updateSpeedsSerie(QLineSeries *serie, int appUnit);
     Q_INVOKABLE void updateAltiSerie(QLineSeries *serie, int appUnit);
     Q_INVOKABLE void updateAcclSeries(QLineSeries *x, QLineSeries *y, QLineSeries *z);
@@ -275,9 +283,6 @@ public:
     ~Shot();
 
     void addFile(ofb_file *file);
-#ifdef ENABLE_LIBMTP
-    void attachMtpStorage(LIBMTP_mtpdevice_t *device, LIBMTP_devicestorage_t *storage);
-#endif
 
     QList <ofb_file *> getFiles(bool withPreviews = true, bool withHdAudio = true) const;
 
@@ -289,7 +294,7 @@ public slots:
     QString getFilesQString() const;
     QStringList getFilesQStringList() const;
 
-    QString getName() const { return m_name; }
+    QString getName() const { return m_shot_name; }
     qint64 getDuration() const;
     qint64 getSize() const;
     qint64 getDataSize() const;

@@ -91,9 +91,11 @@ void FileScanner::scanFilesystemDirectory(QString &dir_path)
         {
             if (fi.exists() && fi.isReadable())
             {
+                // Get file infos
                 ofb_file *f = new ofb_file;
                 if (f)
                 {
+                    f->filesystemPath = fi.filePath();
                     f->name = fi.baseName();
                     f->extension = fi.suffix().toLower();
                     f->size = static_cast<uint64_t>(fi.size());
@@ -104,13 +106,40 @@ void FileScanner::scanFilesystemDirectory(QString &dir_path)
 #endif
                     f->modification_date = fi.lastModified();
 
-                    f->filesystemPath = fi.filePath();
-
+                    // Try to get shot infos, if applicable
                     ofb_shot *s = new ofb_shot;
                     bool shotStatus = getGoProShotInfos(*f, *s);
                     if (!shotStatus)
                         shotStatus = getGenericShotInfos(*f, *s);
 
+                    // Pre-parse metadatas on scanning thread
+                    if (shotStatus)
+                    {
+                        if (f->extension.endsWith(".mp4", Qt::CaseInsensitive))
+                        {
+                            int minivideo_retcode = minivideo_open(f->filesystemPath.toLocal8Bit(), &f->media);
+                            if (minivideo_retcode == 1)
+                            {
+                                minivideo_retcode = minivideo_parse(f->media, true, false);
+                                if (minivideo_retcode != 1)
+                                {
+                                    qDebug() << "minivideo_parse() failed with retcode: " << minivideo_retcode;
+                                    minivideo_close(&f->media);
+                                }
+                            }
+                            else
+                            {
+                                qDebug() << "minivideo_open() failed with retcode: " << minivideo_retcode;
+                            }
+                        }
+                        else if (f->extension.endsWith(".jpg", Qt::CaseInsensitive) ||
+                                 f->extension.endsWith(".jpeg", Qt::CaseInsensitive))
+                        {
+                            f->ed = exif_data_new_from_file(f->filesystemPath.toLocal8Bit());
+                        }
+                    }
+
+                    // Send the file back to the UI
                     if (shotStatus)
                         emit fileFound(f, s);
                     else
@@ -132,22 +161,28 @@ bool FileScanner::scanFilesystemFile(QString &file_path, ofb_file *f, ofb_shot *
 
     if (f && s)
     {
+        // Get file infos
         QFileInfo fi(file_path);
         if (fi.isFile() && fi.exists() && fi.isReadable())
         {
             f->filesystemPath = fi.filePath();
             f->name = fi.baseName();
-
             f->extension = fi.suffix().toLower();
             f->size = static_cast<uint64_t>(fi.size());
 #if (QT_VERSION_MINOR >= 10)
             f->creation_date = fi.birthTime();
+#else
+            f->creation_date = fi.created();
 #endif
             f->modification_date = fi.lastModified();
 
+            // Try to get shot infos, if applicable
             shotStatus = getGoProShotInfos(*f, *s);
             if (!shotStatus)
                 shotStatus = getGenericShotInfos(*f, *s);
+
+            // This function is not run on the scanning thread, so pre-parsing
+            // metadatas here doesn't really make sense
         }
     }
 
@@ -307,6 +342,7 @@ void FileScanner::mtpFileRec(LIBMTP_mtpdevice_t *device, uint32_t storageid, uin
                 //qDebug() << "- (file) " << mtpFile->filename << "(" << mtpFile->filesize << "bytes)";
                 QString file_name = mtpFile->filename;
 
+                // Get file infos
                 ofb_file *f = new ofb_file;
                 {
                     f->name = file_name.mid(0, file_name.lastIndexOf("."));
@@ -318,15 +354,20 @@ void FileScanner::mtpFileRec(LIBMTP_mtpdevice_t *device, uint32_t storageid, uin
                     f->mtpObjectId = mtpFile->item_id;
                 }
 
+                // Try to get shot infos, if applicable
                 ofb_shot *s = new ofb_shot;
                 bool shotStatus = getGoProShotInfos(*f, *s);
                 if (!shotStatus)
                     shotStatus = getGenericShotInfos(*f, *s);
 
+                // Send the file back to the UI
                 if (shotStatus)
                     emit fileFound(f, s);
                 else
+                {
+                    delete f;
                     delete s;
+                }
             }
 
             tmp = mtpFile;

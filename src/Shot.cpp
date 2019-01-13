@@ -35,18 +35,6 @@
 #include <QDesktopServices>
 #include <QDebug>
 
-#ifdef ENABLE_LIBEXIF
-#include <libexif/exif-data.h>
-#endif
-
-#ifdef ENABLE_LIBMTP
-#include <libmtp.h>
-#endif
-
-#ifdef ENABLE_MINIVIDEO
-#include <minivideo.h>
-#endif
-
 /* ************************************************************************** */
 
 Shot::Shot(QObject *parent) : QObject(parent)
@@ -61,24 +49,30 @@ Shot::Shot(Shared::ShotType type, QObject *parent) : QObject(parent)
 
 Shot::~Shot()
 {
+    for (auto picture: m_pictures)
+    {
+        if (picture->ed)
+            exif_data_unref(picture->ed);
+    }
     qDeleteAll(m_pictures);
     m_pictures.clear();
 
+    for (auto video: m_videos)
+    {
+        if (video->media)
+            minivideo_close(&video->media);
+    }
     qDeleteAll(m_videos);
     m_videos.clear();
+
     qDeleteAll(m_videos_previews);
     m_videos_previews.clear();
+
     qDeleteAll(m_videos_thumbnails);
     m_videos_thumbnails.clear();
+
     qDeleteAll(m_videos_hdAudio);
     m_videos_hdAudio.clear();
-
-    for (auto media: m_minivideos)
-    {
-        minivideo_close(&media);
-        media = nullptr;
-    }
-    m_minivideos.clear();
 }
 
 /* ************************************************************************** */
@@ -93,7 +87,7 @@ void Shot::addFile(ofb_file *file)
         // FUSION hack // "first file" is actually not the first file
         if (file->name.startsWith("GPFR") || file->name.startsWith("GPBK"))
         {
-            m_name = file->name;
+            m_shot_name = file->name;
             if (file->creation_date.isValid())
                 m_date_file = file->creation_date;
             else
@@ -132,8 +126,8 @@ void Shot::addFile(ofb_file *file)
         }
         else
         {
-            if (m_name.isEmpty())
-                m_name = file->name;
+            if (m_shot_name.isEmpty())
+                m_shot_name = file->name;
 
             if (!m_date_file.isValid())
             {
@@ -177,28 +171,12 @@ void Shot::addFile(ofb_file *file)
                 qWarning() << "Shot::addFile(" << file->extension << ") UNKNOWN FORMAT";
             }
         }
-
-#ifdef ENABLE_LIBMTP
-        // Associat mtpDevice
-        if (file->mtpDevice && !m_mtpDevice)
-        {
-            m_mtpDevice = file->mtpDevice;
-        }
-#endif
     }
     else
     {
         qWarning() << "Shot::addFile(" << file << ") nullptr";
     }
 }
-
-#ifdef ENABLE_LIBMTP
-void Shot::attachMtpStorage(LIBMTP_mtpdevice_t *device, LIBMTP_devicestorage_t *storage)
-{
-    m_mtpDevice = device;
-    m_mtpStorage = storage;
-}
-#endif
 
 /* ************************************************************************** */
 /*
@@ -319,6 +297,7 @@ QImage Shot::getPreviewMtp()
 
     if (m_videos.size() > 0 || m_pictures.size() > 0)
     {
+        LIBMTP_mtpdevice_t *mtp_device = nullptr;
         unsigned mtp_object_id = 0;
         unsigned char *mtp_buffer = nullptr;
         unsigned mtp_buffer_size = 0;
@@ -326,12 +305,12 @@ QImage Shot::getPreviewMtp()
         if (m_videos.size() > 0 && m_videos.at(0)->mtpDevice)
         {
             mtp_object_id = m_videos.at(0)->mtpObjectId;
-            m_mtpDevice = m_videos.at(0)->mtpDevice;
+            mtp_device = m_videos.at(0)->mtpDevice;
         }
         else if (m_pictures.size() > 0 && m_pictures.at(0)->mtpDevice)
         {
             mtp_object_id = m_pictures.at(0)->mtpObjectId;
-            m_mtpDevice = m_pictures.at(0)->mtpDevice;
+            mtp_device = m_pictures.at(0)->mtpDevice;
         }
         else
         {
@@ -346,10 +325,10 @@ QImage Shot::getPreviewMtp()
             LIBMTP_filetype_t ft = LIBMTP_FILETYPE_JPEG;
             LIBMTP_filesampledata_t *fsd = nullptr;
 
-            int retcode = LIBMTP_Get_Representative_Sample_Format(m_mtpDevice, ft, &fsd);
+            int retcode = LIBMTP_Get_Representative_Sample_Format(mtp_device, ft, &fsd);
             if (retcode == 0 && fsd)
             {
-                retcode =  LIBMTP_Get_Representative_Sample(m_mtpDevice, mtp_object_id, fsd);
+                retcode =  LIBMTP_Get_Representative_Sample(mtp_device, mtp_object_id, fsd);
 
                 if (img.loadFromData((const uchar *)fsd->data, fsd->size))
                 {
@@ -363,7 +342,7 @@ QImage Shot::getPreviewMtp()
         // backup method, using LIBMTP_Get_Thumbnail()
         if (!status)
         {
-            retcode = LIBMTP_Get_Thumbnail(m_mtpDevice, mtp_object_id,  &mtp_buffer, &mtp_buffer_size);
+            retcode = LIBMTP_Get_Thumbnail(mtp_device, mtp_object_id,  &mtp_buffer, &mtp_buffer_size);
             if (retcode == 0)
             {
                 if (img.loadFromData(mtp_buffer, mtp_buffer_size))
@@ -513,11 +492,17 @@ bool Shot::getMetadatasFromPicture(int index)
 
 #ifdef ENABLE_LIBEXIF
 
-    // EXIF ////////////////////////////////////////////////////////////////////
-    ExifData *ed = exif_data_new_from_file(m_pictures.at(index)->filesystemPath.toLocal8Bit());
+    // Check if the file is already parsed;
+    ExifData *ed = m_pictures.at(index)->ed;
+
+     if (!ed)
+        ed = exif_data_new_from_file(m_pictures.at(index)->filesystemPath.toLocal8Bit());
+
     if (ed)
     {
         hasEXIF = true;
+
+        // EXIF ////////////////////////////////////////////////////////////////
 
         // Parse tags
         ExifEntry *entry;
@@ -745,64 +730,68 @@ bool Shot::getMetadatasFromVideo(int index)
 
 #ifdef ENABLE_MINIVIDEO
 
-    MediaFile_t *media = nullptr;
+    // Check if the file is already parsed;
+    MediaFile_t *media = m_videos.at(index)->media;
 
-    int minivideo_retcode = minivideo_open(m_videos.at(index)->filesystemPath.toLocal8Bit(), &media);
-    if (minivideo_retcode == 1)
+    // If not, open it
+    if (!media)
     {
-        minivideo_retcode = minivideo_parse(media, true, false);
-        if (minivideo_retcode != 1)
+        int minivideo_retcode = minivideo_open(m_videos.at(index)->filesystemPath.toLocal8Bit(), &media);
+        if (minivideo_retcode == 1)
         {
-            qDebug() << "minivideo_parse() failed with retcode: " << minivideo_retcode;
-            minivideo_close(&media);
+            minivideo_retcode = minivideo_parse(media, true, false);
+            if (minivideo_retcode != 1)
+            {
+                qDebug() << "minivideo_parse() failed with retcode: " << minivideo_retcode;
+                minivideo_close(&media);
+            }
         }
         else
         {
-            m_minivideos.push_back(media);
-
-            m_date_metadatas = QDateTime::fromTime_t(media->creation_time);
-
-            if (media->tracks_audio_count > 0)
-            {
-                acodec = QString::fromLocal8Bit(getCodecString(stream_AUDIO, media->tracks_audio[0]->stream_codec, false));
-            }
-            if (media->tracks_video_count > 0)
-            {
-                width = media->tracks_video[0]->width;
-                height = media->tracks_video[0]->height;
-                m_duration += media->tracks_video[0]->stream_duration_ms;
-
-                vcodec = QString::fromLocal8Bit(getCodecString(stream_VIDEO, media->tracks_video[0]->stream_codec, false));
-                framerate = media->tracks_video[0]->framerate;
-                bitrate = media->tracks_video[0]->bitrate_avg;
-            }
-            for (unsigned i = 0; i < media->tracks_others_count; i++)
-            {
-                if (media->tracks_others[i])
-                {
-                    MediaStream_t *t = media->tracks_others[i];
-
-                    if (t->stream_type == stream_TMCD && timecode.isEmpty())
-                    {
-                        timecode += QString("%1:%2:%3-%4")\
-                                        .arg(t->time_reference[0], 2, 'u', 0, '0')\
-                                        .arg(t->time_reference[1], 2, 'u', 0, '0')\
-                                        .arg(t->time_reference[2], 2, 'u', 0, '0')\
-                                        .arg(t->time_reference[3], 2, 'u', 0, '0');
-                    }
-                    else if (t->stream_fcc == fourcc_be("gpmd"))
-                    {
-                        hasGPMF = true;
-                    }
-                }
-            }
-
-            return true;
+            qDebug() << "minivideo_open() failed with retcode: " << minivideo_retcode;
         }
     }
-    else
+
+    if (media)
     {
-        qDebug() << "minivideo_open() failed with retcode: " << minivideo_retcode;
+        m_date_metadatas = QDateTime::fromTime_t(media->creation_time);
+
+        if (media->tracks_audio_count > 0)
+        {
+            acodec = QString::fromLocal8Bit(getCodecString(stream_AUDIO, media->tracks_audio[0]->stream_codec, false));
+        }
+        if (media->tracks_video_count > 0)
+        {
+            width = media->tracks_video[0]->width;
+            height = media->tracks_video[0]->height;
+            m_duration += media->tracks_video[0]->stream_duration_ms;
+
+            vcodec = QString::fromLocal8Bit(getCodecString(stream_VIDEO, media->tracks_video[0]->stream_codec, false));
+            framerate = media->tracks_video[0]->framerate;
+            bitrate = media->tracks_video[0]->bitrate_avg;
+        }
+        for (unsigned i = 0; i < media->tracks_others_count; i++)
+        {
+            if (media->tracks_others[i])
+            {
+                MediaStream_t *t = media->tracks_others[i];
+
+                if (t->stream_type == stream_TMCD && timecode.isEmpty())
+                {
+                    timecode += QString("%1:%2:%3-%4")\
+                                    .arg(t->time_reference[0], 2, 'u', 0, '0')\
+                                    .arg(t->time_reference[1], 2, 'u', 0, '0')\
+                                    .arg(t->time_reference[2], 2, 'u', 0, '0')\
+                                    .arg(t->time_reference[3], 2, 'u', 0, '0');
+                }
+                else if (t->stream_fcc == fourcc_be("gpmd"))
+                {
+                    hasGPMF = true;
+                }
+            }
+        }
+
+        return true;
     }
 
 #endif // ENABLE_MINIVIDEO
@@ -810,7 +799,7 @@ bool Shot::getMetadatasFromVideo(int index)
     return false;
 }
 
-bool Shot::getMetadatasFromVideoGPMF(int index)
+bool Shot::getMetadatasFromVideoGPMF()
 {
     //qDebug() << "Shot::getMetadatasFromVideoGPMF()";
 
@@ -818,8 +807,6 @@ bool Shot::getMetadatasFromVideoGPMF(int index)
         return true;
 
     if (m_videos.size() <= 0)
-        return false;
-    if (m_videos.at(index)->filesystemPath.isEmpty())
         return false;
 
 #ifdef ENABLE_MINIVIDEO
@@ -830,27 +817,20 @@ bool Shot::getMetadatasFromVideoGPMF(int index)
 
         // OPEN MEDIA //////////////////////////////////////////////////////////
 
-        MediaFile_t *media = nullptr;
+        // Check if the file is already parsed;
+        MediaFile_t *media = m_videos.at(i)->media;
 
-        if (m_minivideos.size() > i)
+        // If not, open it
+        if (!media)
         {
-            media = m_minivideos.at(i);
-        }
-        else
-        {
-            int minivideo_retcode = minivideo_open(m_videos.at(index)->filesystemPath.toLocal8Bit(), &media);
-
+            int minivideo_retcode = minivideo_open(m_videos.at(i)->filesystemPath.toLocal8Bit(), &media);
             if (minivideo_retcode == 1)
             {
                 minivideo_retcode = minivideo_parse(media, true, false);
-
-                if (minivideo_retcode == 1)
-                {
-                    m_minivideos.push_back(media);
-                }
-                else
+                if (minivideo_retcode != 1)
                 {
                     qDebug() << "minivideo_parse() failed with retcode: " << minivideo_retcode;
+                    minivideo_close(&media);
                 }
             }
             else
