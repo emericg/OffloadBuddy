@@ -70,12 +70,17 @@ QImage GridThumbnailer::requestImage(const QString &id, QSize *size,
     int target_height = requestedSize.height() > 0 ? requestedSize.height() : DEFAULT_THUMB_SIZE;
 
     // Get timecode from string id, and remove it from string path
+    int timecode_pos = id.lastIndexOf('@');
     int timecode_s = 0;
-    if (id.lastIndexOf('@') > 0)
+    if (timecode_pos)
     {
-        int timecode_pos = id.size() - id.lastIndexOf('@');
-        timecode_s = id.right(timecode_pos - 1).toInt();
-        path.chop(timecode_pos);
+        bool timecode_validity = false;
+        timecode_pos = id.size() - timecode_pos;
+        timecode_s = id.rightRef(timecode_pos - 1).toInt(&timecode_validity);
+
+        // Make sure we had a timecode and not a random '@' character
+        if (timecode_validity)
+            path.chop(timecode_pos);
     }
 /*
     qDebug() << "@ requestId: " << id;
@@ -104,7 +109,7 @@ QImage GridThumbnailer::requestImage(const QString &id, QSize *size,
     }
 
     // Video file fallback
-    if (decoding_status == false)
+    if (!decoding_status)
     {
 #if defined(ENABLE_FFMPEG)
         decoding_status = getImage_withFfmpeg(path, thumb, timecode_s, target_width, target_height);
@@ -114,7 +119,7 @@ QImage GridThumbnailer::requestImage(const QString &id, QSize *size,
     }
 
     // Use our own static fallback pictures
-    if (decoding_status == false)
+    if (!decoding_status)
     {
         if (size) *size = QSize(DEFAULT_THUMB_SIZE, DEFAULT_THUMB_SIZE);
         if (id.contains(".mp4") || id.contains(".m4v") || id.contains(".mov") || id.contains(".mkv") || id.contains(".webm"))
@@ -223,12 +228,11 @@ bool decode_packet(AVPacket *pPacket, AVCodecContext *pCodecContext, AVFrame *pF
         retcode = avcodec_receive_frame(pCodecContext, pFrame);
         if (retcode == AVERROR(EAGAIN) || retcode == AVERROR_EOF)
             break;
-        else if (retcode < 0)
+        if (retcode < 0)
         {
             qDebug() << "ERROR while receiving a frame from the decoder:" << av_err2str(retcode);
             return status;
         }
-
         if (retcode >= 0)
         {
 /*
@@ -241,8 +245,8 @@ bool decode_packet(AVPacket *pPacket, AVCodecContext *pCodecContext, AVFrame *pF
             int src_w = pFrame->width;
             int src_h = pFrame->height;
             int srcRange = 0;
-            double src_ar = (double)src_w / (double)src_h;
-            enum AVPixelFormat src_pix_fmt = (AVPixelFormat)pFrame->format;
+            double src_ar = static_cast<double>(src_w) / static_cast<double>(src_h);
+            enum AVPixelFormat src_pix_fmt = static_cast<AVPixelFormat>(pFrame->format);
 
             // Remove the 'J' in deprecated pixel formats, which denotes full range
             switch (pFrame->format)
@@ -264,11 +268,11 @@ bool decode_packet(AVPacket *pPacket, AVCodecContext *pCodecContext, AVFrame *pF
                     srcRange = 1;
                     break;
                 default:
-                    src_pix_fmt = (AVPixelFormat)pFrame->format;
+                    src_pix_fmt = static_cast<AVPixelFormat>(pFrame->format);
                     break;
             }
 
-            int dst_w = roundTo(std::round(width * src_ar), 32);
+            int dst_w = roundTo(static_cast<int>(std::round(width * src_ar)), 32);
             int dst_h = height;
             int dstRange;
             enum AVPixelFormat dst_pix_fmt = AV_PIX_FMT_RGB24;
@@ -477,7 +481,7 @@ bool GridThumbnailer::getImage_withFfmpeg(const QString &path, QImage &img,
                                    img, width, height);
 
             // we have a picture!
-            if (status == true)
+            if (status)
                 break;
 
             // stop it, otherwise we'll be saving hundreds of frames
