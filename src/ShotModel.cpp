@@ -168,13 +168,13 @@ Shot *ShotModel::getShotAt(int listIndex)
  * \param name
  * \return
  */
-Shot *ShotModel::getShotWithName(const QString name)
+Shot *ShotModel::getShotWithName(const QString &name)
 {
     if (!name.isEmpty())
     {
-        for (int i = 0; i < m_shots.size(); i++)
+        for (auto shot: m_shots)
         {
-            Shot *search = qobject_cast<Shot*>(m_shots.at(i));
+            Shot *search = qobject_cast<Shot*>(shot);
             if (search->getName() == name)
             {
                 return search;
@@ -192,13 +192,13 @@ Shot *ShotModel::getShotWithName(const QString name)
  * \param path
  * \return
  */
-Shot *ShotModel::getShotWithPath(const QString path)
+Shot *ShotModel::getShotWithPath(const QString &path)
 {
     if (!path.isEmpty())
     {
-        for (int i = 0; i < m_shots.size(); i++)
+        for (auto shot: m_shots)
         {
-            Shot *search = qobject_cast<Shot*>(m_shots.at(i));
+            Shot *search = qobject_cast<Shot*>(shot);
             if (search)
             {
                 QList <ofb_file *> files = search->getFiles();
@@ -278,25 +278,23 @@ QVariant ShotModel::data(const QModelIndex & index, int role) const
     {
         if (role == NameRole)
             return shot->getName();
-        else if (role == TypeRole)
+        if (role == TypeRole)
             return shot->getType();
-        else if (role == PreviewRole)
+        if (role == PreviewRole)
             return shot->getPreviewPhoto();
-        else if (role == SizeRole)
+        if (role == SizeRole)
             return shot->getSize();
-        else if (role == DurationRole)
+        if (role == DurationRole)
             return shot->getDuration();
-        else if (role == DateRole)
+        if (role == DateRole)
             return shot->getDate();
-        else if (role == PointerRole)
+        if (role == PointerRole)
             return QVariant::fromValue(shot);
-        else if (role == PathRole)
-        {
-            if (shot->getFiles().size() > 0)
-                return shot->getFiles().at(0)->filesystemPath;
-        }
-        else
-            qDebug() << "Ooops missing ShotModel role !!!";
+        if (role == PathRole && !shot->getFiles().empty())
+            return shot->getFiles().at(0)->filesystemPath;
+
+        // If we made it here...
+        qDebug() << "Ooops missing ShotModel role !!!";
     }
 
     return QVariant();

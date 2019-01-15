@@ -77,11 +77,11 @@ QString Device::getUniqueId() const
 {
     QString id;
 
-    if (m_serial.isEmpty() == false)
+    if (!m_serial.isEmpty())
         id = m_serial;
-    else if (m_filesystemStorages.size() > 0 && getPath(0).isEmpty() == false)
+    else if (!m_filesystemStorages.empty() && !getPath(0).isEmpty())
         id = getPath(0);
-    else if (m_mtpDevices.size())
+    else if (!m_mtpDevices.empty())
         id = "MTP-" + QString::number(m_mtpDevices.at(0)->devNum) + "-" + QString::number(m_mtpDevices.at(0)->devNum);
     else
     {
@@ -92,7 +92,7 @@ QString Device::getUniqueId() const
     return id;
 }
 
-void Device::setName(const QString name)
+void Device::setName(const QString &name)
 {
     m_model = name;
     emit deviceUpdated();
@@ -105,7 +105,7 @@ bool Device::isValid()
     if (m_brand.isEmpty() && m_model.isEmpty())
         status = false;
 
-    if (m_filesystemStorages.size() == 0 && m_mtpStorages.size() == 0)
+    if (m_filesystemStorages.empty() && m_mtpStorages.empty())
         status = false;
 
     return status;
@@ -195,7 +195,7 @@ bool Device::addStorage_filesystem(const QString &path)
             {
                 // basic checks
                 if (storage->m_storage.bytesAvailable() > 128*1024*1024 &&
-                    storage->m_storage.isReadOnly() == false)
+                    !storage->m_storage.isReadOnly())
                 {
                     storage->m_writable = true;
 #ifdef __linux
@@ -228,7 +228,7 @@ bool Device::addStorage_filesystem(const QString &path)
     }
 
     // Start initial scan
-    if (status == true)
+    if (status)
     {
         QThread *thread = new QThread();
         FileScanner *fs = new FileScanner();
@@ -282,7 +282,7 @@ QString Device::getPath(const int index) const
 {
     if (index >= 0)
     {
-        if (m_filesystemStorages.size() > 0)
+        if (!m_filesystemStorages.empty())
         {
             if (m_filesystemStorages.size() > index)
             {
@@ -290,7 +290,7 @@ QString Device::getPath(const int index) const
             }
         }
 #ifdef ENABLE_LIBMTP
-        if (m_mtpStorages.size() > 0)
+        if (!m_mtpStorages.empty())
         {
             if (m_mtpStorages.size() > index)
             {
@@ -436,7 +436,7 @@ void Device::refreshStorageInfos()
             storage->m_storage.refresh();
 
             // Check if writable and some space is available // for firmware upates
-            if (storage->m_storage.isReadOnly() == false &&
+            if (!storage->m_storage.isReadOnly() &&
                 storage->m_storage.bytesAvailable() > 128*1024*1024)
             {
                 storage->m_writable = true;
@@ -603,7 +603,7 @@ void Device::offloadAll()
     QList<Shot *> shots;
     m_shotModel->getShots(shots);
 
-    if (jm && shots.size() > 0)
+    if (jm && !shots.empty())
     {
         //if (sm->getAutoMerge())
         //    jm->addJobs(JOB_MERGE, this, shots);
@@ -622,13 +622,13 @@ void Device::deleteAll()
     QList<Shot *> shots;
     m_shotModel->getShots(shots);
 
-    if (jm && shots.size() > 0)
+    if (jm && !shots.empty())
         jm->addJobs(JOB_DELETE, this, shots);
 }
 
 /* ************************************************************************** */
 
-void Device::offloadCopySelected(const QString shot_name)
+void Device::offloadCopySelected(const QString& shot_name)
 {
     qDebug() << "offloadCopySelected(" << shot_name << ")";
 

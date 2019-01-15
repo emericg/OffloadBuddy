@@ -97,7 +97,7 @@ MediaDirectory::~MediaDirectory()
  * the risk to inadvertantly use another disk or just let the user know that its
  * output directory is now invalid?
  */
-void MediaDirectory::setPath(QString path)
+void MediaDirectory::setPath(const QString &path)
 {
     m_path = path;
 
@@ -175,7 +175,7 @@ void MediaDirectory::refreshMediaDirectory()
 
         // basic checks // need at least 128MB
         if (m_storage->bytesAvailable() > 128*1024*1024 &&
-            m_storage->isReadOnly() == false)
+            !m_storage->isReadOnly())
         {
 #ifdef __linux
             // adanced permission checks

@@ -84,7 +84,7 @@ void JobWorkerSync::work()
                 // HANDLE DELETION /////////////////////////////////////////////
                 if (current_job->type == JOB_DELETE)
                 {
-                    for (auto file: element->files)
+                    for (auto const &file: element->files)
                     {
                         // TODO check if device is RO?
 
@@ -92,7 +92,7 @@ void JobWorkerSync::work()
                         {
                             //qDebug() << "JobWorkerSync  >  deleting:" << file.filesystemPath;
 
-                            if (QFile::remove(file.filesystemPath) == true)
+                            if (QFile::remove(file.filesystemPath))
                             {
                                 stuff_done++;
                             }
@@ -128,7 +128,7 @@ void JobWorkerSync::work()
                 // HANDLE COPY /////////////////////////////////////////////////
                 if (current_job->type == JOB_COPY)
                 {
-                    for (auto file: element->files)
+                    for (auto const &file: element->files)
                     {
                         if (!file.filesystemPath.isEmpty())
                         {
@@ -139,7 +139,7 @@ void JobWorkerSync::work()
                             QString destFile = element->destination_dir + fi_src.baseName() + "." + fi_src.suffix();
                             QFileInfo fi_dst(destFile);
 
-                            if (fi_dst.exists() == false ||
+                            if (!fi_dst.exists() ||
                                 (fi_dst.exists() && fi_dst.size() != fi_src.size()))
                             {
                                 bool success = QFile::copy(file.filesystemPath, destFile);
@@ -171,7 +171,7 @@ void JobWorkerSync::work()
                             QString destFile = element->destination_dir + file.name + "." + file.extension;
                             QFileInfo fi_dst(destFile);
 
-                            if (fi_dst.exists() == false ||
+                            if (!fi_dst.exists() ||
                                 (fi_dst.exists() && fi_dst.size() != static_cast<qint64>(file.size)))
                             {
                                 int err = LIBMTP_Get_File_To_File(file.mtpDevice, file.mtpObjectId, destFile.toLocal8Bit(), nullptr, nullptr);

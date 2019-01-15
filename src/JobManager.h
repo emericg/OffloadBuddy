@@ -169,7 +169,7 @@ public:
         else
             return tr("UNKNOWN");
     }
-    void setName(QString name) { m_name = name; }
+    void setName(const QString &name) { m_name = name; }
     QString getName() { return m_name; }
 
     void setDevice(Device *d) { m_device = d; }

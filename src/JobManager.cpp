@@ -45,12 +45,9 @@ JobManager *JobManager::getInstance()
     if (instance == nullptr)
     {
         instance = new JobManager();
-        return instance;
     }
-    else
-    {
-        return instance;
-    }
+
+    return instance;
 }
 
 JobManager::JobManager()
@@ -267,7 +264,7 @@ bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list,
     JobTracker *tracker = new JobTracker(job->id, job->type);
     tracker->setDevice(d);
     tracker->setAutoDelete(autoDelete);
-    if (job->elements.size() > 0)
+    if (!job->elements.empty())
         tracker->setDestination(job->elements.front()->destination_dir);
     m_trackedJobs.push_back(tracker);
     emit trackedJobsUpdated();

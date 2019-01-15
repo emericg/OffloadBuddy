@@ -144,7 +144,7 @@ bool DeviceManager::getMtpDeviceName(const QString &stringId,
 
                     QStringList mtp_string_parts = stringId.split("_");
 
-                    for (auto part: mtp_string_parts)
+                    for (auto const &part: mtp_string_parts)
                     {
                         // FUSION hack
                         if (p.contains("Fusion", Qt::CaseInsensitive))
@@ -279,9 +279,9 @@ void DeviceManager::addFsDeviceGoPro(QString path, gopro_device_infos *deviceInf
         }
     }
 
-    if (deviceExists == false)
+    if (!deviceExists)
     {
-        if (deviceMerge == true)
+        if (deviceMerge)
         {
             qDebug() << ">>>> Fusioooooooon";
 
@@ -299,7 +299,7 @@ void DeviceManager::addFsDeviceGoPro(QString path, gopro_device_infos *deviceInf
                            deviceInfos->firmware_version);
             if (d)
             {
-                if (d->addStorage_filesystem(path) == true)
+                if (d->addStorage_filesystem(path))
                 {
                     if (d->isValid())
                     {
@@ -347,7 +347,7 @@ void DeviceManager::addFsDeviceGeneric(QString path, generic_device_infos *devic
         }
     }
 
-    if (deviceExists == false)
+    if (!deviceExists)
     {
         d = new Device(deviceInfos->device_type,
                        STORAGE_FILESYSTEM,
@@ -356,7 +356,7 @@ void DeviceManager::addFsDeviceGeneric(QString path, generic_device_infos *devic
                        "", "");
         if (d)
         {
-            if (d->addStorage_filesystem(path) == true)
+            if (d->addStorage_filesystem(path))
             {
                 if (d->isValid())
                 {
@@ -385,7 +385,7 @@ void DeviceManager::addFsDeviceGeneric(QString path, generic_device_infos *devic
 void DeviceManager::addVfsDevice(ofb_vfs_device *deviceInfos)
 {
     if (m_devices.size() >= MAX_DEVICES ||
-        !deviceInfos || deviceInfos->paths.size() == 0)
+        !deviceInfos || deviceInfos->paths.empty())
     {
         delete deviceInfos;
         return;
@@ -417,13 +417,13 @@ void DeviceManager::addVfsDevice(ofb_vfs_device *deviceInfos)
         }
     }
 
-    if (deviceExists == false)
+    if (!deviceExists)
     {
-        if (deviceMerge == true)
+        if (deviceMerge)
         {
             qDebug() << ">>>> Fusioooooooon";
 
-            for (auto fs: deviceInfos->paths)
+            for (auto const &fs: deviceInfos->paths)
             {
                 d->setName("Fusion");
                 d->addStorage_filesystem(fs);
@@ -438,7 +438,7 @@ void DeviceManager::addVfsDevice(ofb_vfs_device *deviceInfos)
                            deviceInfos->brand, deviceInfos->model,
                            deviceInfos->firmware, deviceInfos->serial);
 
-            for (auto fs: deviceInfos->paths)
+            for (auto const &fs: deviceInfos->paths)
             {
                 d->addStorage_filesystem(fs);
             }
@@ -496,9 +496,9 @@ void DeviceManager::addMtpDevice(ofb_mtp_device *deviceInfos)
         }
     }
 
-    if (deviceExists == false)
+    if (!deviceExists)
     {
-        if (deviceMerge == true)
+        if (deviceMerge)
         {
             qDebug() << ">>>> Fusioooooooon";
 

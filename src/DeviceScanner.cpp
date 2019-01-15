@@ -118,7 +118,7 @@ void DeviceScanner::scanFilesystems()
 
                     // Watch this path
                     m_watchedFilesystems.push_back(deviceRootpath);
-                    if (m_watcherFilesystem.addPath(deviceRootpath) == false)
+                    if (!m_watcherFilesystem.addPath(deviceRootpath))
                         qDebug() << "FILE WATCHER FAILZD for " << deviceRootpath;
                 }
                 else
@@ -139,7 +139,7 @@ void DeviceScanner::scanFilesystems()
 
                     // Watch this path
                     m_watchedFilesystems.push_back(deviceRootpath);
-                    if (m_watcherFilesystem.addPath(deviceRootpath) == false)
+                    if (!m_watcherFilesystem.addPath(deviceRootpath))
                         qDebug() << "FILE WATCHER FAILZD for " << deviceRootpath;
                 }
                 else
@@ -155,9 +155,9 @@ void DeviceScanner::scanFilesystems()
     }
 
     // Check if we lost some device(s) since last scan
-    for (auto storage: m_watchedFilesystems)
+    for (auto const &storage: m_watchedFilesystems)
     {
-        if (connectedFilesystems.contains(storage) == false)
+        if (!connectedFilesystems.contains(storage))
         {
             //qDebug() << storage << "has gone missing, removing device...";
             removeFilesystem(storage);
@@ -501,7 +501,7 @@ void DeviceScanner::scanMtpDevices()
                             s->m_device = mtpDevice;
                             s->m_storage = storage;
                             s->m_dcim_id = file->item_id;
-                            s->m_writable = (storage->AccessCapability == 0) ? true : false;
+                            s->m_writable = storage->AccessCapability == 0;
 /*
                             qDebug() << "MTP storage:";
                             qDebug() << "-" << s->m_device;
@@ -521,7 +521,7 @@ void DeviceScanner::scanMtpDevices()
                 }
             }
 
-            if (deviceInfos->storages.size() > 0)
+            if (!deviceInfos->storages.empty())
             {
                 // Send device infos to the DeviceManager
                 emit mtpDeviceFound(deviceInfos);
@@ -540,7 +540,7 @@ void DeviceScanner::scanMtpDevices()
     // Check if we lost some device(s) since last scan
     for (auto watchedDevice: m_watchedMtpDevices)
     {
-        if (connectedMtpDevices.contains(watchedDevice) == false)
+        if (!connectedMtpDevices.contains(watchedDevice))
         {
             //qDebug() << "Device @ bus" << watchedDevice.first << ", dev" << watchedDevice.second << "has gone missing, removing device...";
             removeMtpDevice(watchedDevice);
@@ -561,7 +561,7 @@ void DeviceScanner::removeFilesystem(const QString &path)
     //qDebug() << "DeviceScanner::removeFilesystem()" << path;
 
     QDir dir(path);
-    if (dir.exists() == true)
+    if (dir.exists())
     {
         // FIXME virtual filesystem sometimes still exists after physical removal
         qDebug() << "DeviceScanner::removeFilesystem()" << path << "but associated directory STILL exists";

@@ -76,7 +76,7 @@ public:
 
 public slots:
     QString getPath() { return m_path; }
-    void setPath(QString path);
+    void setPath(const QString &path);
     int getContent() { return m_content_type; }
     void setContent(int content);
 

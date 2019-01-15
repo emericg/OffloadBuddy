@@ -41,12 +41,9 @@ SettingsManager *SettingsManager::getInstance()
     if (instance == nullptr)
     {
         instance = new SettingsManager();
-        return instance;
     }
-    else
-    {
-        return instance;
-    }
+
+    return instance;
 }
 
 SettingsManager::SettingsManager()
@@ -219,7 +216,7 @@ void SettingsManager::addDirectory(QString path)
     }
 }
 
-void SettingsManager::deleteDirectory(QString path)
+void SettingsManager::deleteDirectory(const QString &path)
 {
     if (!path.isEmpty())
     {

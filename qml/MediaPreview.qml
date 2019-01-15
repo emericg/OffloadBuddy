@@ -83,7 +83,6 @@ Rectangle {
         anchors.fill: parent
         autoTransform: true
         fillMode: Image.PreserveAspectFit
-        //source: "qrc:/resources/other/placeholder_picture.svg"
 
         sourceSize.width: shot.width / 2
         sourceSize.height: shot.height / 2

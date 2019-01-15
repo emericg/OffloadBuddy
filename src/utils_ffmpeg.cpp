@@ -78,7 +78,7 @@ void ffmpeg_list_decoders(bool hw_only)
     {
         if (codec->hw_configs)
             qDebug() << "DECODER:  (HW) " << codec->name;
-        else if (hw_only == false)
+        else if (!hw_only)
             qDebug() << "DECODER:" << codec->name;
     }
 #endif
@@ -99,7 +99,7 @@ void ffmpeg_list_encoders(bool hw_only)
         {
             if (codec->hw_configs)
                 qDebug() << "ENCODER:  (HW) " << codec->name;
-            else if (hw_only == false)
+            else if (!hw_only)
                 qDebug() << "ENCODER:" << codec->name;
         }
     }

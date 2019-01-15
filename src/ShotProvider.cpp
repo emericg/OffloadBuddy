@@ -104,7 +104,7 @@ void ShotProvider::orderByName()
 
 /* ************************************************************************** */
 
-void ShotProvider::filterByType(const QString type)
+void ShotProvider::filterByType(const QString &type)
 {
     if (m_shotFilter)
     {
@@ -126,7 +126,7 @@ void ShotProvider::filterByType(const QString type)
 
 /* ************************************************************************** */
 
-void ShotProvider::filterByFolder(const QString path)
+void ShotProvider::filterByFolder(const QString &path)
 {
     if (m_shotFilter)
     {

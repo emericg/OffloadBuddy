@@ -67,8 +67,8 @@ public:
     void getShots(QList<Shot *> &shots);
     Shot *getShotAt(int index);
     Shot *getShotAt(Shared::ShotType type, int file_id, int camera_id) const;
-    Shot *getShotWithName(const QString name);
-    Shot *getShotWithPath(const QString path);
+    Shot *getShotWithName(const QString &name);
+    Shot *getShotWithPath(const QString &path);
     int getShotCount() const;
 
 public slots:

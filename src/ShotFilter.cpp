@@ -43,7 +43,7 @@ bool ShotFilter::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent
 {
     bool accepted = true;
 
-    if (m_acceptedTypes.size() == 0 && m_acceptedFolder.isEmpty())
+    if (m_acceptedTypes.empty() && m_acceptedFolder.isEmpty())
         return accepted;
 
     QModelIndex index = sourceModel()->index(sourceRow, 0, sourceParent);
@@ -55,7 +55,7 @@ bool ShotFilter::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent
             accepted = false;
     }
 
-    if (m_acceptedTypes.size() != 0)
+    if (!m_acceptedTypes.empty())
     {
         int type = sourceModel()->data(index, ShotModel::TypeRole).toInt();
         if (!m_acceptedTypes.contains(type))

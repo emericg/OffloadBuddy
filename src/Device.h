@@ -207,7 +207,7 @@ public:
            const QString &serial, const QString &version);
     ~Device();
 
-    void setName(const QString name);
+    void setName(const QString &name);
     bool isValid();
 
     bool addStorage_filesystem(const QString &path);

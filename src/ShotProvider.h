@@ -67,8 +67,8 @@ public slots:
     void orderByShotType();
     void orderByName();
 
-    void filterByType(const QString type);
-    void filterByFolder(const QString path);
+    void filterByType(const QString &type);
+    void filterByFolder(const QString &path);
 
     //QVariant getShot(const int index) const { return QVariant::fromValue(m_shotModel->getShotAt(index)); }
     QVariant getShot(const QString name) const { return QVariant::fromValue(m_shotModel->getShotWithName(name)); }
