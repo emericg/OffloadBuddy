@@ -239,6 +239,61 @@ int32_t GpmfBuffer::readData_i32(const GpmfKLV &klv, int &error)
     return value;
 }
 
+float GpmfBuffer::readData_float(const GpmfKLV &klv, int &error)
+{
+    float value = 0;
+
+    switch (klv.type)
+    {
+    case GPMF_TYPE_UNSIGNED_BYTE:
+        value = read_u8(error);
+        break;
+
+    case GPMF_TYPE_SIGNED_BYTE:
+        value = read_i8(error);
+        break;
+
+    case GPMF_TYPE_UNSIGNED_SHORT:
+        value = read_u16(error);
+        break;
+
+    case GPMF_TYPE_SIGNED_SHORT:
+        value = read_i16(error);
+        break;
+
+    case GPMF_TYPE_FOURCC:
+    case GPMF_TYPE_UNSIGNED_LONG:
+        value = read_u32(error);
+        break;
+
+    case GPMF_TYPE_SIGNED_LONG:
+        value = read_i32(error);
+        break;
+
+    case GPMF_TYPE_UNSIGNED_64BIT:
+        value = read_u64(error);
+        break;
+
+    case GPMF_TYPE_SIGNED_64BIT:
+        value = read_i64(error);
+        break;
+
+    case GPMF_TYPE_FLOAT:
+        value = read_float(error);
+        break;
+
+    case GPMF_TYPE_DOUBLE:
+        value = static_cast<float>(read_double(error));
+        break;
+
+    default:
+        error = 1;
+        break;
+    }
+
+    return value;
+}
+
 double GpmfBuffer::readData_double(const GpmfKLV &klv, int &error)
 {
     double value = 0;

@@ -198,33 +198,34 @@ class Shot: public QObject
 
     bool gpmf_parsed = false;
 
-    typedef struct TripleDouble {
-        double x;
-        double y;
-        double z;
-    } TripleDouble;
+    typedef struct TriFloat {
+        float x;
+        float y;
+        float z;
+    } TriFloat;
     uint32_t global_offset_ms = 0;
 
-    std::vector <std::pair<double, double>> m_gps;
+    std::vector <std::pair<float, float>> m_gps;
     std::vector <std::pair<std::string, unsigned>> m_gps_params;
-    double m_gps_altitude_offset = 0;
-    std::vector <double> m_alti;
-    std::vector <double> m_speed;
+    float m_gps_altitude_offset = 0;
+    std::vector <float> m_alti;
+    std::vector <float> m_speed;
 /*
     QVector<QPointF> m_alti_points;
     QVector<QPointF> m_speed_points;
     QVector<QPointF> m_gps_points;
 */
-    std::vector <TripleDouble> m_gyro;
-    std::vector <TripleDouble> m_accelero;
-    std::vector <TripleDouble> m_magneto;
-    std::vector <double> m_compass;
+    std::vector <TriFloat> m_gyro;
+    std::vector <TriFloat> m_accelero;
+    std::vector <TriFloat> m_magneto;
+    std::vector <float> m_compass;
 
     bool parseGpmfSample(GpmfBuffer &buf, int &devc_count);
-    void parseData_gps5(GpmfBuffer &buf, GpmfKLV &klv, const double scales[16],
+    bool parseGpmfSampleFast(GpmfBuffer &buf, int &devc_count);
+    void parseData_gps5(GpmfBuffer &buf, GpmfKLV &klv, const float scales[16],
                         std::string &gps_tmcd, unsigned gps_fix, unsigned gps_dop);
-    void parseData_triplet(GpmfBuffer &buf, GpmfKLV &klv, const double scales[16],
-                           std::vector <TripleDouble> &datalist);
+    void parseData_triplet(GpmfBuffer &buf, GpmfKLV &klv, const float scales[16],
+                           std::vector <TriFloat> &datalist);
 
     bool hasEXIF = false;
     bool hasExif() { return hasEXIF; }
@@ -262,9 +263,9 @@ class Shot: public QObject
     float getMaxG() { return maxG; }
     Q_PROPERTY(float maxG READ getMaxG NOTIFY metadatasUpdated)
 
-    double distance_km = 0;
-    double getDistanceKm() { return distance_km; }
-    Q_PROPERTY(double distanceKm READ getDistanceKm NOTIFY metadatasUpdated)
+    float distance_km = 0;
+    float getDistanceKm() { return distance_km; }
+    Q_PROPERTY(float distanceKm READ getDistanceKm NOTIFY metadatasUpdated)
 
 public slots:
     Q_INVOKABLE bool getMetadatasFromVideoGPMF();

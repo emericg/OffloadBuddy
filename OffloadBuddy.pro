@@ -40,6 +40,7 @@ SOURCES  += src/main.cpp \
             src/FileScanner.cpp \
             src/ItemImage.cpp \
             src/Shot.cpp \
+            src/ShotTelemetry.cpp \
             src/ShotModel.cpp \
             src/ShotFilter.cpp \
             src/ShotProvider.cpp \

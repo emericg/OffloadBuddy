@@ -68,6 +68,7 @@ public:
     uint8_t *readBytes(int bytes, int &error);
 
     int32_t readData_i32(const GpmfKLV &klv, int &error);
+    float readData_float(const GpmfKLV &klv, int &error);
     double readData_double(const GpmfKLV &klv, int &error);
 
     template<typename T>
