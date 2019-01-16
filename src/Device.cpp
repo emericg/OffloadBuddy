@@ -628,7 +628,7 @@ void Device::deleteAll()
 
 /* ************************************************************************** */
 
-void Device::offloadCopySelected(const QString& shot_name)
+void Device::offloadCopySelected(const QString &shot_name)
 {
     qDebug() << "offloadCopySelected(" << shot_name << ")";
 
@@ -639,7 +639,7 @@ void Device::offloadCopySelected(const QString& shot_name)
         jm->addJob(JOB_COPY, this, shot);
 }
 
-void Device::offloadMergeSelected(const QString shot_name)
+void Device::offloadMergeSelected(const QString &shot_name)
 {
     qDebug() << "offloadMergeSelected(" << shot_name << ")";
 
@@ -650,7 +650,7 @@ void Device::offloadMergeSelected(const QString shot_name)
         jm->addJob(JOB_COPY, this, shot);
 }
 
-void Device::reencodeSelected(const QString shot_name, const QString codec,
+void Device::reencodeSelected(const QString &shot_name, const QString &codec,
                               float quality, float speed, float fps,
                               int start, int duration)
 {
@@ -672,7 +672,7 @@ void Device::reencodeSelected(const QString shot_name, const QString codec,
         jm->addJob(JOB_REENCODE, this, shot, nullptr, &sett);
 }
 
-void Device::deleteSelected(const QString shot_name)
+void Device::deleteSelected(const QString &shot_name)
 {
     qDebug() << "Device::deleteSelected(" << shot_name << ")";
 

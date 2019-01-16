@@ -179,10 +179,10 @@ if not os.path.exists("src/" + FILE_minivideo):
 ## linuxdeployqt
 ## version: git
 if OS_HOST == "Linux":
-    FILE_linuxdeployqt = "linuxdeployqt-continuous-x86_64.AppImage"
+    FILE_linuxdeployqt = "linuxdeployqt-5-x86_64.AppImage"
     if not os.path.exists("src/" + FILE_linuxdeployqt):
         print("> Downloading " + FILE_linuxdeployqt + "...")
-        urllib.request.urlretrieve("https://github.com/probonopd/linuxdeployqt/releases/download/continuous/" + FILE_linuxdeployqt, src_dir + FILE_linuxdeployqt)
+        urllib.request.urlretrieve("https://github.com/probonopd/linuxdeployqt/releases/download/5/" + FILE_linuxdeployqt, src_dir + FILE_linuxdeployqt)
 
 ## CHOOSE TARGETS ##############################################################
 

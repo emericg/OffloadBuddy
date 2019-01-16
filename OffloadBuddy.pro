@@ -2,6 +2,7 @@ TARGET  = OffloadBuddy
 VERSION = 0.1.0
 
 CONFIG += c++14
+versionAtLeast(QT_VERSION, 5.11) { CONFIG += qtquickcompiler }
 QT     += core gui svg quick quickcontrols2
 QT     += multimedia location sql charts
 
