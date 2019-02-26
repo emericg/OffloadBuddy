@@ -2,7 +2,6 @@ TARGET  = OffloadBuddy
 VERSION = 0.1.0
 
 CONFIG += c++14
-versionAtLeast(QT_VERSION, 5.11) { CONFIG += qtquickcompiler }
 QT     += core gui svg quick quickcontrols2
 QT     += multimedia location sql charts
 
@@ -107,6 +106,13 @@ unix {
     #QMAKE_CXXFLAGS += -Wno-nullability-completeness
 }
 
+CONFIG(release, debug|release) {
+    versionAtLeast(QT_VERSION, 5.11) {
+        # QtQuick Compiler
+        CONFIG += qtquickcompiler
+    }
+}
+
 DEFINES += QT_DEPRECATED_WARNINGS
 
 # Additional import path used to resolve QML modules
@@ -141,7 +147,7 @@ contains(DEFINES, USE_CONTRIBS) {
 
 } else {
 
-    !unix { warning("Building ReShoot without contribs on windows is untested...") }
+    !unix { warning("Building OffloadBuddy without contribs on windows is untested...") }
 
     CONFIG += link_pkgconfig
     macx { PKG_CONFIG = /usr/local/bin/pkg-config } # use pkg-config from brew

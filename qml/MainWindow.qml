@@ -35,9 +35,8 @@ ApplicationWindow {
     minimumWidth: 1280
     minimumHeight: 720
 
-    WindowStateSaver {
+    WindowGeometrySaver {
         window: applicationWindow
-        windowName: "mainWindow"
     }
 /*
     menuBar: MenuBar {

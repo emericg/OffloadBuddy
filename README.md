@@ -15,14 +15,15 @@ Works with Linux, macOS and Windows!
 
 FEATURES:
 
-* Import datas from SD cards, mass storage or MTP devices
-  * Organize your media library
-  * Copy, merge or reencode medias
-  * Show and export telemetry
-* Create short video clips or extract photos from your videos
-* Create timelapse from videos
-* Assemble photo timelapses into videos
-* GoPro firmware updates (WIP)
+- [x] Import datas from SD cards, mass storage or MTP devices
+  - [x] Organize your media library
+  - [x] Copy, merge or reencode medias
+  - [x] Show and export telemetry (WIP)
+- [x] Create short video clips from your videos
+- [ ] Extract photos from your videos
+- [ ] Create timelapse from videos
+- [x] Assemble photo timelapses into videos
+- [ ] GoPro firmware updates (WIP)
 
 
 ### Screenshots!
@@ -61,36 +62,30 @@ OffloadBuddy:
 > $ make  
 
 
-## Licensing
-
-OffloadBuddy is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.  
-Read [LICENSE](LICENSE) or [consult the licence on the FSF website](https://www.gnu.org/licenses/gpl-3.0.txt) directly.
-
-Emeric Grange <emeric.grange@gmail.com>
-
-
-## Third party projects
-
-* Qt [website](https://www.qt.io) [LGPL 3](https://www.gnu.org/licenses/lgpl-3.0.txt)
-* ffmpeg [website](https://www.ffmpeg.org/) [LGPL 2.1](https://www.gnu.org/licenses/lgpl-2.1.txt)
-* MiniVideo [website](https://github.com/emericg/MiniVideo) [LGPL 3](https://www.gnu.org/licenses/lgpl-3.0.txt)
-* libexif [website](https://github.com/libexif/libexif/) [LGPL 2.1](https://www.gnu.org/licenses/lgpl-2.1.txt)
-* libmtp [website](http://libmtp.sourceforge.net/) [LGPL 2.1](https://www.gnu.org/licenses/lgpl-2.1.txt)
-* SingleApplication [website](https://github.com/itay-grudev/SingleApplication) [MIT](https://opensource.org/licenses/MIT)
-* Graphical resources: please read [assets/COPYING](assets/COPYING)
-
-
-## Special thanks
-
-* Mickael Heudre <mickheudre@gmail.com> for his invaluable QML expertise!
-
-
 ## Get involved!
 
 ### Developers
 
-You can browse the code here on GitHub, submit patches and pull requests! Your help would be greatly appreciated ;-)
+You can browse the code on the GitHub page, submit patches and pull requests! Your help would be greatly appreciated ;-)
 
 ### Users
 
-You can help us finding bugs, proposing new features and more! Visit the "Issues" section in the GitHub menu to start.
+You can help us find and report bugs, propose new features, help with the documentation and more! Visit the Issues section of the GitHub page to start!
+
+
+## License
+
+OffloadBuddy is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.  
+Read the [LICENSE](LICENSE) file or [consult the licence on the FSF website](https://www.gnu.org/licenses/gpl-3.0.txt) directly.
+
+Emeric Grange <emeric.grange@gmail.com>
+
+### Third party projects used by OffloadBuddy
+
+* Qt [website](https://www.qt.io) ([LGPL 3](https://www.gnu.org/licenses/lgpl-3.0.txt))
+* ffmpeg [website](https://www.ffmpeg.org/) ([LGPL 2.1](https://www.gnu.org/licenses/lgpl-2.1.txt))
+* MiniVideo [website](https://github.com/emericg/MiniVideo) ([LGPL 3](https://www.gnu.org/licenses/lgpl-3.0.txt))
+* libexif [website](https://github.com/libexif/libexif/) ([LGPL 2.1](https://www.gnu.org/licenses/lgpl-2.1.txt))
+* libmtp [website](http://libmtp.sourceforge.net/) ([LGPL 2.1](https://www.gnu.org/licenses/lgpl-2.1.txt))
+* SingleApplication [website](https://github.com/itay-grudev/SingleApplication) ([MIT](https://opensource.org/licenses/MIT))
+* Graphical resources: please read [assets/COPYING](assets/COPYING)

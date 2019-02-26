@@ -84,7 +84,7 @@ find appdir/;
 ## PACKAGE #####################################################################
 
 if [[ $create_package = true ]] ; then
-  echo '---- Running appimage packager'
+  echo '---- Running AppImage packager'
   ./contribs/src/linuxdeployqt-5-x86_64.AppImage appdir/$USRDIR/share/applications/*.desktop -qmldir=qml/ -appimage;
 fi
 

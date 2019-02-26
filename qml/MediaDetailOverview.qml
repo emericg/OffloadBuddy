@@ -270,7 +270,7 @@ Rectangle {
                 anchors.leftMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
 
-                text: shot.width + "x" + shot.height + "   (" + StringUtils.aspectratioToString(shot.width, shot.height) + ")"
+                text: shot.width + "x" + shot.height + "   (" + StringUtils.varToString(shot.width, shot.height) + ")"
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignRight
                 font.pixelSize: ThemeEngine.fontSizeContentText

@@ -9,11 +9,17 @@ OffloadBuddy.config
 OffloadBuddy.creator*
 OffloadBuddy.files
 OffloadBuddy.includes
+OffloadBuddy.pro.*
+
+# Qt Quick Compiler
+qrc_resources.cpp
+qmlcache_loader.cpp
+qml_*qml.cpp
 
 # QMake temporary project files
-OffloadBuddy.pro.*
 Makefile
 .qmake.stash
 
 # Others
 stash/*
+.DS_Store
