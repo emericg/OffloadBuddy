@@ -1,18 +1,19 @@
 QT += core network
 CONFIG += c++11
 
-HEADERS += $$PWD/singleapplication.h \
-           $$PWD/singleapplication_p.h
-SOURCES += $$PWD/singleapplication.cpp
+INCLUDEPATH += $${PWD}
 
-INCLUDEPATH += $$PWD
+HEADERS += $${PWD}/singleapplication.h \
+           $${PWD}/singleapplication_p.h
+
+SOURCES += $${PWD}/singleapplication.cpp \
+           $${PWD}/singleapplication_p.cpp
 
 win32 {
     msvc:LIBS += Advapi32.lib
-    gcc:LIBS += -lAdvapi32
+    gcc:LIBS += -ladvapi32
 }
-
-DISTFILES += \
-    $$PWD/README.md \
-    $$PWD/CHANGELOG.md \
-    $$PWD/Windows.md
+macx {
+    # to handle the macOS dock click
+    LIBS += -framework CoreFoundation -framework Carbon -lobjc
+}
