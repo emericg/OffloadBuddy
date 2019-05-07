@@ -107,7 +107,7 @@ Rectangle {
                 id: textVersion
                 width: 112
                 height: 16
-                text: qsTr("Version 0.1 (git)")
+                text: qsTr("Version 0.2 (git)")
                 anchors.horizontalCenter: imageLogo.horizontalCenter
                 anchors.top: imageLogo.bottom
                 anchors.topMargin: 6

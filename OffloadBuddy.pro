@@ -1,31 +1,26 @@
 TARGET  = OffloadBuddy
-VERSION = 0.1.0
+
+VERSION = 0.2
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 CONFIG += c++14
 QT     += core gui svg quick quickcontrols2
 QT     += multimedia location sql charts
-
-# Enables or disable optional features
-DEFINES += ENABLE_FFMPEG
-DEFINES += ENABLE_LIBEXIF
-DEFINES += ENABLE_MINIVIDEO
-unix {
-    DEFINES += ENABLE_LIBMTP
-}
 
 # Validate Qt version
 if (lessThan(QT_MAJOR_VERSION, 5) | lessThan(QT_MINOR_VERSION, 9)) {
     error("You need Qt 5.9 to build $${TARGET}...")
 }
 
-# Build artifacts
+# Build artifacts ##############################################################
+
 OBJECTS_DIR = build/
 MOC_DIR     = build/
 RCC_DIR     = build/
 UI_DIR      = build/
 DESTDIR     = bin/
 
-# Sources ######################################################################
+# Project files ################################################################
 
 SOURCES  += src/main.cpp \
             src/SettingsManager.cpp \
@@ -79,6 +74,7 @@ HEADERS  += src/SettingsManager.h \
             src/utils_enums.h
 
 RESOURCES += qml/qml.qrc \
+             i18n/i18n.qrc \
              assets/assets.qrc \
              resources.qrc
 
@@ -88,6 +84,23 @@ OTHER_FILES += .travis.yml \
                deploy_macos.sh \
                deploy_windows.sh
 
+#TRANSLATIONS = i18n/offloadbuddy_fr.ts
+
+lupdate_only { SOURCES += qml/*.qml qml/*.js }
+
+# App features #################################################################
+
+# Use Qt Quick compiler
+# CONFIG += qtquickcompiler
+
+DEFINES += ENABLE_FFMPEG
+DEFINES += ENABLE_LIBEXIF
+DEFINES += ENABLE_MINIVIDEO
+unix { DEFINES += ENABLE_LIBMTP }
+
+#DEFINES += USE_CONTRIBS
+
+# SingleApplication for desktop OS
 include(src/thirdparty/SingleApplication/singleapplication.pri)
 DEFINES += QAPPLICATION_CLASS=QApplication
 
@@ -106,18 +119,7 @@ unix {
     #QMAKE_CXXFLAGS += -Wno-nullability-completeness
 }
 
-CONFIG(release, debug|release) {
-    versionAtLeast(QT_VERSION, 5.11) {
-        # QtQuick Compiler
-        CONFIG += qtquickcompiler
-    }
-}
-
 DEFINES += QT_DEPRECATED_WARNINGS
-
-# Additional import path used to resolve QML modules
-QML_IMPORT_PATH = qml/
-QML_DESIGNER_IMPORT_PATH = qml/
 
 # Dependencies #################################################################
 
@@ -159,9 +161,9 @@ contains(DEFINES, USE_CONTRIBS) {
     contains(DEFINES, ENABLE_FFMPEG) { PKGCONFIG += libavformat libavcodec libswscale libswresample libavutil }
 }
 
-# Deploy #######################################################################
-
+################################################################################
 # Application deployment and installation steps
+
 linux {
     TARGET = $$lower($${TARGET})
 
