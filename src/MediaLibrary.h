@@ -59,17 +59,17 @@ public:
 
 public slots:
     void searchMediaDirectories();
-    void searchMediaDirectory(const QString path);
+    void searchMediaDirectory(const QString &path);
 
     int getLibraryState() const { return m_libraryState; }
-    void workerScanningStarted(QString s);
-    void workerScanningFinished(QString s);
+    void workerScanningStarted(const QString &s);
+    void workerScanningFinished(const QString &s);
 
     //
-    void reencodeSelected(const QString shot_name, const QString codec,
+    void reencodeSelected(const QString &shot_name, const QString &codec,
                           float quality, float speed, float fps,
                           int start, int duration);
-    void deleteSelected(const QString shot_name);
+    void deleteSelected(const QString &shot_name);
 };
 
 /* ************************************************************************** */

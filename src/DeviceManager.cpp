@@ -244,7 +244,7 @@ void DeviceManager::workerScanningFinished()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void DeviceManager::addFsDeviceGoPro(QString path, gopro_device_infos *deviceInfos)
+void DeviceManager::addFsDeviceGoPro(const QString &path, gopro_device_infos *deviceInfos)
 {
     if (m_devices.size() >= MAX_DEVICES || path.isEmpty() || !deviceInfos)
     {
@@ -326,7 +326,7 @@ void DeviceManager::addFsDeviceGoPro(QString path, gopro_device_infos *deviceInf
     delete deviceInfos;
 }
 
-void DeviceManager::addFsDeviceGeneric(QString path, generic_device_infos *deviceInfos)
+void DeviceManager::addFsDeviceGeneric(const QString &path, generic_device_infos *deviceInfos)
 {
     if (m_devices.size() >= MAX_DEVICES || path.isEmpty() || !deviceInfos)
     {

@@ -106,8 +106,8 @@ void DeviceScanner::scanFilesystems()
             QString deviceRootpath = storage.rootPath();
             bool found = false;
 
-            gopro_device_infos *goproDeviceInfos = new gopro_device_infos;
-            if (goproDeviceInfos && found == false)
+            auto *goproDeviceInfos = new gopro_device_infos;
+            if (goproDeviceInfos && !found)
             {
                 if (parseGoProVersionFile(deviceRootpath, *goproDeviceInfos))
                 {
@@ -127,8 +127,8 @@ void DeviceScanner::scanFilesystems()
                 }
             }
 
-            generic_device_infos *genericDeviceInfos = new generic_device_infos;
-            if (genericDeviceInfos && found == false)
+            auto *genericDeviceInfos = new generic_device_infos;
+            if (genericDeviceInfos && !found)
             {
                 if (parseGenericDCIM(deviceRootpath, *genericDeviceInfos))
                 {

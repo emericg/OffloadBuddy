@@ -210,8 +210,8 @@ qint64 Shot::getDuration() const
 {
     if (m_type < Shared::SHOT_PICTURE)
         return m_duration;
-    else
-        return m_pictures.size();
+
+    return m_pictures.size();
 }
 
 qint64 Shot::getSize() const

@@ -52,6 +52,7 @@ Rectangle {
             imageFs.source = "image://GridThumbnailer/" + shot.previewPhoto
         else if (shotDevice && shotDevice.deviceStorage === Shared.STORAGE_MTP)
         {
+            imageMtp.enabled = true
             imageMtp.visible = true
             imageMtp.image = shot.getPreviewMtp()
         }
@@ -112,6 +113,7 @@ Rectangle {
     ItemImage {
         id: imageMtp
         visible: false
+        enabled: false
         anchors.fill: parent
     }
 

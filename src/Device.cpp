@@ -313,10 +313,12 @@ QStringList Device::getPathList() const
         if (st) paths += st->m_path;
     }
 #ifdef ENABLE_LIBMTP
+/*
     for (auto st: m_mtpStorages)
     {
-        //if (st) st->m_storage->VolumeIdentifier;
+        if (st) st->m_storage->VolumeIdentifier;
     }
+*/
 #endif // ENABLE_LIBMTP
 
     return paths;

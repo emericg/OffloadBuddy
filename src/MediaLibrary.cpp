@@ -72,7 +72,7 @@ void MediaLibrary::scanMediaDirectory(MediaDirectory *md)
 
 /* ************************************************************************** */
 
-void MediaLibrary::searchMediaDirectory(const QString path)
+void MediaLibrary::searchMediaDirectory(const QString &path)
 {
     if (m_shotModel)
     {
@@ -119,14 +119,14 @@ void MediaLibrary::searchMediaDirectories()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void MediaLibrary::workerScanningStarted(QString s)
+void MediaLibrary::workerScanningStarted(const QString &s)
 {
     qDebug() << "> MediaLibrary::workerScanningStarted(" << s << ")";
     m_libraryState = DEVICE_STATE_SCANNING;
     emit stateUpdated();
 }
 
-void MediaLibrary::workerScanningFinished(QString s)
+void MediaLibrary::workerScanningFinished(const QString &s)
 {
     qDebug() << "> MediaLibrary::workerScanningFinished(" << s << ")";
     m_libraryState = DEVICE_STATE_IDLE;
@@ -136,7 +136,7 @@ void MediaLibrary::workerScanningFinished(QString s)
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void MediaLibrary::reencodeSelected(const QString shot_name, const QString codec,
+void MediaLibrary::reencodeSelected(const QString &shot_name, const QString &codec,
                                     float quality, float speed, float fps,
                                     int start, int duration)
 {
@@ -158,7 +158,7 @@ void MediaLibrary::reencodeSelected(const QString shot_name, const QString codec
         jm->addJob(JOB_REENCODE, nullptr, shot, nullptr, &sett);
 }
 
-void MediaLibrary::deleteSelected(const QString shot_name)
+void MediaLibrary::deleteSelected(const QString &shot_name)
 {
     qDebug() << "MediaLibrary::deleteSelected(" << shot_name << ")";
 
