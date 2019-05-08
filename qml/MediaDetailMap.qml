@@ -5,9 +5,9 @@ import QtLocation 5.9
 import QtPositioning 5.9
 import QtMultimedia 5.9
 
-import com.offloadbuddy.style 1.0
+import com.offloadbuddy.theme 1.0
 import com.offloadbuddy.shared 1.0
-import "StringUtils.js" as StringUtils
+import "UtilsString.js" as UtilsString
 
 Rectangle {
     id: contentMap
@@ -28,7 +28,7 @@ Rectangle {
 
             rectangleCoordinates.visible = true
             coordinates.text = shot.latitudeString + "    " + shot.longitudeString
-            altitude.text = StringUtils.altitudeToString(shot.altitude, 0, settingsManager.appunits)
+            altitude.text = UtilsString.altitudeToString(shot.altitude, 0, settingsManager.appunits)
         } else {
             mapPointGPS.center = QtPositioning.coordinate(45.5, 6)
             mapPointGPS.zoomLevel = 2
@@ -112,7 +112,7 @@ Rectangle {
     Rectangle {
         id: rectangleCoordinates
         height: 32
-        color: ThemeEngine.colorContentSubBox
+        color: Theme.colorContentSubBox
         anchors.right: parent.right
         anchors.rightMargin: 16
         anchors.left: parent.left
@@ -130,7 +130,7 @@ Rectangle {
             text: qsTr("GPS coordinates:")
             font.pixelSize: 16
             font.bold: true
-            color: ThemeEngine.colorText
+            color: Theme.colorText
             verticalAlignment: Text.AlignVCenter
         }
 
@@ -145,7 +145,7 @@ Rectangle {
             text: qsTr("Altitude:")
             font.pixelSize: 16
             font.bold: true
-            color: ThemeEngine.colorText
+            color: Theme.colorText
             verticalAlignment: Text.AlignVCenter
         }
 
@@ -158,7 +158,7 @@ Rectangle {
 
             text: "text"
             font.pixelSize: 16
-            color: ThemeEngine.colorText
+            color: Theme.colorText
             verticalAlignment: Text.AlignVCenter
         }
 
@@ -171,7 +171,7 @@ Rectangle {
 
             text: "text"
             font.pixelSize: 16
-            color: ThemeEngine.colorText
+            color: Theme.colorText
             verticalAlignment: Text.AlignVCenter
         }
 

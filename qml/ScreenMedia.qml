@@ -3,9 +3,9 @@ import QtQuick.Controls 2.2
 
 import QtGraphicalEffects 1.0
 
-import com.offloadbuddy.style 1.0
+import com.offloadbuddy.theme 1.0
 import com.offloadbuddy.shared 1.0
-import "StringUtils.js" as StringUtils
+import "UtilsString.js" as UtilsString
 
 Rectangle {
     id: screenMedia
@@ -81,7 +81,7 @@ Rectangle {
         anchors.left: parent.left
         anchors.topMargin: 0
         anchors.top: parent.top
-        color: ThemeEngine.colorHeaderBackground
+        color: Theme.colorHeaderBackground
 
         ButtonImage {
             id: rectangleBack
@@ -91,7 +91,7 @@ Rectangle {
             anchors.left: parent.left
             anchors.leftMargin: 16
 
-            imageSource: "qrc:/icons_material/baseline-keyboard_arrow_left-24px.svg"
+            imageSource: "qrc:/icons_material/baseline-navigate_before-24px.svg"
             onClicked: {
                 if (content.state == "library")
                     screenLibrary.state = "stateMediaGrid"
@@ -108,9 +108,9 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
 
             text: "SHOT NAME"
-            color: ThemeEngine.colorHeaderTitle
+            color: Theme.colorHeaderTitle
             font.bold: true
-            font.pixelSize: ThemeEngine.fontSizeHeaderTitle
+            font.pixelSize: Theme.fontSizeHeaderTitle
             verticalAlignment: Text.AlignVCenter
         }
 
@@ -249,7 +249,7 @@ Rectangle {
 
     Rectangle {
         id: rectangleContent
-        color: ThemeEngine.colorContentBackground
+        color: Theme.colorContentBackground
 
         anchors.top: rectangleHeader.bottom
         anchors.right: parent.right

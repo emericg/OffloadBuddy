@@ -2,8 +2,9 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Dialogs 1.2
 
-import com.offloadbuddy.style 1.0
-import "StringUtils.js" as StringUtils
+import com.offloadbuddy.theme 1.0
+import "UtilsString.js" as UtilsString
+import "UtilsPath.js" as UtilsPath
 
 Rectangle {
     id: itemMediaDirectory
@@ -23,13 +24,13 @@ Rectangle {
 
     function updateInfos() {
         if (directory.available === false)
-            itemMediaDirectory.color = ThemeEngine.colorSomethingsWrong
+            itemMediaDirectory.color = Theme.colorSomethingsWrong
         else
             itemMediaDirectory.color = "transparent"
 
-        deviceSpaceText.text = StringUtils.bytesToString_short(directory.spaceUsed) + " used / "
-                                + StringUtils.bytesToString_short(directory.spaceAvailable) + " available / "
-                                + StringUtils.bytesToString_short(directory.spaceTotal) + " total"
+        deviceSpaceText.text = UtilsString.bytesToString_short(directory.spaceUsed) + " used / "
+                                + UtilsString.bytesToString_short(directory.spaceAvailable) + " available / "
+                                + UtilsString.bytesToString_short(directory.spaceTotal) + " total"
     }
 
     TextFieldThemed {
@@ -50,7 +51,7 @@ Rectangle {
             selectFolder: true
 
             onAccepted: {
-                directory.directoryPath = StringUtils.urlToPath(fileDialogChange.fileUrl.toString());
+                directory.directoryPath = UtilsPath.cleanUrl(fileDialogChange.fileUrl);
                 settingsMgr.directoryModified();
             }
         }
@@ -135,8 +136,8 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: -6
 
-        text: StringUtils.bytesToString_short(directory.spaceUsed) + " used / " + StringUtils.bytesToString_short(directory.spaceAvailable) + " available / " + StringUtils.bytesToString_short(directory.spaceTotal) + " total"
-        color: ThemeEngine.colorText
+        text: UtilsString.bytesToString_short(directory.spaceUsed) + " used / " + UtilsString.bytesToString_short(directory.spaceAvailable) + " available / " + UtilsString.bytesToString_short(directory.spaceTotal) + " total"
+        color: Theme.colorText
         visible: directory.available
     }
     Text {

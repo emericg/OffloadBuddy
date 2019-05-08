@@ -44,7 +44,6 @@ function fileToFolder(filePath) {
     return folderPath;
 }
 
-
 /* ************************************************************************** */
 
 function isMediaFile(filePath, permissive) {

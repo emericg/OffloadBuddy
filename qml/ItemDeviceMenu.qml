@@ -2,7 +2,7 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtGraphicalEffects 1.0
 
-import com.offloadbuddy.style 1.0
+import com.offloadbuddy.theme 1.0
 
 Rectangle {
     id: itemDeviceMenu
@@ -30,8 +30,8 @@ Rectangle {
         ColorOverlay {
             anchors.fill: parent
             source: parent
-            color: ThemeEngine.colorSidebarIcons
-            visible: ThemeEngine.colorSidebarIcons === "#ffffff" ? true : false
+            color: Theme.colorSidebarIcons
+            visible: Theme.colorSidebarIcons === "#ffffff" ? true : false
         }
     }
 
@@ -45,7 +45,7 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0
 
-        color: ThemeEngine.colorSidebarText
+        color: Theme.colorSidebarText
         text: (myDevice.model === "device")? myDevice.brand : myDevice.model
         font.bold: true
         font.pixelSize: 11

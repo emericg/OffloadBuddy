@@ -19,8 +19,6 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-/* ************************************************************************** */
-
 #include "SettingsManager.h"
 #include "MediaLibrary.h"
 #include "DeviceManager.h"
@@ -34,6 +32,9 @@
 #ifdef ENABLE_MINIVIDEO
 #include <minivideo.h>
 #endif
+
+#include <QTranslator>
+#include <QLibraryInfo>
 
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
@@ -109,37 +110,47 @@ int main(int argc, char *argv[])
     app.setOrganizationDomain("OffloadBuddy");
     app.setOrganizationName("OffloadBuddy");
 
+    // icon
     QIcon appIcon(":/appicons/offloadbuddy.svg");
     app.setWindowIcon(appIcon);
 
+    // i18n
+    QTranslator qtTranslator;
+    qtTranslator.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+    app.installTranslator(&qtTranslator);
+
+    QTranslator appTranslator;
+    appTranslator.load(":/i18n/offloadbuddy.qm");
+    app.installTranslator(&appTranslator);
+
     ////////////////////////////////////////////////////////////////////////////
 
-    SettingsManager *s = SettingsManager::getInstance();
-    if (s)
+    SettingsManager *sm = SettingsManager::getInstance();
+    if (sm)
     {
         if (argc > 0 && argv[0])
         {
             QString path = QString::fromLocal8Bit(argv[0]);
-            s->setAppPath(path);
+            sm->setAppPath(path);
         }
     }
 
-    MediaLibrary *m = new MediaLibrary;
-    m->searchMediaDirectories();
+    MediaLibrary *ml = new MediaLibrary;
+    ml->searchMediaDirectories();
 
-    DeviceManager *d = new DeviceManager;
-    d->searchDevices();
+    DeviceManager *dm = new DeviceManager;
+    dm->searchDevices();
 
-    JobManager *j = JobManager::getInstance();
-    j->attachLibrary(m);
+    JobManager *jm = JobManager::getInstance();
+    jm->attachLibrary(ml);
     atexit(exithandler); // will stop running job on exit
 
     ////////////////////////////////////////////////////////////////////////////
 
     qmlRegisterSingletonType(
         QUrl("qrc:/qml/ThemeEngine.qml"),
-        "com.offloadbuddy.style", 1, 0,
-        "ThemeEngine");
+        "com.offloadbuddy.theme", 1, 0,
+        "Theme");
 
     qmlRegisterUncreatableMetaObject(
         Shared::staticMetaObject,
@@ -152,10 +163,10 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
     QQmlContext *engine_context = engine.rootContext();
-    engine_context->setContextProperty("settingsManager", s);
-    engine_context->setContextProperty("mediaLibrary", m);
-    engine_context->setContextProperty("deviceManager", d);
-    engine_context->setContextProperty("jobManager", j);
+    engine_context->setContextProperty("settingsManager", sm);
+    engine_context->setContextProperty("mediaLibrary", ml);
+    engine_context->setContextProperty("deviceManager", dm);
+    engine_context->setContextProperty("jobManager", jm);
 
     engine.addImageProvider("GridThumbnailer", new GridThumbnailer);
 

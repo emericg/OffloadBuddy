@@ -3,9 +3,9 @@ import QtQuick.Controls 2.2
 import QtMultimedia 5.9
 import QtGraphicalEffects 1.0
 
-import com.offloadbuddy.style 1.0
+import com.offloadbuddy.theme 1.0
 import com.offloadbuddy.shared 1.0
-import "StringUtils.js" as StringUtils
+import "UtilsString.js" as UtilsString
 
 Rectangle {
     id: contentOverview
@@ -113,24 +113,24 @@ Rectangle {
 
             labelDuration.visible = true
             labelDuration.anchors.topMargin = 8
-            duration.text = StringUtils.durationToString(shot.duration)
+            duration.text = UtilsString.durationToString(shot.duration)
 
-            bitrate.text = StringUtils.bitrateToString(shot.bitrate)
+            bitrate.text = UtilsString.bitrateToString(shot.bitrate)
             codec.text = shot.codecVideo
-            framerate.text = StringUtils.framerateToString(shot.framerate)
+            framerate.text = UtilsString.framerateToString(shot.framerate)
             timecode.text = shot.timecode
         }
 
-        size.text = StringUtils.bytesToString_short(shot.datasize)
+        size.text = UtilsString.bytesToString_short(shot.datasize)
         if (shot.size !== shot.datasize) {
-            size.text += "   (" + qsTr("full: ") + StringUtils.bytesToString_short(shot.size) + ")"
+            size.text += "   (" + qsTr("full: ") + UtilsString.bytesToString_short(shot.size) + ")"
         }
     }
 
     Rectangle {
         id: rectangleMetadatas
         width: 320
-        color: ThemeEngine.colorContentBox
+        color: Theme.colorContentBox
         anchors.bottomMargin: 0
         anchors.rightMargin: 0
         anchors.right: parent.right
@@ -154,8 +154,8 @@ Rectangle {
             ColorOverlay {
                 anchors.fill: parent
                 source: parent
-                color: ThemeEngine.colorContentText
-                visible: ThemeEngine.colorContentText !== "#000000" ? true : false
+                color: Theme.colorContentText
+                visible: Theme.colorContentText !== "#000000" ? true : false
             }
 
             Text {
@@ -164,12 +164,12 @@ Rectangle {
                 anchors.left: parent.right
                 anchors.leftMargin: 16
 
-                color: ThemeEngine.colorContentText
+                color: Theme.colorContentText
                 text: shot.date.toUTCString()
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignLeft
                 anchors.verticalCenter: parent.verticalCenter
-                font.pixelSize: ThemeEngine.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentText
             }
         }
 
@@ -189,8 +189,8 @@ Rectangle {
             ColorOverlay {
                 anchors.fill: parent
                 source: parent
-                color: ThemeEngine.colorContentText
-                visible: ThemeEngine.colorContentText !== "#000000" ? true : false
+                color: Theme.colorContentText
+                visible: Theme.colorContentText !== "#000000" ? true : false
             }
 
             Text {
@@ -203,8 +203,8 @@ Rectangle {
                 text: shot.camera
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignLeft
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
+                color: Theme.colorContentText
             }
         }
 
@@ -224,8 +224,8 @@ Rectangle {
             ColorOverlay {
                 anchors.fill: parent
                 source: parent
-                color: ThemeEngine.colorContentText
-                visible: ThemeEngine.colorContentText !== "#000000" ? true : false
+                color: Theme.colorContentText
+                visible: Theme.colorContentText !== "#000000" ? true : false
             }
 
             Text {
@@ -238,8 +238,8 @@ Rectangle {
 
                 text: ""
                 verticalAlignment: Text.AlignVCenter
-                color: ThemeEngine.colorContentText
-                font.pixelSize: ThemeEngine.fontSizeContentText
+                color: Theme.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
             }
         }
 
@@ -259,8 +259,8 @@ Rectangle {
             ColorOverlay {
                 anchors.fill: parent
                 source: parent
-                color: ThemeEngine.colorContentText
-                visible: ThemeEngine.colorContentText !== "#000000" ? true : false
+                color: Theme.colorContentText
+                visible: Theme.colorContentText !== "#000000" ? true : false
             }
 
             Text {
@@ -270,11 +270,11 @@ Rectangle {
                 anchors.leftMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
 
-                text: shot.width + "x" + shot.height + "   (" + StringUtils.varToString(shot.width, shot.height) + ")"
+                text: shot.width + "x" + shot.height + "   (" + UtilsString.varToString(shot.width, shot.height) + ")"
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignRight
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
+                color: Theme.colorContentText
             }
         }
 
@@ -294,8 +294,8 @@ Rectangle {
             ColorOverlay {
                 anchors.fill: parent
                 source: parent
-                color: ThemeEngine.colorContentText
-                visible: ThemeEngine.colorContentText !== "#000000" ? true : false
+                color: Theme.colorContentText
+                visible: Theme.colorContentText !== "#000000" ? true : false
             }
 
             Text {
@@ -305,11 +305,11 @@ Rectangle {
                 anchors.leftMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
 
-                color: ThemeEngine.colorContentText
-                text: StringUtils.orientationToString(shot.orientation)
+                color: Theme.colorContentText
+                text: UtilsString.orientationToString(shot.orientation)
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignRight
-                font.pixelSize: ThemeEngine.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentText
             }
         }
 
@@ -329,8 +329,8 @@ Rectangle {
             ColorOverlay {
                 anchors.fill: parent
                 source: parent
-                color: ThemeEngine.colorContentText
-                visible: ThemeEngine.colorContentText !== "#000000" ? true : false
+                color: Theme.colorContentText
+                visible: Theme.colorContentText !== "#000000" ? true : false
             }
 
             Text {
@@ -340,11 +340,11 @@ Rectangle {
                 anchors.leftMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
 
-                color: ThemeEngine.colorContentText
-                text: StringUtils.bytesToString_short(shot.datasize)
+                color: Theme.colorContentText
+                text: UtilsString.bytesToString_short(shot.datasize)
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignRight
-                font.pixelSize: ThemeEngine.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentText
             }
         }
 
@@ -375,8 +375,8 @@ Rectangle {
                 ColorOverlay {
                     anchors.fill: parent
                     source: parent
-                    color: ThemeEngine.colorContentText
-                    visible: ThemeEngine.colorContentText !== "#000000" ? true : false
+                    color: Theme.colorContentText
+                    visible: Theme.colorContentText !== "#000000" ? true : false
                 }
 
                 Text {
@@ -389,8 +389,8 @@ Rectangle {
                     text: qsTr("ISO") + " " + shot.iso
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
-                    font.pixelSize: ThemeEngine.fontSizeContentText
-                    color: ThemeEngine.colorContentText
+                    font.pixelSize: Theme.fontSizeContentText
+                    color: Theme.colorContentText
                 }
             }
 
@@ -410,8 +410,8 @@ Rectangle {
                 ColorOverlay {
                     anchors.fill: parent
                     source: parent
-                    color: ThemeEngine.colorContentText
-                    visible: ThemeEngine.colorContentText !== "#000000" ? true : false
+                    color: Theme.colorContentText
+                    visible: Theme.colorContentText !== "#000000" ? true : false
                 }
 
                 Text {
@@ -424,8 +424,8 @@ Rectangle {
                     text: shot.focal
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
-                    font.pixelSize: ThemeEngine.fontSizeContentText
-                    color: ThemeEngine.colorContentText
+                    font.pixelSize: Theme.fontSizeContentText
+                    color: Theme.colorContentText
                 }
             }
 
@@ -445,8 +445,8 @@ Rectangle {
                 ColorOverlay {
                     anchors.fill: parent
                     source: parent
-                    color: ThemeEngine.colorContentText
-                    visible: ThemeEngine.colorContentText !== "#000000" ? true : false
+                    color: Theme.colorContentText
+                    visible: Theme.colorContentText !== "#000000" ? true : false
                 }
 
                 Text {
@@ -459,8 +459,8 @@ Rectangle {
                     text: shot.exposure
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
-                    font.pixelSize: ThemeEngine.fontSizeContentText
-                    color: ThemeEngine.colorContentText
+                    font.pixelSize: Theme.fontSizeContentText
+                    color: Theme.colorContentText
                 }
             }
         }
@@ -480,7 +480,7 @@ Rectangle {
                 id: labelChapter
                 width: 290
                 height: 28
-                color: ThemeEngine.colorContentText
+                color: Theme.colorContentText
                 text: qsTr("Chapters:")
                 anchors.left: parent.left
                 anchors.leftMargin: 16
@@ -488,7 +488,7 @@ Rectangle {
                 anchors.topMargin: 0
                 verticalAlignment: Text.AlignVCenter
                 font.bold: true
-                font.pixelSize: ThemeEngine.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentText
 
                 Text {
                     id: chapters
@@ -500,8 +500,8 @@ Rectangle {
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
-                    font.pixelSize: ThemeEngine.fontSizeContentText
-                    color: ThemeEngine.colorContentText
+                    font.pixelSize: Theme.fontSizeContentText
+                    color: Theme.colorContentText
                 }
             }
 
@@ -516,8 +516,8 @@ Rectangle {
                 anchors.topMargin: 0
                 verticalAlignment: Text.AlignVCenter
                 font.bold: true
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
+                color: Theme.colorContentText
 
                 Text {
                     id: timecode
@@ -529,8 +529,8 @@ Rectangle {
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
-                    color: ThemeEngine.colorContentText
-                    font.pixelSize: ThemeEngine.fontSizeContentText
+                    color: Theme.colorContentText
+                    font.pixelSize: Theme.fontSizeContentText
                 }
             }
 
@@ -545,8 +545,8 @@ Rectangle {
                 anchors.leftMargin: 16
                 verticalAlignment: Text.AlignVCenter
                 font.bold: true
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
+                color: Theme.colorContentText
 
                 Text {
                     id: codec
@@ -558,8 +558,8 @@ Rectangle {
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
-                    color: ThemeEngine.colorContentText
-                    font.pixelSize: ThemeEngine.fontSizeContentText
+                    color: Theme.colorContentText
+                    font.pixelSize: Theme.fontSizeContentText
                 }
             }
 
@@ -567,7 +567,7 @@ Rectangle {
                 id: labelBitrate
                 width: 290
                 height: 28
-                color: ThemeEngine.colorContentText
+                color: Theme.colorContentText
                 text: qsTr("Bitrate:")
                 anchors.left: parent.left
                 anchors.leftMargin: 16
@@ -575,7 +575,7 @@ Rectangle {
                 anchors.topMargin: 0
                 verticalAlignment: Text.AlignVCenter
                 font.bold: true
-                font.pixelSize: ThemeEngine.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentText
 
                 Text {
                     id: bitrate
@@ -587,8 +587,8 @@ Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
-                    color: ThemeEngine.colorContentText
-                    font.pixelSize: ThemeEngine.fontSizeContentText
+                    color: Theme.colorContentText
+                    font.pixelSize: Theme.fontSizeContentText
                 }
             }
 
@@ -596,7 +596,7 @@ Rectangle {
                 id: labelFramerate
                 width: 290
                 height: 28
-                color: ThemeEngine.colorContentText
+                color: Theme.colorContentText
                 text: qsTr("Framerate:")
                 anchors.left: parent.left
                 anchors.leftMargin: 16
@@ -604,7 +604,7 @@ Rectangle {
                 anchors.topMargin: 0
                 verticalAlignment: Text.AlignVCenter
                 font.bold: true
-                font.pixelSize: ThemeEngine.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentText
 
                 Text {
                     id: framerate
@@ -616,8 +616,8 @@ Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
-                    color: ThemeEngine.colorContentText
-                    font.pixelSize: ThemeEngine.fontSizeContentText
+                    color: Theme.colorContentText
+                    font.pixelSize: Theme.fontSizeContentText
                 }
             }
         }
@@ -625,7 +625,7 @@ Rectangle {
         Rectangle {
             id: rectangleFiles
             height: 256
-            color: ThemeEngine.colorContentSubBox
+            color: Theme.colorContentSubBox
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 0
             anchors.right: parent.right
@@ -646,9 +646,9 @@ Rectangle {
                 text: qsTr("File(s):")
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
-                color: ThemeEngine.colorContentText
+                color: Theme.colorContentText
                 font.bold: true
-                font.pixelSize: ThemeEngine.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentText
             }
 
             Text {
@@ -665,8 +665,8 @@ Rectangle {
                 text: ""
                 clip: true
                 horizontalAlignment: Text.AlignRight
-                color: ThemeEngine.colorContentText
-                font.pixelSize: ThemeEngine.fontSizeContentText
+                color: Theme.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
             }
         }
     }

@@ -1,7 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 
-import com.offloadbuddy.style 1.0
+import com.offloadbuddy.theme 1.0
 
 Rectangle {
     width: 1280
@@ -57,7 +57,7 @@ Rectangle {
     Rectangle {
         id: rectangleHeader
         height: 128
-        color: ThemeEngine.colorHeaderBackground
+        color: Theme.colorHeaderBackground
         z: 1
         anchors.top: parent.top
         anchors.topMargin: 0
@@ -80,12 +80,12 @@ Rectangle {
             anchors.top: parent.top
             anchors.topMargin: 16
 
-            color: ThemeEngine.colorHeaderTitle
+            color: Theme.colorHeaderTitle
             text: qsTr("MEDIA LIBRARY")
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignRight
             font.bold: true
-            font.pixelSize: ThemeEngine.fontSizeHeaderTitle
+            font.pixelSize: Theme.fontSizeHeaderTitle
         }
 
         ComboBoxThemed {
@@ -237,8 +237,8 @@ Rectangle {
             anchors.leftMargin: 16
 
             text: qsTr("ZOOM")
-            font.pixelSize: ThemeEngine.fontSizeHeaderText
-            color: ThemeEngine.colorHeaderText
+            font.pixelSize: Theme.fontSizeHeaderText
+            color: Theme.colorHeaderText
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }
@@ -248,7 +248,7 @@ Rectangle {
 
     Rectangle {
         id: rectangleLibraryGrid
-        color: ThemeEngine.colorContentBackground
+        color: Theme.colorContentBackground
 
         anchors.top: rectangleHeader.bottom
         anchors.topMargin: 0
@@ -264,7 +264,7 @@ Rectangle {
             width: 350
             height: 350
             radius: width*0.5
-            color: ThemeEngine.colorHeaderBackground
+            color: Theme.colorHeaderBackground
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
 
@@ -295,7 +295,7 @@ Rectangle {
                 height: shotsview.cellSize
                 color: "#00000000"
                 border.width : 4
-                border.color: ThemeEngine.colorApproved
+                border.color: Theme.colorApproved
                 x: {
                     if (shotsview.currentItem.x) {
                         x = shotsview.currentItem.x

@@ -3,14 +3,14 @@ import QtQuick.Controls 2.2
 import QtQuick.Dialogs 1.2
 import QtGraphicalEffects 1.0
 
-import com.offloadbuddy.style 1.0
-import "StringUtils.js" as StringUtils
+import com.offloadbuddy.theme 1.0
+import "UtilsString.js" as UtilsString
 
 Rectangle {
     id: itemJob
     height: 48
     width: parent.width
-    color: ThemeEngine.colorContentSubBox
+    color: Theme.colorContentSubBox
 
     property var job
 
@@ -38,8 +38,8 @@ Rectangle {
             ColorOverlay {
                 anchors.fill: parent
                 source: parent
-                color: ThemeEngine.colorSidebarIcons
-                visible: ThemeEngine.colorSidebarIcons === "#ffffff" ? true : false
+                color: Theme.colorSidebarIcons
+                visible: Theme.colorSidebarIcons === "#ffffff" ? true : false
             }
 
             NumberAnimation on rotation {
@@ -94,7 +94,7 @@ Rectangle {
         id: jobType
         height: 40
         text: job.type
-        color: ThemeEngine.colorText
+        color: Theme.colorText
         font.bold: true
         verticalAlignment: Text.AlignVCenter
         anchors.left: rectangleStatus.right
@@ -108,7 +108,7 @@ Rectangle {
         y: 25
         height: 40
         text: job.name
-        color: ThemeEngine.colorText
+        color: Theme.colorText
         verticalAlignment: Text.AlignVCenter
         anchors.left: jobType.right
         anchors.leftMargin: 8
@@ -149,8 +149,8 @@ Rectangle {
             ColorOverlay {
                 anchors.fill: parent
                 source: parent
-                color: ThemeEngine.colorSidebarIcons
-                visible: ThemeEngine.colorSidebarIcons === "#ffffff" ? true : false
+                color: Theme.colorSidebarIcons
+                visible: Theme.colorSidebarIcons === "#ffffff" ? true : false
             }
         }
 

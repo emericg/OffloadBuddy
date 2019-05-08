@@ -2,7 +2,7 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 
 import com.offloadbuddy.shared 1.0
-import "StringUtils.js" as StringUtils
+import "UtilsString.js" as UtilsString
 
 Item {
     id: itemEncode
@@ -103,8 +103,8 @@ Item {
             if (clipStop < 0) clipStop = currentShot.duration
             clipStartMs = clipStart
             clipDurationMs = clipStop - clipStart
-            textField_clipstart.text = StringUtils.durationToString_ffmpeg(clipStart)
-            textField_clipstop.text = StringUtils.durationToString_ffmpeg(clipStop)
+            textField_clipstart.text = UtilsString.durationToString_ffmpeg(clipStart)
+            textField_clipstop.text = UtilsString.durationToString_ffmpeg(clipStop)
 
             cbCOPY.visible = true
             cbCOPY.checked = true

@@ -2,8 +2,9 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Dialogs 1.2
 
-import com.offloadbuddy.style 1.0
-import "StringUtils.js" as StringUtils
+import com.offloadbuddy.theme 1.0
+import "UtilsString.js" as UtilsString
+import "UtilsPath.js" as UtilsPath
 
 Rectangle {
     width: 1280
@@ -12,7 +13,7 @@ Rectangle {
     Rectangle {
         id: rectangleHeader
         height: 64
-        color: ThemeEngine.colorHeaderBackground
+        color: Theme.colorHeaderBackground
         anchors.right: parent.right
         anchors.rightMargin: 0
         anchors.left: parent.left
@@ -30,14 +31,14 @@ Rectangle {
             text: qsTr("SETTINGS")
             verticalAlignment: Text.AlignVCenter
             font.bold: true
-            font.pixelSize: ThemeEngine.fontSizeHeaderTitle
-            color: ThemeEngine.colorHeaderTitle
+            font.pixelSize: Theme.fontSizeHeaderTitle
+            color: Theme.colorHeaderTitle
         }
     }
 
     Rectangle {
         id: rectangleContent
-        color: ThemeEngine.colorContentBackground
+        color: Theme.colorContentBackground
 
         anchors.top: rectangleHeader.bottom
         anchors.topMargin: 0
@@ -135,7 +136,7 @@ Rectangle {
             width: 350
             height: 40
             text: qsTr("Automatically delete offloaded medias")
-            font.pixelSize: ThemeEngine.fontSizeContentText
+            font.pixelSize: Theme.fontSizeContentText
 
             anchors.left: checkAutoMetadatas.right
             anchors.leftMargin: 16
@@ -157,8 +158,8 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignLeft
             text: qsTr("Units in:")
-            font.pixelSize: ThemeEngine.fontSizeContentText
-            color: ThemeEngine.colorContentText
+            font.pixelSize: Theme.fontSizeContentText
+            color: Theme.colorContentText
         }
 
         Text {
@@ -171,8 +172,8 @@ Rectangle {
             horizontalAlignment: Text.AlignLeft
             anchors.left: parent.left
             anchors.leftMargin: 16
-            font.pixelSize: ThemeEngine.fontSizeContentText
-            color: ThemeEngine.colorContentText
+            font.pixelSize: Theme.fontSizeContentText
+            color: Theme.colorContentText
         }
 
         ComboBoxThemed {
@@ -202,7 +203,7 @@ Rectangle {
                 else
                     cbinit = true;
 
-                ThemeEngine.loadTheme(currentIndex)
+                Theme.loadTheme(currentIndex)
             }
         }
 
@@ -247,7 +248,7 @@ Rectangle {
         Rectangle {
             id: rectangleMedias
             radius: 4
-            color: ThemeEngine.colorContentBox
+            color: Theme.colorContentBox
 
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 16
@@ -269,8 +270,8 @@ Rectangle {
                 text: qsTr("Media directories")
                 verticalAlignment: Text.AlignVCenter
                 font.bold: true
-                font.pixelSize: ThemeEngine.fontSizeContentTitle
-                color: ThemeEngine.colorContentTitle
+                font.pixelSize: Theme.fontSizeContentTitle
+                color: Theme.colorContentTitle
             }
 
             ButtonThemed {
@@ -292,7 +293,7 @@ Rectangle {
                 folder: shortcuts.home
 
                 onAccepted: {
-                    settingsManager.addDirectory(StringUtils.urlToPath(fileDialogAdd.fileUrl.toString()))
+                    settingsManager.addDirectory(UtilsPath.cleanUrl(fileDialogAdd.fileUrl))
                 }
             }
 
@@ -349,8 +350,8 @@ Rectangle {
                 anchors.right: comboBoxContentHierarchy.left
                 anchors.rightMargin: 16
                 anchors.verticalCenter: textMediasTitle.verticalCenter
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
+                color: Theme.colorContentText
             }
         }
     }

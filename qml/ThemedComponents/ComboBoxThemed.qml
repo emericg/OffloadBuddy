@@ -1,7 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 
-import com.offloadbuddy.style 1.0
+import com.offloadbuddy.theme 1.0
 
 ComboBox {
     id: control
@@ -48,7 +48,7 @@ ComboBox {
 
         text: control.displayText
         font: control.font
-        color: ThemeEngine.colorComboBoxText
+        color: Theme.colorComboBoxText
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
     }
@@ -56,7 +56,7 @@ ComboBox {
     background: Rectangle {
         implicitWidth: 120
         implicitHeight: 40
-        color: ThemeEngine.colorComboBox
+        color: Theme.colorComboBox
         //border.color: control.pressed ? "#17a81a" : "#21be2b"
         //border.width: control.visualFocus ? 2 : 1
     }
@@ -78,7 +78,7 @@ ComboBox {
 
         background: Rectangle {
             color: "white"
-            //border.color: ThemeEngine.colorButton
+            //border.color: Theme.colorButton
         }
     }
 

@@ -2,8 +2,8 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtGraphicalEffects 1.0
 
-import com.offloadbuddy.style 1.0
-import "StringUtils.js" as StringUtils
+import com.offloadbuddy.theme 1.0
+import "UtilsString.js" as UtilsString
 
 Rectangle {
     id: screenDeviceGrid
@@ -47,8 +47,8 @@ Rectangle {
     function updateStorage() {
         //console.log("currentDevice.storageLevel" + currentDevice.storageLevel)
         if (currentDevice.spaceTotal > 0) {
-            deviceSpaceText.text = StringUtils.bytesToString_short(currentDevice.spaceUsed)
-                    + qsTr(" used of ") + StringUtils.bytesToString_short(currentDevice.spaceTotal)
+            deviceSpaceText.text = UtilsString.bytesToString_short(currentDevice.spaceUsed)
+                    + qsTr(" used of ") + UtilsString.bytesToString_short(currentDevice.spaceTotal)
         } else {
             deviceSpaceText.text = qsTr("Unknown storage")
         }
@@ -201,7 +201,7 @@ Rectangle {
     Rectangle {
         id: rectangleHeader
         height: 128
-        color: ThemeEngine.colorHeaderBackground
+        color: Theme.colorHeaderBackground
         z: 1
         anchors.top: parent.top
         anchors.topMargin: 0
@@ -244,9 +244,9 @@ Rectangle {
             anchors.rightMargin: 8
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignRight
-            color: ThemeEngine.colorHeaderTitle
+            color: Theme.colorHeaderTitle
             font.bold: true
-            font.pixelSize: ThemeEngine.fontSizeHeaderTitle - 2
+            font.pixelSize: Theme.fontSizeHeaderTitle - 2
         }
 
         Image {
@@ -265,8 +265,8 @@ Rectangle {
             ColorOverlay {
                 anchors.fill: parent
                 source: parent
-                visible: ThemeEngine.colorHeaderText === "#000000" ? false : true
-                color: ThemeEngine.colorHeaderText
+                visible: Theme.colorHeaderText === "#000000" ? false : true
+                color: Theme.colorHeaderText
             }
         }
         Image {
@@ -285,8 +285,8 @@ Rectangle {
             ColorOverlay {
                 anchors.fill: parent
                 source: parent
-                visible: ThemeEngine.colorHeaderText === "#000000" ? false : true
-                color: ThemeEngine.colorHeaderText
+                visible: Theme.colorHeaderText === "#000000" ? false : true
+                color: Theme.colorHeaderText
             }
         }
         Image {
@@ -304,8 +304,8 @@ Rectangle {
 
             ColorOverlay {
                 source: parent
-                color: ThemeEngine.colorHeaderText
-                visible: ThemeEngine.colorHeaderText === "#000000" ? false : true
+                color: Theme.colorHeaderText
+                visible: Theme.colorHeaderText === "#000000" ? false : true
                 anchors.fill: parent
             }
         }
@@ -320,8 +320,8 @@ Rectangle {
             anchors.topMargin: 0
 
             text: "64GB available of 128GB"
-            color: ThemeEngine.colorHeaderText
-            font.pixelSize: ThemeEngine.fontSizeHeaderText
+            color: Theme.colorHeaderText
+            font.pixelSize: Theme.fontSizeHeaderText
             horizontalAlignment: Text.AlignRight
             verticalAlignment: Text.AlignBottom
         }
@@ -371,7 +371,7 @@ Rectangle {
 
             Rectangle {
                 id: rectangleTransferDecorated
-                color: ThemeEngine.colorApproved
+                color: Theme.colorApproved
                 width: parent.width
                 height: parent.height
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -437,12 +437,12 @@ Rectangle {
                 timerReset.stop();
                 blinkReset.stop();
                 textReset.text = qsTr("Delete ALL content!");
-                rectangleDeleteDecorated.color = ThemeEngine.colorDangerZone;
+                rectangleDeleteDecorated.color = Theme.colorDangerZone;
             }
 
             Rectangle {
                 id: rectangleDeleteDecorated
-                color: ThemeEngine.colorDangerZone
+                color: Theme.colorDangerZone
                 width: parent.width
                 height: parent.height
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -452,8 +452,8 @@ Rectangle {
                     id: blinkReset
                     running: false
                     loops: Animation.Infinite
-                    ColorAnimation { from: ThemeEngine.colorDangerZone; to: "red"; duration: 1000 }
-                    ColorAnimation { from: "red"; to: ThemeEngine.colorDangerZone; duration: 1000 }
+                    ColorAnimation { from: Theme.colorDangerZone; to: "red"; duration: 1000 }
+                    ColorAnimation { from: "red"; to: Theme.colorDangerZone; duration: 1000 }
                 }
             }
 
@@ -607,8 +607,8 @@ Rectangle {
             anchors.leftMargin: 16
 
             text: qsTr("ZOOM")
-            font.pixelSize: ThemeEngine.fontSizeHeaderText
-            color: ThemeEngine.colorHeaderText
+            font.pixelSize: Theme.fontSizeHeaderText
+            color: Theme.colorHeaderText
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }
@@ -618,7 +618,7 @@ Rectangle {
 
     Rectangle {
         id: rectangleDeviceShots
-        color: ThemeEngine.colorContentBackground
+        color: Theme.colorContentBackground
 
         anchors.top: rectangleHeader.bottom
         anchors.right: parent.right
@@ -630,7 +630,7 @@ Rectangle {
             width: 350
             height: 350
             radius: width*0.5
-            color: ThemeEngine.colorHeaderBackground
+            color: Theme.colorHeaderBackground
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
 
@@ -660,7 +660,7 @@ Rectangle {
                 height: shotsview.cellSize
                 color: "#00000000"
                 border.width : 4
-                border.color: ThemeEngine.colorApproved
+                border.color: Theme.colorApproved
                 x: {
                     if (shotsview.currentItem.x) {
                         x = shotsview.currentItem.x

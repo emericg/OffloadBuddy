@@ -1,7 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 
-import com.offloadbuddy.style 1.0
+import com.offloadbuddy.theme 1.0
 
 Item {
     id: actionButtonItem
@@ -39,7 +39,7 @@ Item {
             width: parent.width
             anchors { verticalCenter: parent.verticalCenter; left: parent.left; leftMargin: 10 }
             font.bold: true
-            font.pixelSize: ThemeEngine.fontSizeContentText
+            font.pixelSize: Theme.fontSizeContentText
             color: "#3d3d3d"
         }
         MouseArea {
@@ -57,7 +57,7 @@ Item {
             },
             State {
                 name: "hovered";
-                PropertyChanges { target: vButton; color: { if (vButton.text === qsTr("DELETE")) ThemeEngine.colorDangerZone; else ThemeEngine.colorApproved; } }
+                PropertyChanges { target: vButton; color: { if (vButton.text === qsTr("DELETE")) Theme.colorDangerZone; else Theme.colorApproved; } }
             },
             State {
                 name: "normal";

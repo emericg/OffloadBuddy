@@ -24,7 +24,7 @@ import QtQuick.Controls 2.2
 import QtQuick.Window 2.2
 import QtGraphicalEffects 1.0
 
-import com.offloadbuddy.style 1.0
+import com.offloadbuddy.theme 1.0
 
 ApplicationWindow {
     id: applicationWindow
@@ -77,7 +77,7 @@ ApplicationWindow {
     Rectangle {
         id: sideBar
         width: 96
-        color: ThemeEngine.colorSidebar
+        color: Theme.colorSidebar
         anchors.left: parent.left
         anchors.leftMargin: 0
         anchors.bottom: parent.bottom
@@ -95,14 +95,14 @@ ApplicationWindow {
             anchors.right: parent.right
             anchors.rightMargin: 0
 
-            visible: (ThemeEngine.selector === "arrow")
+            visible: (Theme.selector === "arrow")
             source: "qrc:/menus/selector_arrow.svg"
 
             ColorOverlay {
                 anchors.fill: parent
                 source: parent
-                color: ThemeEngine.colorSidebarIcons
-                visible: ThemeEngine.colorSidebarIcons === "#ffffff" ? true : false
+                color: Theme.colorSidebarIcons
+                visible: Theme.colorSidebarIcons === "#ffffff" ? true : false
             }
         }
 
@@ -111,13 +111,13 @@ ApplicationWindow {
             width: parent.width
             height: 64
 
-            visible: (ThemeEngine.selector === "bar")
+            visible: (Theme.selector === "bar")
             color: "black"
 
             Rectangle {
                 width: 4
                 height: parent.height
-                color: ThemeEngine.colorApproved
+                color: Theme.colorApproved
             }
         }
 
@@ -147,8 +147,8 @@ ApplicationWindow {
                 ColorOverlay {
                     anchors.fill: parent
                     source: parent
-                    color: ThemeEngine.colorSidebarIcons
-                    visible: ThemeEngine.colorSidebarIcons === "#ffffff" ? true : false
+                    color: Theme.colorSidebarIcons
+                    visible: Theme.colorSidebarIcons === "#ffffff" ? true : false
                 }
             }
         }
@@ -206,8 +206,8 @@ ApplicationWindow {
                 ColorOverlay {
                     anchors.fill: parent
                     source: parent
-                    color: ThemeEngine.colorSidebarIcons
-                    visible: ThemeEngine.colorSidebarIcons ? 1 : 0
+                    color: Theme.colorSidebarIcons
+                    visible: Theme.colorSidebarIcons ? 1 : 0
                 }
 
                 NumberAnimation on opacity {
@@ -254,8 +254,8 @@ ApplicationWindow {
                 ColorOverlay {
                     anchors.fill: parent
                     source: parent
-                    color: ThemeEngine.colorSidebarIcons
-                    visible: ThemeEngine.colorSidebarIcons === "#ffffff" ? true : false
+                    color: Theme.colorSidebarIcons
+                    visible: Theme.colorSidebarIcons === "#ffffff" ? true : false
                 }
             }
         }
@@ -283,8 +283,8 @@ ApplicationWindow {
                 ColorOverlay {
                     anchors.fill: parent
                     source: parent
-                    color: ThemeEngine.colorSidebarIcons
-                    visible: ThemeEngine.colorSidebarIcons === "#ffffff" ? true : false
+                    color: Theme.colorSidebarIcons
+                    visible: Theme.colorSidebarIcons === "#ffffff" ? true : false
                 }
             }
         }
@@ -312,8 +312,8 @@ ApplicationWindow {
                 ColorOverlay {
                     anchors.fill: parent
                     source: parent
-                    color: ThemeEngine.colorSidebarIcons
-                    visible: ThemeEngine.colorSidebarIcons === "#ffffff" ? true : false
+                    color: Theme.colorSidebarIcons
+                    visible: Theme.colorSidebarIcons === "#ffffff" ? true : false
                 }
             }
         }

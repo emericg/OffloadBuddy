@@ -5,9 +5,9 @@ import QtCharts 2.2
 import QtLocation 5.9
 import QtPositioning 5.9
 
-import com.offloadbuddy.style 1.0
+import com.offloadbuddy.theme 1.0
 import com.offloadbuddy.shared 1.0
-import "StringUtils.js" as StringUtils
+import "UtilsString.js" as UtilsString
 
 Rectangle {
     id: contentTelemetry
@@ -22,8 +22,8 @@ Rectangle {
     }
 
     function updateUnits() {
-        speedsGraph.title = "Speed (" + StringUtils.speedUnit(settingsManager.appunits) + ")"
-        altiGraph.title = "Altitude (" + StringUtils.altitudeUnit(settingsManager.appunits) + ")"
+        speedsGraph.title = "Speed (" + UtilsString.speedUnit(settingsManager.appunits) + ")"
+        altiGraph.title = "Altitude (" + UtilsString.altitudeUnit(settingsManager.appunits) + ")"
         updateMetadatas()
     }
 
@@ -48,24 +48,24 @@ Rectangle {
             }
 
             // Graphs datas
-            speedsGraph.title = "Speed (" + StringUtils.speedUnit(settingsManager.appunits) + ")"
+            speedsGraph.title = "Speed (" + UtilsString.speedUnit(settingsManager.appunits) + ")"
             shot.updateSpeedsSerie(speedsSeries, settingsManager.appunits)
-            altiGraph.title = "Altitude (" + StringUtils.altitudeUnit(settingsManager.appunits) + ")"
+            altiGraph.title = "Altitude (" + UtilsString.altitudeUnit(settingsManager.appunits) + ")"
             shot.updateAltiSerie(altiSeries, settingsManager.appunits);
             shot.updateAcclSeries(acclX, acclY, acclZ);
             shot.updateGyroSeries(gyroX, gyroY, gyroZ);
 
             // Text datas
-            speedMIN.text = StringUtils.speedToString(shot.minSpeed, 2, settingsManager.appunits)
-            speedAVG.text = StringUtils.speedToString(shot.avgSpeed, 2, settingsManager.appunits)
-            speedMAX.text = StringUtils.speedToString(shot.maxSpeed, 2, settingsManager.appunits)
+            speedMIN.text = UtilsString.speedToString(shot.minSpeed, 2, settingsManager.appunits)
+            speedAVG.text = UtilsString.speedToString(shot.avgSpeed, 2, settingsManager.appunits)
+            speedMAX.text = UtilsString.speedToString(shot.maxSpeed, 2, settingsManager.appunits)
 
-            altiMIN.text = StringUtils.altitudeToString(shot.minAlti, 0, settingsManager.appunits)
-            altiAVG.text = StringUtils.altitudeToString(shot.avgAlti, 0, settingsManager.appunits)
-            altiMAX.text = StringUtils.altitudeToString(shot.maxAlti, 0, settingsManager.appunits)
+            altiMIN.text = UtilsString.altitudeToString(shot.minAlti, 0, settingsManager.appunits)
+            altiAVG.text = UtilsString.altitudeToString(shot.avgAlti, 0, settingsManager.appunits)
+            altiMAX.text = UtilsString.altitudeToString(shot.maxAlti, 0, settingsManager.appunits)
 
-            trackDuration.text = StringUtils.durationToString(shot.duration)
-            trackDistance.text = StringUtils.distanceToString(shot.distanceKm, 1, settingsManager.appunits)
+            trackDuration.text = UtilsString.durationToString(shot.duration)
+            trackDistance.text = UtilsString.distanceToString(shot.distanceKm, 1, settingsManager.appunits)
             acclMAX.text = (shot.maxG / 9.80665).toFixed(1) + " G's"
 
             // Graphs axis
@@ -131,7 +131,7 @@ Rectangle {
     Rectangle {
         id: rectangleMap
         width: 500
-        color: ThemeEngine.colorContentBackground
+        color: Theme.colorContentBackground
 
         anchors.top: parent.top
         anchors.topMargin: 0
@@ -211,7 +211,7 @@ Rectangle {
                 id: mapTrace
                 visible: true
                 line.width: 3
-                line.color: ThemeEngine.colorApproved
+                line.color: Theme.colorApproved
 
                 path: [
                     { latitude: 45.5, longitude: 6 },
@@ -224,7 +224,7 @@ Rectangle {
 
     Rectangle {
         id: rectangleGraphs
-        color: ThemeEngine.colorContentBackground
+        color: Theme.colorContentBackground
 
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0
@@ -238,7 +238,7 @@ Rectangle {
         Rectangle {
             id: rectangleText
             height: 138
-            color: ThemeEngine.colorContentSubBox
+            color: Theme.colorContentSubBox
             clip: true
             anchors.top: parent.top
             anchors.topMargin: 16
@@ -254,8 +254,8 @@ Rectangle {
                 anchors.leftMargin: 32
                 anchors.verticalCenter: labelAvgSpeed.verticalCenter
                 font.bold: true
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
+                color: Theme.colorContentText
             }
 
             Text {
@@ -266,8 +266,8 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.leftMargin: 8
                 font.bold: true
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
+                color: Theme.colorContentText
             }
 
             Text {
@@ -278,8 +278,8 @@ Rectangle {
                 anchors.leftMargin: 32
                 anchors.verticalCenter: labelAvgAltitude.verticalCenter
                 font.bold: true
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
+                color: Theme.colorContentText
             }
 
             Text {
@@ -290,8 +290,8 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.leftMargin: 8
                 font.bold: true
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
+                color: Theme.colorContentText
             }
 
             Text {
@@ -301,8 +301,8 @@ Rectangle {
                 anchors.leftMargin: 32
                 anchors.verticalCenter: labelAvgSpeed.verticalCenter
                 font.bold: true
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
+                color: Theme.colorContentText
             }
 
             Text {
@@ -312,8 +312,8 @@ Rectangle {
                 anchors.leftMargin: 32
                 anchors.verticalCenter: labelAvgAltitude.verticalCenter
                 font.bold: true
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
+                color: Theme.colorContentText
             }
 
             Text {
@@ -324,8 +324,8 @@ Rectangle {
                 font.bold: true
                 anchors.left: parent.left
                 anchors.leftMargin: 8
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
+                color: Theme.colorContentText
             }
 
             Text {
@@ -334,8 +334,8 @@ Rectangle {
                 anchors.verticalCenter: labelAvgSpeed.verticalCenter
                 anchors.left: labelAvgSpeed.right
                 anchors.leftMargin: 12
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
+                color: Theme.colorContentText
             }
 
             Text {
@@ -344,8 +344,8 @@ Rectangle {
                 anchors.left: labelMaxSpeed.right
                 anchors.leftMargin: 12
                 anchors.verticalCenter: labelMaxSpeed.verticalCenter
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
+                color: Theme.colorContentText
             }
 
             Text {
@@ -354,8 +354,8 @@ Rectangle {
                 anchors.left: labelMinSpeed.right
                 anchors.leftMargin: 12
                 anchors.verticalCenter: labelMinSpeed.verticalCenter
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
+                color: Theme.colorContentText
             }
 
             Text {
@@ -364,8 +364,8 @@ Rectangle {
                 anchors.left: labelAvgAltitude.right
                 anchors.leftMargin: 12
                 anchors.verticalCenter: labelAvgAltitude.verticalCenter
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
+                color: Theme.colorContentText
             }
 
             Text {
@@ -374,8 +374,8 @@ Rectangle {
                 anchors.left: labelMaxAltitude.right
                 anchors.leftMargin: 12
                 anchors.verticalCenter: labelMaxAltitude.verticalCenter
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
+                color: Theme.colorContentText
             }
 
             Text {
@@ -384,8 +384,8 @@ Rectangle {
                 anchors.left: labelMinAltitude.right
                 anchors.leftMargin: 12
                 anchors.verticalCenter: labelMinAltitude.verticalCenter
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
+                color: Theme.colorContentText
             }
 
             Text {
@@ -394,8 +394,8 @@ Rectangle {
                 anchors.left: labelGforce.right
                 anchors.leftMargin: 12
                 anchors.verticalCenter: labelGforce.verticalCenter
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
+                color: Theme.colorContentText
             }
 
             Text {
@@ -406,8 +406,8 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.leftMargin: 8
                 font.bold: true
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
+                color: Theme.colorContentText
             }
 
             Text {
@@ -416,8 +416,8 @@ Rectangle {
                 anchors.left: labelDuration.right
                 anchors.leftMargin: 12
                 anchors.verticalCenter: labelDuration.verticalCenter
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
+                color: Theme.colorContentText
             }
 
             Text {
@@ -428,8 +428,8 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.leftMargin: 8
                 font.bold: true
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
+                color: Theme.colorContentText
             }
 
             Text {
@@ -438,8 +438,8 @@ Rectangle {
                 anchors.left: labelDistance.right
                 anchors.leftMargin: 12
                 anchors.verticalCenter: labelDistance.verticalCenter
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
+                color: Theme.colorContentText
             }
         }
 
@@ -459,7 +459,7 @@ Rectangle {
                 id: speedsGraph
                 width: 302
                 height: 173
-                title: "Speed (" + StringUtils.speedUnit(settingsManager.appunits) + ")"
+                title: "Speed (" + UtilsString.speedUnit(settingsManager.appunits) + ")"
 
                 antialiasing: true
                 //legend.visible: false // Needs Qt 5.10+ / Qt Charts 2.3
@@ -478,7 +478,7 @@ Rectangle {
                 id: altiGraph
                 width: 304
                 height: 173
-                title: "Altitude (" + StringUtils.altitudeUnit(settingsManager.appunits) + ")"
+                title: "Altitude (" + UtilsString.altitudeUnit(settingsManager.appunits) + ")"
 
                 antialiasing: true
                 //legend.visible: false // Needs Qt 5.10+ / Qt Charts 2.3

@@ -2,8 +2,8 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Dialogs 1.2
 
-import com.offloadbuddy.style 1.0
-import "StringUtils.js" as StringUtils
+import com.offloadbuddy.theme 1.0
+import "UtilsString.js" as UtilsString
 
 Rectangle {
     width: 1280
@@ -14,7 +14,7 @@ Rectangle {
     Rectangle {
         id: rectangleHeader
         height: 64
-        color: ThemeEngine.colorHeaderBackground
+        color: Theme.colorHeaderBackground
         anchors.right: parent.right
         anchors.rightMargin: 0
         anchors.left: parent.left
@@ -32,8 +32,8 @@ Rectangle {
             text: qsTr("RUNNING JOBS")
             verticalAlignment: Text.AlignVCenter
             font.bold: true
-            font.pixelSize: ThemeEngine.fontSizeHeaderTitle
-            color: ThemeEngine.colorHeaderTitle
+            font.pixelSize: Theme.fontSizeHeaderTitle
+            color: Theme.colorHeaderTitle
         }
 
         ButtonThemed {
@@ -49,7 +49,7 @@ Rectangle {
 
     Rectangle {
         id: rectangleContent
-        color: ThemeEngine.colorContentBackground
+        color: Theme.colorContentBackground
 
         anchors.top: rectangleHeader.bottom
         anchors.topMargin: 0
@@ -62,7 +62,7 @@ Rectangle {
 
         Rectangle {
             id: rectangleJobs
-            color: ThemeEngine.colorContentBox
+            color: Theme.colorContentBox
 
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 16

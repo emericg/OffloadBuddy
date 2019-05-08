@@ -2,7 +2,7 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtGraphicalEffects 1.0
 
-import com.offloadbuddy.style 1.0
+import com.offloadbuddy.theme 1.0
 
 Rectangle {
     width: 1280
@@ -11,7 +11,7 @@ Rectangle {
     Rectangle {
         id: rectangleHeader
         height: 64
-        color: ThemeEngine.colorHeaderBackground
+        color: Theme.colorHeaderBackground
         anchors.right: parent.right
         anchors.rightMargin: 0
         anchors.left: parent.left
@@ -30,14 +30,14 @@ Rectangle {
             text: qsTr("ABOUT")
             verticalAlignment: Text.AlignVCenter
             font.bold: true
-            font.pixelSize: ThemeEngine.fontSizeHeaderTitle
-            color: ThemeEngine.colorHeaderTitle
+            font.pixelSize: Theme.fontSizeHeaderTitle
+            color: Theme.colorHeaderTitle
         }
     }
 
     Rectangle {
         id: rectangleContent
-        color: ThemeEngine.colorContentBackground
+        color: Theme.colorContentBackground
 
         anchors.top: rectangleHeader.bottom
         anchors.topMargin: 0
@@ -51,7 +51,7 @@ Rectangle {
         Rectangle {
             id: rectangleProject
             height: 320
-            color: ThemeEngine.colorContentBox
+            color: Theme.colorContentBox
             radius: 4
             anchors.top: parent.top
             anchors.topMargin: 16
@@ -81,8 +81,8 @@ Rectangle {
                 anchors.topMargin: 12
                 verticalAlignment: Text.AlignVCenter
                 font.bold: true
-                font.pixelSize: ThemeEngine.fontSizeContentTitle
-                color: ThemeEngine.colorContentTitle
+                font.pixelSize: Theme.fontSizeContentTitle
+                color: Theme.colorContentTitle
             }
 
             TextArea {
@@ -97,8 +97,8 @@ Rectangle {
 
                 readOnly: true
                 wrapMode: Text.WordWrap
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
+                color: Theme.colorContentText
                 text: "OffloadBuddy is a multimedia offloading software with a few tricks up his sleeve!\nIt's designed to remove the hassle of handling and transferring the many videos and pictures file from your devices like action cameras, regular cameras and smartphones...\n\n* Import datas from SD cards, mass storage or MTP devices\n  - Copy, merge or reencode medias\n  - Consult and export shots metadatas\n  - Organize your media library\n* Create clips or extract photos from your videos\n* Assemble photo timelapses into videos\n* GoPro firmware updates"
                 anchors.rightMargin: 8
             }
@@ -113,8 +113,8 @@ Rectangle {
                 anchors.topMargin: 6
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
-                font.pixelSize: ThemeEngine.fontSizeContentText
-                color: ThemeEngine.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
+                color: Theme.colorContentText
             }
 
             Text {
@@ -124,8 +124,8 @@ Rectangle {
                 anchors.leftMargin: 8
 
                 text: qsTr("Visit us on <html><style type=\"text/css\"></style><a href=\"https://github.com/emericg/OffloadBuddy\">GitHub</a></html>!")
-                color: ThemeEngine.colorContentText
-                font.pixelSize: ThemeEngine.fontSizeContentText
+                color: Theme.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
                 onLinkActivated: Qt.openUrlExternally("https://github.com/emericg/OffloadBuddy")
             }
 
@@ -145,7 +145,7 @@ Rectangle {
                 ColorOverlay {
                     anchors.fill: parent
                     source: parent
-                    color: ThemeEngine.colorContentText
+                    color: Theme.colorContentText
                 }
             }
 
@@ -161,7 +161,7 @@ Rectangle {
                 sourceSize.width: 32
 
                 ColorOverlay {
-                    color: ThemeEngine.colorContentText
+                    color: Theme.colorContentText
                     source: parent
                     anchors.fill: parent
                 }
@@ -176,8 +176,8 @@ Rectangle {
                 anchors.leftMargin: 8
 
                 text: qsTr("Report bugs or post feature request on our <html><style type=\"text/css\"></style><a href=\"https://github.com/emericg/OffloadBuddy/issues\">issue tracker</a></html>!")
-                color: ThemeEngine.colorContentText
-                font.pixelSize: ThemeEngine.fontSizeContentText
+                color: Theme.colorContentText
+                font.pixelSize: Theme.fontSizeContentText
                 onLinkActivated: Qt.openUrlExternally("https://github.com/emericg/OffloadBuddy/issues")
             }
         }
@@ -190,7 +190,7 @@ Rectangle {
             anchors.right: parent.right
             anchors.left: parent.left
             anchors.margins: 16
-            color: ThemeEngine.colorContentBox
+            color: Theme.colorContentBox
 
             Text {
                 id: text_title1
@@ -202,8 +202,8 @@ Rectangle {
                 anchors.topMargin: 12
                 verticalAlignment: Text.AlignVCenter
                 font.bold: true
-                font.pixelSize: ThemeEngine.fontSizeContentTitle
-                color: ThemeEngine.colorContentTitle
+                font.pixelSize: Theme.fontSizeContentTitle
+                color: Theme.colorContentTitle
             }
 
             Rectangle {
@@ -212,7 +212,7 @@ Rectangle {
                 y: 64
                 width: 512
                 height: 128
-                color: ThemeEngine.colorContentSubBox
+                color: Theme.colorContentSubBox
                 radius: 8
 
                 Rectangle {
@@ -264,7 +264,7 @@ Rectangle {
                     anchors.rightMargin: 8
 
                     text: "Emeric"
-                    color: ThemeEngine.colorContentSubTitle
+                    color: Theme.colorContentSubTitle
                     horizontalAlignment: Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter
                     font.bold: true
@@ -283,8 +283,8 @@ Rectangle {
 
                     readOnly: true
                     text: qsTr("Main developer. Likes animals and flowers. Also, ponies. You know, the ones with horns and wings.")
-                    color: ThemeEngine.colorContentSubText
-                    font.pixelSize: ThemeEngine.fontSizeContentText
+                    color: Theme.colorContentSubText
+                    font.pixelSize: Theme.fontSizeContentText
                     wrapMode: Text.WordWrap
                     verticalAlignment: Text.AlignTop
                     horizontalAlignment: Text.AlignLeft

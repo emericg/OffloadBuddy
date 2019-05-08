@@ -3,9 +3,9 @@ import QtQuick.Controls 2.2
 import QtMultimedia 5.9
 import QtGraphicalEffects 1.0
 
-import com.offloadbuddy.style 1.0
+import com.offloadbuddy.theme 1.0
 import com.offloadbuddy.shared 1.0
-import "StringUtils.js" as StringUtils
+import "UtilsString.js" as UtilsString
 
 Rectangle {
     id: preview
@@ -146,7 +146,7 @@ Rectangle {
             id: mediaControls
             height: 40
             opacity: 1
-            color: ThemeEngine.colorButton
+            color: Theme.colorButton
             anchors.right: parent.right
             anchors.rightMargin: 0
             anchors.left: parent.left
@@ -284,7 +284,7 @@ Rectangle {
             Rectangle {
                 id: timeline
                 height: 40
-                color: ThemeEngine.colorButton
+                color: Theme.colorButton
                 anchors.left: buttonStartCut.right
                 anchors.leftMargin: 0
                 anchors.right: buttonStopCut.left
@@ -295,7 +295,7 @@ Rectangle {
                     id: timelinePosition
                     width: 0
                     height: 40
-                    color: ThemeEngine.colorApproved
+                    color: Theme.colorApproved
                     anchors.left: parent.left
                     anchors.leftMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
@@ -337,7 +337,7 @@ Rectangle {
                 height: 28
                 //color: "#d0d0d0"
                 border.width: 2
-                border.color: ThemeEngine.colorApproved
+                border.color: Theme.colorApproved
                 anchors.right: buttonScreenshot.left
                 anchors.rightMargin: 0
                 anchors.verticalCenter: parent.verticalCenter
@@ -346,7 +346,7 @@ Rectangle {
                     id: soundlinePosition
                     width: 0
                     height: 28
-                    color: ThemeEngine.colorApproved
+                    color: Theme.colorApproved
                     anchors.left: parent.left
                     anchors.leftMargin: 0
                     anchors.verticalCenter: parent.verticalCenter

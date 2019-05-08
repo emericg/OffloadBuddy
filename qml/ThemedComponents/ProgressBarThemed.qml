@@ -1,7 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 
-import com.offloadbuddy.style 1.0
+import com.offloadbuddy.theme 1.0
 
 ProgressBar {
     id: control
@@ -11,7 +11,7 @@ ProgressBar {
     background: Rectangle {
         implicitWidth: 200
         implicitHeight: control.height
-        color: ThemeEngine.colorProgressBarBg
+        color: Theme.colorProgressBarBg
     }
 
     contentItem: Item {
@@ -21,7 +21,7 @@ ProgressBar {
         Rectangle {
             width: control.visualPosition * parent.width
             height: control.height
-            color: ThemeEngine.colorProgressBar
+            color: Theme.colorProgressBar
         }
     }
 }

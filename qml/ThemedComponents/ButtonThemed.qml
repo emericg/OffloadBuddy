@@ -1,7 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 
-import com.offloadbuddy.style 1.0
+import com.offloadbuddy.theme 1.0
 
 Button {
     id: control
@@ -11,14 +11,14 @@ Button {
         implicitWidth: 100
         implicitHeight: 40
         opacity: enabled ? 1 : 0.3
-        color: control.down ? ThemeEngine.colorButtonDown : ThemeEngine.colorButton
+        color: control.down ? Theme.colorButtonDown : Theme.colorButton
     }
 
     contentItem: Text {
         text: control.text
         font: control.font
         opacity: enabled ? 1.0 : 0.3
-        color: control.down ? ThemeEngine.colorButtonText : ThemeEngine.colorButtonText
+        color: control.down ? Theme.colorButtonText : Theme.colorButtonText
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
