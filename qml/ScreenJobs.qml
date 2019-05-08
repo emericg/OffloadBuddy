@@ -5,7 +5,7 @@ import QtQuick.Dialogs 1.2
 import com.offloadbuddy.theme 1.0
 import "UtilsString.js" as UtilsString
 
-Rectangle {
+Item {
     width: 1280
     height: 720
 
@@ -14,7 +14,7 @@ Rectangle {
     Rectangle {
         id: rectangleHeader
         height: 64
-        color: Theme.colorHeaderBackground
+        color: Theme.colorHeader
         anchors.right: parent.right
         anchors.rightMargin: 0
         anchors.left: parent.left
@@ -47,9 +47,8 @@ Rectangle {
         }
     }
 
-    Rectangle {
+    Item {
         id: rectangleContent
-        color: Theme.colorContentBackground
 
         anchors.top: rectangleHeader.bottom
         anchors.topMargin: 0

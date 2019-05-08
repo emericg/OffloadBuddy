@@ -34,6 +34,8 @@ ApplicationWindow {
     minimumWidth: 1280
     minimumHeight: 720
 
+    color: Theme.colorBackground
+
     WindowGeometrySaver {
         window: applicationWindow
     }
@@ -52,7 +54,7 @@ ApplicationWindow {
         }
     }
 */
-    property var currentDevicePtr
+    property var currentDevicePtr: null
 
     Connections {
         target: jobManager

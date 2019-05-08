@@ -34,9 +34,6 @@ class GridThumbnailer : public QQuickImageProvider
 {
     const int DEFAULT_THUMB_SIZE = 512;
 
-    QImage fallback_video;
-    QImage fallback_picture;
-
 #ifdef ENABLE_FFMPEG
     bool getImage_withFfmpeg(const QString &path, QImage &img,
                              const int timecode_s,

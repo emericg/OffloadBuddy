@@ -6,14 +6,14 @@ import com.offloadbuddy.theme 1.0
 import "UtilsString.js" as UtilsString
 import "UtilsPath.js" as UtilsPath
 
-Rectangle {
+Item {
     width: 1280
     height: 720
 
     Rectangle {
         id: rectangleHeader
         height: 64
-        color: Theme.colorHeaderBackground
+        color: Theme.colorHeader
         anchors.right: parent.right
         anchors.rightMargin: 0
         anchors.left: parent.left
@@ -25,7 +25,7 @@ Rectangle {
             id: textHeader
             height: 40
             anchors.left: parent.left
-            anchors.leftMargin: 16
+            anchors.leftMargin: 24
             anchors.verticalCenter: parent.verticalCenter
 
             text: qsTr("SETTINGS")
@@ -36,9 +36,8 @@ Rectangle {
         }
     }
 
-    Rectangle {
+    Item {
         id: rectangleContent
-        color: Theme.colorContentBackground
 
         anchors.top: rectangleHeader.bottom
         anchors.topMargin: 0
@@ -157,7 +156,7 @@ Rectangle {
             anchors.leftMargin: 24
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignLeft
-            text: qsTr("Units in:")
+            text: qsTr("Unit system")
             font.pixelSize: Theme.fontSizeContentText
             color: Theme.colorContentText
         }

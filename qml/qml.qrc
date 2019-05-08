@@ -26,6 +26,9 @@
         <file>MediaDetailTelemetry.qml</file>
         <file>MediaDetailOverview.qml</file>
         <file>MediaPreview.qml</file>
+
+        <file alias="ItemImageButton.qml">components/ItemImageButton.qml</file>
+        <file alias="ItemMenuButton.qml">components/ItemMenuButton.qml</file>
         <file alias="WindowGeometrySaver.qml">components/WindowGeometrySaver.qml</file>
         <file alias="ImageSvg.qml">components_themed/ImageSvg.qml</file>
 

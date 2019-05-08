@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>resources/minicons/bookmark.svg</file>
-        <file>resources/minicons/unknown.svg</file>
         <file>resources/minicons/picture.svg</file>
         <file>resources/minicons/picture_multi.svg</file>
         <file>resources/minicons/video.svg</file>
@@ -15,10 +14,6 @@
         <file>resources/minicons/job_offloading.svg</file>
         <file>resources/minicons/job_open.svg</file>
         <file>resources/minicons/job_queued.svg</file>
-        <file>resources/other/placeholder_loading.svg</file>
-        <file>resources/other/placeholder_picture.svg</file>
-        <file>resources/other/placeholder_picture_multi.svg</file>
-        <file>resources/other/placeholder_video.svg</file>
     </qresource>
     <qresource prefix="/icons">
         <file alias="disk.svg">resources/icons/disk.svg</file>

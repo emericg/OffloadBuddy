@@ -10,7 +10,7 @@ Rectangle {
     id: itemShot
     width: 279
     height: Math.round(width / cellFormat)
-    color: "#eef0f1"
+    color: Theme.colorForeground
 
     property Shot shot: pointer
     property var shotDevice
@@ -98,6 +98,8 @@ Rectangle {
             icon_right.visible = false
         }
     }
+
+    // TODO loader between imageFs and imageMtp
 
     Image {
         id: imageFs

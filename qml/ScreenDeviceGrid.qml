@@ -200,7 +200,7 @@ Rectangle {
     Rectangle {
         id: rectangleHeader
         height: 128
-        color: Theme.colorHeaderBackground
+        color: Theme.colorHeader
         z: 1
         anchors.top: parent.top
         anchors.topMargin: 0
@@ -592,9 +592,8 @@ Rectangle {
 
     // CONTENT /////////////////////////////////////////////////////////////////
 
-    Rectangle {
+    Item {
         id: rectangleDeviceShots
-        color: Theme.colorContentBackground
 
         anchors.top: rectangleHeader.bottom
         anchors.right: parent.right
@@ -606,7 +605,7 @@ Rectangle {
             width: 350
             height: 350
             radius: width*0.5
-            color: Theme.colorHeaderBackground
+            color: Theme.colorHeader
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
 

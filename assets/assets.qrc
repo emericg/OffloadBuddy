@@ -1,8 +1,10 @@
 <RCC>
     <qresource prefix="/">
         <file>icons_material/baseline-aspect_ratio-24px.svg</file>
+        <file>icons_material/baseline-av_timer-24px.svg</file>
         <file>icons_material/baseline-bug_report-24px.svg</file>
         <file>icons_material/baseline-camera-24px.svg</file>
+        <file>icons_material/baseline-camera_roll-24px.svg</file>
         <file>icons_material/baseline-center_focus_weak-24px.svg</file>
         <file>icons_material/baseline-close-24px.svg</file>
         <file>icons_material/baseline-data_usage-24px.svg</file>
@@ -11,7 +13,10 @@
         <file>icons_material/baseline-folder-24px.svg</file>
         <file>icons_material/baseline-fullscreen_exit-24px.svg</file>
         <file>icons_material/baseline-fullscreen-24px.svg</file>
+        <file>icons_material/baseline-insert_chart_outlined-24px.svg</file>
         <file>icons_material/baseline-iso-24px.svg</file>
+        <file>icons_material/baseline-map-24px.svg</file>
+        <file>icons_material/baseline-memory-24px.svg</file>
         <file>icons_material/baseline-navigate_before-24px.svg</file>
         <file>icons_material/baseline-navigate_next-24px.svg</file>
         <file>icons_material/baseline-pause-24px.svg</file>
@@ -22,6 +27,7 @@
         <file>icons_material/baseline-shutter_speed-24px.svg</file>
         <file>icons_material/baseline-stop-24px.svg</file>
         <file>icons_material/baseline-timer-24px.svg</file>
+        <file>icons_material/baseline-video_library-24px.svg</file>
         <file>icons_material/baseline-volume_up-24px.svg</file>
         <file>icons_material/outline-camera_alt-24px.svg</file>
         <file>icons_material/outline-folder-24px.svg</file>

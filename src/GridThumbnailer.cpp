@@ -53,8 +53,7 @@ GridThumbnailer::GridThumbnailer() :
     QQuickImageProvider(QQuickImageProvider::Image,
                         QQmlImageProviderBase::ForceAsynchronousImageLoading)
 {
-    fallback_video = QImage(":/resources/other/placeholder_video.svg").scaled(DEFAULT_THUMB_SIZE, DEFAULT_THUMB_SIZE, Qt::KeepAspectRatio);
-    fallback_picture = QImage(":/resources/other/placeholder_picture.svg").scaled(DEFAULT_THUMB_SIZE, DEFAULT_THUMB_SIZE, Qt::KeepAspectRatio);
+    //
 }
 
 /* ************************************************************************** */
@@ -122,10 +121,10 @@ QImage GridThumbnailer::requestImage(const QString &id, QSize *size,
     if (!decoding_status)
     {
         if (size) *size = QSize(DEFAULT_THUMB_SIZE, DEFAULT_THUMB_SIZE);
-        if (id.contains(".mp4") || id.contains(".m4v") || id.contains(".mov") || id.contains(".mkv") || id.contains(".webm"))
-            return fallback_video;
-        if (id.contains(".jpg") || id.contains(".jpeg") || id.contains(".png") || id.contains(".gpr") || id.contains(".tif") || id.contains(".tiff"))
-            return fallback_picture;
+        //if (id.contains(".mp4") || id.contains(".m4v") || id.contains(".mov") || id.contains(".mkv") || id.contains(".webm"))
+        //    return fallback_video;
+        //if (id.contains(".jpg") || id.contains(".jpeg") || id.contains(".png") || id.contains(".gpr") || id.contains(".tif") || id.contains(".tiff"))
+        //    return fallback_picture;
     }
 
     if (size) *size = QSize(thumb.width(), thumb.height());

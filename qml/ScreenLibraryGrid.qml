@@ -3,7 +3,7 @@ import QtQuick.Controls 2.2
 
 import com.offloadbuddy.theme 1.0
 
-Rectangle {
+Item {
     width: 1280
     height: 720
 
@@ -57,7 +57,7 @@ Rectangle {
     Rectangle {
         id: rectangleHeader
         height: 128
-        color: Theme.colorHeaderBackground
+        color: Theme.colorHeader
         z: 1
         anchors.top: parent.top
         anchors.topMargin: 0
@@ -246,9 +246,8 @@ Rectangle {
 
     // CONTENT /////////////////////////////////////////////////////////////////
 
-    Rectangle {
+    Item {
         id: rectangleLibraryGrid
-        color: Theme.colorContentBackground
 
         anchors.top: rectangleHeader.bottom
         anchors.topMargin: 0
@@ -264,7 +263,7 @@ Rectangle {
             width: 350
             height: 350
             radius: width*0.5
-            color: Theme.colorHeaderBackground
+            color: Theme.colorHeader
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
 

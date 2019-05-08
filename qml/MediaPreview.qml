@@ -26,11 +26,7 @@ Rectangle {
         if (shot.previewPhoto) {
             imageOutput.source = "file:///" + shot.previewPhoto
         } else {
-            if (shot.duration > 1) {
-                imageOutput.source = "qrc:/resources/other/placeholder_picture_multi.svg"
-            } else {
-                imageOutput.source = "qrc:/resources/other/placeholder_picture.svg"
-            }
+            // error icon?
         }
     }
 
@@ -38,10 +34,11 @@ Rectangle {
         imageOutput.visible = false
         mediaOutput.visible = true
 
-        if (shot.previewVideo)
+        if (shot.previewVideo) {
             videoPlayer.source = "file:///" + shot.previewVideo
-        else
-            imageOutput.source = "qrc:/resources/other/placeholder_video.svg"
+        } else {
+            // error icon?
+        }
 
         videoPlayer.pause()
     }

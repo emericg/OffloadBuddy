@@ -5,7 +5,7 @@ import com.offloadbuddy.theme 1.0
 import com.offloadbuddy.shared 1.0
 import "UtilsString.js" as UtilsString
 
-Rectangle {
+Item {
     id: screenMedia
     width: 1280
     height: 720
@@ -79,17 +79,20 @@ Rectangle {
         anchors.left: parent.left
         anchors.topMargin: 0
         anchors.top: parent.top
-        color: Theme.colorHeaderBackground
+        color: Theme.colorHeader
 
-        ButtonImage {
-            id: rectangleBack
-            width: 40
-            height: 40
-            anchors.verticalCenter: parent.verticalCenter
+        ItemImageButton {
+            id: buttonBack
+            width: 48
+            height: 48
             anchors.left: parent.left
-            anchors.leftMargin: 16
+            anchors.leftMargin: 8
+            anchors.verticalCenter: parent.verticalCenter
 
-            imageSource: "qrc:/icons_material/baseline-navigate_before-24px.svg"
+            highlightColor: Theme.colorPrimary
+            iconColor: Theme.colorHeaderTitle
+
+            source: "qrc:/icons_material/baseline-navigate_before-24px.svg"
             onClicked: {
                 if (content.state == "library")
                     screenLibrary.state = "stateMediaGrid"
@@ -101,8 +104,8 @@ Rectangle {
         Text {
             id: textShotName
             height: 40
-            anchors.leftMargin: 16
-            anchors.left: rectangleBack.right
+            anchors.leftMargin: 8
+            anchors.left: buttonBack.right
             anchors.verticalCenter: parent.verticalCenter
 
             text: "SHOT NAME"
@@ -140,49 +143,54 @@ Rectangle {
             onClicked: screenMedia.state = "map"
         }
 
-        Rectangle {
-            id: codecVideo
-            width: 80
+        Row {
+            id: row
             height: 28
-            anchors.right: codecAudio.left
-            anchors.rightMargin: 16
+            spacing: 16
             anchors.verticalCenter: parent.verticalCenter
+            anchors.left: textShotName.right
+            anchors.leftMargin: 32
 
-            color: "#dfdfdf"
-            Text {
-                id: codecVideoText
-                anchors.fill: parent
+            Rectangle {
+                id: codecVideo
+                width: 80
+                height: 28
+                //anchors.verticalCenter: parent.verticalCenter
+                color: "#dfdfdf"
 
-                text: qsTr("CODEC")
-                color: "dimgrey"
-                font.capitalization: Font.AllUppercase
-                font.pixelSize: 16
-                font.bold: true
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
+                Text {
+                    id: codecVideoText
+                    anchors.fill: parent
+
+                    text: qsTr("CODEC")
+                    color: "dimgrey"
+                    font.capitalization: Font.AllUppercase
+                    font.pixelSize: 16
+                    font.bold: true
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
             }
-        }
 
-        Rectangle {
-            id: codecAudio
-            width: 80
-            height: 28
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.right: buttonOverview.left
-            anchors.rightMargin: 16
+            Rectangle {
+                id: codecAudio
+                width: 80
+                height: 28
+                //anchors.verticalCenter: parent.verticalCenter
+                color: "#dfdfdf"
 
-            color: "#dfdfdf"
-            Text {
-                id: codecAudioText
-                anchors.fill: parent
+                Text {
+                    id: codecAudioText
+                    anchors.fill: parent
 
-                text: qsTr("CODEC")
-                color: "dimgrey"
-                font.capitalization: Font.AllUppercase
-                font.pixelSize: 16
-                font.bold: true
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
+                    text: qsTr("CODEC")
+                    color: "dimgrey"
+                    font.capitalization: Font.AllUppercase
+                    font.pixelSize: 16
+                    font.bold: true
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
             }
         }
     }
@@ -245,9 +253,8 @@ Rectangle {
         }
     ]
 
-    Rectangle {
+    Item {
         id: rectangleContent
-        color: Theme.colorContentBackground
 
         anchors.top: rectangleHeader.bottom
         anchors.right: parent.right

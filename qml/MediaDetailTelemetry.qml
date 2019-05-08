@@ -9,12 +9,11 @@ import com.offloadbuddy.theme 1.0
 import com.offloadbuddy.shared 1.0
 import "UtilsString.js" as UtilsString
 
-Rectangle {
+Item {
     id: contentTelemetry
     width: 1500
     height: 700
     anchors.fill: parent
-    color: "#00000000"
 
     Connections {
         target: settingsManager
@@ -128,10 +127,9 @@ Rectangle {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    Rectangle {
+    Item {
         id: rectangleMap
         width: 500
-        color: Theme.colorContentBackground
 
         anchors.top: parent.top
         anchors.topMargin: 0
@@ -222,9 +220,8 @@ Rectangle {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    Rectangle {
+    Item {
         id: rectangleGraphs
-        color: Theme.colorContentBackground
 
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0

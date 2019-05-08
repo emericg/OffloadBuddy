@@ -4,7 +4,7 @@ import QtQuick.Controls 2.2
 import com.offloadbuddy.theme 1.0
 import "UtilsString.js" as UtilsString
 
-Rectangle {
+Item {
     id: screenDevice
     width: 1280
     height: 720

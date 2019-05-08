@@ -13,34 +13,34 @@ Item {
     property int currentTheme: -1
 
     // Colors
-    property string colorSidebar: "#4E598C"
-    property string colorSidebarContent: "#ffffff"
+    property string colorSidebar
+    property string colorSidebarContent
 
-    property string colorHeader: "#ebedee"
-    property string colorHeaderContent: "#353637"
-    property string colorHeaderBackground: "#ebedee"    // DEPRECATED
-    property string colorHeaderTitle: "#353637"         // DEPRECATED
-    property string colorHeaderText: "#000000"          // DEPRECATED
+    property string colorHeader
+    property string colorHeaderContent
+    property string colorHeaderTitle        // DEPRECATED
+    property string colorHeaderText         // DEPRECATED
 
-    property string colorInfoBanner: "#fed859"
-    property string colorInfoBannerText: "#ffffff"
+    property string colorInfoBanner
+    property string colorInfoBannerText
 
-    property string colorContentBackground: "#ffffff" // DEPRECATED
-    property string colorContentBox: "#F7F7F7"
-    property string colorContentTitle: "#353637"
-    property string colorContentText: "#000000"
-    property string colorContentSubBox: "#eef0f1"
-    property string colorContentSubTitle: "#000000"
-    property string colorContentSubText: "#000000"
+    property string colorBackground
+    property string colorForeground
+    property string colorContentBox // DEPRECATED
+    property string colorContentTitle
+    property string colorContentText
+    property string colorContentSubBox
+    property string colorContentSubTitle
+    property string colorContentSubText
 
-    property string colorText: "#000000"
-    property string colorSubText: "#666666"
-    property string colorIcon: "#000000"
+    property string colorText
+    property string colorSubText
+    property string colorIcon
 
-    property string colorPrimary: "#46b0f4"
-    property string colorSecondary: ""
-    property string colorWarning: "#FF5F5F"
-    property string colorError: "#FFE15E"
+    property string colorPrimary
+    property string colorSecondary
+    property string colorWarning
+    property string colorError
 
     // Qt Quick controls theming // DEPRECATED
     property string colorButton: "#e0e0e0"
@@ -75,14 +75,16 @@ Item {
 
             // "PLAIN AND BORING"
 
-            colorSidebar =          "#4E598C"
+            colorSidebar =          "#4E596F"
             colorSidebarContent =   "#ffffff"
 
-            colorHeaderBackground = "#ebedee"
+            colorHeader =           "#CBCBCB"
             colorHeaderTitle =      "#353637"
             colorHeaderText =       "#000000"
 
-            colorContentBackground ="#ffffff"
+            colorBackground =      "#EEEEEE"
+            colorForeground =      "#E0E0E0"
+
             colorContentBox =       "#F7F7F7"
             colorContentTitle =     "#353637"
             colorContentText =      "#000000"
@@ -92,9 +94,9 @@ Item {
 
             colorText =             "#000000"
 
-            colorPrimary =          "#46b0f4"
-            colorWarning =          "#FF5F5F"
-            colorError =            "#FFE15E"
+            colorPrimary =          "#ffca28"
+            colorWarning =          "#ffac00"
+            colorError =            "#dc322f"
 
             colorButton =           "#e0e0e0"
             colorButtonText =       "#000000"
@@ -114,11 +116,13 @@ Item {
             colorSidebar =          "#2e2e2e"
             colorSidebarContent =   "#ffffff"
 
-            colorHeaderBackground = "#444444"
+            colorHeader =           "#282828"
             colorHeaderTitle =      "#8b8e8f"
             colorHeaderText =       "#a89a9a"
 
-            colorContentBackground ="#636363"
+            colorBackground =       "#404040"
+            colorForeground =       "#555555"
+
             colorContentBox =       "#565656"
             colorContentTitle =     "#a0a29c"
             colorContentText =      "#ffffff"
@@ -128,7 +132,7 @@ Item {
 
             colorText =             "#ffffff"
 
-            colorPrimary =         "#f0544c"
+            colorPrimary =          "#f0544c"
             colorWarning =          "#ee2b57"
             colorError =            "#FFDB63"
 
@@ -150,11 +154,13 @@ Item {
             colorSidebar =          "#181818"
             colorSidebarContent =   "#bebebe"
 
-            colorHeaderBackground = "#141414"
+            colorHeader =           "#141414"
             colorHeaderTitle =      "#ffffff"
             colorHeaderText =       "#a3a3a0"
 
-            colorContentBackground ="#222222"
+            colorBackground =       "#222222"
+            colorForeground =       "#141414"
+
             colorContentBox =       "#333333"
             colorContentTitle =     "#a0a29c"
             colorContentText =      "#a3a3a0"
@@ -192,13 +198,15 @@ Item {
             // yellow "#FCCD13" "#FFE400"
 
             colorSidebar =          "#E31D8D"
-            colorSidebarContent =   "#FCCD13"
+            colorSidebarContent =   "#DCFF00"
 
-            colorHeaderBackground = "#faa7d1"
+            colorHeader =           "#faa7d1"
             colorHeaderTitle =      "#E31D8D"
             colorHeaderText =       "#8F4594"
 
-            colorContentBackground ="#ffffff"
+            colorBackground =       "#ffffff"
+            colorForeground =       "#faa7d1"
+
             colorContentBox =       "#fff5fa"
             colorContentTitle =     "#A4CC44"
             colorContentText =      "#944197"

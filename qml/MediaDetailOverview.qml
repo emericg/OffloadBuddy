@@ -6,12 +6,11 @@ import com.offloadbuddy.theme 1.0
 import com.offloadbuddy.shared 1.0
 import "UtilsString.js" as UtilsString
 
-Rectangle {
+Item {
     id: contentOverview
     width: 1280
     height: 720
     anchors.fill: parent
-    color: "#00000000"
 
     property var selectedShot : shot
     property string selectedItemName : shot ? shot.name : ""
@@ -49,18 +48,14 @@ Rectangle {
 
         if (shot.camera) {
             labelCamera.visible = true
-            labelCamera.anchors.topMargin = 8
         } else {
             labelCamera.visible = false
-            labelCamera.anchors.topMargin = -24
         }
 
         if (shot.orientation) {
             labelOrientation.visible = true
-            labelOrientation.anchors.topMargin = 8
         } else {
             labelOrientation.visible = false
-            labelOrientation.anchors.topMargin = -24
         }
 
         if (shot.type >= Shared.SHOT_PICTURE) {
@@ -72,7 +67,6 @@ Rectangle {
 
             codecAudio.visible = false
             codecVideo.visible = true
-            codecVideo.anchors.right = buttonOverview.left
             codecVideoText.text = shot.codecVideo
 
             if (shot.iso.length === 0 && shot.focal.length === 0 && shot.exposure.length === 0) {
@@ -81,11 +75,9 @@ Rectangle {
 
             if (shot.duration > 1) {
                 labelDuration.visible = true
-                labelDuration.anchors.topMargin = 8
                 duration.text = shot.duration + " " + qsTr("pictures")
             } else {
                 labelDuration.visible = false
-                labelDuration.anchors.topMargin = -24
             }
         } else {
             mediaPreview.setVideoMode()
@@ -102,16 +94,12 @@ Rectangle {
                 codecVideo.visible = false
 
             if (shot.codecAudio.length) {
-                codecAudio.visible = true
                 codecAudioText.text = shot.codecAudio
-                codecVideo.anchors.right = codecAudio.left
             } else {
-                codecVideo.anchors.right = buttonOverview.left
                 codecAudio.visible = false
             }
 
             labelDuration.visible = true
-            labelDuration.anchors.topMargin = 8
             duration.text = UtilsString.durationToString(shot.duration)
 
             bitrate.text = UtilsString.bitrateToString(shot.bitrate)
@@ -126,23 +114,23 @@ Rectangle {
         }
     }
 
-    Rectangle {
+    Column {
         id: rectangleMetadatas
         width: 320
-        color: Theme.colorContentBox
+        //color: Theme.colorContentBox
         anchors.bottomMargin: 0
         anchors.rightMargin: 0
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.topMargin: 0
+        anchors.topMargin: 32
         anchors.top: parent.top
+
+        spacing: 8
 
         ImageSvg {
             id: labelDate
             width: 28
             height: 28
-            anchors.top: parent.top
-            anchors.topMargin: 16
             anchors.left: parent.left
             anchors.leftMargin: 16
 
@@ -168,8 +156,6 @@ Rectangle {
             id: labelCamera
             width: 28
             height: 28
-            anchors.top: labelDate.bottom
-            anchors.topMargin: 8
             anchors.left: parent.left
             anchors.leftMargin: 16
 
@@ -195,8 +181,6 @@ Rectangle {
             id: labelDuration
             width: 28
             height: 28
-            anchors.top: labelCamera.bottom
-            anchors.topMargin: 8
             anchors.left: parent.left
             anchors.leftMargin: 16
 
@@ -222,8 +206,6 @@ Rectangle {
             id: labelDefinition
             width: 28
             height: 28
-            anchors.top: labelDuration.bottom
-            anchors.topMargin: 8
             anchors.left: parent.left
             anchors.leftMargin: 16
 
@@ -249,8 +231,6 @@ Rectangle {
             id: labelOrientation
             width: 28
             height: 28
-            anchors.top: labelDefinition.bottom
-            anchors.topMargin: 8
             anchors.left: parent.left
             anchors.leftMargin: 16
 
@@ -276,8 +256,6 @@ Rectangle {
             id: labelSize
             width: 28
             height: 28
-            anchors.top: labelOrientation.bottom
-            anchors.topMargin: 8
             anchors.left: parent.left
             anchors.leftMargin: 16
 
@@ -299,23 +277,21 @@ Rectangle {
             }
         }
 
-        Rectangle {
+        Column {
             id: rectanglePicture
-            height: 120
-            color: "#00000000"
-            anchors.top: labelSize.bottom
-            anchors.topMargin: 16
             anchors.left: parent.left
             anchors.leftMargin: 0
             anchors.right: parent.right
             anchors.rightMargin: 0
 
+            spacing: 8
+
+            Item { width: 16; height: 16; } // spacer
+
             ImageSvg {
                 id: labelISO
                 width: 28
                 height: 28
-                anchors.top: parent.top
-                anchors.topMargin: 8
                 anchors.left: parent.left
                 anchors.leftMargin: 16
 
@@ -341,8 +317,6 @@ Rectangle {
                 id: labelFocal
                 width: 28
                 height: 28
-                anchors.top: labelISO.bottom
-                anchors.topMargin: 8
                 anchors.left: parent.left
                 anchors.leftMargin: 16
 
@@ -368,8 +342,6 @@ Rectangle {
                 id: labelExposure
                 width: 28
                 height: 28
-                anchors.top: labelFocal.bottom
-                anchors.topMargin: 8
                 anchors.left: parent.left
                 anchors.leftMargin: 16
 
@@ -392,159 +364,139 @@ Rectangle {
             }
         }
 
-        Rectangle {
+        Column {
             id: rectangleVideo
-            height: 120
-            color: "#00000000"
-            anchors.top: labelSize.bottom
-            anchors.topMargin: 16
             anchors.right: parent.right
             anchors.rightMargin: 0
             anchors.left: parent.left
             anchors.leftMargin: 0
 
-            Text {
+            spacing: 8
+
+            Item { width: 16; height: 16; } // spacer
+
+            ImageSvg {
                 id: labelChapter
-                width: 290
+                width: 28
                 height: 28
-                color: Theme.colorContentText
-                text: qsTr("Chapters:")
                 anchors.left: parent.left
                 anchors.leftMargin: 16
-                anchors.top: labelTimecode.bottom
-                anchors.topMargin: 0
-                verticalAlignment: Text.AlignVCenter
-                font.bold: true
-                font.pixelSize: Theme.fontSizeContentText
+
+                source: "qrc:/icons_material/baseline-video_library-24px.svg"
+                color: Theme.colorContentText
 
                 Text {
-                    id: chapters
-                    width: 128
-                    height: 32
-                    text: shot.chapters
+                    id: chapter
+                    height: 28
+                    anchors.left: parent.right
+                    anchors.leftMargin: 16
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: shot.chapters + qsTr(" chapters")
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
-                    anchors.right: parent.right
-                    anchors.rightMargin: 0
-                    anchors.verticalCenter: parent.verticalCenter
                     font.pixelSize: Theme.fontSizeContentText
                     color: Theme.colorContentText
                 }
             }
 
-            Text {
+            ImageSvg {
                 id: labelTimecode
-                width: 290
+                width: 28
                 height: 28
-                text: qsTr("Timecode:")
                 anchors.left: parent.left
                 anchors.leftMargin: 16
-                anchors.top: labelBitrate.bottom
-                anchors.topMargin: 0
-                verticalAlignment: Text.AlignVCenter
-                font.bold: true
-                font.pixelSize: Theme.fontSizeContentText
+
+                source: "qrc:/icons_material/baseline-av_timer-24px.svg"
                 color: Theme.colorContentText
 
                 Text {
                     id: timecode
-                    width: 128
-                    height: 32
+                    height: 28
+                    anchors.left: parent.right
+                    anchors.leftMargin: 16
+                    anchors.verticalCenter: parent.verticalCenter
+
                     text: ""
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
-                    anchors.right: parent.right
-                    anchors.rightMargin: 0
-                    anchors.verticalCenter: parent.verticalCenter
-                    color: Theme.colorContentText
                     font.pixelSize: Theme.fontSizeContentText
+                    color: Theme.colorContentText
                 }
             }
 
-            Text {
+            ImageSvg {
                 id: labelCodec
-                width: 290
+                width: 28
                 height: 28
-                text: qsTr("Codec:")
-                anchors.top: parent.top
-                anchors.topMargin: 0
                 anchors.left: parent.left
                 anchors.leftMargin: 16
-                verticalAlignment: Text.AlignVCenter
-                font.bold: true
-                font.pixelSize: Theme.fontSizeContentText
+
+                source: "qrc:/icons_material/baseline-memory-24px.svg"
                 color: Theme.colorContentText
 
                 Text {
                     id: codec
-                    width: 128
-                    height: 32
+                    height: 28
+                    anchors.left: parent.right
+                    anchors.leftMargin: 16
+                    anchors.verticalCenter: parent.verticalCenter
+
                     text: ""
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
-                    anchors.right: parent.right
-                    anchors.rightMargin: 0
-                    anchors.verticalCenter: parent.verticalCenter
-                    color: Theme.colorContentText
                     font.pixelSize: Theme.fontSizeContentText
+                    color: Theme.colorContentText
                 }
             }
 
-            Text {
+            ImageSvg {
                 id: labelBitrate
-                width: 290
+                width: 28
                 height: 28
-                color: Theme.colorContentText
-                text: qsTr("Bitrate:")
                 anchors.left: parent.left
                 anchors.leftMargin: 16
-                anchors.top: labelFramerate.bottom
-                anchors.topMargin: 0
-                verticalAlignment: Text.AlignVCenter
-                font.bold: true
-                font.pixelSize: Theme.fontSizeContentText
+
+                source: "qrc:/icons_material/baseline-insert_chart_outlined-24px.svg"
+                color: Theme.colorContentText
 
                 Text {
                     id: bitrate
-                    width: 128
-                    height: 32
-                    text: ""
-                    anchors.right: parent.right
-                    anchors.rightMargin: 0
+                    height: 28
+                    anchors.left: parent.right
+                    anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
+
+                    text: ""
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
-                    color: Theme.colorContentText
                     font.pixelSize: Theme.fontSizeContentText
+                    color: Theme.colorContentText
                 }
             }
 
-            Text {
+            ImageSvg {
                 id: labelFramerate
-                width: 290
+                width: 28
                 height: 28
-                color: Theme.colorContentText
-                text: qsTr("Framerate:")
                 anchors.left: parent.left
                 anchors.leftMargin: 16
-                anchors.top: labelCodec.bottom
-                anchors.topMargin: 0
-                verticalAlignment: Text.AlignVCenter
-                font.bold: true
-                font.pixelSize: Theme.fontSizeContentText
+
+                source: "qrc:/icons_material/baseline-camera_roll-24px.svg"
+                color: Theme.colorContentText
 
                 Text {
                     id: framerate
-                    width: 128
-                    height: 32
-                    text: ""
-                    anchors.right: parent.right
-                    anchors.rightMargin: 0
+                    height: 28
+                    anchors.left: parent.right
+                    anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
+
+                    text: ""
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
-                    color: Theme.colorContentText
                     font.pixelSize: Theme.fontSizeContentText
+                    color: Theme.colorContentText
                 }
             }
         }
@@ -553,8 +505,6 @@ Rectangle {
             id: rectangleFiles
             height: 256
             color: Theme.colorContentSubBox
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 0
             anchors.right: parent.right
             anchors.rightMargin: 0
             anchors.left: parent.left
