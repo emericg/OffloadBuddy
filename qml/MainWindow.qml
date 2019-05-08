@@ -22,7 +22,6 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Window 2.2
-import QtGraphicalEffects 1.0
 
 import com.offloadbuddy.theme 1.0
 
@@ -88,7 +87,7 @@ ApplicationWindow {
 
         // SELECTORS
 
-        Image {
+        ImageSvg {
             id: selectorArrow
             width: 12
             height: 12
@@ -97,13 +96,7 @@ ApplicationWindow {
 
             visible: (Theme.selector === "arrow")
             source: "qrc:/menus/selector_arrow.svg"
-
-            ColorOverlay {
-                anchors.fill: parent
-                source: parent
-                color: Theme.colorSidebarIcons
-                visible: Theme.colorSidebarIcons === "#ffffff" ? true : false
-            }
+            color: Theme.colorSidebarContent
         }
 
         Rectangle {
@@ -117,7 +110,7 @@ ApplicationWindow {
             Rectangle {
                 width: 4
                 height: parent.height
-                color: Theme.colorApproved
+                color: Theme.colorPrimary
             }
         }
 
@@ -138,18 +131,10 @@ ApplicationWindow {
                 onClicked: content.state = "library"
             }
 
-            Image {
+            ImageSvg {
                 anchors.fill: parent
                 source: "qrc:/menus/media.svg"
-                sourceSize.width: 64
-                sourceSize.height: 64
-
-                ColorOverlay {
-                    anchors.fill: parent
-                    source: parent
-                    color: Theme.colorSidebarIcons
-                    visible: Theme.colorSidebarIcons === "#ffffff" ? true : false
-                }
+                color: Theme.colorSidebarContent
             }
         }
 
@@ -196,19 +181,13 @@ ApplicationWindow {
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
                 onClicked: content.state = "jobs"
             }
-            Image {
+            ImageSvg {
                 id: button_jobs_image
                 anchors.fill: parent
                 fillMode: Image.PreserveAspectFit
                 source: "qrc:/menus/jobs.svg"
                 opacity: 0
-
-                ColorOverlay {
-                    anchors.fill: parent
-                    source: parent
-                    color: Theme.colorSidebarIcons
-                    visible: Theme.colorSidebarIcons ? 1 : 0
-                }
+                color: Theme.colorSidebarContent
 
                 NumberAnimation on opacity {
                     id: button_jobs_fadein
@@ -244,19 +223,11 @@ ApplicationWindow {
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
                 onClicked: content.state = "settings"
             }
-            Image {
+            ImageSvg {
                 anchors.fill: parent
                 fillMode: Image.PreserveAspectFit
                 source: "qrc:/menus/settings.svg"
-                sourceSize.width: 50
-                sourceSize.height: 50
-
-                ColorOverlay {
-                    anchors.fill: parent
-                    source: parent
-                    color: Theme.colorSidebarIcons
-                    visible: Theme.colorSidebarIcons === "#ffffff" ? true : false
-                }
+                color: Theme.colorSidebarContent
             }
         }
 
@@ -274,18 +245,10 @@ ApplicationWindow {
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
                 onClicked: content.state = "about"
             }
-            Image {
+            ImageSvg {
                 anchors.fill: parent
                 source: "qrc:/menus/about.svg"
-                sourceSize.width: 50
-                sourceSize.height: 50
-
-                ColorOverlay {
-                    anchors.fill: parent
-                    source: parent
-                    color: Theme.colorSidebarIcons
-                    visible: Theme.colorSidebarIcons === "#ffffff" ? true : false
-                }
+                color: Theme.colorSidebarContent
             }
         }
 
@@ -302,19 +265,11 @@ ApplicationWindow {
                 anchors.fill: parent
                 onClicked: Qt.quit()
             }
-            Image {
+            ImageSvg {
                 anchors.fill: parent
                 fillMode: Image.PreserveAspectFit
                 source: "qrc:/menus/exit.svg"
-                sourceSize.width: 50
-                sourceSize.height: 50
-
-                ColorOverlay {
-                    anchors.fill: parent
-                    source: parent
-                    color: Theme.colorSidebarIcons
-                    visible: Theme.colorSidebarIcons === "#ffffff" ? true : false
-                }
+                color: Theme.colorSidebarContent
             }
         }
 

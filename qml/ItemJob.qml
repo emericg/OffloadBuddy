@@ -1,7 +1,6 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Dialogs 1.2
-import QtGraphicalEffects 1.0
 
 import com.offloadbuddy.theme 1.0
 import "UtilsString.js" as UtilsString
@@ -27,20 +26,12 @@ Rectangle {
         color: "#00000000"
         clip: true
 
-        Image {
+        ImageSvg {
             id: imageStatus
             width: 40
             height: 40
             source: "qrc:/resources/minicons/job_queued.svg"
-            sourceSize.width: 40
-            sourceSize.height: 40
-
-            ColorOverlay {
-                anchors.fill: parent
-                source: parent
-                color: Theme.colorSidebarIcons
-                visible: Theme.colorSidebarIcons === "#ffffff" ? true : false
-            }
+            color: Theme.colorSidebarContent
 
             NumberAnimation on rotation {
                 id: encodeAnimation
@@ -136,22 +127,14 @@ Rectangle {
         anchors.rightMargin: 8
         anchors.verticalCenter: parent.verticalCenter
 
-        Image {
+        ImageSvg {
             id: imageOpen
             width: 32
             height: 32
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
             source: "qrc:/resources/minicons/job_open.svg"
-            sourceSize.width: 32
-            sourceSize.height: 32
-
-            ColorOverlay {
-                anchors.fill: parent
-                source: parent
-                color: Theme.colorSidebarIcons
-                visible: Theme.colorSidebarIcons === "#ffffff" ? true : false
-            }
+            color: Theme.colorSidebarContent
         }
 
         MouseArea {

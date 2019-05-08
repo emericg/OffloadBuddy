@@ -1,6 +1,5 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
-import QtGraphicalEffects 1.0
 
 import com.offloadbuddy.theme 1.0
 
@@ -14,7 +13,7 @@ Rectangle {
     property var myDevice
     signal myDeviceClicked(var devicePtr)
 
-    Image {
+    ImageSvg {
         id: deviceImage
         width: 64
         height: 64
@@ -22,17 +21,8 @@ Rectangle {
         anchors.topMargin: 4
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
-        fillMode: Image.PreserveAspectCrop
         source: "qrc:/menus/device.svg"
-        sourceSize.width: 64
-        sourceSize.height: 64
-
-        ColorOverlay {
-            anchors.fill: parent
-            source: parent
-            color: Theme.colorSidebarIcons
-            visible: Theme.colorSidebarIcons === "#ffffff" ? true : false
-        }
+        color: Theme.colorSidebarContent
     }
 
     Text {
@@ -45,7 +35,7 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0
 
-        color: Theme.colorSidebarText
+        color: Theme.colorSidebarContent
         text: (myDevice.model === "device")? myDevice.brand : myDevice.model
         font.bold: true
         font.pixelSize: 11

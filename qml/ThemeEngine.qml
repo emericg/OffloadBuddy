@@ -14,17 +14,18 @@ Item {
 
     // Colors
     property string colorSidebar: "#4E598C"
-    property string colorSidebarText: "#ffffff"
-    property string colorSidebarIcons: ""
+    property string colorSidebarContent: "#ffffff"
 
-    property string colorHeaderBackground: "#ebedee"
-    property string colorHeaderTitle: "#353637"
-    property string colorHeaderText: "#000000"
+    property string colorHeader: "#ebedee"
+    property string colorHeaderContent: "#353637"
+    property string colorHeaderBackground: "#ebedee"    // DEPRECATED
+    property string colorHeaderTitle: "#353637"         // DEPRECATED
+    property string colorHeaderText: "#000000"          // DEPRECATED
 
     property string colorInfoBanner: "#fed859"
     property string colorInfoBannerText: "#ffffff"
 
-    property string colorContentBackground: "#ffffff"
+    property string colorContentBackground: "#ffffff" // DEPRECATED
     property string colorContentBox: "#F7F7F7"
     property string colorContentTitle: "#353637"
     property string colorContentText: "#000000"
@@ -33,13 +34,15 @@ Item {
     property string colorContentSubText: "#000000"
 
     property string colorText: "#000000"
-    property string colorTextDisabled: "#000000"
+    property string colorSubText: "#666666"
+    property string colorIcon: "#000000"
 
-    property string colorApproved: "#46b0f4"
-    property string colorDangerZone: "#FF5F5F"
-    property string colorSomethingsWrong: "#FFE15E"
+    property string colorPrimary: "#46b0f4"
+    property string colorSecondary: ""
+    property string colorWarning: "#FF5F5F"
+    property string colorError: "#FFE15E"
 
-    // Qt Quick controls theming
+    // Qt Quick controls theming // DEPRECATED
     property string colorButton: "#e0e0e0"
     property string colorButtonText: "#000000"
     property string colorButtonDown: "#bdbdbd"
@@ -73,8 +76,7 @@ Item {
             // "PLAIN AND BORING"
 
             colorSidebar =          "#4E598C"
-            colorSidebarText =      "#ffffff"
-            colorSidebarIcons =     ""
+            colorSidebarContent =   "#ffffff"
 
             colorHeaderBackground = "#ebedee"
             colorHeaderTitle =      "#353637"
@@ -89,11 +91,10 @@ Item {
             colorContentSubText =   "#000000"
 
             colorText =             "#000000"
-            colorTextDisabled =     "#000000"
 
-            colorApproved =         "#46b0f4"
-            colorDangerZone =       "#FF5F5F"
-            colorSomethingsWrong =  "#FFE15E"
+            colorPrimary =          "#46b0f4"
+            colorWarning =          "#FF5F5F"
+            colorError =            "#FFE15E"
 
             colorButton =           "#e0e0e0"
             colorButtonText =       "#000000"
@@ -111,8 +112,7 @@ Item {
             // "DARK AND SPOOKY"
 
             colorSidebar =          "#2e2e2e"
-            colorSidebarText =      "#ffffff"
-            colorSidebarIcons =     ""
+            colorSidebarContent =   "#ffffff"
 
             colorHeaderBackground = "#444444"
             colorHeaderTitle =      "#8b8e8f"
@@ -127,11 +127,10 @@ Item {
             colorContentSubText =   "#ffffff"
 
             colorText =             "#ffffff"
-            colorTextDisabled =     "#eeeeee"
 
-            colorApproved =         "#f0544c"
-            colorDangerZone =       "#ee2b57"
-            colorSomethingsWrong =  "#FFDB63"
+            colorPrimary =         "#f0544c"
+            colorWarning =          "#ee2b57"
+            colorError =            "#FFDB63"
 
             colorButton =           "#e0e0e0"
             colorButtonText =       "#000000"
@@ -149,8 +148,7 @@ Item {
             // "BLOOD AND TEARS"
 
             colorSidebar =          "#181818"
-            colorSidebarText =      "#bebebe"
-            colorSidebarIcons =     "#ffffff"
+            colorSidebarContent =   "#bebebe"
 
             colorHeaderBackground = "#141414"
             colorHeaderTitle =      "#ffffff"
@@ -165,11 +163,10 @@ Item {
             colorContentSubText =   "#a3a3a0"
 
             colorText =             "#a3a3a0"
-            colorTextDisabled =     "#000000"
 
-            colorApproved =         "#009ee2"
-            colorDangerZone =       "#fa6871"
-            colorSomethingsWrong =  "#FFDB63"
+            colorPrimary =          "#009ee2"
+            colorWarning =          "#fa6871"
+            colorError =            "#FFDB63"
 
             colorButton =           "#e0e0e0"
             colorButtonText =       "#000000"
@@ -195,8 +192,7 @@ Item {
             // yellow "#FCCD13" "#FFE400"
 
             colorSidebar =          "#E31D8D"
-            colorSidebarText =      "#FCCD13"
-            colorSidebarIcons =     "#ffffff"
+            colorSidebarContent =   "#FCCD13"
 
             colorHeaderBackground = "#faa7d1"
             colorHeaderTitle =      "#E31D8D"
@@ -211,11 +207,10 @@ Item {
             colorContentSubText =   "#944197"
 
             colorText =             "#944197"
-            colorTextDisabled =     "#000000"
 
-            colorApproved =         "#FFE400"
-            colorDangerZone =       "#944197"
-            colorSomethingsWrong =  "#FFDB63"
+            colorPrimary =          "#FFE400"
+            colorWarning =          "#944197"
+            colorError =            "#FFDB63"
 
             colorButton =           "#ED65A7"
             colorButtonText =       "#ffffff"

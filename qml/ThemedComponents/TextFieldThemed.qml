@@ -11,7 +11,7 @@ TextField {
         implicitWidth: 200
         implicitHeight: 40
         color: textField_path.activeFocus ? "white" : "white"
-        border.color: textField_path.activeFocus ? Theme.colorApproved : Theme.colorButton
+        border.color: textField_path.activeFocus ? Theme.colorPrimary : Theme.colorButton
         border.width: textField_path.activeFocus ? 2 : 1
     }
 }

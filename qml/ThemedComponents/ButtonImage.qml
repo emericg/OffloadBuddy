@@ -1,6 +1,5 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
-import QtGraphicalEffects 1.0
 
 import com.offloadbuddy.theme 1.0
 
@@ -18,21 +17,13 @@ Button {
         color: control.down ? Theme.colorButtonDown : Theme.colorButton
     }
 
-    contentItem: Image {
+    contentItem: ImageSvg {
         width: imageSize
         height: imageSize
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
 
         source: imageSource
-        sourceSize.width: width
-        sourceSize.height: height
-        fillMode: Image.PreserveAspectCrop
-
-        ColorOverlay {
-            anchors.fill: parent
-            source: parent
-            color: enabled ? Theme.colorButtonText : Theme.colorButtonDown
-        }
+        color: enabled ? Theme.colorButtonText : Theme.colorButtonDown
     }
 }

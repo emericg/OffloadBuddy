@@ -295,7 +295,7 @@ Rectangle {
                 height: shotsview.cellSize
                 color: "#00000000"
                 border.width : 4
-                border.color: Theme.colorApproved
+                border.color: Theme.colorPrimary
                 x: {
                     if (shotsview.currentItem.x) {
                         x = shotsview.currentItem.x

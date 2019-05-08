@@ -211,7 +211,7 @@ Rectangle {
                 id: mapTrace
                 visible: true
                 line.width: 3
-                line.color: Theme.colorApproved
+                line.color: Theme.colorPrimary
 
                 path: [
                     { latitude: 45.5, longitude: 6 },

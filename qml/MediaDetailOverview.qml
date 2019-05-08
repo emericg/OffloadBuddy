@@ -1,7 +1,6 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtMultimedia 5.9
-import QtGraphicalEffects 1.0
 
 import com.offloadbuddy.theme 1.0
 import com.offloadbuddy.shared 1.0
@@ -138,7 +137,7 @@ Rectangle {
         anchors.topMargin: 0
         anchors.top: parent.top
 
-        Image {
+        ImageSvg {
             id: labelDate
             width: 28
             height: 28
@@ -148,15 +147,7 @@ Rectangle {
             anchors.leftMargin: 16
 
             source: "qrc:/icons_material/baseline-date_range-24px.svg"
-            sourceSize.width: width
-            sourceSize.height: height
-
-            ColorOverlay {
-                anchors.fill: parent
-                source: parent
-                color: Theme.colorContentText
-                visible: Theme.colorContentText !== "#000000" ? true : false
-            }
+            color: Theme.colorContentText
 
             Text {
                 id: date
@@ -173,7 +164,7 @@ Rectangle {
             }
         }
 
-        Image {
+        ImageSvg {
             id: labelCamera
             width: 28
             height: 28
@@ -183,15 +174,7 @@ Rectangle {
             anchors.leftMargin: 16
 
             source: "qrc:/icons_material/baseline-camera-24px.svg"
-            sourceSize.width: width
-            sourceSize.height: height
-
-            ColorOverlay {
-                anchors.fill: parent
-                source: parent
-                color: Theme.colorContentText
-                visible: Theme.colorContentText !== "#000000" ? true : false
-            }
+            color: Theme.colorContentText
 
             Text {
                 id: camera
@@ -208,7 +191,7 @@ Rectangle {
             }
         }
 
-        Image {
+        ImageSvg {
             id: labelDuration
             width: 28
             height: 28
@@ -218,15 +201,7 @@ Rectangle {
             anchors.leftMargin: 16
 
             source: "qrc:/icons_material/baseline-timer-24px.svg"
-            sourceSize.width: width
-            sourceSize.height: height
-
-            ColorOverlay {
-                anchors.fill: parent
-                source: parent
-                color: Theme.colorContentText
-                visible: Theme.colorContentText !== "#000000" ? true : false
-            }
+            color: Theme.colorContentText
 
             Text {
                 id: duration
@@ -243,7 +218,7 @@ Rectangle {
             }
         }
 
-        Image {
+        ImageSvg {
             id: labelDefinition
             width: 28
             height: 28
@@ -253,15 +228,7 @@ Rectangle {
             anchors.leftMargin: 16
 
             source: "qrc:/icons_material/baseline-aspect_ratio-24px.svg"
-            sourceSize.width: width
-            sourceSize.height: height
-
-            ColorOverlay {
-                anchors.fill: parent
-                source: parent
-                color: Theme.colorContentText
-                visible: Theme.colorContentText !== "#000000" ? true : false
-            }
+            color: Theme.colorContentText
 
             Text {
                 id: definition
@@ -278,7 +245,7 @@ Rectangle {
             }
         }
 
-        Image {
+        ImageSvg {
             id: labelOrientation
             width: 28
             height: 28
@@ -288,15 +255,7 @@ Rectangle {
             anchors.leftMargin: 16
 
             source: "qrc:/icons_material/baseline-screen_rotation-24px.svg"
-            sourceSize.width: width
-            sourceSize.height: height
-
-            ColorOverlay {
-                anchors.fill: parent
-                source: parent
-                color: Theme.colorContentText
-                visible: Theme.colorContentText !== "#000000" ? true : false
-            }
+            color: Theme.colorContentText
 
             Text {
                 id: orientation
@@ -313,7 +272,7 @@ Rectangle {
             }
         }
 
-        Image {
+        ImageSvg {
             id: labelSize
             width: 28
             height: 28
@@ -323,15 +282,7 @@ Rectangle {
             anchors.leftMargin: 16
 
             source: "qrc:/icons_material/baseline-folder-24px.svg"
-            sourceSize.width: width
-            sourceSize.height: height
-
-            ColorOverlay {
-                anchors.fill: parent
-                source: parent
-                color: Theme.colorContentText
-                visible: Theme.colorContentText !== "#000000" ? true : false
-            }
+            color: Theme.colorContentText
 
             Text {
                 id: size
@@ -359,7 +310,7 @@ Rectangle {
             anchors.right: parent.right
             anchors.rightMargin: 0
 
-            Image {
+            ImageSvg {
                 id: labelISO
                 width: 28
                 height: 28
@@ -369,15 +320,7 @@ Rectangle {
                 anchors.leftMargin: 16
 
                 source: "qrc:/icons_material/baseline-iso-24px.svg"
-                sourceSize.width: width
-                sourceSize.height: height
-
-                ColorOverlay {
-                    anchors.fill: parent
-                    source: parent
-                    color: Theme.colorContentText
-                    visible: Theme.colorContentText !== "#000000" ? true : false
-                }
+                color: Theme.colorContentText
 
                 Text {
                     id: iso
@@ -394,7 +337,7 @@ Rectangle {
                 }
             }
 
-            Image {
+            ImageSvg {
                 id: labelFocal
                 width: 28
                 height: 28
@@ -404,15 +347,7 @@ Rectangle {
                 anchors.leftMargin: 16
 
                 source: "qrc:/icons_material/baseline-center_focus_weak-24px.svg"
-                sourceSize.width: width
-                sourceSize.height: height
-
-                ColorOverlay {
-                    anchors.fill: parent
-                    source: parent
-                    color: Theme.colorContentText
-                    visible: Theme.colorContentText !== "#000000" ? true : false
-                }
+                color: Theme.colorContentText
 
                 Text {
                     id: focal
@@ -429,7 +364,7 @@ Rectangle {
                 }
             }
 
-            Image {
+            ImageSvg {
                 id: labelExposure
                 width: 28
                 height: 28
@@ -439,15 +374,7 @@ Rectangle {
                 anchors.leftMargin: 16
 
                 source: "qrc:/icons_material/baseline-shutter_speed-24px.svg"
-                sourceSize.width: width
-                sourceSize.height: height
-
-                ColorOverlay {
-                    anchors.fill: parent
-                    source: parent
-                    color: Theme.colorContentText
-                    visible: Theme.colorContentText !== "#000000" ? true : false
-                }
+                color: Theme.colorContentText
 
                 Text {
                     id: exposure

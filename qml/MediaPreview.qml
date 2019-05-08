@@ -1,7 +1,6 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtMultimedia 5.9
-import QtGraphicalEffects 1.0
 
 import com.offloadbuddy.theme 1.0
 import com.offloadbuddy.shared 1.0
@@ -295,7 +294,7 @@ Rectangle {
                     id: timelinePosition
                     width: 0
                     height: 40
-                    color: Theme.colorApproved
+                    color: Theme.colorPrimary
                     anchors.left: parent.left
                     anchors.leftMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
@@ -337,7 +336,7 @@ Rectangle {
                 height: 28
                 //color: "#d0d0d0"
                 border.width: 2
-                border.color: Theme.colorApproved
+                border.color: Theme.colorPrimary
                 anchors.right: buttonScreenshot.left
                 anchors.rightMargin: 0
                 anchors.verticalCenter: parent.verticalCenter
@@ -346,7 +345,7 @@ Rectangle {
                     id: soundlinePosition
                     width: 0
                     height: 28
-                    color: Theme.colorApproved
+                    color: Theme.colorPrimary
                     anchors.left: parent.left
                     anchors.leftMargin: 0
                     anchors.verticalCenter: parent.verticalCenter

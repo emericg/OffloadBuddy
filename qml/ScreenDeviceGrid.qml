@@ -1,6 +1,5 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
-import QtGraphicalEffects 1.0
 
 import com.offloadbuddy.theme 1.0
 import "UtilsString.js" as UtilsString
@@ -249,7 +248,7 @@ Rectangle {
             font.pixelSize: Theme.fontSizeHeaderTitle - 2
         }
 
-        Image {
+        ImageSvg {
             id: deviceLockedImage
             width: 24
             height: 24
@@ -259,17 +258,9 @@ Rectangle {
             anchors.rightMargin: -3
 
             source: "qrc:/icons_material/outline-https-24px.svg"
-            sourceSize.width: 24
-            sourceSize.height: 24
-
-            ColorOverlay {
-                anchors.fill: parent
-                source: parent
-                visible: Theme.colorHeaderText === "#000000" ? false : true
-                color: Theme.colorHeaderText
-            }
+            color: Theme.colorHeaderContent
         }
-        Image {
+        ImageSvg {
             id: deviceStorageImage
             width: 24
             height: 24
@@ -279,17 +270,10 @@ Rectangle {
             anchors.rightMargin: -3
 
             source: "qrc:/icons_material/outline-sd_card-24px.svg"
-            sourceSize.width: 24
-            sourceSize.height: 24
+            color: Theme.colorHeaderContent
 
-            ColorOverlay {
-                anchors.fill: parent
-                source: parent
-                visible: Theme.colorHeaderText === "#000000" ? false : true
-                color: Theme.colorHeaderText
-            }
         }
-        Image {
+        ImageSvg {
             id: deviceBatteryIcon
             width: 24
             height: 24
@@ -299,15 +283,7 @@ Rectangle {
             anchors.rightMargin: -3
 
             source: "qrc:/icons_material/outline-power-24px.svg"
-            sourceSize.width: 24
-            sourceSize.height: 24
-
-            ColorOverlay {
-                source: parent
-                color: Theme.colorHeaderText
-                visible: Theme.colorHeaderText === "#000000" ? false : true
-                anchors.fill: parent
-            }
+            color: Theme.colorHeaderContent
         }
 
         Text {
@@ -371,7 +347,7 @@ Rectangle {
 
             Rectangle {
                 id: rectangleTransferDecorated
-                color: Theme.colorApproved
+                color: Theme.colorPrimary
                 width: parent.width
                 height: parent.height
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -437,12 +413,12 @@ Rectangle {
                 timerReset.stop();
                 blinkReset.stop();
                 textReset.text = qsTr("Delete ALL content!");
-                rectangleDeleteDecorated.color = Theme.colorDangerZone;
+                rectangleDeleteDecorated.color = Theme.colorWarning;
             }
 
             Rectangle {
                 id: rectangleDeleteDecorated
-                color: Theme.colorDangerZone
+                color: Theme.colorWarning
                 width: parent.width
                 height: parent.height
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -452,8 +428,8 @@ Rectangle {
                     id: blinkReset
                     running: false
                     loops: Animation.Infinite
-                    ColorAnimation { from: Theme.colorDangerZone; to: "red"; duration: 1000 }
-                    ColorAnimation { from: "red"; to: Theme.colorDangerZone; duration: 1000 }
+                    ColorAnimation { from: Theme.colorWarning; to: "red"; duration: 1000 }
+                    ColorAnimation { from: "red"; to: Theme.colorWarning; duration: 1000 }
                 }
             }
 
@@ -660,7 +636,7 @@ Rectangle {
                 height: shotsview.cellSize
                 color: "#00000000"
                 border.width : 4
-                border.color: Theme.colorApproved
+                border.color: Theme.colorPrimary
                 x: {
                     if (shotsview.currentItem.x) {
                         x = shotsview.currentItem.x

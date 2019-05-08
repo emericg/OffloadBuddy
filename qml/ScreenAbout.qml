@@ -129,7 +129,7 @@ Rectangle {
                 onLinkActivated: Qt.openUrlExternally("https://github.com/emericg/OffloadBuddy")
             }
 
-            Image {
+            ImageSvg {
                 id: imageGitHub
                 width: 32
                 height: 32
@@ -139,34 +139,20 @@ Rectangle {
                 anchors.bottomMargin: 12
 
                 source: "qrc:/logos/github.svg"
-                sourceSize.height: 64
-                sourceSize.width: 64
-
-                ColorOverlay {
-                    anchors.fill: parent
-                    source: parent
-                    color: Theme.colorContentText
-                }
+                color: Theme.colorIcon
             }
 
-            Image {
+            ImageSvg {
                 id: imageIssues
                 width: 32
                 height: 32
                 anchors.left: textGitHub.right
+                anchors.leftMargin: 24
+                anchors.bottom: parent.bottom
                 anchors.bottomMargin: 12
 
                 source: "qrc:/icons_material/baseline-bug_report-24px.svg"
-                sourceSize.height: 32
-                sourceSize.width: 32
-
-                ColorOverlay {
-                    color: Theme.colorContentText
-                    source: parent
-                    anchors.fill: parent
-                }
-                anchors.bottom: parent.bottom
-                anchors.leftMargin: 24
+                color: Theme.colorIcon
             }
 
             Text {

@@ -12,14 +12,14 @@ CheckBox {
         implicitHeight: 26
         x: control.leftPadding
         y: parent.height / 2 - height / 2
-        border.color: control.down ? Theme.colorApproved : Theme.colorButton
+        border.color: control.down ? Theme.colorPrimary : Theme.colorButton
 
         Rectangle {
             width: 14
             height: 14
             x: 6
             y: 6
-            color: Theme.colorApproved
+            color: Theme.colorPrimary
             visible: control.checked
         }
     }
@@ -28,7 +28,7 @@ CheckBox {
         text: control.text
         font: control.font
         opacity: enabled ? 1.0 : 0.3
-        color: control.down ? Theme.colorTextDisabled : Theme.colorText
+        color: control.down ? Theme.colorSubText : Theme.colorText
         verticalAlignment: Text.AlignVCenter
         leftPadding: control.indicator.width + control.spacing
     }

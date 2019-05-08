@@ -20,7 +20,7 @@ Slider {
         Rectangle {
             width: control.visualPosition * parent.width
             height: parent.height
-            color: Theme.colorApproved
+            color: Theme.colorPrimary
             radius: 2
         }
     }
