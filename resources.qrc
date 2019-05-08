@@ -15,8 +15,6 @@
         <file>resources/minicons/job_offloading.svg</file>
         <file>resources/minicons/job_open.svg</file>
         <file>resources/minicons/job_queued.svg</file>
-        <file>resources/other/gps_marker.svg</file>
-        <file>resources/other/GitHub-Mark-64px.png</file>
         <file>resources/other/placeholder_loading.svg</file>
         <file>resources/other/placeholder_picture.svg</file>
         <file>resources/other/placeholder_picture_multi.svg</file>
@@ -33,9 +31,5 @@
         <file alias="process_play.svg">resources/icons/process_play.svg</file>
         <file alias="process_pause.svg">resources/icons/process_pause.svg</file>
         <file alias="process_stop.svg">resources/icons/process_stop.svg</file>
-    </qresource>
-    <qresource prefix="/appicons">
-        <file alias="offloadbuddy.svg">resources/app/offloadbuddy.svg</file>
-        <file alias="offloadbuddy.png">resources/app/offloadbuddy.png</file>
     </qresource>
 </RCC>

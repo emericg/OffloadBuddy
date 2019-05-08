@@ -138,7 +138,7 @@ Rectangle {
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 12
 
-                source: "../resources/other/GitHub-Mark-64px.png"
+                source: "qrc:/logos/github.svg"
                 sourceSize.height: 64
                 sourceSize.width: 64
 
