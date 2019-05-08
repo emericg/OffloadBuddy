@@ -26,6 +26,8 @@
         <file>icons_material/outline-https-24px.svg</file>
         <file>icons_material/outline-power-24px.svg</file>
         <file>icons_material/outline-sd_card-24px.svg</file>
+        <file>logos/github.svg</file>
+        <file>others/gps_marker.svg</file>
     </qresource>
     <qresource prefix="/menus">
         <file alias="selector_arrow.svg">menus/selector_arrow.svg</file>
