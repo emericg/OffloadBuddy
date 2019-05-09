@@ -15,32 +15,9 @@ Item {
     property var selectedShot : shot
     property string selectedItemName : shot ? shot.name : ""
 
-    // POPUPS //////////////////////////////////////////////////////////////////
-
-    Popup {
-        id: popupEncode
-        modal: true
-        focus: true
-        x: (parent.width - panelEncode.width) / 2
-        y: (parent.height - 64 - panelEncode.height) / 2
-        closePolicy: Popup.CloseOnEscape /*| Popup.CloseOnPressOutsideParent*/
-
-        PanelEncode {
-            id: panelEncode
-        }
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-
-    MediaPreview {
-        id: mediaPreview
-    }
-
     function setPause() {
         mediaPreview.setPause()
     }
-
-    ////////////////////////////////////////////////////////////////////////////
 
     function updateOverview() {
 
@@ -87,13 +64,15 @@ Item {
 
             //console.log("shot.previewPhoto :" + shot.previewVideo)
 
-            codecVideo.visible = true
-            if (shot.codecVideo.length)
+            if (shot.codecVideo.length) {
+                codecVideo.visible = true
                 codecVideoText.text = shot.codecVideo
-            else
+            } else {
                 codecVideo.visible = false
+            }
 
             if (shot.codecAudio.length) {
+                codecAudio.visible = true
                 codecAudioText.text = shot.codecAudio
             } else {
                 codecAudio.visible = false
@@ -114,10 +93,30 @@ Item {
         }
     }
 
+    // POPUPS //////////////////////////////////////////////////////////////////
+
+    MediaPreview {
+        id: mediaPreview
+    }
+
+    Popup {
+        id: popupEncode
+        modal: true
+        focus: true
+        x: (parent.width - panelEncode.width) / 2
+        y: (parent.height - 64 - panelEncode.height) / 2
+        closePolicy: Popup.CloseOnEscape /*| Popup.CloseOnPressOutsideParent*/
+
+        PanelEncode {
+            id: panelEncode
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
     Column {
         id: rectangleMetadatas
         width: 320
-        //color: Theme.colorContentBox
         anchors.bottomMargin: 0
         anchors.rightMargin: 0
         anchors.right: parent.right
@@ -131,11 +130,9 @@ Item {
             id: labelDate
             width: 28
             height: 28
-            anchors.left: parent.left
-            anchors.leftMargin: 16
 
             source: "qrc:/icons_material/baseline-date_range-24px.svg"
-            color: Theme.colorContentText
+            color: Theme.colorText
 
             Text {
                 id: date
@@ -143,7 +140,7 @@ Item {
                 anchors.left: parent.right
                 anchors.leftMargin: 16
 
-                color: Theme.colorContentText
+                color: Theme.colorText
                 text: shot.date.toUTCString()
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignLeft
@@ -156,11 +153,9 @@ Item {
             id: labelCamera
             width: 28
             height: 28
-            anchors.left: parent.left
-            anchors.leftMargin: 16
 
             source: "qrc:/icons_material/baseline-camera-24px.svg"
-            color: Theme.colorContentText
+            color: Theme.colorText
 
             Text {
                 id: camera
@@ -173,7 +168,7 @@ Item {
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignLeft
                 font.pixelSize: Theme.fontSizeContentText
-                color: Theme.colorContentText
+                color: Theme.colorText
             }
         }
 
@@ -181,11 +176,9 @@ Item {
             id: labelDuration
             width: 28
             height: 28
-            anchors.left: parent.left
-            anchors.leftMargin: 16
 
             source: "qrc:/icons_material/baseline-timer-24px.svg"
-            color: Theme.colorContentText
+            color: Theme.colorText
 
             Text {
                 id: duration
@@ -197,7 +190,7 @@ Item {
 
                 text: ""
                 verticalAlignment: Text.AlignVCenter
-                color: Theme.colorContentText
+                color: Theme.colorText
                 font.pixelSize: Theme.fontSizeContentText
             }
         }
@@ -206,11 +199,9 @@ Item {
             id: labelDefinition
             width: 28
             height: 28
-            anchors.left: parent.left
-            anchors.leftMargin: 16
 
             source: "qrc:/icons_material/baseline-aspect_ratio-24px.svg"
-            color: Theme.colorContentText
+            color: Theme.colorText
 
             Text {
                 id: definition
@@ -223,7 +214,7 @@ Item {
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignRight
                 font.pixelSize: Theme.fontSizeContentText
-                color: Theme.colorContentText
+                color: Theme.colorText
             }
         }
 
@@ -231,11 +222,9 @@ Item {
             id: labelOrientation
             width: 28
             height: 28
-            anchors.left: parent.left
-            anchors.leftMargin: 16
 
             source: "qrc:/icons_material/baseline-screen_rotation-24px.svg"
-            color: Theme.colorContentText
+            color: Theme.colorText
 
             Text {
                 id: orientation
@@ -244,7 +233,7 @@ Item {
                 anchors.leftMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
 
-                color: Theme.colorContentText
+                color: Theme.colorText
                 text: UtilsString.orientationToString(shot.orientation)
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignRight
@@ -256,11 +245,9 @@ Item {
             id: labelSize
             width: 28
             height: 28
-            anchors.left: parent.left
-            anchors.leftMargin: 16
 
             source: "qrc:/icons_material/baseline-folder-24px.svg"
-            color: Theme.colorContentText
+            color: Theme.colorText
 
             Text {
                 id: size
@@ -269,7 +256,7 @@ Item {
                 anchors.leftMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
 
-                color: Theme.colorContentText
+                color: Theme.colorText
                 text: UtilsString.bytesToString_short(shot.datasize)
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignRight
@@ -292,11 +279,9 @@ Item {
                 id: labelISO
                 width: 28
                 height: 28
-                anchors.left: parent.left
-                anchors.leftMargin: 16
 
                 source: "qrc:/icons_material/baseline-iso-24px.svg"
-                color: Theme.colorContentText
+                color: Theme.colorText
 
                 Text {
                     id: iso
@@ -309,7 +294,7 @@ Item {
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
                     font.pixelSize: Theme.fontSizeContentText
-                    color: Theme.colorContentText
+                    color: Theme.colorText
                 }
             }
 
@@ -317,11 +302,9 @@ Item {
                 id: labelFocal
                 width: 28
                 height: 28
-                anchors.left: parent.left
-                anchors.leftMargin: 16
 
                 source: "qrc:/icons_material/baseline-center_focus_weak-24px.svg"
-                color: Theme.colorContentText
+                color: Theme.colorText
 
                 Text {
                     id: focal
@@ -334,7 +317,7 @@ Item {
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
                     font.pixelSize: Theme.fontSizeContentText
-                    color: Theme.colorContentText
+                    color: Theme.colorText
                 }
             }
 
@@ -342,11 +325,9 @@ Item {
                 id: labelExposure
                 width: 28
                 height: 28
-                anchors.left: parent.left
-                anchors.leftMargin: 16
 
                 source: "qrc:/icons_material/baseline-shutter_speed-24px.svg"
-                color: Theme.colorContentText
+                color: Theme.colorText
 
                 Text {
                     id: exposure
@@ -359,7 +340,7 @@ Item {
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
                     font.pixelSize: Theme.fontSizeContentText
-                    color: Theme.colorContentText
+                    color: Theme.colorText
                 }
             }
         }
@@ -379,11 +360,9 @@ Item {
                 id: labelChapter
                 width: 28
                 height: 28
-                anchors.left: parent.left
-                anchors.leftMargin: 16
 
                 source: "qrc:/icons_material/baseline-video_library-24px.svg"
-                color: Theme.colorContentText
+                color: Theme.colorText
 
                 Text {
                     id: chapter
@@ -396,7 +375,7 @@ Item {
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
                     font.pixelSize: Theme.fontSizeContentText
-                    color: Theme.colorContentText
+                    color: Theme.colorText
                 }
             }
 
@@ -404,11 +383,9 @@ Item {
                 id: labelTimecode
                 width: 28
                 height: 28
-                anchors.left: parent.left
-                anchors.leftMargin: 16
 
                 source: "qrc:/icons_material/baseline-av_timer-24px.svg"
-                color: Theme.colorContentText
+                color: Theme.colorText
 
                 Text {
                     id: timecode
@@ -421,7 +398,7 @@ Item {
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
                     font.pixelSize: Theme.fontSizeContentText
-                    color: Theme.colorContentText
+                    color: Theme.colorText
                 }
             }
 
@@ -429,11 +406,9 @@ Item {
                 id: labelCodec
                 width: 28
                 height: 28
-                anchors.left: parent.left
-                anchors.leftMargin: 16
 
                 source: "qrc:/icons_material/baseline-memory-24px.svg"
-                color: Theme.colorContentText
+                color: Theme.colorText
 
                 Text {
                     id: codec
@@ -446,7 +421,7 @@ Item {
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
                     font.pixelSize: Theme.fontSizeContentText
-                    color: Theme.colorContentText
+                    color: Theme.colorText
                 }
             }
 
@@ -454,11 +429,9 @@ Item {
                 id: labelBitrate
                 width: 28
                 height: 28
-                anchors.left: parent.left
-                anchors.leftMargin: 16
 
                 source: "qrc:/icons_material/baseline-insert_chart_outlined-24px.svg"
-                color: Theme.colorContentText
+                color: Theme.colorText
 
                 Text {
                     id: bitrate
@@ -471,7 +444,7 @@ Item {
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
                     font.pixelSize: Theme.fontSizeContentText
-                    color: Theme.colorContentText
+                    color: Theme.colorText
                 }
             }
 
@@ -479,11 +452,9 @@ Item {
                 id: labelFramerate
                 width: 28
                 height: 28
-                anchors.left: parent.left
-                anchors.leftMargin: 16
 
                 source: "qrc:/icons_material/baseline-camera_roll-24px.svg"
-                color: Theme.colorContentText
+                color: Theme.colorText
 
                 Text {
                     id: framerate
@@ -496,55 +467,58 @@ Item {
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
                     font.pixelSize: Theme.fontSizeContentText
-                    color: Theme.colorContentText
+                    color: Theme.colorText
                 }
             }
         }
+    }
 
-        Rectangle {
-            id: rectangleFiles
-            height: 256
-            color: Theme.colorContentSubBox
-            anchors.right: parent.right
-            anchors.rightMargin: 0
+    ////////////////////////////////////////////////////////////////////////////
+
+    Rectangle {
+        id: rectangleFiles
+        width: 320
+        height: 256
+        color: Theme.colorForeground
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 0
+        anchors.right: parent.right
+        anchors.rightMargin: 0
+
+        Text {
+            id: labelFileCount
+            height: 32
             anchors.left: parent.left
-            anchors.leftMargin: 0
+            anchors.leftMargin: 8
+            anchors.top: parent.top
+            anchors.topMargin: 8
+            anchors.right: parent.right
+            anchors.rightMargin: 16
 
-            Text {
-                id: labelFileCount
-                height: 32
-                anchors.left: parent.left
-                anchors.leftMargin: 16
-                anchors.top: parent.top
-                anchors.topMargin: 8
-                anchors.right: parent.right
-                anchors.rightMargin: 8
+            text: qsTr("File(s):")
+            horizontalAlignment: Text.AlignLeft
+            verticalAlignment: Text.AlignVCenter
+            color: Theme.colorText
+            font.bold: true
+            font.pixelSize: Theme.fontSizeContentText
+        }
 
-                text: qsTr("File(s):")
-                horizontalAlignment: Text.AlignLeft
-                verticalAlignment: Text.AlignVCenter
-                color: Theme.colorContentText
-                font.bold: true
-                font.pixelSize: Theme.fontSizeContentText
-            }
+        Text {
+            id: textFileList
+            anchors.rightMargin: 16
+            anchors.leftMargin: 8
+            anchors.bottomMargin: 16
+            anchors.top: labelFileCount.bottom
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            anchors.topMargin: 0
 
-            Text {
-                id: textFileList
-                anchors.rightMargin: 16
-                anchors.leftMargin: 16
-                anchors.bottomMargin: 8
-                anchors.top: labelFileCount.bottom
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                anchors.left: parent.left
-                anchors.topMargin: 0
-
-                text: ""
-                clip: true
-                horizontalAlignment: Text.AlignRight
-                color: Theme.colorContentText
-                font.pixelSize: Theme.fontSizeContentText
-            }
+            text: ""
+            clip: true
+            horizontalAlignment: Text.AlignRight
+            color: Theme.colorText
+            font.pixelSize: Theme.fontSizeContentText
         }
     }
 }

@@ -32,7 +32,7 @@ Item {
             verticalAlignment: Text.AlignVCenter
             font.bold: true
             font.pixelSize: Theme.fontSizeHeaderTitle
-            color: Theme.colorHeaderTitle
+            color: Theme.colorHeaderContent
         }
     }
 
@@ -49,31 +49,16 @@ Item {
         anchors.rightMargin: 0
 
         CheckBoxThemed {
-            id: checkAutoLaunch
-            width: 500
-            height: 40
-            text: qsTr("Launch OffloadBuddy when a new device is detected")
-            enabled: false
-            anchors.top: text1.bottom
-            anchors.topMargin: 16
-            anchors.left: parent.left
-            anchors.leftMargin: 16
-
-            checked: settingsManager.autolaunch
-            onCheckStateChanged: {
-                settingsManager.autolaunch = checked
-            }
-        }
-
-        CheckBoxThemed {
             id: checkIgnoreJunk
             width: 350
             height: 40
             text: qsTr("Ignore LRVs and THM files")
-            anchors.top: checkAutoLaunch.bottom
+            font.bold: false
+            font.pixelSize: 16
+            anchors.top: text1.bottom
             anchors.topMargin: 16
             anchors.left: parent.left
-            anchors.leftMargin: 16
+            anchors.leftMargin: 32
 
             checked: settingsManager.ignorejunk
             onCheckStateChanged: {
@@ -86,6 +71,8 @@ Item {
             width: 350
             height: 40
             text: qsTr("Ignore HD audio files")
+            font.bold: false
+            font.pixelSize: 16
             anchors.left: checkIgnoreJunk.right
             anchors.leftMargin: 16
             anchors.verticalCenter: checkIgnoreJunk.verticalCenter
@@ -101,11 +88,13 @@ Item {
             width: 350
             height: 40
             text: qsTr("Automatically merge video chapters")
+            font.bold: false
+            font.pixelSize: 16
             enabled: false
             anchors.top: checkIgnoreJunk.bottom
             anchors.topMargin: 16
             anchors.left: parent.left
-            anchors.leftMargin: 16
+            anchors.leftMargin: 32
 
             checked: settingsManager.automerge
             onCheckStateChanged: {
@@ -118,6 +107,7 @@ Item {
             width: 350
             height: 40
             text: qsTr("Automatically extract telemetry")
+            font.pixelSize: 16
             enabled: false
             anchors.verticalCenter: checkAutoMerge.verticalCenter
             anchors.left: checkAutoMerge.right
@@ -135,7 +125,8 @@ Item {
             width: 350
             height: 40
             text: qsTr("Automatically delete offloaded medias")
-            font.pixelSize: Theme.fontSizeContentText
+            font.bold: false
+            font.pixelSize: 16
 
             anchors.left: checkAutoMetadatas.right
             anchors.leftMargin: 16
@@ -153,26 +144,28 @@ Item {
             anchors.top: checkAutoMerge.bottom
             anchors.topMargin: 16
             anchors.left: parent.left
-            anchors.leftMargin: 24
+            anchors.leftMargin: 32
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignLeft
             text: qsTr("Unit system")
-            font.pixelSize: Theme.fontSizeContentText
-            color: Theme.colorContentText
+            font.bold: true
+            font.pixelSize: 16
+            color: Theme.colorText
         }
 
         Text {
             id: text1
             height: 40
-            text: qsTr("Application theme:")
+            text: qsTr("Application theme")
+            font.bold: true
+            font.pixelSize: 16
             anchors.top: parent.top
-            anchors.topMargin: 16
+            anchors.topMargin: 32
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignLeft
             anchors.left: parent.left
-            anchors.leftMargin: 16
-            font.pixelSize: Theme.fontSizeContentText
-            color: Theme.colorContentText
+            anchors.leftMargin: 32
+            color: Theme.colorText
         }
 
         ComboBoxThemed {
@@ -209,6 +202,7 @@ Item {
         RadioButtonThemed {
             id: radioButtonMetric
             text: qsTr("Metric")
+            font.pixelSize: 16
             anchors.left: text4.right
             anchors.leftMargin: 16
             anchors.verticalCenter: text4.verticalCenter
@@ -228,6 +222,7 @@ Item {
         RadioButtonThemed {
             id: radioButtonImperial
             text: qsTr("Imperial")
+            font.pixelSize: 16
             anchors.left: radioButtonMetric.right
             anchors.leftMargin: 16
             anchors.verticalCenter: text4.verticalCenter
@@ -244,19 +239,17 @@ Item {
             }
         }
 
-        Rectangle {
+        Item {
             id: rectangleMedias
-            radius: 4
-            color: Theme.colorContentBox
 
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 16
+            anchors.bottomMargin: 0
             anchors.top: text4.bottom
-            anchors.topMargin: 16
+            anchors.topMargin: 0
             anchors.right: parent.right
-            anchors.rightMargin: 16
+            anchors.rightMargin: 0
             anchors.left: parent.left
-            anchors.leftMargin: 16
+            anchors.leftMargin: 0
 
             Text {
                 id: textMediasTitle
@@ -264,13 +257,13 @@ Item {
                 anchors.top: parent.top
                 anchors.topMargin: 16
                 anchors.left: parent.left
-                anchors.leftMargin: 16
+                anchors.leftMargin: 32
 
                 text: qsTr("Media directories")
+                font.pixelSize: 16
                 verticalAlignment: Text.AlignVCenter
                 font.bold: true
-                font.pixelSize: Theme.fontSizeContentTitle
-                color: Theme.colorContentTitle
+                color: Theme.colorText
             }
 
             ButtonThemed {
@@ -311,9 +304,9 @@ Item {
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 16
                 anchors.left: parent.left
-                anchors.leftMargin: 16
+                anchors.leftMargin: 32
                 anchors.right: parent.right
-                anchors.rightMargin: 16
+                anchors.rightMargin: 32
             }
 
             ComboBoxThemed {
@@ -346,11 +339,12 @@ Item {
             Text {
                 id: text2
                 text: qsTr("Media hierarchy:")
+                font.bold: true
+                font.pixelSize: 16
                 anchors.right: comboBoxContentHierarchy.left
                 anchors.rightMargin: 16
                 anchors.verticalCenter: textMediasTitle.verticalCenter
-                font.pixelSize: Theme.fontSizeContentText
-                color: Theme.colorContentText
+                color: Theme.colorText
             }
         }
     }

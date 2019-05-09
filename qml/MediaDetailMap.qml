@@ -111,7 +111,7 @@ Item {
     Rectangle {
         id: rectangleCoordinates
         height: 32
-        color: Theme.colorContentSubBox
+        color: Theme.colorForeground
         anchors.right: parent.right
         anchors.rightMargin: 16
         anchors.left: parent.left

@@ -236,14 +236,15 @@ Rectangle {
             id: deviceModelText
             width: 256
             height: 30
-            text: "Camera brand & model"
             anchors.top: parent.top
             anchors.topMargin: 12
             anchors.right: deviceImage.left
             anchors.rightMargin: 8
+
+            text: "Camera brand & model"
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignRight
-            color: Theme.colorHeaderTitle
+            color: Theme.colorHeaderContent
             font.bold: true
             font.pixelSize: Theme.fontSizeHeaderTitle - 2
         }
@@ -296,7 +297,7 @@ Rectangle {
             anchors.topMargin: 0
 
             text: "64GB available of 128GB"
-            color: Theme.colorHeaderText
+            color: Theme.colorHeaderContent
             font.pixelSize: Theme.fontSizeHeaderText
             horizontalAlignment: Text.AlignRight
             verticalAlignment: Text.AlignBottom
@@ -584,7 +585,7 @@ Rectangle {
 
             text: qsTr("ZOOM")
             font.pixelSize: Theme.fontSizeHeaderText
-            color: Theme.colorHeaderText
+            color: Theme.colorHeaderContent
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }

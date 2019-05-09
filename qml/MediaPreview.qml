@@ -20,6 +20,8 @@ Rectangle {
     property int stopLimit: -1
 
     function setImageMode() {
+        console.log("MediaPreview::setImageMode()  >  '" + shot.previewPhoto + "'")
+
         imageOutput.visible = true
         mediaOutput.visible = false
 
@@ -31,6 +33,8 @@ Rectangle {
     }
 
     function setVideoMode() {
+        console.log("MediaPreview::setVideoMode()  >  '" + shot.previewVideo + "'")
+
         imageOutput.visible = false
         mediaOutput.visible = true
 

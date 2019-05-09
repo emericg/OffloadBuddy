@@ -33,7 +33,7 @@ Item {
             verticalAlignment: Text.AlignVCenter
             font.bold: true
             font.pixelSize: Theme.fontSizeHeaderTitle
-            color: Theme.colorHeaderTitle
+            color: Theme.colorHeaderContent
         }
 
         ButtonThemed {
@@ -61,7 +61,7 @@ Item {
 
         Rectangle {
             id: rectangleJobs
-            color: Theme.colorContentBox
+            color: Theme.colorForeground
 
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 16

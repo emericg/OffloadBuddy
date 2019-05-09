@@ -9,6 +9,8 @@ Item {
     implicitWidth: 64
     implicitHeight: 64
 
+    width: 16 + contentImage.width + 16 + contentText.width + 24
+
     signal clicked()
     property bool selected: false
     property bool highlighted: false
@@ -37,19 +39,16 @@ Item {
         id: bgRect
         anchors.fill: parent
         visible: selected
-        color: Theme.colorDarkGreen
+        color: Theme.colorBackground
     }
 
     Rectangle {
         id: bgFocus
         anchors.fill: parent
-
-        color: Theme.colorDarkGreen
+        color: Theme.colorForeground
         opacity: 0
 
-        Behavior on opacity {
-            OpacityAnimator { duration: 250 }
-        }
+        Behavior on opacity { OpacityAnimator { duration: 250 } }
     }
 
     ImageSvg {
@@ -62,7 +61,7 @@ Item {
 
         opacity: itemMenuButton.enabled ? 1.0 : 0.3
         source: itemMenuButton.source
-        color: "white"
+        color: Theme.colorHeaderContent
     }
 
     Text {
@@ -75,7 +74,7 @@ Item {
         text: menuText
         font.pixelSize: 16
         font.bold: true
-        color: "white"
+        color: Theme.colorHeaderContent
         verticalAlignment: Text.AlignVCenter
     }
 }

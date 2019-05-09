@@ -30,7 +30,7 @@ Item {
             verticalAlignment: Text.AlignVCenter
             font.bold: true
             font.pixelSize: Theme.fontSizeHeaderTitle
-            color: Theme.colorHeaderTitle
+            color: Theme.colorHeaderContent
         }
     }
 
@@ -61,19 +61,19 @@ Item {
         TextArea {
             id: textArea
             anchors.top: parent.top
-            anchors.topMargin: 16
+            anchors.topMargin: 24
             anchors.bottom: imageGitHub.top
-            anchors.bottomMargin: 16
+            anchors.bottomMargin: 24
             anchors.left: parent.left
-            anchors.leftMargin: 16
+            anchors.leftMargin: 24
             anchors.right: imageLogo.left
 
             readOnly: true
             wrapMode: Text.WordWrap
-            font.pixelSize: Theme.fontSizeContentText
-            color: Theme.colorContentText
+            font.pixelSize: 18
+            color: Theme.colorText
             text: "OffloadBuddy is a multimedia offloading software with a few tricks up his sleeve!\nIt's designed to remove the hassle of handling and transferring the many videos and pictures file from your devices like action cameras, regular cameras and smartphones...\n\n* Import datas from SD cards, mass storage or MTP devices\n  - Copy, merge or reencode medias\n  - Consult and export shots metadatas\n  - Organize your media library\n* Create clips or extract photos from your videos\n* Assemble photo timelapses into videos\n* GoPro firmware updates"
-            anchors.rightMargin: 16
+            anchors.rightMargin: 24
         }
 
         Text {
@@ -87,7 +87,7 @@ Item {
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
             font.pixelSize: Theme.fontSizeContentText
-            color: Theme.colorContentText
+            color: Theme.colorText
         }
 
         Text {
@@ -97,8 +97,8 @@ Item {
             anchors.leftMargin: 8
 
             text: qsTr("Visit us on <html><style type=\"text/css\"></style><a href=\"https://github.com/emericg/OffloadBuddy\">GitHub</a></html>!")
-            color: Theme.colorContentText
-            font.pixelSize: Theme.fontSizeContentText
+            color: Theme.colorText
+            font.pixelSize: 18
             onLinkActivated: Qt.openUrlExternally("https://github.com/emericg/OffloadBuddy")
         }
 
@@ -107,9 +107,9 @@ Item {
             width: 32
             height: 32
             anchors.left: parent.left
-            anchors.leftMargin: 24
+            anchors.leftMargin: 32
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 24
+            anchors.bottomMargin: 32
 
             source: "qrc:/logos/github.svg"
             color: Theme.colorIcon
@@ -120,9 +120,9 @@ Item {
             width: 32
             height: 32
             anchors.left: textGitHub.right
-            anchors.leftMargin: 24
+            anchors.leftMargin: 32
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 24
+            anchors.bottomMargin: 32
 
             source: "qrc:/icons_material/baseline-bug_report-24px.svg"
             color: Theme.colorIcon
@@ -135,8 +135,8 @@ Item {
             anchors.leftMargin: 8
 
             text: qsTr("Report bugs or post feature request on our <html><style type=\"text/css\"></style><a href=\"https://github.com/emericg/OffloadBuddy/issues\">issue tracker</a></html>!")
-            color: Theme.colorContentText
-            font.pixelSize: Theme.fontSizeContentText
+            color: Theme.colorText
+            font.pixelSize: 18
             onLinkActivated: Qt.openUrlExternally("https://github.com/emericg/OffloadBuddy/issues")
         }
     }

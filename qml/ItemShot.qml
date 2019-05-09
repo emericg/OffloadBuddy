@@ -34,6 +34,17 @@ Rectangle {
         }
     }
 
+    ImageSvg {
+        id: imageLoading
+        width: 64
+        height: 64
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+
+        color: Theme.colorIcon
+        source: "qrc:/icons_material/baseline-hourglass_empty-24px.svg"
+    }
+
     Connections {
         target: shot
         onStateUpdated: handleState()
@@ -280,10 +291,11 @@ Rectangle {
         }
     }
 
-    Rectangle {
+
+    Item {
         id: legendBottom
         height: 38
-        color: "#00000000" // "#80e5e8e6"
+
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0
         anchors.right: parent.right
@@ -291,6 +303,15 @@ Rectangle {
         anchors.left: parent.left
         anchors.leftMargin: 0
 
+        ImageSvg {
+            id: icon_left
+            width: 24
+            height: 24
+            anchors.left: parent.left
+            anchors.leftMargin: 8
+            anchors.verticalCenter: parent.verticalCenter
+            color: "white"
+        }
         Text {
             id: text_left
             width: 124
@@ -311,6 +332,15 @@ Rectangle {
             font.pixelSize: 13
         }
 
+        ImageSvg {
+            id: icon_right
+            width: 24
+            height: 24
+            anchors.right: parent.right
+            anchors.rightMargin: 8
+            anchors.verticalCenter: parent.verticalCenter
+            color: "white"
+        }
         Text {
             id: text_right
             width: 124
@@ -327,30 +357,6 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignRight
             font.pixelSize: 13
-        }
-
-        Image {
-            id: icon_left
-            width: 24
-            height: 24
-            sourceSize.width: 24
-            sourceSize.height: 24
-            fillMode: Image.PreserveAspectFit
-            anchors.left: parent.left
-            anchors.leftMargin: 8
-            anchors.verticalCenter: parent.verticalCenter
-        }
-
-        Image {
-            id: icon_right
-            width: 24
-            height: 24
-            sourceSize.width: 24
-            sourceSize.height: 24
-            fillMode: Image.PreserveAspectFit
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.right: parent.right
-            anchors.rightMargin: 8
         }
     }
 }

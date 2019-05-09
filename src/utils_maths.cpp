@@ -24,6 +24,8 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 
+#define d2r (M_PI / 180.0)
+
 /* ************************************************************************** */
 
 int roundTo(const int value, const int roundTo)
@@ -32,8 +34,6 @@ int roundTo(const int value, const int roundTo)
 }
 
 /* ************************************************************************** */
-
-#define d2r (M_PI / 180.0)
 
 double haversine_km(double lat1, double long1, double lat2, double long2)
 {

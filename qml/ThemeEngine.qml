@@ -18,25 +18,15 @@ Item {
 
     property string colorHeader
     property string colorHeaderContent
-    property string colorHeaderTitle        // DEPRECATED
-    property string colorHeaderText         // DEPRECATED
 
-    property string colorInfoBanner
-    property string colorInfoBannerText
+    property string colorInfoBanner // TODO
+    property string colorInfoBannerText // TODO
 
     property string colorBackground
     property string colorForeground
-    property string colorContentBox // DEPRECATED
-    property string colorContentTitle
-    property string colorContentText
-    property string colorContentSubBox
-    property string colorContentSubTitle
-    property string colorContentSubText
-
     property string colorText
     property string colorSubText
     property string colorIcon
-
     property string colorPrimary
     property string colorSecondary
     property string colorWarning
@@ -79,20 +69,14 @@ Item {
             colorSidebarContent =   "#ffffff"
 
             colorHeader =           "#CBCBCB"
-            colorHeaderTitle =      "#353637"
-            colorHeaderText =       "#000000"
+            colorHeaderContent =    "#353637" // sub: "#000000"
 
             colorBackground =      "#EEEEEE"
             colorForeground =      "#E0E0E0"
 
-            colorContentBox =       "#F7F7F7"
-            colorContentTitle =     "#353637"
-            colorContentText =      "#000000"
-            colorContentSubBox =    "#eef0f1"
-            colorContentSubTitle =  "#000000"
-            colorContentSubText =   "#000000"
-
             colorText =             "#000000"
+            colorSubText =          "#606060"
+            colorIcon =             "#000000"
 
             colorPrimary =          "#ffca28"
             colorWarning =          "#ffac00"
@@ -117,20 +101,14 @@ Item {
             colorSidebarContent =   "#ffffff"
 
             colorHeader =           "#282828"
-            colorHeaderTitle =      "#8b8e8f"
-            colorHeaderText =       "#a89a9a"
+            colorHeaderContent =    "#8b8e8f" // sub: "#a89a9a"
 
             colorBackground =       "#404040"
             colorForeground =       "#555555"
 
-            colorContentBox =       "#565656"
-            colorContentTitle =     "#a0a29c"
-            colorContentText =      "#ffffff"
-            colorContentSubBox =    "#848484"
-            colorContentSubTitle =  "#403F3C"
-            colorContentSubText =   "#ffffff"
-
             colorText =             "#ffffff"
+            colorSubText =          "#dddddd"
+            colorIcon =             "#ffffff"
 
             colorPrimary =          "#f0544c"
             colorWarning =          "#ee2b57"
@@ -155,20 +133,14 @@ Item {
             colorSidebarContent =   "#bebebe"
 
             colorHeader =           "#141414"
-            colorHeaderTitle =      "#ffffff"
-            colorHeaderText =       "#a3a3a0"
+            colorHeaderContent =    "#ffffff" // sub: "#a3a3a0"
 
             colorBackground =       "#222222"
-            colorForeground =       "#141414"
-
-            colorContentBox =       "#333333"
-            colorContentTitle =     "#a0a29c"
-            colorContentText =      "#a3a3a0"
-            colorContentSubBox =    "#565656"
-            colorContentSubTitle =  "#ffffff"
-            colorContentSubText =   "#a3a3a0"
+            colorForeground =       "#333333"
 
             colorText =             "#a3a3a0"
+            colorSubText =          "#a3a3a0"
+            colorIcon =             "#a3a3a0"
 
             colorPrimary =          "#009ee2"
             colorWarning =          "#fa6871"
@@ -201,20 +173,14 @@ Item {
             colorSidebarContent =   "#DCFF00"
 
             colorHeader =           "#faa7d1"
-            colorHeaderTitle =      "#E31D8D"
-            colorHeaderText =       "#8F4594"
+            colorHeaderContent =    "#E31D8D" // sub: "#8F4594"
 
             colorBackground =       "#ffffff"
-            colorForeground =       "#faa7d1"
-
-            colorContentBox =       "#fff5fa"
-            colorContentTitle =     "#A4CC44"
-            colorContentText =      "#944197"
-            colorContentSubBox =    "#ffe7f3"
-            colorContentSubTitle =  "#0DB8D4"
-            colorContentSubText =   "#944197"
+            colorForeground =       "#ffe7f3"
 
             colorText =             "#944197"
+            colorSubText =          "#944197"
+            colorIcon =             "#944197"
 
             colorPrimary =          "#FFE400"
             colorWarning =          "#944197"

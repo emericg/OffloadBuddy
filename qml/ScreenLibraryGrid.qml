@@ -73,137 +73,18 @@ Item {
 
         Text {
             id: textHeader
-            width: 200
             height: 40
             anchors.right: parent.right
             anchors.rightMargin: 16
             anchors.top: parent.top
             anchors.topMargin: 16
 
-            color: Theme.colorHeaderTitle
             text: qsTr("MEDIA LIBRARY")
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignRight
+            color: Theme.colorHeaderContent
             font.bold: true
             font.pixelSize: Theme.fontSizeHeaderTitle
-        }
-
-        ComboBoxThemed {
-            id: comboBox_directories
-            width: 300
-            height: 40
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 16
-            anchors.right: parent.right
-            anchors.rightMargin: 16
-
-            ListModel {
-                id: cbMediaDirectories
-                ListElement { text: qsTr("ALL media directories"); }
-            }
-
-            model: cbMediaDirectories
-            displayText: qsTr("Show ALL media directories")
-            visible: (cbMediaDirectories.count > 2)
-
-            Component.onCompleted: updateDirectories()
-            Connections {
-                target: settingsManager
-                onDirectoriesUpdated: updateDirectories()
-            }
-
-            function updateDirectories() {
-                cbMediaDirectories.clear()
-                cbMediaDirectories.append( { text: qsTr("ALL media directories") } );
-
-                for (var child in settingsManager.directoriesList) {
-                    if (settingsManager.directoriesList[child].available)
-                        cbMediaDirectories.append( { "text": settingsManager.directoriesList[child].directoryPath } )
-                }
-            }
-
-            property bool cbinit: false
-            onCurrentIndexChanged: {
-                if (cbinit) {
-                    if (currentIndex == 0) {
-                        mediaLibrary.filterByFolder("")
-                        displayText = qsTr("Show") + " " + cbMediaDirectories.get(currentIndex).text
-                    } else {
-                        mediaLibrary.filterByFolder(cbMediaDirectories.get(currentIndex).text)
-                        displayText = cbMediaDirectories.get(currentIndex).text
-                    }
-                } else
-                    cbinit = true;
-            }
-        }
-
-        ComboBoxThemed {
-            id: comboBox_orderby
-            width: 200
-            height: 40
-            anchors.top: parent.top
-            anchors.topMargin: 16
-            anchors.left: parent.left
-            anchors.leftMargin: 16
-            displayText: qsTr("Order by: Date")
-
-            model: ListModel {
-                id: cbShotsOrderby
-                ListElement { text: qsTr("Date"); }
-                ListElement { text: qsTr("Duration"); }
-                ListElement { text: qsTr("Shot type"); }
-                //ListElement { text: qsTr("GPS location"); }
-                ListElement { text: qsTr("Name"); }
-            }
-
-            property bool cbinit: false
-            onCurrentIndexChanged: {
-                if (cbinit) {
-                    if (currentIndex == 0)
-                        mediaLibrary.orderByDate()
-                    else if (currentIndex == 1)
-                        mediaLibrary.orderByDuration()
-                    else if (currentIndex == 2)
-                        mediaLibrary.orderByShotType()
-                    else if (currentIndex == 3)
-                        mediaLibrary.orderByName()
-                } else
-                    cbinit = true;
-
-                displayText = qsTr("Order by:") + " " + cbShotsOrderby.get(currentIndex).text
-            }
-        }
-
-        ComboBoxThemed {
-            id: comboBox_filterby
-            width: 200
-            height: 40
-            anchors.top: parent.top
-            anchors.topMargin: 16
-            anchors.left: comboBox_orderby.right
-            anchors.leftMargin: 16
-            displayText: qsTr("No filter")
-
-            model: ListModel {
-                id: cbMediaFilters
-                ListElement { text: qsTr("No filter"); }
-                ListElement { text: qsTr("Videos"); }
-                ListElement { text: qsTr("Photos"); }
-                ListElement { text: qsTr("Timelapses"); }
-            }
-
-            property bool cbinit: false
-            onCurrentIndexChanged: {
-                if (cbinit) {
-                    mediaLibrary.filterByType(cbMediaFilters.get(currentIndex).text)
-
-                    if (currentIndex == 0)
-                        displayText = cbMediaFilters.get(currentIndex).text
-                    else
-                        displayText = qsTr("Filter by:") + " " + cbMediaFilters.get(currentIndex).text
-                } else
-                    cbinit = true;
-            }
         }
 
         SliderThemed {
@@ -232,15 +113,135 @@ Item {
         Text {
             id: textZoom
             height: 40
-            anchors.verticalCenter: comboBox_orderby.verticalCenter
-            anchors.left: comboBox_filterby.right
+            anchors.left: parent.left
             anchors.leftMargin: 16
 
             text: qsTr("ZOOM")
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 16
             font.pixelSize: Theme.fontSizeHeaderText
-            color: Theme.colorHeaderText
+            color: Theme.colorHeaderContent
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
+        }
+
+        Row {
+            id: row
+            height: 40
+            spacing: 16
+            anchors.left: parent.left
+            anchors.leftMargin: 16
+            anchors.top: parent.top
+            anchors.topMargin: 16
+
+            ComboBoxThemed {
+                id: comboBox_directories
+                width: 300
+                height: 40
+                anchors.verticalCenter: parent.verticalCenter
+
+                ListModel {
+                    id: cbMediaDirectories
+                    ListElement { text: qsTr("ALL media directories"); }
+                }
+
+                model: cbMediaDirectories
+                displayText: qsTr("Show ALL media directories")
+                visible: (cbMediaDirectories.count > 2)
+
+                Component.onCompleted: updateDirectories()
+                Connections {
+                    target: settingsManager
+                    onDirectoriesUpdated: updateDirectories()
+                }
+
+                function updateDirectories() {
+                    cbMediaDirectories.clear()
+                    cbMediaDirectories.append( { text: qsTr("ALL media directories") } );
+
+                    for (var child in settingsManager.directoriesList) {
+                        if (settingsManager.directoriesList[child].available)
+                            cbMediaDirectories.append( { "text": settingsManager.directoriesList[child].directoryPath } )
+                    }
+                }
+
+                property bool cbinit: false
+                onCurrentIndexChanged: {
+                    if (cbinit) {
+                        if (currentIndex == 0) {
+                            mediaLibrary.filterByFolder("")
+                            displayText = qsTr("Show") + " " + cbMediaDirectories.get(currentIndex).text
+                        } else {
+                            mediaLibrary.filterByFolder(cbMediaDirectories.get(currentIndex).text)
+                            displayText = cbMediaDirectories.get(currentIndex).text
+                        }
+                    } else
+                        cbinit = true;
+                }
+            }
+
+            ComboBoxThemed {
+                id: comboBox_orderby
+                width: 200
+                height: 40
+                anchors.verticalCenter: parent.verticalCenter
+                displayText: qsTr("Order by: Date")
+
+                model: ListModel {
+                    id: cbShotsOrderby
+                    ListElement { text: qsTr("Date"); }
+                    ListElement { text: qsTr("Duration"); }
+                    ListElement { text: qsTr("Shot type"); }
+                    //ListElement { text: qsTr("GPS location"); }
+                    ListElement { text: qsTr("Name"); }
+                }
+
+                property bool cbinit: false
+                onCurrentIndexChanged: {
+                    if (cbinit) {
+                        if (currentIndex == 0)
+                            mediaLibrary.orderByDate()
+                        else if (currentIndex == 1)
+                            mediaLibrary.orderByDuration()
+                        else if (currentIndex == 2)
+                            mediaLibrary.orderByShotType()
+                        else if (currentIndex == 3)
+                            mediaLibrary.orderByName()
+                    } else
+                        cbinit = true;
+
+                    displayText = qsTr("Order by:") + " " + cbShotsOrderby.get(currentIndex).text
+                }
+            }
+
+            ComboBoxThemed {
+                id: comboBox_filterby
+                width: 200
+                height: 40
+                anchors.verticalCenter: parent.verticalCenter
+                displayText: qsTr("No filter")
+
+                model: ListModel {
+                    id: cbMediaFilters
+                    ListElement { text: qsTr("No filter"); }
+                    ListElement { text: qsTr("Videos"); }
+                    ListElement { text: qsTr("Photos"); }
+                    ListElement { text: qsTr("Timelapses"); }
+                }
+
+                property bool cbinit: false
+                onCurrentIndexChanged: {
+                    if (cbinit) {
+                        mediaLibrary.filterByType(cbMediaFilters.get(currentIndex).text)
+
+                        if (currentIndex == 0)
+                            displayText = cbMediaFilters.get(currentIndex).text
+                        else
+                            displayText = qsTr("Filter by:") + " " + cbMediaFilters.get(currentIndex).text
+                    } else
+                        cbinit = true;
+                }
+            }
         }
     }
 

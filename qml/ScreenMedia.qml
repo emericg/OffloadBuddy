@@ -37,38 +37,25 @@ Item {
             textShotName.text = shot.name
 
             if (shot.hasGPMF && shot.hasGPS) {
-                buttonTelemetry.visible = true
-                buttonTelemetry.width = 110
-
                 // if (not static)
                 //{
                     contentTelemetry.updateMetadatas()
-                    buttonMap.visible = false
-                    buttonMap.width = -16
                 //} else {
-                //    buttonMap.visible = true
-                //    buttonMap.width = 64
-                //
                 //    contentMap.updateMap()
                 //}
             } else {
-                buttonTelemetry.visible = false
-                buttonTelemetry.width = -16
-
                 if (shot.latitude !== 0.0) {
-                    buttonMap.visible = true
-                    buttonMap.width = 64
-
                     contentMap.updateMap()
                 } else {
-                    buttonMap.visible = false
-                    buttonMap.width = -16
+                    //
                 }
             }
 
             contentOverview.updateOverview()
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 
     Rectangle {
         id: rectangleHeader
@@ -89,10 +76,9 @@ Item {
             anchors.leftMargin: 8
             anchors.verticalCenter: parent.verticalCenter
 
-            highlightColor: Theme.colorPrimary
-            iconColor: Theme.colorHeaderTitle
+            iconColor: Theme.colorHeaderContent
 
-            source: "qrc:/icons_material/baseline-navigate_before-24px.svg"
+            source: "qrc:/others/navigate_before_big.svg"
             onClicked: {
                 if (content.state == "library")
                     screenLibrary.state = "stateMediaGrid"
@@ -109,42 +95,14 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
 
             text: "SHOT NAME"
-            color: Theme.colorHeaderTitle
+            color: Theme.colorHeaderContent
             font.bold: true
             font.pixelSize: Theme.fontSizeHeaderTitle
             verticalAlignment: Text.AlignVCenter
         }
 
-        ButtonThemed {
-            id: buttonOverview
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.right: buttonTelemetry.left
-            anchors.rightMargin: 16
-
-            text: qsTr("Overview")
-            onClicked: screenMedia.state = "overview"
-        }
-        ButtonThemed {
-            id: buttonTelemetry
-            anchors.right: buttonMap.left
-            anchors.rightMargin: 16
-            anchors.verticalCenter: parent.verticalCenter
-
-            text: qsTr("Telemetry")
-            onClicked: screenMedia.state = "metadatas"
-        }
-        ButtonThemed {
-            id: buttonMap
-            anchors.right: parent.right
-            anchors.rightMargin: 16
-            anchors.verticalCenter: buttonOverview.verticalCenter
-
-            text: qsTr("Map")
-            onClicked: screenMedia.state = "map"
-        }
-
         Row {
-            id: row
+            id: rowCodecs
             height: 28
             spacing: 16
             anchors.verticalCenter: parent.verticalCenter
@@ -155,15 +113,15 @@ Item {
                 id: codecVideo
                 width: 80
                 height: 28
-                //anchors.verticalCenter: parent.verticalCenter
-                color: "#dfdfdf"
+                opacity: 0.8
+                color: Theme.colorForeground
 
                 Text {
                     id: codecVideoText
                     anchors.fill: parent
 
                     text: qsTr("CODEC")
-                    color: "dimgrey"
+                    color: Theme.colorText
                     font.capitalization: Font.AllUppercase
                     font.pixelSize: 16
                     font.bold: true
@@ -176,15 +134,15 @@ Item {
                 id: codecAudio
                 width: 80
                 height: 28
-                //anchors.verticalCenter: parent.verticalCenter
-                color: "#dfdfdf"
+                opacity: 0.8
+                color: Theme.colorForeground
 
                 Text {
                     id: codecAudioText
                     anchors.fill: parent
 
                     text: qsTr("CODEC")
-                    color: "dimgrey"
+                    color: Theme.colorText
                     font.capitalization: Font.AllUppercase
                     font.pixelSize: 16
                     font.bold: true
@@ -193,7 +151,53 @@ Item {
                 }
             }
         }
+
+        Row {
+            id: rowMenus
+            anchors.right: parent.right
+            anchors.rightMargin: 48
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 0
+            anchors.top: parent.top
+            anchors.topMargin: 0
+
+            function setActiveMenu() {
+                //
+            }
+
+            ItemMenuButton {
+                id: menuOverview
+                height: parent.height
+
+                menuText: qsTr("Overview")
+                source: "qrc:/icons_material/baseline-aspect_ratio-24px.svg"
+                onClicked: screenMedia.state = "overview"
+                selected: screenMedia.state === "overview"
+            }
+            ItemMenuButton {
+                id: menuAbout
+                height: parent.height
+
+                menuText: qsTr("Telemetry")
+                source: "qrc:/icons_material/baseline-insert_chart-24px.svg"
+                onClicked: screenMedia.state = "metadatas"
+                selected: screenMedia.state === "metadatas"
+                visible: (shot.hasGPMF && shot.hasGPS)
+            }
+            ItemMenuButton {
+                id: menuMedias
+                height: parent.height
+
+                menuText: qsTr("Map")
+                source: "qrc:/icons_material/baseline-map-24px.svg"
+                onClicked: screenMedia.state = "map"
+                selected: screenMedia.state === "map"
+                visible: shot.latitude !== 0.0
+            }
+        }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 
     onStateChanged: {
         // save state

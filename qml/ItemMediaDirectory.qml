@@ -158,40 +158,13 @@ Rectangle {
         verticalAlignment: Text.AlignVCenter
     }
 
-    Rectangle {
+    ItemImageButton {
         id: rectangleDelete
-        width: 40
-        height: 40
-        color: "#00000000"
         anchors.right: parent.right
-        anchors.rightMargin: 0
         anchors.verticalCenter: parent.verticalCenter
 
-        Image {
-            id: imageDelete
-            width: 40
-            height: 40
-            fillMode: Image.PreserveAspectFit
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.horizontalCenter: parent.horizontalCenter
-            source: "qrc:/icons/process_stop.svg"
-            sourceSize.width: 40
-            sourceSize.height: 40
-        }
-
-        MouseArea {
-            id: mouseAreaDelete
-            anchors.fill: parent
-            onClicked: settingsMgr.deleteDirectory(textField_path.text)
-
-            onPressed: {
-                imageDelete.width = imageDelete.width - 4
-                imageDelete.height = imageDelete.height - 4
-            }
-            onReleased: {
-                imageDelete.width = imageDelete.width + 4
-                imageDelete.height = imageDelete.height + 4
-            }
-        }
+        highlightColor: Theme.colorError
+        source: "qrc:/icons_material/baseline-delete-24px.svg"
+        onClicked: settingsMgr.deleteDirectory(textField_path.text)
     }
 }
