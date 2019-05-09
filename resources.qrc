@@ -16,10 +16,6 @@
         <file>resources/minicons/job_queued.svg</file>
     </qresource>
     <qresource prefix="/icons">
-        <file alias="disk.svg">resources/icons/disk.svg</file>
-        <file alias="card.svg">resources/icons/card.svg</file>
-        <file alias="phone.svg">resources/icons/card.svg</file>
-        <file alias="usb.svg">resources/icons/usb.svg</file>
         <file alias="done.svg">resources/icons/done.svg</file>
         <file alias="play.svg">resources/icons/play.svg</file>
         <file alias="working.svg">resources/icons/working.svg</file>
