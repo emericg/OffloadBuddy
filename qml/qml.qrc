@@ -1,11 +1,10 @@
 <RCC>
     <qresource prefix="/qml">
-        <file>MainWindow.qml</file>
+        <file>Application.qml</file>
         <file>ThemeEngine.qml</file>
         <file>UtilsPath.js</file>
         <file>UtilsNumber.js</file>
         <file>UtilsString.js</file>
-        <file>StringUtils.js</file>
         <file>ScreenLibrary.qml</file>
         <file>ScreenLibraryGrid.qml</file>
         <file>ScreenDevice.qml</file>
@@ -26,12 +25,10 @@
         <file>MediaDetailTelemetry.qml</file>
         <file>MediaDetailOverview.qml</file>
         <file>MediaPreview.qml</file>
-
         <file alias="ItemImageButton.qml">components/ItemImageButton.qml</file>
         <file alias="ItemMenuButton.qml">components/ItemMenuButton.qml</file>
         <file alias="WindowGeometrySaver.qml">components/WindowGeometrySaver.qml</file>
         <file alias="ImageSvg.qml">components_themed/ImageSvg.qml</file>
-
         <file alias="ButtonImage.qml">ThemedComponents/ButtonImage.qml</file>
         <file alias="ButtonThemed.qml">ThemedComponents/ButtonThemed.qml</file>
         <file alias="CheckBoxThemed.qml">ThemedComponents/CheckBoxThemed.qml</file>

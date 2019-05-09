@@ -5,11 +5,10 @@ import QtQuick.Dialogs 1.2
 import com.offloadbuddy.theme 1.0
 import "UtilsString.js" as UtilsString
 
-Rectangle {
+Item {
     id: itemJob
     height: 48
     width: parent.width
-    color: Theme.colorForeground
 
     property var job
 

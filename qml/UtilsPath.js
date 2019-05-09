@@ -1,5 +1,6 @@
 // UtilsPath.js
 // Version 0.1
+.pragma library
 
 /*!
  * Take an url or string, and make sure we output a clean string path.

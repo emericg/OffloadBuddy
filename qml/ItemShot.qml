@@ -4,7 +4,6 @@ import QtQuick.Controls 2.2
 import com.offloadbuddy.theme 1.0
 import com.offloadbuddy.shared 1.0
 import "UtilsString.js" as UtilsString
-import "StringUtils.js" as StringUtils
 
 Rectangle {
     id: itemShot
@@ -14,7 +13,13 @@ Rectangle {
 
     property Shot shot: pointer
     property var shotDevice
+
     property real cellFormat: 4/3
+
+    Connections {
+        target: shot
+        onStateUpdated: handleState()
+    }
 
     function handleState() {
         icon_state.visible = true
@@ -32,22 +37,6 @@ Rectangle {
         } else {
             icon_state.visible = false
         }
-    }
-
-    ImageSvg {
-        id: imageLoading
-        width: 64
-        height: 64
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
-
-        color: Theme.colorIcon
-        source: "qrc:/icons_material/baseline-hourglass_empty-24px.svg"
-    }
-
-    Connections {
-        target: shot
-        onStateUpdated: handleState()
     }
 
     Component.onCompleted: {
@@ -79,7 +68,7 @@ Rectangle {
         } else if (type < Shared.SHOT_PICTURE) {
             if (duration > 0) {
                 text_left.visible = true
-                text_left.text = StringUtils.durationToString_condensed(duration)
+                text_left.text = UtilsString.durationToString_condensed(duration)
             }
             icon_left.source = "qrc:/resources/minicons/video.svg"
 
@@ -110,6 +99,19 @@ Rectangle {
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+
+    ImageSvg {
+        id: imageLoading
+        width: 64
+        height: 64
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+
+        color: Theme.colorIcon
+        source: "qrc:/icons_material/baseline-hourglass_empty-24px.svg"
+    }
+
     // TODO loader between imageFs and imageMtp
 
     Image {
@@ -131,28 +133,124 @@ Rectangle {
         anchors.fill: parent
     }
 
-    Image {
-        id: icon_state
-        width: 24
-        height: 24
-        sourceSize.width: 24
-        sourceSize.height: 24
-        anchors.top: parent.top
-        anchors.topMargin: 8
-        anchors.right: parent.right
-        anchors.rightMargin: 8
-        fillMode: Image.PreserveAspectFit
+    Item {
+        id: legends
+        anchors.fill: parent
+
+        visible: (imageFs.visible || imageMtp.visible)
+
+        ImageSvg {
+            id: icon_left
+            width: 24
+            height: 24
+            anchors.left: parent.left
+            anchors.leftMargin: 8
+            color: "white"
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 8
+        }
+        Text {
+            id: text_left
+            color: "white"
+            text: qsTr("left")
+            anchors.verticalCenter: icon_left.verticalCenter
+            anchors.left: icon_left.right
+            anchors.leftMargin: 4
+            lineHeight: 1
+            style: Text.Raised
+            styleColor: "#000000"
+            font.bold: true
+            horizontalAlignment: Text.AlignLeft
+            verticalAlignment: Text.AlignVCenter
+            font.pixelSize: 13
+        }
+
+        ImageSvg {
+            id: icon_right
+            width: 24
+            height: 24
+            anchors.right: parent.right
+            anchors.rightMargin: 8
+            color: "white"
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 8
+        }
+        Text {
+            id: text_right
+            color: "white"
+            text: qsTr("right")
+            anchors.verticalCenter: icon_right.verticalCenter
+            style: Text.Raised
+            font.bold: true
+            anchors.right: icon_right.left
+            anchors.rightMargin: 4
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignRight
+            font.pixelSize: 13
+        }
+
+        Text {
+            id: text_top
+            x: 8
+            y: 8
+            height: 20
+            anchors.right: parent.right
+            anchors.rightMargin: 8
+            anchors.left: parent.left
+            anchors.leftMargin: 8
+            anchors.top: parent.top
+            anchors.topMargin: 8
+
+            color: "white"
+            clip: true
+            text: name
+            style: Text.Raised
+            horizontalAlignment: Text.AlignLeft
+            verticalAlignment: Text.AlignVCenter
+            font.bold: true
+            font.pixelSize: 13
+        }
+
+        Image {
+            id: icon_state
+            x: 247
+            y: 8
+            width: 24
+            height: 24
+            sourceSize.width: 24
+            sourceSize.height: 24
+            anchors.top: parent.top
+            anchors.topMargin: 8
+            anchors.right: parent.right
+            anchors.rightMargin: 8
+            fillMode: Image.PreserveAspectFit
+        }
+    }
+
+    Rectangle {
+        id: rectangleOverlay
+        color: "#80ffffff"
+        anchors.fill: parent
+
+        Image {
+            id: image_overlay
+            width: 64
+            height: 64
+            sourceSize.width: 64
+            sourceSize.height: 64
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            fillMode: Image.PreserveAspectCrop
+            source: "qrc:/icons/done.svg"
+        }
     }
 
     MouseArea {
         id: mouseAreaItem
         anchors.fill: parent
-
-        propagateComposedEvents: true
-        acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
-
         hoverEnabled: true
-        onHoveredChanged: text_top.visible = !text_top.visible
+        propagateComposedEvents: true
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
 
         property int thumbId: 1
         Timer {
@@ -162,7 +260,7 @@ Rectangle {
             repeat: true
             onTriggered: {
                 if (shot.type > Shared.SHOT_UNKNOWN &&
-                    shot.type < Shared.SHOT_PICTURE) {
+                        shot.type < Shared.SHOT_PICTURE) {
                     var timecode_s = Math.round((shot.duration / 4000) * mouseAreaItem.thumbId)
                     if (++mouseAreaItem.thumbId > 3) mouseAreaItem.thumbId = 1
 
@@ -174,6 +272,8 @@ Rectangle {
             }
         }
         onEntered: {
+            text_top.visible = true
+
             if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== Shared.STORAGE_MTP)) {
                 if (shot.type > Shared.SHOT_UNKNOWN && shot.type < Shared.SHOT_PICTURE) {
                     thumbTimer.start()
@@ -181,6 +281,8 @@ Rectangle {
             }
         }
         onExited: {
+            text_top.visible = false
+
             if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== Shared.STORAGE_MTP)) {
                 if (shot.type > Shared.SHOT_UNKNOWN && shot.type < Shared.SHOT_PICTURE) {
                     thumbId = 1
@@ -250,113 +352,6 @@ Rectangle {
                 else
                     screenLibrary.state = "stateMediaDetails"
             }
-        }
-    }
-
-    Text {
-        id: text_top
-        height: 20
-        anchors.right: parent.right
-        anchors.rightMargin: 8
-        anchors.left: parent.left
-        anchors.leftMargin: 8
-        anchors.top: parent.top
-        anchors.topMargin: 8
-
-        color: "#ffffff"
-        clip: true
-        text: name
-        style: Text.Raised
-        horizontalAlignment: Text.AlignLeft
-        verticalAlignment: Text.AlignVCenter
-        font.bold: true
-        font.pixelSize: 13
-    }
-
-    Rectangle {
-        id: rectangleOverlay
-        color: "#80ffffff"
-        anchors.fill: parent
-
-        Image {
-            id: image_overlay
-            width: 64
-            height: 64
-            sourceSize.width: 64
-            sourceSize.height: 64
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-            fillMode: Image.PreserveAspectCrop
-            source: "qrc:/icons/done.svg"
-        }
-    }
-
-
-    Item {
-        id: legendBottom
-        height: 38
-
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
-        anchors.right: parent.right
-        anchors.rightMargin: 0
-        anchors.left: parent.left
-        anchors.leftMargin: 0
-
-        ImageSvg {
-            id: icon_left
-            width: 24
-            height: 24
-            anchors.left: parent.left
-            anchors.leftMargin: 8
-            anchors.verticalCenter: parent.verticalCenter
-            color: "white"
-        }
-        Text {
-            id: text_left
-            width: 124
-            color: "#ffffff"
-            text: qsTr("left")
-            lineHeight: 1
-            style: Text.Raised
-            styleColor: "#000000"
-            anchors.top: parent.top
-            anchors.topMargin: 0
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 0
-            font.bold: true
-            anchors.left: icon_left.right
-            anchors.leftMargin: 8
-            horizontalAlignment: Text.AlignLeft
-            verticalAlignment: Text.AlignVCenter
-            font.pixelSize: 13
-        }
-
-        ImageSvg {
-            id: icon_right
-            width: 24
-            height: 24
-            anchors.right: parent.right
-            anchors.rightMargin: 8
-            anchors.verticalCenter: parent.verticalCenter
-            color: "white"
-        }
-        Text {
-            id: text_right
-            width: 124
-            color: "#ffffff"
-            text: qsTr("right")
-            style: Text.Raised
-            anchors.top: parent.top
-            anchors.topMargin: 0
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 0
-            font.bold: true
-            anchors.right: icon_right.left
-            anchors.rightMargin: 4
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignRight
-            font.pixelSize: 13
         }
     }
 }

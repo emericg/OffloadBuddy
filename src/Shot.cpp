@@ -730,28 +730,29 @@ bool Shot::getMetadatasFromVideo(int index)
 
 #ifdef ENABLE_MINIVIDEO
 
-    // Check if the file is already parsed;
-    MediaFile_t *media = m_videos.at(index)->media;
-
-    // If not, open it
-    if (!media)
+    // Check if the file is already parsed
+    if (!m_videos.at(index)->media)
     {
-        int minivideo_retcode = minivideo_open(m_videos.at(index)->filesystemPath.toLocal8Bit(), &media);
+        // If not, open it
+        int minivideo_retcode = minivideo_open(m_videos.at(index)->filesystemPath.toLocal8Bit(), &m_videos.at(index)->media);
         if (minivideo_retcode == 1)
         {
-            minivideo_retcode = minivideo_parse(media, true, false);
+            minivideo_retcode = minivideo_parse(m_videos.at(index)->media, true, false);
             if (minivideo_retcode != 1)
             {
                 qDebug() << "minivideo_parse() failed with retcode: " << minivideo_retcode;
-                minivideo_close(&media);
+                minivideo_close(&m_videos.at(index)->media);
             }
         }
         else
         {
             qDebug() << "minivideo_open() failed with retcode: " << minivideo_retcode;
+            qDebug() << "minivideo_open() cannot open: " << m_videos.at(index)->filesystemPath;
+            qDebug() << "minivideo_open() cannot open: " << m_videos.at(index)->filesystemPath.toLocal8Bit();
         }
     }
 
+    MediaFile_t *media = m_videos.at(index)->media;
     if (media)
     {
         m_date_metadatas = QDateTime::fromTime_t(media->creation_time);
@@ -809,6 +810,7 @@ bool Shot::getMetadatasFromVideo(int index)
                                 if (parseGpmfSampleFast(buf, devc_count))
                                 {
                                     // we have GPS datetime
+                                    minivideo_destroy_sample(&sp);
                                     break;
                                 }
                             }
@@ -847,19 +849,17 @@ bool Shot::getMetadatasFromVideoGPMF()
         // OPEN MEDIA //////////////////////////////////////////////////////////
 
         // Check if the file is already parsed;
-        MediaFile_t *media = video->media;
-
-        // If not, open it
-        if (!media)
+        if (!video->media)
         {
-            int minivideo_retcode = minivideo_open(video->filesystemPath.toLocal8Bit(), &media);
+            // If not, open it
+            int minivideo_retcode = minivideo_open(video->filesystemPath.toLocal8Bit(), &video->media);
             if (minivideo_retcode == 1)
             {
-                minivideo_retcode = minivideo_parse(media, true, false);
+                minivideo_retcode = minivideo_parse(video->media, true, false);
                 if (minivideo_retcode != 1)
                 {
                     qDebug() << "minivideo_parse() failed with retcode: " << minivideo_retcode;
-                    minivideo_close(&media);
+                    minivideo_close(&video->media);
                 }
             }
             else
@@ -870,6 +870,7 @@ bool Shot::getMetadatasFromVideoGPMF()
 
         // PARSE METADATAS /////////////////////////////////////////////////////
 
+        MediaFile_t *media = video->media;
         if (media)
         {
             for (unsigned i = 0; i < media->tracks_others_count; i++)

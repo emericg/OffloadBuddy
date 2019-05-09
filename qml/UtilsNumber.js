@@ -1,5 +1,6 @@
 // UtilsNumber.js
 // Version 0.1
+.pragma library
 
 /*!
  * Pad a number

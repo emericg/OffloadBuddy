@@ -170,7 +170,7 @@ int main(int argc, char *argv[])
 
     engine.addImageProvider("GridThumbnailer", new GridThumbnailer);
 
-    engine.load(QUrl(QStringLiteral("qrc:/qml/MainWindow.qml")));
+    engine.load(QUrl(QStringLiteral("qrc:/qml/Application.qml")));
     if (engine.rootObjects().isEmpty())
         return -1;
 

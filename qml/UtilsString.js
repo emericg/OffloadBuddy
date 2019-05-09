@@ -1,34 +1,10 @@
 // UtilsString.js
-// Version 0.1
+// Version 0.2
+.pragma library
 
-/*!
- * durationToString_short()
- */
-function durationToString_short(duration) {
-    var time_ = Math.floor(duration / 1000);
-    var secs = time_ % 60;
-    time_ = Math.floor(time_ / 60);
-    var mins = time_ % 60;
-    time_ = Math.floor(time_ / 60);
-
-    if (secs < 10)
-    {
-        secs = "0" + secs;
-    }
-    if (mins < 10)
-    {
-        mins = "0" + mins;
-    }
-    if (time_ === 0)
-    {
-        time_ = "";
-    }
-    else
-    {
-        time_ += ":";
-    }
-
-    return time_ + mins + ":" + secs;
+function padNumberInternal(n) {
+    n = n + '';
+    return n.length >= 2 ? n : new Array(2 - n.length + 1).join('0') + n;
 }
 
 /*!
@@ -65,6 +41,92 @@ function durationToString(duration) {
     }
 
     return text;
+}
+
+/*!
+ * durationToString_short()
+ */
+function durationToString_short(duration) {
+    var text = '';
+
+    if (duration > 1000) {
+        var hours = Math.floor(duration / 3600000);
+        var minutes = Math.floor((duration - (hours * 3600000)) / 60000);
+        var seconds = Math.round((duration - (hours * 3600000) - (minutes * 60000)) / 1000);
+
+        text += padNumberInternal(hours).toString() + ":";
+        text += padNumberInternal(minutes).toString() + ":";
+        text += padNumberInternal(seconds).toString() + ":";
+    } else if (duration > 0) {
+        text = "00:00:01";
+    } else {
+        text = "00:00:00";
+    }
+
+    return text
+}
+
+/*!
+ * durationToString_condensed()
+ */
+function durationToString_condensed(duration) {
+    var text = '';
+
+    if (duration > 1000) {
+        var hours = Math.floor(duration / 3600000);
+        var minutes = Math.floor((duration - (hours * 3600000)) / 60000);
+        var seconds = Math.round((duration - (hours * 3600000) - (minutes * 60000)) / 1000);
+
+        if (hours > 0) text += padNumberInternal(hours).toString() + ":";
+        text += padNumberInternal(minutes).toString() + ":";
+        text += padNumberInternal(seconds).toString();
+    } else if (duration > 0) {
+        text = "~00:01";
+    } else {
+        text = "00:xx";
+    }
+
+    return text
+}
+
+/*!
+ * durationToString_ffmpeg()
+ */
+function durationToString_ffmpeg(duration) {
+    var text = '';
+
+    if (duration > 0) {
+        var hours = Math.floor(duration / 3600000);
+        var minutes = Math.floor((duration - (hours * 3600000)) / 60000);
+        var seconds = Math.floor((duration - (hours * 3600000) - (minutes * 60000)) / 1000);
+        var milliseconds = Math.floor((duration - (hours * 3600000) - (minutes * 60000)) - (seconds * 1000));
+
+        if (hours > 0)
+            text += padNumberInternal(hours).toString();
+        if (hours === 0)
+            text += "00";
+
+        text += ":";
+
+        if (minutes > 0)
+            text += padNumberInternal(minutes).toString();
+        if (minutes === 0)
+            text += "00";
+
+        text += ":";
+
+        if (seconds > 0) {
+            text += padNumberInternal(seconds).toString();
+        if (seconds === 0)
+            text += "00";
+        if (milliseconds)
+            text += "." + milliseconds.toString();
+        }
+    } else {
+        text = "00:00:00";
+    }
+
+    return text
 }
 
 /* ************************************************************************** */

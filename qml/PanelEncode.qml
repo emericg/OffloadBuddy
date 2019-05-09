@@ -131,7 +131,7 @@ Item {
 
     Rectangle {
         id: rectangleEncode
-        color: "#ffffff"
+        color: "white"
         anchors.bottom: rectangleDestination.top
         anchors.bottomMargin: 0
         anchors.right: parent.right
@@ -148,10 +148,9 @@ Item {
             font.pixelSize: 24
         }
 
-        Rectangle {
+        Item {
             id: rectangleCodec
             height: 40
-            color: "#ffffff"
             anchors.top: titleEncode.bottom
             anchors.topMargin: 8
             anchors.left: parent.left
@@ -213,10 +212,9 @@ Item {
             }
         }
 
-        Rectangle {
+        Item {
             id: rectangleSpeed
             height: 40
-            color: "#ffffff"
             anchors.top: rectangleCodec.bottom
             anchors.topMargin: 0
             anchors.left: parent.left
@@ -248,10 +246,9 @@ Item {
             }
         }
 
-        Rectangle {
+        Item {
             id: rectangleQuality
             height: 40
-            color: "#ffffff"
             anchors.top: rectangleSpeed.bottom
             anchors.topMargin: 0
             anchors.left: parent.left
@@ -283,10 +280,9 @@ Item {
             }
         }
 
-        Rectangle {
+        Item {
             id: rectangleFramerate
             height: 40
-            color: "#ffffff"
             anchors.top: rectangleQuality.bottom
             anchors.topMargin: 0
             anchors.left: parent.left
@@ -326,10 +322,9 @@ Item {
             }
         }
 
-        Rectangle {
+        Item {
             id: rectangleClip
             height: 48
-            color: "#ffffff"
             anchors.top: rectangleFramerate.bottom
             anchors.topMargin: 8
             anchors.right: parent.right
@@ -371,14 +366,9 @@ Item {
             }
         }
 
-
-
-
-
-        Rectangle {
+        Item {
             id: rectangleFilter
             height: 96
-            color: "#ffffff"
             anchors.top: rectangleClip.bottom
             anchors.topMargin: 0
             anchors.right: parent.right
@@ -438,7 +428,7 @@ Item {
             id: textDestinationTitle
             text: qsTr("Select destination")
             anchors.verticalCenter: parent.verticalCenter
-            anchors.leftMargin: 16
+            anchors.leftMargin: 12
             anchors.left: parent.left
             font.pixelSize: 16
         }
@@ -446,10 +436,10 @@ Item {
         ComboBox {
             id: comboBoxDestination
             anchors.right: parent.right
-            anchors.rightMargin: 16
+            anchors.rightMargin: 12
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: textDestinationTitle.right
-            anchors.leftMargin: 16
+            anchors.leftMargin: 12
 
             ListModel {
                 id: cbDestinations

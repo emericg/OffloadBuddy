@@ -61,15 +61,25 @@ Rectangle {
         onDoubleClicked: toogleFullScreen()
 
         function toogleFullScreen() {
+            // Check if fullscreen is necessary (preview is already maxed out)
+            if (!preview.isFullScreen) {
+                //console.log("Check if fullscreen is necessary: " + (shot.width / shot.height) + " vs " + (preview.width / preview.height))
+                if ((shot.width / shot.height) < (preview.width / preview.height))
+                    return
+            }
+
+            // Set fullscreen
             preview.isFullScreen = !preview.isFullScreen
 
-            if (preview.isFullScreen) {
+            if (!preview.isFullScreen) {
                 buttonFullscreen.imageSource = "qrc:/icons_material/baseline-fullscreen-24px.svg"
                 rectangleMetadatas.visible = true
+                rectangleFiles.visible = true
                 preview.anchors.right = rectangleMetadatas.left
             } else {
                 buttonFullscreen.imageSource = "qrc:/icons_material/baseline-fullscreen_exit-24px.svg"
                 rectangleMetadatas.visible = false
+                rectangleFiles.visible = false
                 preview.anchors.right = parent.parent.right
             }
 

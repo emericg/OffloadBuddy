@@ -227,11 +227,12 @@ bool decode_packet(AVPacket *pPacket, AVCodecContext *pCodecContext, AVFrame *pF
         retcode = avcodec_receive_frame(pCodecContext, pFrame);
         if (retcode == AVERROR(EAGAIN) || retcode == AVERROR_EOF)
             break;
-        if (retcode < 0)
+        else if (retcode < 0)
         {
             qDebug() << "ERROR while receiving a frame from the decoder:" << av_err2str(retcode);
             return status;
         }
+
         if (retcode >= 0)
         {
 /*
@@ -332,6 +333,8 @@ bool decode_packet(AVPacket *pPacket, AVCodecContext *pCodecContext, AVFrame *pF
     return status;
 }
 
+/* ************************************************************************** */
+
 bool GridThumbnailer::getImage_withFfmpeg(const QString &path, QImage &img,
                                           const int timecode_s,
                                           const int width, const int height)
@@ -363,7 +366,7 @@ bool GridThumbnailer::getImage_withFfmpeg(const QString &path, QImage &img,
     }
     if (avformat_find_stream_info(demuxContext,  nullptr) < 0)
     {
-        qDebug() << "ERROR could not get the stream infos";
+        qDebug() << "ERROR could not get the streams infos";
     }
 
     /// LOCATE VIDEO STREAM ////////////////////////////////////////////////////
@@ -386,7 +389,7 @@ bool GridThumbnailer::getImage_withFfmpeg(const QString &path, QImage &img,
             goto abort_stage1;
         }
 
-        // when the stream is a video we store its index, codec parameters and codec
+        // when the stream is a video, we store its index, codec parameters and codec
         if (pLocalCodecParameters->codec_type == AVMEDIA_TYPE_VIDEO)
         {
             videoStreamIndex = static_cast<int>(i);

@@ -19,8 +19,8 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#ifndef THUMBNAILER_H
-#define THUMBNAILER_H
+#ifndef GRID_THUMBNAILER_H
+#define GRID_THUMBNAILER_H
 /* ************************************************************************** */
 
 #include <QQuickAsyncImageProvider>
@@ -59,4 +59,4 @@ public:
 };
 
 /* ************************************************************************** */
-#endif // THUMBNAILER_H
+#endif // GRID_THUMBNAILER_H
