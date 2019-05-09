@@ -1,12 +1,5 @@
 
-# resources/app/
-- offloadbuddy.*            // Emeric Grange        // CC BY-SA 4.0
-
 # resources/icons/
-- card.svg                  // Lüv icon theme       // CC BY-SA 4.0
-- disk.svg                  // Lüv icon theme       // CC BY-SA 4.0
-- phone.svg                 // Lüv icon theme       // CC BY-SA 4.0
-- usb.svg                   // Lüv icon theme       // CC BY-SA 4.0
 - play.svg                  // Lüv icon theme       // CC BY-SA 4.0
 - working.svg               // Lüv icon theme       // CC BY-SA 4.0
 - done.svg                  // Lüv icon theme       // CC BY-SA 4.0
@@ -25,8 +18,3 @@
 - job_offloading.svg        // Lüv icon theme       // CC BY-SA 4.0
 - job_open.svg              // Lüv icon theme       // CC BY-SA 4.0
 - job_queued.svg            // Lüv icon theme       // CC BY-SA 4.0
-
-# resources/other:
-- placeholder_*.svg         // Lüv icon theme       // CC BY-SA 4.0
-- gps_marker.png            // Emeric Grange        // CC BY-SA 4.0
-- GitHub-Mark-64px.png      // https://github.com/logos // proprietary

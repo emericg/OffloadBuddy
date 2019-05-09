@@ -65,9 +65,6 @@
         <file alias="session.svg">cameras/session.svg</file>
         <file alias="fusion.svg">cameras/fusion.svg</file>
     </qresource>
-    <qresource prefix="/authors">
-        <file alias="emeric.jpg">authors/emeric.jpg</file>
-    </qresource>
     <qresource prefix="/appicons">
         <file alias="offloadbuddy.svg">desktop/offloadbuddy.svg</file>
         <file alias="offloadbuddy.png">desktop/offloadbuddy.png</file>
