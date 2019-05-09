@@ -275,7 +275,7 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
                 fillMode: Image.PreserveAspectFit
-                source: "qrc:/icons/disk.svg"
+                source: "qrc:/devices/disk.svg"
             }
 
             NumberAnimation on opacity {

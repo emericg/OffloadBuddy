@@ -141,11 +141,11 @@ Rectangle {
 
         if (currentDevice && currentDevice.deviceStorage === 0)
             if (currentDevice.deviceType === 2)
-                imageEmpty.source = "qrc:/icons/card.svg"
+                imageEmpty.source = "qrc:/devices/card.svg"
             else
-                imageEmpty.source = "qrc:/icons/phone.svg"
+                imageEmpty.source = "qrc:/devices/phone.svg"
         else
-            imageEmpty.source = "qrc:/icons/usb.svg"
+            imageEmpty.source = "qrc:/devices/usb.svg"
     }
 
     function updateGridViewSettings() {

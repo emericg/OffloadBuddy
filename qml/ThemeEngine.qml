@@ -19,8 +19,8 @@ Item {
     property string colorHeader
     property string colorHeaderContent
 
-    property string colorInfoBanner // TODO
-    property string colorInfoBannerText // TODO
+    property string colorInfoBanner: "#fed859" // TODO
+    property string colorInfoBannerText: "#ffffff" // TODO
 
     property string colorBackground
     property string colorForeground

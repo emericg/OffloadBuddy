@@ -49,11 +49,11 @@ Item {
         Image {
             id: imageLogo
             width: 220
-            height: 180
+            height: 160
             anchors.top: parent.top
-            anchors.topMargin: 24
+            anchors.topMargin: 20
             anchors.right: parent.right
-            anchors.rightMargin: 24
+            anchors.rightMargin: 20
             fillMode: Image.PreserveAspectCrop
             source: "qrc:/appicons/offloadbuddy.png"
         }

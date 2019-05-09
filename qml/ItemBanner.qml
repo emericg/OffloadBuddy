@@ -16,7 +16,7 @@ Rectangle {
     anchors.leftMargin: 0
     anchors.right: parent.right
     anchors.rightMargin: 0
-    
+
     Component.onCompleted: {
         banner.close()
     }
@@ -41,7 +41,7 @@ Rectangle {
         color: Theme.colorInfoBannerText
         font.pixelSize: Theme.fontSizeBannerText
     }
-    
+
     ImageSvg {
         id: image
         width: 40
@@ -50,10 +50,10 @@ Rectangle {
         anchors.rightMargin: 16
         anchors.verticalCenter: parent.verticalCenter
         fillMode: Image.PreserveAspectFit
-        
+
         source: "qrc:/icons_material/baseline-close-24px.svg"
         color: Theme.colorInfoBannerText
-        
+
         MouseArea {
             anchors.fill: parent
             onClicked: banner.close()

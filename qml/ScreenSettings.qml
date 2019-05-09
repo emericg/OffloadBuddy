@@ -55,15 +55,13 @@ Item {
             text: qsTr("Ignore LRVs and THM files")
             font.bold: false
             font.pixelSize: 16
-            anchors.top: text1.bottom
-            anchors.topMargin: 16
+            anchors.top: text3.bottom
+            anchors.topMargin: 8
             anchors.left: parent.left
             anchors.leftMargin: 32
 
             checked: settingsManager.ignorejunk
-            onCheckStateChanged: {
-                settingsManager.ignorejunk = checked
-            }
+            onCheckStateChanged: settingsManager.ignorejunk = checked
         }
 
         CheckBoxThemed {
@@ -78,9 +76,7 @@ Item {
             anchors.verticalCenter: checkIgnoreJunk.verticalCenter
 
             checked: settingsManager.ignorehdaudio
-            onCheckStateChanged: {
-                settingsManager.ignorehdaudio = checked
-            }
+            onCheckStateChanged: settingsManager.ignorehdaudio = checked
         }
 
         CheckBoxThemed {
@@ -97,9 +93,7 @@ Item {
             anchors.leftMargin: 32
 
             checked: settingsManager.automerge
-            onCheckStateChanged: {
-                settingsManager.automerge = checked
-            }
+            onCheckStateChanged: settingsManager.automerge = checked
         }
 
         CheckBoxThemed {
@@ -114,9 +108,7 @@ Item {
             anchors.leftMargin: 16
 
             checked: settingsManager.autometadata
-            onCheckStateChanged: {
-                settingsManager.autometadata = checked
-            }
+            onCheckStateChanged: settingsManager.autometadata = checked
         }
 
         CheckBoxThemed {
@@ -133,24 +125,7 @@ Item {
             anchors.verticalCenter: checkAutoMetadatas.verticalCenter
 
             checked: settingsManager.autodelete
-            onCheckStateChanged: {
-                settingsManager.autodelete = checked
-            }
-        }
-
-        Text {
-            id: text4
-            height: 40
-            anchors.top: checkAutoMerge.bottom
-            anchors.topMargin: 16
-            anchors.left: parent.left
-            anchors.leftMargin: 32
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignLeft
-            text: qsTr("Unit system")
-            font.bold: true
-            font.pixelSize: 16
-            color: Theme.colorText
+            onCheckStateChanged: settingsManager.autodelete = checked
         }
 
         Text {
@@ -165,6 +140,34 @@ Item {
             horizontalAlignment: Text.AlignLeft
             anchors.left: parent.left
             anchors.leftMargin: 32
+            color: Theme.colorText
+        }
+
+        Text {
+            id: text3
+            height: 40
+            text: qsTr("Offloading:")
+            verticalAlignment: Text.AlignVCenter
+            font.bold: true
+            anchors.top: text2.bottom
+            anchors.topMargin: 16
+            anchors.left: parent.left
+            anchors.leftMargin: 32
+            font.pixelSize: 16
+        }
+
+        Text {
+            id: text2
+            height: 40
+            anchors.top: text1.bottom
+            anchors.topMargin: 16
+            anchors.left: parent.left
+            anchors.leftMargin: 32
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignLeft
+            text: qsTr("Unit system")
+            font.bold: true
+            font.pixelSize: 16
             color: Theme.colorText
         }
 
@@ -203,9 +206,9 @@ Item {
             id: radioButtonMetric
             text: qsTr("Metric")
             font.pixelSize: 16
-            anchors.left: text4.right
+            anchors.left: text2.right
             anchors.leftMargin: 16
-            anchors.verticalCenter: text4.verticalCenter
+            anchors.verticalCenter: text2.verticalCenter
 
             Component.onCompleted: {
                 if (settingsManager.appunits === 0)
@@ -225,7 +228,7 @@ Item {
             font.pixelSize: 16
             anchors.left: radioButtonMetric.right
             anchors.leftMargin: 16
-            anchors.verticalCenter: text4.verticalCenter
+            anchors.verticalCenter: text2.verticalCenter
 
             Component.onCompleted: {
                 if (settingsManager.appunits === 1)
@@ -244,8 +247,8 @@ Item {
 
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 0
-            anchors.top: text4.bottom
-            anchors.topMargin: 0
+            anchors.top: checkAutoMerge.bottom
+            anchors.topMargin: 16
             anchors.right: parent.right
             anchors.rightMargin: 0
             anchors.left: parent.left
@@ -295,10 +298,9 @@ Item {
                 height: 64
                 interactive: false
                 model: settingsManager.directoriesList
-                delegate: ItemMediaDirectory { settingsMgr: settingsManager;
-                                               directory: modelData }
+                delegate: ItemMediaDirectory { settingsMgr: settingsManager; directory: modelData; }
 
-                spacing: 16
+                spacing: 8
                 anchors.top: textMediasTitle.bottom
                 anchors.topMargin: 16
                 anchors.bottom: parent.bottom
@@ -309,13 +311,26 @@ Item {
                 anchors.rightMargin: 32
             }
 
+            Text {
+                id: textMediaHierarchy
+                height: 40
+                text: qsTr("Media hierarchy")
+                verticalAlignment: Text.AlignVCenter
+                font.bold: true
+                font.pixelSize: 16
+                anchors.right: comboBoxContentHierarchy.left
+                anchors.rightMargin: 32
+                anchors.verticalCenter: textMediasTitle.verticalCenter
+                color: Theme.colorText
+            }
+
             ComboBoxThemed {
                 id: comboBoxContentHierarchy
                 width: 256
                 height: 40
                 anchors.right: parent.right
                 anchors.rightMargin: 16
-                anchors.verticalCenter: text2.verticalCenter
+                anchors.verticalCenter: textMediaHierarchy.verticalCenter
 
                 model: ListModel {
                     id: cbItemsContentHierarchy
@@ -334,17 +349,6 @@ Item {
                     else
                         cbinit = true;
                 }
-            }
-
-            Text {
-                id: text2
-                text: qsTr("Media hierarchy:")
-                font.bold: true
-                font.pixelSize: 16
-                anchors.right: comboBoxContentHierarchy.left
-                anchors.rightMargin: 16
-                anchors.verticalCenter: textMediasTitle.verticalCenter
-                color: Theme.colorText
             }
         }
     }

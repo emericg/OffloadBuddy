@@ -37,8 +37,7 @@ Item {
             textShotName.text = shot.name
 
             if (shot.hasGPMF && shot.hasGPS) {
-                // if (not static)
-                //{
+                //if (not static) {
                     contentTelemetry.updateMetadatas()
                 //} else {
                 //    contentMap.updateMap()
@@ -161,10 +160,6 @@ Item {
             anchors.top: parent.top
             anchors.topMargin: 0
 
-            function setActiveMenu() {
-                //
-            }
-
             ItemMenuButton {
                 id: menuOverview
                 height: parent.height
@@ -192,7 +187,7 @@ Item {
                 source: "qrc:/icons_material/baseline-map-24px.svg"
                 onClicked: screenMedia.state = "map"
                 selected: screenMedia.state === "map"
-                visible: shot.latitude !== 0.0
+                visible: (shot.type >= Shared.SHOT_PICTURE && shot.latitude !== 0.0)
             }
         }
     }
