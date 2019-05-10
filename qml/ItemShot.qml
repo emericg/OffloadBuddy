@@ -25,14 +25,14 @@ Rectangle {
         icon_state.visible = true
         rectangleOverlay.visible = false
         if (shot.state === Shared.SHOT_STATE_QUEUED) {
-            icon_state.source = "qrc:/resources/minicons/queued.svg"
+            icon_state.source = "qrc:/icons_material/baseline-schedule-24px.svg"
         } else if (shot.state === Shared.SHOT_STATE_OFFLOADING) {
-            icon_state.source = "qrc:/resources/minicons/offloading.svg"
+            icon_state.source = "qrc:/icons_material/baseline-save_alt-24px.svg"
         } else if (shot.state === Shared.SHOT_STATE_ENCODING) {
-            icon_state.source = "qrc:/resources/minicons/encoding.svg"
+            icon_state.source = "qrc:/icons_material/baseline-memory-24px.svg"
         } else if (shot.state === Shared.SHOT_STATE_DONE) {
             icon_state.visible = false
-            image_overlay.source = "qrc:/icons/done.svg"
+            image_overlay.source = "qrc:/icons_material/baseline-check_circle_outline-24px.svg"
             rectangleOverlay.visible = true
         } else {
             icon_state.visible = false
@@ -62,31 +62,19 @@ Rectangle {
         text_left.visible = false
         if (type === Shared.SHOT_UNKNOWN) {
             icon_left.source = "qrc:/resources/minicons/unknown.svg"
-
-            if (!shot.previewPhoto && !shot.previewVideo)
-                imageFs.source = "qrc:/resources/other/placeholder_video.svg"
         } else if (type < Shared.SHOT_PICTURE) {
             if (duration > 0) {
                 text_left.visible = true
                 text_left.text = UtilsString.durationToString_condensed(duration)
             }
             icon_left.source = "qrc:/resources/minicons/video.svg"
-
-            if (!shot.previewPhoto && !shot.previewVideo)
-                imageFs.source = "qrc:/resources/other/placeholder_video.svg"
         } else {
             if (type >= Shared.SHOT_PICTURE_MULTI) {
                 text_left.visible = true
                 text_left.text = duration
                 icon_left.source = "qrc:/resources/minicons/picture_multi.svg"
-
-                if (!shot.previewPhoto)
-                    imageFs.source = "qrc:/resources/other/placeholder_picture_multi.svg"
             } else {
                 icon_left.source = "qrc:/resources/minicons/picture.svg"
-
-                if (!shot.previewPhoto)
-                    imageFs.source = "qrc:/resources/other/placeholder_picture.svg"
             }
         }
 
@@ -241,7 +229,7 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
             fillMode: Image.PreserveAspectCrop
-            source: "qrc:/icons/done.svg"
+            source: "qrc:/icons_material/baseline-check_circle_outline-24px.svg"
         }
     }
 

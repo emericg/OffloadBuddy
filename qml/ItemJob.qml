@@ -65,11 +65,11 @@ Item {
 
     function updateJobStatus() {
         if (job.state === 8) {
-            imageStatus.source = "qrc:/resources/minicons/job_done.svg"
+            imageStatus.source = "qrc:/icons_material/baseline-done-24px.svg"
             offloadAnimation.stop()
             encodeAnimation.stop()
         } else if (job.state === 9) {
-            imageStatus.source = "qrc:/resources/minicons/job_errored.svg"
+            imageStatus.source = "qrc:/icons_material/baseline-error-24px.svg"
             offloadAnimation.stop()
             encodeAnimation.stop()
         } else if (job.state >= 1) {
@@ -132,7 +132,7 @@ Item {
             height: 32
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
-            source: "qrc:/resources/minicons/job_open.svg"
+            source: "qrc:/icons_material/outline-folder-24px.svg"
             color: Theme.colorSidebarContent
         }
 
@@ -168,7 +168,7 @@ Item {
             fillMode: Image.PreserveAspectFit
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
-            source: "qrc:/icons/process_stop.svg"
+            source: "qrc:/icons_material/baseline-cancel-24px.svg"
             sourceSize.width: 40
             sourceSize.height: 40
         }
@@ -204,7 +204,7 @@ Item {
             fillMode: Image.PreserveAspectFit
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
-            source: "qrc:/icons/process_pause.svg"
+            source: "qrc:/icons_material/baseline-pause_circle_outline-24px.svg"
             sourceSize.width: 40
             sourceSize.height: 40
         }
