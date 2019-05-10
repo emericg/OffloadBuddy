@@ -118,11 +118,10 @@ ApplicationWindow {
 
         // MENUS
 
-        Rectangle {
+        Item {
             id: button_library
             width: 64
             height: 64
-            color: "#00000000"
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top
             anchors.topMargin: 24
@@ -140,10 +139,8 @@ ApplicationWindow {
             }
         }
 
-        Rectangle {
+        Item {
             id: menuDevice
-            color: "#00000000"
-
             anchors.bottom: button_settings.top
             anchors.bottomMargin: 16
             anchors.top: button_library.bottom
@@ -169,11 +166,10 @@ ApplicationWindow {
             }
         }
 
-        Rectangle {
+        Item {
             id: button_jobs
             width: 50
             height: 50
-            color: "#00000000"
             anchors.bottom: button_settings.top
             anchors.bottomMargin: 8
             anchors.horizontalCenter: parent.horizontalCenter
@@ -211,11 +207,10 @@ ApplicationWindow {
             visible: false
         }
 
-        Rectangle {
+        Item {
             id: button_settings
             width: 50
             height: 50
-            color: "#00000000"
             anchors.bottom: button_about.top
             anchors.bottomMargin: 8
             anchors.horizontalCenter: parent.horizontalCenter
@@ -233,11 +228,10 @@ ApplicationWindow {
             }
         }
 
-        Rectangle {
+        Item {
             id: button_about
             width: 50
             height: 50
-            color: "#00000000"
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: button_exit.top
             anchors.bottomMargin: 8
@@ -254,11 +248,10 @@ ApplicationWindow {
             }
         }
 
-        Rectangle {
+        Item {
             id: button_exit
             width: 50
             height: 50
-            color: "#00000000"
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 24

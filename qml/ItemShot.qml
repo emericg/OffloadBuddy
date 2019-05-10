@@ -110,8 +110,10 @@ Rectangle {
         visible: (imageFs.progress === 1.0)
 
         fillMode: Image.PreserveAspectCrop
-        sourceSize.width: 400
-        sourceSize.height: 400 // or: 400 / cellFormat
+        antialiasing: false
+        smooth: false // for perf reasons
+        sourceSize.width: 512
+        sourceSize.height: 512 // big enough so we have good quality regarding of the thumb size
     }
 
     ItemImage {
@@ -133,9 +135,10 @@ Rectangle {
             height: 24
             anchors.left: parent.left
             anchors.leftMargin: 8
-            color: "white"
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 8
+
+            color: "white"
         }
         Text {
             id: text_left
@@ -159,9 +162,10 @@ Rectangle {
             height: 24
             anchors.right: parent.right
             anchors.rightMargin: 8
-            color: "white"
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 8
+
+            color: "white"
         }
         Text {
             id: text_right
@@ -199,19 +203,17 @@ Rectangle {
             font.pixelSize: 13
         }
 
-        Image {
+        ImageSvg {
             id: icon_state
-            x: 247
-            y: 8
             width: 24
             height: 24
-            sourceSize.width: 24
-            sourceSize.height: 24
+
             anchors.top: parent.top
             anchors.topMargin: 8
             anchors.right: parent.right
             anchors.rightMargin: 8
-            fillMode: Image.PreserveAspectFit
+
+            color: "white"
         }
     }
 
@@ -220,16 +222,15 @@ Rectangle {
         color: "#80ffffff"
         anchors.fill: parent
 
-        Image {
+        ImageSvg {
             id: image_overlay
             width: 64
             height: 64
-            sourceSize.width: 64
-            sourceSize.height: 64
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
-            fillMode: Image.PreserveAspectCrop
+
             source: "qrc:/icons_material/baseline-check_circle_outline-24px.svg"
+            color: "white"
         }
     }
 

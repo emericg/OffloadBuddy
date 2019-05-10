@@ -5,54 +5,48 @@ import QtQuick.Dialogs 1.2
 import com.offloadbuddy.theme 1.0
 import "UtilsString.js" as UtilsString
 
-Item {
+Rectangle {
     id: itemJob
-    height: 48
-    width: parent.width
+    color: Theme.colorForeground
+    implicitWidth: 640
+    implicitHeight: 48
 
-    property var job
+    property var job: null
 
     signal pauseClicked()
     signal stopClicked()
 
-    Rectangle {
-        id: rectangleStatus
+    ImageSvg {
+        id: imageStatus
         width: 40
         height: 40
         anchors.left: parent.left
         anchors.leftMargin: 12
         anchors.verticalCenter: parent.verticalCenter
-        color: "#00000000"
-        clip: true
 
-        ImageSvg {
-            id: imageStatus
-            width: 40
-            height: 40
-            source: "qrc:/resources/minicons/job_queued.svg"
-            color: Theme.colorSidebarContent
+        source: "qrc:/icons_material/baseline-schedule-24px.svg"
+        color: Theme.colorIcons
 
-            NumberAnimation on rotation {
-                id: encodeAnimation
-                running: false
+        NumberAnimation on rotation {
+            id: encodeAnimation
+            running: false
 
-                onStarted: imageStatus.source = "qrc:/resources/minicons/job_encoding.svg"
-                onStopped: imageStatus.rotation = 0
-                duration: 2000;
-                from: 0;
-                to: 360;
-                loops: Animation.Infinite
-            }
+            onStarted: imageStatus.source = "qrc:/icons_material/baseline-memory-24px.svg"
+            onStopped: imageStatus.rotation = 0
+            duration: 2000;
+            from: 0;
+            to: 360;
+            loops: Animation.Infinite
+        }
 
-            SequentialAnimation {
-                id: offloadAnimation
-                running: false
+        SequentialAnimation {
+            id: offloadAnimation
+            running: false
 
-                onStarted: imageStatus.source = "qrc:/resources/minicons/job_offloading.svg"
-                onStopped: imageStatus.y = 0
-                NumberAnimation { target: imageStatus; property: "y"; from: -40; to: 40; duration: 1000; }
-                loops: Animation.Infinite
-            }
+            onStarted: imageStatus.source = "qrc:/icons_material/baseline-save_alt-24px.svg"
+            onStopped: imageStatus.y = 0
+            NumberAnimation { target: imageStatus; property: "y"; from: -40; to: 40; duration: 1000; }
+            loops: Animation.Infinite
         }
     }
 
@@ -87,7 +81,7 @@ Item {
         color: Theme.colorText
         font.bold: true
         verticalAlignment: Text.AlignVCenter
-        anchors.left: rectangleStatus.right
+        anchors.left: imageStatus.right
         anchors.leftMargin: 12
         anchors.verticalCenter: parent.verticalCenter
         font.pixelSize: 14
@@ -117,11 +111,10 @@ Item {
         value: job.progress
     }
 
-    Rectangle {
+    Item {
         id: rectangleOpen
         width: 40
         height: 40
-        color: "#00000000"
         anchors.right: rectanglePlayPause.left
         anchors.rightMargin: 8
         anchors.verticalCenter: parent.verticalCenter
@@ -133,7 +126,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
             source: "qrc:/icons_material/outline-folder-24px.svg"
-            color: Theme.colorSidebarContent
+            color: Theme.colorIcons
         }
 
         MouseArea {
@@ -152,25 +145,23 @@ Item {
         }
     }
 
-    Rectangle {
+    Item {
         id: rectangleDelete
         width: 40
         height: 40
-        color: "#00000000"
         anchors.right: parent.right
         anchors.rightMargin: 12
         anchors.verticalCenter: parent.verticalCenter
 
-        Image {
+        ImageSvg {
             id: imageDelete
             width: 40
             height: 40
-            fillMode: Image.PreserveAspectFit
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
+
             source: "qrc:/icons_material/baseline-cancel-24px.svg"
-            sourceSize.width: 40
-            sourceSize.height: 40
+            color: Theme.colorIcons
         }
         MouseArea {
             id: mouseAreaDelete
@@ -188,25 +179,23 @@ Item {
         }
     }
 
-    Rectangle {
+    Item {
         id: rectanglePlayPause
         width: 40
         height: 40
-        color: "#00000000"
         anchors.rightMargin: 8
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: rectangleDelete.left
 
-        Image {
+        ImageSvg {
             id: imagePlayPause
             width: 40
             height: 40
-            fillMode: Image.PreserveAspectFit
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
+
             source: "qrc:/icons_material/baseline-pause_circle_outline-24px.svg"
-            sourceSize.width: 40
-            sourceSize.height: 40
+            color: Theme.colorIcons
         }
 
         MouseArea {

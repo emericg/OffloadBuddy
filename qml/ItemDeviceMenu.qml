@@ -3,11 +3,10 @@ import QtQuick.Controls 2.2
 
 import com.offloadbuddy.theme 1.0
 
-Rectangle {
+Item {
     id: itemDeviceMenu
     width: 80
     height: 80
-    color: "#00000000"
     anchors.horizontalCenter: parent.horizontalCenter
 
     property var myDevice

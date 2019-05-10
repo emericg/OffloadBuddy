@@ -59,36 +59,22 @@ Item {
         anchors.right: parent.right
         anchors.rightMargin: 0
 
-        Rectangle {
-            id: rectangleJobs
-            color: Theme.colorForeground
+        ListView {
+            id: jobsView
+            width: parent.width
+            interactive: false
+            model: jobManager.jobsList
+            delegate: ItemJob { job: modelData; width: jobsView.width; }
 
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 16
+            spacing: 16
             anchors.top: parent.top
             anchors.topMargin: 16
-            anchors.right: parent.right
-            anchors.rightMargin: 16
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 16
             anchors.left: parent.left
             anchors.leftMargin: 16
-
-            ListView {
-                id: jobsView
-                width: parent.width
-                interactive: false
-                model: jobManager.jobsList
-                delegate: ItemJob { job: modelData }
-
-                spacing: 16
-                anchors.top: parent.top
-                anchors.topMargin: 16
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 16
-                anchors.left: parent.left
-                anchors.leftMargin: 16
-                anchors.right: parent.right
-                anchors.rightMargin: 16
-            }
+            anchors.right: parent.right
+            anchors.rightMargin: 16
         }
     }
 }

@@ -1,15 +1,18 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
+import QtGraphicalEffects 1.0
 
 import com.offloadbuddy.theme 1.0
 
 Item {
+    id: mediaGrid
     width: 1280
     height: 720
 
     property var selectedItem : shotsview.currentItem
     property int selectedItemIndex : shotsview.currentIndex
     property string selectedItemName : shotsview.currentItem ? shotsview.currentItem.shot.name : ""
+    //property string selectedItemPath : shotsview.currentItem ? shotsview.currentItem.shot.path : ""
 
     property var selectionList : [] // TODO
 
@@ -49,6 +52,20 @@ Item {
 
         PanelEncode {
             id: panelEncode
+        }
+        background: Item {/*
+            ShaderEffectSource {
+              id: effectSource
+              anchors.fill: popupEncode
+              sourceItem: mediaGrid
+              sourceRect: Qt.rect(0,0,900,900)
+            }
+            FastBlur{
+              id: blur
+              anchors.fill: effectSource
+              source: effectSource
+              radius: 32
+            }*/
         }
     }
 
@@ -95,17 +112,23 @@ Item {
             anchors.left: textZoom.right
             anchors.leftMargin: 4
             stepSize: 1
-            to: 3
             from: 1
             value: 2
+            to: 4
 
             onValueChanged: {
                 if (value == 1.0) {
-                    shotsview.cellSize = 221;
-                } else  if (value == 2.0) {
-                    shotsview.cellSize = 279;
-                } else  if (value == 3.0) {
-                    shotsview.cellSize = 376;
+                    shotsview.cellSizeTarget = 221;
+                    shotsview.computeCellSize();
+                } else if (value == 2.0) {
+                    shotsview.cellSizeTarget = 279;
+                    shotsview.computeCellSize();
+                } else if (value == 3.0) {
+                    shotsview.cellSizeTarget = 376;
+                    shotsview.computeCellSize();
+                } else if (value == 4.0) {
+                    shotsview.cellSizeTarget = 450;
+                    shotsview.computeCellSize();
                 }
             }
         }
@@ -338,53 +361,74 @@ Item {
             actionMenu.visible = false
         }
 
-        ScrollView {
-            id: scrollView
+        GridView {
+            id: shotsview
             anchors.fill: parent
-            //anchors.topMargin: banner.height
+            anchors.leftMargin: 16
+            anchors.topMargin: 16
 
-            GridView {
-                id: shotsview
+            interactive: true
+            //snapMode: GridView.SnapToRow
+            //clip: true
+            //keyNavigationEnabled: true
+            //focus: true
 
-                //Component.onCompleted: initGridViewStuff()
-                onCountChanged: updateGridViewSettings()
+            onCountChanged: updateGridViewSettings()
+            Component.onCompleted: { currentIndex = -1 }
 
-                flickableChildren: MouseArea {
-                    id: mouseAreaInsideView
-                    anchors.fill: parent
+            property real cellFormat: 4/3
+            property int cellSizeTarget: 279
+            property int cellSize: 279
+            property int cellMarginTarget: 12
+            property int cellMargin: 12
 
-                    acceptedButtons: Qt.AllButtons
-                    onClicked: {
-                        screenLibraryGrid.selectionList = []
-                        shotsview.currentIndex = -1
-                        actionMenu.visible = false
-                    }
-                }
+            //property int cellMargin: (parent.width%cellSize) / Math.floor(parent.width/cellSize);
+            cellWidth: cellSize + cellMargin
+            cellHeight: Math.round(cellSize / cellFormat) + cellMargin
 
-                property real cellFormat: 4/3
-                property int cellSize: 279
-                property int cellMargin: 12
-                anchors.leftMargin: 16
-                anchors.topMargin: 16
+            onWidthChanged: {/*
+                if (shotsview.width < 1280) {
+                    if (cellSizeTarget != 279) cellSizeTarget = 279
+                } else if (shotsview.width < 1920) {
+                    if (cellSizeTarget != 400) cellSizeTarget = 400
+                } else {
+                    if (cellSizeTarget != 600) cellSizeTarget = 600
+                }*/
+
+                computeCellSize()
+            }
+            function computeCellSize() {
+                var availableWidth = shotsview.width - cellMarginTarget
+                var cellColumnsTarget = Math.trunc(availableWidth / cellSizeTarget)
+                // 1 // Adjust only cellSize
+                cellSize = (availableWidth - cellMarginTarget * cellColumnsTarget) / cellColumnsTarget
+                // Recompute
+                cellWidth = cellSize + cellMargin
+                cellHeight = Math.round(cellSize / cellFormat) + cellMarginTarget
+            }
+
+            ////////
+
+            model: mediaLibrary.shotFilter
+            delegate: ItemShot { width: shotsview.cellSize; cellFormat: shotsview.cellFormat; }
+
+            ScrollBar.vertical: ScrollBar { z: 1 }
+
+            flickableChildren: MouseArea {
+                id: mouseAreaInsideView
                 anchors.fill: parent
 
-                //property int cellMargin: (parent.width%cellSize) / Math.floor(parent.width/cellSize);
-                cellWidth: cellSize + cellMargin
-                cellHeight: Math.round(cellSize / cellFormat) + cellMargin
-
-                interactive: true
-                //snapMode: GridView.SnapToRow
-                //clip: true
-                //keyNavigationEnabled: true
-
-                model: mediaLibrary.shotFilter
-                delegate: ItemShot { width: shotsview.cellSize; cellFormat: shotsview.cellFormat }
-
-                highlight: highlight
-                highlightFollowsCurrentItem: true
-                highlightMoveDuration: 0
-                focus: true
+                acceptedButtons: Qt.AllButtons
+                onClicked: {
+                    screenLibraryGrid.selectionList = []
+                    shotsview.currentIndex = -1
+                    actionMenu.visible = false
+                }
             }
+
+            highlight: highlight
+            highlightFollowsCurrentItem: true
+            highlightMoveDuration: 0
         }
 
         MouseArea {

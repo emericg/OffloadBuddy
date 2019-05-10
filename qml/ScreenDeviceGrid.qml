@@ -13,6 +13,7 @@ Rectangle {
     property var selectedItem : shotsview.currentItem
     property int selectedItemIndex : shotsview.currentIndex
     property string selectedItemName : shotsview.currentItem ? shotsview.currentItem.shot.name : ""
+    //property string selectedItemPath : shotsview.currentItem ? shotsview.currentItem.shot.path : ""
 
     property var selectionList : [] // TODO
 
@@ -193,6 +194,9 @@ Rectangle {
         PanelEncode {
             id: panelEncode
         }
+        background: Item {
+            //
+        }
     }
 
     // HEADER //////////////////////////////////////////////////////////////////
@@ -326,7 +330,6 @@ Rectangle {
 
         ProgressBarThemed {
             id: deviceBatteryBar
-            x: 858
             width: 256
             height: 6
             anchors.verticalCenterOffset: 0
@@ -336,11 +339,10 @@ Rectangle {
             value: 0.5
         }
 
-        Rectangle {
+        Item {
             id: rectangleTransfer
             width: 240
             height: 40
-            color: "#00000000"
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 16
             anchors.left: parent.left
@@ -382,11 +384,10 @@ Rectangle {
             }
         }
 
-        Rectangle {
+        Item {
             id: rectangleDelete
             width: 240
             height: 40
-            color: "#00000000"
             anchors.left: rectangleTransfer.right
             anchors.leftMargin: 16
             anchors.bottom: parent.bottom
@@ -557,17 +558,23 @@ Rectangle {
             anchors.left: textZoom.right
             anchors.leftMargin: 4
             stepSize: 1
-            to: 3
             from: 1
             value: 2
+            to: 4
 
             onValueChanged: {
                 if (value == 1.0) {
-                    shotsview.cellSize = 221;
-                } else  if (value == 2.0) {
-                    shotsview.cellSize = 279;
-                } else  if (value == 3.0) {
-                    shotsview.cellSize = 376;
+                    shotsview.cellSizeTarget = 221;
+                    shotsview.computeCellSize();
+                } else if (value == 2.0) {
+                    shotsview.cellSizeTarget = 279;
+                    shotsview.computeCellSize();
+                } else if (value == 3.0) {
+                    shotsview.cellSizeTarget = 376;
+                    shotsview.computeCellSize();
+                } else if (value == 4.0) {
+                    shotsview.cellSizeTarget = 450;
+                    shotsview.computeCellSize();
                 }
 
                 // save state
@@ -687,73 +694,94 @@ Rectangle {
             id: banner
         }
 
-        ScrollView {
-            id: scrollView
+        GridView {
+            id: shotsview
             anchors.fill: parent
-            anchors.topMargin: banner.height
+            anchors.leftMargin: 16
+            anchors.topMargin: banner.height + 16
 
-            GridView {
-                id: shotsview
+            interactive: true
+            //snapMode: GridView.SnapToRow
+            //clip: true
+            //keyNavigationEnabled: true
+            //focus: true
 
-                //Component.onCompleted: initGridViewStuff()
-                onCountChanged: updateGridViewSettings()
-                onCurrentIndexChanged: {
-                    //console.log("onCurrentIndexChanged() selected index: " + shotsview.currentIndex)
-                    //console.log("onCurrentIndexChanged() selected row/column: " + shotsview.childAt())
+            onCountChanged: updateGridViewSettings()
+            Component.onCompleted: { currentIndex = -1 }
 
-                    //console.log("onCurrentIndexChanged() selected shot: " + shotsview.currentIndex)
-                    //console.log("onCurrentIndexChanged() selected shots [ " + selectionList + "]")
+            property real cellFormat: 4/3
+            property int cellSizeTarget: 279
+            property int cellSize: 279
+            property int cellMarginTarget: 12
+            property int cellMargin: 12
 
-                    //console.log("highlight: " + rectangleDeviceShots.highlight.x + "/" + rectangleDeviceShots.highlight.y)
+            //property int cellMargin: (parent.width%cellSize) / Math.floor(parent.width/cellSize);
+            cellWidth: cellSize + cellMargin
+            cellHeight: Math.round(cellSize / cellFormat) + cellMargin
 
-                    // save state
-                    if (deviceSavedState && shotsview.currentIndex != 0)
-                        deviceSavedState.selectedIndex = shotsview.currentIndex
-                }
-                onCurrentItemChanged: {
-                    //console.log("onCurrentItemChanged() item: " + shotsview.currentItem)
-                    //shotsview.currentItem.visible = false;
-                    //console.log("onCurrentItemChanged() item: " + shotsview.currentItem.shot.name)
+            onCurrentIndexChanged: {
+                //console.log("onCurrentIndexChanged() selected index: " + shotsview.currentIndex)
+                //console.log("onCurrentIndexChanged() selected row/column: " + shotsview.childAt())
 
-                    //screenDeviceShots.selectionList.push(shotsview.currentItem.shot.name)
-                }
+                //console.log("onCurrentIndexChanged() selected shot: " + shotsview.currentIndex)
+                //console.log("onCurrentIndexChanged() selected shots [ " + selectionList + "]")
 
-                flickableChildren: MouseArea {
-                    id: mouseAreaInsideView
-                    anchors.fill: parent
+                //console.log("highlight: " + rectangleDeviceShots.highlight.x + "/" + rectangleDeviceShots.highlight.y)
 
-                    acceptedButtons: Qt.AllButtons
-                    onClicked: {
-                        screenDeviceGrid.selectionList = []
-                        shotsview.currentIndex = -1
-                        actionMenu.visible = false
-                    }
-                }
+                // save state
+                if (deviceSavedState && shotsview.currentIndex != 0)
+                    deviceSavedState.selectedIndex = shotsview.currentIndex
+            }
+            onCurrentItemChanged: {
+                //console.log("onCurrentItemChanged() item: " + shotsview.currentItem)
+                //shotsview.currentItem.visible = false;
+                //console.log("onCurrentItemChanged() item: " + shotsview.currentItem.shot.name)
 
-                property real cellFormat: 4/3
-                property int cellSize: 279
-                property int cellMargin: 12
-                anchors.leftMargin: 16
-                anchors.topMargin: 16
+                //screenDeviceShots.selectionList.push(shotsview.currentItem.shot.name)
+            }
+            onWidthChanged: {/*
+                if (shotsview.width < 1280) {
+                    if (cellSizeTarget != 279) cellSizeTarget = 279
+                } else if (shotsview.width < 1920) {
+                    if (cellSizeTarget != 400) cellSizeTarget = 400
+                } else {
+                    if (cellSizeTarget != 600) cellSizeTarget = 600
+                }*/
+
+                computeCellSize()
+            }
+            function computeCellSize() {
+                var availableWidth = shotsview.width - cellMarginTarget
+                var cellColumnsTarget = Math.trunc(availableWidth / cellSizeTarget)
+                // 1 // Adjust only cellSize
+                cellSize = (availableWidth - cellMarginTarget * cellColumnsTarget) / cellColumnsTarget
+                // Recompute
+                cellWidth = cellSize + cellMargin
+                cellHeight = Math.round(cellSize / cellFormat) + cellMarginTarget
+            }
+
+            ////////
+
+            model: currentDevice ? currentDevice.shotFilter : null
+            delegate: ItemShot { width: shotsview.cellSize; cellFormat: shotsview.cellFormat }
+
+            ScrollBar.vertical: ScrollBar { z: 1 }
+
+            flickableChildren: MouseArea {
+                id: mouseAreaInsideView
                 anchors.fill: parent
 
-                //property int cellMargin: (parent.width%cellSize) / Math.floor(parent.width/cellSize);
-                cellWidth: cellSize + cellMargin
-                cellHeight: Math.round(cellSize / cellFormat) + cellMargin
-
-                interactive: true
-                //snapMode: GridView.SnapToRow
-                //clip: true
-                //keyNavigationEnabled: true
-
-                model: currentDevice ? currentDevice.shotFilter : null
-                delegate: ItemShot { width: shotsview.cellSize; cellFormat: shotsview.cellFormat }
-
-                highlight: highlight
-                highlightFollowsCurrentItem: true
-                highlightMoveDuration: 0
-                focus: true
+                acceptedButtons: Qt.AllButtons
+                onClicked: {
+                    screenDeviceGrid.selectionList = []
+                    shotsview.currentIndex = -1
+                    actionMenu.visible = false
+                }
             }
+
+            highlight: highlight
+            highlightFollowsCurrentItem: true
+            highlightMoveDuration: 0
         }
 
         MouseArea {
