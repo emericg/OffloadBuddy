@@ -4,7 +4,7 @@ import QtQuick.Controls 2.2
 import com.offloadbuddy.theme 1.0
 import "UtilsString.js" as UtilsString
 
-Rectangle {
+Item {
     id: screenDeviceGrid
     width: 1280
     height: 720
@@ -573,7 +573,7 @@ Rectangle {
                     shotsview.cellSizeTarget = 376;
                     shotsview.computeCellSize();
                 } else if (value == 4.0) {
-                    shotsview.cellSizeTarget = 450;
+                    shotsview.cellSizeTarget = 512;
                     shotsview.computeCellSize();
                 }
 

@@ -75,6 +75,12 @@
         <file alias="session.svg">cameras/session.svg</file>
         <file alias="fusion.svg">cameras/fusion.svg</file>
     </qresource>
+    <qresource prefix="/devices">
+        <file alias="card.svg">devices/card.svg</file>
+        <file alias="disk.svg">devices/disk.svg</file>
+        <file alias="phone.svg">devices/phone.svg</file>
+        <file alias="usb.svg">devices/usb.svg</file>
+    </qresource>
     <qresource prefix="/appicons">
         <file alias="offloadbuddy.svg">desktop/offloadbuddy.svg</file>
         <file alias="offloadbuddy.png">desktop/offloadbuddy.png</file>

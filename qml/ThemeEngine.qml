@@ -32,13 +32,11 @@ Item {
     property string colorWarning
     property string colorError
 
-    // Qt Quick controls theming // DEPRECATED
+    // Qt Quick controls theming // DEPRECATED?
     property string colorButton: "#e0e0e0"
     property string colorButtonText: "#000000"
     property string colorButtonDown: "#bdbdbd"
     property string colorButtonHover: "#E4E4E4"
-    property string colorComboBox: "#e0e0e0"
-    property string colorComboBoxText: "#000000"
     property string colorProgressBar: "#46b0f4"
     property string colorProgressBarBg: "#E4E4E4"
 
@@ -79,15 +77,14 @@ Item {
             colorIcon =             "#000000"
 
             colorPrimary =          "#ffca28"
+            colorSecondary =        "#ffca28"
             colorWarning =          "#ffac00"
             colorError =            "#dc322f"
 
-            colorButton =           "#e0e0e0"
+            colorButton =           "#DBDBDB"
+            colorButtonDown =       "#c1c1c1"
             colorButtonText =       "#000000"
-            colorButtonDown =       "#bdbdbd"
             colorButtonHover =      "#E4E4E4"
-            colorComboBox =         "#e0e0e0"
-            colorComboBoxText =     "#000000"
             colorProgressBar =      "#46b0f4"
             colorProgressBarBg =    "#E4E4E4"
 
@@ -101,9 +98,9 @@ Item {
             colorSidebarContent =   "#ffffff"
 
             colorHeader =           "#282828"
-            colorHeaderContent =    "#8b8e8f" // sub: "#a89a9a"
+            colorHeaderContent =    "#a0a0a0" // sub: "#a89a9a"
 
-            colorBackground =       "#404040"
+            colorBackground =       "#444444"
             colorForeground =       "#555555"
 
             colorText =             "#ffffff"
@@ -111,15 +108,14 @@ Item {
             colorIcon =             "#ffffff"
 
             colorPrimary =          "#f0544c"
+            colorSecondary =        "#f0544c"
             colorWarning =          "#ee2b57"
             colorError =            "#FFDB63"
 
-            colorButton =           "#e0e0e0"
-            colorButtonText =       "#000000"
-            colorButtonDown =       "#bdbdbd"
+            colorButton =           "#555555"
+            colorButtonDown =       "#333333"
+            colorButtonText =       "#ffffff"
             colorButtonHover =      "#E4E4E4"
-            colorComboBox =         "#e0e0e0"
-            colorComboBoxText =     "#000000"
             colorProgressBar =      "#f0544c"
             colorProgressBarBg =    "#E4E4E4"
 
@@ -143,15 +139,14 @@ Item {
             colorIcon =             "#a3a3a0"
 
             colorPrimary =          "#009ee2"
+            colorSecondary =        "#009ee2"
             colorWarning =          "#fa6871"
             colorError =            "#FFDB63"
 
-            colorButton =           "#e0e0e0"
+            colorButton =           "#ffffff"
             colorButtonText =       "#000000"
             colorButtonDown =       "#bdbdbd"
             colorButtonHover =      "#E4E4E4"
-            colorComboBox =         "#ffffff"
-            colorComboBoxText =     "#000000"
             colorProgressBar =      "#009ee2"
             colorProgressBarBg =    "#E4E4E4"
 
@@ -183,6 +178,7 @@ Item {
             colorIcon =             "#944197"
 
             colorPrimary =          "#FFE400"
+            colorSecondary =        "#FFE400"
             colorWarning =          "#944197"
             colorError =            "#FFDB63"
 
@@ -190,8 +186,6 @@ Item {
             colorButtonText =       "#ffffff"
             colorButtonDown =       "#F592C1"
             colorButtonHover =      "#E4E4E4"
-            colorComboBox =         "#ED65A7"
-            colorComboBoxText =     "#ffffff"
             colorProgressBar =      "#FFCB02"
             colorProgressBarBg =    "#E4E4E4"
 

@@ -164,7 +164,7 @@ Rectangle {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 0
 
-            ButtonImage {
+            ButtonImageOld {
                 id: buttonPlay
                 width: 40
                 height: 40
@@ -183,7 +183,7 @@ Rectangle {
                     }
                 }
             }
-            ButtonImage {
+            ButtonImageOld {
                 id: buttonStop
                 width: 40
                 height: 40
@@ -231,7 +231,7 @@ Rectangle {
                     timelineLimitStop.width = timeline.width * (((videoPlayer.duration - videoPlayer.position) / videoPlayer.duration));
                 }
             }
-            ButtonImage {
+            ButtonImageOld {
                 id: buttonSound
                 width: 40
                 height: 40
@@ -251,7 +251,7 @@ Rectangle {
                 }
             }
 
-            ButtonImage {
+            ButtonImageOld {
                 id: buttonScreenshot
                 width: 40
                 height: 40
@@ -264,7 +264,7 @@ Rectangle {
                     //
                 }
             }
-            ButtonImage {
+            ButtonImageOld {
                 id: buttonEncode
                 width: 40
                 height: 40
@@ -279,7 +279,7 @@ Rectangle {
                     popupEncode.open()
                 }
             }
-            ButtonImage {
+            ButtonImageOld {
                 id: buttonFullscreen
                 width: 40
                 height: 40

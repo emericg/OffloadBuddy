@@ -6,14 +6,6 @@ import com.offloadbuddy.theme 1.0
 Button {
     id: control
 
-    // theming
-    background: Rectangle {
-        implicitWidth: 100
-        implicitHeight: 40
-        opacity: enabled ? 1 : 0.3
-        color: control.down ? Theme.colorButtonDown : Theme.colorButton
-    }
-
     contentItem: Text {
         text: control.text
         font: control.font
@@ -22,5 +14,13 @@ Button {
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
+    }
+
+    background: Rectangle {
+        implicitWidth: 128
+        implicitHeight: 40
+        radius: 4
+        opacity: enabled ? 1 : 0.3
+        color: control.down ? Theme.colorButtonDown : Theme.colorButton
     }
 }

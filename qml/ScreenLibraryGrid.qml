@@ -14,17 +14,49 @@ Item {
     property string selectedItemName : shotsview.currentItem ? shotsview.currentItem.shot.name : ""
     //property string selectedItemPath : shotsview.currentItem ? shotsview.currentItem.shot.path : ""
 
-    property var selectionList : [] // TODO
+    property var selectionMode: false
+    property var selectionList: []
+    property var selectionCount: 0
+
+    function selectedFile(index) {
+        selectionMode = true;
+        selectionList.push(index);
+        selectionCount++;
+
+    }
+
+    function deselectedFile(index) {
+        var i = selectionList.indexOf(index);
+        if (i > -1) { selectionList.splice(i, 1); selectionCount--; }
+        if (selectionList.length === 0) selectionMode = false;
+    }
+
+    function listSelectedFile(index) {
+        for (var child in selectionList) {
+            console.log("listSelectedFile(" + index)
+        }
+    }
+
+    function exitSelectionMode() {
+        for (var child in shotsview.contentItem.children) {
+            if (shotsview.contentItem.children[child].shotSelected) {
+                shotsview.contentItem.children[child].shotSelected = false;
+            }
+        }
+
+        selectionMode = false;
+        selectionList = [];
+        selectionCount = 0;
+    }
 
     function initGridViewSettings() {
         actionMenu.visible = false
     }
 
     function updateGridViewSettings() {
-
         if (shotsview.count == 0) {
-            selectionList = []
             shotsview.currentIndex = -1
+            mediaGrid.exitSelectionMode()
         }
 
         if (mediaLibrary) {
@@ -127,7 +159,7 @@ Item {
                     shotsview.cellSizeTarget = 376;
                     shotsview.computeCellSize();
                 } else if (value == 4.0) {
-                    shotsview.cellSizeTarget = 450;
+                    shotsview.cellSizeTarget = 512;
                     shotsview.computeCellSize();
                 }
             }
@@ -268,12 +300,81 @@ Item {
         }
     }
 
+    // MENUS ///////////////////////////////////////////////////////////////////
+
+    Column {
+        id: menusArea
+        z: 1
+        anchors.top: rectangleHeader.bottom
+        anchors.topMargin: 0
+        anchors.left: parent.left
+        anchors.leftMargin: 0
+        anchors.right: parent.right
+        anchors.rightMargin: 0
+
+        ////////
+
+        Rectangle {
+            id: menuSelection
+            height: 56
+            anchors.right: parent.right
+            anchors.rightMargin: 0
+            anchors.left: parent.left
+            anchors.leftMargin: 0
+
+            color: Theme.colorForeground
+            visible: (mediaGrid.selectionCount)
+
+            Text {
+                id: elementCounter
+                anchors.right: parent.right
+                anchors.rightMargin: 56
+                anchors.verticalCenter: parent.verticalCenter
+
+                text: qsTr("%1 elements selected").arg(mediaGrid.selectionCount)
+                color: Theme.colorText
+                font.pixelSize: 16
+            }
+            ItemImageButton {
+                id: rectangleClear
+                anchors.right: parent.right
+                anchors.rightMargin: 8
+                anchors.verticalCenter: parent.verticalCenter
+
+                highlightColor: Theme.colorSecondary
+                source: "qrc:/icons_material/baseline-close-24px.svg"
+                onClicked: {
+                    mediaGrid.exitSelectionMode()
+                }
+            }
+
+            Row {
+                id: row1
+                spacing: 16
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 0
+                anchors.top: parent.top
+                anchors.topMargin: 0
+                anchors.left: parent.left
+                anchors.leftMargin: 16
+
+                ButtonImageThemed {
+                    id: button
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: qsTr("Delete")
+                    source: "qrc:/icons_material/baseline-delete-24px.svg"
+                }
+            }
+        }
+    }
+
     // CONTENT /////////////////////////////////////////////////////////////////
 
     Item {
         id: rectangleLibraryGrid
 
-        anchors.top: rectangleHeader.bottom
+        anchors.top: menusArea.bottom
         anchors.topMargin: 0
         anchors.right: parent.right
         anchors.rightMargin: 0
@@ -374,7 +475,10 @@ Item {
             //focus: true
 
             onCountChanged: updateGridViewSettings()
-            Component.onCompleted: { currentIndex = -1 }
+            Component.onCompleted: {
+                currentIndex = -1;
+                mediaGrid.exitSelectionMode();
+            }
 
             property real cellFormat: 4/3
             property int cellSizeTarget: 279
@@ -420,7 +524,8 @@ Item {
 
                 acceptedButtons: Qt.AllButtons
                 onClicked: {
-                    screenLibraryGrid.selectionList = []
+                    //console.log("mouseAreaInsideView clicked")
+                    mediaGrid.exitSelectionMode()
                     shotsview.currentIndex = -1
                     actionMenu.visible = false
                 }
@@ -436,6 +541,7 @@ Item {
             anchors.fill: parent
             acceptedButtons: Qt.RightButton
             propagateComposedEvents: true
+            //onClicked: console.log("mouseAreaOutsideView clicked")
         }
     }
 }

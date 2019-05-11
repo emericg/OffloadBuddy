@@ -48,7 +48,7 @@ ComboBox {
 
         text: control.displayText
         font: control.font
-        color: Theme.colorComboBoxText
+        color: Theme.colorButtonText
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
     }
@@ -56,7 +56,7 @@ ComboBox {
     background: Rectangle {
         implicitWidth: 120
         implicitHeight: 40
-        color: Theme.colorComboBox
+        color: Theme.colorButton
         //border.color: control.pressed ? "#17a81a" : "#21be2b"
         //border.width: control.visualFocus ? 2 : 1
     }

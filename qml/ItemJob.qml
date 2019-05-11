@@ -25,7 +25,7 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
 
         source: "qrc:/icons_material/baseline-schedule-24px.svg"
-        color: Theme.colorIcons
+        color: Theme.colorIcon
 
         NumberAnimation on rotation {
             id: encodeAnimation
@@ -126,7 +126,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
             source: "qrc:/icons_material/outline-folder-24px.svg"
-            color: Theme.colorIcons
+            color: Theme.colorIcon
         }
 
         MouseArea {
@@ -161,7 +161,7 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
 
             source: "qrc:/icons_material/baseline-cancel-24px.svg"
-            color: Theme.colorIcons
+            color: Theme.colorIcon
         }
         MouseArea {
             id: mouseAreaDelete
@@ -195,7 +195,7 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
 
             source: "qrc:/icons_material/baseline-pause_circle_outline-24px.svg"
-            color: Theme.colorIcons
+            color: Theme.colorIcon
         }
 
         MouseArea {

@@ -56,7 +56,7 @@ Rectangle {
             }
         }
 
-        ButtonImage {
+        ButtonImageOld {
             id: button_refresh
             width: 36
             height: 36
@@ -70,7 +70,7 @@ Rectangle {
                 mediaLibrary.searchMediaDirectory(directory.directoryPath)
             }
         }
-        ButtonImage {
+        ButtonImageOld {
             id: button_change
             width: 36
             height: 36

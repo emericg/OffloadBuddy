@@ -131,28 +131,31 @@ Item {
         Text {
             id: text1
             height: 40
+            anchors.top: parent.top
+            anchors.topMargin: 32
+            anchors.left: parent.left
+            anchors.leftMargin: 32
+
             text: qsTr("Application theme")
             font.bold: true
             font.pixelSize: 16
-            anchors.top: parent.top
-            anchors.topMargin: 32
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignLeft
-            anchors.left: parent.left
-            anchors.leftMargin: 32
             color: Theme.colorText
         }
 
         Text {
             id: text3
             height: 40
-            text: qsTr("Offloading:")
-            verticalAlignment: Text.AlignVCenter
-            font.bold: true
             anchors.top: text2.bottom
             anchors.topMargin: 16
             anchors.left: parent.left
             anchors.leftMargin: 32
+
+            text: qsTr("Offloading")
+            verticalAlignment: Text.AlignVCenter
+            color: Theme.colorText
+            font.bold: true
             font.pixelSize: 16
         }
 
@@ -163,12 +166,13 @@ Item {
             anchors.topMargin: 16
             anchors.left: parent.left
             anchors.leftMargin: 32
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignLeft
+
             text: qsTr("Unit system")
             font.bold: true
             font.pixelSize: 16
             color: Theme.colorText
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignLeft
         }
 
         ComboBoxThemed {
@@ -224,11 +228,12 @@ Item {
 
         RadioButtonThemed {
             id: radioButtonImperial
-            text: qsTr("Imperial")
-            font.pixelSize: 16
             anchors.left: radioButtonMetric.right
             anchors.leftMargin: 16
             anchors.verticalCenter: text2.verticalCenter
+
+            text: qsTr("Imperial")
+            font.pixelSize: 16
 
             Component.onCompleted: {
                 if (settingsManager.appunits === 1)

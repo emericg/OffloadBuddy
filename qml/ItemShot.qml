@@ -13,7 +13,7 @@ Rectangle {
 
     property Shot shot: pointer
     property var shotDevice
-
+    property bool shotSelected: false
     property real cellFormat: 4/3
 
     Connections {
@@ -123,6 +123,8 @@ Rectangle {
         anchors.fill: parent
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+
     Item {
         id: legends
         anchors.fill: parent
@@ -218,9 +220,18 @@ Rectangle {
     }
 
     Rectangle {
-        id: rectangleOverlay
-        color: "#80ffffff"
+        id: rectangleSelection
         anchors.fill: parent
+
+        visible: shotSelected
+        color: Theme.colorSecondary
+        opacity: 0.66
+    }
+    Rectangle {
+        id: rectangleOverlay
+        anchors.fill: parent
+
+        color: "#80ffffff"
 
         ImageSvg {
             id: image_overlay
@@ -239,7 +250,7 @@ Rectangle {
         anchors.fill: parent
         hoverEnabled: true
         propagateComposedEvents: true
-        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
 
         property int thumbId: 1
         Timer {
@@ -288,6 +299,8 @@ Rectangle {
             shotsview.currentIndex = index
 
             if (mouse.button === Qt.RightButton) {
+                //console.log("ItemShot::onClicked::Qt.RightButton")
+
                 var folder = true
                 var copy = true
                 var merge = false
@@ -327,8 +340,24 @@ Rectangle {
             } else {
                 actionMenu.visible = false
             }
+
+            if (mouse.button === Qt.MiddleButton) {
+                //console.log("ItemShot::onClicked::Qt.MiddleButton")
+
+                if (!shotsview.selectionMode) {
+                    if (!shotSelected) {
+                        shotSelected = true;
+                        mediaGrid.selectedFile(index);
+                    } else {
+                        shotSelected = false;
+                        mediaGrid.deselectedFile(index);
+                    }
+                }
+            }
         }
         onDoubleClicked: {
+            //console.log("ItemShot::onDoubleClicked")
+
             if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== Shared.STORAGE_MTP)) {
                 // Show the "shot details" screen
                 actionMenu.visible = false
@@ -340,6 +369,19 @@ Rectangle {
                     screenDevice.state = "stateMediaDetails"
                 else
                     screenLibrary.state = "stateMediaDetails"
+            }
+        }
+        onPressAndHold: {
+            //console.log("ItemShot::onPressAndHold")
+
+            if (!shotsview.selectionMode) {
+                if (!shotSelected) {
+                    shotSelected = true;
+                    mediaGrid.selectedFile(index);
+                } else {
+                    shotSelected = false;
+                    mediaGrid.deselectedFile(index);
+                }
             }
         }
     }

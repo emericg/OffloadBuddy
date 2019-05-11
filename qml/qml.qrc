@@ -25,12 +25,16 @@
         <file>MediaDetailTelemetry.qml</file>
         <file>MediaDetailOverview.qml</file>
         <file>MediaPreview.qml</file>
+
         <file alias="ItemImageButton.qml">components/ItemImageButton.qml</file>
         <file alias="ItemMenuButton.qml">components/ItemMenuButton.qml</file>
         <file alias="WindowGeometrySaver.qml">components/WindowGeometrySaver.qml</file>
+        <file alias="ButtonImage.qml">components_themed/ButtonImage.qml</file>
+        <file alias="ButtonImageThemed.qml">components_themed/ButtonImageThemed.qml</file>
+        <file alias="ButtonThemed.qml">components_themed/ButtonThemed.qml</file>
         <file alias="ImageSvg.qml">components_themed/ImageSvg.qml</file>
-        <file alias="ButtonImage.qml">ThemedComponents/ButtonImage.qml</file>
-        <file alias="ButtonThemed.qml">ThemedComponents/ButtonThemed.qml</file>
+
+        <file alias="ButtonImageOld.qml">ThemedComponents/ButtonImageOld.qml</file>
         <file alias="CheckBoxThemed.qml">ThemedComponents/CheckBoxThemed.qml</file>
         <file alias="ComboBoxThemed.qml">ThemedComponents/ComboBoxThemed.qml</file>
         <file alias="ProgressBarThemed.qml">ThemedComponents/ProgressBarThemed.qml</file>
