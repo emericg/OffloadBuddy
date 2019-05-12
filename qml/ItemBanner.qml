@@ -10,8 +10,6 @@ Rectangle {
     height: 56
     color: Theme.colorInfoBanner
 
-    anchors.top: parent.top
-    anchors.topMargin: 0
     anchors.left: parent.left
     anchors.leftMargin: 0
     anchors.right: parent.right
@@ -41,22 +39,14 @@ Rectangle {
         color: Theme.colorInfoBannerText
         font.pixelSize: Theme.fontSizeBannerText
     }
-
-    ImageSvg {
-        id: image
-        width: 40
-        height: 40
+    ItemImageButton {
+        id: rectangleClose
         anchors.right: parent.right
-        anchors.rightMargin: 16
+        anchors.rightMargin: 8
         anchors.verticalCenter: parent.verticalCenter
-        fillMode: Image.PreserveAspectFit
 
+        highlightColor: Theme.colorSecondary
         source: "qrc:/icons_material/baseline-close-24px.svg"
-        color: Theme.colorInfoBannerText
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: banner.close()
-        }
+        onClicked:banner.close()
     }
 }

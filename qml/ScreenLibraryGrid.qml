@@ -22,7 +22,6 @@ Item {
         selectionMode = true;
         selectionList.push(index);
         selectionCount++;
-
     }
 
     function deselectedFile(index) {
@@ -322,8 +321,28 @@ Item {
             anchors.left: parent.left
             anchors.leftMargin: 0
 
-            color: Theme.colorForeground
+            color: Theme.colorPrimary
             visible: (mediaGrid.selectionCount)
+
+            Row {
+                id: row1
+                spacing: 16
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 0
+                anchors.top: parent.top
+                anchors.topMargin: 0
+                anchors.left: parent.left
+                anchors.leftMargin: 16
+
+                ButtonImageThemed {
+                    id: buttonDelete
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    opacity: 0.9
+                    text: qsTr("Delete")
+                    source: "qrc:/icons_material/baseline-delete-24px.svg"
+                }
+            }
 
             Text {
                 id: elementCounter
@@ -343,28 +362,7 @@ Item {
 
                 highlightColor: Theme.colorSecondary
                 source: "qrc:/icons_material/baseline-close-24px.svg"
-                onClicked: {
-                    mediaGrid.exitSelectionMode()
-                }
-            }
-
-            Row {
-                id: row1
-                spacing: 16
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 0
-                anchors.top: parent.top
-                anchors.topMargin: 0
-                anchors.left: parent.left
-                anchors.leftMargin: 16
-
-                ButtonImageThemed {
-                    id: button
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    text: qsTr("Delete")
-                    source: "qrc:/icons_material/baseline-delete-24px.svg"
-                }
+                onClicked: mediaGrid.exitSelectionMode()
             }
         }
     }

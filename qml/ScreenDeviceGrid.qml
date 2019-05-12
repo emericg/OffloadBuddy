@@ -5,7 +5,7 @@ import com.offloadbuddy.theme 1.0
 import "UtilsString.js" as UtilsString
 
 Item {
-    id: screenDeviceGrid
+    id: mediaGrid
     width: 1280
     height: 720
     anchors.fill: parent
@@ -15,12 +15,44 @@ Item {
     property string selectedItemName : shotsview.currentItem ? shotsview.currentItem.shot.name : ""
     //property string selectedItemPath : shotsview.currentItem ? shotsview.currentItem.shot.path : ""
 
-    property var selectionList : [] // TODO
+    property var selectionMode: false
+    property var selectionList: []
+    property var selectionCount: 0
+
+    function selectedFile(index) {
+        selectionMode = true;
+        selectionList.push(index);
+        selectionCount++;
+    }
+
+    function deselectedFile(index) {
+        var i = selectionList.indexOf(index);
+        if (i > -1) { selectionList.splice(i, 1); selectionCount--; }
+        if (selectionList.length === 0) selectionMode = false;
+    }
+
+    function listSelectedFile(index) {
+        for (var child in selectionList) {
+            console.log("listSelectedFile(" + index)
+        }
+    }
+
+    function exitSelectionMode() {
+        for (var child in shotsview.contentItem.children) {
+            if (shotsview.contentItem.children[child].shotSelected) {
+                shotsview.contentItem.children[child].shotSelected = false;
+            }
+        }
+
+        selectionMode = false;
+        selectionList = [];
+        selectionCount = 0;
+    }
 
     Connections {
         target: currentDevice
-        onStateUpdated: screenDeviceGrid.updateGridViewSettings()
-        onDeviceUpdated: screenDeviceGrid.updateDeviceHeader()
+        onStateUpdated: mediaGrid.updateGridViewSettings()
+        onDeviceUpdated: mediaGrid.updateDeviceHeader()
         onStorageUpdated: updateStorage()
         onBatteryUpdated: updateBattery()
     }
@@ -92,10 +124,10 @@ Item {
         deviceModelText.text = currentDevice.brand + " " + currentDevice.model;
 
         if (currentDevice.model.includes("HERO7 White") ||
-            currentDevice.model.includes("HERO7 Silver")) {
+                currentDevice.model.includes("HERO7 Silver")) {
             deviceImage.source = "qrc:/cameras/H7w.svg"
         } else if (currentDevice.model.includes("HERO7") ||
-            currentDevice.model.includes("HERO6")) {
+                   currentDevice.model.includes("HERO6")) {
             deviceImage.source = "qrc:/cameras/H6.svg"
         } else if (currentDevice.model.includes("HERO5")) {
             deviceImage.source = "qrc:/cameras/H5.svg"
@@ -353,6 +385,7 @@ Item {
                 color: Theme.colorPrimary
                 width: parent.width
                 height: parent.height
+                radius: 4
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
             }
@@ -423,6 +456,7 @@ Item {
                 color: Theme.colorWarning
                 width: parent.width
                 height: parent.height
+                radius: 4
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
 
@@ -598,12 +632,111 @@ Item {
         }
     }
 
+    // MENUS ///////////////////////////////////////////////////////////////////
+
+    Column {
+        id: menusArea
+        z: 1
+        anchors.top: rectangleHeader.bottom
+        anchors.topMargin: 0
+        anchors.left: parent.left
+        anchors.leftMargin: 0
+        anchors.right: parent.right
+        anchors.rightMargin: 0
+
+        ////////
+
+        Rectangle {
+            id: menuSelection
+            height: 56
+            anchors.right: parent.right
+            anchors.rightMargin: 0
+            anchors.left: parent.left
+            anchors.leftMargin: 0
+
+            color: Theme.colorPrimary
+            visible: (mediaGrid.selectionCount)
+
+            Row {
+                id: row1
+                spacing: 16
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 0
+                anchors.top: parent.top
+                anchors.topMargin: 0
+                anchors.left: parent.left
+                anchors.leftMargin: 16
+
+                ButtonImageThemed {
+                    id: buttonOffload
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    opacity: 0.9
+                    text: qsTr("Offload")
+                    source: "qrc:/icons_material/baseline-save_alt-24px.svg"
+                }
+                ButtonImageThemed {
+                    id: buttonMerge
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    opacity: 0.9
+                    text: qsTr("Merge")
+                    source: "qrc:/icons_material/baseline-save_alt-24px.svg"
+                }
+                ButtonImageThemed {
+                    //id: button
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    opacity: 0.9
+                    text: qsTr("Extract metadatas")
+                    source: "qrc:/icons_material/baseline-insert_chart_outlined-24px.svg"
+                }
+                ButtonImageThemed {
+                    id: buttonDelete
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    opacity: 0.9
+                    text: qsTr("Delete")
+                    source: "qrc:/icons_material/baseline-delete-24px.svg"
+                }
+            }
+
+            Text {
+                id: elementCounter
+                anchors.right: parent.right
+                anchors.rightMargin: 56
+                anchors.verticalCenter: parent.verticalCenter
+
+                text: qsTr("%1 elements selected").arg(mediaGrid.selectionCount)
+                color: Theme.colorText
+                font.pixelSize: 16
+            }
+            ItemImageButton {
+                id: rectangleClear
+                anchors.right: parent.right
+                anchors.rightMargin: 8
+                anchors.verticalCenter: parent.verticalCenter
+
+                highlightColor: Theme.colorSecondary
+                source: "qrc:/icons_material/baseline-close-24px.svg"
+                onClicked: mediaGrid.exitSelectionMode()
+            }
+        }
+
+        ////////
+
+        ItemBanner {
+            id: banner
+        }
+    }
+
     // CONTENT /////////////////////////////////////////////////////////////////
 
     Item {
         id: rectangleDeviceShots
+        anchors.topMargin: 0
 
-        anchors.top: rectangleHeader.bottom
+        anchors.top: menusArea.bottom
         anchors.right: parent.right
         anchors.left: parent.left
         anchors.bottom: parent.bottom
@@ -690,10 +823,6 @@ Item {
             actionMenu.visible = false
         }
 
-        ItemBanner {
-            id: banner
-        }
-
         GridView {
             id: shotsview
             anchors.fill: parent
@@ -773,7 +902,7 @@ Item {
 
                 acceptedButtons: Qt.AllButtons
                 onClicked: {
-                    screenDeviceGrid.selectionList = []
+                    mediaGrid.selectionList = []
                     shotsview.currentIndex = -1
                     actionMenu.visible = false
                 }
