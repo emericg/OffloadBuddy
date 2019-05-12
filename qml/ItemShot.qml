@@ -118,9 +118,8 @@ Rectangle {
 
     ItemImage {
         id: imageMtp
-        visible: false
-        enabled: false
         anchors.fill: parent
+        visible: false
     }
 
     ////////////////////////////////////////////////////////////////////////////

@@ -38,7 +38,7 @@ void ItemImage::paint(QPainter *painter)
     if (isEnabled() && isVisible())
     {
         QRectF bounding_rect = boundingRect();
-        QImage scaled = m_image.scaledToHeight(bounding_rect.height());
+        QImage scaled = m_image.scaledToHeight(bounding_rect.height(), Qt::SmoothTransformation);
         QPointF center = bounding_rect.center() - scaled.rect().center();
 
         if (center.x() < 0)
