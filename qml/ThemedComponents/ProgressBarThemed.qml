@@ -21,7 +21,7 @@ ProgressBar {
         Rectangle {
             width: control.visualPosition * parent.width
             height: control.height
-            color: Theme.colorProgressBar
+            color: Theme.colorSecondary
         }
     }
 }

@@ -20,7 +20,7 @@ Button {
             text: control.text
             font: control.font
             opacity: enabled ? 1.0 : 0.3
-            color: control.down ? Theme.colorText : Theme.colorText
+            color: control.down ? Theme.colorButtonText : Theme.colorButtonText
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight

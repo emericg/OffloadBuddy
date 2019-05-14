@@ -13,7 +13,7 @@ Rectangle {
 
     property Shot shot: pointer
     property var shotDevice
-    property bool shotSelected: false
+    property bool shotSelected: mediaGrid.isFileSelected(index)
     property real cellFormat: 4/3
 
     Connections {
@@ -51,8 +51,7 @@ Rectangle {
             imageFs.source = "image://GridThumbnailer/" + shot.previewVideo
         else if (shot.previewPhoto)
             imageFs.source = "image://GridThumbnailer/" + shot.previewPhoto
-        else if (shotDevice && shotDevice.deviceStorage === Shared.STORAGE_MTP)
-        {
+        else if (shotDevice && shotDevice.deviceStorage === Shared.STORAGE_MTP) {
             imageMtp.enabled = true
             imageMtp.visible = true
             imageMtp.image = shot.getPreviewMtp()
@@ -223,8 +222,8 @@ Rectangle {
         anchors.fill: parent
 
         visible: shotSelected
-        color: Theme.colorSecondary
-        opacity: 0.66
+        color: Theme.colorPrimary
+        opacity: 0.5
     }
     Rectangle {
         id: rectangleOverlay

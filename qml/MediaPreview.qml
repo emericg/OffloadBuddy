@@ -148,7 +148,7 @@ Rectangle {
             }
         }
 
-        ItemBanner {
+        ItemBannerMessage {
             id: mediaBanner
         }
 

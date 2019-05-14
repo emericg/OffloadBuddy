@@ -25,6 +25,12 @@ Item {
         selectionCount++;
     }
 
+    function isFileSelected(index) {
+        if (selectionList.indexOf(index) > -1)
+            return true
+        return false
+    }
+
     function deselectedFile(index) {
         var i = selectionList.indexOf(index);
         if (i > -1) { selectionList.splice(i, 1); selectionCount--; }
@@ -529,6 +535,8 @@ Item {
             property bool cbinit: false
             onCurrentIndexChanged: {
                 if (cbinit) {
+                    exitSelectionMode()
+
                     if (currentIndex == 0)
                         currentDevice.orderByDate()
                     else if (currentIndex == 1)
@@ -569,6 +577,8 @@ Item {
             property bool cbinit: false
             onCurrentIndexChanged: {
                 if (cbinit) {
+                    exitSelectionMode()
+
                     currentDevice.filterByType(cbMediaFilters.get(currentIndex).text)
 
                     if (currentIndex == 0)
@@ -644,88 +654,12 @@ Item {
         anchors.right: parent.right
         anchors.rightMargin: 0
 
-        ////////
-
-        Rectangle {
+        ItemBannerActions {
             id: menuSelection
-            height: 56
-            anchors.right: parent.right
-            anchors.rightMargin: 0
-            anchors.left: parent.left
-            anchors.leftMargin: 0
-
-            color: Theme.colorPrimary
             visible: (mediaGrid.selectionCount)
-
-            Row {
-                id: row1
-                spacing: 16
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 0
-                anchors.top: parent.top
-                anchors.topMargin: 0
-                anchors.left: parent.left
-                anchors.leftMargin: 16
-
-                ButtonImageThemed {
-                    id: buttonOffload
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    opacity: 0.9
-                    text: qsTr("Offload")
-                    source: "qrc:/icons_material/baseline-save_alt-24px.svg"
-                }
-                ButtonImageThemed {
-                    id: buttonMerge
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    opacity: 0.9
-                    text: qsTr("Merge")
-                    source: "qrc:/icons_material/baseline-save_alt-24px.svg"
-                }
-                ButtonImageThemed {
-                    //id: button
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    opacity: 0.9
-                    text: qsTr("Extract metadatas")
-                    source: "qrc:/icons_material/baseline-insert_chart_outlined-24px.svg"
-                }
-                ButtonImageThemed {
-                    id: buttonDelete
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    opacity: 0.9
-                    text: qsTr("Delete")
-                    source: "qrc:/icons_material/baseline-delete-24px.svg"
-                }
-            }
-
-            Text {
-                id: elementCounter
-                anchors.right: parent.right
-                anchors.rightMargin: 56
-                anchors.verticalCenter: parent.verticalCenter
-
-                text: qsTr("%1 elements selected").arg(mediaGrid.selectionCount)
-                color: Theme.colorText
-                font.pixelSize: 16
-            }
-            ItemImageButton {
-                id: rectangleClear
-                anchors.right: parent.right
-                anchors.rightMargin: 8
-                anchors.verticalCenter: parent.verticalCenter
-
-                highlightColor: Theme.colorSecondary
-                source: "qrc:/icons_material/baseline-close-24px.svg"
-                onClicked: mediaGrid.exitSelectionMode()
-            }
         }
 
-        ////////
-
-        ItemBanner {
+        ItemBannerMessage {
             id: banner
         }
     }

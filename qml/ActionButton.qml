@@ -57,7 +57,7 @@ Item {
             },
             State {
                 name: "hovered";
-                PropertyChanges { target: vButton; color: { if (vButton.text === qsTr("DELETE")) Theme.colorWarning; else Theme.colorPrimary; } }
+                PropertyChanges { target: vButton; color: { if (vButton.text === qsTr("DELETE")) Theme.colorWarning; else Theme.colorSecondary; } }
             },
             State {
                 name: "normal";

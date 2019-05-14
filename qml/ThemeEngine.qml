@@ -63,29 +63,28 @@ Item {
 
             // "PLAIN AND BORING"
 
-            colorSidebar =          "#4E596F"
+            colorSidebar =          "#607D8B"
             colorSidebarContent =   "#ffffff"
 
-            colorHeader =           "#CBCBCB"
+            colorHeader =           "#D0D0D0"
             colorHeaderContent =    "#353637" // sub: "#000000"
 
-            colorBackground =      "#EEEEEE"
-            colorForeground =      "#E0E0E0"
+            colorBackground =       "#EEEEEE"
+            colorForeground =       "#E0E0E0"
 
             colorText =             "#000000"
             colorSubText =          "#606060"
             colorIcon =             "#000000"
 
-            colorPrimary =          "#ffca28"
-            colorSecondary =        "#ffca28"
-            colorWarning =          "#ffac00"
-            colorError =            "#dc322f"
+            colorPrimary =          "#03A9F4"
+            colorSecondary =        "#3ae374"
+            colorWarning =          "#FFC107"
+            colorError =            "#FF5722"
 
             colorButton =           "#DBDBDB"
             colorButtonDown =       "#c1c1c1"
             colorButtonText =       "#000000"
             colorButtonHover =      "#E4E4E4"
-            colorProgressBar =      "#46b0f4"
             colorProgressBarBg =    "#E4E4E4"
 
             selector =              "arrow"
@@ -107,8 +106,8 @@ Item {
             colorSubText =          "#dddddd"
             colorIcon =             "#ffffff"
 
-            colorPrimary =          "#f0544c"
-            colorSecondary =        "#f0544c"
+            colorPrimary =          "#ff9f1a"
+            colorSecondary =        "#c56cf0"
             colorWarning =          "#ee2b57"
             colorError =            "#FFDB63"
 
@@ -116,7 +115,6 @@ Item {
             colorButtonDown =       "#333333"
             colorButtonText =       "#ffffff"
             colorButtonHover =      "#E4E4E4"
-            colorProgressBar =      "#f0544c"
             colorProgressBarBg =    "#E4E4E4"
 
             selector =              "arrow"
@@ -147,7 +145,6 @@ Item {
             colorButtonText =       "#000000"
             colorButtonDown =       "#bdbdbd"
             colorButtonHover =      "#E4E4E4"
-            colorProgressBar =      "#009ee2"
             colorProgressBarBg =    "#E4E4E4"
 
             selector =              "bar"
@@ -186,7 +183,6 @@ Item {
             colorButtonText =       "#ffffff"
             colorButtonDown =       "#F592C1"
             colorButtonHover =      "#E4E4E4"
-            colorProgressBar =      "#FFCB02"
             colorProgressBarBg =    "#E4E4E4"
 
             selector =              "arrow"
