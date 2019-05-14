@@ -79,9 +79,9 @@ Item {
 
             source: "qrc:/others/navigate_before_big.svg"
             onClicked: {
-                if (content.state == "library")
+                if (applicationContent.state == "library")
                     screenLibrary.state = "stateMediaGrid"
-                else if (content.state == "device")
+                else if (applicationContent.state == "device")
                     screenDevice.state = "stateMediaGrid"
             }
         }

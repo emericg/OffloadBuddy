@@ -27,19 +27,20 @@ import com.offloadbuddy.theme 1.0
 
 ApplicationWindow {
     id: applicationWindow
-    //flags: Qt.FramelessWindowHint | Qt.Window
-
-    title: "OffloadBuddy"
-    visible: true
+    flags: Qt.Window // | Qt.FramelessWindowHint
     minimumWidth: 1280
     minimumHeight: 720
 
+    title: "OffloadBuddy"
     color: Theme.colorBackground
+    visible: true
 
     WindowGeometrySaver {
         window: applicationWindow
     }
 /*
+    // Menubar /////////////////////////////////////////////////////////////////
+
     menuBar: MenuBar {
         Menu {
             title: qsTr("File")
@@ -54,250 +55,22 @@ ApplicationWindow {
         }
     }
 */
-    property var currentDevicePtr: null
-
-    Connections {
-        target: jobManager
-        onTrackedJobsUpdated: {
-            if (button_jobs.visible === false && jobManager.trackedJobCount > 0) {
-                button_jobs.visible = true
-                button_jobs_fadein.start()
-            }
-
-            if (jobManager.workingJobCount > 0) {
-                button_jobs_working.start()
-            } else {
-                button_jobs_working.stop()
-                button_jobs_fadein.start()
-            }
-        }
-    }
-
     // Sidebar /////////////////////////////////////////////////////////////////
 
-    Rectangle {
-        id: sideBar
-        width: 96
-        color: Theme.colorSidebar
-        anchors.left: parent.left
-        anchors.leftMargin: 0
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
-        anchors.top: parent.top
-        anchors.topMargin: 0
-        transformOrigin: Item.Center
-
-        // SELECTORS
-
-        ImageSvg {
-            id: selectorArrow
-            width: 12
-            height: 12
-            anchors.right: parent.right
-            anchors.rightMargin: 0
-
-            visible: (Theme.selector === "arrow")
-            source: "qrc:/menus/selector_arrow.svg"
-            color: Theme.colorSidebarContent
-        }
-
-        Rectangle {
-            id: selectorBar
-            width: parent.width
-            height: 64
-
-            visible: (Theme.selector === "bar")
-            color: "black"
-
-            Rectangle {
-                width: 4
-                height: parent.height
-                color: Theme.colorPrimary
-            }
-        }
-
-        // MENUS
-
-        Item {
-            id: button_library
-            width: 64
-            height: 64
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: parent.top
-            anchors.topMargin: 24
-
-            MouseArea {
-                anchors.fill: parent
-                acceptedButtons: Qt.LeftButton | Qt.RightButton
-                onClicked: content.state = "library"
-            }
-
-            ImageSvg {
-                anchors.fill: parent
-                source: "qrc:/menus/media.svg"
-                color: Theme.colorSidebarContent
-            }
-        }
-
-        Item {
-            id: menuDevice
-            anchors.bottom: button_settings.top
-            anchors.bottomMargin: 16
-            anchors.top: button_library.bottom
-            anchors.topMargin: 16
-            anchors.left: parent.left
-            anchors.leftMargin: 0
-            anchors.right: parent.right
-            anchors.rightMargin: 0
-
-            ListView {
-                id: devicesview
-                interactive: false
-                spacing: 16
-                anchors.fill: parent
-
-                model: deviceManager.devicesList
-                delegate: ItemDeviceMenu {
-                    myDevice: modelData
-                    Component.onCompleted: {
-                        myDeviceClicked.connect(sideBar.myDeviceClicked)
-                    }
-                }
-            }
-        }
-
-        Item {
-            id: button_jobs
-            width: 50
-            height: 50
-            anchors.bottom: button_settings.top
-            anchors.bottomMargin: 8
-            anchors.horizontalCenter: parent.horizontalCenter
-
-            MouseArea {
-                anchors.fill: parent
-                acceptedButtons: Qt.LeftButton | Qt.RightButton
-                onClicked: content.state = "jobs"
-            }
-            ImageSvg {
-                id: button_jobs_image
-                anchors.fill: parent
-                fillMode: Image.PreserveAspectFit
-                source: "qrc:/menus/jobs.svg"
-                opacity: 0
-                color: Theme.colorSidebarContent
-
-                NumberAnimation on opacity {
-                    id: button_jobs_fadein
-                    running: false
-                    from: button_jobs_image.opacity
-                    to: 1
-                    duration: 1000
-                }
-
-                SequentialAnimation on opacity {
-                    id: button_jobs_working
-                    running: false
-                    loops: Animation.Infinite
-                    OpacityAnimator { from: 0; to: 1; duration: 1000 }
-                    OpacityAnimator { from: 1; to: 0; duration: 1000 }
-                }
-            }
-
-            visible: false
-        }
-
-        Item {
-            id: button_settings
-            width: 50
-            height: 50
-            anchors.bottom: button_about.top
-            anchors.bottomMargin: 8
-            anchors.horizontalCenter: parent.horizontalCenter
-
-            MouseArea {
-                anchors.fill: parent
-                acceptedButtons: Qt.LeftButton | Qt.RightButton
-                onClicked: content.state = "settings"
-            }
-            ImageSvg {
-                anchors.fill: parent
-                fillMode: Image.PreserveAspectFit
-                source: "qrc:/menus/settings.svg"
-                color: Theme.colorSidebarContent
-            }
-        }
-
-        Item {
-            id: button_about
-            width: 50
-            height: 50
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.bottom: button_exit.top
-            anchors.bottomMargin: 8
-
-            MouseArea {
-                anchors.fill: parent
-                acceptedButtons: Qt.LeftButton | Qt.RightButton
-                onClicked: content.state = "about"
-            }
-            ImageSvg {
-                anchors.fill: parent
-                source: "qrc:/menus/about.svg"
-                color: Theme.colorSidebarContent
-            }
-        }
-
-        Item {
-            id: button_exit
-            width: 50
-            height: 50
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 24
-
-            MouseArea {
-                anchors.fill: parent
-                onClicked: Qt.quit()
-            }
-            ImageSvg {
-                anchors.fill: parent
-                fillMode: Image.PreserveAspectFit
-                source: "qrc:/menus/exit.svg"
-                color: Theme.colorSidebarContent
-            }
-        }
-
-        signal myDeviceClicked(var devicePtr)
-        onMyDeviceClicked: {
-            if (typeof devicePtr !== "undefined") {
-                //console.log(devicePtr + ' component was triggered')
-                content.state = "device"
-                screenDevice.currentDevice = devicePtr
-                currentDevicePtr = devicePtr // save current device
-            }
-        }
-
-        Connections {
-            target: deviceManager
-            signal deviceRemoved(var devicePtr)
-            onDeviceRemoved: {
-                //console.log("deviceRemoved(" + devicePtr + ") and currentDevice(" + currentDevicePtr + ")")
-                if (typeof devicePtr !== "undefined")
-                    if (devicePtr === currentDevicePtr)
-                        content.state = "library"
-            }
-        }
+    Sidebar {
+        id: applicationSidebar
     }
 
     // Content /////////////////////////////////////////////////////////////////
 
+    property var currentDevicePtr: null
+
     Item {
-        id: content
+        id: applicationContent
 
         anchors.right: parent.right
         anchors.rightMargin: 0
-        anchors.left: sideBar.right
+        anchors.left: applicationSidebar.right
         anchors.leftMargin: 0
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0
@@ -332,16 +105,6 @@ ApplicationWindow {
                 name: "library"
 
                 PropertyChanges {
-                    target: selectorArrow
-                    anchors.verticalCenter: button_library.verticalCenter
-                }
-                PropertyChanges {
-                    target: selectorBar
-                    height: 68
-                    anchors.verticalCenter: button_library.verticalCenter
-                }
-
-                PropertyChanges {
                     target: screenLibrary
                     visible: true
                 }
@@ -364,16 +127,6 @@ ApplicationWindow {
             },
             State {
                 name: "device"
-
-                PropertyChanges {
-                    target: selectorArrow
-                    anchors.verticalCenter: undefined
-                }
-                PropertyChanges {
-                    target: selectorBar
-                    height: 68
-                    anchors.verticalCenter: undefined
-                }
 
                 PropertyChanges {
                     target: screenLibrary
@@ -400,16 +153,6 @@ ApplicationWindow {
                 name: "jobs"
 
                 PropertyChanges {
-                    target: selectorArrow
-                    anchors.verticalCenter: button_jobs.verticalCenter
-                }
-                PropertyChanges {
-                    target: selectorBar
-                    height: 54
-                    anchors.verticalCenter: button_jobs.verticalCenter
-                }
-
-                PropertyChanges {
                     target: screenLibrary
                     visible: false
                 }
@@ -434,16 +177,6 @@ ApplicationWindow {
                 name: "settings"
 
                 PropertyChanges {
-                    target: selectorArrow
-                    anchors.verticalCenter: button_settings.verticalCenter
-                }
-                PropertyChanges {
-                    target: selectorBar
-                    height: 54
-                    anchors.verticalCenter: button_settings.verticalCenter
-                }
-
-                PropertyChanges {
                     target: screenLibrary
                     visible: false
                 }
@@ -466,16 +199,6 @@ ApplicationWindow {
             },
             State {
                 name: "about"
-
-                PropertyChanges {
-                    target: selectorArrow
-                    anchors.verticalCenter: button_about.verticalCenter
-                }
-                PropertyChanges {
-                    target: selectorBar
-                    height: 54
-                    anchors.verticalCenter: button_about.verticalCenter
-                }
 
                 PropertyChanges {
                     target: screenLibrary

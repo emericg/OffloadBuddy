@@ -5,6 +5,7 @@
         <file>UtilsPath.js</file>
         <file>UtilsNumber.js</file>
         <file>UtilsString.js</file>
+        <file>Sidebar.qml</file>
         <file>ScreenLibrary.qml</file>
         <file>ScreenLibraryGrid.qml</file>
         <file>ScreenDevice.qml</file>
