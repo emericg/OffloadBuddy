@@ -303,7 +303,7 @@ Item {
                 height: 64
                 interactive: false
                 model: settingsManager.directoriesList
-                delegate: ItemMediaDirectory { settingsMgr: settingsManager; directory: modelData; }
+                delegate: ItemMediaDirectory { directory: modelData; }
 
                 spacing: 8
                 anchors.top: textMediasTitle.bottom

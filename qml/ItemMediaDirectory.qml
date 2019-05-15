@@ -16,7 +16,6 @@ Rectangle {
     property var directory
     property bool directoryAvailable: directory.available
     property bool directorySpace: directory.spaceAvailable
-    property var settingsMgr
 
     Component.onCompleted: updateInfos()
     onDirectoryAvailableChanged: updateInfos()
@@ -52,7 +51,7 @@ Rectangle {
 
             onAccepted: {
                 directory.directoryPath = UtilsPath.cleanUrl(fileDialogChange.fileUrl);
-                settingsMgr.directoryModified();
+                settingsManager.directoryModified();
             }
         }
 
@@ -108,7 +107,7 @@ Rectangle {
         onCurrentIndexChanged: {
             if (cbinit) {
                 directory.directoryContent = currentIndex;
-                settingsMgr.directoryModified();
+                settingsManager.directoryModified();
             } else {
                 cbinit = true;
             }
@@ -165,6 +164,6 @@ Rectangle {
 
         highlightColor: Theme.colorError
         source: "qrc:/icons_material/baseline-delete-24px.svg"
-        onClicked: settingsMgr.deleteDirectory(textField_path.text)
+        onClicked: settingsManager.deleteDirectory(textField_path.text)
     }
 }

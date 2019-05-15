@@ -237,8 +237,9 @@ Item {
                             mediaLibrary.filterByFolder(cbMediaDirectories.get(currentIndex).text)
                             displayText = cbMediaDirectories.get(currentIndex).text
                         }
-                    } else
+                    } else {
                         cbinit = true;
+                    }
                 }
             }
 
@@ -271,8 +272,9 @@ Item {
                             mediaLibrary.orderByShotType()
                         else if (currentIndex == 3)
                             mediaLibrary.orderByName()
-                    } else
+                    } else {
                         cbinit = true;
+                    }
 
                     displayText = qsTr("Order by:") + " " + cbShotsOrderby.get(currentIndex).text
                 }
@@ -304,8 +306,9 @@ Item {
                             displayText = cbMediaFilters.get(currentIndex).text
                         else
                             displayText = qsTr("Filter by:") + " " + cbMediaFilters.get(currentIndex).text
-                    } else
+                    } else {
                         cbinit = true;
+                    }
                 }
             }
         }
