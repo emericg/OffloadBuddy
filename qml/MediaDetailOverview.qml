@@ -99,6 +99,60 @@ Item {
         id: mediaPreview
     }
 
+    Item {
+        id: itemActions
+        width: 336
+        height: 48
+        anchors.top: parent.top
+        anchors.topMargin: 16
+        anchors.right: parent.right
+        anchors.rightMargin: 0
+
+        Row {
+            id: row
+            spacing: 4
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: parent.top
+            anchors.topMargin: 0
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 0
+
+            ItemImageButton {
+                id: buttonEncode
+                width: 48
+                height: 48
+                source: "qrc:/icons_material/baseline-settings_applications-24px.svg"
+            }
+
+            ItemImageButton {
+                id: buttonTelemetry
+                width: 48
+                height: 48
+                source: "qrc:/icons_material/baseline-insert_chart-24px.svg"
+            }
+
+            ItemImageButton {
+                id: buttonShowFolder
+                width: 48
+                height: 48
+                source: "qrc:/icons_material/outline-folder-24px.svg"
+                onClicked: shot.openFolder()
+            }
+
+            ItemImageButton {
+                id: buttonDelete
+                width: 48
+                height: 48
+                source: "qrc:/icons_material/baseline-delete-24px.svg"
+                onClicked: {
+                    // shot.
+                    //mediaLibrary.deleteSelected(selectedItemName)
+                    //currentDevice.deleteSelected(selectedItemName)
+                }
+            }
+        }
+    }
+
     Popup {
         id: popupEncode
         modal: true
@@ -121,8 +175,8 @@ Item {
         anchors.rightMargin: 0
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.topMargin: 32
-        anchors.top: parent.top
+        anchors.topMargin: 16
+        anchors.top: itemActions.bottom
 
         spacing: 8
 

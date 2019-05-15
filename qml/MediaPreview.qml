@@ -75,11 +75,13 @@ Rectangle {
                 buttonFullscreen.imageSource = "qrc:/icons_material/baseline-fullscreen-24px.svg"
                 rectangleMetadatas.visible = true
                 rectangleFiles.visible = true
+                itemActions.visible = true
                 preview.anchors.right = rectangleMetadatas.left
             } else {
                 buttonFullscreen.imageSource = "qrc:/icons_material/baseline-fullscreen_exit-24px.svg"
                 rectangleMetadatas.visible = false
                 rectangleFiles.visible = false
+                itemActions.visible = false
                 preview.anchors.right = parent.parent.right
             }
 
