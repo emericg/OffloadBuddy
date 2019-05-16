@@ -117,6 +117,8 @@ void JobWorkerAsync::jobAbort()
 
 void JobWorkerAsync::queueWork(Job *job)
 {
+    qDebug() << ">> JobWorkerSync::queueWork()";
+
     if (job)
     {
         for (unsigned i = 0; i < job->elements.size(); i++)
@@ -276,10 +278,14 @@ void JobWorkerAsync::queueWork(Job *job)
         qDebug() << "* duration:" << job->settings.durationMs;
 */
     }
+
+    qDebug() << ">> JobWorkerSync::queueWork()";
 }
 
 void JobWorkerAsync::work()
 {
+    qDebug() << ">> JobWorkerSync::work()";
+
     if (m_childProcess == nullptr)
     {
         if (!m_ffmpegjobs.isEmpty())
@@ -297,6 +303,8 @@ void JobWorkerAsync::work()
             }
         }
     }
+
+    qDebug() << "<< JobWorkerSync::work()";
 }
 
 /* ************************************************************************** */

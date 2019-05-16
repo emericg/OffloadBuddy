@@ -51,17 +51,17 @@ JobWorkerSync::~JobWorkerSync()
 
 void JobWorkerSync::queueWork(Job *job)
 {
-    qDebug() << ">> queueWork()";
+    qDebug() << ">> JobWorkerSync::queueWork()";
 
     QMutexLocker locker(& m_jobsMutex);
     m_jobs.enqueue(job);
 
-    qDebug() << "<< queueWork()";
+    qDebug() << "<< JobWorkerSync::queueWork()";
 }
 
 void JobWorkerSync::work()
 {
-    qDebug() << ">> work()";
+    qDebug() << ">> JobWorkerSync::work()";
 
     float progress = 0.f;
     int64_t stuff_done = 0;
@@ -214,7 +214,7 @@ void JobWorkerSync::work()
     m_working = false;
     m_jobsMutex.unlock();
 
-    qDebug() << "<< work()";
+    qDebug() << "<< JobWorkerSync::work()";
 }
 
 /* ************************************************************************** */

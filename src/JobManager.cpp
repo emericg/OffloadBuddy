@@ -289,7 +289,6 @@ bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list,
 
         if (m_job_cpu)
         {
-            // FIXME not threaded the first time?
             m_job_cpu->queueWork(job);
             m_job_cpu->work();
         }
@@ -367,9 +366,9 @@ bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list,
             }
         }
 
+        if (m_selected_worker)
         {
             m_selected_worker->queueWork(job);
-            emit m_selected_worker->work();
             status = true;
         }
     }
