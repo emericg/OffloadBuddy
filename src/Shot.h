@@ -94,6 +94,8 @@ class Shot: public QObject
     Q_PROPERTY(unsigned type READ getType NOTIFY shotUpdated)
     //Q_PROPERTY(unsigned subType READ getType NOTIFY shotUpdated)
 
+    Q_PROPERTY(QString uuid READ getUuid NOTIFY shotUpdated)
+
     Q_PROPERTY(QString name READ getName NOTIFY shotUpdated)
     Q_PROPERTY(QString camera READ getCameraSource NOTIFY shotUpdated)
     Q_PROPERTY(qint64 size READ getSize NOTIFY shotUpdated)
@@ -133,9 +135,11 @@ class Shot: public QObject
     Shared::ShotType m_type = Shared::SHOT_UNKNOWN;
     Shared::ShotState m_state = Shared::SHOT_STATE_DEFAULT;
 
+    QString m_uuid;                 //!< Shot unique identifier, generated at object creation
+
     QString m_shot_name;
-    int m_shot_id = -1;
-    int m_camera_id = 0;            //!< Shot is part of a multi camera systems
+    int m_shot_id = -1;             //!< Shot ID (if we have a shot, not a single file)
+    int m_camera_id = 0;            //!< Camera ID (if the shot is part of a multi camera system)
 
     // PICTURES files
     QList <ofb_file *> m_pictures;
@@ -294,6 +298,8 @@ public slots:
 
     QString getFilesQString() const;
     QStringList getFilesQStringList() const;
+
+    QString getUuid() const { return m_uuid; }
 
     QString getName() const { return m_shot_name; }
     qint64 getDuration() const;

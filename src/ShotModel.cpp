@@ -188,6 +188,30 @@ Shot *ShotModel::getShotWithName(const QString &name)
 }
 
 /*!
+ * \brief ShotModel::getShotWithUuid
+ * \param uuid
+ * \return
+ */
+Shot *ShotModel::getShotWithUuid(const QString &uuid)
+{
+    if (!uuid.isEmpty())
+    {
+        for (auto shot: m_shots)
+        {
+            Shot *search = qobject_cast<Shot*>(shot);
+            if (search->getUuid() == uuid)
+            {
+                return search;
+            }
+        }
+
+        //qDebug() << "No shot found for uuid" << uuid;
+    }
+
+    return nullptr;
+}
+
+/*!
  * \brief ShotModel::getShotWithPath
  * \param path
  * \return

@@ -610,7 +610,7 @@ void Device::offloadAll()
         //if (sm->getAutoMerge())
         //    jm->addJobs(JOB_MERGE, this, shots);
         //else
-            jm->addJobs(JOB_COPY, this, shots);
+            jm->addJobs(JOB_COPY, this, nullptr, shots);
     }
 }
 
@@ -625,42 +625,42 @@ void Device::deleteAll()
     m_shotModel->getShots(shots);
 
     if (jm && !shots.empty())
-        jm->addJobs(JOB_DELETE, this, shots);
+        jm->addJobs(JOB_DELETE, this, nullptr, shots);
 }
 
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void Device::offloadCopySelected(const QString &shot_name)
+void Device::offloadCopySelected(const QString &shot_uuid)
 {
-    qDebug() << "offloadCopySelected(" << shot_name << ")";
+    qDebug() << "offloadCopySelected(" << shot_uuid << ")";
 
     JobManager *jm = JobManager::getInstance();
-    Shot *shot = m_shotModel->getShotWithName(shot_name);
+    Shot *shot = m_shotModel->getShotWithUuid(shot_uuid);
 
     if (jm && shot)
-        jm->addJob(JOB_COPY, this, shot);
+        jm->addJob(JOB_COPY, this, nullptr, shot);
 }
 
-void Device::offloadMergeSelected(const QString &shot_name)
+void Device::offloadMergeSelected(const QString &shot_uuid)
 {
-    qDebug() << "offloadMergeSelected(" << shot_name << ")";
+    qDebug() << "offloadMergeSelected(" << shot_uuid << ")";
 
     JobManager *jm = JobManager::getInstance();
-    Shot *shot = m_shotModel->getShotWithName(shot_name);
+    Shot *shot = m_shotModel->getShotWithUuid(shot_uuid);
 
     if (jm && shot)
-        jm->addJob(JOB_COPY, this, shot);
+        jm->addJob(JOB_COPY, this, nullptr, shot);
 }
 
-void Device::reencodeSelected(const QString &shot_name, const QString &codec,
+void Device::reencodeSelected(const QString &shot_uuid, const QString &codec,
                               float quality, float speed, float fps,
                               int start, int duration)
 {
-    qDebug() << "Device::reencodeSelected(" << shot_name << ")";
+    qDebug() << "Device::reencodeSelected(" << shot_uuid << ")";
 
     JobManager *jm = JobManager::getInstance();
-    Shot *shot = m_shotModel->getShotWithName(shot_name);
+    Shot *shot = m_shotModel->getShotWithUuid(shot_uuid);
 
     JobEncodeSettings sett;
     sett.codec = codec;
@@ -672,16 +672,18 @@ void Device::reencodeSelected(const QString &shot_name, const QString &codec,
     if (duration > 0) sett.durationMs = duration;
 
     if (jm && shot)
-        jm->addJob(JOB_REENCODE, this, shot, nullptr, &sett);
+        jm->addJob(JOB_REENCODE, this, nullptr, shot, nullptr, &sett);
 }
 
-void Device::deleteSelected(const QString &shot_name)
+void Device::deleteSelected(const QString &shot_uuid)
 {
-    qDebug() << "Device::deleteSelected(" << shot_name << ")";
+    qDebug() << "Device::deleteSelected(" << shot_uuid << ")";
 
     JobManager *jm = JobManager::getInstance();
-    Shot *shot = m_shotModel->getShotWithName(shot_name);
+    Shot *shot = m_shotModel->getShotWithUuid(shot_uuid);
 
     if (jm && shot)
-        jm->addJob(JOB_DELETE, this, shot);
+        jm->addJob(JOB_DELETE, this, nullptr, shot);
 }
+
+/* ************************************************************************** */

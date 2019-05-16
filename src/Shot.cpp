@@ -28,6 +28,7 @@
 
 #include <QDir>
 #include <QUrl>
+#include <QUuid>
 #include <QFile>
 #include <QFileInfo>
 #include <QDateTime>
@@ -39,11 +40,12 @@
 
 Shot::Shot(QObject *parent) : QObject(parent)
 {
-    //
+    m_uuid = QUuid::createUuid().toString();
 }
 
 Shot::Shot(Shared::ShotType type, QObject *parent) : QObject(parent)
 {
+    m_uuid = QUuid::createUuid().toString();
     m_type = type;
 }
 

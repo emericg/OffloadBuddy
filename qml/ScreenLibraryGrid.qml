@@ -9,10 +9,9 @@ Item {
     width: 1280
     height: 720
 
-    property var selectedItem : shotsview.currentItem
-    property int selectedItemIndex : shotsview.currentIndex
-    property string selectedItemName : shotsview.currentItem ? shotsview.currentItem.shot.name : ""
-    //property string selectedItemPath : shotsview.currentItem ? shotsview.currentItem.shot.path : ""
+    property var selectedItem: shotsview.currentItem
+    property int selectedItemIndex: shotsview.currentIndex
+    property string selectedItemUuid: shotsview.currentItem ? shotsview.currentItem.shot.uuid : ""
 
     property var selectionMode: false
     property var selectionList: []
@@ -411,7 +410,7 @@ Item {
             onVisibleChanged: shotsview.interactive = !shotsview.interactive
         }
         function actionMenuTriggered(index) {
-            //console.log("actionMenuTriggered(" + index + ") selected shot: '" + selectedItemName + "'")
+            //console.log("actionMenuTriggered(" + index + ") selected shot: '" + shotsview.currentItem.shot.name + "'")
 
             if (index === 0)
                 selectedItem.shot.openFolder()
@@ -420,7 +419,7 @@ Item {
                 popupEncode.open()
             }
             if (index === 16)
-                mediaLibrary.deleteSelected(selectedItemName)
+                mediaLibrary.deleteSelected(selectedItemUuid)
 
             actionMenu.visible = false
         }

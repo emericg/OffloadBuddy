@@ -113,7 +113,7 @@ Item {
             PropertyChanges {
                 target: screenMedia
                 visible: true
-                shot: currentDevice.getShot(screenDeviceGrid.selectedItemName)
+                shot: currentDevice.getShotByUuid(screenDeviceGrid.selectedItemUuid)
             }
         }
     ]

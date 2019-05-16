@@ -65,11 +65,10 @@ public slots:
     void workerScanningStarted(const QString &s);
     void workerScanningFinished(const QString &s);
 
-    //
-    void reencodeSelected(const QString &shot_name, const QString &codec,
+    void reencodeSelected(const QString &shot_uuid, const QString &codec,
                           float quality, float speed, float fps,
                           int start, int duration);
-    void deleteSelected(const QString &shot_name);
+    void deleteSelected(const QString &shot_uuid);
 };
 
 /* ************************************************************************** */

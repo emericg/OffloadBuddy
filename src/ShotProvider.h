@@ -70,8 +70,9 @@ public slots:
     void filterByType(const QString &type);
     void filterByFolder(const QString &path);
 
-    //QVariant getShot(const int index) const { return QVariant::fromValue(m_shotModel->getShotAt(index)); }
-    QVariant getShot(const QString name) const { return QVariant::fromValue(m_shotModel->getShotWithName(name)); }
+    QVariant getShotByIndex(const int index) const { return QVariant::fromValue(m_shotModel->getShotAt(index)); }
+    QVariant getShotByName(const QString &name) const { return QVariant::fromValue(m_shotModel->getShotWithName(name)); }
+    QVariant getShotByUuid(const QString &uuid) const { return QVariant::fromValue(m_shotModel->getShotWithUuid(uuid)); }
 };
 
 /* ************************************************************************** */

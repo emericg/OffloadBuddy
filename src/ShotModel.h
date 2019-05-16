@@ -67,6 +67,7 @@ public:
     void getShots(QList<Shot *> &shots);
     Shot *getShotAt(int index);
     Shot *getShotAt(Shared::ShotType type, int file_id, int camera_id) const;
+    Shot *getShotWithUuid(const QString &uuid);
     Shot *getShotWithName(const QString &name);
     Shot *getShotWithPath(const QString &path);
     int getShotCount() const;

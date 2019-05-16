@@ -259,12 +259,12 @@ public slots:
     void offloadAll();
     void deleteAll();
 
-    void offloadCopySelected(const QString &shot_name);
-    void offloadMergeSelected(const QString &shot_name);
-    void reencodeSelected(const QString &shot_name, const QString &codec,
+    void offloadCopySelected(const QString &shot_uuid);
+    void offloadMergeSelected(const QString &shot_uuid);
+    void reencodeSelected(const QString &shot_uuid, const QString &codec,
                           float quality, float speed, float fps,
                           int start, int duration);
-    void deleteSelected(const QString &shot_name);
+    void deleteSelected(const QString &shot_uuid);
 };
 
 /* ************************************************************************** */

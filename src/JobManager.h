@@ -131,7 +131,9 @@ class JobTracker: public QObject
     bool m_autoDelete = false;
 
     int m_job_id = -1;
-    Device *m_device = nullptr;
+    Device *m_source_device = nullptr;
+    MediaLibrary *m_source_library = nullptr;
+    //ShotProvider *m_shot_provider = nullptr;
     QString m_destination;
 
 Q_SIGNALS:
@@ -172,8 +174,13 @@ public:
     void setName(const QString &name) { m_name = name; }
     QString getName() { return m_name; }
 
-    void setDevice(Device *d) { m_device = d; }
-    Device *getDevice() const { return m_device; }
+    void setDevice(Device *d) { m_source_device = d; }
+    Device *getDevice() const { return m_source_device; }
+    void setLibrary(MediaLibrary *ml) { m_source_library = ml; }
+    MediaLibrary *getLibrary() const { return m_source_library; }
+    // TODO unify through a ShotProvider ?
+    //void setProvider(ShotProvider *sp) { m_shot_provider = sp; }
+    //ShotProvider *getProvider() const { return m_shot_provider; }
 
     void setDestination(QString dest) { m_destination = dest; }
     QString getDestination() const { return m_destination; }
@@ -245,9 +252,9 @@ public:
     void attachLibrary(MediaLibrary *l);
     void cleanup();
 
-    bool addJob(JobType type, Device *d, Shot *s,
+    bool addJob(JobType type, Device *d, MediaLibrary *ml, Shot *s,
                 MediaDirectory *md = nullptr, JobEncodeSettings *set = nullptr);
-    bool addJobs(JobType type, Device *d, QList<Shot *> list,
+    bool addJobs(JobType type, Device *d, MediaLibrary *ml, QList<Shot *> list,
                  MediaDirectory *md = nullptr, JobEncodeSettings *set = nullptr);
 
 public slots:

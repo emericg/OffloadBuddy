@@ -136,14 +136,14 @@ void MediaLibrary::workerScanningFinished(const QString &s)
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void MediaLibrary::reencodeSelected(const QString &shot_name, const QString &codec,
+void MediaLibrary::reencodeSelected(const QString &shot_uuid, const QString &codec,
                                     float quality, float speed, float fps,
                                     int start, int duration)
 {
-    qDebug() << "MediaLibrary::reencodeSelected(" << shot_name << ")";
+    qDebug() << "MediaLibrary::reencodeSelected(" << shot_uuid << ")";
 
     JobManager *jm = JobManager::getInstance();
-    Shot *shot = m_shotModel->getShotWithName(shot_name);
+    Shot *shot = m_shotModel->getShotWithUuid(shot_uuid);
 
     JobEncodeSettings sett;
     sett.codec = codec;
@@ -155,18 +155,18 @@ void MediaLibrary::reencodeSelected(const QString &shot_name, const QString &cod
     if (duration > 0) sett.durationMs = duration;
 
     if (jm && shot)
-        jm->addJob(JOB_REENCODE, nullptr, shot, nullptr, &sett);
+        jm->addJob(JOB_REENCODE, nullptr, this, shot, nullptr, &sett);
 }
 
-void MediaLibrary::deleteSelected(const QString &shot_name)
+void MediaLibrary::deleteSelected(const QString &shot_uuid)
 {
-    qDebug() << "MediaLibrary::deleteSelected(" << shot_name << ")";
+    qDebug() << "MediaLibrary::deleteSelected(" << shot_uuid << ")";
 
     JobManager *jm = JobManager::getInstance();
-    Shot *shot = m_shotModel->getShotWithName(shot_name);
+    Shot *shot = m_shotModel->getShotWithUuid(shot_uuid);
 
     if (jm && shot)
-        jm->addJob(JOB_DELETE, nullptr, shot);
+        jm->addJob(JOB_DELETE, nullptr, this, shot);
 }
 
 /* ************************************************************************** */

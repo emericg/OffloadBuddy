@@ -189,7 +189,7 @@ QString JobManager::getandmakeDestination(Shot *s, Device *d)
 
 /* ************************************************************************** */
 
-bool JobManager::addJob(JobType type, Device *d, Shot *s,
+bool JobManager::addJob(JobType type, Device *d, MediaLibrary *ml, Shot *s,
                         MediaDirectory *md, JobEncodeSettings *settings)
 {
     bool status = false;
@@ -200,10 +200,10 @@ bool JobManager::addJob(JobType type, Device *d, Shot *s,
     QList<Shot *> list;
     list.push_back(s);
 
-    return addJobs(type, d, list, md, settings);
+    return addJobs(type, d, ml, list, md, settings);
 }
 
-bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list,
+bool JobManager::addJobs(JobType type, Device *d, MediaLibrary *ml,  QList<Shot *> list,
                          MediaDirectory *md, JobEncodeSettings *settings)
 {
     bool status = false;
@@ -239,7 +239,7 @@ bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list,
     // CREATE JOB //////////////////////////////////////////////////////////////
 
     Job *job = new Job;
-    job->id = rand(); // lol
+    job->id = rand(); // TODO // Use QUuid
     job->type = type;
     if (settings)
         job->settings = *settings;
@@ -263,6 +263,7 @@ bool JobManager::addJobs(JobType type, Device *d, QList<Shot *> list,
 
     JobTracker *tracker = new JobTracker(job->id, job->type);
     tracker->setDevice(d);
+    tracker->setLibrary(ml);
     tracker->setAutoDelete(autoDelete);
     if (!job->elements.empty())
         tracker->setDestination(job->elements.front()->destination_dir);
@@ -480,6 +481,10 @@ void JobManager::shotFinished(int jobId, Shot *shot)
             {
                 Device *d = j->getDevice();
                 if (d) d->deleteShot(shot);
+
+                MediaLibrary *l = j->getLibrary();
+                if (l) l->deleteShot(shot);
+
                 // shot is now invalid
             }
             else
@@ -489,7 +494,7 @@ void JobManager::shotFinished(int jobId, Shot *shot)
                 if (j->getAutoDelete() &&
                     (j->getType() == JOB_COPY || j->getType() == JOB_MERGE))
                 {
-                    addJob(JOB_DELETE, j->getDevice(), shot);
+                    addJob(JOB_DELETE, j->getDevice(), j->getLibrary(), shot);
                 }
 
                 // TODO create new shot

@@ -101,12 +101,12 @@ Item {
 
             if (applicationContent.state === "library") {
                 // delete shot
-                //mediaLibrary.deleteSelectedUuid(shot.uuid)
+                mediaLibrary.deleteSelected(shot.uuid)
                 // then back to media grid
                 screenLibrary.state = "stateMediaGrid"
             } else if (applicationContent.state === "device") {
                 // delete shot
-                //currentDevice.deleteSelectedUuid(shot.uuid)
+                currentDevice.deleteSelected(shot.uuid)
                 // then back to media grid
                 screenDevice.state = "stateMediaGrid"
             }
