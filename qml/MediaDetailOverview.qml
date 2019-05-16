@@ -12,9 +12,6 @@ Item {
     height: 720
     anchors.fill: parent
 
-    property var selectedShot : shot
-    property string selectedItemName : shot ? shot.name : ""
-
     function setPause() {
         mediaPreview.setPause()
     }
@@ -95,6 +92,42 @@ Item {
 
     // POPUPS //////////////////////////////////////////////////////////////////
 
+    PopupConfirm {
+        id: popupDelete
+        message: qsTr("Delete this file?")
+        onConfirmed: {
+            // just to be sure?
+            //mediaGrid.exitSelectionMode()
+
+            if (applicationContent.state === "library") {
+                // delete shot
+                //mediaLibrary.deleteSelectedUuid(shot.uuid)
+                // then back to media grid
+                screenLibrary.state = "stateMediaGrid"
+            } else if (applicationContent.state === "device") {
+                // delete shot
+                //currentDevice.deleteSelectedUuid(shot.uuid)
+                // then back to media grid
+                screenDevice.state = "stateMediaGrid"
+            }
+        }
+    }
+
+    Popup {
+        id: popupEncode
+        modal: true
+        focus: true
+        x: (parent.width - panelEncode.width) / 2
+        y: (parent.height - 64 - panelEncode.height) / 2
+        closePolicy: Popup.CloseOnEscape /*| Popup.CloseOnPressOutsideParent*/
+
+        PanelEncode {
+            id: panelEncode
+        }
+    }
+
+    // CONTENT /////////////////////////////////////////////////////////////////
+
     MediaPreview {
         id: mediaPreview
     }
@@ -144,25 +177,8 @@ Item {
                 width: 48
                 height: 48
                 source: "qrc:/icons_material/baseline-delete-24px.svg"
-                onClicked: {
-                    // shot.
-                    //mediaLibrary.deleteSelected(selectedItemName)
-                    //currentDevice.deleteSelected(selectedItemName)
-                }
+                onClicked: popupDelete.open()
             }
-        }
-    }
-
-    Popup {
-        id: popupEncode
-        modal: true
-        focus: true
-        x: (parent.width - panelEncode.width) / 2
-        y: (parent.height - 64 - panelEncode.height) / 2
-        closePolicy: Popup.CloseOnEscape /*| Popup.CloseOnPressOutsideParent*/
-
-        PanelEncode {
-            id: panelEncode
         }
     }
 

@@ -761,7 +761,7 @@ Item {
             id: shotsview
             anchors.fill: parent
             anchors.leftMargin: 16
-            anchors.topMargin: banner.height + 16
+            anchors.topMargin: 16
 
             interactive: true
             //snapMode: GridView.SnapToRow

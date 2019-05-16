@@ -35,7 +35,7 @@ Item {
         anchors.bottomMargin: 0
 
         color: Theme.colorSidebarContent
-        text: (myDevice.model === "device")? myDevice.brand : myDevice.model
+        text: (myDevice.model === "device") ? myDevice.brand : myDevice.model
         font.bold: true
         font.pixelSize: 11
         horizontalAlignment: Text.AlignHCenter

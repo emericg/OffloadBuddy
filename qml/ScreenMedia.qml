@@ -12,6 +12,7 @@ Item {
     anchors.fill: parent
 
     property Shot shot: null
+
     onShotChanged: {
         // if we 'just' changed shot, we reset the state // FIXME forward/backward reset's it too
         screenMedia.state = "overview"
