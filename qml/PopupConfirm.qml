@@ -7,13 +7,7 @@ Popup {
     height: 256
 
     signal confirmed()
-
     property string message: ""
-
-    x: (applicationWindow.width / 2) - (popupConfirm.width / 2) - (applicationSidebar.width / 2)
-    y: (applicationWindow.height / 2) - (popupConfirm.height / 2)
-    //width: textMessage.contentWidth + padding * 2
-    padding: 24
 
     modal: true
     focus: true

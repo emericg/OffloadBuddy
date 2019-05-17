@@ -94,6 +94,9 @@ Item {
 
     PopupConfirm {
         id: popupDelete
+        x: (applicationWindow.width / 2) - (popupDelete.width / 2) - (applicationSidebar.width)
+        y: (applicationWindow.height / 2) - (popupDelete.height / 2) - (rectangleHeader.height)
+
         message: qsTr("Delete this file?")
         onConfirmed: {
             // just to be sure?

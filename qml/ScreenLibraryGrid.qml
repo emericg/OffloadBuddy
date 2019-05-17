@@ -105,6 +105,30 @@ Item {
         }
     }
 
+    PopupConfirm {
+        id: confirmDeleteMultipleFilesPopup
+        x: (applicationWindow.width / 2) - (confirmDeleteMultipleFilesPopup.width / 2) - (applicationSidebar.width / 2)
+        y: (applicationWindow.height / 2) - (confirmDeleteMultipleFilesPopup.height / 2)
+
+        message: qsTr("Delete these selected files?")
+        onConfirmed: {
+            //
+        }
+    }
+    PopupConfirm {
+        id: confirmDeleteSingleFilePopup
+        x: (applicationWindow.width / 2) - (confirmDeleteSingleFilePopup.width / 2) - (applicationSidebar.width / 2)
+        y: (applicationWindow.height / 2) - (confirmDeleteSingleFilePopup.height / 2)
+
+        message: qsTr("Delete selected file?")
+        onConfirmed: {
+            mediaLibrary.deleteSelected(selectedItemUuid)
+
+            shotsview.currentIndex = -1;
+            mediaGrid.exitSelectionMode();
+        }
+    }
+
     // HEADER //////////////////////////////////////////////////////////////////
 
     Rectangle {
@@ -412,14 +436,16 @@ Item {
         function actionMenuTriggered(index) {
             //console.log("actionMenuTriggered(" + index + ") selected shot: '" + shotsview.currentItem.shot.name + "'")
 
-            if (index === 0)
+            if (index === 0) {
                 selectedItem.shot.openFolder()
+            }
             if (index === 3) {
                 panelEncode.updateEncodePanel(selectedItem.shot)
                 popupEncode.open()
             }
-            if (index === 16)
-                mediaLibrary.deleteSelected(selectedItemUuid)
+            if (index === 16) {
+                confirmDeleteSingleFilePopup.open()
+            }
 
             actionMenu.visible = false
         }
