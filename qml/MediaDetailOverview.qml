@@ -80,6 +80,7 @@ Item {
 
             bitrate.text = UtilsString.bitrateToString(shot.bitrate)
             codec.text = shot.codecVideo
+            if (shot.codecAudio) codec.text +=  " / " + shot.codecAudio
             framerate.text = UtilsString.framerateToString(shot.framerate)
             timecode.text = shot.timecode
         }
@@ -442,6 +443,7 @@ Item {
                 width: 28
                 height: 28
 
+                visible: (shot.chapters > 1)
                 source: "qrc:/icons_material/baseline-video_library-24px.svg"
                 color: Theme.colorText
 
@@ -461,15 +463,15 @@ Item {
             }
 
             ImageSvg {
-                id: labelTimecode
+                id: labelCodec
                 width: 28
                 height: 28
 
-                source: "qrc:/icons_material/baseline-av_timer-24px.svg"
+                source: "qrc:/icons_material/baseline-memory-24px.svg"
                 color: Theme.colorText
 
                 Text {
-                    id: timecode
+                    id: codec
                     height: 28
                     anchors.left: parent.right
                     anchors.leftMargin: 16
@@ -484,15 +486,15 @@ Item {
             }
 
             ImageSvg {
-                id: labelCodec
+                id: labelFramerate
                 width: 28
                 height: 28
 
-                source: "qrc:/icons_material/baseline-memory-24px.svg"
+                source: "qrc:/icons_material/baseline-camera_roll-24px.svg"
                 color: Theme.colorText
 
                 Text {
-                    id: codec
+                    id: framerate
                     height: 28
                     anchors.left: parent.right
                     anchors.leftMargin: 16
@@ -530,15 +532,15 @@ Item {
             }
 
             ImageSvg {
-                id: labelFramerate
+                id: labelTimecode
                 width: 28
                 height: 28
 
-                source: "qrc:/icons_material/baseline-camera_roll-24px.svg"
+                source: "qrc:/icons_material/baseline-av_timer-24px.svg"
                 color: Theme.colorText
 
                 Text {
-                    id: framerate
+                    id: timecode
                     height: 28
                     anchors.left: parent.right
                     anchors.leftMargin: 16

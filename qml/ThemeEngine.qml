@@ -162,9 +162,9 @@ Item {
             // yellow "#FCCD13" "#FFE400"
 
             colorSidebar =          "#E31D8D"
-            colorSidebarContent =   "#DCFF00"
+            colorSidebarContent =   "#FFFBE2"
 
-            colorHeader =           "#faa7d1"
+            colorHeader =           "#F99DCE"
             colorHeaderContent =    "#E31D8D" // sub: "#8F4594"
 
             colorBackground =       "#ffffff"
@@ -179,7 +179,7 @@ Item {
             colorWarning =          "#944197"
             colorError =            "#FFDB63"
 
-            colorButton =           "#ED65A7"
+            colorButton =           "#FF3BB3"
             colorButtonText =       "#ffffff"
             colorButtonDown =       "#F592C1"
             colorButtonHover =      "#E4E4E4"

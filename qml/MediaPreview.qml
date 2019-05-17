@@ -13,7 +13,7 @@ Rectangle {
     anchors.left: parent.left
     anchors.right: rectangleMetadatas.left
     anchors.margins: 16
-    color: "black"
+    color: (shot.type >= Shared.SHOT_PICTURE || isFullScreen) ? "transparent" : "black"
 
     property bool isFullScreen: false
     property int startLimit: -1

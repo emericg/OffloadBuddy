@@ -404,7 +404,7 @@ Item {
             Rectangle {
                 width: shotsview.cellSize;
                 height: shotsview.cellSize
-                color: "#00000000"
+                color: "transparent"
                 border.width : 4
                 border.color: Theme.colorPrimary
                 x: {

@@ -11,13 +11,11 @@ Item {
 
     property var mediaProvider: null
     property var currentShot: null
-    property string currentShotName: ""
     property int clipStartMs: -1
     property int clipDurationMs: -1
 
     function updateEncodePanel(shot) {
         currentShot = shot
-        currentShotName = shot.name
 
         // GIF only appear for short videos
         if (shot.duration < 10000) {
@@ -495,7 +493,7 @@ Item {
                 else if (typeof mediaLibrary !== "undefined")
                     mediaProvider = mediaLibrary
 
-                mediaProvider.reencodeSelected(currentShotName, codec,
+                mediaProvider.reencodeSelected(shot.uuid, codec,
                                           sliderQuality.value,
                                           sliderSpeed.value,
                                           fps,

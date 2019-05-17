@@ -96,7 +96,7 @@ Rectangle {
         source: "qrc:/menus/selector_arrow.svg"
         color: Theme.colorSidebarContent
     }
-    
+
     Rectangle {
         id: selectorBar
         width: parent.width

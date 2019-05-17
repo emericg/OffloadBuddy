@@ -232,11 +232,10 @@ Item {
         anchors.top: parent.top
         anchors.topMargin: 0
 
-        Rectangle {
+        Item {
             id: rectangleText
             height: 138
-            color: Theme.colorForeground
-            clip: true
+
             anchors.top: parent.top
             anchors.topMargin: 16
             anchors.right: parent.right
@@ -456,18 +455,20 @@ Item {
                 id: speedsGraph
                 width: 302
                 height: 173
+
                 title: "Speed (" + UtilsString.speedUnit(settingsManager.appunits) + ")"
+                titleColor: Theme.colorText
 
                 antialiasing: true
                 //legend.visible: false // Needs Qt 5.10+ / Qt Charts 2.3
                 //backgroundRoundness: 0
-                //backgroundColor: "#00000000"
+                backgroundColor: "transparent"
 
                 LineSeries {
                     id: speedsSeries
                     axisX: ValueAxis { id: axisSpeedX0; visible: false; gridVisible: false; }
                     axisY: ValueAxis { id: axisSpeedY0; visible: true; gridVisible: true;
-                                       labelsFont.pixelSize: 12; labelFormat: "%0.1f"; }
+                                       labelsFont.pixelSize: 12; labelsColor: Theme.colorText; labelFormat: "%0.1f"; }
                 }
             }
 
@@ -475,19 +476,18 @@ Item {
                 id: altiGraph
                 width: 304
                 height: 173
-                title: "Altitude (" + UtilsString.altitudeUnit(settingsManager.appunits) + ")"
 
+                title: "Altitude (" + UtilsString.altitudeUnit(settingsManager.appunits) + ")"
+                titleColor: Theme.colorText
+                backgroundColor: "transparent"
                 antialiasing: true
-                //legend.visible: false // Needs Qt 5.10+ / Qt Charts 2.3
-                //backgroundRoundness: 0
-                //backgroundColor: "#00000000"
 
                 LineSeries {
                     id: altiSeries
                     color: "green"
                     axisX: ValueAxis { id: axisAltiX0; visible: false; gridVisible: false; }
                     axisY: ValueAxis { id: axisAltiY0; visible: true; gridVisible: true;
-                                       labelsFont.pixelSize: 12; labelFormat: "%i"; }
+                                       labelsFont.pixelSize: 12; labelsColor: Theme.colorText; labelFormat: "%i"; }
                 }
             }
 
@@ -495,12 +495,15 @@ Item {
                 id: acclGraph
                 width: 302
                 height: 173
+
                 title: "Acceleration"
+                titleColor: Theme.colorText
+                backgroundColor: "transparent"
                 antialiasing: true
 
                 ValueAxis { id: axisAcclX0; visible: false; gridVisible: false; }
                 ValueAxis { id: axisAcclY0; visible: true; gridVisible: true;
-                            labelsFont.pixelSize: 12; labelFormat: "%i"; }
+                            labelsFont.pixelSize: 12; labelsColor: Theme.colorText; labelFormat: "%i"; }
 
                 SplineSeries { id: acclX; axisX: axisAcclX0; axisY: axisAcclY0; }
                 SplineSeries { id: acclY; axisX: axisAcclX0; axisY: axisAcclY0; }
@@ -511,13 +514,15 @@ Item {
                 id: gyroGraph
                 width: 302
                 height: 173
-                plotAreaColor: "#00000000"
+
                 title: "Gyroscope"
+                titleColor: Theme.colorText
+                backgroundColor: "transparent"
                 antialiasing: true
 
                 ValueAxis { id: axisGyroX0; visible: false; gridVisible: false; }
                 ValueAxis { id: axisGyroY0; visible: true; gridVisible: true;
-                            labelsFont.pixelSize: 12; labelFormat: "%i"; }
+                            labelsFont.pixelSize: 12; labelsColor: Theme.colorText; labelFormat: "%i"; }
 
                 LineSeries { id: gyroX; axisX: axisGyroX0; axisY: axisGyroY0; color: "red"; }
                 LineSeries { id: gyroY; axisX: axisGyroX0; axisY: axisGyroY0; color: "green"; }
