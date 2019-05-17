@@ -1,21 +1,24 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 
+import com.offloadbuddy.theme 1.0
+
 Popup {
     id: popupConfirm
-    width: 330
+    width: 480
     height: 256
 
     signal confirmed()
-    property string message: ""
+    property string message
+    property string files: []
 
     modal: true
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
     background: Rectangle {
-        color: theme.backgroundColor
-        radius: 8
+        color: Theme.colorBackground
+        radius: 2
     }
 
     Text {
@@ -27,7 +30,7 @@ Popup {
         anchors.top: parent.top
         anchors.topMargin: 24
 
-        text: qsTr("Ho men, are you sure you want to do that?")
+        text: message
         verticalAlignment: Text.AlignVCenter
         horizontalAlignment: Text.AlignHCenter
         wrapMode: Text.WordWrap
@@ -36,28 +39,31 @@ Popup {
 
     Row {
         id: row
-        y: 192
         height: 40
-        anchors.horizontalCenterOffset: 1
-        spacing: 24
+        spacing: 32
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 24
         anchors.horizontalCenter: parent.horizontalCenter
 
-        ButtonThemed {
+        ButtonImageWireframe {
             id: buttonConfirm
-            text: qsTr("Confirm")
             anchors.verticalCenter: parent.verticalCenter
+
+            text: qsTr("Confirm")
+            source: "qrc:/icons_material/baseline-delete-24px.svg"
+            fullColor: true
+            primaryColor: Theme.colorError
             onClicked: {
                 popupConfirm.confirmed();
                 popupConfirm.close();
             }
         }
 
-        ButtonThemed {
+        ButtonWireframe {
             id: buttonCancel
-            text: qsTr("Cancel")
             anchors.verticalCenter: parent.verticalCenter
+
+            text: qsTr("Cancel")
             onClicked: {
                 popupConfirm.close();
             }

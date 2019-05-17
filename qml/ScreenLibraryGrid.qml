@@ -115,12 +115,13 @@ Item {
             //
         }
     }
+
     PopupConfirm {
         id: confirmDeleteSingleFilePopup
         x: (applicationWindow.width / 2) - (confirmDeleteSingleFilePopup.width / 2) - (applicationSidebar.width / 2)
         y: (applicationWindow.height / 2) - (confirmDeleteSingleFilePopup.height / 2)
 
-        message: qsTr("Delete selected file?")
+        message: qsTr("Are you sure you want to delete the selected file?")
         onConfirmed: {
             mediaLibrary.deleteSelected(selectedItemUuid)
 

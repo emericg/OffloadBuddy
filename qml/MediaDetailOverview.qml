@@ -97,7 +97,7 @@ Item {
         x: (applicationWindow.width / 2) - (popupDelete.width / 2) - (applicationSidebar.width)
         y: (applicationWindow.height / 2) - (popupDelete.height / 2) - (rectangleHeader.height)
 
-        message: qsTr("Delete this file?")
+        message: qsTr("Are you sure you want to delete the selected file?")
         onConfirmed: {
             // just to be sure?
             //mediaGrid.exitSelectionMode()
@@ -126,6 +126,9 @@ Item {
 
         PanelEncode {
             id: panelEncode
+        }
+        background: Item {
+            //
         }
     }
 
@@ -158,6 +161,11 @@ Item {
                 width: 48
                 height: 48
                 source: "qrc:/icons_material/baseline-settings_applications-24px.svg"
+                onClicked: {
+                    panelEncode.updateEncodePanel(shot)
+                    panelEncode.setClip(mediaPreview.startLimit, mediaPreview.stopLimit)
+                    popupEncode.open()
+                }
             }
 
             ItemImageButton {

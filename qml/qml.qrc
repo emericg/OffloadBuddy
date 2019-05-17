@@ -34,7 +34,9 @@
         <file alias="WindowGeometrySaver.qml">components/WindowGeometrySaver.qml</file>
         <file alias="ButtonImage.qml">components_themed/ButtonImage.qml</file>
         <file alias="ButtonImageThemed.qml">components_themed/ButtonImageThemed.qml</file>
+        <file alias="ButtonImageWireframe.qml">components_themed/ButtonImageWireframe.qml</file>
         <file alias="ButtonThemed.qml">components_themed/ButtonThemed.qml</file>
+        <file alias="ButtonWireframe.qml">components_themed/ButtonWireframe.qml</file>
         <file alias="ImageSvg.qml">components_themed/ImageSvg.qml</file>
 
         <file alias="ButtonImageOld.qml">ThemedComponents/ButtonImageOld.qml</file>

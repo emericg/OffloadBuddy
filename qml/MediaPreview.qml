@@ -7,7 +7,7 @@ import com.offloadbuddy.shared 1.0
 import "UtilsString.js" as UtilsString
 
 Rectangle {
-    id: preview
+    id: mediaPreview
     anchors.top: parent.top
     anchors.bottom: parent.bottom
     anchors.left: parent.left
@@ -62,27 +62,27 @@ Rectangle {
 
         function toogleFullScreen() {
             // Check if fullscreen is necessary (preview is already maxed out)
-            if (!preview.isFullScreen) {
+            if (!mediaPreview.isFullScreen) {
                 //console.log("Check if fullscreen is necessary: " + (shot.width / shot.height) + " vs " + (preview.width / preview.height))
-                if ((shot.width / shot.height) < (preview.width / preview.height))
+                if ((shot.width / shot.height) < (mediaPreview.width / mediaPreview.height))
                     return
             }
 
             // Set fullscreen
-            preview.isFullScreen = !preview.isFullScreen
+            mediaPreview.isFullScreen = !mediaPreview.isFullScreen
 
-            if (!preview.isFullScreen) {
+            if (!mediaPreview.isFullScreen) {
                 buttonFullscreen.imageSource = "qrc:/icons_material/baseline-fullscreen-24px.svg"
                 rectangleMetadatas.visible = true
                 rectangleFiles.visible = true
                 itemActions.visible = true
-                preview.anchors.right = rectangleMetadatas.left
+                mediaPreview.anchors.right = rectangleMetadatas.left
             } else {
                 buttonFullscreen.imageSource = "qrc:/icons_material/baseline-fullscreen_exit-24px.svg"
                 rectangleMetadatas.visible = false
                 rectangleFiles.visible = false
                 itemActions.visible = false
-                preview.anchors.right = parent.parent.right
+                mediaPreview.anchors.right = parent.parent.right
             }
 
             if (videoPlayer.position > 0)
@@ -135,8 +135,8 @@ Rectangle {
             onSourceChanged: {
                 stop()
                 isRunning = false
-                preview.startLimit = -1
-                preview.stopLimit = -1
+                mediaPreview.startLimit = -1
+                mediaPreview.stopLimit = -1
                 timelineLimitStart.width = 0
                 timelineLimitStop.width = 0
                 timelinePosition.width = 0
@@ -211,7 +211,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
 
                 onClicked: {
-                    preview.startLimit = videoPlayer.position
+                    mediaPreview.startLimit = videoPlayer.position
                     //clipStart = mediaPlayer.position
                     //console.log("clipStart: " + clipStart)
                     timelineLimitStart.width = timeline.width * (videoPlayer.position / videoPlayer.duration);
@@ -227,7 +227,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
 
                 onClicked: {
-                    preview.stopLimit = videoPlayer.position
+                    mediaPreview.stopLimit = videoPlayer.position
                     //clipStop = mediaPlayer.position
                     //console.log("clipStop: " + clipStart)
                     timelineLimitStop.width = timeline.width * (((videoPlayer.duration - videoPlayer.position) / videoPlayer.duration));
@@ -277,7 +277,7 @@ Rectangle {
 
                 onClicked: {
                     panelEncode.updateEncodePanel(shot)
-                    panelEncode.setClip(preview.startLimit, preview.stopLimit)
+                    panelEncode.setClip(mediaPreview.startLimit, mediaPreview.stopLimit)
                     popupEncode.open()
                 }
             }

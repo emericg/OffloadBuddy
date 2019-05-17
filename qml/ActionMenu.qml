@@ -7,6 +7,7 @@ Rectangle {
     height: menuHolder.height + 12
     visible: isOpen
     focus: isOpen
+    radius: 2
 
     signal menuSelected(int index)
     property bool isOpen: false
@@ -84,18 +85,15 @@ Rectangle {
             onButtonClicked: menuSelected(index)
         }
 
-        Item {
+        Rectangle {
             id: telemetrySeparator
-            height: 2
             anchors.left: parent.left
             anchors.leftMargin: 10
             anchors.right: parent.right
             anchors.rightMargin: 20
-            Rectangle {
-                height: 2
-                width: parent.width
-                color: "#c3c3c3"
-            }
+
+            height: 1
+            color: "#c3c3c3"
         }
         ActionButton {
             id: telemetryGPMF
@@ -110,18 +108,15 @@ Rectangle {
             onButtonClicked: menuSelected(index)
         }
 
-        Item {
+        Rectangle {
             id: removeSeparator
-            height: 2
             anchors.left: parent.left
             anchors.leftMargin: 10
             anchors.right: parent.right
             anchors.rightMargin: 20
-            Rectangle {
-                height: 2
-                width: parent.width
-                color: "#c3c3c3"
-            }
+
+            height: 1
+            color: "#c3c3c3"
         }
         ActionButton {
             id: removeSelected
