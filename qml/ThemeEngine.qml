@@ -66,11 +66,11 @@ Item {
             colorSidebar =          "#607D8B"
             colorSidebarContent =   "#ffffff"
 
-            colorHeader =           "#D0D0D0"
+            colorHeader =           "#E9E9E9"
             colorHeaderContent =    "#353637" // sub: "#000000"
 
-            colorBackground =       "#EEEEEE"
-            colorForeground =       "#E0E0E0"
+            colorBackground =       "#FFFFFF"
+            colorForeground =       "#F0F0F0"
 
             colorText =             "#000000"
             colorSubText =          "#606060"
@@ -81,11 +81,11 @@ Item {
             colorWarning =          "#FFC107"
             colorError =            "#FF5722"
 
-            colorButton =           "#DBDBDB"
+            colorButton =           "#D9D9D9"
             colorButtonDown =       "#c1c1c1"
             colorButtonText =       "#000000"
-            colorButtonHover =      "#E4E4E4"
-            colorProgressBarBg =    "#E4E4E4"
+            colorButtonHover =      "#E0E0E0"
+            colorProgressBarBg =    "#E0E0E0"
 
             selector =              "arrow"
 
@@ -109,7 +109,7 @@ Item {
             colorPrimary =          "#ff9f1a"
             colorSecondary =        "#c56cf0"
             colorWarning =          "#ee2b57"
-            colorError =            "#FFDB63"
+            colorError =            "#ee2b57"
 
             colorButton =           "#555555"
             colorButtonDown =       "#333333"

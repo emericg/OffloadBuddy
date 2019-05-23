@@ -5,12 +5,12 @@ import com.offloadbuddy.theme 1.0
 
 Popup {
     id: popupConfirm
-    width: 480
-    height: 256
+    width: 640
+    height: (files.length) ? 320 : 180
 
     signal confirmed()
     property string message
-    property string files: []
+    property var files: []
 
     modal: true
     focus: true
@@ -35,6 +35,24 @@ Popup {
         horizontalAlignment: Text.AlignHCenter
         wrapMode: Text.WordWrap
         font.pixelSize: 20
+        color: Theme.colorText
+    }
+
+    ListView {
+        id: listArea
+        anchors.bottom: row.top
+        anchors.bottomMargin: 24
+        anchors.top: textArea.bottom
+        anchors.topMargin: 24
+        anchors.right: parent.right
+        anchors.rightMargin: 24
+        anchors.left: parent.left
+        anchors.leftMargin: 24
+
+        visible: files.length
+        clip: true
+        model: files
+        delegate: Text { text: modelData; color: Theme.colorText; }
     }
 
     Row {
@@ -49,7 +67,7 @@ Popup {
             id: buttonConfirm
             anchors.verticalCenter: parent.verticalCenter
 
-            text: qsTr("Confirm")
+            text: qsTr("Delete")
             source: "qrc:/icons_material/baseline-delete-24px.svg"
             fullColor: true
             primaryColor: Theme.colorError
@@ -64,6 +82,7 @@ Popup {
             anchors.verticalCenter: parent.verticalCenter
 
             text: qsTr("Cancel")
+            primaryColor: Theme.colorPrimary
             onClicked: {
                 popupConfirm.close();
             }

@@ -114,7 +114,7 @@ Item {
                 width: 80
                 height: 28
                 opacity: 0.8
-                color: Theme.colorForeground
+                color: Theme.colorBackground
 
                 Text {
                     id: codecVideoText
@@ -135,7 +135,7 @@ Item {
                 width: 80
                 height: 28
                 opacity: 0.8
-                color: Theme.colorForeground
+                color: Theme.colorBackground
 
                 Text {
                     id: codecAudioText

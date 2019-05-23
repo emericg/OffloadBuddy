@@ -110,7 +110,7 @@ Item {
         x: (applicationWindow.width / 2) - (confirmDeleteMultipleFilesPopup.width / 2) - (applicationSidebar.width / 2)
         y: (applicationWindow.height / 2) - (confirmDeleteMultipleFilesPopup.height / 2)
 
-        message: qsTr("Delete these selected files?")
+        message: qsTr("Are you sure you want to delete the selected files?")
         onConfirmed: {
             //
         }
@@ -121,7 +121,7 @@ Item {
         x: (applicationWindow.width / 2) - (confirmDeleteSingleFilePopup.width / 2) - (applicationSidebar.width / 2)
         y: (applicationWindow.height / 2) - (confirmDeleteSingleFilePopup.height / 2)
 
-        message: qsTr("Are you sure you want to delete the selected file?")
+        message: qsTr("Are you sure you want to delete this file?")
         onConfirmed: {
             mediaLibrary.deleteSelected(selectedItemUuid)
 
