@@ -119,6 +119,8 @@ Rectangle {
         anchors.rightMargin: 8
         anchors.verticalCenter: parent.verticalCenter
 
+        visible: job.type !== 3 // not a deletion
+
         ImageSvg {
             id: imageOpen
             width: 32

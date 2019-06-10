@@ -493,7 +493,7 @@ Item {
                 else if (typeof mediaLibrary !== "undefined")
                     mediaProvider = mediaLibrary
 
-                mediaProvider.reencodeSelected(shot.uuid, codec,
+                mediaProvider.reencodeSelected(currentShot.uuid, codec,
                                           sliderQuality.value,
                                           sliderSpeed.value,
                                           fps,

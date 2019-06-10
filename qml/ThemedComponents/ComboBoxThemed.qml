@@ -43,7 +43,7 @@ ComboBox {
     }
 */
     contentItem: Text {
-        leftPadding: 8
+        leftPadding: 16
         rightPadding: 8
 
         text: control.displayText

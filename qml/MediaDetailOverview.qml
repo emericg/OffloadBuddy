@@ -82,7 +82,6 @@ Item {
             codec.text = shot.codecVideo
             if (shot.codecAudio) codec.text +=  " / " + shot.codecAudio
             framerate.text = UtilsString.framerateToString(shot.framerate)
-            timecode.text = shot.timecode
         }
 
         size.text = UtilsString.bytesToString_short(shot.datasize)
@@ -536,6 +535,7 @@ Item {
                 width: 28
                 height: 28
 
+                visible: shot.timecode
                 source: "qrc:/icons_material/baseline-av_timer-24px.svg"
                 color: Theme.colorText
 
@@ -546,7 +546,7 @@ Item {
                     anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: ""
+                    text: shot.timecode
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
                     font.pixelSize: Theme.fontSizeContentText
