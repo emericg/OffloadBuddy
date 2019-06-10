@@ -31,6 +31,7 @@
 
         <file alias="ItemImageButton.qml">components/ItemImageButton.qml</file>
         <file alias="ItemMenuButton.qml">components/ItemMenuButton.qml</file>
+        <file alias="ItemSidebarButton.qml">components/ItemSidebarButton.qml</file>
         <file alias="WindowGeometrySaver.qml">components/WindowGeometrySaver.qml</file>
         <file alias="ButtonImage.qml">components_themed/ButtonImage.qml</file>
         <file alias="ButtonImageThemed.qml">components_themed/ButtonImageThemed.qml</file>

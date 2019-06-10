@@ -38,9 +38,9 @@ ApplicationWindow {
     WindowGeometrySaver {
         window: applicationWindow
     }
-/*
-    // Menubar /////////////////////////////////////////////////////////////////
 
+    // Menubar /////////////////////////////////////////////////////////////////
+/*
     menuBar: MenuBar {
         Menu {
             title: qsTr("File")
