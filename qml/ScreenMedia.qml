@@ -14,7 +14,7 @@ Item {
     property Shot shot: null
 
     onShotChanged: {
-        // if we 'just' changed shot, we reset the state // FIXME forward/backward reset's it too
+        // if we 'just' changed shot, we reset the state // FIXME forward/backward reset it too
         screenMedia.state = "overview"
         updateShotDetails()
 

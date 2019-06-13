@@ -155,7 +155,7 @@ class Device: public ShotProvider
     Q_PROPERTY(int deviceStorage READ getDeviceStorage NOTIFY deviceUpdated)
     Q_PROPERTY(int deviceModel READ getDeviceModel NOTIFY deviceUpdated)
 
-    Q_PROPERTY(QString uniqueId READ getUniqueId NOTIFY deviceUpdated)
+    Q_PROPERTY(QString uuid READ getUuid NOTIFY deviceUpdated)
 
     Q_PROPERTY(QString brand READ getBrand NOTIFY deviceUpdated)
     Q_PROPERTY(QString model READ getModel NOTIFY deviceUpdated)
@@ -174,6 +174,8 @@ class Device: public ShotProvider
     deviceModel_e m_deviceModel = MODEL_UNKNOWN;
     deviceStorage_e m_deviceStorage = STORAGE_FILESYSTEM;
     deviceState_e m_deviceState = DEVICE_STATE_IDLE;
+
+    QString m_uuid;             //!< Device unique identifier, generated at object creation
 
     // Generic infos
     QString m_brand = "Unknown";//!< Device brand
@@ -231,7 +233,7 @@ public slots:
     QString getSerial() const { return m_serial; }
     QString getFirmware() const { return m_firmware; }
 
-    QString getUniqueId() const;
+    QString getUuid() const { return m_uuid; }
 
     //
     int getStorageCount() const;

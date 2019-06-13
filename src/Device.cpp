@@ -27,6 +27,7 @@
 #include <QStorageInfo>
 #include <QFile>
 #include <QDir>
+#include <QUuid>
 #include <QThread>
 #include <QDebug>
 
@@ -43,6 +44,8 @@ Device::Device(const deviceType_e type, const deviceStorage_e storage,
     m_model = model;
     m_serial = serial;
     m_firmware = version;
+
+    m_uuid = QUuid::createUuid().toString();
 
     connect(&m_updateStorageTimer, &QTimer::timeout, this, &Device::refreshStorageInfos);
     m_updateStorageTimer.setInterval(10 * 1000);
@@ -72,25 +75,6 @@ Device::~Device()
 
 /* ************************************************************************** */
 /* ************************************************************************** */
-
-QString Device::getUniqueId() const
-{
-    QString id;
-
-    if (!m_serial.isEmpty())
-        id = m_serial;
-    else if (!m_filesystemStorages.empty() && !getPath(0).isEmpty())
-        id = getPath(0);
-    else if (!m_mtpDevices.empty())
-        id = "MTP-" + QString::number(m_mtpDevices.at(0)->devNum) + "-" + QString::number(m_mtpDevices.at(0)->devNum);
-    else
-    {
-        qWarning() << "getUniqueId() unable to get unique Id !!!";
-        id = m_model;
-    }
-
-    return id;
-}
 
 void Device::setName(const QString &name)
 {

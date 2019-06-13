@@ -15,25 +15,25 @@ Item {
 
     onCurrentDeviceChanged: {
         if (currentDevice) {
-            //console.log("Device is now " + currentDevice.uniqueId)
+            //console.log("Device is now " + currentDevice.uuid)
             screenDeviceGrid.updateDeviceHeader()
             screenDeviceGrid.initGridViewSettings()
             screenDeviceGrid.updateGridViewSettings()
         }
 
-        if (currentDevice && !deviceSavedStateList[currentDevice.uniqueId]) {
-            deviceSavedStateList[currentDevice.uniqueId] = ({ orderBy: 0,
-                                                              filterBy: 0,
-                                                              zoomLevel: 2.0,
-                                                              mainState: "stateMediaGrid",
-                                                              selectedIndex: 0,
-                                                              detail_shot: null,
-                                                              detail_state: "overview" })
+        if (currentDevice && !deviceSavedStateList[currentDevice.uuid]) {
+            deviceSavedStateList[currentDevice.uuid] = ({ orderBy: 0,
+                                                          filterBy: 0,
+                                                          zoomLevel: 2.0,
+                                                          mainState: "stateMediaGrid",
+                                                          selectedIndex: 0,
+                                                          detail_shot: null,
+                                                          detail_state: "overview" })
         }
 
-        if (currentDevice && deviceSavedStateList[currentDevice.uniqueId]) {
+        if (currentDevice && deviceSavedStateList[currentDevice.uuid]) {
             // restore state
-            deviceSavedState = deviceSavedStateList[currentDevice.uniqueId]
+            deviceSavedState = deviceSavedStateList[currentDevice.uuid]
             state = deviceSavedState.mainState
             screenDeviceGrid.restoreState()
             screenMedia.restoreState()

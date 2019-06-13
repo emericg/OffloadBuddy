@@ -311,7 +311,7 @@ bool JobManager::addJobs(JobType type, Device *d, MediaLibrary *ml,  QList<Shot 
                  type == JOB_CLIP ||
                  type == JOB_COPY || type == JOB_MERGE)
         {
-            m_selected_worker = m_job_disk[d->getUniqueId()];
+            m_selected_worker = m_job_disk[d->getUuid()];
 
             if (m_selected_worker == nullptr)
             {
@@ -335,7 +335,7 @@ bool JobManager::addJobs(JobType type, Device *d, MediaLibrary *ml,  QList<Shot 
                     status = true;
                 }
 
-                m_job_disk.insert(d->getUniqueId(), m_selected_worker);
+                m_job_disk.insert(d->getUuid(), m_selected_worker);
             }
         }
         else
