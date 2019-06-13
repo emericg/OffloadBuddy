@@ -19,7 +19,7 @@ Item {
         updateShotDetails()
 
         // save state
-        if (deviceSavedState && typeof deviceSavedState !== "undefined")
+        if (typeof deviceSavedState !== "undefined" && deviceSavedState)
             deviceSavedState.detail_shot = shot
     }
 
@@ -149,6 +149,53 @@ Item {
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                 }
+            }
+        }
+
+        Row {
+            id: rowActions
+            anchors.right: rowMenus.left
+            anchors.rightMargin: 32
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: 4
+
+            ItemImageButton {
+                id: buttonTimestamp
+                width: 48
+                height: 48
+                source: "qrc:/icons_material/baseline-date_range-24px.svg"
+            }
+
+            ItemImageButton {
+                id: buttonEncode
+                width: 48
+                height: 48
+                source: "qrc:/icons_material/baseline-settings_applications-24px.svg"
+                onClicked: contentOverview.openEncodePopup()
+            }
+
+            ItemImageButton {
+                id: buttonTelemetry
+                width: 48
+                height: 48
+                source: "qrc:/icons_material/baseline-insert_chart-24px.svg"
+                visible: (shot.hasGPMF && shot.hasGPS)
+            }
+
+            ItemImageButton {
+                id: buttonShowFolder
+                width: 48
+                height: 48
+                source: "qrc:/icons_material/outline-folder-24px.svg"
+                onClicked: shot.openFolder()
+            }
+
+            ItemImageButton {
+                id: buttonDelete
+                width: 48
+                height: 48
+                source: "qrc:/icons_material/baseline-delete-24px.svg"
+                onClicked: popupDelete.open()
             }
         }
 

@@ -75,14 +75,23 @@ Rectangle {
                 buttonFullscreen.imageSource = "qrc:/icons_material/baseline-fullscreen-24px.svg"
                 rectangleMetadatas.visible = true
                 rectangleFiles.visible = true
-                itemActions.visible = true
                 mediaPreview.anchors.right = rectangleMetadatas.left
+
+                mediaControls.anchors.top = mediaOutput.bottom
+                mediaControls.anchors.topMargin = 0
+                mediaControls.anchors.bottom = undefined
+                mediaControls.anchors.bottomMargin = undefined
             } else {
                 buttonFullscreen.imageSource = "qrc:/icons_material/baseline-fullscreen_exit-24px.svg"
                 rectangleMetadatas.visible = false
                 rectangleFiles.visible = false
-                itemActions.visible = false
                 mediaPreview.anchors.right = parent.parent.right
+/*
+                mediaControls.anchors.top = undefined
+                mediaControls.anchors.topMargin = undefined
+                mediaControls.anchors.bottom = mediaOutput.bottom
+                mediaControls.anchors.bottomMargin = 0
+*/
             }
 
             if (videoPlayer.position > 0)
@@ -102,8 +111,9 @@ Rectangle {
 
     VideoOutput {
         id: mediaOutput
-        anchors.fill: parent
         source: videoPlayer
+        anchors.fill: parent
+        anchors.bottomMargin: mediaControls.visible ? 40 : 0
 
         property int clipStart: 0
         property int clipStop: shot.duration
@@ -159,12 +169,12 @@ Rectangle {
             height: 40
             opacity: 1
             color: Theme.colorButton
+            anchors.top: parent.bottom
+            anchors.topMargin: 0
             anchors.right: parent.right
             anchors.rightMargin: 0
             anchors.left: parent.left
             anchors.leftMargin: 0
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 0
 
             ButtonImageOld {
                 id: buttonPlay
@@ -257,28 +267,13 @@ Rectangle {
                 id: buttonScreenshot
                 width: 40
                 height: 40
-                anchors.right: buttonEncode.left
+                anchors.right: buttonFullscreen.left
                 anchors.rightMargin: 0
                 anchors.verticalCenter: parent.verticalCenter
                 imageSource: "qrc:/icons_material/outline-camera_alt-24px.svg"
 
                 onClicked: {
                     //
-                }
-            }
-            ButtonImageOld {
-                id: buttonEncode
-                width: 40
-                height: 40
-                anchors.right: buttonFullscreen.left
-                anchors.rightMargin: 0
-                anchors.verticalCenter: parent.verticalCenter
-                imageSource: "qrc:/icons_material/baseline-settings_applications-24px.svg"
-
-                onClicked: {
-                    panelEncode.updateEncodePanel(shot)
-                    panelEncode.setClip(mediaPreview.startLimit, mediaPreview.stopLimit)
-                    popupEncode.open()
                 }
             }
             ButtonImageOld {

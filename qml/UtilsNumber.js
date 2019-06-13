@@ -25,8 +25,7 @@ function padNumber(n, width, z) {
  *
  * example: trimNumber(154.54645698, 100000) => 154.54645
  */
-function trimNumber(n, p)
-{
+function trimNumber(n, p) {
     if (typeof p == "undefined") {
         p = 100000;
     }
@@ -45,8 +44,7 @@ function normalize(value, min, max) {
 /*!
  * Round n to a multiple of two
  */
-function round2(n)
-{
+function round2(n) {
     return Math.ceil(n/2)*2;
 }
 

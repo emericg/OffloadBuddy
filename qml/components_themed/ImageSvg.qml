@@ -14,7 +14,7 @@ Item {
     Image {
         id: sourceImg
         anchors.fill: parent
-        visible: color ? false : true
+        visible: (parent.visible && parent.color) ? false : true
 
         source: parent.source
         sourceSize: Qt.size(width, height)
@@ -23,7 +23,7 @@ Item {
     ColorOverlay {
         source: sourceImg
         anchors.fill: parent
-        visible: color ? true : false
+        visible: (parent.visible && parent.color) ? true : false
 
         color: parent.color
         cached: visible
