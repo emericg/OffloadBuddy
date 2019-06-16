@@ -313,9 +313,20 @@ Rectangle {
                     anchors.fill: parent
 
                     onClicked: {
-                        var fff = mouseX / timeline.width
-                        //if (mediaPlayer.isRunning)
+                        var fff = (mouseX / timeline.width)
+                        var wasRunning = videoPlayer.isRunning
+
+                        if (wasRunning) {
+                            videoPlayer.pause()
+                            videoPlayer.isRunning = false
+                        }
+
                         videoPlayer.seek(videoPlayer.duration * fff)
+
+                        if (wasRunning) {
+                            videoPlayer.play()
+                            videoPlayer.isRunning = true
+                        }
                     }
                 }
 
