@@ -95,6 +95,9 @@ Item {
         panelEncode.setClip(mediaPreview.startLimit, mediaPreview.stopLimit)
         popupEncode.open()
     }
+    function openDeletePopup() {
+        popupDelete.open()
+    }
 
     // POPUPS //////////////////////////////////////////////////////////////////
 

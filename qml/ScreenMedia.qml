@@ -195,7 +195,7 @@ Item {
                 width: 48
                 height: 48
                 source: "qrc:/icons_material/baseline-delete-24px.svg"
-                onClicked: popupDelete.open()
+                onClicked: contentOverview.openDeletePopup()
             }
         }
 
