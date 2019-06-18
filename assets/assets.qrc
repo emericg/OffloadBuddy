@@ -15,6 +15,7 @@
         <file>icons_material/baseline-delete-24px.svg</file>
         <file>icons_material/baseline-done-24px.svg</file>
         <file>icons_material/baseline-error-24px.svg</file>
+        <file>icons_material/baseline-flip-24px.svg</file>
         <file>icons_material/baseline-folder-24px.svg</file>
         <file>icons_material/baseline-fullscreen_exit-24px.svg</file>
         <file>icons_material/baseline-fullscreen-24px.svg</file>
@@ -31,7 +32,10 @@
         <file>icons_material/baseline-play_arrow-24px.svg</file>
         <file>icons_material/baseline-play_circle_outline-24px.svg</file>
         <file>icons_material/baseline-refresh-24px.svg</file>
+        <file>icons_material/baseline-rotate_left-24px.svg</file>
+        <file>icons_material/baseline-rotate_right-24px.svg</file>
         <file>icons_material/baseline-save_alt-24px.svg</file>
+        <file>icons_material/baseline-save-24px.svg</file>
         <file>icons_material/baseline-schedule-24px.svg</file>
         <file>icons_material/baseline-screen_rotation-24px.svg</file>
         <file>icons_material/baseline-settings_applications-24px.svg</file>

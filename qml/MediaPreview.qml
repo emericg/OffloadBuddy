@@ -7,12 +7,13 @@ import com.offloadbuddy.shared 1.0
 import "UtilsString.js" as UtilsString
 
 Rectangle {
-    id: mediaPreview
+    id: mediaArea
     anchors.top: parent.top
     anchors.bottom: parent.bottom
     anchors.left: parent.left
-    anchors.right: rectangleMetadatas.left
+    anchors.right: infosGeneric.left
     anchors.margins: 16
+
     color: (shot.type >= Shared.SHOT_PICTURE || isFullScreen) ? "transparent" : "black"
 
     property bool isFullScreen: false
@@ -221,7 +222,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
 
                 onClicked: {
-                    mediaPreview.startLimit = videoPlayer.position
+                    mediaArea.startLimit = videoPlayer.position
                     //clipStart = mediaPlayer.position
                     //console.log("clipStart: " + clipStart)
                     timelineLimitStart.width = timeline.width * (videoPlayer.position / videoPlayer.duration);
@@ -237,7 +238,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
 
                 onClicked: {
-                    mediaPreview.stopLimit = videoPlayer.position
+                    mediaArea.stopLimit = videoPlayer.position
                     //clipStop = mediaPlayer.position
                     //console.log("clipStop: " + clipStart)
                     timelineLimitStop.width = timeline.width * (((videoPlayer.duration - videoPlayer.position) / videoPlayer.duration));

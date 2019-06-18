@@ -33,18 +33,17 @@ Item {
         }
 
         if (shot.type >= Shared.SHOT_PICTURE) {
-
             mediaPreview.setImageMode()
 
-            rectanglePicture.visible = true
-            rectangleVideo.visible = false
+            infosPicture.visible = true
+            infosVideo.visible = false
 
             codecAudio.visible = false
             codecVideo.visible = true
             codecVideoText.text = shot.codecVideo
 
             if (shot.iso.length === 0 && shot.focal.length === 0 && shot.exposure.length === 0) {
-                rectanglePicture.visible = false
+                infosPicture.visible = false
             }
 
             if (shot.duration > 1) {
@@ -56,8 +55,8 @@ Item {
         } else {
             mediaPreview.setVideoMode()
 
-            rectanglePicture.visible = false
-            rectangleVideo.visible = true
+            infosPicture.visible = false
+            infosVideo.visible = true
 
             //console.log("shot.previewPhoto :" + shot.previewVideo)
 
@@ -147,10 +146,8 @@ Item {
         id: mediaPreview
     }
 
-    ////////////////////////////////////////////////////////////////////////////
-
     Column {
-        id: rectangleMetadatas
+        id: infosGeneric
         width: 320
         anchors.bottomMargin: 0
         anchors.rightMargin: 0
@@ -223,7 +220,6 @@ Item {
                 anchors.leftMargin: 16
                 horizontalAlignment: Text.AlignRight
 
-                text: ""
                 verticalAlignment: Text.AlignVCenter
                 color: Theme.colorText
                 font.pixelSize: Theme.fontSizeContentText
@@ -299,8 +295,10 @@ Item {
             }
         }
 
+        ////////////////
+
         Column {
-            id: rectanglePicture
+            id: infosPicture
             anchors.left: parent.left
             anchors.leftMargin: 0
             anchors.right: parent.right
@@ -380,8 +378,10 @@ Item {
             }
         }
 
+        ////////////////
+
         Column {
-            id: rectangleVideo
+            id: infosVideo
             anchors.right: parent.right
             anchors.rightMargin: 0
             anchors.left: parent.left
@@ -510,17 +510,18 @@ Item {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     Rectangle {
-        id: rectangleFiles
+        id: infosFiles
         width: 320
         height: 256
-        color: Theme.colorForeground
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0
         anchors.right: parent.right
         anchors.rightMargin: 0
+
+        color: Theme.colorForeground
 
         Text {
             id: labelFileCount
