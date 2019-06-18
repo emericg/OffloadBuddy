@@ -244,7 +244,7 @@ bool Device::addStorage_filesystem(const QString &path)
 void Device::workerScanningStarted(QString s)
 {
     //qDebug() << "> Device::workerScanningStarted(" << s << ")";
-    Q_UNUSED(s);
+    Q_UNUSED(s)
 
     m_deviceState = DEVICE_STATE_SCANNING;
     emit stateUpdated();
@@ -253,7 +253,7 @@ void Device::workerScanningStarted(QString s)
 void Device::workerScanningFinished(QString s)
 {
     //qDebug() << "> Device::workerScanningFinished(" << s << ")";
-    Q_UNUSED(s);
+    Q_UNUSED(s)
 
     m_deviceState = DEVICE_STATE_IDLE;
     emit stateUpdated();

@@ -45,7 +45,6 @@ protected:
 
     ShotModel *m_shotModel = nullptr;
     ShotFilter *m_shotFilter = nullptr;
-    Shot *findShot(Shared::ShotType type, int file_id, int camera_id) const;
 
 Q_SIGNALS:
     void shotModelUpdated();
@@ -70,8 +69,9 @@ public slots:
     void filterByType(const QString &type);
     void filterByFolder(const QString &path);
 
-    QVariant getShotByIndex(const int index) const { return QVariant::fromValue(m_shotModel->getShotAt(index)); }
-    QVariant getShotByName(const QString &name) const { return QVariant::fromValue(m_shotModel->getShotWithName(name)); }
+    //QVariant getShotByIndex(const int index) const { return QVariant::fromValue(m_shotModel->getShotAtIndex(index)); }
+    //QVariant getShotByProxyIndex(const int index) const { QModelIndex proxyIndex = m_shotFilter->index(index, 0); return QVariant::fromValue(m_shotModel->getShotAtProxyIndex(proxyIndex)); }
+    //QVariant getShotByName(const QString &name) const { return QVariant::fromValue(m_shotModel->getShotWithName(name)); }
     QVariant getShotByUuid(const QString &uuid) const { return QVariant::fromValue(m_shotModel->getShotWithUuid(uuid)); }
 };
 

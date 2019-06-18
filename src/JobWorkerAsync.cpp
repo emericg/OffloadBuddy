@@ -234,7 +234,6 @@ void JobWorkerAsync::queueWork(Job *job)
             if (job->settings.codec == "GIF")
             {
                 file_extension = "gif";
-
                 ptiwrap->arguments << "-vf" << "scale=480:-1";
             }
 
@@ -257,15 +256,17 @@ void JobWorkerAsync::queueWork(Job *job)
                 ptiwrap->arguments << "-r" << QString::number(job->settings.fps);
             }
 
+            // keep metadatas?
+            //-map_metadata 0
+
             ptiwrap->destFile = element->destination_dir + element->files.front().name + reencode_or_clipped + "." + file_extension;
             ptiwrap->arguments << ptiwrap->destFile;
 
             m_ffmpegjobs.push_back(ptiwrap);
-/*
+
             // Recap encoding arguments:
             qDebug() << "ENCODING JOB:";
             qDebug() << ">" << ptiwrap->arguments;
-*/
         }
 /*
         // Recap settings:

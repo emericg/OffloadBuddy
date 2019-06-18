@@ -311,7 +311,7 @@ void Shot::parseData_gps5(GpmfBuffer &buf, GpmfKLV &klv,
     std::pair<std::string, float> gps_params;
     gps_params.first = gps_tmcd;
     gps_params.second = gps_fix;
-    Q_UNUSED(gps_dop);
+    Q_UNUSED(gps_dop)
 
     if (gps_fix > 1 && !m_date_gps.isValid())
     {

@@ -145,9 +145,9 @@ QPixmap GridThumbnailer::requestPixmap(const QString &id, QSize *size,
 QQuickTextureFactory *GridThumbnailer::requestTexture(const QString &id, QSize *size,
                                                       const QSize &requestedSize)
 {
-    Q_UNUSED(id);
-    Q_UNUSED(size);
-    Q_UNUSED(requestedSize);
+    Q_UNUSED(id)
+    Q_UNUSED(size)
+    Q_UNUSED(requestedSize)
 
     return nullptr;
 }
@@ -176,7 +176,7 @@ bool GridThumbnailer::getImage_withMinivideo(const QString &path, QImage &img,
                 if (track && track->sample_count > tid)
                 {
                     // TODO seek
-                    Q_UNUSED(timecode_s);
+                    Q_UNUSED(timecode_s)
 
                     // TODO make sure sid is a keyframe
                     //track->sample_type[sid] == sample_VIDEO_SYNC)

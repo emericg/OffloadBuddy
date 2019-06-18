@@ -134,6 +134,8 @@ void ShotModel::removeShot(Shot *shot)
     }
 }
 
+/* ************************************************************************** */
+
 /*!
  * \brief Return all of the shots from a device.
  * \param shots[out]
@@ -147,18 +149,33 @@ void ShotModel::getShots(QList<Shot *> &shots)
 }
 
 /*!
- * \brief ShotModel::getShotAt
+ * \brief ShotModel::getShotAtIndex
  * \param listIndex: might not be the same than gridview index...
  * \return
  */
-Shot *ShotModel::getShotAt(int listIndex)
+Shot *ShotModel::getShotAtIndex(int listIndex)
 {
-    //qDebug() << "ShotModel::getShotAt:" << index(0, listIndex);
+    //qDebug() << "ShotModel::getShotAtIndex:" << index(0, listIndex);
 
     if (listIndex >= 0 && listIndex < m_shots.size())
     {
         return m_shots.at(listIndex);
     }
+
+    return nullptr;
+}
+
+/*!
+ * \brief ShotModel::getShotAtIndex
+ * \param listIndex: should be the same than gridview index...
+ * \return
+ */
+Shot *ShotModel::getShotAtProxyIndex(QModelIndex proxyIndex)
+{
+    //qDebug() << "ShotModel::getShotAtProxyIndex:" << index(0, listIndex);
+    Q_UNUSED(proxyIndex)
+
+    // TODO
 
     return nullptr;
 }
@@ -286,7 +303,7 @@ int ShotModel::getShotCount() const
 
 int ShotModel::rowCount(const QModelIndex & parent) const
 {
-    Q_UNUSED(parent);
+    Q_UNUSED(parent)
     return m_shots.size();
 }
 

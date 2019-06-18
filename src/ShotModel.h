@@ -65,8 +65,9 @@ public:
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
 
     void getShots(QList<Shot *> &shots);
-    Shot *getShotAt(int index);
     Shot *getShotAt(Shared::ShotType type, int file_id, int camera_id) const;
+    Shot *getShotAtIndex(int index);
+    Shot *getShotAtProxyIndex(QModelIndex index);
     Shot *getShotWithUuid(const QString &uuid);
     Shot *getShotWithName(const QString &name);
     Shot *getShotWithPath(const QString &path);
