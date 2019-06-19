@@ -161,39 +161,39 @@ Item {
 
             ItemImageButton {
                 id: buttonTimestamp
-                width: 48
-                height: 48
+                width: 40
+                height: 40
                 source: "qrc:/icons_material/baseline-date_range-24px.svg"
             }
 
             ItemImageButton {
                 id: buttonEncode
-                width: 48
-                height: 48
+                width: 40
+                height: 40
                 source: "qrc:/icons_material/baseline-settings_applications-24px.svg"
                 onClicked: contentOverview.openEncodePopup()
             }
 
             ItemImageButton {
                 id: buttonTelemetry
-                width: 48
-                height: 48
+                width: 40
+                height: 40
                 source: "qrc:/icons_material/baseline-insert_chart-24px.svg"
                 visible: (shot.hasGPMF && shot.hasGPS)
             }
 
             ItemImageButton {
                 id: buttonShowFolder
-                width: 48
-                height: 48
+                width: 40
+                height: 40
                 source: "qrc:/icons_material/outline-folder-24px.svg"
                 onClicked: shot.openFolder()
             }
 
             ItemImageButton {
                 id: buttonDelete
-                width: 48
-                height: 48
+                width: 40
+                height: 40
                 source: "qrc:/icons_material/baseline-delete-24px.svg"
                 onClicked: contentOverview.openDeletePopup()
             }

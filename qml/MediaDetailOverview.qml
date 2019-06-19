@@ -146,6 +146,8 @@ Item {
         id: mediaPreview
     }
 
+    ////////////////
+
     Column {
         id: infosGeneric
         width: 320

@@ -4,6 +4,7 @@ import QtMultimedia 5.9
 
 import com.offloadbuddy.theme 1.0
 import com.offloadbuddy.shared 1.0
+import "UtilsNumber.js" as UtilsNumber
 import "UtilsString.js" as UtilsString
 
 Rectangle {
@@ -23,6 +24,10 @@ Rectangle {
     function setImageMode() {
         console.log("MediaPreview::setImageMode()  >  '" + shot.previewPhoto + "'")
 
+        output.scale = 1
+        output.rotation = 0
+        output.transform = noflip
+
         imageOutput.visible = true
         mediaOutput.visible = false
 
@@ -31,10 +36,16 @@ Rectangle {
         } else {
             // error icon?
         }
+
+        computeSize(shot.width, shot.height)
     }
 
     function setVideoMode() {
         console.log("MediaPreview::setVideoMode()  >  '" + shot.previewVideo + "'")
+
+        output.scale = 1
+        output.rotation = 0
+        output.transform = noflip
 
         imageOutput.visible = false
         mediaOutput.visible = true
@@ -44,6 +55,8 @@ Rectangle {
         } else {
             // error icon?
         }
+
+        computeSize(shot.width, shot.height)
 
         videoPlayer.pause()
     }
@@ -55,127 +68,316 @@ Rectangle {
         }
     }
 
-    MouseArea {
-        id: previewFullScreen
-        anchors.fill: parent
+    function toogleFullScreen() {
+        // Check if fullscreen is necessary (preview is already maxed out)
+        if (!mediaArea.isFullScreen) {
+            //console.log("Check if fullscreen is necessary: " + (shot.width / shot.height) + " vs " + (mediaArea.width / mediaArea.height))
+            if ((shot.width / shot.height) < (mediaArea.width / mediaArea.height))
+                return
+        }
 
-        onDoubleClicked: toogleFullScreen()
+        // Set fullscreen
+        mediaArea.isFullScreen = !mediaArea.isFullScreen
 
-        function toogleFullScreen() {
-            // Check if fullscreen is necessary (preview is already maxed out)
-            if (!mediaPreview.isFullScreen) {
-                //console.log("Check if fullscreen is necessary: " + (shot.width / shot.height) + " vs " + (preview.width / preview.height))
-                if ((shot.width / shot.height) < (mediaPreview.width / mediaPreview.height))
-                    return
-            }
-
-            // Set fullscreen
-            mediaPreview.isFullScreen = !mediaPreview.isFullScreen
-
-            if (!mediaPreview.isFullScreen) {
-                buttonFullscreen.imageSource = "qrc:/icons_material/baseline-fullscreen-24px.svg"
-                rectangleMetadatas.visible = true
-                rectangleFiles.visible = true
-                mediaPreview.anchors.right = rectangleMetadatas.left
-
-                mediaControls.anchors.top = mediaOutput.bottom
-                mediaControls.anchors.topMargin = 0
-                mediaControls.anchors.bottom = undefined
-                mediaControls.anchors.bottomMargin = undefined
-            } else {
-                buttonFullscreen.imageSource = "qrc:/icons_material/baseline-fullscreen_exit-24px.svg"
-                rectangleMetadatas.visible = false
-                rectangleFiles.visible = false
-                mediaPreview.anchors.right = parent.parent.right
+        if (!mediaArea.isFullScreen) {
+            buttonFullscreen.imageSource = "qrc:/icons_material/baseline-fullscreen-24px.svg"
+            infosGeneric.visible = true
+            infosFiles.visible = true
+            mediaArea.anchors.right = infosGeneric.left
 /*
-                mediaControls.anchors.top = undefined
-                mediaControls.anchors.topMargin = undefined
-                mediaControls.anchors.bottom = mediaOutput.bottom
-                mediaControls.anchors.bottomMargin = 0
+            mediaControls.anchors.top = mediaOutput.bottom
+            mediaControls.anchors.topMargin = 0
+            mediaControls.anchors.bottom = undefined
+            mediaControls.anchors.bottomMargin = undefined
 */
-            }
+        } else {
+            buttonFullscreen.imageSource = "qrc:/icons_material/baseline-fullscreen_exit-24px.svg"
+            infosGeneric.visible = false
+            infosFiles.visible = false
+            mediaArea.anchors.right = contentOverview.right
+/*
+            mediaControls.anchors.top = undefined
+            mediaControls.anchors.topMargin = undefined
+            mediaControls.anchors.bottom = mediaOutput.bottom
+            mediaControls.anchors.bottomMargin = 0
+*/
+        }
 
-            if (videoPlayer.position > 0)
-                timelinePosition.width = timeline.width * (videoPlayer.position / videoPlayer.duration)
+        computeSize(shot.width, shot.height)
+
+        if (videoPlayer.position > 0)
+            timelinePosition.width = timeline.width * (videoPlayer.position / videoPlayer.duration)
+    }
+
+    function computeSize(mediaWidth, mediaHeight) {
+        //console.log("Check if fullscreen is necessary: " + (shot.width / shot.height) + " vs " + (mediaArea.width / mediaArea.height))
+        //if ((shot.width / shot.height) < (mediaArea.width / mediaArea.height))
+
+        var media_ar = (mediaWidth / mediaHeight)
+        //console.log("media ratio: " + media_ar)
+        var area_ar = (mediaArea.width / mediaArea.height)
+        //console.log("area ratio: " + area_ar)
+
+        var ratio = (mediaArea.width / mediaWidth)
+        //console.log("mediaArea ratio: " + ratio)
+
+        if (media_ar > area_ar) {
+            //console.log(">1")
+            overlays.width = mediaWidth * ratio
+            overlays.height = mediaHeight * ratio
+        } else {
+            //console.log(">2")
+            overlays.width = mediaWidth * (mediaArea.height / mediaHeight )
+            overlays.height = mediaHeight * (mediaArea.height / mediaHeight )
+        }
+
+        //console.log("> media size    : " + mediaWidth + "x" + mediaHeight)
+        //console.log("> mediaArea size: " + mediaArea.width + "x" + mediaArea.height)
+        //console.log("> poc size      : " + overlays.width + "x" + overlays.height)
+    }
+
+    Matrix4x4 { id: noflip; matrix: Qt.matrix4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1) }
+    Matrix4x4 { id: vflip; matrix: Qt.matrix4x4(-1, 0, 0, output.width, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1) }
+    Matrix4x4 { id: hflip; matrix: Qt.matrix4x4(1, 0, 0, 0, 0, -1, 0, output.height, 0, 0, 1, 0, 0, 0, 0, 1) }
+    Matrix4x4 { id: vhflip; matrix: Qt.matrix4x4(-1, 0, 0, output.width, 0, -1, 0, output.height, 0, 0, 1, 0, 0, 0, 0, 1) }
+
+    function setFlip(value) {
+        console.log("setflip() " + value)
+
+        if (value === "vertical")
+            output.vflipped = !output.vflipped
+        if (value === "horizontal")
+            output.hflipped = !output.hflipped
+
+        if (output.vflipped && output.hflipped)
+            output.transform = vhflip
+        else if (output.vflipped)
+            output.transform = vflip
+        else if (output.hflipped)
+            output.transform = hflip
+        else
+            output.transform = noflip
+    }
+
+    function setRotation(value) {
+        console.log("setRotation() " + value)
+
+        output.rotation += value
+        output.rotation = UtilsNumber.mod(output.rotation, 360)
+
+        if (output.rotation == 90 || output.rotation == 270) {
+            output.scale = shot.height / shot.width
+        } else {
+            output.scale = 1
         }
     }
 
-    Image {
-        id: imageOutput
+    ////////////////////////////////////////////////////////////////////////////
+
+    Item {
+        id: output
         anchors.fill: parent
-        autoTransform: true
-        fillMode: Image.PreserveAspectFit
 
-        sourceSize.width: shot.width / 2
-        sourceSize.height: shot.height / 2
-    }
+        property bool vflipped: false
+        property bool hflipped: false
 
-    VideoOutput {
-        id: mediaOutput
-        source: videoPlayer
-        anchors.fill: parent
-        anchors.bottomMargin: mediaControls.visible ? 40 : 0
+        Image {
+            id: imageOutput
+            anchors.fill: parent
+            autoTransform: true
+            fillMode: Image.PreserveAspectFit
 
-        property int clipStart: 0
-        property int clipStop: shot.duration
+            sourceSize.width: shot.width / 2
+            sourceSize.height: shot.height / 2
+        }
 
-        MediaPlayer {
-            id: videoPlayer
-            volume: 0.5
-            autoPlay: true // will be paused immediately
-            notifyInterval: 33
+        VideoOutput {
+            id: mediaOutput
+            source: videoPlayer
 
-            property bool isRunning: false
-            onError: {
-                if (platform.os === "windows")
-                    mediaBanner.openMessage(qsTr("Codec pack installed?"))
-                else
-                    mediaBanner.openMessage(qsTr("Oooops..."))
-            }
-            onPlaying: {
-                buttonPlay.imageSource = "qrc:/icons_material/baseline-pause-24px.svg"
-            }
-            onPaused: {
-                buttonPlay.imageSource = "qrc:/icons_material/baseline-play_arrow-24px.svg"
-            }
-            onStopped: {
-                isRunning = false
-                timelinePosition.width = 0
-                buttonPlay.imageSource = "qrc:/icons_material/baseline-play_arrow-24px.svg"
-            }
-            onSourceChanged: {
-                stop()
-                isRunning = false
-                mediaPreview.startLimit = -1
-                mediaPreview.stopLimit = -1
-                timelineLimitStart.width = 0
-                timelineLimitStop.width = 0
-                timelinePosition.width = 0
-                mediaBanner.close()
-            }
-            onVolumeChanged: {
-                soundlinePosition.width = (soundline.width * volume)
-            }
-            onPositionChanged: {
-                timelinePosition.width = timeline.width * (videoPlayer.position / videoPlayer.duration)
+            anchors.fill: parent
+            anchors.bottomMargin: 0 //mediaControls.visible ? 40 : 0
+
+            property int clipStart: 0
+            property int clipStop: shot.duration
+
+            MediaPlayer {
+                id: videoPlayer
+                volume: 0.5
+                autoPlay: true // will be paused immediately
+                notifyInterval: 33
+
+                property bool isRunning: false
+                onError: {
+                    if (platform.os === "windows")
+                        mediaBanner.openMessage(qsTr("Codec pack installed?"))
+                    else
+                        mediaBanner.openMessage(qsTr("Oooops..."))
+                }
+                onPlaying: {
+                    buttonPlay.imageSource = "qrc:/icons_material/baseline-pause-24px.svg"
+                }
+                onPaused: {
+                    buttonPlay.imageSource = "qrc:/icons_material/baseline-play_arrow-24px.svg"
+                }
+                onStopped: {
+                    if (videoPlayer.position >= videoPlayer.duration) { // EOF
+                        isRunning = false
+                        videoPlayer.seek(0)
+                        videoPlayer.pause()
+                    }
+                }
+                onSourceChanged: {
+                    //videoPlayer.stop()
+                    isRunning = false
+                    mediaArea.startLimit = -1
+                    mediaArea.stopLimit = -1
+                    timelineLimitStart.width = 0
+                    timelineLimitStop.width = 0
+                    timelinePosition.width = 0
+                    mediaBanner.close()
+                }
+                onVolumeChanged: {
+                    soundlinePosition.width = (soundline.width * volume)
+                }
+                onPositionChanged: {
+                    timelinePosition.width = timeline.width * (videoPlayer.position / videoPlayer.duration)
+                }
             }
         }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    Item {
+        id: overlays
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+
+
+        Rectangle {
+            id: poc
+
+            z: 2
+            color: "transparent"
+            border.color: "red"
+            border.width: 4
+        }
+        ////////////////
+
+        Item {
+            id: overlayRotations
+            anchors.fill: parent
+            anchors.left: parent.left
+            anchors.leftMargin: 16
+            anchors.top: parent.top
+            anchors.topMargin: 16
+
+            visible: mouseArea.hovered
+            opacity: 0.66
+
+            Row {
+                id: row
+                Column {
+                    ItemImageButton {
+                        id: buttonRotateLeft
+                        width: 40
+                        height: 40
+
+                        background: true
+                        iconColor: "white"
+                        highlightColor: Theme.colorForeground
+                        source: "qrc:/icons_material/baseline-rotate_left-24px.svg"
+                        onClicked: mediaArea.setRotation(-90)
+                    }
+                    ItemImageButton {
+                        id: buttonRotateRight
+                        width: 40
+                        height: 40
+
+                        background: true
+                        iconColor: "white"
+                        highlightColor: Theme.colorForeground
+                        source: "qrc:/icons_material/baseline-rotate_right-24px.svg"
+                        onClicked: mediaArea.setRotation(+90)
+                    }
+                }
+                Column {
+                    ItemImageButton {
+                        id: buttonFlipV
+                        width: 40
+                        height: 40
+
+                        background: true
+                        iconColor: "white"
+                        highlightColor: Theme.colorForeground
+                        source: "qrc:/icons_material/baseline-flip-24px.svg"
+                        onClicked: mediaArea.setFlip("vertical")
+                    }
+                    ItemImageButton {
+                        id: buttonFlipH
+                        width: 40
+                        height: 40
+                        rotation: 90
+
+                        background: true
+                        iconColor: "white"
+                        highlightColor: Theme.colorForeground
+                        source: "qrc:/icons_material/baseline-flip-24px.svg"
+                        onClicked: mediaArea.setFlip("horizontal")
+                    }
+                }
+            }
+            ItemImageButton {
+                id: buttonRotateSave
+                width: 40
+                height: 40
+                anchors.horizontalCenter: row.horizontalCenter
+                anchors.top: row.bottom
+
+                background: true
+                iconColor: "green"
+                highlightColor: Theme.colorForeground
+                visible: (output.rotation != 0 || output.vflipped || output.hflipped)
+                source: "qrc:/icons_material/baseline-save-24px.svg"
+                //onClicked: shot.saveRotation(angle)
+            }
+        }
+
+        MouseArea {
+            id: mouseArea
+            anchors.fill: parent
+            hoverEnabled: true
+            propagateComposedEvents: true
+
+            property bool hovered: false
+
+            onDoubleClicked: toogleFullScreen()
+            onEntered: { hovered = true; }
+            onExited: { hovered = false; }
+        }
+
+        ////////////////
 
         ItemBannerMessage {
             id: mediaBanner
         }
+
+        ////////////////
 
         Rectangle {
             id: mediaControls
             height: 40
             opacity: 1
             color: Theme.colorButton
-            anchors.top: parent.bottom
-            anchors.topMargin: 0
+            visible: (mediaOutput.visible /*&& mouseArea.hovered*/)
+
             anchors.right: parent.right
             anchors.rightMargin: 0
             anchors.left: parent.left
             anchors.leftMargin: 0
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 0
 
             ButtonImageOld {
                 id: buttonPlay
@@ -196,28 +398,12 @@ Rectangle {
                     }
                 }
             }
-            ButtonImageOld {
-                id: buttonStop
-                width: 40
-                height: 40
-                anchors.left: buttonPlay.right
-                anchors.leftMargin: 0
-                anchors.verticalCenter: parent.verticalCenter
-
-                onClicked: {
-                    videoPlayer.stop()
-                    videoPlayer.isRunning = false
-                }
-
-                imageSource: "qrc:/icons_material/baseline-stop-24px.svg"
-            }
-
             Button {
                 id: buttonStartCut
                 width: 40
                 height: 40
                 text: "["
-                anchors.left: buttonStop.right
+                anchors.left: buttonPlay.right
                 anchors.leftMargin: 0
                 anchors.verticalCenter: parent.verticalCenter
 
@@ -286,7 +472,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 imageSource: "qrc:/icons_material/baseline-fullscreen-24px.svg"
 
-                onClicked: previewFullScreen.toogleFullScreen()
+                onClicked: mediaArea.toogleFullScreen()
             }
 
             Rectangle {
@@ -372,7 +558,6 @@ Rectangle {
                 }
 
                 MouseArea {
-                    id: mouseArea
                     anchors.fill: parent
                     onClicked: videoPlayer.volume = (mouseX / soundline.width)
                 }
