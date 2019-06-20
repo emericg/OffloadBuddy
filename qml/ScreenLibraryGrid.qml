@@ -35,9 +35,9 @@ Item {
         if (selectionList.length === 0) selectionMode = false;
     }
 
-    function listSelectedFile(index) {
-        for (var child in selectionList) {
-            console.log("listSelectedFile(" + index)
+    function listSelectedFile() {
+        for (var id in selectionList) {
+            console.log("listSelectedFile(" + shotsview.contentItem.children[id].shot.uuid)
         }
     }
 
@@ -112,7 +112,15 @@ Item {
 
         message: qsTr("Are you sure you want to delete the selected files?")
         onConfirmed: {
-            //
+            var indexes = mediaGrid.selectionList;
+            mediaGrid.exitSelectionMode();
+
+            //var uuid_list = mediaLibrary.getSelectedUuids(indexes);
+            //var path_list = mediaLibrary.getSelectedPaths(indexes);
+            //console.log("paths; " + path_list)
+
+            // actual deletion
+            mediaLibrary.deleteSelection(indexes)
         }
     }
 
@@ -445,6 +453,9 @@ Item {
                 popupEncode.open()
             }
             if (index === 16) {
+                var indexes = []
+                indexes.push(shotsview.currentIndex)
+                confirmDeleteSingleFilePopup.files = mediaLibrary.getSelectedPaths(indexes);
                 confirmDeleteSingleFilePopup.open()
             }
 

@@ -37,8 +37,8 @@ Item {
     }
 
     function listSelectedFile(index) {
-        for (var child in selectionList) {
-            console.log("listSelectedFile(" + index)
+        for (var id in selectionList) {
+            console.log("listSelectedFile(" + shotsview.contentItem.children[id].shot.uuid)
         }
     }
 
@@ -67,6 +67,10 @@ Item {
         comboBox_orderby.currentIndex = deviceSavedState.orderBy
         comboBox_filterby.currentIndex = deviceSavedState.filterBy
         shotsview.currentIndex = deviceSavedState.selectedIndex
+
+        //selectionMode = deviceSavedState.selectionMode;
+        //selectionList = deviceSavedState.selectionList;
+        //selectionCount = deviceSavedState.selectionCount;
     }
 
     function updateBattery() {
@@ -241,9 +245,17 @@ Item {
         x: (applicationWindow.width / 2) - (confirmDeleteMultipleFilesPopup.width / 2) - (applicationSidebar.width / 2)
         y: (applicationWindow.height / 2) - (confirmDeleteMultipleFilesPopup.height / 2)
 
-        message: qsTr("Delete these selected files?")
+        message: qsTr("Are you sure you want to delete the selected files?")
         onConfirmed: {
-            //
+            var indexes = mediaGrid.selectionList;
+            mediaGrid.exitSelectionMode();
+
+            //var uuid_list = currentDevice.getSelectedUuids(indexes);
+            //var path_list = currentDevice.getSelectedPaths(indexes);
+            //console.log("paths; " + path_list)
+
+            // actual deletion
+            currentDevice.deleteSelection(indexes)
         }
     }
 
@@ -779,6 +791,9 @@ Item {
                 popupEncode.open()
             }
             if (index === 16) {
+                var indexes = []
+                indexes.push(shotsview.currentIndex)
+                confirmDeleteSingleFilePopup.files = currentDevice.getSelectedPaths(indexes);
                 confirmDeleteSingleFilePopup.open()
             }
 

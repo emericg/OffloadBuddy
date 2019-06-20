@@ -25,7 +25,9 @@
 #include "FileScanner.h"
 #include "JobManager.h"
 
+#include <QUuid>
 #include <QThread>
+#include <QJSValue>
 #include <QDebug>
 
 /* ************************************************************************** */
@@ -167,6 +169,78 @@ void MediaLibrary::deleteSelected(const QString &shot_uuid)
 
     if (jm && shot)
         jm->addJob(JOB_DELETE, nullptr, this, shot);
+}
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+QStringList MediaLibrary::getSelectedUuids(const QVariant &indexes)
+{
+    qDebug() << "MediaLibrary::getSelectedUuids(" << indexes << ")";
+
+    QStringList selectedUuids;
+
+    // indexes from qml gridview (after filtering)
+    QJSValue jsArray = indexes.value<QJSValue>();
+    const unsigned length = jsArray.property("length").toUInt();
+    QList<QPersistentModelIndex> proxyIndexes;
+
+    for (unsigned i = 0; i < length; i++)
+    {
+        QModelIndex proxyIndex = m_shotFilter->index(jsArray.property(i).toInt(), 0);
+        proxyIndexes.append(QPersistentModelIndex(proxyIndex));
+
+        Shot *shot = qvariant_cast<Shot*>(m_shotFilter->data(proxyIndexes.at(i), ShotModel::PointerRole));
+        if (shot) selectedUuids += shot->getUuid();
+        //qDebug() << "MediaLibrary::getSelectedUuids(" <<  shot->getUuid();
+    }
+
+    return selectedUuids;
+}
+
+/* ************************************************************************** */
+
+QStringList MediaLibrary::getSelectedPaths(const QVariant &indexes)
+{
+    qDebug() << "MediaLibrary::getSelectedPaths(" << indexes << ")";
+
+    QStringList selectedPaths;
+
+    // indexes from qml gridview (after filtering)
+    QJSValue jsArray = indexes.value<QJSValue>();
+    const unsigned jsArray_length = jsArray.property("length").toUInt();
+    QList<QPersistentModelIndex> proxyIndexes;
+
+    for (unsigned i = 0; i < jsArray_length; i++)
+    {
+        QModelIndex proxyIndex = m_shotFilter->index(jsArray.property(i).toInt(), 0);
+        proxyIndexes.append(QPersistentModelIndex(proxyIndex));
+
+        Shot *shot = qvariant_cast<Shot*>(m_shotFilter->data(proxyIndexes.at(i), ShotModel::PointerRole));
+        if (shot) selectedPaths += shot->getFilesQStringList();
+        //qDebug() << "MediaLibrary::listSelected(" <<  shot->getFilesQStringList();
+    }
+
+    return selectedPaths;
+}
+
+/* ************************************************************************** */
+
+void MediaLibrary::deleteSelection(const QVariant &indexes)
+{
+    qDebug() << "MediaLibrary::deleteSelection(" << indexes << ")";
+
+    QStringList selectedUuids = getSelectedUuids(indexes);
+    QList<Shot *> list;
+
+    for (auto u: selectedUuids)
+    {
+        list.push_back(m_shotModel->getShotWithUuid(u));
+    }
+
+    JobManager *jm = JobManager::getInstance();
+    if (jm && !list.empty())
+        jm->addJobs(JOB_DELETE, nullptr, this, list);
 }
 
 /* ************************************************************************** */

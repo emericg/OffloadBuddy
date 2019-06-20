@@ -355,18 +355,19 @@ Rectangle {
         }
         onDoubleClicked: {
             //console.log("ItemShot::onDoubleClicked")
+            if (mouse.button === Qt.LeftButton) {
+                if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== Shared.STORAGE_MTP)) {
+                    // Show the "shot details" screen
+                    actionMenu.visible = false
+                    shotsview.currentIndex = index
 
-            if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== Shared.STORAGE_MTP)) {
-                // Show the "shot details" screen
-                actionMenu.visible = false
-                shotsview.currentIndex = index
+                    shot.getMetadatasFromVideoGPMF();
 
-                shot.getMetadatasFromVideoGPMF();
-
-                if (shotDevice)
-                    screenDevice.state = "stateMediaDetails"
-                else
-                    screenLibrary.state = "stateMediaDetails"
+                    if (shotDevice)
+                        screenDevice.state = "stateMediaDetails"
+                    else
+                        screenLibrary.state = "stateMediaDetails"
+                }
             }
         }
         onPressAndHold: {

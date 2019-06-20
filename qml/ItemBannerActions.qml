@@ -24,34 +24,62 @@ Rectangle {
         anchors.left: parent.left
         anchors.leftMargin: 16
 
-        ButtonImageThemed {
+        ButtonImageWireframe {
             id: buttonOffload
             anchors.verticalCenter: parent.verticalCenter
 
+            visible: applicationContent.state === "device"
+
+            fullColor: true
             text: qsTr("Offload")
             source: "qrc:/icons_material/baseline-save_alt-24px.svg"
+            onClicked: currentDevice.offloadCopySelection(mediaGrid.selectionList);
         }
-        ButtonImageThemed {
+        ButtonImageWireframe {
             id: buttonMerge
             anchors.verticalCenter: parent.verticalCenter
 
+            visible: applicationContent.state === "device"
+
+            fullColor: true
             text: qsTr("Merge")
             source: "qrc:/icons_material/baseline-save_alt-24px.svg"
+            onClicked: currentDevice.offloadMergeSelection(mediaGrid.selectionList);
         }
-        ButtonImageThemed {
+        ButtonImageWireframe {
             id: buttonTelemetry
             anchors.verticalCenter: parent.verticalCenter
 
+            fullColor: true
             text: qsTr("Extract metadatas")
             source: "qrc:/icons_material/baseline-insert_chart_outlined-24px.svg"
+            onClicked: {
+                if (applicationContent.state === "library") {
+                    //mediaLibrary.extractTelemetrySelection(mediaGrid.selectionList);
+                }
+                else if (applicationContent.state === "device") {
+                    //currentDevice.extractTelemetrySelection(mediaGrid.selectionList);
+                }
+            }
         }
-        ButtonImageThemed {
+        ButtonImageWireframe {
             id: buttonDelete
             anchors.verticalCenter: parent.verticalCenter
 
+            fullColor: true
+            primaryColor: Theme.colorWarning
             text: qsTr("Delete")
             source: "qrc:/icons_material/baseline-delete-24px.svg"
-            onClicked: confirmDeleteMultipleFilesPopup.open()
+            onClicked: {
+                if (applicationContent.state === "library") {
+                    confirmDeleteMultipleFilesPopup.files = mediaLibrary.getSelectedPaths(mediaGrid.selectionList);
+                    confirmDeleteMultipleFilesPopup.open();
+                }
+                else if (applicationContent.state === "device") {
+                    confirmDeleteMultipleFilesPopup.files = currentDevice.getSelectedPaths(mediaGrid.selectionList);
+                    confirmDeleteMultipleFilesPopup.open();
+                }
+            }
         }
     }
 
@@ -61,7 +89,7 @@ Rectangle {
         anchors.rightMargin: 56
         anchors.verticalCenter: parent.verticalCenter
 
-        text: qsTr("%1 elements selected").arg(mediaGrid.selectionCount)
+        text: qsTr("%n element(s) selected", "", mediaGrid.selectionCount)
         color: "white"
         font.pixelSize: 16
     }

@@ -27,6 +27,9 @@ Item {
                                                           zoomLevel: 2.0,
                                                           mainState: "stateMediaGrid",
                                                           selectedIndex: 0,
+                                                          selectionMode: false,
+                                                          selectionList: [],
+                                                          selectionCount: 0,
                                                           detail_shot: null,
                                                           detail_state: "overview" })
         }
