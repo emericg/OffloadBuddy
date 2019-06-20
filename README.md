@@ -38,11 +38,12 @@ FEATURES:
 ### Dependencies
 
 You will need a C++14 capable compiler and Qt 5.9+ (with QtMultimedia, QtLocation and QtCharts)
+On Windows, the contribs builds fine with MSVC 2017.
 
 Build dependencies:
 - Qt (5.9+)  
-- cmake  
-- pkg-config  
+- CMake  
+- pkg-config (linux / macOS without contribs)  
 
 Optional dependencies:
 - libusb and libmtp  
@@ -54,7 +55,7 @@ Optional dependencies:
 
 Contribs (optional):
 > $ cd OffloadBuddy/contribs  
-> $ ./contribs.py  
+> $ python3 contribs.py  
 
 OffloadBuddy:
 > $ cd OffloadBuddy/  
@@ -76,7 +77,7 @@ You can help us find and report bugs, propose new features, help with the docume
 ## License
 
 OffloadBuddy is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.  
-Read the [LICENSE](LICENSE) file or [consult the licence on the FSF website](https://www.gnu.org/licenses/gpl-3.0.txt) directly.
+Read the [LICENSE](LICENSE) file or [consult the license on the FSF website](https://www.gnu.org/licenses/gpl-3.0.txt) directly.
 
 Emeric Grange <emeric.grange@gmail.com>
 
