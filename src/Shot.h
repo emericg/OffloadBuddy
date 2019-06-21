@@ -175,7 +175,6 @@ class Shot: public QObject
     double gps_lat = 0.0;
     double gps_long = 0.0;
     double gps_alt = 0.0;
-    QDateTime gps_ts;
 
     // PICTURES metadatas
     QString focal;

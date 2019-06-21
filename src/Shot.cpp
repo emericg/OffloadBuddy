@@ -606,7 +606,7 @@ bool Shot::getMetadatasFromPicture(int index)
             m_date_gps = QDateTime(gpsDate, gpsTime);
 
         // GPS infos ///////////////////////////////////////////////////////////////
-        if (gps_ts.isValid())
+        if (m_date_gps.isValid())
         {
             hasGPS = true;
 
