@@ -55,6 +55,25 @@ Item {
         }
     }
 
+    // KEYS HANDLING ///////////////////////////////////////////////////////////
+
+    focus: (applicationContent.state == "device" && screenDevice.state == "stateMediaDetails") || (applicationContent.state == "library" && screenLibrary.state == "stateMediaDetails")
+    Keys.onPressed: {
+        if (event.key === Qt.Key_Space) {
+            event.accepted = true;
+            contentOverview.setPlayPause();
+        } else if (event.key === Qt.Key_Backspace) {
+            event.accepted = true;
+            if (applicationContent.state == "library")
+                screenLibrary.state = "stateMediaGrid"
+            else if (applicationContent.state == "device")
+                screenDevice.state = "stateMediaGrid"
+        } else if (event.key === Qt.Key_Delete) {
+            event.accepted = true;
+            contentOverview.openDeletePopup();
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////
 
     Rectangle {

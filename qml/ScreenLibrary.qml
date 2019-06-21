@@ -14,6 +14,37 @@ Item {
         onStateUpdated: screenLibraryGrid.updateGridViewSettings()
     }
 
+    // KEYS HANDLING ///////////////////////////////////////////////////////////
+
+    Shortcut {
+        sequence: StandardKey.Back
+        onActivated: {
+            if (screenLibrary.state === "stateMediaDetails")
+                screenLibrary.state = "stateMediaGrid"
+        }
+    }
+    Shortcut {
+        sequence: StandardKey.Forward
+        onActivated: {
+            if (screenLibrary.state === "stateMediaGrid")
+                if (screenLibraryGrid.selectedItemIndex >= 0)
+                    screenLibrary.state = "stateMediaDetails"
+        }
+    }
+/*
+    focus: true
+    Keys.onPressed: {
+        if (event.key === Qt.Key_Enter) {
+            event.accepted = true;
+            console.log("Key_Enter in screenlibrary")
+            //
+        } else if (event.key === Qt.Key_Delete) {
+            console.log("Key_Delete in screenlibrary")
+            event.accepted = true;
+            //
+        }
+    }
+*/
     // CONTENT /////////////////////////////////////////////////////////////////
 
     MouseArea {
@@ -32,21 +63,6 @@ Item {
             }
         }
     }
-    Shortcut {
-        sequence: StandardKey.Back
-        onActivated: {
-            if (screenLibrary.state === "stateMediaDetails")
-                screenLibrary.state = "stateMediaGrid"
-        }
-    }
-    Shortcut {
-        sequence: StandardKey.Forward
-        onActivated: {
-            if (screenLibrary.state === "stateMediaGrid")
-                if (screenLibraryGrid.selectedItemIndex >= 0)
-                    screenLibrary.state = "stateMediaDetails"
-        }
-    }
 
     ScreenLibraryGrid {
         anchors.fill: parent
@@ -56,6 +72,8 @@ Item {
         anchors.fill: parent
         id: screenMedia
     }
+
+    // STATES //////////////////////////////////////////////////////////////////
 
     state: "stateMediaGrid"
     states: [

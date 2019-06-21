@@ -43,10 +43,22 @@ Item {
         }
     }
 
-    onStateChanged: {
-        // save state
-        if (deviceSavedState)
-             deviceSavedState.mainState = state
+    // KEYS HANDLING ///////////////////////////////////////////////////////////
+
+    Shortcut {
+        sequence: StandardKey.Back
+        onActivated: {
+            if (screenDevice.state === "stateMediaDetails")
+                screenDevice.state = "stateMediaGrid"
+        }
+    }
+    Shortcut {
+        sequence: StandardKey.Forward
+        onActivated: {
+            if (screenDevice.state === "stateMediaGrid")
+                if (screenDeviceGrid.selectedItemIndex >= 0)
+                    screenDevice.state = "stateMediaDetails"
+        }
     }
 
     // CONTENT /////////////////////////////////////////////////////////////////
@@ -67,21 +79,6 @@ Item {
             }
         }
     }
-    Shortcut {
-        sequence: StandardKey.Back
-        onActivated: {
-            if (screenDevice.state === "stateMediaDetails")
-                screenDevice.state = "stateMediaGrid"
-        }
-    }
-    Shortcut {
-        sequence: StandardKey.Forward
-        onActivated: {
-            if (screenDevice.state === "stateMediaGrid")
-                if (screenDeviceGrid.selectedItemIndex >= 0)
-                    screenDevice.state = "stateMediaDetails"
-        }
-    }
 
     ScreenDeviceGrid {
         anchors.fill: parent
@@ -90,6 +87,13 @@ Item {
     ScreenMedia {
         anchors.fill: parent
         id: screenMedia
+    }
+
+    // STATES //////////////////////////////////////////////////////////////////
+
+    onStateChanged: {
+        // save state
+        if (deviceSavedState) deviceSavedState.mainState = state
     }
 
     state: "stateMediaGrid"

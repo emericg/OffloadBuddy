@@ -68,6 +68,16 @@ Rectangle {
         }
     }
 
+    function setPlayPause() {
+        if (videoPlayer.isRunning) {
+            videoPlayer.pause()
+            videoPlayer.isRunning = false
+        } else {
+            videoPlayer.play()
+            videoPlayer.isRunning = true
+        }
+    }
+
     function toogleFullScreen() {
         // Check if fullscreen is necessary (preview is already maxed out)
         if (!mediaArea.isFullScreen) {

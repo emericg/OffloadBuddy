@@ -12,9 +12,8 @@ Item {
     height: 720
     anchors.fill: parent
 
-    function setPause() {
-        mediaPreview.setPause()
-    }
+    function setPause() { mediaPreview.setPause() }
+    function setPlayPause() { mediaPreview.setPlayPause() }
 
     function updateOverview() {
 
@@ -107,17 +106,14 @@ Item {
 
         message: qsTr("Are you sure you want to delete the selected file?")
         onConfirmed: {
-            // just to be sure?
-            //mediaGrid.exitSelectionMode()
-
             if (applicationContent.state === "library") {
                 // delete shot
-                mediaLibrary.deleteSelected(shot.uuid)
+                mediaLibrary.deleteSelected(screenMedia.shot.uuid)
                 // then back to media grid
                 screenLibrary.state = "stateMediaGrid"
             } else if (applicationContent.state === "device") {
                 // delete shot
-                currentDevice.deleteSelected(shot.uuid)
+                screenDevice.currentDevice.deleteSelected(screenMedia.shot.uuid)
                 // then back to media grid
                 screenDevice.state = "stateMediaGrid"
             }
