@@ -14,45 +14,52 @@ Item {
     property int selectedItemIndex : shotsView.currentIndex
     property string selectedItemUuid: shotsView.currentItem ? shotsView.currentItem.shot.uuid : ""
 
+    ////////
+
     property var selectionMode: false
     property var selectionList: []
     property var selectionCount: 0
 
-    function selectedFile(index) {
+    function selectFile(index) {
         selectionMode = true;
         selectionList.push(index);
         selectionCount++;
-    }
 
-    function isFileSelected(index) {
-        if (selectionList.indexOf(index) > -1)
-            return true
-        return false
+        currentDevice.getShotByProxyIndex(index).selected = true;
     }
-
-    function deselectedFile(index) {
+    function deselectFile(index) {
         var i = selectionList.indexOf(index);
         if (i > -1) { selectionList.splice(i, 1); selectionCount--; }
         if (selectionList.length === 0) selectionMode = false;
+
+        currentDevice.getShotByProxyIndex(index).selected = false;
     }
 
-    function listSelectedFile(index) {
-        for (var id in selectionList) {
-            console.log("listSelectedFile(" + shotsView.contentItem.children[id].shot.uuid)
+    function selectAll() {
+        exitSelectionMode()
+
+        selectionMode = true;
+        for (var i = 0; i < shotsView.count; i++) {
+            selectionList.push(i);
+            selectionCount++;
+
+            currentDevice.getShotByProxyIndex(i).selected = true;
         }
     }
-
+    function listSelectedFiles() {
+        //
+    }
     function exitSelectionMode() {
-        for (var child in shotsView.contentItem.children) {
-            if (shotsView.contentItem.children[child].shotSelected) {
-                shotsView.contentItem.children[child].shotSelected = false;
-            }
-        }
-
         selectionMode = false;
         selectionList = [];
         selectionCount = 0;
+
+        for (var i = 0; i < shotsView.count; i++) {
+            currentDevice.getShotByProxyIndex(i).selected = false;
+        }
     }
+
+    ////////
 
     Connections {
         target: currentDevice
@@ -551,7 +558,7 @@ Item {
 
         ComboBoxThemed {
             id: comboBox_orderby
-            width: 200
+            width: 220
             height: 40
             anchors.top: parent.top
             anchors.topMargin: 16
@@ -572,6 +579,7 @@ Item {
             onCurrentIndexChanged: {
                 if (cbinit) {
                     exitSelectionMode()
+                    shotsView.currentIndex = -1
 
                     if (currentIndex == 0)
                         currentDevice.orderByDate()
@@ -594,7 +602,7 @@ Item {
 
         ComboBoxThemed {
             id: comboBox_filterby
-            width: 200
+            width: 240
             height: 40
             anchors.top: parent.top
             anchors.topMargin: 16
@@ -614,6 +622,7 @@ Item {
             onCurrentIndexChanged: {
                 if (cbinit) {
                     exitSelectionMode()
+                    shotsView.currentIndex = -1
 
                     currentDevice.filterByType(cbMediaFilters.get(currentIndex).text)
 
@@ -883,10 +892,29 @@ Item {
             highlight: highlight
             highlightFollowsCurrentItem: true
             highlightMoveDuration: 0
-        }
 
-        Keys.onPressed: {
-            //
+            Keys.onPressed: {
+                if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                    actionMenu.visible = false
+                    screenDevice.state = "stateMediaDetails"
+                } else if ((event.key === Qt.Key_A) && (event.modifiers & Qt.ControlModifier)) {
+                    mediaGrid.selectAll()
+                } else if (event.key === Qt.Key_Clear) {
+                    mediaGrid.exitSelectionMode()
+                } else if (event.key === Qt.Key_Menu) {
+                    console.log("shotsview::Key_Menu")
+                } else if (event.key === Qt.Key_Delete) {
+                    if (selectionMode) {
+                        confirmDeleteSingleFilePopup.files = currentDevice.getSelectedPaths(selectionList);
+                        confirmDeleteSingleFilePopup.open()
+                    } else {
+                        var indexes = []
+                        indexes.push(shotsView.currentIndex)
+                        confirmDeleteSingleFilePopup.files = currentDevice.getSelectedPaths(indexes);
+                        confirmDeleteSingleFilePopup.open()
+                    }
+                }
+            }
         }
 
         MouseArea {

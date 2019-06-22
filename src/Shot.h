@@ -135,6 +135,11 @@ class Shot: public QObject
     Shared::ShotType m_type = Shared::SHOT_UNKNOWN;
     Shared::ShotState m_state = Shared::SHOT_STATE_DEFAULT;
 
+    Q_PROPERTY(bool selected READ isSelected WRITE setSelected NOTIFY selectionUpdated)
+    bool selected = false;
+    bool isSelected() const { return selected; }
+    void setSelected(bool value) { selected = value; Q_EMIT selectionUpdated(); }
+
     QString m_uuid;                 //!< Shot unique identifier, generated at object creation
 
     QString m_shot_name;
@@ -345,6 +350,7 @@ public slots:
 Q_SIGNALS:
     void shotUpdated();
     void stateUpdated();
+    void selectionUpdated();
     void metadatasUpdated();
     void datasUpdated();
 };

@@ -13,45 +13,52 @@ Item {
     property int selectedItemIndex: shotsView.currentIndex
     property string selectedItemUuid: shotsView.currentItem ? shotsView.currentItem.shot.uuid : ""
 
+    ////////
+
     property var selectionMode: false
     property var selectionList: []
     property var selectionCount: 0
 
-    function selectedFile(index) {
+    function selectFile(index) {
         selectionMode = true;
         selectionList.push(index);
         selectionCount++;
-    }
 
-    function isFileSelected(index) {
-        if (selectionList.indexOf(index) > -1)
-            return true
-        return false
+        mediaLibrary.getShotByProxyIndex(index).selected = true;
     }
-
-    function deselectedFile(index) {
+    function deselectFile(index) {
         var i = selectionList.indexOf(index);
         if (i > -1) { selectionList.splice(i, 1); selectionCount--; }
         if (selectionList.length === 0) selectionMode = false;
+
+        mediaLibrary.getShotByProxyIndex(index).selected = false;
     }
 
-    function listSelectedFile() {
-        for (var id in selectionList) {
-            console.log("listSelectedFile(" + shotsView.contentItem.children[id].shot.uuid)
+    function selectAll() {
+        exitSelectionMode()
+
+        selectionMode = true;
+        for (var i = 0; i < shotsView.count; i++) {
+            selectionList.push(i);
+            selectionCount++;
+
+            mediaLibrary.getShotByProxyIndex(i).selected = true;
         }
     }
-
+    function listSelectedFiles() {
+        //
+    }
     function exitSelectionMode() {
-        for (var child in shotsView.contentItem.children) {
-            if (shotsView.contentItem.children[child].shotSelected) {
-                shotsView.contentItem.children[child].shotSelected = false;
-            }
-        }
-
         selectionMode = false;
         selectionList = [];
         selectionCount = 0;
+
+        for (var i = 0; i < shotsView.count; i++) {
+            mediaLibrary.getShotByProxyIndex(i).selected = false;
+        }
     }
+
+    ////////
 
     function initGridViewSettings() {
         actionMenu.visible = false
@@ -261,6 +268,7 @@ Item {
                 onCurrentIndexChanged: {
                     if (cbinit) {
                         exitSelectionMode()
+                        shotsView.currentIndex = -1
 
                         if (currentIndex == 0) {
                             mediaLibrary.filterByFolder("")
@@ -277,7 +285,7 @@ Item {
 
             ComboBoxThemed {
                 id: comboBox_orderby
-                width: 200
+                width: 220
                 height: 40
                 anchors.verticalCenter: parent.verticalCenter
                 displayText: qsTr("Order by: Date")
@@ -295,6 +303,7 @@ Item {
                 onCurrentIndexChanged: {
                     if (cbinit) {
                         exitSelectionMode()
+                        shotsView.currentIndex = -1
 
                         if (currentIndex == 0)
                             mediaLibrary.orderByDate()
@@ -314,7 +323,7 @@ Item {
 
             ComboBoxThemed {
                 id: comboBox_filterby
-                width: 200
+                width: 240
                 height: 40
                 anchors.verticalCenter: parent.verticalCenter
                 displayText: qsTr("No filter")
@@ -331,6 +340,7 @@ Item {
                 onCurrentIndexChanged: {
                     if (cbinit) {
                         exitSelectionMode()
+                        shotsView.currentIndex = -1
 
                         mediaLibrary.filterByType(cbMediaFilters.get(currentIndex).text)
 
@@ -528,23 +538,24 @@ Item {
 
             Keys.onPressed: {
                 if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-                    console.log("shotsview::Key_Return")
-
+                    actionMenu.visible = false
+                    screenLibrary.state = "stateMediaDetails"
                 } else if ((event.key === Qt.Key_A) && (event.modifiers & Qt.ControlModifier)) {
-                    console.log("shotsview::CTRL+A")
-                    //selectAll()
+                    mediaGrid.selectAll()
                 } else if (event.key === Qt.Key_Clear) {
-                    console.log("shotsview::Key_Clear")
                     mediaGrid.exitSelectionMode()
                 } else if (event.key === Qt.Key_Menu) {
                     console.log("shotsview::Key_Menu")
-                    //openMenu()
                 } else if (event.key === Qt.Key_Delete) {
-                    console.log("shotsview::Key_Delete")
-                    var indexes = []
-                    indexes.push(shotsView.currentIndex)
-                    confirmDeleteSingleFilePopup.files = mediaLibrary.getSelectedPaths(indexes);
-                    confirmDeleteSingleFilePopup.open()
+                    if (selectionMode) {
+                        confirmDeleteSingleFilePopup.files = mediaLibrary.getSelectedPaths(selectionList);
+                        confirmDeleteSingleFilePopup.open()
+                    } else {
+                        var indexes = []
+                        indexes.push(shotsView.currentIndex)
+                        confirmDeleteSingleFilePopup.files = mediaLibrary.getSelectedPaths(indexes);
+                        confirmDeleteSingleFilePopup.open()
+                    }
                 }
             }
         }

@@ -12,8 +12,8 @@ Rectangle {
     color: Theme.colorForeground
 
     property Shot shot: pointer
-    property var shotDevice
-    property bool shotSelected: mediaGrid.isFileSelected(index)
+    property var shotDevice: null
+
     property real cellFormat: 4/3
 
     Connections {
@@ -221,7 +221,7 @@ Rectangle {
         id: rectangleSelection
         anchors.fill: parent
 
-        visible: shotSelected
+        visible: shot.selected
         color: Theme.colorPrimary
         opacity: 0.5
     }
@@ -270,6 +270,7 @@ Rectangle {
             }
         }
         onEntered: {
+            shotsView.focus = true
             text_top.visible = true
 
             if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== Shared.STORAGE_MTP)) {
@@ -299,13 +300,18 @@ Rectangle {
 
             // multiselection
             if ((mouse.button === Qt.LeftButton) && (mouse.modifiers & Qt.ShiftModifier)) {
-                console.log("multiselection with modifier, from " + lastIndex + " to " + index)
+                //console.log("multiselection (with modifier), from " + lastIndex + " to " + index)
 
-                mediaGrid.selectedFile(index);
-
+                if (lastIndex < index) {
+                    for (var i = lastIndex; i <= index; i++)
+                        mediaGrid.selectFile(i);
+                } else if (lastIndex >= index) {
+                    for (var j = index; j <= lastIndex; j++)
+                        mediaGrid.selectFile(j);
+                }
             }
 
-            // minimenu
+            // action menu
             if (mouse.button === Qt.RightButton) {
                 //console.log("ItemShot::onClicked::Qt.RightButton")
 
@@ -354,18 +360,17 @@ Rectangle {
                 //console.log("ItemShot::onClicked::Qt.MiddleButton")
 
                 if (!shotsView.selectionMode) {
-                    if (!shotSelected) {
-                        shotSelected = true;
-                        mediaGrid.selectedFile(index);
+                    if (!shot.selected) {
+                        mediaGrid.selectFile(index);
                     } else {
-                        shotSelected = false;
-                        mediaGrid.deselectedFile(index);
+                        mediaGrid.deselectFile(index);
                     }
                 }
             }
         }
         onDoubleClicked: {
             //console.log("ItemShot::onDoubleClicked")
+
             if (mouse.button === Qt.LeftButton) {
                 if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== Shared.STORAGE_MTP)) {
                     // Show the "shot details" screen
@@ -385,12 +390,10 @@ Rectangle {
             //console.log("ItemShot::onPressAndHold")
 
             if (!shotsView.selectionMode) {
-                if (!shotSelected) {
-                    shotSelected = true;
-                    mediaGrid.selectedFile(index);
+                if (!shot.selected) {
+                    mediaGrid.selectFile(index);
                 } else {
-                    shotSelected = false;
-                    mediaGrid.deselectedFile(index);
+                    mediaGrid.deselectFile(index);
                 }
             }
         }

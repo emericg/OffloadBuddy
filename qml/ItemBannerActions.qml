@@ -56,8 +56,7 @@ Rectangle {
             onClicked: {
                 if (applicationContent.state === "library") {
                     //mediaLibrary.extractTelemetrySelection(mediaGrid.selectionList);
-                }
-                else if (applicationContent.state === "device") {
+                } else if (applicationContent.state === "device") {
                     //currentDevice.extractTelemetrySelection(mediaGrid.selectionList);
                 }
             }
@@ -74,8 +73,7 @@ Rectangle {
                 if (applicationContent.state === "library") {
                     confirmDeleteMultipleFilesPopup.files = mediaLibrary.getSelectedPaths(mediaGrid.selectionList);
                     confirmDeleteMultipleFilesPopup.open();
-                }
-                else if (applicationContent.state === "device") {
+                } else if (applicationContent.state === "device") {
                     confirmDeleteMultipleFilesPopup.files = currentDevice.getSelectedPaths(mediaGrid.selectionList);
                     confirmDeleteMultipleFilesPopup.open();
                 }

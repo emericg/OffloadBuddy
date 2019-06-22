@@ -616,6 +616,59 @@ void Device::deleteAll()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
+QStringList Device::getSelectedUuids(const QVariant &indexes)
+{
+    qDebug() << "Device::getSelectedUuids(" << indexes << ")";
+
+    QStringList selectedUuids;
+
+    // indexes from qml gridview (after filtering)
+    QJSValue jsArray = indexes.value<QJSValue>();
+    const unsigned length = jsArray.property("length").toUInt();
+    QList<QPersistentModelIndex> proxyIndexes;
+
+    for (unsigned i = 0; i < length; i++)
+    {
+        QModelIndex proxyIndex = m_shotFilter->index(jsArray.property(i).toInt(), 0);
+        proxyIndexes.append(QPersistentModelIndex(proxyIndex));
+
+        Shot *shot = qvariant_cast<Shot*>(m_shotFilter->data(proxyIndexes.at(i), ShotModel::PointerRole));
+        if (shot) selectedUuids += shot->getUuid();
+        //qDebug() << "MediaLibrary::getSelectedUuids(" <<  shot->getUuid();
+    }
+
+    return selectedUuids;
+}
+
+/* ************************************************************************** */
+
+QStringList Device::getSelectedPaths(const QVariant &indexes)
+{
+    //qDebug() << "Device::getSelectedPaths(" << indexes << ")";
+
+    QStringList selectedPaths;
+
+    // indexes from qml gridview (after filtering)
+    QJSValue jsArray = indexes.value<QJSValue>();
+    const unsigned jsArray_length = jsArray.property("length").toUInt();
+    QList<QPersistentModelIndex> proxyIndexes;
+
+    for (unsigned i = 0; i < jsArray_length; i++)
+    {
+        QModelIndex proxyIndex = m_shotFilter->index(jsArray.property(i).toInt(), 0);
+        proxyIndexes.append(QPersistentModelIndex(proxyIndex));
+
+        Shot *shot = qvariant_cast<Shot*>(m_shotFilter->data(proxyIndexes.at(i), ShotModel::PointerRole));
+        if (shot) selectedPaths += shot->getFilesQStringList();
+        //qDebug() << "MediaLibrary::listSelected(" <<  shot->getFilesQStringList();
+    }
+
+    return selectedPaths;
+}
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+
 void Device::offloadCopySelected(const QString &shot_uuid)
 {
     qDebug() << "offloadCopySelected(" << shot_uuid << ")";
@@ -672,58 +725,6 @@ void Device::deleteSelected(const QString &shot_uuid)
 }
 
 /* ************************************************************************** */
-/* ************************************************************************** */
-
-QStringList Device::getSelectedUuids(const QVariant &indexes)
-{
-    qDebug() << "Device::getSelectedUuids(" << indexes << ")";
-
-    QStringList selectedUuids;
-
-    // indexes from qml gridview (after filtering)
-    QJSValue jsArray = indexes.value<QJSValue>();
-    const unsigned length = jsArray.property("length").toUInt();
-    QList<QPersistentModelIndex> proxyIndexes;
-
-    for (unsigned i = 0; i < length; i++)
-    {
-        QModelIndex proxyIndex = m_shotFilter->index(jsArray.property(i).toInt(), 0);
-        proxyIndexes.append(QPersistentModelIndex(proxyIndex));
-
-        Shot *shot = qvariant_cast<Shot*>(m_shotFilter->data(proxyIndexes.at(i), ShotModel::PointerRole));
-        if (shot) selectedUuids += shot->getUuid();
-        //qDebug() << "MediaLibrary::getSelectedUuids(" <<  shot->getUuid();
-    }
-
-    return selectedUuids;
-}
-
-/* ************************************************************************** */
-
-QStringList Device::getSelectedPaths(const QVariant &indexes)
-{
-    qDebug() << "Device::getSelectedPaths(" << indexes << ")";
-
-    QStringList selectedPaths;
-
-    // indexes from qml gridview (after filtering)
-    QJSValue jsArray = indexes.value<QJSValue>();
-    const unsigned jsArray_length = jsArray.property("length").toUInt();
-    QList<QPersistentModelIndex> proxyIndexes;
-
-    for (unsigned i = 0; i < jsArray_length; i++)
-    {
-        QModelIndex proxyIndex = m_shotFilter->index(jsArray.property(i).toInt(), 0);
-        proxyIndexes.append(QPersistentModelIndex(proxyIndex));
-
-        Shot *shot = qvariant_cast<Shot*>(m_shotFilter->data(proxyIndexes.at(i), ShotModel::PointerRole));
-        if (shot) selectedPaths += shot->getFilesQStringList();
-        //qDebug() << "MediaLibrary::listSelected(" <<  shot->getFilesQStringList();
-    }
-
-    return selectedPaths;
-}
-
 /* ************************************************************************** */
 
 void Device::deleteSelection(const QVariant &indexes)
