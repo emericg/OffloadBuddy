@@ -9,9 +9,9 @@ Item {
     width: 1280
     height: 720
 
-    property var selectedItem: shotsview.currentItem
-    property int selectedItemIndex: shotsview.currentIndex
-    property string selectedItemUuid: shotsview.currentItem ? shotsview.currentItem.shot.uuid : ""
+    property var selectedItem: shotsView.currentItem
+    property int selectedItemIndex: shotsView.currentIndex
+    property string selectedItemUuid: shotsView.currentItem ? shotsView.currentItem.shot.uuid : ""
 
     property var selectionMode: false
     property var selectionList: []
@@ -37,14 +37,14 @@ Item {
 
     function listSelectedFile() {
         for (var id in selectionList) {
-            console.log("listSelectedFile(" + shotsview.contentItem.children[id].shot.uuid)
+            console.log("listSelectedFile(" + shotsView.contentItem.children[id].shot.uuid)
         }
     }
 
     function exitSelectionMode() {
-        for (var child in shotsview.contentItem.children) {
-            if (shotsview.contentItem.children[child].shotSelected) {
-                shotsview.contentItem.children[child].shotSelected = false;
+        for (var child in shotsView.contentItem.children) {
+            if (shotsView.contentItem.children[child].shotSelected) {
+                shotsView.contentItem.children[child].shotSelected = false;
             }
         }
 
@@ -58,8 +58,8 @@ Item {
     }
 
     function updateGridViewSettings() {
-        if (shotsview.count == 0) {
-            shotsview.currentIndex = -1
+        if (shotsView.count == 0) {
+            shotsView.currentIndex = -1
             mediaGrid.exitSelectionMode()
         }
 
@@ -69,7 +69,7 @@ Item {
                 loadingFader.start()
             } else if (mediaLibrary.libraryState === 0) { // idle
                 loadingFader.stop()
-                if (shotsview.count > 0) {
+                if (shotsView.count > 0) {
                     circleEmpty.visible = false
                 }
             }
@@ -133,7 +133,7 @@ Item {
         onConfirmed: {
             mediaLibrary.deleteSelected(selectedItemUuid)
 
-            shotsview.currentIndex = -1;
+            shotsView.currentIndex = -1;
             mediaGrid.exitSelectionMode();
         }
     }
@@ -187,17 +187,17 @@ Item {
 
             onValueChanged: {
                 if (value == 1.0) {
-                    shotsview.cellSizeTarget = 221;
-                    shotsview.computeCellSize();
+                    shotsView.cellSizeTarget = 221;
+                    shotsView.computeCellSize();
                 } else if (value == 2.0) {
-                    shotsview.cellSizeTarget = 279;
-                    shotsview.computeCellSize();
+                    shotsView.cellSizeTarget = 279;
+                    shotsView.computeCellSize();
                 } else if (value == 3.0) {
-                    shotsview.cellSizeTarget = 376;
-                    shotsview.computeCellSize();
+                    shotsView.cellSizeTarget = 376;
+                    shotsView.computeCellSize();
                 } else if (value == 4.0) {
-                    shotsview.cellSizeTarget = 512;
-                    shotsview.computeCellSize();
+                    shotsView.cellSizeTarget = 512;
+                    shotsView.computeCellSize();
                 }
             }
         }
@@ -410,21 +410,21 @@ Item {
         Component {
             id: highlight
             Rectangle {
-                width: shotsview.cellSize;
-                height: shotsview.cellSize
+                width: shotsView.cellSize;
+                height: shotsView.cellSize
                 color: "transparent"
                 border.width : 4
                 border.color: Theme.colorPrimary
                 x: {
-                    if (shotsview.currentItem.x) {
-                        x = shotsview.currentItem.x
+                    if (shotsView.currentItem.x) {
+                        x = shotsView.currentItem.x
                     } else {
                         x = 0
                     }
                 }
                 y: {
-                    if (shotsview.currentItem.y) {
-                        y = shotsview.currentItem.y
+                    if (shotsView.currentItem.y) {
+                        y = shotsView.currentItem.y
                     } else {
                         y = 0
                     }
@@ -440,7 +440,7 @@ Item {
         Connections {
             target: actionMenu
             onMenuSelected: rectangleLibraryGrid.actionMenuTriggered(index)
-            onVisibleChanged: shotsview.interactive = !shotsview.interactive
+            onVisibleChanged: shotsView.interactive = !shotsView.interactive
         }
         function actionMenuTriggered(index) {
             //console.log("actionMenuTriggered(" + index + ") selected shot: '" + shotsview.currentItem.shot.name + "'")
@@ -454,7 +454,7 @@ Item {
             }
             if (index === 16) {
                 var indexes = []
-                indexes.push(shotsview.currentIndex)
+                indexes.push(shotsView.currentIndex)
                 confirmDeleteSingleFilePopup.files = mediaLibrary.getSelectedPaths(indexes);
                 confirmDeleteSingleFilePopup.open()
             }
@@ -463,18 +463,20 @@ Item {
         }
 
         GridView {
-            id: shotsview
+            id: shotsView
             anchors.fill: parent
             anchors.leftMargin: 16
             anchors.topMargin: 16
 
-            interactive: true
-            //snapMode: GridView.SnapToRow
             //clip: true
-            //keyNavigationEnabled: true
-            //focus: true
+            //snapMode: GridView.SnapToRow
+            interactive: true
+            keyNavigationEnabled: true
+            focus: (applicationContent.state === "library" && screenLibrary.state === "stateMediaGrid")
 
             onCountChanged: updateGridViewSettings()
+            onWidthChanged: computeCellSize()
+
             Component.onCompleted: {
                 currentIndex = -1;
                 mediaGrid.exitSelectionMode();
@@ -490,19 +492,8 @@ Item {
             cellWidth: cellSize + cellMargin
             cellHeight: Math.round(cellSize / cellFormat) + cellMargin
 
-            onWidthChanged: {/*
-                if (shotsview.width < 1280) {
-                    if (cellSizeTarget != 279) cellSizeTarget = 279
-                } else if (shotsview.width < 1920) {
-                    if (cellSizeTarget != 400) cellSizeTarget = 400
-                } else {
-                    if (cellSizeTarget != 600) cellSizeTarget = 600
-                }*/
-
-                computeCellSize()
-            }
             function computeCellSize() {
-                var availableWidth = shotsview.width - cellMarginTarget
+                var availableWidth = shotsView.width - cellMarginTarget
                 var cellColumnsTarget = Math.trunc(availableWidth / cellSizeTarget)
                 // 1 // Adjust only cellSize
                 cellSize = (availableWidth - cellMarginTarget * cellColumnsTarget) / cellColumnsTarget
@@ -514,7 +505,7 @@ Item {
             ////////
 
             model: mediaLibrary.shotFilter
-            delegate: ItemShot { width: shotsview.cellSize; cellFormat: shotsview.cellFormat; }
+            delegate: ItemShot { width: shotsView.cellSize; cellFormat: shotsView.cellFormat; }
 
             ScrollBar.vertical: ScrollBar { z: 1 }
 
@@ -522,11 +513,11 @@ Item {
                 id: mouseAreaInsideView
                 anchors.fill: parent
 
-                acceptedButtons: Qt.AllButtons
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
                 onClicked: {
                     //console.log("mouseAreaInsideView clicked")
                     mediaGrid.exitSelectionMode()
-                    shotsview.currentIndex = -1
+                    shotsView.currentIndex = -1
                     actionMenu.visible = false
                 }
             }
@@ -534,6 +525,28 @@ Item {
             highlight: highlight
             highlightFollowsCurrentItem: true
             highlightMoveDuration: 0
+
+            Keys.onPressed: {
+                if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                    console.log("shotsview::Key_Return")
+
+                } else if ((event.key === Qt.Key_A) && (event.modifiers & Qt.ControlModifier)) {
+                    console.log("shotsview::CTRL+A")
+                    //selectAll()
+                } else if (event.key === Qt.Key_Clear) {
+                    console.log("shotsview::Key_Clear")
+                    mediaGrid.exitSelectionMode()
+                } else if (event.key === Qt.Key_Menu) {
+                    console.log("shotsview::Key_Menu")
+                    //openMenu()
+                } else if (event.key === Qt.Key_Delete) {
+                    console.log("shotsview::Key_Delete")
+                    var indexes = []
+                    indexes.push(shotsView.currentIndex)
+                    confirmDeleteSingleFilePopup.files = mediaLibrary.getSelectedPaths(indexes);
+                    confirmDeleteSingleFilePopup.open()
+                }
+            }
         }
 
         MouseArea {

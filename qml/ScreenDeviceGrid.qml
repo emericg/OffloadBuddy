@@ -10,9 +10,9 @@ Item {
     height: 720
     anchors.fill: parent
 
-    property var selectedItem : shotsview.currentItem
-    property int selectedItemIndex : shotsview.currentIndex
-    property string selectedItemUuid: shotsview.currentItem ? shotsview.currentItem.shot.uuid : ""
+    property var selectedItem : shotsView.currentItem
+    property int selectedItemIndex : shotsView.currentIndex
+    property string selectedItemUuid: shotsView.currentItem ? shotsView.currentItem.shot.uuid : ""
 
     property var selectionMode: false
     property var selectionList: []
@@ -38,14 +38,14 @@ Item {
 
     function listSelectedFile(index) {
         for (var id in selectionList) {
-            console.log("listSelectedFile(" + shotsview.contentItem.children[id].shot.uuid)
+            console.log("listSelectedFile(" + shotsView.contentItem.children[id].shot.uuid)
         }
     }
 
     function exitSelectionMode() {
-        for (var child in shotsview.contentItem.children) {
-            if (shotsview.contentItem.children[child].shotSelected) {
-                shotsview.contentItem.children[child].shotSelected = false;
+        for (var child in shotsView.contentItem.children) {
+            if (shotsView.contentItem.children[child].shotSelected) {
+                shotsView.contentItem.children[child].shotSelected = false;
             }
         }
 
@@ -66,7 +66,7 @@ Item {
         sliderZoom.value = deviceSavedState.zoomLevel
         comboBox_orderby.currentIndex = deviceSavedState.orderBy
         comboBox_filterby.currentIndex = deviceSavedState.filterBy
-        shotsview.currentIndex = deviceSavedState.selectedIndex
+        shotsView.currentIndex = deviceSavedState.selectedIndex
 
         //selectionMode = deviceSavedState.selectionMode;
         //selectionList = deviceSavedState.selectionList;
@@ -196,11 +196,11 @@ Item {
 
         // restore state
         if (deviceSavedState)
-            shotsview.currentIndex = deviceSavedState.selectedIndex
+            shotsView.currentIndex = deviceSavedState.selectedIndex
 
-        if (shotsview.count == 0) {
+        if (shotsView.count == 0) {
             selectionList = []
-            shotsview.currentIndex = -1
+            shotsView.currentIndex = -1
         }
 
         if (currentDevice) {
@@ -209,7 +209,7 @@ Item {
                 loadingFader.start()
             } else if (currentDevice.deviceState === 0) { // idle
                 loadingFader.stop()
-                if (shotsview.count > 0) {
+                if (shotsView.count > 0) {
                     circleEmpty.visible = false
                     rectangleTransfer.visible = true
 
@@ -268,7 +268,7 @@ Item {
         onConfirmed: {
             currentDevice.deleteSelected(selectedItemUuid)
 
-            shotsview.currentIndex = -1;
+            shotsView.currentIndex = -1;
             mediaGrid.exitSelectionMode();
         }
     }
@@ -644,17 +644,17 @@ Item {
 
             onValueChanged: {
                 if (value == 1.0) {
-                    shotsview.cellSizeTarget = 221;
-                    shotsview.computeCellSize();
+                    shotsView.cellSizeTarget = 221;
+                    shotsView.computeCellSize();
                 } else if (value == 2.0) {
-                    shotsview.cellSizeTarget = 279;
-                    shotsview.computeCellSize();
+                    shotsView.cellSizeTarget = 279;
+                    shotsView.computeCellSize();
                 } else if (value == 3.0) {
-                    shotsview.cellSizeTarget = 376;
-                    shotsview.computeCellSize();
+                    shotsView.cellSizeTarget = 376;
+                    shotsView.computeCellSize();
                 } else if (value == 4.0) {
-                    shotsview.cellSizeTarget = 512;
-                    shotsview.computeCellSize();
+                    shotsView.cellSizeTarget = 512;
+                    shotsView.computeCellSize();
                 }
 
                 // save state
@@ -742,21 +742,21 @@ Item {
         Component {
             id: highlight
             Rectangle {
-                width: shotsview.cellSize;
-                height: shotsview.cellSize
+                width: shotsView.cellSize;
+                height: shotsView.cellSize
                 color: "transparent"
                 border.width : 4
                 border.color: Theme.colorPrimary
                 x: {
-                    if (shotsview.currentItem.x) {
-                        x = shotsview.currentItem.x
+                    if (shotsView.currentItem.x) {
+                        x = shotsView.currentItem.x
                     } else {
                         x = 0
                     }
                 }
                 y: {
-                    if (shotsview.currentItem.y) {
-                        y = shotsview.currentItem.y
+                    if (shotsView.currentItem.y) {
+                        y = shotsView.currentItem.y
                     } else {
                         y = 0
                     }
@@ -772,13 +772,13 @@ Item {
         Connections {
             target: actionMenu
             onMenuSelected: rectangleDeviceShots.actionMenuTriggered(index)
-            onVisibleChanged: shotsview.interactive = !shotsview.interactive
+            onVisibleChanged: shotsView.interactive = !shotsView.interactive
         }
         function actionMenuTriggered(index) {
             //console.log("actionMenuTriggered(" + index + ") selected shot: '" + shotsview.currentItem.shot.name + "'")
 
             if (index === 0) {
-                shotsview.currentItem.shot.openFolder()
+                shotsView.currentItem.shot.openFolder()
             }
             if (index === 1) {
                 currentDevice.offloadCopySelected(selectedItemUuid)
@@ -792,7 +792,7 @@ Item {
             }
             if (index === 16) {
                 var indexes = []
-                indexes.push(shotsview.currentIndex)
+                indexes.push(shotsView.currentIndex)
                 confirmDeleteSingleFilePopup.files = currentDevice.getSelectedPaths(indexes);
                 confirmDeleteSingleFilePopup.open()
             }
@@ -801,19 +801,24 @@ Item {
         }
 
         GridView {
-            id: shotsview
+            id: shotsView
             anchors.fill: parent
             anchors.leftMargin: 16
             anchors.topMargin: 16
 
-            interactive: true
-            //snapMode: GridView.SnapToRow
             //clip: true
-            //keyNavigationEnabled: true
-            //focus: true
+            //snapMode: GridView.SnapToRow
+            interactive: true
+            keyNavigationEnabled: true
+            focus: (applicationContent.state === "device" && screenLibrary.state === "stateMediaGrid")
 
             onCountChanged: updateGridViewSettings()
-            Component.onCompleted: { currentIndex = -1 }
+            onWidthChanged: computeCellSize()
+
+            Component.onCompleted: {
+                currentIndex = -1;
+                mediaGrid.exitSelectionMode();
+            }
 
             property real cellFormat: 4/3
             property int cellSizeTarget: 279
@@ -835,8 +840,8 @@ Item {
                 //console.log("highlight: " + rectangleDeviceShots.highlight.x + "/" + rectangleDeviceShots.highlight.y)
 
                 // save state
-                if (deviceSavedState && shotsview.currentIndex != 0)
-                    deviceSavedState.selectedIndex = shotsview.currentIndex
+                if (deviceSavedState && shotsView.currentIndex != 0)
+                    deviceSavedState.selectedIndex = shotsView.currentIndex
             }
             onCurrentItemChanged: {
                 //console.log("onCurrentItemChanged() item: " + shotsview.currentItem)
@@ -845,19 +850,9 @@ Item {
 
                 //screenDeviceShots.selectionList.push(shotsview.currentItem.shot.name)
             }
-            onWidthChanged: {/*
-                if (shotsview.width < 1280) {
-                    if (cellSizeTarget != 279) cellSizeTarget = 279
-                } else if (shotsview.width < 1920) {
-                    if (cellSizeTarget != 400) cellSizeTarget = 400
-                } else {
-                    if (cellSizeTarget != 600) cellSizeTarget = 600
-                }*/
 
-                computeCellSize()
-            }
             function computeCellSize() {
-                var availableWidth = shotsview.width - cellMarginTarget
+                var availableWidth = shotsView.width - cellMarginTarget
                 var cellColumnsTarget = Math.trunc(availableWidth / cellSizeTarget)
                 // 1 // Adjust only cellSize
                 cellSize = (availableWidth - cellMarginTarget * cellColumnsTarget) / cellColumnsTarget
@@ -869,7 +864,7 @@ Item {
             ////////
 
             model: currentDevice ? currentDevice.shotFilter : null
-            delegate: ItemShot { width: shotsview.cellSize; cellFormat: shotsview.cellFormat }
+            delegate: ItemShot { width: shotsView.cellSize; cellFormat: shotsView.cellFormat }
 
             ScrollBar.vertical: ScrollBar { z: 1 }
 
@@ -877,10 +872,10 @@ Item {
                 id: mouseAreaInsideView
                 anchors.fill: parent
 
-                acceptedButtons: Qt.AllButtons
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
                 onClicked: {
                     mediaGrid.selectionList = []
-                    shotsview.currentIndex = -1
+                    shotsView.currentIndex = -1
                     actionMenu.visible = false
                 }
             }
@@ -890,11 +885,16 @@ Item {
             highlightMoveDuration: 0
         }
 
+        Keys.onPressed: {
+            //
+        }
+
         MouseArea {
             id: mouseAreaOutsideView
             anchors.fill: parent
             acceptedButtons: Qt.RightButton
             propagateComposedEvents: true
+            //onClicked: console.log("mouseAreaOutsideView clicked")
         }
     }
 }

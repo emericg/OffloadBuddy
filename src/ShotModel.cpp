@@ -150,7 +150,7 @@ void ShotModel::getShots(QList<Shot *> &shots)
 
 /*!
  * \brief ShotModel::getShotAtIndex
- * \param listIndex: might not be the same than gridview index...
+ * \param listIndex: UNFILTERED INDEX be careful
  * \return
  */
 Shot *ShotModel::getShotAtIndex(int listIndex)
@@ -161,21 +161,6 @@ Shot *ShotModel::getShotAtIndex(int listIndex)
     {
         return m_shots.at(listIndex);
     }
-
-    return nullptr;
-}
-
-/*!
- * \brief ShotModel::getShotAtIndex
- * \param listIndex: should be the same than gridview index...
- * \return
- */
-Shot *ShotModel::getShotAtProxyIndex(QModelIndex proxyIndex)
-{
-    //qDebug() << "ShotModel::getShotAtProxyIndex:" << index(0, listIndex);
-    Q_UNUSED(proxyIndex)
-
-    // TODO
 
     return nullptr;
 }

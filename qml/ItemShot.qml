@@ -294,8 +294,18 @@ Rectangle {
         }
 
         onClicked: {
-            shotsview.currentIndex = index
+            var lastIndex = shotsView.currentIndex
+            shotsView.currentIndex = index
 
+            // multiselection
+            if ((mouse.button === Qt.LeftButton) && (mouse.modifiers & Qt.ShiftModifier)) {
+                console.log("multiselection with modifier, from " + lastIndex + " to " + index)
+
+                mediaGrid.selectedFile(index);
+
+            }
+
+            // minimenu
             if (mouse.button === Qt.RightButton) {
                 //console.log("ItemShot::onClicked::Qt.RightButton")
 
@@ -339,10 +349,11 @@ Rectangle {
                 actionMenu.visible = false
             }
 
+            // multiselection
             if (mouse.button === Qt.MiddleButton) {
                 //console.log("ItemShot::onClicked::Qt.MiddleButton")
 
-                if (!shotsview.selectionMode) {
+                if (!shotsView.selectionMode) {
                     if (!shotSelected) {
                         shotSelected = true;
                         mediaGrid.selectedFile(index);
@@ -359,7 +370,7 @@ Rectangle {
                 if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== Shared.STORAGE_MTP)) {
                     // Show the "shot details" screen
                     actionMenu.visible = false
-                    shotsview.currentIndex = index
+                    shotsView.currentIndex = index
 
                     shot.getMetadatasFromVideoGPMF();
 
@@ -373,7 +384,7 @@ Rectangle {
         onPressAndHold: {
             //console.log("ItemShot::onPressAndHold")
 
-            if (!shotsview.selectionMode) {
+            if (!shotsView.selectionMode) {
                 if (!shotSelected) {
                     shotSelected = true;
                     mediaGrid.selectedFile(index);
