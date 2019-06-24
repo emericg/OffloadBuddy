@@ -124,7 +124,7 @@ void JobWorkerAsync::queueWork(Job *job)
         for (unsigned i = 0; i < job->elements.size(); i++)
         {
             JobElement *element = job->elements.at(i);
-            if (element->parent_shots->getType() <= Shared::SHOT_PICTURE &&
+            if (element->parent_shots->getShotType() <= Shared::SHOT_PICTURE &&
                 element->files.size() != 1)
             {
                 qDebug() << "This async job element got" << element->files.size() << "file(s), should not happen...";
@@ -155,7 +155,7 @@ void JobWorkerAsync::queueWork(Job *job)
             // FFMPEG arguments
             ptiwrap->arguments << "-y" /*<< "-loglevel" << "warning" << "-stats"*/;
 
-            if (element->parent_shots->getType() > Shared::SHOT_PICTURE)
+            if (element->parent_shots->getShotType() > Shared::SHOT_PICTURE)
             {
                 // timelapse to video
                 ptiwrap->arguments << "-r" << QString::number(job->settings.fps);

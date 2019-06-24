@@ -75,8 +75,7 @@ HEADERS  += src/SettingsManager.h \
 
 RESOURCES += qml/qml.qrc \
              i18n/i18n.qrc \
-             assets/assets.qrc \
-             resources.qrc
+             assets/assets.qrc
 
 OTHER_FILES += .travis.yml \
                contribs/contribs.py \

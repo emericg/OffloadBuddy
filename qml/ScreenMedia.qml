@@ -61,7 +61,7 @@ Item {
            (applicationContent.state === "library" && screenLibrary.state === "stateMediaDetails")
     Keys.onPressed: {
         if (event.key === Qt.Key_Space) {
-            if (screenMedia.state === "overview" && shot.type < Shared.SHOT_PICTURE) {
+            if (screenMedia.state === "overview" && shot.fileType === Shared.FILE_VIDEO) {
                 event.accepted = true;
                 contentOverview.setPlayPause();
             }
@@ -257,7 +257,7 @@ Item {
                 source: "qrc:/icons_material/baseline-map-24px.svg"
                 onClicked: screenMedia.state = "map"
                 selected: screenMedia.state === "map"
-                visible: (shot.type >= Shared.SHOT_PICTURE && shot.latitude !== 0.0)
+                visible: (shot.fileType === Shared.FILE_PICTURE && shot.latitude !== 0.0)
             }
         }
     }

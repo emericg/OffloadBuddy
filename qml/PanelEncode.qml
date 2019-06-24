@@ -25,10 +25,10 @@ Item {
         }
 
         // Framerate handler
-        if (shot.type === Shared.SHOT_PICTURE_MULTI ||
-            shot.type === Shared.SHOT_PICTURE_BURST ||
-            shot.type === Shared.SHOT_PICTURE_TIMELAPSE ||
-            shot.type === Shared.SHOT_PICTURE_NIGHTLAPSE) {
+        if (shot.shotType === Shared.SHOT_PICTURE_MULTI ||
+            shot.shotType === Shared.SHOT_PICTURE_BURST ||
+            shot.shotType === Shared.SHOT_PICTURE_TIMELAPSE ||
+            shot.shotType === Shared.SHOT_PICTURE_NIGHTLAPSE) {
             // timelapses
             sliderFps.value = 30
             sliderFps.from = 5

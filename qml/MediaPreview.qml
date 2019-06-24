@@ -15,7 +15,7 @@ Rectangle {
     anchors.right: infosGeneric.left
     anchors.margins: 16
 
-    color: (shot.type >= Shared.SHOT_PICTURE || isFullScreen) ? "transparent" : "black"
+    color: (shot.fileType === Shared.FILE_PICTURE || isFullScreen) ? "transparent" : "black"
 
     property bool isFullScreen: false
     property int startLimit: -1

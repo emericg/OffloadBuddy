@@ -45,7 +45,8 @@ protected:
 public:
     enum ShotRoles {
         NameRole = Qt::UserRole+1,
-        TypeRole,
+        ShotTypeRole,
+        FileTypeRole,
         PreviewRole,
         SizeRole,
         DurationRole,

@@ -91,7 +91,7 @@ MediaDirectory * JobManager::getAutoDestination(Shot *s)
     {
         MediaDirectory *md_current = qobject_cast<MediaDirectory*>(md);
         if (md_current &&
-            md_current->isAvailableFor(s->getType(), s->getSize()))
+            md_current->isAvailableFor(s->getShotType(), s->getSize()))
         {
             md_selected = md_current;
             break;
@@ -147,7 +147,7 @@ QString JobManager::getandmakeDestination(Shot *s, Device *d)
         }
 
         // Put chaptered videos in there own directory?
-        if (s->getType() < Shared::SHOT_PICTURE)
+        if (s->getShotType() < Shared::SHOT_PICTURE)
         {
             if (s->getChapterCount() > 1)
             {
@@ -158,16 +158,16 @@ QString JobManager::getandmakeDestination(Shot *s, Device *d)
         }
 
         // Put multishot in there own directory
-        if (s->getType() == Shared::SHOT_PICTURE_MULTI ||
-            s->getType() == Shared::SHOT_PICTURE_BURST ||
-            s->getType() == Shared::SHOT_PICTURE_TIMELAPSE ||
-            s->getType() == Shared::SHOT_PICTURE_NIGHTLAPSE)
+        if (s->getShotType() == Shared::SHOT_PICTURE_MULTI ||
+            s->getShotType() == Shared::SHOT_PICTURE_BURST ||
+            s->getShotType() == Shared::SHOT_PICTURE_TIMELAPSE ||
+            s->getShotType() == Shared::SHOT_PICTURE_NIGHTLAPSE)
         {
-            if (s->getType() == Shared::SHOT_PICTURE_BURST)
+            if (s->getShotType() == Shared::SHOT_PICTURE_BURST)
                 destDir += "burst_";
-            else if (s->getType() == Shared::SHOT_PICTURE_TIMELAPSE)
+            else if (s->getShotType() == Shared::SHOT_PICTURE_TIMELAPSE)
                 destDir += "timelapse_";
-            else if (s->getType() == Shared::SHOT_PICTURE_NIGHTLAPSE)
+            else if (s->getShotType() == Shared::SHOT_PICTURE_NIGHTLAPSE)
                 destDir += "nightlapse_";
             else
                 destDir += "multi_";

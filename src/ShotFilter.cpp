@@ -57,7 +57,7 @@ bool ShotFilter::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent
 
     if (!m_acceptedTypes.empty())
     {
-        int type = sourceModel()->data(index, ShotModel::TypeRole).toInt();
+        int type = sourceModel()->data(index, ShotModel::ShotTypeRole).toInt();
         if (!m_acceptedTypes.contains(type))
             accepted = false;
     }

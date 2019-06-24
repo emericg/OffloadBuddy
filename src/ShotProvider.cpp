@@ -86,7 +86,7 @@ void ShotProvider::orderByShotType()
 {
     if (m_shotFilter)
     {
-        m_shotFilter->setSortRole(ShotModel::TypeRole);
+        m_shotFilter->setSortRole(ShotModel::ShotTypeRole);
         m_shotFilter->sort(0, Qt::AscendingOrder);
         m_shotFilter->invalidate();
     }

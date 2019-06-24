@@ -206,7 +206,7 @@ Item {
             shotsView.currentIndex = deviceSavedState.selectedIndex
 
         if (shotsView.count == 0) {
-            selectionList = []
+            exitSelectionMode()
             shotsView.currentIndex = -1
         }
 
@@ -883,7 +883,7 @@ Item {
 
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
                 onClicked: {
-                    mediaGrid.selectionList = []
+                    mediaGrid.exitSelectionMode()
                     shotsView.currentIndex = -1
                     actionMenu.visible = false
                 }

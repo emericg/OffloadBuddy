@@ -12,8 +12,8 @@
    viewBox="0 0 24 24"
    version="1.1"
    id="svg6"
-   sodipodi:docname="baseline-navigate_before-24px.svg"
-   inkscape:version="0.92.2 2405546, 2018-03-11">
+   sodipodi:docname="navigate_before_big.svg"
+   inkscape:version="0.92.4 5da689c313, 2019-01-14">
   <metadata
      id="metadata12">
     <rdf:RDF>
@@ -49,12 +49,8 @@
      inkscape:window-maximized="0"
      inkscape:current-layer="svg6" />
   <path
-     d="M 16.166356,6.4729759 14.468511,4.775132 7.2436439,12 14.468511,19.224868 16.166356,17.527024 10.651373,12 Z"
+     d="M 15.08161,6.4729759 13.383765,4.775132 6.1588981,12 13.383765,19.224868 15.08161,17.527024 9.5666272,12 Z"
      id="path2"
      inkscape:connector-curvature="0"
      style="stroke-width:1" />
-  <path
-     d="M0 0h24v24H0z"
-     fill="none"
-     id="path4" />
 </svg>

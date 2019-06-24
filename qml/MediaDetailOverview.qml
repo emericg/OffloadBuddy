@@ -31,7 +31,7 @@ Item {
             labelOrientation.visible = false
         }
 
-        if (shot.type >= Shared.SHOT_PICTURE) {
+        if (shot.fileType === Shared.FILE_PICTURE) {
             mediaPreview.setImageMode()
 
             infosPicture.visible = true

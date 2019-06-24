@@ -91,8 +91,8 @@ class Shot: public QObject
 
     Q_PROPERTY(unsigned state READ getState NOTIFY stateUpdated)
 
-    Q_PROPERTY(unsigned type READ getType NOTIFY shotUpdated)
-    //Q_PROPERTY(unsigned subType READ getType NOTIFY shotUpdated)
+    Q_PROPERTY(unsigned shotType READ getShotType NOTIFY shotUpdated)
+    Q_PROPERTY(unsigned fileType READ getFileType NOTIFY shotUpdated)
 
     Q_PROPERTY(QString uuid READ getUuid NOTIFY shotUpdated)
 
@@ -125,12 +125,12 @@ class Shot: public QObject
     Q_PROPERTY(double framerate READ getFramerate NOTIFY shotUpdated)
     Q_PROPERTY(unsigned bitrate READ getBitrate NOTIFY shotUpdated)
 
-    Q_PROPERTY(QString latitudeString READ getLatitudeStr NOTIFY shotUpdated)
-    Q_PROPERTY(QString longitudeString READ getLongitudeStr NOTIFY shotUpdated)
-    Q_PROPERTY(QString altitudeString READ getAltitudeStr NOTIFY shotUpdated)
-    Q_PROPERTY(double latitude READ getLatitude NOTIFY shotUpdated)
-    Q_PROPERTY(double longitude READ getLongitude NOTIFY shotUpdated)
-    Q_PROPERTY(double altitude READ getAltitude NOTIFY shotUpdated)
+    Q_PROPERTY(QString latitudeString READ getLatitudeStr NOTIFY metadatasUpdated)
+    Q_PROPERTY(QString longitudeString READ getLongitudeStr NOTIFY metadatasUpdated)
+    Q_PROPERTY(QString altitudeString READ getAltitudeStr NOTIFY metadatasUpdated)
+    Q_PROPERTY(double latitude READ getLatitude NOTIFY metadatasUpdated)
+    Q_PROPERTY(double longitude READ getLongitude NOTIFY metadatasUpdated)
+    Q_PROPERTY(double altitude READ getAltitude NOTIFY metadatasUpdated)
 
     Shared::ShotType m_type = Shared::SHOT_UNKNOWN;
     Shared::ShotState m_state = Shared::SHOT_STATE_DEFAULT;
@@ -296,7 +296,15 @@ public:
     QList <ofb_file *> getFiles(bool withPreviews = true, bool withHdAudio = true) const;
 
 public slots:
-    unsigned getType() const { return m_type; }
+    unsigned getShotType() const { return m_type; }
+    unsigned getFileType() const {
+        if (m_type >= Shared::SHOT_VIDEO && m_type <= Shared::SHOT_VIDEO_3D)
+           return Shared::FILE_VIDEO;
+        else if (m_type >= Shared::SHOT_PICTURE && m_type <= Shared::SHOT_PICTURE_NIGHTLAPSE)
+            return Shared::FILE_PICTURE;
+
+         return Shared::FILE_UNKNOWN;
+    }
     unsigned getState() const { return m_state; }
     void setState(Shared::ShotState state) { m_state = state; emit stateUpdated(); }
 

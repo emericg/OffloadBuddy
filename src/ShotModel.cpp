@@ -263,7 +263,7 @@ Shot *ShotModel::getShotAt(Shared::ShotType type, int file_id, int camera_id) co
         for (int i = m_shots.size()-1; i >= 0; i--)
         {
             Shot *search = qobject_cast<Shot*>(m_shots.at(i));
-            if (search && search->getType() == type)
+            if (search && search->getShotType() == type)
             {
                 if (search->getFileId() == file_id &&
                     search->getCameraId() == camera_id)
@@ -304,8 +304,10 @@ QVariant ShotModel::data(const QModelIndex & index, int role) const
     {
         if (role == NameRole)
             return shot->getName();
-        if (role == TypeRole)
-            return shot->getType();
+        if (role == ShotTypeRole)
+            return shot->getShotType();
+        if (role == FileTypeRole)
+            return shot->getFileType();
         if (role == PreviewRole)
             return shot->getPreviewPhoto();
         if (role == SizeRole)
@@ -331,7 +333,8 @@ QHash<int, QByteArray> ShotModel::roleNames() const
     QHash<int, QByteArray> roles;
 
     roles[NameRole] = "name";
-    roles[TypeRole] = "type";
+    roles[ShotTypeRole] = "shotType";
+    roles[FileTypeRole] = "fileType";
     roles[PreviewRole] = "preview";
     roles[DurationRole] = "duration";
     roles[SizeRole] = "size";

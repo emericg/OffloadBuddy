@@ -48,7 +48,7 @@ Rectangle {
 
         handleState()
         if (shot.previewVideo)
-            imageFs.source = "image://GridThumbnailer/" + shot.previewVideo
+            imageFs.source = "image://GridThumbnailer/" + shot.previewVideo + "@" + (shot.duration/12000).toFixed()
         else if (shot.previewPhoto)
             imageFs.source = "image://GridThumbnailer/" + shot.previewPhoto
         else if (shotDevice && shotDevice.deviceStorage === Shared.STORAGE_MTP) {
@@ -59,32 +59,104 @@ Rectangle {
 
         text_right.visible = false
         text_left.visible = false
-        if (type === Shared.SHOT_UNKNOWN) {
-            icon_left.source = "qrc:/resources/minicons/unknown.svg"
-        } else if (type < Shared.SHOT_PICTURE) {
+        if (fileType === Shared.FILE_VIDEO) {
             if (duration > 0) {
                 text_left.visible = true
                 text_left.text = UtilsString.durationToString_condensed(duration)
             }
-            icon_left.source = "qrc:/resources/minicons/video.svg"
-        } else {
-            if (type >= Shared.SHOT_PICTURE_MULTI) {
+            if (shot.chapters > 1)
+                icon_left.source = "qrc:/icons_material/baseline-video_library-24px.svg"
+            else
+                icon_left.source = "qrc:/icons_material/outline-local_movies-24px.svg"
+        } else if (fileType === Shared.FILE_PICTURE) {
+            if (shotType === Shared.SHOT_PICTURE_BURST) {
                 text_left.visible = true
                 text_left.text = duration
-                icon_left.source = "qrc:/resources/minicons/picture_multi.svg"
+                icon_left.source = "qrc:/icons_material/baseline-burst_mode-24px.svg"
+            } else if (shotType >= Shared.SHOT_PICTURE_MULTI) {
+                text_left.visible = true
+                text_left.text = duration
+                icon_left.source = "qrc:/icons_material/baseline-photo_library-24px.svg"
             } else {
-                icon_left.source = "qrc:/resources/minicons/picture.svg"
+                icon_left.source = "qrc:/icons_material/baseline-photo-24px.svg"
             }
+        } else {
+            icon_left.source = "qrc:/icons_material/baseline-broken_image-24px.svg"
         }
 
         if (shot.highlightCount > 0) {
             icon_right.visible = true
-            icon_right.source = "qrc:/resources/minicons/bookmark.svg"
+            icon_right.color = "yellow"
+            icon_right.source = "qrc:/icons_material/baseline-label_important-24px.svg"
             text_right.text = shot.highlightCount
         } else {
             icon_right.visible = false
         }
     }
+
+    function openShot() {
+        if (mouse.button === Qt.LeftButton) {
+            if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== Shared.STORAGE_MTP)) {
+                // Show the "shot details" screen
+                actionMenu.visible = false
+                shotsView.currentIndex = index
+
+                shot.getMetadatasFromVideoGPMF();
+
+                if (shotDevice)
+                    screenDevice.state = "stateMediaDetails"
+                else
+                    screenLibrary.state = "stateMediaDetails"
+            }
+        }
+    }
+
+    function selectShot() {
+        //
+    }
+
+    function openMenu() {
+        if (!actionMenu.visible) {
+            var folder = true
+            var copy = true
+            var merge = false
+            var encode = false
+            var telemetry_gpmf = false
+            var telemetry_gps = false
+            var remove = true
+
+            if (shot.fileType === Shared.FILE_VIDEO) { // all kind of videos
+                if (shot.chapters > 1)
+                    merge = true
+                encode = true
+            } else if (shot.shotType > Shared.SHOT_PICTURE) { // only multi picture
+                encode = true
+            }
+            if (shot.hasGPMF)
+                telemetry_gpmf = true
+            if (shot.hasGPS)
+                telemetry_gps = true
+            if (shotDevice) {
+                if (shotDevice.deviceStorage === Shared.STORAGE_MTP) {
+                    folder = false
+                    merge = false
+                    encode = false
+                }
+                if (shotDevice.readOnly)
+                    remove = false
+            } else {
+                copy = false
+            }
+
+            actionMenu.setMenuButtons(folder, copy, merge, encode, telemetry_gpmf, telemetry_gps, remove)
+
+            actionMenu.visible = true
+            actionMenu.x = mouseAreaOutsideView.mouseX + 8
+            actionMenu.y = mouseAreaOutsideView.mouseY + 8
+        } else {
+            actionMenu.visible = false
+        }
+     }
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -257,10 +329,11 @@ Rectangle {
             running: false;
             repeat: true
             onTriggered: {
-                if (shot.type > Shared.SHOT_UNKNOWN &&
-                        shot.type < Shared.SHOT_PICTURE) {
+                if (shot.fileType === Shared.FILE_VIDEO) {
                     var timecode_s = Math.round((shot.duration / 4000) * mouseAreaItem.thumbId)
-                    if (++mouseAreaItem.thumbId > 3) mouseAreaItem.thumbId = 1
+
+                    if (++mouseAreaItem.thumbId > 3)
+                        mouseAreaItem.thumbId = 1
 
                     if (shot.previewVideo)
                         imageFs.source = "image://GridThumbnailer/" + shot.previewVideo + "@" + timecode_s
@@ -274,7 +347,7 @@ Rectangle {
             text_top.visible = true
 
             if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== Shared.STORAGE_MTP)) {
-                if (shot.type > Shared.SHOT_UNKNOWN && shot.type < Shared.SHOT_PICTURE) {
+                if (shot.fileType === Shared.FILE_VIDEO) {
                     thumbTimer.start()
                 }
             }
@@ -283,11 +356,11 @@ Rectangle {
             text_top.visible = false
 
             if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== Shared.STORAGE_MTP)) {
-                if (shot.type > Shared.SHOT_UNKNOWN && shot.type < Shared.SHOT_PICTURE) {
+                if (shot.fileType === Shared.FILE_VIDEO) {
                     thumbId = 1
                     thumbTimer.stop()
                     if (shot.previewVideo)
-                        imageFs.source = "image://GridThumbnailer/" + shot.previewVideo
+                        imageFs.source = "image://GridThumbnailer/" + shot.previewVideo + "@" + (shot.duration/12000).toFixed()
                     else if (shot.previewPhoto)
                         imageFs.source = "image://GridThumbnailer/" + shot.previewPhoto
                 }
@@ -323,11 +396,11 @@ Rectangle {
                 var telemetry_gps = false
                 var remove = true
 
-                if (shot.type < Shared.SHOT_PICTURE) {
+                if (shot.fileType === Shared.FILE_VIDEO) {
                     if (shot.chapters > 1)
                         merge = true
                     encode = true
-                } else if (shot.type > Shared.SHOT_PICTURE) {
+                } else if (shot.shotType > Shared.SHOT_PICTURE) {
                     encode = true
                 }
                 if (shot.hasGPMF)
