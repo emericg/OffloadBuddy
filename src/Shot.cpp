@@ -762,6 +762,9 @@ bool Shot::getMetadatasFromVideo(int index)
         if (media->tracks_audio_count > 0)
         {
             acodec = QString::fromLocal8Bit(getCodecString(stream_AUDIO, media->tracks_audio[0]->stream_codec, false));
+            achannels = media->tracks_audio[0]->channel_count;
+            asamplerate = media->tracks_audio[0]->sampling_rate;
+            abitrate = media->tracks_audio[0]->bitrate_avg;
         }
         if (media->tracks_video_count > 0)
         {

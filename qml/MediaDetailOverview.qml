@@ -51,7 +51,7 @@ Item {
             } else {
                 labelDuration.visible = false
             }
-        } else {
+        } else if (shot.fileType === Shared.FILE_VIDEO) {
             mediaPreview.setVideoMode()
 
             infosPicture.visible = false
@@ -62,24 +62,35 @@ Item {
             if (shot.codecVideo.length) {
                 codecVideo.visible = true
                 codecVideoText.text = shot.codecVideo
+                codec.text = shot.codecVideo
             } else {
                 codecVideo.visible = false
             }
 
-            if (shot.codecAudio.length) {
+            if (shot.audioCodec.length) {
                 codecAudio.visible = true
-                codecAudioText.text = shot.codecAudio
+                codecAudioText.text = shot.audioCodec
+                codec.text +=  " / " + shot.audioCodec
             } else {
                 codecAudio.visible = false
             }
 
             labelDuration.visible = true
             duration.text = UtilsString.durationToString(shot.duration)
-
-            bitrate.text = UtilsString.bitrateToString(shot.bitrate)
-            codec.text = shot.codecVideo
-            if (shot.codecAudio) codec.text +=  " / " + shot.codecAudio
             framerate.text = UtilsString.framerateToString(shot.framerate)
+            bitrate.text = UtilsString.bitrateToString(shot.bitrate)
+
+            if (shot.audioCodec.length) {
+                if (shot.audioChannels === 1)
+                    audioChannels.text = qsTr("Mono")
+                else if (shot.audioChannels === 2)
+                    audioChannels.text = qsTr("Stereo")
+                else
+                    audioChannels.text = shot.audioChannels + qsTr(" channels")
+
+                //audioBitrate.text = UtilsString.bitrateToString(shot.audioBitrate)
+                //audioSamplerate.text = shot.audioSamplerate
+            }
         }
 
         size.text = UtilsString.bytesToString_short(shot.datasize)
@@ -428,7 +439,6 @@ Item {
                     anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: ""
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
                     font.pixelSize: Theme.fontSizeContentText
@@ -451,7 +461,6 @@ Item {
                     anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: ""
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
                     font.pixelSize: Theme.fontSizeContentText
@@ -474,7 +483,28 @@ Item {
                     anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: ""
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignRight
+                    font.pixelSize: Theme.fontSizeContentText
+                    color: Theme.colorText
+                }
+            }
+
+            ImageSvg {
+                id: labelAudioChannels
+                width: 28
+                height: 28
+
+                source: "qrc:/icons_material/baseline-speaker-24px.svg"
+                color: Theme.colorText
+
+                Text {
+                    id: audioChannels
+                    height: 28
+                    anchors.left: parent.right
+                    anchors.leftMargin: 16
+                    anchors.verticalCenter: parent.verticalCenter
+
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
                     font.pixelSize: Theme.fontSizeContentText
@@ -550,7 +580,6 @@ Item {
             anchors.left: parent.left
             anchors.topMargin: 0
 
-            text: ""
             clip: true
             horizontalAlignment: Text.AlignRight
             color: Theme.colorText

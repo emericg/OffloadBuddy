@@ -119,11 +119,15 @@ class Shot: public QObject
     Q_PROPERTY(QString focal READ getFocal NOTIFY shotUpdated)
     Q_PROPERTY(QString exposure READ getExposure NOTIFY shotUpdated)
 
-    Q_PROPERTY(QString codecAudio READ getCodecAudio NOTIFY shotUpdated)
     Q_PROPERTY(QString codecVideo READ getCodecVideo NOTIFY shotUpdated)
-    Q_PROPERTY(QString timecode READ getTimecode NOTIFY shotUpdated)
     Q_PROPERTY(double framerate READ getFramerate NOTIFY shotUpdated)
     Q_PROPERTY(unsigned bitrate READ getBitrate NOTIFY shotUpdated)
+    Q_PROPERTY(QString timecode READ getTimecode NOTIFY shotUpdated)
+
+    Q_PROPERTY(QString audioCodec READ getAudioCodec NOTIFY shotUpdated)
+    Q_PROPERTY(unsigned audioChannels READ getAudioChannels NOTIFY shotUpdated)
+    Q_PROPERTY(unsigned audioBitrate READ getAudioBitrate NOTIFY shotUpdated)
+    Q_PROPERTY(unsigned audioSamplerate READ getAudioSamplerate NOTIFY shotUpdated)
 
     Q_PROPERTY(QString latitudeString READ getLatitudeStr NOTIFY metadatasUpdated)
     Q_PROPERTY(QString longitudeString READ getLongitudeStr NOTIFY metadatasUpdated)
@@ -187,11 +191,15 @@ class Shot: public QObject
     QString esposure_time;
 
     // VIDEO metadatas
-    QString acodec;
     QString vcodec;
     QString timecode;
     double framerate = 0.0;
     unsigned bitrate = 0;
+
+    QString acodec;
+    unsigned achannels = 0;
+    unsigned abitrate = 0;
+    unsigned asamplerate = 0;
 
     bool getMetadatasFromPicture(int index = 0);
     bool getMetadatasFromVideo(int index = 0);
@@ -333,11 +341,15 @@ public slots:
     QString getFocal() const { return focal; }
     QString getExposure() const { return esposure_time; }
 
-    QString getCodecAudio() const { return acodec; }
     QString getCodecVideo() const { return vcodec; }
     QString getTimecode() const { return timecode; }
     double getFramerate() const { return framerate; }
     unsigned getBitrate() const { return bitrate; }
+
+    QString getAudioCodec() const { return acodec; }
+    unsigned getAudioChannels() const { return achannels; }
+    unsigned getAudioBitrate() const { return abitrate; }
+    unsigned getAudioSamplerate() const { return asamplerate; }
 
     QString getLatitudeStr() const { return gps_lat_str; }
     QString getLongitudeStr() const { return gps_long_str; }
