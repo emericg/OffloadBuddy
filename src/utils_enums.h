@@ -172,9 +172,15 @@ namespace Shared
     {
         SHOT_STATE_DEFAULT = 0,
         SHOT_STATE_QUEUED,
+
         SHOT_STATE_OFFLOADING,
+        SHOT_STATE_OFFLOADED,
+
         SHOT_STATE_ENCODING,
-        SHOT_STATE_DONE,
+        SHOT_STATE_ENCODED,
+
+        SHOT_STATE_DONE = 32,
+        SHOT_STATE_ERRORED,
     };
     Q_ENUM_NS(ShotState)
 }

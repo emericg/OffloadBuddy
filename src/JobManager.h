@@ -264,11 +264,14 @@ public slots:
 
     void clearFinishedJobs();
 
-    void jobProgress(int, float);
     void jobStarted(int);
+    void jobProgress(int, float);
     void jobFinished(int, int);
+    //void jobErrored(int, int); // TODO?
+
     void shotStarted(int, Shot *);
     void shotFinished(int, Shot *);
+    //void shotErrored(int, Shot *); // TODO?
 
     void newFile(QString);
 };

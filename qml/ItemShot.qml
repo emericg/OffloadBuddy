@@ -24,18 +24,30 @@ Rectangle {
     function handleState() {
         icon_state.visible = true
         rectangleOverlay.visible = false
+
         if (shot.state === Shared.SHOT_STATE_QUEUED) {
             icon_state.source = "qrc:/icons_material/baseline-schedule-24px.svg"
+            offloadAnimation.stop()
+            encodeAnimation.stop()
         } else if (shot.state === Shared.SHOT_STATE_OFFLOADING) {
-            icon_state.source = "qrc:/icons_material/baseline-save_alt-24px.svg"
+            //icon_state.source = "qrc:/icons_material/baseline-save_alt-24px.svg"
+            offloadAnimation.start()
         } else if (shot.state === Shared.SHOT_STATE_ENCODING) {
-            icon_state.source = "qrc:/icons_material/baseline-memory-24px.svg"
-        } else if (shot.state === Shared.SHOT_STATE_DONE) {
+            //icon_state.source = "qrc:/icons_material/baseline-memory-24px.svg"
+            encodeAnimation.start()
+        } else if (shot.state === Shared.SHOT_STATE_DONE ||
+                   shot.state === Shared.SHOT_STATE_OFFLOADED ||
+                   shot.state === Shared.SHOT_STATE_ENCODED) {
             icon_state.visible = false
             image_overlay.source = "qrc:/icons_material/baseline-check_circle_outline-24px.svg"
             rectangleOverlay.visible = true
+            offloadAnimation.stop()
+            encodeAnimation.stop()
         } else {
             icon_state.visible = false
+            rectangleOverlay.visible = false
+            offloadAnimation.stop()
+            encodeAnimation.stop()
         }
     }
 
@@ -286,6 +298,27 @@ Rectangle {
             anchors.rightMargin: 8
 
             color: "white"
+
+            NumberAnimation on rotation {
+                id: encodeAnimation
+                running: false
+
+                onStarted: icon_state.source = "qrc:/icons_material/baseline-memory-24px.svg"
+                onStopped: icon_state.rotation = 0
+                duration: 2000;
+                from: 0;
+                to: 360;
+                loops: Animation.Infinite
+            }
+            SequentialAnimation {
+                id: offloadAnimation
+                running: false
+
+                onStarted: icon_state.source = "qrc:/icons_material/baseline-save_alt-24px.svg"
+                onStopped: icon_state.y = 0
+                NumberAnimation { target: icon_state; property: "y"; from: -40; to: 40; duration: 1000; }
+                loops: Animation.Infinite
+            }
         }
     }
 

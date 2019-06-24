@@ -489,7 +489,23 @@ void JobManager::shotFinished(int jobId, Shot *shot)
             }
             else
             {
-                shot->setState(Shared::SHOT_STATE_DONE);
+                switch (j->getType()) {
+                case JOB_COPY:
+                case JOB_MERGE:
+                    shot->setState(Shared::SHOT_STATE_OFFLOADED);
+                    break;
+
+                case JOB_CLIP:
+                case JOB_TIMELAPSE_TO_VIDEO:
+                case JOB_REENCODE:
+                case JOB_STAB:
+                    shot->setState(Shared::SHOT_STATE_ENCODED);
+                    break;
+
+                default:
+                    shot->setState(Shared::SHOT_STATE_DONE);
+                    break;
+                }
 
                 if (j->getAutoDelete() &&
                     (j->getType() == JOB_COPY || j->getType() == JOB_MERGE))
