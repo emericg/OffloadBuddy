@@ -240,7 +240,7 @@ Item {
                 selected: screenMedia.state === "overview"
             }
             ItemMenuButton {
-                id: menuAbout
+                id: menuTelemetry
                 height: parent.height
 
                 menuText: qsTr("Telemetry")
@@ -250,7 +250,7 @@ Item {
                 visible: (shot.hasGPMF && shot.hasGPS)
             }
             ItemMenuButton {
-                id: menuMedias
+                id: menuMap
                 height: parent.height
 
                 menuText: qsTr("Map")

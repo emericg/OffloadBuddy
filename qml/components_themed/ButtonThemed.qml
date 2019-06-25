@@ -19,7 +19,7 @@ Button {
     background: Rectangle {
         implicitWidth: 128
         implicitHeight: 40
-        radius: 4
+        radius: 0
         opacity: enabled ? 1 : 0.3
         color: control.down ? Theme.colorButtonDown : Theme.colorButton
     }

@@ -274,12 +274,15 @@ Item {
                 color: Theme.colorText
             }
 
-            ButtonThemed {
+            ItemImageButton {
                 id: buttonNew
-                text: qsTr("Add new")
                 anchors.left: textMediasTitle.right
                 anchors.leftMargin: 32
                 anchors.verticalCenter: textMediasTitle.verticalCenter
+
+                //text: qsTr("Add new")
+                source: "qrc:/icons_material/outline-create_new_folder-24px.svg"
+                tooltipText: "Add a new media directory"
                 onClicked: fileDialogAdd.open()
             }
 

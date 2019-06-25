@@ -55,29 +55,28 @@ Rectangle {
             }
         }
 
-        ButtonImageOld {
+        ItemImageButton {
             id: button_refresh
-            width: 36
-            height: 36
+            width: 32
+            height: 32
             anchors.right: button_change.left
-            anchors.rightMargin: 2
+            anchors.rightMargin: 8
             anchors.verticalCenter: parent.verticalCenter
             enabled: directory.available
 
-            imageSource: "qrc:/icons_material/baseline-refresh-24px.svg"
-            onClicked: {
-                mediaLibrary.searchMediaDirectory(directory.directoryPath)
-            }
+            source: "qrc:/icons_material/baseline-refresh-24px.svg"
+            onClicked: mediaLibrary.searchMediaDirectory(directory.directoryPath)
         }
-        ButtonImageOld {
+        ButtonThemed {
             id: button_change
-            width: 36
+            width: 72
             height: 36
             anchors.right: parent.right
             anchors.rightMargin: 2
             anchors.verticalCenter: parent.verticalCenter
 
-            imageSource: "qrc:/icons_material/outline-folder-24px.svg"
+            //imageSource: "qrc:/icons_material/outline-folder-24px.svg"
+            text: qsTr("change")
             onClicked: {
                 fileDialogChange.folder =  "file:///" + textField_path.text
                 fileDialogChange.open()
