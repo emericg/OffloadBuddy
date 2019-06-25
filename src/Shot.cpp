@@ -576,8 +576,6 @@ bool Shot::getMetadatasFromPicture(int index)
             esposure_time = buf;
         }
 
-        QDate gpsDate;
-        QTime gpsTime;
         entry = exif_content_get_entry(ed->ifd[EXIF_IFD_0], EXIF_TAG_DATE_TIME);
         if (entry)
         {
@@ -585,6 +583,9 @@ bool Shot::getMetadatasFromPicture(int index)
             exif_entry_get_value(entry, buf, sizeof(buf));
             m_date_metadatas = QDateTime::fromString(buf, "yyyy:MM:dd hh:mm:ss");
         }
+
+        QDate gpsDate;
+        QTime gpsTime;
         entry = exif_content_get_entry(ed->ifd[EXIF_IFD_GPS],
                                        static_cast<ExifTag>(EXIF_TAG_GPS_DATE_STAMP));
         if (entry)
@@ -600,6 +601,9 @@ bool Shot::getMetadatasFromPicture(int index)
             // ex: GPSTimeStamp: 08:36:14,00
             exif_entry_get_value(entry, buf, sizeof(buf));
             gpsTime = QTime::fromString(buf, "hh:mm:ss,z");
+
+            if (!gpsTime.isValid())
+                gpsTime = QTime::fromString(buf, "hh:mm:ss.z");
         }
 
         if (gpsDate.isValid() && gpsTime.isValid())
