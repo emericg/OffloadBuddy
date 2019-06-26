@@ -62,7 +62,7 @@ Rectangle {
         ActionButton {
             id: openFolder
             index: 0
-            button_text: qsTr("Open folder")
+            button_text: qsTr("Show folder")
             onButtonClicked: menuSelected(index)
         }
 

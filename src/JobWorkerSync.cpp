@@ -59,6 +59,15 @@ void JobWorkerSync::queueWork(Job *job)
     qDebug() << "<< JobWorkerSync::queueWork()";
 }
 
+bool JobWorkerSync::isWorking()
+{
+    qDebug() << ">> JobWorkerSync::isWorking()";
+
+    QMutexLocker locker(& m_jobsMutex);
+    return m_working;
+}
+
+
 void JobWorkerSync::work()
 {
     qDebug() << ">> JobWorkerSync::work()";

@@ -141,13 +141,14 @@ Rectangle {
                 if (shot.chapters > 1)
                     merge = true
                 encode = true
+
+                if (shot.hasGPMF)
+                    telemetry_gpmf = true
+                if (shot.hasGPS)
+                    telemetry_gps = true
             } else if (shot.shotType > Shared.SHOT_PICTURE) { // only multi picture
                 encode = true
             }
-            if (shot.hasGPMF)
-                telemetry_gpmf = true
-            if (shot.hasGPS)
-                telemetry_gps = true
             if (shotDevice) {
                 if (shotDevice.deviceStorage === Shared.STORAGE_MTP) {
                     folder = false
@@ -168,7 +169,7 @@ Rectangle {
         } else {
             actionMenu.visible = false
         }
-     }
+    }
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -462,7 +463,8 @@ Rectangle {
             }
 
             // multiselection
-            if (mouse.button === Qt.MiddleButton) {
+            if (mouse.button === Qt.MiddleButton ||
+                ((mouse.button === Qt.LeftButton) && (mouse.modifiers & Qt.ControlModifier))) {
                 //console.log("ItemShot::onClicked::Qt.MiddleButton")
 
                 if (!shotsView.selectionMode) {

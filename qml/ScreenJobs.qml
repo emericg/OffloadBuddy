@@ -36,13 +36,15 @@ Item {
             color: Theme.colorHeaderContent
         }
 
-        ButtonThemed {
+        ButtonImageThemed {
             id: buttonClear
             width: 256
-            text: qsTr("Clear finished jobs")
             anchors.right: parent.right
             anchors.rightMargin: 12
             anchors.verticalCenter: parent.verticalCenter
+
+            text: qsTr("Clear finished jobs")
+            source: "qrc:/icons_material/baseline-close-24px.svg"
             onClicked: myJobs.clearFinishedJobs()
         }
     }

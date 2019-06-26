@@ -301,11 +301,11 @@ bool JobManager::addJobs(JobType type, Device *d, MediaLibrary *ml,  QList<Shot 
 
         if (type == JOB_DELETE || type == JOB_FORMAT)
         {
-            m_selected_worker = m_job_instant;
+            m_selected_worker = m_job_instant; // TODO
         }
         else if (type == JOB_FIRMWARE_DOWNLOAD)
         {
-            m_selected_worker = m_job_web;
+            m_selected_worker = m_job_web; // TODO
         }
         else if (type == JOB_METADATAS || type == JOB_FIRMWARE_UPLOAD ||
                  type == JOB_CLIP ||
@@ -322,7 +322,7 @@ bool JobManager::addJobs(JobType type, Device *d, MediaLibrary *ml,  QList<Shot 
                 {
                     m_selected_worker->moveToThread(m_selected_worker->thread);
 
-                    connect(m_selected_worker->thread, SIGNAL(started()), m_selected_worker, SLOT(work()));
+                    connect(m_selected_worker, SIGNAL(startWorking()), m_selected_worker, SLOT(work()));
 
                     connect(m_selected_worker, SIGNAL(jobProgress(int, float)), this, SLOT(jobProgress(int, float)));
                     connect(m_selected_worker, SIGNAL(jobStarted(int)), this, SLOT(jobStarted(int)));
@@ -344,32 +344,10 @@ bool JobManager::addJobs(JobType type, Device *d, MediaLibrary *ml,  QList<Shot 
             return status;
         }
 
-        if (m_selected_worker == nullptr)
-        {
-            m_selected_worker = new JobWorkerSync();
-            m_selected_worker->thread = new QThread();
-
-            if (m_selected_worker->thread && m_selected_worker)
-            {
-                m_selected_worker->moveToThread(m_selected_worker->thread);
-
-                connect(m_selected_worker->thread, SIGNAL(started()), m_selected_worker, SLOT(work()));
-
-                connect(m_selected_worker, SIGNAL(jobProgress(int, float)), this, SLOT(jobProgress(int, float)));
-                connect(m_selected_worker, SIGNAL(jobStarted(int)), this, SLOT(jobStarted(int)));
-                connect(m_selected_worker, SIGNAL(jobFinished(int, int)), this, SLOT(jobFinished(int, int)));
-                connect(m_selected_worker, SIGNAL(shotStarted(int, Shot *)), this, SLOT(shotStarted(int, Shot *)));
-                connect(m_selected_worker, SIGNAL(shotFinished(int, Shot *)), this, SLOT(shotFinished(int, Shot *)));
-                connect(m_selected_worker, SIGNAL(fileProduced(QString)), this, SLOT(newFile(QString)));
-
-                m_selected_worker->thread->start();
-                status = true;
-            }
-        }
-
         if (m_selected_worker)
         {
             m_selected_worker->queueWork(job);
+            emit m_selected_worker->startWorking();
             status = true;
         }
     }

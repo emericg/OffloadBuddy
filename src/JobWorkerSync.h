@@ -50,11 +50,15 @@ public:
 
     QThread *thread = nullptr;
 
+    bool isWorking();
+
 public slots:
     void queueWork(Job *job);
     void work();
 
 signals:
+    void startWorking();
+
     void jobStarted(int);
     void jobProgress(int, float);
     void jobFinished(int, int);
