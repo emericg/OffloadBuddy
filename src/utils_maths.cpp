@@ -21,7 +21,9 @@
 
 #include "utils_maths.h"
 
+#ifndef _USE_MATH_DEFINES
 #define _USE_MATH_DEFINES
+#endif
 #include <cmath>
 
 #define d2r (M_PI / 180.0)

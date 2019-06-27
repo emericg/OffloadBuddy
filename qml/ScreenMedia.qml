@@ -201,7 +201,7 @@ Item {
                 width: 40
                 height: 40
                 source: "qrc:/icons_material/baseline-insert_chart-24px.svg"
-                visible: (shot.hasGPMF && shot.hasGPS)
+                visible: (shot && shot.hasGPMF && shot.hasGPS)
             }
 
             ItemImageButton {
@@ -247,7 +247,7 @@ Item {
                 source: "qrc:/icons_material/baseline-insert_chart-24px.svg"
                 onClicked: screenMedia.state = "metadatas"
                 selected: screenMedia.state === "metadatas"
-                visible: (shot.hasGPMF && shot.hasGPS)
+                visible: (shot && shot.hasGPMF && shot.hasGPS)
             }
             ItemMenuButton {
                 id: menuMap
@@ -257,7 +257,7 @@ Item {
                 source: "qrc:/icons_material/baseline-map-24px.svg"
                 onClicked: screenMedia.state = "map"
                 selected: screenMedia.state === "map"
-                visible: (shot.fileType === Shared.FILE_PICTURE && shot.latitude !== 0.0)
+                visible: (shot && shot.fileType === Shared.FILE_PICTURE && shot.latitude !== 0.0)
             }
         }
     }

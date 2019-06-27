@@ -19,7 +19,9 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
+#ifndef _USE_MATH_DEFINES
 #define _USE_MATH_DEFINES
+#endif
 #include <cmath>
 
 #include "Shot.h"
@@ -134,9 +136,9 @@ bool Shot::parseGpmfSample(GpmfBuffer &buf, int &devc_count)
                             // Generate compass data from magnetometer
                             {
                                 // Calculate the angle of the vector y,x
-                                double heading = (std::atan2(m_magneto.back().y,m_magneto.back().x) * 180.0) / M_PI;
+                                float heading = (std::atan2(m_magneto.back().y, m_magneto.back().x) * 180.f) / M_PI;
                                 // Normalize to 0-360
-                                if (heading < 0) heading += 360.0;
+                                if (heading < 0) heading += 360.f;
                                 m_compass.push_back(heading);
                             }
                         } break;

@@ -19,31 +19,25 @@ Item {
 
         textFileList.text = shot.fileList
 
-        if (shot.camera) {
-            labelCamera.visible = true
-        } else {
-            labelCamera.visible = false
-        }
+        labelCamera.visible = (shot.camera)
+        camera.text = shot.camera
 
-        if (shot.orientation) {
-            labelOrientation.visible = true
-        } else {
-            labelOrientation.visible = false
-        }
+        date.text = shot.date.toUTCString()
+        size.text = UtilsString.bytesToString_short(shot.datasize)
+        definition.text = shot.width + "x" + shot.height + "   (" + UtilsString.varToString(shot.width, shot.height) + ")"
 
+        labelOrientation.visible = (shot.orientation)
+        orientation.text = UtilsString.orientationToString(shot.orientation)
+
+        // FILE_PICTURE
         if (shot.fileType === Shared.FILE_PICTURE) {
             mediaPreview.setImageMode()
 
-            infosPicture.visible = true
             infosVideo.visible = false
 
             codecAudio.visible = false
             codecVideo.visible = true
             codecVideoText.text = shot.codecVideo
-
-            if (shot.iso.length === 0 && shot.focal.length === 0 && shot.exposure.length === 0) {
-                infosPicture.visible = false
-            }
 
             if (shot.duration > 1) {
                 labelDuration.visible = true
@@ -51,13 +45,27 @@ Item {
             } else {
                 labelDuration.visible = false
             }
-        } else if (shot.fileType === Shared.FILE_VIDEO) {
+
+            if (shot.iso.length === 0 && shot.focal.length === 0 && shot.exposure.length === 0) {
+                infosPicture.visible = false
+            } else {
+                infosPicture.visible = true
+
+                labelISO.visible = (shot.iso.length)
+                iso.text = qsTr("ISO") + " " + shot.iso
+                labelFocal.visible = (shot.focal.length)
+                focal.text = shot.focal
+                labelExposure.visible = (shot.exposure.length)
+                exposure.text = shot.exposure
+            }
+        }
+
+        // FILE_VIDEO
+        if (shot.fileType === Shared.FILE_VIDEO) {
             mediaPreview.setVideoMode()
 
             infosPicture.visible = false
             infosVideo.visible = true
-
-            //console.log("shot.previewPhoto :" + shot.previewVideo)
 
             if (shot.codecVideo.length) {
                 codecVideo.visible = true
@@ -75,11 +83,15 @@ Item {
                 codecAudio.visible = false
             }
 
+            labelChapters.visible = (shot.chapters > 1)
+            chapters.text = shot.chapters + qsTr(" chapters")
+
             labelDuration.visible = true
             duration.text = UtilsString.durationToString(shot.duration)
             framerate.text = UtilsString.framerateToString(shot.framerate)
             bitrate.text = UtilsString.bitrateToString(shot.bitrate)
 
+            labelAudioChannels.visible = (shot.audioCodec.length)
             if (shot.audioCodec.length) {
                 if (shot.audioChannels === 1)
                     audioChannels.text = qsTr("Mono")
@@ -91,6 +103,9 @@ Item {
                 //audioBitrate.text = UtilsString.bitrateToString(shot.audioBitrate)
                 //audioSamplerate.text = shot.audioSamplerate
             }
+
+            labelTimecode.visible = (shot.timecode)
+            timecode.text = shot.timecode
         }
 
         size.text = UtilsString.bytesToString_short(shot.datasize)
@@ -182,7 +197,6 @@ Item {
                 anchors.leftMargin: 16
 
                 color: Theme.colorText
-                text: shot.date.toUTCString()
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignLeft
                 anchors.verticalCenter: parent.verticalCenter
@@ -205,7 +219,6 @@ Item {
                 anchors.leftMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
 
-                text: shot.camera
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignLeft
                 font.pixelSize: Theme.fontSizeContentText
@@ -250,7 +263,6 @@ Item {
                 anchors.leftMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
 
-                text: shot.width + "x" + shot.height + "   (" + UtilsString.varToString(shot.width, shot.height) + ")"
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignRight
                 font.pixelSize: Theme.fontSizeContentText
@@ -274,7 +286,6 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
 
                 color: Theme.colorText
-                text: UtilsString.orientationToString(shot.orientation)
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignRight
                 font.pixelSize: Theme.fontSizeContentText
@@ -297,7 +308,6 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
 
                 color: Theme.colorText
-                text: UtilsString.bytesToString_short(shot.datasize)
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignRight
                 font.pixelSize: Theme.fontSizeContentText
@@ -332,7 +342,6 @@ Item {
                     anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: qsTr("ISO") + " " + shot.iso
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
                     font.pixelSize: Theme.fontSizeContentText
@@ -355,7 +364,6 @@ Item {
                     anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: shot.focal
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
                     font.pixelSize: Theme.fontSizeContentText
@@ -378,7 +386,6 @@ Item {
                     anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: shot.exposure
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
                     font.pixelSize: Theme.fontSizeContentText
@@ -401,22 +408,20 @@ Item {
             Item { width: 16; height: 16; } // spacer
 
             ImageSvg {
-                id: labelChapter
+                id: labelChapters
                 width: 28
                 height: 28
 
-                visible: (shot.chapters > 1)
                 source: "qrc:/icons_material/baseline-video_library-24px.svg"
                 color: Theme.colorText
 
                 Text {
-                    id: chapter
+                    id: chapters
                     height: 28
                     anchors.left: parent.right
                     anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: shot.chapters + qsTr(" chapters")
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
                     font.pixelSize: Theme.fontSizeContentText
@@ -495,7 +500,6 @@ Item {
                 width: 28
                 height: 28
 
-                visible: shot.audioCodec.length
                 source: "qrc:/icons_material/baseline-speaker-24px.svg"
                 color: Theme.colorText
 
@@ -518,7 +522,6 @@ Item {
                 width: 28
                 height: 28
 
-                visible: shot.timecode
                 source: "qrc:/icons_material/baseline-av_timer-24px.svg"
                 color: Theme.colorText
 
@@ -529,7 +532,6 @@ Item {
                     anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: shot.timecode
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
                     font.pixelSize: Theme.fontSizeContentText

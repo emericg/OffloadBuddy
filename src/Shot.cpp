@@ -19,7 +19,9 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
+#ifndef _USE_MATH_DEFINES
 #define _USE_MATH_DEFINES
+#endif
 #include <cmath>
 
 #include "Shot.h"
@@ -889,10 +891,10 @@ bool Shot::getMetadatasFromVideoGPMF()
                     MediaStream_t *t = media->tracks_others[i];
 
                     bool status = false;
-                    uint32_t gpmf_sample_count = t->sample_count;
+                    unsigned gpmf_sample_count = t->sample_count;
                     int devc_count = 0;
 
-                    for (int32_t sp_index = 0; sp_index < gpmf_sample_count; sp_index++)
+                    for (unsigned sp_index = 0; sp_index < gpmf_sample_count; sp_index++)
                     {
                         // Get GPMF sample from MP4
                         MediaSample_t *sp = minivideo_get_sample(media, t, sp_index);

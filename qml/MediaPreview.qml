@@ -15,7 +15,7 @@ Rectangle {
     anchors.right: infosGeneric.left
     anchors.margins: 16
 
-    color: (shot.fileType === Shared.FILE_PICTURE || isFullScreen) ? "transparent" : "black"
+    color: (isFullScreen || (shot && shot.fileType === Shared.FILE_PICTURE)) ? "transparent" : "black"
 
     property bool isFullScreen: false
     property int startLimit: -1
@@ -197,8 +197,8 @@ Rectangle {
             autoTransform: true
             fillMode: Image.PreserveAspectFit
 
-            sourceSize.width: shot.width / 2
-            sourceSize.height: shot.height / 2
+            sourceSize.width: if (shot) shot.width / 2
+            sourceSize.height: if (shot) shot.height / 2
         }
 
         VideoOutput {
@@ -209,7 +209,7 @@ Rectangle {
             anchors.bottomMargin: 0 //mediaControls.visible ? 40 : 0
 
             property int clipStart: 0
-            property int clipStop: shot.duration
+            property int clipStop: (shot) ? shot.duration : 0
 
             MediaPlayer {
                 id: videoPlayer
