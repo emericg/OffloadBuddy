@@ -1,10 +1,10 @@
 TARGET  = OffloadBuddy
 
-VERSION = 0.2
+VERSION = 0.3
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 CONFIG += c++14
-QT     += core gui svg quick quickcontrols2
+QT     += core qml quickcontrols2 svg
 QT     += multimedia location sql charts
 
 # Validate Qt version
@@ -190,7 +190,7 @@ linux {
 
 macx {
     # Automatic bundle packaging
-    deploy.commands = macdeployqt $${OUT_PWD}/$${DESTDIR}/$${TARGET}.app -qmldir=qml/
+    deploy.commands = macdeployqt $${OUT_PWD}/$${DESTDIR}/$${TARGET}.app -qmldir=qml/ -appstore-compliant
     install.depends = deploy
     QMAKE_EXTRA_TARGETS += install deploy
 
