@@ -495,6 +495,7 @@ Item {
                 width: 28
                 height: 28
 
+                visible: shot.audioCodec.length
                 source: "qrc:/icons_material/baseline-speaker-24px.svg"
                 color: Theme.colorText
 

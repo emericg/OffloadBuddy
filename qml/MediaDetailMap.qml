@@ -17,7 +17,6 @@ Item {
         if (shot.latitude !== 0.0) {
             mapPointGPS.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
             mapPointGPS.zoomLevel = 12
-            mapPointGPS.anchors.topMargin = 48
             mapMarker.visible = true
             mapMarker.coordinate = QtPositioning.coordinate(shot.latitude, shot.longitude)
             button_map_dezoom.enabled = true
@@ -28,30 +27,21 @@ Item {
             rectangleCoordinates.visible = true
             coordinates.text = shot.latitudeString + "    " + shot.longitudeString
             altitude.text = UtilsString.altitudeToString(shot.altitude, 0, settingsManager.appunits)
-        } else {
-            mapPointGPS.center = QtPositioning.coordinate(45.5, 6)
-            mapPointGPS.zoomLevel = 2
-            mapPointGPS.anchors.topMargin = 16
-            mapMarker.visible = false
-            rectangleCoordinates.visible = false
-            button_map_dezoom.enabled = false
-            button_map_zoom.enabled = false
-            button_gps_export.visible = false
         }
     }
 
     Map {
         id: mapPointGPS
-        copyrightsVisible: false
         anchors.topMargin: 48
         anchors.fill: parent
         anchors.margins: 16
-
-        gesture.enabled: false
         z: parent.z + 1
+
+        copyrightsVisible: false
+        gesture.enabled: false
         plugin: Plugin { name: "mapboxgl" } // "osm", "mapboxgl", "esri"
-        center: QtPositioning.coordinate(45.5, 6)
-        zoomLevel: 2
+        //center: QtPositioning.coordinate(45.5, 6)
+        //zoomLevel: 2
 
         MapQuickItem {
             id: mapMarker
@@ -68,14 +58,13 @@ Item {
             anchors.fill: parent
             onWheel: {
                 if (wheel.angleDelta.y < 0)
-                    onClicked: parent.zoomLevel--
+                    parent.zoomLevel--
                 else
-                    onClicked: parent.zoomLevel++
+                    parent.zoomLevel++
             }
         }
 
         Row {
-            id: row
             anchors.top: parent.top
             anchors.topMargin: 16
             anchors.right: parent.right

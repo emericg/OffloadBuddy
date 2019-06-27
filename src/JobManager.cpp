@@ -277,6 +277,8 @@ bool JobManager::addJobs(JobType type, Device *d, MediaLibrary *ml,  QList<Shot 
         // ffmpeg worker
         if (m_job_cpu == nullptr)
         {
+            qDebug() << "Starting an async worker";
+
             m_job_cpu = new JobWorkerAsync();
 
             connect(m_job_cpu, SIGNAL(jobStarted(int)), this, SLOT(jobStarted(int)));
@@ -315,6 +317,8 @@ bool JobManager::addJobs(JobType type, Device *d, MediaLibrary *ml,  QList<Shot 
 
             if (m_selected_worker == nullptr)
             {
+                qDebug() << "Starting a sync worker";
+
                 m_selected_worker = new JobWorkerSync();
                 m_selected_worker->thread = new QThread();
 

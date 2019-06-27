@@ -37,15 +37,6 @@ Item {
         onHeightChanged()
 
         if (shot) {
-            if (shot.latitude !== 0.0) {
-                mapTraceGPS.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
-                mapTraceGPS.zoomLevel = 12
-                mapMarker.visible = false
-                mapMarker.coordinate = QtPositioning.coordinate(shot.latitude, shot.longitude)
-                button_map_dezoom.enabled = true
-                button_map_zoom.enabled = true
-            }
-
             // Graphs datas
             speedsGraph.title = "Speed (" + UtilsString.speedUnit(settingsManager.appunits) + ")"
             shot.updateSpeedsSerie(speedsSeries, settingsManager.appunits)
@@ -88,26 +79,40 @@ Item {
             axisGyroX0.max = gyroX.count
 
             // GPS trace
-            mapTrace.visible = true
+            if (shot.latitude !== 0.0) {
+                button_map_dezoom.enabled = true
+                button_map_zoom.enabled = true
 
-            if (shot.distanceKm < 0.5)
-                mapTraceGPS.zoomLevel = 18
-            else if (shot.distanceKm < 2)
-                mapTraceGPS.zoomLevel = 15
-            else if (shot.distanceKm < 10)
-                mapTraceGPS.zoomLevel = 12
-            else if (shot.distanceKm < 50)
-                mapTraceGPS.zoomLevel = 10
-            else if (shot.distanceKm < 100)
-                mapTraceGPS.zoomLevel = 8
+                // clean GPS points
+                while (mapTrace.pathLength() > 0)
+                    mapTrace.removeCoordinate(mapTrace.coordinateAt(0))
 
-            // clean GPS points
-            while (mapTrace.pathLength() > 0)
-                mapTrace.removeCoordinate(mapTrace.coordinateAt(0))
+                // add new GPS points // FIXME
+                for (var i = 0; i < 18000; i+=18)
+                    mapTrace.addCoordinate(shot.getGpsCoordinates(i))
 
-            // add new GPS points // FIXME
-            for (var i = 0; i < 18000; i+=18)
-                mapTrace.addCoordinate(shot.getGpsCoordinates(i))
+                if (shot.distanceKm < 0.5)
+                    mapTraceGPS.zoomLevel = 18
+                else if (shot.distanceKm < 2)
+                    mapTraceGPS.zoomLevel = 15
+                else if (shot.distanceKm < 10)
+                    mapTraceGPS.zoomLevel = 12
+                else if (shot.distanceKm < 50)
+                    mapTraceGPS.zoomLevel = 10
+                else if (shot.distanceKm < 100)
+                    mapTraceGPS.zoomLevel = 8
+
+                mapTraceGPS.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
+
+                if (mapTrace.pathLength() > 1) {
+                    mapTrace.visible = true
+                    mapMarker.visible = false
+                } else {
+                    mapTrace.visible = false
+                    mapMarker.visible = true
+                    mapMarker.coordinate = QtPositioning.coordinate(shot.latitude, shot.longitude)
+                }
+            }
         }
     }
 
@@ -140,29 +145,30 @@ Item {
 
         Map {
             id: mapTraceGPS
-            anchors.leftMargin: 0
             anchors.fill: parent
-            copyrightsVisible: false
             anchors.margins: 16
-
-            gesture.enabled: false
             z: parent.z + 1
+
+            copyrightsVisible: false
+            gesture.enabled: false
             plugin: Plugin { name: "mapboxgl" } // "osm", "mapboxgl", "esri"
-            center: QtPositioning.coordinate(45.5, 6)
-            zoomLevel: 2
+
+            //zoomLevel: 2
+            //center: QtPositioning.coordinate(45.5, 6)
 
             MouseArea {
                 anchors.fill: parent
                 onWheel: {
                     if (wheel.angleDelta.y < 0)
-                        onClicked: parent.zoomLevel--
+                        mapTraceGPS.zoomLevel--
                     else
-                        onClicked: parent.zoomLevel++
+                        mapTraceGPS.zoomLevel++
+
+                    mapTraceGPS.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
                 }
             }
 
             Row {
-                id: row
                 anchors.top: parent.top
                 anchors.topMargin: 16
                 anchors.right: parent.right
@@ -178,7 +184,10 @@ Item {
                     font.pointSize: 16
                     opacity: 0.8
 
-                    onClicked: parent.parent.zoomLevel--
+                    onClicked: {
+                        mapTraceGPS.zoomLevel--
+                        mapTraceGPS.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
+                    }
                 }
 
                 ButtonThemed {
@@ -190,7 +199,10 @@ Item {
                     font.pointSize: 16
                     opacity: 0.8
 
-                    onClicked: parent.parent.zoomLevel++
+                    onClicked: {
+                        mapTraceGPS.zoomLevel++
+                        mapTraceGPS.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
+                    }
                 }
             }
 

@@ -56,7 +56,7 @@ else
 fi
 
 echo '---- Running macdeployqt'
-macdeployqt bin/OffloadBuddy.app -qmldir=qml/;
+macdeployqt bin/OffloadBuddy.app -qmldir=qml/ -appstore-compliant;
 
 # Copy ffmpeg binary and libs
 cp contribs/env/macos_x86_64/usr/bin/ffmpeg bin/OffloadBuddy.app/Contents/MacOS/
