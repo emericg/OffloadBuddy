@@ -223,4 +223,20 @@ ApplicationWindow {
             }
         ]
     }
+
+    // Exit ////////////////////////////////////////////////////////////////////
+
+    PopupExit {
+        id: popupExit
+        x: (parent.width - popupExit.width) / 2
+        y: (parent.height - popupExit.height) / 2
+        onConfirmed: Qt.quit()
+    }
+    onClosing: {
+        // If a job is running, ask user to confirm exit
+        if (jobManager.workingJobCount > 0) {
+            close.accepted = false;
+            popupExit.open()
+        }
+    }
 }

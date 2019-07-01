@@ -121,8 +121,8 @@ Rectangle {
             width: sideBar.width
             imgSize: 48
 
-            onClicked: Qt.quit()
             source: "qrc:/menus/exit.svg"
+            onClicked: applicationWindow.close()
         }
     }
 }

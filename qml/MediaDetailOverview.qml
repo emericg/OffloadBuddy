@@ -125,7 +125,7 @@ Item {
 
     // POPUPS //////////////////////////////////////////////////////////////////
 
-    PopupConfirm {
+    PopupDelete {
         id: popupDelete
         x: (applicationWindow.width / 2) - (popupDelete.width / 2) - (applicationSidebar.width)
         y: (applicationWindow.height / 2) - (popupDelete.height / 2) - (rectangleHeader.height)
@@ -154,7 +154,7 @@ Item {
         y: (parent.height - 64 - panelEncode.height) / 2
         closePolicy: Popup.CloseOnEscape /*| Popup.CloseOnPressOutsideParent*/
 
-        PanelEncode {
+        PopupEncodeVideo {
             id: panelEncode
         }
         background: Item {

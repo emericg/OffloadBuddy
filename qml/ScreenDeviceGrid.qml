@@ -239,7 +239,7 @@ Item {
         y: (parent.height - panelEncode.height) / 2
         closePolicy: Popup.CloseOnEscape /*| Popup.CloseOnPressOutsideParent*/
 
-        PanelEncode {
+        PopupEncodeVideo {
             id: panelEncode
         }
         background: Item {
@@ -247,7 +247,7 @@ Item {
         }
     }
 
-    PopupConfirm {
+    PopupDelete {
         id: confirmDeleteMultipleFilesPopup
         x: (applicationWindow.width / 2) - (confirmDeleteMultipleFilesPopup.width / 2) - (applicationSidebar.width / 2)
         y: (applicationWindow.height / 2) - (confirmDeleteMultipleFilesPopup.height / 2)
@@ -266,7 +266,7 @@ Item {
         }
     }
 
-    PopupConfirm {
+    PopupDelete {
         id: confirmDeleteSingleFilePopup
         x: (applicationWindow.width / 2) - (confirmDeleteSingleFilePopup.width / 2) - (applicationSidebar.width / 2)
         y: (applicationWindow.height / 2) - (confirmDeleteSingleFilePopup.height / 2)

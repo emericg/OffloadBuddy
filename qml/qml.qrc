@@ -22,8 +22,9 @@
         <file>ItemShot.qml</file>
         <file>ActionMenu.qml</file>
         <file>ActionButton.qml</file>
-        <file>PopupConfirm.qml</file>
-        <file>PanelEncode.qml</file>
+        <file>PopupDelete.qml</file>
+        <file>PopupExit.qml</file>
+        <file>PopupEncodeVideo.qml</file>
         <file>MediaDetailMap.qml</file>
         <file>MediaDetailTelemetry.qml</file>
         <file>MediaDetailOverview.qml</file>
