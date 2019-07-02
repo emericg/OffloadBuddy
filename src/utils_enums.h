@@ -124,6 +124,12 @@ typedef enum deviceModel_e
         DEVICE_YI_4K,
         DEVICE_YI_4Kp,
 
+    DEVICE_DJI = 330,
+        DEVICE_DJI_OSMO,
+        DEVICE_DJI_OSMOp,
+        DEVICE_DJI_OSMO_POCKET,
+        DEVICE_DJI_OSMO_ACTION,
+
 } deviceModel_e;
 
 /* ************************************************************************** */

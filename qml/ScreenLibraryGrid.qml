@@ -540,6 +540,10 @@ Item {
                 if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                     actionMenu.visible = false
                     screenLibrary.state = "stateMediaDetails"
+                }  else if (event.key === Qt.Key_PageUp) {
+                    shotsView.currentIndex = 0;
+                } else if (event.key === Qt.Key_PageDown) {
+                    shotsView.currentIndex = shotsView.count - 1;
                 } else if ((event.key === Qt.Key_A) && (event.modifiers & Qt.ControlModifier)) {
                     mediaGrid.selectAll()
                 } else if (event.key === Qt.Key_Clear) {
