@@ -409,6 +409,27 @@ QStringList Shot::getFilesQStringList() const
     return list;
 }
 
+QString & Shot::getFolder()
+{
+    if (m_folder.isEmpty())
+    {
+        if (!m_pictures.empty())
+        {
+            m_folder = m_pictures.at(0)->filesystemPath;
+        }
+        else if (!m_videos.empty())
+        {
+            m_folder = m_videos.at(0)->filesystemPath;
+        }
+
+        QDir p(m_folder);
+        p.cdUp();
+        m_folder = p.absolutePath();
+    }
+
+    return m_folder;
+}
+
 QString Shot::getFilesQString() const
 {
     QString list;

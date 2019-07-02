@@ -108,7 +108,7 @@ void MediaLibrary::searchMediaDirectories()
     {
         // TODO connect to directoriesUpdated()
 
-        const QList <QObject *> * mediaDirectories = s->getDirectoriesList();
+        const QList <QObject *> *mediaDirectories = s->getDirectoriesList();
 
         for (auto d: *mediaDirectories)
         {

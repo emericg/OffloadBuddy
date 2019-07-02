@@ -49,6 +49,9 @@ void FileScanner::chooseFilesystem(const QString &path)
 {
     m_abort_scan = false;
     m_selected_filesystem = path;
+
+    if (m_selected_filesystem.endsWith('/'))
+        m_selected_filesystem.chop(1);
 }
 
 void FileScanner::chooseMtpStorage(StorageMtp *mtpStorage)

@@ -150,6 +150,8 @@ class Shot: public QObject
     int m_shot_id = -1;             //!< Shot ID (if we have a shot, not a single file)
     int m_camera_id = 0;            //!< Camera ID (if the shot is part of a multi camera system)
 
+    QString m_folder;
+
     // PICTURES files
     QList <ofb_file *> m_pictures;
 
@@ -316,6 +318,7 @@ public slots:
     unsigned getState() const { return m_state; }
     void setState(Shared::ShotState state) { m_state = state; emit stateUpdated(); }
 
+    QString & getFolder();
     QString getFilesQString() const;
     QStringList getFilesQStringList() const;
 

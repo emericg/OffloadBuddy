@@ -81,6 +81,12 @@ void ShotModel::addFile(ofb_file *f, ofb_shot *s)
     if (s->shot_id > 0)
     {
         shot = getShotAt(s->shot_type, s->shot_id, s->camera_id);
+
+        if (shot && f->filesystemPath.contains(shot->getFolder()) == false)
+        {
+            // We make sure files are in the same folder. Useful when shot ids are looping.
+            shot = nullptr;
+        }
     }
     else
     {
