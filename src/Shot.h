@@ -368,6 +368,7 @@ public slots:
     double getAltitude() const { return gps_alt; }
 
     int getHighlightCount() const { return m_highlights.size(); }
+    int getGpsPointCount() const { return m_gps.size(); }
 
     int getFileId() const { return m_shot_id; }
     void setFileId(int id) { m_shot_id = id; }

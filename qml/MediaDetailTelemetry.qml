@@ -87,8 +87,8 @@ Item {
                 while (mapTrace.pathLength() > 0)
                     mapTrace.removeCoordinate(mapTrace.coordinateAt(0))
 
-                // add new GPS points // FIXME
-                for (var i = 0; i < 18000; i+=18)
+                // add new GPS points // one per seconde (at 18Hz)
+                for (var i = 0; i < shot.getGpsPointCount(); i+=18)
                     mapTrace.addCoordinate(shot.getGpsCoordinates(i))
 
                 if (shot.distanceKm < 0.5)
