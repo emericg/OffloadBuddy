@@ -143,9 +143,8 @@ Item {
                 currentDevice.model.includes("HERO7 Silver")) {
             deviceImage.source = "qrc:/cameras/H7w.svg"
         } else if (currentDevice.model.includes("HERO7") ||
-                   currentDevice.model.includes("HERO6")) {
-            deviceImage.source = "qrc:/cameras/H6.svg"
-        } else if (currentDevice.model.includes("HERO5")) {
+                   currentDevice.model.includes("HERO6") ||
+                   currentDevice.model.includes("HERO5")) {
             deviceImage.source = "qrc:/cameras/H5.svg"
         } else if (currentDevice.model.includes("Session")) {
             deviceImage.source = "qrc:/cameras/session.svg"
