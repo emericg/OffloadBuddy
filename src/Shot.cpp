@@ -209,6 +209,18 @@ QDateTime Shot::getDate() const
 
     return m_date_file;
 }
+QDateTime Shot::getDateFile() const
+{
+    return m_date_file;
+}
+QDateTime Shot::getDateMetadata() const
+{
+    return m_date_metadatas;
+}
+QDateTime Shot::getDateGPS() const
+{
+    return m_date_gps;
+}
 
 qint64 Shot::getDuration() const
 {

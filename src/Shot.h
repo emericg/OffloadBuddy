@@ -110,6 +110,9 @@ class Shot: public QObject
 
     Q_PROPERTY(qint64 duration READ getDuration NOTIFY shotUpdated)
     Q_PROPERTY(QDateTime date READ getDate NOTIFY shotUpdated)
+    Q_PROPERTY(QDateTime dateFile READ getDateFile NOTIFY shotUpdated)
+    Q_PROPERTY(QDateTime dateMetadata READ getDateMetadata NOTIFY shotUpdated)
+    Q_PROPERTY(QDateTime dateGPS READ getDateGPS NOTIFY shotUpdated)
 
     Q_PROPERTY(unsigned width READ getWidth NOTIFY shotUpdated)
     Q_PROPERTY(unsigned height READ getHeight NOTIFY shotUpdated)
@@ -331,6 +334,9 @@ public slots:
     qint64 getFullSize() const;
     int getChapterCount() const;    //!< 0 means no notion of chapter
     QDateTime getDate() const;
+    QDateTime getDateFile() const;
+    QDateTime getDateMetadata() const;
+    QDateTime getDateGPS() const;
     QString getPreviewPhoto() const;
     QString getPreviewVideo() const;
     QImage getPreviewMtp();

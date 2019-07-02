@@ -33,7 +33,7 @@ Popup {
         wrapMode: Text.WordWrap
         font.pixelSize: 20
         color: Theme.colorText
-        text: "A job is still running. Do you want to exit anyway?"
+        text: qsTr("A job is still running. Do you want to exit anyway?")
     }
 
     Row {

@@ -186,6 +186,7 @@ Item {
                 width: 40
                 height: 40
                 source: "qrc:/icons_material/baseline-date_range-24px.svg"
+                onClicked: contentOverview.openDatePopup()
             }
 
             ItemImageButton {

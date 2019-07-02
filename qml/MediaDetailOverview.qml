@@ -115,15 +115,27 @@ Item {
     }
 
     function openEncodePopup() {
-        panelEncode.updateEncodePanel(shot)
-        panelEncode.setClip(mediaPreview.startLimit, mediaPreview.stopLimit)
-        popupEncode.open()
+        if (shot.fileType === Shared.FILE_VIDEO) {
+            panelEncode.updateEncodePanel(shot)
+            panelEncode.setClip(mediaPreview.startLimit, mediaPreview.stopLimit)
+            popupEncode.open()
+        }
     }
     function openDeletePopup() {
         popupDelete.open()
     }
+    function openDatePopup() {
+        popupDate.open()
+        popupDate.loadDates()
+    }
 
     // POPUPS //////////////////////////////////////////////////////////////////
+
+    PopupDate {
+        id: popupDate
+        x: (applicationWindow.width / 2) - (popupDelete.width / 2) - (applicationSidebar.width)
+        y: (applicationWindow.height / 2) - (popupDelete.height / 2) - (rectangleHeader.height)
+    }
 
     PopupDelete {
         id: popupDelete

@@ -22,6 +22,7 @@
         <file>ItemShot.qml</file>
         <file>ActionMenu.qml</file>
         <file>ActionButton.qml</file>
+        <file>PopupDate.qml</file>
         <file>PopupDelete.qml</file>
         <file>PopupExit.qml</file>
         <file>PopupEncodeVideo.qml</file>
