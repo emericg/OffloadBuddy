@@ -756,6 +756,7 @@ Item {
             Rectangle {
                 width: shotsView.cellSize;
                 height: shotsView.cellSize
+                visible: !mediaGrid.selectionMode
                 color: "transparent"
                 border.width : 4
                 border.color: Theme.colorPrimary
