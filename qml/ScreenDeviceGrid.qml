@@ -21,6 +21,10 @@ Item {
     property var selectionCount: 0
 
     function selectFile(index) {
+        // make sure it's not already selected
+        if (currentDevice.getShotByProxyIndex(index).selected) return;
+
+        // then add
         selectionMode = true;
         selectionList.push(index);
         selectionCount++;

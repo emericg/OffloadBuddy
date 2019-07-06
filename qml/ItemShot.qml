@@ -405,7 +405,7 @@ Rectangle {
             var lastIndex = shotsView.currentIndex
             shotsView.currentIndex = index
 
-            // multiselection
+            // multi selection (range)
             if ((mouse.button === Qt.LeftButton) && (mouse.modifiers & Qt.ShiftModifier)) {
                 //console.log("multiselection (with modifier), from " + lastIndex + " to " + index)
 
@@ -416,10 +416,25 @@ Rectangle {
                     for (var j = index; j <= lastIndex; j++)
                         mediaGrid.selectFile(j);
                 }
+                return;
+            }
+
+            // multi selection (add)
+            if (mouse.button === Qt.MiddleButton ||
+                ((mouse.button === Qt.LeftButton) && mediaGrid.selectionMode) ||
+                ((mouse.button === Qt.LeftButton) && (mouse.modifiers & Qt.ControlModifier))) {
+                //console.log("ItemShot::onClicked::Qt.MiddleButton")
+
+                if (!shot.selected) {
+                    mediaGrid.selectFile(index);
+                } else {
+                    mediaGrid.deselectFile(index);
+                }
+                return;
             }
 
             // action menu
-            if (mouse.button === Qt.RightButton) {
+            if (mouse.button === Qt.RightButton && !mediaGrid.selectionMode) {
                 //console.log("ItemShot::onClicked::Qt.RightButton")
 
                 var folder = true
@@ -461,20 +476,6 @@ Rectangle {
             } else {
                 actionMenu.visible = false
             }
-
-            // multiselection
-            if (mouse.button === Qt.MiddleButton ||
-                ((mouse.button === Qt.LeftButton) && (mouse.modifiers & Qt.ControlModifier))) {
-                //console.log("ItemShot::onClicked::Qt.MiddleButton")
-
-                if (!shotsView.selectionMode) {
-                    if (!shot.selected) {
-                        mediaGrid.selectFile(index);
-                    } else {
-                        mediaGrid.deselectFile(index);
-                    }
-                }
-            }
         }
         onDoubleClicked: {
             //console.log("ItemShot::onDoubleClicked")
@@ -497,12 +498,11 @@ Rectangle {
         onPressAndHold: {
             //console.log("ItemShot::onPressAndHold")
 
-            if (!shotsView.selectionMode) {
-                if (!shot.selected) {
-                    mediaGrid.selectFile(index);
-                } else {
-                    mediaGrid.deselectFile(index);
-                }
+            // multi selection
+            if (!shot.selected) {
+                mediaGrid.selectFile(index);
+            } else {
+                mediaGrid.deselectFile(index);
             }
         }
     }
