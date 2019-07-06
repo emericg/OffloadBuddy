@@ -175,30 +175,28 @@ Item {
                 anchors.rightMargin: 16
                 spacing: 16
 
-                ButtonThemed {
+                ItemImageButton {
                     id: button_map_dezoom
                     width: 40
                     height: 40
-                    text: "-"
-                    font.bold: true
-                    font.pointSize: 16
-                    opacity: 0.8
+                    iconColor: "#606060"
+                    highlightColor: "#F0F0F0"
 
+                    source: "qrc:/icons_material/baseline-zoom_out-24px.svg"
                     onClicked: {
                         mapTraceGPS.zoomLevel--
                         mapTraceGPS.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
                     }
                 }
 
-                ButtonThemed {
+                ItemImageButton {
                     id: button_map_zoom
                     width: 40
                     height: 40
-                    text: "+"
-                    font.bold: true
-                    font.pointSize: 16
-                    opacity: 0.8
+                    iconColor: "#606060"
+                    highlightColor: "#F0F0F0"
 
+                    source: "qrc:/icons_material/baseline-zoom_in-24px.svg"
                     onClicked: {
                         mapTraceGPS.zoomLevel++
                         mapTraceGPS.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
@@ -480,7 +478,8 @@ Item {
                     id: speedsSeries
                     axisX: ValueAxis { id: axisSpeedX0; visible: false; gridVisible: false; }
                     axisY: ValueAxis { id: axisSpeedY0; visible: true; gridVisible: true;
-                                       labelsFont.pixelSize: 12; labelsColor: Theme.colorText; labelFormat: "%0.1f"; }
+                                       labelsFont.pixelSize: 12; labelsColor: Theme.colorText; labelFormat: "%0.1f";
+                                       gridLineColor: Theme.colorText; }
                 }
             }
 
@@ -499,7 +498,8 @@ Item {
                     color: "green"
                     axisX: ValueAxis { id: axisAltiX0; visible: false; gridVisible: false; }
                     axisY: ValueAxis { id: axisAltiY0; visible: true; gridVisible: true;
-                                       labelsFont.pixelSize: 12; labelsColor: Theme.colorText; labelFormat: "%i"; }
+                                       labelsFont.pixelSize: 12; labelsColor: Theme.colorText; labelFormat: "%i";
+                                       gridLineColor: Theme.colorText; }
                 }
             }
 
@@ -515,7 +515,8 @@ Item {
 
                 ValueAxis { id: axisAcclX0; visible: false; gridVisible: false; }
                 ValueAxis { id: axisAcclY0; visible: true; gridVisible: true;
-                            labelsFont.pixelSize: 12; labelsColor: Theme.colorText; labelFormat: "%i"; }
+                            labelsFont.pixelSize: 12; labelsColor: Theme.colorText; labelFormat: "%i";
+                            gridLineColor: Theme.colorText; }
 
                 SplineSeries { id: acclX; axisX: axisAcclX0; axisY: axisAcclY0; }
                 SplineSeries { id: acclY; axisX: axisAcclX0; axisY: axisAcclY0; }
@@ -534,7 +535,8 @@ Item {
 
                 ValueAxis { id: axisGyroX0; visible: false; gridVisible: false; }
                 ValueAxis { id: axisGyroY0; visible: true; gridVisible: true;
-                            labelsFont.pixelSize: 12; labelsColor: Theme.colorText; labelFormat: "%i"; }
+                            labelsFont.pixelSize: 12; labelsColor: Theme.colorText; labelFormat: "%i";
+                            gridLineColor: Theme.colorText; }
 
                 LineSeries { id: gyroX; axisX: axisGyroX0; axisY: axisGyroY0; color: "red"; }
                 LineSeries { id: gyroY; axisX: axisGyroX0; axisY: axisGyroY0; color: "green"; }

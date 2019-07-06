@@ -71,27 +71,25 @@ Item {
             anchors.rightMargin: 16
             spacing: 16
 
-            ButtonThemed {
+            ItemImageButton {
                 id: button_map_dezoom
                 width: 40
                 height: 40
-                text: "-"
-                font.bold: true
-                font.pointSize: 16
-                opacity: 0.8
+                iconColor: "#606060"
+                highlightColor: "#F0F0F0"
 
+                source: "qrc:/icons_material/baseline-zoom_out-24px.svg"
                 onClicked: parent.parent.zoomLevel--
             }
 
-            ButtonThemed {
+            ItemImageButton {
                 id: button_map_zoom
                 width: 40
                 height: 40
-                text: "+"
-                font.bold: true
-                font.pointSize: 16
-                opacity: 0.8
+                iconColor: "#606060"
+                highlightColor: "#F0F0F0"
 
+                source: "qrc:/icons_material/baseline-zoom_in-24px.svg"
                 onClicked: parent.parent.zoomLevel++
             }
         }
