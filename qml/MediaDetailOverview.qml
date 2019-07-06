@@ -14,6 +14,7 @@ Item {
 
     function setPause() { mediaPreview.setPause() }
     function setPlayPause() { mediaPreview.setPlayPause() }
+    function toggleRotate() { mediaPreview.toggleRotate() }
 
     function updateOverview() {
 

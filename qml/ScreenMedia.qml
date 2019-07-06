@@ -182,6 +182,14 @@ Item {
             spacing: 4
 
             ItemImageButton {
+                id: buttonRotate
+                width: 40
+                height: 40
+                source: "qrc:/icons_material/baseline-rotate_90_degrees_ccw-24px.svg"
+                onClicked: contentOverview.toggleRotate()
+            }
+
+            ItemImageButton {
                 id: buttonTimestamp
                 width: 40
                 height: 40

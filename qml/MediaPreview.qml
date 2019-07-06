@@ -27,6 +27,7 @@ Rectangle {
         output.scale = 1
         output.rotation = 0
         output.transform = noflip
+        overlayRotations.visible = false
 
         imageOutput.visible = true
         mediaOutput.visible = false
@@ -46,6 +47,7 @@ Rectangle {
         output.scale = 1
         output.rotation = 0
         output.transform = noflip
+        overlayRotations.visible = false
 
         imageOutput.visible = false
         mediaOutput.visible = true
@@ -76,6 +78,10 @@ Rectangle {
             videoPlayer.play()
             videoPlayer.isRunning = true
         }
+    }
+
+    function toggleRotate() {
+        overlayRotations.visible = !overlayRotations.visible
     }
 
     function toogleFullScreen() {
@@ -263,16 +269,15 @@ Rectangle {
         id: overlays
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
-
-
+/*
         Rectangle {
             id: poc
-
             z: 2
             color: "transparent"
             border.color: "red"
             border.width: 4
         }
+*/
         ////////////////
 
         Item {
@@ -283,7 +288,7 @@ Rectangle {
             anchors.top: parent.top
             anchors.topMargin: 16
 
-            visible: mouseArea.hovered
+            visible: false // mouseArea.hovered
             opacity: 0.66
 
             Row {
