@@ -92,7 +92,7 @@ Rectangle {
             imgSize: 48
 
             visible: jobManager.trackedJobCount
-            animated:  jobManager.workingJobCount
+            animated: jobManager.workingJobCount
 
             selected: applicationContent.state === "jobs"
             onClicked: applicationContent.state = "jobs"

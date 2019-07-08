@@ -5,6 +5,8 @@ import com.offloadbuddy.theme 1.0
 
 Button {
     id: control
+    implicitWidth: 128
+    implicitHeight: 40
 
     property bool fullColor: false
     property string primaryColor: "#5483EF"

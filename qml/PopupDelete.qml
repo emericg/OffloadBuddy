@@ -4,9 +4,10 @@ import QtQuick.Controls 2.2
 import com.offloadbuddy.theme 1.0
 
 Popup {
-    id: popupConfirm
+    id: popupDelete
     width: 640
     height: (files.length) ? 320 : 180
+    padding: 24
 
     signal confirmed()
     property string message
@@ -16,75 +17,94 @@ Popup {
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
+    ////////////////////////////////////////////////////////////////////////////
+
     background: Rectangle {
         color: Theme.colorBackground
         radius: 2
     }
 
-    Text {
-        id: textArea
-        anchors.left: parent.left
-        anchors.leftMargin: 24
-        anchors.right: parent.right
-        anchors.rightMargin: 24
-        anchors.top: parent.top
-        anchors.topMargin: 24
+    contentItem: Item {
+        //anchors.fill: parent
 
-        text: message
-        verticalAlignment: Text.AlignVCenter
-        horizontalAlignment: Text.AlignHCenter
-        wrapMode: Text.WordWrap
-        font.pixelSize: 20
-        color: Theme.colorText
-    }
+        Text {
+            id: textArea
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
 
-    ListView {
-        id: listArea
-        anchors.bottom: row.top
-        anchors.bottomMargin: 24
-        anchors.top: textArea.bottom
-        anchors.topMargin: 24
-        anchors.right: parent.right
-        anchors.rightMargin: 24
-        anchors.left: parent.left
-        anchors.leftMargin: 24
-
-        visible: files.length
-        clip: true
-        model: files
-        delegate: Text { text: modelData; color: Theme.colorText; }
-    }
-
-    Row {
-        id: row
-        height: 40
-        spacing: 32
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 24
-        anchors.horizontalCenter: parent.horizontalCenter
-
-        ButtonImageWireframe {
-            id: buttonConfirm
-            anchors.verticalCenter: parent.verticalCenter
-
-            text: qsTr("Delete")
-            source: "qrc:/icons_material/baseline-delete-24px.svg"
-            fullColor: true
-            primaryColor: Theme.colorError
-            onClicked: {
-                popupConfirm.confirmed();
-                popupConfirm.close();
-            }
+            text: message
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignLeft
+            wrapMode: Text.WordWrap
+            font.pixelSize: 20
+            color: Theme.colorText
         }
 
-        ButtonWireframe {
-            id: buttonCancel
-            anchors.verticalCenter: parent.verticalCenter
+        ////////////////
 
-            text: qsTr("Cancel")
-            primaryColor: Theme.colorPrimary
-            onClicked: {
-                popupConfirm.close();
+        ImageSvg {
+            id: listIcon
+            anchors.top: textArea.bottom
+            anchors.topMargin: 12
+            anchors.left: parent.left
+            anchors.leftMargin: -2
+
+            visible: files.length
+            color: Theme.colorText
+            source: "qrc:/icons_material/baseline-list-24px.svg"
+        }
+
+        ListView {
+            id: listArea
+            anchors.bottom: rowButtons.top
+            anchors.bottomMargin: 12
+            anchors.top: listIcon.top
+            anchors.topMargin: 6
+            anchors.right: parent.right
+            anchors.left: listIcon.right
+            anchors.leftMargin: 12
+
+            visible: files.length
+            flickableDirection: Flickable.HorizontalAndVerticalFlick
+            clip: true
+            model: files
+            delegate: Text { text: modelData; font.pixelSize: 14; color: Theme.colorSubText; }
+        }
+
+        ////////////////
+
+        Row {
+            id: rowButtons
+            height: 40
+            anchors.right: parent.right
+            anchors.rightMargin: 0
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 0
+            spacing: 24
+
+            ButtonWireframe {
+                id: buttonCancel
+                anchors.verticalCenter: parent.verticalCenter
+
+                text: qsTr("Cancel")
+                primaryColor: Theme.colorPrimary
+                onClicked: {
+                    popupDelete.close();
+                }
+            }
+            ButtonImageWireframe {
+                id: buttonConfirm
+                anchors.verticalCenter: parent.verticalCenter
+
+                text: qsTr("Delete")
+                source: "qrc:/icons_material/baseline-delete-24px.svg"
+                fullColor: true
+                primaryColor: Theme.colorError
+                onClicked: {
+                    popupDelete.confirmed();
+                    popupDelete.close();
+                }
             }
         }
     }

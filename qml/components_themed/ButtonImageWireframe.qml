@@ -6,6 +6,9 @@ import com.offloadbuddy.theme 1.0
 
 Button {
     id: control
+    implicitWidth: 128
+    implicitHeight: 40
+
     width: contenttext.width + imgSize*3
 
     property url source: ""

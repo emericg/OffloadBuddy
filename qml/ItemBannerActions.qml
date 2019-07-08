@@ -25,26 +25,37 @@ Rectangle {
         anchors.leftMargin: 16
 
         ButtonImageWireframe {
-            id: buttonOffload
+            id: buttonOffloadCopy
             anchors.verticalCenter: parent.verticalCenter
 
             visible: applicationContent.state === "device"
 
             fullColor: true
-            text: qsTr("Offload")
+            text: qsTr("Offload (copy)")
             source: "qrc:/icons_material/baseline-save_alt-24px.svg"
             onClicked: currentDevice.offloadCopySelection(mediaGrid.selectionList);
         }
         ButtonImageWireframe {
-            id: buttonMerge
+            id: buttonOffloadMerge
             anchors.verticalCenter: parent.verticalCenter
 
             visible: applicationContent.state === "device"
 
             fullColor: true
-            text: qsTr("Merge")
+            text: qsTr("Offload (merge)")
             source: "qrc:/icons_material/baseline-save_alt-24px.svg"
             onClicked: currentDevice.offloadMergeSelection(mediaGrid.selectionList);
+        }
+        ButtonImageWireframe {
+            id: buttonMergeShots
+            anchors.verticalCenter: parent.verticalCenter
+
+            visible: (mediaGrid.selectionCount >= 2)
+
+            fullColor: true
+            text: qsTr("Merge shots together")
+            source: "qrc:/icons_material/baseline-merge_type-24px.svg"
+            //onClicked:
         }
         ButtonImageWireframe {
             id: buttonTelemetry
@@ -80,6 +91,8 @@ Rectangle {
             }
         }
     }
+
+    ////////
 
     Text {
         id: elementCounter

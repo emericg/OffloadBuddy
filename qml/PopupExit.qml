@@ -6,7 +6,8 @@ import com.offloadbuddy.theme 1.0
 Popup {
     id: popupExit
     width: 640
-    height: 256
+    height: 160
+    padding: 24
 
     signal confirmed()
 
@@ -14,58 +15,61 @@ Popup {
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
+    ////////////////////////////////////////////////////////////////////////////
+
     background: Rectangle {
         color: Theme.colorBackground
         radius: 2
     }
 
-    Text {
-        id: textArea
-        anchors.left: parent.left
-        anchors.leftMargin: 24
-        anchors.right: parent.right
-        anchors.rightMargin: 24
-        anchors.top: parent.top
-        anchors.topMargin: 24
+    contentItem: Item {
+        //anchors.fill: parent
 
-        verticalAlignment: Text.AlignVCenter
-        horizontalAlignment: Text.AlignHCenter
-        wrapMode: Text.WordWrap
-        font.pixelSize: 20
-        color: Theme.colorText
-        text: qsTr("A job is still running. Do you want to exit anyway?")
-    }
+        Text {
+            id: textArea
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
 
-    Row {
-        id: row
-        height: 40
-        spacing: 32
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 24
-        anchors.horizontalCenter: parent.horizontalCenter
-
-        ButtonImageWireframe {
-            id: buttonExit
-            anchors.verticalCenter: parent.verticalCenter
-
-            text: qsTr("Exit")
-            source: "qrc:/icons_material/baseline-close-24px.svg"
-            fullColor: true
-            primaryColor: Theme.colorWarning
-            onClicked: {
-                popupExit.confirmed();
-                popupExit.close();
-            }
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignLeft
+            wrapMode: Text.WordWrap
+            font.pixelSize: 20
+            color: Theme.colorText
+            text: qsTr("A job is still running. Do you want to exit anyway?")
         }
 
-        ButtonWireframe {
-            id: buttonCancel
-            anchors.verticalCenter: parent.verticalCenter
+        Row {
+            id: rowButtons
+            height: 40
+            spacing: 24
+            anchors.right: parent.right
+            anchors.rightMargin: 0
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 0
 
-            text: qsTr("Cancel")
-            primaryColor: Theme.colorPrimary
-            onClicked: {
-                popupExit.close();
+            ButtonWireframe {
+                id: buttonCancel
+                anchors.verticalCenter: parent.verticalCenter
+
+                text: qsTr("Cancel")
+                primaryColor: Theme.colorPrimary
+                onClicked: {
+                    popupExit.close();
+                }
+            }
+            ButtonImageWireframe {
+                id: buttonExit
+                anchors.verticalCenter: parent.verticalCenter
+
+                text: qsTr("Exit")
+                source: "qrc:/icons_material/baseline-exit_to_app-24px.svg"
+                fullColor: true
+                primaryColor: Theme.colorWarning
+                onClicked: {
+                    popupExit.confirmed();
+                    popupExit.close();
+                }
             }
         }
     }

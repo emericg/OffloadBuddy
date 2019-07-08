@@ -113,7 +113,7 @@ Item {
             id: image_fadein
             from: 0
             to: 1
-            duration: 1000
+            duration: (myDevice) ? 333 : 0
         }
 
         SequentialAnimation on opacity {

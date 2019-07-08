@@ -58,6 +58,8 @@ Item {
                 focal.text = shot.focal
                 labelExposure.visible = (shot.exposure.length)
                 exposure.text = shot.exposure
+                labelFlash.visible = (shot.flash)
+                flash.text = qsTr("Enabled")
             }
         }
 
@@ -134,8 +136,8 @@ Item {
 
     PopupDate {
         id: popupDate
-        x: (applicationWindow.width / 2) - (popupDelete.width / 2) - (applicationSidebar.width)
-        y: (applicationWindow.height / 2) - (popupDelete.height / 2) - (rectangleHeader.height)
+        x: (applicationWindow.width / 2) - (popupDate.width / 2) - (applicationSidebar.width)
+        y: (applicationWindow.height / 2) - (popupDate.height / 2) - (rectangleHeader.height)
     }
 
     PopupDelete {
@@ -394,6 +396,28 @@ Item {
 
                 Text {
                     id: exposure
+                    height: 28
+                    anchors.left: parent.right
+                    anchors.leftMargin: 16
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignRight
+                    font.pixelSize: Theme.fontSizeContentText
+                    color: Theme.colorText
+                }
+            }
+
+            ImageSvg {
+                id: labelFlash
+                width: 28
+                height: 28
+
+                source: "qrc:/icons_material/baseline-flash_on-24px.svg"
+                color: Theme.colorText
+
+                Text {
+                    id: flash
                     height: 28
                     anchors.left: parent.right
                     anchors.leftMargin: 16

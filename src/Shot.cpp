@@ -202,10 +202,20 @@ int Shot::getChapterCount() const
 
 QDateTime Shot::getDate() const
 {
+    QDateTime firstpossibledate(QDate(2001, 1, 1), QTime(0, 0));
+
+    if (m_camera_source.contains("HERO5")) firstpossibledate = QDateTime(QDate(2016, 1, 1), QTime(0, 0));
+    if (m_camera_source.contains("HERO6")) firstpossibledate = QDateTime(QDate(2017, 1, 1), QTime(0, 0));
+    if (m_camera_source.contains("HERO7")) firstpossibledate = QDateTime(QDate(2018, 1, 1), QTime(0, 0));
+
     if (m_date_gps.isValid())
         return m_date_gps;
     if (m_date_metadatas.isValid())
-        return m_date_metadatas;
+    {
+        if (m_date_metadatas > firstpossibledate &&
+            m_date_metadatas < QDateTime::currentDateTime())
+            return m_date_metadatas;
+    }
 
     return m_date_file;
 }
@@ -586,7 +596,16 @@ bool Shot::getMetadatasFromPicture(int index)
         {
             exif_entry_get_value(entry, buf, sizeof(buf));
             //orientation = buf;
-
+/*
+            1 = Horizontal (normal)
+            2 = Mirror horizontal
+            3 = Rotate 180
+            4 = Mirror vertical
+            5 = Mirror horizontal and rotate 270 CW
+            6 = Rotate 90 CW
+            7 = Mirror horizontal and rotate 90 CW
+            8 = Rotate 270 CW
+*/
             if (strncmp(buf, "Top-left", sizeof(buf)) == 0)
             {
                 // TODO
@@ -596,8 +615,23 @@ bool Shot::getMetadatasFromPicture(int index)
         if (entry)
         {
             exif_entry_get_value(entry, buf, sizeof(buf));
-            focal = buf;
+            if (strlen(buf))
+            {
+                focal = buf;
+                focal.replace("f", "ƒ");
+            }
         }
+        entry = exif_content_get_entry(ed->ifd[EXIF_IFD_EXIF], EXIF_TAG_FOCAL_LENGTH);
+        if (entry)
+        {
+            exif_entry_get_value(entry, buf, sizeof(buf));
+            if (strlen(buf))
+            {
+                if (!focal.isEmpty()) focal += "  ";
+                focal += buf;
+            }
+        }
+
         entry = exif_content_get_entry(ed->ifd[EXIF_IFD_EXIF], EXIF_TAG_ISO_SPEED_RATINGS);
         if (entry)
         {
@@ -610,10 +644,22 @@ bool Shot::getMetadatasFromPicture(int index)
             exif_entry_get_value(entry, buf, sizeof(buf));
             esposure_time = buf;
         }
+        entry = exif_content_get_entry(ed->ifd[EXIF_IFD_EXIF], EXIF_TAG_FLASH);
+        if (entry)
+        {
+            exif_entry_get_value(entry, buf, sizeof(buf));
+            int flashvalue = QString::fromLatin1(buf).toInt();
+
+            if (flashvalue > 0) flash = true;
+        }
 
         entry = exif_content_get_entry(ed->ifd[EXIF_IFD_0], EXIF_TAG_DATE_TIME);
         if (entry)
         {
+            // TODO
+            //0x882a	TimeZoneOffset	int16s[n]	ExifIFD	(1 or 2 values: 1. The time zone offset of DateTimeOriginal from GMT in hours, 2. If present, the time zone offset of ModifyDate)
+            //0x9010	OffsetTime	string	ExifIFD	(time zone for ModifyDate)
+
             // ex: DateTime: 2018:08:10 10:37:08
             exif_entry_get_value(entry, buf, sizeof(buf));
             m_date_metadatas = QDateTime::fromString(buf, "yyyy:MM:dd hh:mm:ss");
