@@ -119,9 +119,11 @@ Item {
 
     function openEncodePopup() {
         if (shot.fileType === Shared.FILE_VIDEO) {
-            panelEncode.updateEncodePanel(shot)
-            panelEncode.setClip(mediaPreview.startLimit, mediaPreview.stopLimit)
-            popupEncode.open()
+            popupEncodeVideo.updateEncodePanel(shot)
+            popupEncodeVideo.setClip(mediaPreview.startLimit, mediaPreview.stopLimit)
+            popupEncodeVideo.open()
+        } else if (shot.fileType === Shared.FILE_PICTURE) {
+            popupEncodePicture.open()
         }
     }
     function openDeletePopup() {
@@ -138,6 +140,10 @@ Item {
         id: popupDate
         x: (applicationWindow.width / 2) - (popupDate.width / 2) - (applicationSidebar.width)
         y: (applicationWindow.height / 2) - (popupDate.height / 2) - (rectangleHeader.height)
+
+        onConfirmed: {
+            //
+        }
     }
 
     PopupDelete {
@@ -145,10 +151,9 @@ Item {
         x: (applicationWindow.width / 2) - (popupDelete.width / 2) - (applicationSidebar.width)
         y: (applicationWindow.height / 2) - (popupDelete.height / 2) - (rectangleHeader.height)
 
-        message: qsTr("Are you sure you want to delete the selected file?")
+        message: qsTr("Are you sure you want to delete the current shot?")
         onConfirmed: {
             if (applicationContent.state === "library") {
-                // delete shot
                 mediaLibrary.deleteSelected(screenMedia.shot.uuid)
                 // then back to media grid
                 screenLibrary.state = "stateMediaGrid"
@@ -161,18 +166,22 @@ Item {
         }
     }
 
-    Popup {
-        id: popupEncode
-        modal: true
-        focus: true
-        x: (parent.width - panelEncode.width) / 2
-        y: (parent.height - 64 - panelEncode.height) / 2
-        closePolicy: Popup.CloseOnEscape /*| Popup.CloseOnPressOutsideParent*/
+    PopupEncodePicture {
+        id: popupEncodePicture
+        x: (applicationWindow.width / 2) - (popupDelete.width / 2) - (applicationSidebar.width)
+        y: (applicationWindow.height / 2) - (popupDelete.height / 2) - (rectangleHeader.height)
 
-        PopupEncodeVideo {
-            id: panelEncode
+        onConfirmed: {
+            //
         }
-        background: Item {
+    }
+
+    PopupEncodeVideo {
+        id: popupEncodeVideo
+        x: (applicationWindow.width / 2) - (popupDelete.width / 2) - (applicationSidebar.width)
+        y: (applicationWindow.height / 2) - (popupDelete.height / 2) - (rectangleHeader.height)
+
+        onConfirmed: {
             //
         }
     }

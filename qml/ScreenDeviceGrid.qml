@@ -234,18 +234,12 @@ Item {
 
     // POPUPS //////////////////////////////////////////////////////////////////
 
-    Popup {
-        id: popupEncode
-        modal: true
-        focus: true
-        x: (parent.width - panelEncode.width) / 2
-        y: (parent.height - panelEncode.height) / 2
-        closePolicy: Popup.CloseOnEscape /*| Popup.CloseOnPressOutsideParent*/
+    PopupEncodeVideo {
+        id: popupEncodeVideo
+        x: (applicationWindow.width / 2) - (confirmDeleteMultipleFilesPopup.width / 2) - (applicationSidebar.width / 2)
+        y: (applicationWindow.height / 2) - (confirmDeleteMultipleFilesPopup.height / 2)
 
-        PopupEncodeVideo {
-            id: panelEncode
-        }
-        background: Item {
+        onConfirmed: {
             //
         }
     }
@@ -255,7 +249,7 @@ Item {
         x: (applicationWindow.width / 2) - (confirmDeleteMultipleFilesPopup.width / 2) - (applicationSidebar.width / 2)
         y: (applicationWindow.height / 2) - (confirmDeleteMultipleFilesPopup.height / 2)
 
-        message: qsTr("Are you sure you want to delete the selected files?")
+        message: qsTr("Are you sure you want to delete selected files?")
         onConfirmed: {
             var indexes = mediaGrid.selectionList;
             mediaGrid.exitSelectionMode();
@@ -274,7 +268,7 @@ Item {
         x: (applicationWindow.width / 2) - (confirmDeleteSingleFilePopup.width / 2) - (applicationSidebar.width / 2)
         y: (applicationWindow.height / 2) - (confirmDeleteSingleFilePopup.height / 2)
 
-        message: qsTr("Are you sure you want to delete the selected file?")
+        message: qsTr("Are you sure you want to delete selected shot?")
         onConfirmed: {
             currentDevice.deleteSelected(selectedItemUuid)
 
@@ -800,8 +794,8 @@ Item {
                 currentDevice.offloadMergeSelected(selectedItemUuid)
             }
             if (index === 3) {
-                panelEncode.updateEncodePanel(selectedItem.shot)
-                popupEncode.open()
+                popupEncodeVideo.updateEncodePanel(selectedItem.shot)
+                popupEncodeVideo.open()
             }
             if (index === 16) {
                 var indexes = []

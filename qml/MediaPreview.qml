@@ -225,7 +225,7 @@ Rectangle {
 
                 property bool isRunning: false
                 onError: {
-                    if (platform.os === "windows")
+                    if (Qt.platform.os === "windows")
                         mediaBanner.openMessage(qsTr("Codec pack installed?"))
                     else
                         mediaBanner.openMessage(qsTr("Oooops..."))

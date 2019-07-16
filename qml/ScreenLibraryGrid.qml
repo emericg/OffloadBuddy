@@ -1,6 +1,5 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
-import QtGraphicalEffects 1.0
 
 import com.offloadbuddy.theme 1.0
 
@@ -89,30 +88,13 @@ Item {
 
     // POPUPS //////////////////////////////////////////////////////////////////
 
-    Popup {
-        id: popupEncode
-        modal: true
-        focus: true
-        x: (parent.width - panelEncode.width) / 2
-        y: (parent.height - panelEncode.height) / 2
-        closePolicy: Popup.CloseOnEscape /*| Popup.CloseOnPressOutsideParent*/
+    PopupEncodeVideo {
+        id: popupEncodeVideo
+        x: (applicationWindow.width / 2) - (confirmDeleteMultipleFilesPopup.width / 2) - (applicationSidebar.width / 2)
+        y: (applicationWindow.height / 2) - (confirmDeleteMultipleFilesPopup.height / 2)
 
-        PopupEncodeVideo {
-            id: panelEncode
-        }
-        background: Item {/*
-            ShaderEffectSource {
-              id: effectSource
-              anchors.fill: popupEncode
-              sourceItem: mediaGrid
-              sourceRect: Qt.rect(0,0,900,900)
-            }
-            FastBlur{
-              id: blur
-              anchors.fill: effectSource
-              source: effectSource
-              radius: 32
-            }*/
+        onConfirmed: {
+            //
         }
     }
 
@@ -121,7 +103,7 @@ Item {
         x: (applicationWindow.width / 2) - (confirmDeleteMultipleFilesPopup.width / 2) - (applicationSidebar.width / 2)
         y: (applicationWindow.height / 2) - (confirmDeleteMultipleFilesPopup.height / 2)
 
-        message: qsTr("Are you sure you want to delete the selected files?")
+        message: qsTr("Are you sure you want to delete selected shots?")
         onConfirmed: {
             var indexes = mediaGrid.selectionList;
             mediaGrid.exitSelectionMode();
@@ -140,7 +122,7 @@ Item {
         x: (applicationWindow.width / 2) - (confirmDeleteSingleFilePopup.width / 2) - (applicationSidebar.width / 2)
         y: (applicationWindow.height / 2) - (confirmDeleteSingleFilePopup.height / 2)
 
-        message: qsTr("Are you sure you want to delete this file?")
+        message: qsTr("Are you sure you want to delete selected shot?")
         onConfirmed: {
             mediaLibrary.deleteSelected(selectedItemUuid)
 
@@ -464,8 +446,8 @@ Item {
                 selectedItem.shot.openFolder()
             }
             if (index === 3) {
-                panelEncode.updateEncodePanel(selectedItem.shot)
-                popupEncode.open()
+                popupEncodeVideo.updateEncodePanel(selectedItem.shot)
+                popupEncodeVideo.open()
             }
             if (index === 16) {
                 var indexes = []

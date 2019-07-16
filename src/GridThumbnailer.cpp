@@ -184,7 +184,8 @@ bool GridThumbnailer::getImage_withMinivideo(const QString &path, QImage &img,
                     OutputSurface_t *out = minivideo_decode_frame(media, sid);
                     if (out)
                     {
-                        img = QImage(out->surface, out->width, out->height, QImage::Format_RGB888, &free).scaled(width*2, height);
+                        img = QImage(out->surface, out->width, out->height,
+                                     QImage::Format_RGB888, &free).scaled(width*2, height);
                         minivideo_destroy_frame(&out);
 
                         status = true;

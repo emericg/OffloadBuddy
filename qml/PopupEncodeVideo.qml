@@ -4,10 +4,19 @@ import QtQuick.Controls 2.2
 import com.offloadbuddy.shared 1.0
 import "UtilsString.js" as UtilsString
 
-Item {
-    id: itemEncode
-    width: 600
-    height: 500
+Popup {
+    id: popupEncodeVideo
+    width: 640
+    height: 480
+    padding: 24
+
+    signal confirmed()
+
+    modal: true
+    focus: true
+    closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+
+    ////////////////////////////////////////////////////////////////////////////
 
     property var mediaProvider: null
     property var currentShot: null
@@ -125,7 +134,14 @@ Item {
         }
     }
 
-    // PANEL ///////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+    background: Rectangle {
+        color: Theme.colorBackground
+        radius: 2
+    }
+
+    ///*contentItem: */Item {
 
     Rectangle {
         id: rectangleEncode
@@ -138,11 +154,12 @@ Item {
 
         Text {
             id: titleEncode
-            text: qsTr("Encoding settings")
             anchors.left: parent.left
             anchors.leftMargin: 16
             anchors.top: parent.top
             anchors.topMargin: 16
+
+            text: qsTr("Encoding settings")
             font.pixelSize: 24
         }
 
@@ -150,7 +167,7 @@ Item {
             id: rectangleCodec
             height: 40
             anchors.top: titleEncode.bottom
-            anchors.topMargin: 8
+            anchors.topMargin: 16
             anchors.left: parent.left
             anchors.leftMargin: 0
             anchors.right: parent.right
@@ -158,10 +175,11 @@ Item {
 
             Text {
                 id: textCodec
-                text: qsTr("Codec")
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.left: parent.left
                 anchors.leftMargin: 16
+
+                text: qsTr("Codec")
                 font.pixelSize: 14
             }
 
@@ -499,7 +517,7 @@ Item {
                                           fps,
                                           clipStartMs,
                                           clipDurationMs)
-                popupEncode.close()
+                popupEncodeVideo.close()
             }
         }
 
@@ -511,7 +529,7 @@ Item {
             anchors.leftMargin: 16
             anchors.verticalCenter: parent.verticalCenter
 
-            onClicked: popupEncode.close()
+            onClicked: popupEncodeVideo.close()
         }
     }
 }

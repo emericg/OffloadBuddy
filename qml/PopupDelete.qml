@@ -5,7 +5,7 @@ import com.offloadbuddy.theme 1.0
 
 Popup {
     id: popupDelete
-    width: 640
+    width: 720
     height: (files.length) ? 320 : 180
     padding: 24
 
@@ -37,7 +37,7 @@ Popup {
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignLeft
             wrapMode: Text.WordWrap
-            font.pixelSize: 20
+            font.pixelSize: 24
             color: Theme.colorText
         }
 

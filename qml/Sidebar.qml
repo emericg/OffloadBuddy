@@ -49,6 +49,7 @@ Rectangle {
         anchors.topMargin: 24
 
         selected: applicationContent.state === "library"
+        animated: ml.libraryState
         onClicked: applicationContent.state = "library"
         source: "qrc:/menus/media.svg"
     }
@@ -72,6 +73,7 @@ Rectangle {
             height: 80
             myDevice: modelData
             selected: (applicationContent.state === "device" && modelData === currentDevicePtr)
+            animated: currentDevicePtr.deviceState
         }
     }
 

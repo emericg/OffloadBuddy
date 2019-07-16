@@ -203,7 +203,6 @@ int Shot::getChapterCount() const
 QDateTime Shot::getDate() const
 {
     QDateTime firstpossibledate(QDate(2001, 1, 1), QTime(0, 0));
-
     if (m_camera_source.contains("HERO5")) firstpossibledate = QDateTime(QDate(2016, 1, 1), QTime(0, 0));
     if (m_camera_source.contains("HERO6")) firstpossibledate = QDateTime(QDate(2017, 1, 1), QTime(0, 0));
     if (m_camera_source.contains("HERO7")) firstpossibledate = QDateTime(QDate(2018, 1, 1), QTime(0, 0));
@@ -212,8 +211,7 @@ QDateTime Shot::getDate() const
         return m_date_gps;
     if (m_date_metadatas.isValid())
     {
-        if (m_date_metadatas > firstpossibledate &&
-            m_date_metadatas < QDateTime::currentDateTime())
+        if (m_date_metadatas > firstpossibledate && m_date_metadatas < QDateTime::currentDateTime())
             return m_date_metadatas;
     }
 
@@ -785,9 +783,24 @@ bool Shot::getMetadatasFromPicture(int index)
     }
     else
     {
-        //qWarning() << "File not readable or no EXIF data in file";
+        //qDebug() << "File not readable or no EXIF data";
     }
 #endif // ENABLE_LIBEXIF
+
+#ifdef ENABLE_EXIV2
+    Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(m_pictures.at(index)->filesystemPath.toStdString());
+    image->readMetadata();
+
+    Exiv2::ExifData &exifData = image->exifData();
+    if (!exifData.empty())
+    {
+        //
+    }
+    else
+    {
+        //qDebug() << "File not readable or no EXIF data";
+    }
+#endif // ENABLE_EXIV2
 
     // Gather additional infos
     QImageReader img_infos(m_pictures.at(index)->filesystemPath);

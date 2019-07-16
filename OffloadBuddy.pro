@@ -18,6 +18,7 @@ OBJECTS_DIR = build/
 MOC_DIR     = build/
 RCC_DIR     = build/
 UI_DIR      = build/
+QMLCACHE_DIR= build/
 DESTDIR     = bin/
 
 # Project files ################################################################
@@ -137,6 +138,7 @@ contains(DEFINES, USE_CONTRIBS) {
 
     contains(DEFINES, ENABLE_LIBMTP) { LIBS += -lusb-1.0 -lmtp }
     contains(DEFINES, ENABLE_LIBEXIF) { LIBS += -lexif }
+    contains(DEFINES, ENABLE_EXIV2) { LIBS += -lexiv2 }
     contains(DEFINES, ENABLE_MINIVIDEO) { LIBS += -lminivideo }
     linux {
         CONFIG += link_pkgconfig
@@ -156,6 +158,7 @@ contains(DEFINES, USE_CONTRIBS) {
 
     contains(DEFINES, ENABLE_LIBMTP) { PKGCONFIG += libusb-1.0 libmtp }
     contains(DEFINES, ENABLE_LIBEXIF) { PKGCONFIG += libexif }
+    contains(DEFINES, ENABLE_EXIV2) { PKGCONFIG += exiv2 }
     contains(DEFINES, ENABLE_MINIVIDEO) { PKGCONFIG += libminivideo }
     contains(DEFINES, ENABLE_FFMPEG) { PKGCONFIG += libavformat libavcodec libswscale libswresample libavutil }
 }

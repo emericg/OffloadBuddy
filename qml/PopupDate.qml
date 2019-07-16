@@ -79,7 +79,7 @@ Popup {
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignLeft
             wrapMode: Text.WordWrap
-            font.pixelSize: 22
+            font.pixelSize: 24
             color: Theme.colorText
             text: qsTr("Change date and time")
         }
@@ -89,7 +89,7 @@ Popup {
         Column {
             id: columnCurrent
             anchors.right: parent.right
-            anchors.rightMargin: 24
+            anchors.rightMargin: 0
             anchors.top: textArea.bottom
             anchors.topMargin: 16
             anchors.left: parent.left
@@ -104,7 +104,7 @@ Popup {
                 anchors.leftMargin: 0
 
                 text: qsTr("File date")
-                font.pixelSize: 15
+                font.pixelSize: 16
                 verticalAlignment: Text.AlignVCenter
                 color: Theme.colorSubText
 
@@ -115,7 +115,7 @@ Popup {
                     anchors.verticalCenter: parent.verticalCenter
 
                     verticalAlignment: Text.AlignVCenter
-                    font.pixelSize: 15
+                    font.pixelSize: 16
                     color: Theme.colorSubText
                 }
 
@@ -166,7 +166,7 @@ Popup {
                 visible: dateMetadata.text
 
                 text: qsTr("Metadata date")
-                font.pixelSize: 15
+                font.pixelSize: 16
                 verticalAlignment: Text.AlignVCenter
                 color: Theme.colorSubText
 
@@ -176,7 +176,7 @@ Popup {
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
 
-                    font.pixelSize: 15
+                    font.pixelSize: 16
                     verticalAlignment: Text.AlignVCenter
                     color: Theme.colorSubText
                 }
@@ -226,7 +226,7 @@ Popup {
                 visible: dateGps.text
 
                 text: qsTr("GPS date")
-                font.pixelSize: 15
+                font.pixelSize: 16
                 verticalAlignment: Text.AlignVCenter
                 color: Theme.colorSubText
 
@@ -236,7 +236,7 @@ Popup {
                     anchors.leftMargin: 140
                     anchors.left: parent.left
 
-                    font.pixelSize: 15
+                    font.pixelSize: 16
                     verticalAlignment: Text.AlignVCenter
                     color: Theme.colorSubText
                 }

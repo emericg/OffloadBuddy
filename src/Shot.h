@@ -33,6 +33,10 @@
 #include <libexif/exif-data.h>
 #endif
 
+#ifdef ENABLE_EXIV2
+#include <exiv2/exiv2.hpp>
+#endif
+
 #ifdef ENABLE_MINIVIDEO
 #include <minivideo.h>
 #endif
