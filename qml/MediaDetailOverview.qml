@@ -18,7 +18,7 @@ Item {
 
     function updateOverview() {
 
-        textFileList.text = shot.fileList
+        //textFileList.text = shot.fileList
 
         labelCamera.visible = (shot.camera)
         camera.text = shot.camera
@@ -168,8 +168,8 @@ Item {
 
     PopupEncodePicture {
         id: popupEncodePicture
-        x: (applicationWindow.width / 2) - (popupDelete.width / 2) - (applicationSidebar.width)
-        y: (applicationWindow.height / 2) - (popupDelete.height / 2) - (rectangleHeader.height)
+        x: (applicationWindow.width / 2) - (popupEncodePicture.width / 2) - (applicationSidebar.width)
+        y: (applicationWindow.height / 2) - (popupEncodePicture.height / 2) - (rectangleHeader.height)
 
         onConfirmed: {
             //
@@ -178,8 +178,8 @@ Item {
 
     PopupEncodeVideo {
         id: popupEncodeVideo
-        x: (applicationWindow.width / 2) - (popupDelete.width / 2) - (applicationSidebar.width)
-        y: (applicationWindow.height / 2) - (popupDelete.height / 2) - (rectangleHeader.height)
+        x: (applicationWindow.width / 2) - (popupEncodeVideo.width / 2) - (applicationSidebar.width)
+        y: (applicationWindow.height / 2) - (popupEncodeVideo.height / 2) - (rectangleHeader.height)
 
         onConfirmed: {
             //
@@ -588,7 +588,7 @@ Item {
     }
 
     ////////////////
-
+/*
     Rectangle {
         id: infosFiles
         width: 320
@@ -635,4 +635,5 @@ Item {
             font.pixelSize: Theme.fontSizeContentText
         }
     }
+*/
 }

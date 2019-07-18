@@ -1,12 +1,15 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
+import QtQuick.Dialogs 1.2
 
 import com.offloadbuddy.theme 1.0
+import "UtilsString.js" as UtilsString
+import "UtilsPath.js" as UtilsPath
 
 Popup {
     id: popupEncodePicture
     width: 640
-    height: 320
+    height: 400
     padding: 24
 
     signal confirmed()
@@ -28,16 +31,13 @@ Popup {
 
         Text {
             id: textArea
+            anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.top: parent.top
 
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignLeft
-            wrapMode: Text.WordWrap
+            text: qsTr("Encode image")
             font.pixelSize: 24
             color: Theme.colorText
-            text: qsTr("Encode image")
         }
 
         /////////
@@ -53,16 +53,17 @@ Popup {
             anchors.left: parent.left
             anchors.leftMargin: 0
 
-            Row {
-                height: 56
+            Item {
+                id: element1
+                height: 48
                 anchors.right: parent.right
                 anchors.rightMargin: 0
                 anchors.left: parent.left
                 anchors.leftMargin: 0
 
                 Text {
-                    id: element1
-                    width: 128
+                    id: rectangleCodec
+                    width: 140
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Format")
@@ -70,15 +71,47 @@ Popup {
                     color: Theme.colorSubText
                 }
 
-                ComboBox {
-                    id: comboBox
-                    width: 400
+                Row {
                     anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: rectangleCodec.right
+                    anchors.leftMargin: 16
+                    anchors.right: parent.right
+                    anchors.rightMargin: 0
+                    spacing: 16
+
+                    RadioButtonThemed {
+                        id: rbPNG
+                        text: "PNG"
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                    RadioButtonThemed {
+                        id: rbJPEG
+                        text: "JPEG"
+                        checked: true
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                    RadioButtonThemed {
+                        id: rbWEBP
+                        text: "WebP"
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                    RadioButtonThemed {
+                        id: rbAVIF
+                        text: "AVIF"
+                        anchors.verticalCenter: parent.verticalCenter
+                        visible: false
+                    }
+                    RadioButtonThemed {
+                        id: rbHEIF
+                        text: "HEIF"
+                        anchors.verticalCenter: parent.verticalCenter
+                        visible: false
+                    }
                 }
             }
 
-            Row {
-                height: 56
+            Item {
+                height: 48
                 anchors.right: parent.right
                 anchors.rightMargin: 0
                 anchors.left: parent.left
@@ -86,7 +119,7 @@ Popup {
 
                 Text {
                     id: element2
-                    width: 128
+                    width: 140
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Quality")
@@ -94,20 +127,123 @@ Popup {
                     color: Theme.colorSubText
                 }
 
-                Slider {
+                SliderThemed {
                     id: slider
-                    width: 400
+                    anchors.left: element2.right
+                    anchors.leftMargin: 16
+                    anchors.right: parent.right
+                    anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
                     value: 0.5
                 }
             }
-
-            Row {
-                height: 56
+/*
+            Rectangle { // spacer
+                height: 1
                 anchors.right: parent.right
-                anchors.rightMargin: 0
+                anchors.left: parent.left
+                color: "#f4f4f4"
+            }
+*/
+            Item {
+                id: rectangleDestination
+                height: 48
+                anchors.right: parent.right
+                anchors.left: parent.left
+
+                Text {
+                    id: textDestinationTitle
+                    text: qsTr("Destination")
+                    anchors.verticalCenter: parent.verticalCenter
+                    font.pixelSize: 16
+                    color: Theme.colorSubText
+                }
+
+                ComboBoxThemed {
+                    id: comboBoxDestination
+                    anchors.left: textDestinationTitle.right
+                    anchors.leftMargin: 16
+                    anchors.right: parent.right
+                    anchors.rightMargin: 0
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    ListModel {
+                        id: cbDestinations
+                        //ListElement { text: "auto"; }
+                    }
+
+                    model: cbDestinations
+
+                    Component.onCompleted: updateDestinations()
+                    function updateDestinations() {
+                        cbDestinations.clear()
+
+                        for (var child in settingsManager.directoriesList) {
+                            if (settingsManager.directoriesList[child].available &&
+                                settingsManager.directoriesList[child].directoryContent !== 1)
+                                cbDestinations.append( { "text": settingsManager.directoriesList[child].directoryPath } )
+                        }
+                        cbDestinations.append( { "text": qsTr("Select path manually") } )
+
+                        comboBoxDestination.currentIndex = 0
+                    }
+
+                    property bool cbinit: false
+                    onCurrentIndexChanged: {
+                        if (cbinit) {
+                            if (comboBoxDestination.currentIndex === cbDestinations.count) {
+                                //
+                            }
+                        } else {
+                            cbinit = true;
+                        }
+                    }
+                }
+            }
+
+            TextFieldThemed {
+                id: textField_path
+                height: 40
                 anchors.left: parent.left
                 anchors.leftMargin: 0
+                anchors.right: parent.right
+                anchors.rightMargin: 0
+
+                visible: (comboBoxDestination.currentIndex === (cbDestinations.count - 1))
+                //text: directory.directoryPath
+
+                onVisibleChanged: {
+
+                }
+
+                FileDialog {
+                    id: fileDialogChange
+                    title: qsTr("Please choose a destination!")
+                    sidebarVisible: true
+                    selectExisting: true
+                    selectMultiple: false
+                    selectFolder: false
+
+                    onAccepted: {
+                        textField_path.text = UtilsPath.cleanUrl(fileDialogChange.fileUrl);
+                    }
+                }
+
+                ButtonThemed {
+                    id: button_change
+                    width: 72
+                    height: 36
+                    anchors.right: parent.right
+                    anchors.rightMargin: 2
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    //imageSource: "qrc:/icons_material/outline-folder-24px.svg"
+                    text: qsTr("change")
+                    onClicked: {
+                        fileDialogChange.folder =  "file:///" + textField_path.text
+                        fileDialogChange.open()
+                    }
+                }
             }
         }
 
@@ -133,13 +269,13 @@ Popup {
                 }
             }
             ButtonImageWireframe {
-                id: buttonExit
+                id: buttonEncode
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Encode")
                 source: "qrc:/icons_material/baseline-memory-24px.svg"
                 fullColor: true
-                primaryColor: Theme.colorHighlight
+                primaryColor: Theme.colorPrimary
                 onClicked: {
                     popupEncodePicture.confirmed();
                     popupEncodePicture.close();

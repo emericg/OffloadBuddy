@@ -98,7 +98,7 @@ Rectangle {
         if (!mediaArea.isFullScreen) {
             buttonFullscreen.imageSource = "qrc:/icons_material/baseline-fullscreen-24px.svg"
             infosGeneric.visible = true
-            infosFiles.visible = true
+            //infosFiles.visible = true
             mediaArea.anchors.right = infosGeneric.left
 /*
             mediaControls.anchors.top = mediaOutput.bottom
@@ -109,7 +109,7 @@ Rectangle {
         } else {
             buttonFullscreen.imageSource = "qrc:/icons_material/baseline-fullscreen_exit-24px.svg"
             infosGeneric.visible = false
-            infosFiles.visible = false
+            //infosFiles.visible = false
             mediaArea.anchors.right = contentOverview.right
 /*
             mediaControls.anchors.top = undefined

@@ -90,8 +90,8 @@ Item {
 
     PopupEncodeVideo {
         id: popupEncodeVideo
-        x: (applicationWindow.width / 2) - (confirmDeleteMultipleFilesPopup.width / 2) - (applicationSidebar.width / 2)
-        y: (applicationWindow.height / 2) - (confirmDeleteMultipleFilesPopup.height / 2)
+        x: (applicationWindow.width / 2) - (popupEncodeVideo.width / 2) - (applicationSidebar.width / 2)
+        y: (applicationWindow.height / 2) - (popupEncodeVideo.height / 2)
 
         onConfirmed: {
             //

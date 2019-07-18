@@ -132,7 +132,7 @@ Item {
             colorBackground =       "#222222"
             colorForeground =       "#333333"
 
-            colorText =             "#a3a3a0"
+            colorText =             "#d2d2d2"
             colorSubText =          "#a3a3a0"
             colorIcon =             "#a3a3a0"
 

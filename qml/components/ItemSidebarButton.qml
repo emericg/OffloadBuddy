@@ -29,6 +29,38 @@ Item {
         }
     }
 
+    function getDevicePicture(deviceName) {
+        if (deviceName.includes("HERO7 White") ||
+            deviceName.includes("HERO7 Silver")) {
+            return "qrc:/cameras/H7w.svg"
+        } else if (deviceName.includes("HERO7") ||
+                   deviceName.includes("HERO6") ||
+                   deviceName.includes("HERO5")) {
+            return "qrc:/cameras/H5.svg"
+        } else if (deviceName.includes("Session")) {
+            return "qrc:/cameras/session.svg"
+        } else if (deviceName.includes("HERO4")) {
+            return "qrc:/cameras/H4.svg"
+        } else if (deviceName.includes("HERO3") ||
+                   deviceName.includes("Hero3")) {
+            return "qrc:/cameras/H3.svg"
+        } else if (deviceName.includes("FUSION") ||
+                   deviceName.includes("Fusion")) {
+            return "qrc:/cameras/fusion.svg"
+        } else if (deviceName.includes("HD2")) {
+            return "qrc:/cameras/H2.svg"
+        }
+
+        // fallback
+        if (myDevice.deviceType === 2)
+            return "qrc:/cameras/generic_smartphone.svg"
+        else if (myDevice.deviceType === 3)
+            return "qrc:/cameras/generic_camera.svg"
+
+        // fallback
+        return "qrc:/cameras/generic_actioncam.svg"
+    }
+
     // SELECTOR
 
     Item {
@@ -106,7 +138,7 @@ Item {
         source: itemSidebarButton.source
         color: Theme.colorSidebarContent
 
-        anchors.verticalCenterOffset: (title) ? -12 : 0
+        anchors.verticalCenterOffset: (title) ? -8 : 0
         anchors.horizontalCenter: parent.horizontalCenter
 
         NumberAnimation on opacity {
@@ -129,7 +161,7 @@ Item {
     Text {
         id: contentText
         anchors.top: contentImage.bottom
-        anchors.topMargin: 0
+        anchors.topMargin: -4
         anchors.horizontalCenter: parent.horizontalCenter
 
         text: title
