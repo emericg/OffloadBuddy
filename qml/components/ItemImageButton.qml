@@ -29,12 +29,15 @@ Item {
 
         hoverEnabled: highlightMode !== "off"
         onEntered: {
-            bgRect.opacity = 1
             itemImageButton.highlighted = true
+            if (highlightMode === "circle")
+                bgRect.opacity = 1
         }
         onExited: {
-            bgRect.opacity = background ? 0.66 : 0
             itemImageButton.highlighted = false
+
+            if (highlightMode === "circle")
+                bgRect.opacity = background ? 0.66 : 0
         }
     }
 

@@ -1,5 +1,5 @@
 // UtilsString.js
-// Version 0.3
+// Version 0.4
 .pragma library
 
 function padNumberInternal(n) {
@@ -56,11 +56,32 @@ function durationToString_short(duration) {
 
         text += padNumberInternal(hours).toString() + ":";
         text += padNumberInternal(minutes).toString() + ":";
-        text += padNumberInternal(seconds).toString() + ":";
+        text += padNumberInternal(seconds).toString();
     } else if (duration > 0) {
         text = "00:00:01";
     } else {
         text = "00:00:00";
+    }
+
+    return text
+}
+
+/*!
+ * durationToString_player()
+ */
+function durationToString_player(duration) {
+    var text = '';
+
+    if (duration > 1000) {
+        var hours = Math.floor(duration / 3600000);
+        var minutes = Math.floor((duration - (hours * 3600000)) / 60000);
+        var seconds = Math.floor((duration - (hours * 3600000) - (minutes * 60000)) / 1000);
+
+        if (hours > 0) text += padNumberInternal(hours).toString() + ":";
+        text += padNumberInternal(minutes).toString() + ":";
+        text += padNumberInternal(seconds).toString();
+    } else {
+        text = "00:00";
     }
 
     return text
@@ -157,11 +178,11 @@ function bitrateToString(bitrate) {
 
     if (bitrate > 0) {
         if (bitrate < 10000000) { // < 10 Mb
-            text = (bitrate / 1000) + " " + qsTr("Kb/s");
+            text = (bitrate / 1000).toFixed(0) + " " + qsTr("Kb/s");
         } else if (bitrate < 100000000) { // < 100 Mb
-            text = (bitrate / 1000 / 1000) + " " + qsTr("Mb/s");
+            text = (bitrate / 1000 / 1000).toFixed(1) + " " + qsTr("Mb/s");
         } else {
-            text = (bitrate / 1000 / 1000) + " " + qsTr("Mb/s");
+            text = (bitrate / 1000 / 1000).toFixed(1) + " " + qsTr("Mb/s");
         }
     } else {
         text = qsTr("NULL bitrate");

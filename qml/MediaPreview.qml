@@ -96,7 +96,7 @@ Rectangle {
         mediaArea.isFullScreen = !mediaArea.isFullScreen
 
         if (!mediaArea.isFullScreen) {
-            buttonFullscreen.imageSource = "qrc:/icons_material/baseline-fullscreen-24px.svg"
+            buttonFullscreen.source = "qrc:/icons_material/baseline-fullscreen-24px.svg"
             infosGeneric.visible = true
             //infosFiles.visible = true
             mediaArea.anchors.right = infosGeneric.left
@@ -107,7 +107,7 @@ Rectangle {
             mediaControls.anchors.bottomMargin = undefined
 */
         } else {
-            buttonFullscreen.imageSource = "qrc:/icons_material/baseline-fullscreen_exit-24px.svg"
+            buttonFullscreen.source = "qrc:/icons_material/baseline-fullscreen_exit-24px.svg"
             infosGeneric.visible = false
             //infosFiles.visible = false
             mediaArea.anchors.right = contentOverview.right
@@ -121,8 +121,8 @@ Rectangle {
 
         computeSize(shot.width, shot.height)
 
-        if (videoPlayer.position > 0)
-            timelinePosition.width = timeline.width * (videoPlayer.position / videoPlayer.duration)
+        //if (videoPlayer.position > 0)
+        //    timelinePosition.width = timeline.width * (videoPlayer.position / videoPlayer.duration)
     }
 
     function computeSize(mediaWidth, mediaHeight) {
@@ -139,12 +139,12 @@ Rectangle {
 
         if (media_ar > area_ar) {
             //console.log(">1")
-            overlays.width = mediaWidth * ratio
-            overlays.height = mediaHeight * ratio
+            overlays.width = Math.ceil(mediaWidth * ratio)
+            overlays.height = Math.ceil(mediaHeight * ratio)
         } else {
             //console.log(">2")
-            overlays.width = mediaWidth * (mediaArea.height / mediaHeight )
-            overlays.height = mediaHeight * (mediaArea.height / mediaHeight )
+            overlays.width = Math.ceil(mediaWidth * (mediaArea.height / mediaHeight))
+            overlays.height = Math.ceil(mediaHeight * (mediaArea.height / mediaHeight))
         }
 
         //console.log("> media size    : " + mediaWidth + "x" + mediaHeight)
@@ -187,6 +187,9 @@ Rectangle {
             output.scale = 1
         }
     }
+
+    onWidthChanged: if (shot) computeSize(shot.width, shot.height)
+    onHeightChanged: if (shot) computeSize(shot.width, shot.height)
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -231,10 +234,10 @@ Rectangle {
                         mediaBanner.openMessage(qsTr("Oooops..."))
                 }
                 onPlaying: {
-                    buttonPlay.imageSource = "qrc:/icons_material/baseline-pause-24px.svg"
+                    buttonPlay.source = "qrc:/icons_material/baseline-pause-24px.svg"
                 }
                 onPaused: {
-                    buttonPlay.imageSource = "qrc:/icons_material/baseline-play_arrow-24px.svg"
+                    buttonPlay.source = "qrc:/icons_material/baseline-play_arrow-24px.svg"
                 }
                 onStopped: {
                     if (videoPlayer.position >= videoPlayer.duration) { // EOF
@@ -248,16 +251,18 @@ Rectangle {
                     isRunning = false
                     mediaArea.startLimit = -1
                     mediaArea.stopLimit = -1
-                    timelineLimitStart.width = 0
-                    timelineLimitStop.width = 0
-                    timelinePosition.width = 0
+                    //timelineLimitStart.width = 0
+                    //timelineLimitStop.width = 0
+                    //timelinePosition.width = 0
                     mediaBanner.close()
                 }
                 onVolumeChanged: {
-                    soundlinePosition.width = (soundline.width * volume)
+                    //soundlinePosition.width = (soundline.width * volume)
                 }
                 onPositionChanged: {
-                    timelinePosition.width = timeline.width * (videoPlayer.position / videoPlayer.duration)
+                    //timelinePosition.width = timeline.width * (videoPlayer.position / videoPlayer.duration)
+                    timeline.value = (videoPlayer.position / videoPlayer.duration)
+                    timecode.text = UtilsString.durationToString_player(videoPlayer.position) + " / " + UtilsString.durationToString_condensed(videoPlayer.duration)
                 }
             }
         }
@@ -380,11 +385,9 @@ Rectangle {
 
         ////////////////
 
-        Rectangle {
+        Item {
             id: mediaControls
             height: 40
-            opacity: 1
-            color: Theme.colorButton
             visible: (mediaOutput.visible /*&& mouseArea.hovered*/)
 
             anchors.right: parent.right
@@ -394,15 +397,61 @@ Rectangle {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 0
 
-            ButtonImageOld {
+            Rectangle {
+                id: mediaControlsBackground
+                anchors.fill: parent
+                opacity: 0.9
+                color: "#222222"
+            }
+            SliderThemed {
+                id: timeline
+                height: 12
+                width: mediaControls.width
+                anchors.top: parent.top
+                anchors.topMargin: -(height/2 + 2)
+                anchors.left: parent.left
+                anchors.leftMargin: -6
+                anchors.right: parent.right
+                anchors.rightMargin: -6
+
+                from: 0
+                to: 1
+                //value: (videoPlayer.position / videoPlayer.duration)
+
+                //onPressedChanged: {
+                onMoved: {
+                //onValueChanged: {
+                    //console.log("PRESSED" + timeline.value)
+                    var wasRunning = videoPlayer.isRunning
+/*
+                    if (wasRunning) {
+                        videoPlayer.pause()
+                        videoPlayer.isRunning = false
+                    }
+*/
+                    videoPlayer.seek(videoPlayer.duration * timeline.value)
+/*
+                    if (wasRunning) {
+                        videoPlayer.play()
+                        videoPlayer.isRunning = true
+                    }
+*/
+                }
+            }
+
+            ItemImageButton {
                 id: buttonPlay
                 width: 40
                 height: 40
                 anchors.left: parent.left
-                anchors.leftMargin: 0
+                anchors.leftMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
 
-                imageSource: "qrc:/icons_material/baseline-play_arrow-24px.svg"
+                iconColor: "white"
+                highlightColor: Theme.colorPrimary
+                highlightMode: "color"
+
+                source: "qrc:/icons_material/baseline-play_arrow-24px.svg"
                 onClicked: {
                     if (videoPlayer.isRunning) {
                         videoPlayer.pause()
@@ -413,6 +462,55 @@ Rectangle {
                     }
                 }
             }
+            ItemImageButton {
+                id: buttonSound
+                width: 36
+                height: 36
+                anchors.left: buttonPlay.right
+                anchors.leftMargin: 16
+                anchors.verticalCenter: parent.verticalCenter
+
+                iconColor: "white"
+                highlightColor: Theme.colorPrimary
+                highlightMode: "color"
+
+                source: "qrc:/icons_material/baseline-volume_up-24px.svg"
+                property real savedVolume: videoPlayer.volume
+                onClicked: {
+                    if (videoPlayer.volume) {
+                        savedVolume = videoPlayer.volume
+                        videoPlayer.volume = 0
+                    } else {
+                        videoPlayer.volume = savedVolume
+                    }
+                }
+            }
+            SliderThemed {
+                id: soundline
+                width: 128
+                anchors.left: buttonSound.right
+                anchors.leftMargin: 8
+                anchors.verticalCenter: parent.verticalCenter
+
+                from: 0
+                to: 1
+                value: videoPlayer.volume
+                onValueChanged: videoPlayer.volume = value
+            }
+
+            Text {
+                id: timecode
+                anchors.left: soundline.right
+                anchors.leftMargin: 12
+                anchors.verticalCenter: parent.verticalCenter
+
+                text: "0:12 / 0:24"
+                color: "white"
+                font.bold: true
+                font.pixelSize: 15
+            }
+
+/*
             Button {
                 id: buttonStartCut
                 width: 40
@@ -445,51 +543,40 @@ Rectangle {
                     timelineLimitStop.width = timeline.width * (((videoPlayer.duration - videoPlayer.position) / videoPlayer.duration));
                 }
             }
-            ButtonImageOld {
-                id: buttonSound
-                width: 40
-                height: 40
-                anchors.right: soundline.left
-                anchors.rightMargin: 0
-                anchors.verticalCenter: parent.verticalCenter
-                imageSource: "qrc:/icons_material/baseline-volume_up-24px.svg"
-
-                property real savedVolume: videoPlayer.volume
-                onClicked: {
-                    if (videoPlayer.volume) {
-                        savedVolume = videoPlayer.volume
-                        videoPlayer.volume = 0
-                    } else {
-                        videoPlayer.volume = savedVolume
-                    }
-                }
-            }
-
-            ButtonImageOld {
+*/
+            ItemImageButton {
                 id: buttonScreenshot
-                width: 40
-                height: 40
+                width: 36
+                height: 36
                 anchors.right: buttonFullscreen.left
-                anchors.rightMargin: 0
+                anchors.rightMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
-                imageSource: "qrc:/icons_material/outline-camera_alt-24px.svg"
 
+                iconColor: "white"
+                highlightColor: Theme.colorPrimary
+                highlightMode: "color"
+
+                source: "qrc:/icons_material/outline-camera_alt-24px.svg"
                 onClicked: {
                     //
                 }
             }
-            ButtonImageOld {
+            ItemImageButton {
                 id: buttonFullscreen
                 width: 40
                 height: 40
                 anchors.right: parent.right
-                anchors.rightMargin: 0
+                anchors.rightMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
-                imageSource: "qrc:/icons_material/baseline-fullscreen-24px.svg"
 
+                iconColor: "white"
+                highlightColor: Theme.colorPrimary
+                highlightMode: "color"
+
+                source: "qrc:/icons_material/baseline-fullscreen-24px.svg"
                 onClicked: mediaArea.toogleFullScreen()
             }
-
+/*
             Rectangle {
                 id: timeline
                 height: 40
@@ -577,6 +664,7 @@ Rectangle {
                     onClicked: videoPlayer.volume = (mouseX / soundline.width)
                 }
             }
+*/
         }
     }
 }

@@ -136,6 +136,7 @@ Item {
                 width: 80
                 height: 28
                 opacity: 0.8
+                radius: 3
                 color: Theme.colorBackground
 
                 Text {
@@ -157,6 +158,7 @@ Item {
                 width: 80
                 height: 28
                 opacity: 0.8
+                radius: 3
                 color: Theme.colorBackground
 
                 Text {

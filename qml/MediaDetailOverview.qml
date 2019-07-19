@@ -197,12 +197,12 @@ Item {
     Column {
         id: infosGeneric
         width: 320
-        anchors.bottomMargin: 0
-        anchors.rightMargin: 0
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        anchors.topMargin: 16
         anchors.top: parent.top
+        anchors.topMargin: 24
+        anchors.right: parent.right
+        anchors.rightMargin: 0
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 0
 
         spacing: 8
 
