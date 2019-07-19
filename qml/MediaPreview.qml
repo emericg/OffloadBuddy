@@ -416,26 +416,24 @@ Rectangle {
 
                 from: 0
                 to: 1
-                //value: (videoPlayer.position / videoPlayer.duration)
 
-                //onPressedChanged: {
                 onMoved: {
-                //onValueChanged: {
-                    //console.log("PRESSED" + timeline.value)
                     var wasRunning = videoPlayer.isRunning
-/*
-                    if (wasRunning) {
-                        videoPlayer.pause()
-                        videoPlayer.isRunning = false
+                    if (Qt.platform.os === "osx") {
+                        if (wasRunning) {
+                            videoPlayer.pause()
+                            videoPlayer.isRunning = false
+                        }
                     }
-*/
+
                     videoPlayer.seek(videoPlayer.duration * timeline.value)
-/*
-                    if (wasRunning) {
-                        videoPlayer.play()
-                        videoPlayer.isRunning = true
+
+                    if (Qt.platform.os === "osx") {
+                        if (wasRunning) {
+                            videoPlayer.play()
+                            videoPlayer.isRunning = true
+                        }
                     }
-*/
                 }
             }
 
