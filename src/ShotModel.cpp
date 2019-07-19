@@ -285,9 +285,33 @@ Shot *ShotModel::getShotAt(Shared::ShotType type, int file_id, int camera_id) co
     return nullptr;
 }
 
+qint64 ShotModel::getDiskSpace() const
+{
+    qint64 size = 0;
+
+    for (auto shot: m_shots)
+    {
+        size += shot->getFullSize();
+    }
+
+    return size;
+}
+
 int ShotModel::getShotCount() const
 {
     return m_shots.size();
+}
+
+int ShotModel::getFileCount() const
+{
+    int count = 0;
+
+    for (auto shot: m_shots)
+    {
+        count += shot->getFileCount();
+    }
+
+    return count;
 }
 
 /* ************************************************************************** */

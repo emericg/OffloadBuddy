@@ -2,6 +2,7 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 
 import com.offloadbuddy.theme 1.0
+import "UtilsString.js" as UtilsString
 
 Item {
     id: mediaGrid
@@ -84,6 +85,9 @@ Item {
                 }
             }
         }
+
+        textFilesCount.text = qsTr("%1 shots  /  %2 files".arg(mediaLibrary.shotModel.getShotCount()).arg(mediaLibrary.shotModel.getFileCount()))
+        textFilesSize.text = qsTr("%1 of space used".arg(UtilsString.bytesToString_short(mediaLibrary.shotModel.getDiskSpace())))
     }
 
     // POPUPS //////////////////////////////////////////////////////////////////
@@ -164,6 +168,34 @@ Item {
             color: Theme.colorHeaderContent
             font.bold: true
             font.pixelSize: Theme.fontSizeHeaderTitle
+        }
+
+        Text {
+            id: textFilesCount
+            height: 24
+            anchors.top: textHeader.bottom
+            anchors.topMargin: 4
+            anchors.right: parent.right
+            anchors.rightMargin: 16
+
+            text: "%42 shots  /  128 files"
+            verticalAlignment: Text.AlignVCenter
+            color: Theme.colorHeaderContent
+            font.pixelSize: Theme.fontSizeHeaderText
+        }
+
+        Text {
+            id: textFilesSize
+            height: 24
+            anchors.top: textFilesCount.bottom
+            anchors.topMargin: 0
+            anchors.right: parent.right
+            anchors.rightMargin: 16
+
+            text: "236 GB of space used"
+            verticalAlignment: Text.AlignVCenter
+            color: Theme.colorHeaderContent
+            font.pixelSize: Theme.fontSizeHeaderText
         }
 
         SliderThemed {

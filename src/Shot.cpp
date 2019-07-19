@@ -450,6 +450,19 @@ QString & Shot::getFolder()
     return m_folder;
 }
 
+int Shot::getFileCount()
+{
+    int count = 0;
+
+    count += m_pictures.size();
+    count += m_videos.size();
+    count += m_videos_previews.size();
+    count += m_videos_thumbnails.size();
+    count += m_videos_hdAudio.size();
+
+    return count;
+}
+
 QString Shot::getFilesQString() const
 {
     QString list;

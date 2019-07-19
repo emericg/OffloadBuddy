@@ -72,7 +72,7 @@ Popup {
 
         // Filters
         rectangleFilter.visible = false
-
+/*
         // Handle destination(s)
         cbDestinations.clear()
         cbDestinations.append( { "text": qsTr("auto") } )
@@ -84,6 +84,7 @@ Popup {
                     cbDestinations.append( { "text": settingsManager.directoriesList[child].directoryPath } )
         }
         comboBoxDestination.currentIndex = 0
+*/
     }
 
     function setCopy() {
@@ -153,7 +154,7 @@ Popup {
             anchors.left: parent.left
             anchors.right: parent.right
 
-            text: qsTr("Encoding settings")
+            text: qsTr("(Re)Encode video")
             font.pixelSize: 24
             color: Theme.colorText
         }
@@ -181,7 +182,7 @@ Popup {
 
                 Text {
                     id: textCodec
-                    width: 140
+                    width: 128
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Codec")
@@ -241,7 +242,7 @@ Popup {
 
                 Text {
                     id: textSpeed
-                    width: 140
+                    width: 128
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Speed index")
@@ -274,7 +275,7 @@ Popup {
 
                 Text {
                     id: textQuality
-                    width: 140
+                    width: 128
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Quality index")
@@ -307,7 +308,7 @@ Popup {
 
                 Text {
                     id: textFramerate
-                    width: 140
+                    width: 128
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Framerate")
@@ -425,13 +426,18 @@ Popup {
                 }
             }
 /*
-            Rectangle { // spacer
+            Rectangle { // separator
                 height: 1
                 anchors.right: parent.right
                 anchors.left: parent.left
                 color: "#f4f4f4"
             }
 */
+            Item { // spacer
+                height: 16
+                anchors.right: parent.right
+                anchors.left: parent.left
+            }
             Item {
                 id: rectangleDestination
                 height: 48
@@ -440,11 +446,13 @@ Popup {
 
                 Text {
                     id: textDestinationTitle
-                    text: qsTr("Destination")
-                    anchors.verticalCenter: parent.verticalCenter
+                    width: 128
                     anchors.left: parent.left
-                    font.pixelSize: 16
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: qsTr("Destination")
                     color: Theme.colorSubText
+                    font.pixelSize: 16
                 }
 
                 ComboBoxThemed {
@@ -452,7 +460,7 @@ Popup {
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: textDestinationTitle.right
-                    anchors.leftMargin: 12
+                    anchors.leftMargin: 16
 
                     ListModel {
                         id: cbDestinations
@@ -473,81 +481,129 @@ Popup {
                         cbDestinations.append( { "text": qsTr("Select path manually") } )
 
                         comboBoxDestination.currentIndex = 0
+                        textField_path.text = settingsManager.directoriesList[0].directoryPath
                     }
 
                     property bool cbinit: false
                     onCurrentIndexChanged: {
                         if (cbinit) {
-                            //
+                            if (comboBoxDestination.currentIndex === cbDestinations.count) {
+                                //
+                            }
                         } else {
                             cbinit = true;
                         }
                     }
                 }
             }
-        }
-    }
 
-    /////////
+            TextFieldThemed {
+                id: textField_path
+                height: 40
+                anchors.left: parent.left
+                anchors.leftMargin: 0
+                anchors.right: parent.right
+                anchors.rightMargin: 0
 
-    Row {
-        id: rowButtons
-        height: 40
-        spacing: 24
-        anchors.right: parent.right
-        anchors.rightMargin: 0
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
+                visible: (comboBoxDestination.currentIndex === (cbDestinations.count - 1))
+                //text: directory.directoryPath
 
-        ButtonWireframe {
-            id: buttonCancel
-            anchors.verticalCenter: parent.verticalCenter
+                onVisibleChanged: {
+                    //
+                }
 
-            text: qsTr("Cancel")
-            primaryColor: Theme.colorPrimary
-            onClicked: {
-                popupEncodeVideo.close();
+                FileDialog {
+                    id: fileDialogChange
+                    title: qsTr("Please choose a destination!")
+                    sidebarVisible: true
+                    selectExisting: true
+                    selectMultiple: false
+                    selectFolder: false
+
+                    onAccepted: {
+                        textField_path.text = UtilsPath.cleanUrl(fileDialogChange.fileUrl);
+                    }
+                }
+
+                ButtonThemed {
+                    id: button_change
+                    width: 72
+                    height: 36
+                    anchors.right: parent.right
+                    anchors.rightMargin: 2
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    //imageSource: "qrc:/icons_material/outline-folder-24px.svg"
+                    text: qsTr("change")
+                    onClicked: {
+                        fileDialogChange.folder =  "file:///" + textField_path.text
+                        fileDialogChange.open()
+                    }
+                }
             }
         }
-        ButtonImageWireframe {
-            id: buttonEncode
-            anchors.verticalCenter: parent.verticalCenter
 
-            text: qsTr("Encode")
-            source: "qrc:/icons_material/baseline-memory-24px.svg"
-            fullColor: true
-            primaryColor: Theme.colorPrimary
-            onClicked: {
-                var codec = "H.264"
-                if (rbH264.checked)
-                    codec = rbH264.text
-                else if (rbH265.checked)
-                    codec = rbH265.text
-                else if (rbVP9.checked)
-                    codec = rbVP9.text
-                else if (rbGIF.checked)
-                    codec = rbGIF.text
+        /////////
 
-                if (clipStartMs > 0 && clipDurationMs > 0)
-                    if (cbCOPY.checked)
-                        codec = "copy"
+        Row {
+            id: rowButtons
+            height: 40
+            spacing: 24
+            anchors.right: parent.right
+            anchors.rightMargin: 0
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 0
 
-                var fps = -1;
-                if (sliderFps.value.toFixed(3) !== currentShot.framerate.toFixed(3))
-                    fps = sliderFps.value
+            ButtonWireframe {
+                id: buttonCancel
+                anchors.verticalCenter: parent.verticalCenter
 
-                if (typeof currentDevice !== "undefined")
-                    mediaProvider = currentDevice
-                else if (typeof mediaLibrary !== "undefined")
-                    mediaProvider = mediaLibrary
+                text: qsTr("Cancel")
+                primaryColor: Theme.colorPrimary
+                onClicked: {
+                    popupEncodeVideo.close();
+                }
+            }
+            ButtonImageWireframe {
+                id: buttonEncode
+                anchors.verticalCenter: parent.verticalCenter
 
-                mediaProvider.reencodeSelected(currentShot.uuid, codec,
-                                               sliderQuality.value,
-                                               sliderSpeed.value,
-                                               fps,
-                                               clipStartMs,
-                                               clipDurationMs)
-                popupEncodeVideo.close()
+                text: qsTr("Encode")
+                source: "qrc:/icons_material/baseline-memory-24px.svg"
+                fullColor: true
+                primaryColor: Theme.colorPrimary
+                onClicked: {
+                    var codec = "H.264"
+                    if (rbH264.checked)
+                        codec = rbH264.text
+                    else if (rbH265.checked)
+                        codec = rbH265.text
+                    else if (rbVP9.checked)
+                        codec = rbVP9.text
+                    else if (rbGIF.checked)
+                        codec = rbGIF.text
+
+                    if (clipStartMs > 0 && clipDurationMs > 0)
+                        if (cbCOPY.checked)
+                            codec = "copy"
+
+                    var fps = -1;
+                    if (sliderFps.value.toFixed(3) !== currentShot.framerate.toFixed(3))
+                        fps = sliderFps.value
+
+                    if (typeof currentDevice !== "undefined")
+                        mediaProvider = currentDevice
+                    else if (typeof mediaLibrary !== "undefined")
+                        mediaProvider = mediaLibrary
+
+                    mediaProvider.reencodeSelected(currentShot.uuid, codec,
+                                                   sliderQuality.value,
+                                                   sliderSpeed.value,
+                                                   fps,
+                                                   clipStartMs,
+                                                   clipDurationMs)
+                    popupEncodeVideo.close()
+                }
             }
         }
     }

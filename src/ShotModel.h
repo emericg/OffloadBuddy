@@ -71,7 +71,10 @@ public:
     Shot *getShotWithUuid(const QString &uuid);
     Shot *getShotWithName(const QString &name);
     Shot *getShotWithPath(const QString &path);
-    int getShotCount() const;
+
+    Q_INVOKABLE qint64 getDiskSpace() const;
+    Q_INVOKABLE int getShotCount() const;
+    Q_INVOKABLE int getFileCount() const;
 
 public slots:
     void addFile(ofb_file *f, ofb_shot *s);

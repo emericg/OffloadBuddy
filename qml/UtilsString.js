@@ -1,5 +1,5 @@
 // UtilsString.js
-// Version 0.2
+// Version 0.3
 .pragma library
 
 function padNumberInternal(n) {
@@ -137,12 +137,14 @@ function durationToString_ffmpeg(duration) {
 function bytesToString_short(bytes) {
     var text = '';
 
-    if (bytes/1000000000 >= 128.0)
-        text = (bytes/1000000000).toFixed(0) + " " + qsTr("GB");
-    else if (bytes/1000000000 >= 1.0)
-        text = (bytes/1000000000).toFixed(1) + " " + qsTr("GB");
-    else
-        text = (bytes/1000000).toFixed(1) + " " + qsTr("MB");
+    if (bytes > 0) {
+        if ((bytes/1000000000) >= 128.0)
+            text = (bytes/1000000000).toFixed(0) + " " + qsTr("GB");
+        else if ((bytes/1000000000) >= 1.0)
+            text = (bytes/1000000000).toFixed(1) + " " + qsTr("GB");
+        else
+            text = (bytes/1000000).toFixed(1) + " " + qsTr("MB");
+    }
 
     return text;
 }

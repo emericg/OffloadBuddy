@@ -5,7 +5,7 @@ import com.offloadbuddy.theme 1.0
 
 RadioButton {
     id: control
-    text: qsTr("RadioButton")
+    text: "RadioButton"
     checked: false
 
     indicator: Rectangle {

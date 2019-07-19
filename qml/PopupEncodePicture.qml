@@ -35,7 +35,7 @@ Popup {
             anchors.left: parent.left
             anchors.right: parent.right
 
-            text: qsTr("Encode image")
+            text: qsTr("(Re)Encode picture")
             font.pixelSize: 24
             color: Theme.colorText
         }
@@ -63,7 +63,7 @@ Popup {
 
                 Text {
                     id: rectangleCodec
-                    width: 140
+                    width: 128
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Format")
@@ -119,7 +119,7 @@ Popup {
 
                 Text {
                     id: element2
-                    width: 140
+                    width: 128
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Quality")
@@ -134,17 +134,26 @@ Popup {
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
-                    value: 0.5
+
+                    from: 0
+                    to: 10
+                    stepSize: 1
+                    value: 5
                 }
             }
 /*
-            Rectangle { // spacer
+            Rectangle { // separator
                 height: 1
                 anchors.right: parent.right
                 anchors.left: parent.left
                 color: "#f4f4f4"
             }
 */
+            Item { // spacer
+                height: 16
+                anchors.right: parent.right
+                anchors.left: parent.left
+            }
             Item {
                 id: rectangleDestination
                 height: 48
@@ -153,10 +162,13 @@ Popup {
 
                 Text {
                     id: textDestinationTitle
-                    text: qsTr("Destination")
+                    width: 128
+                    anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
-                    font.pixelSize: 16
+
+                    text: qsTr("Destination")
                     color: Theme.colorSubText
+                    font.pixelSize: 16
                 }
 
                 ComboBoxThemed {
@@ -186,6 +198,7 @@ Popup {
                         cbDestinations.append( { "text": qsTr("Select path manually") } )
 
                         comboBoxDestination.currentIndex = 0
+                        textField_path.text = settingsManager.directoriesList[0].directoryPath
                     }
 
                     property bool cbinit: false
@@ -213,7 +226,7 @@ Popup {
                 //text: directory.directoryPath
 
                 onVisibleChanged: {
-
+                    //
                 }
 
                 FileDialog {

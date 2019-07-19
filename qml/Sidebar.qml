@@ -49,7 +49,7 @@ Rectangle {
         anchors.topMargin: 24
 
         selected: applicationContent.state === "library"
-        animated: ml.libraryState
+        animated: mediaLibrary.libraryState
         onClicked: applicationContent.state = "library"
         source: "qrc:/menus/media.svg"
     }

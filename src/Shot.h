@@ -171,8 +171,6 @@ class Shot: public QObject
 
 
 
-
-
     //
     QString m_camera_source;        //!< Model of the camera that produced the shot
     QString m_camera_firmware;      //!< Firmware of the camera that produced the shot
@@ -186,6 +184,8 @@ class Shot: public QObject
     unsigned orientation = 0;
     unsigned width = 0;
     unsigned height = 0;
+
+    QList <QTime> m_highlights;
 
     // GPS metadatas
     QString gps_lat_str;
@@ -218,10 +218,7 @@ class Shot: public QObject
 
 
 
-
-    QList <QTime> m_highlights;
-
-    /// GPMF WIP /////////////////////////
+    /// > GPMF WIP /////////////////////////
 
     bool gpmf_parsed = false;
 
@@ -302,7 +299,9 @@ public slots:
     Q_INVOKABLE void updateGyroSeries(QLineSeries *x, QLineSeries *y, QLineSeries *z);
     Q_INVOKABLE QGeoCoordinate getGpsCoordinates(unsigned index);
 
-    /// GPMF WIP /////////////////////////
+    /// < GPMF WIP /////////////////////////
+
+
 
 
 public:
@@ -339,6 +338,7 @@ public slots:
     qint64 getDataSize() const;
     qint64 getFullSize() const;
     int getChapterCount() const;    //!< 0 means no notion of chapter
+    int getFileCount();
     QDateTime getDate() const;
     QDateTime getDateFile() const;
     QDateTime getDateMetadata() const;
