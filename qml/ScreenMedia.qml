@@ -20,7 +20,7 @@ Item {
 
         // save state
         if (typeof deviceSavedState !== "undefined" && deviceSavedState)
-            deviceSavedState.detail_shot = shot
+            deviceSavedState.detail_shot = screenMedia.shot
     }
 
     onVisibleChanged: {
@@ -29,7 +29,7 @@ Item {
     }
 
     function restoreState() {
-        shot = deviceSavedState.detail_shot
+        screenMedia.shot = deviceSavedState.detail_shot // ???
         screenMedia.state = deviceSavedState.detail_state
     }
 

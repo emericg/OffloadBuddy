@@ -57,6 +57,7 @@ ComboBox {
         implicitWidth: 120
         implicitHeight: 40
         color: Theme.colorButton
+        radius: 4
         //border.color: control.pressed ? "#17a81a" : "#21be2b"
         //border.width: control.visualFocus ? 2 : 1
     }

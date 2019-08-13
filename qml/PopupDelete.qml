@@ -29,9 +29,9 @@ Popup {
 
         Text {
             id: textArea
+            anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.top: parent.top
 
             text: message
             verticalAlignment: Text.AlignVCenter

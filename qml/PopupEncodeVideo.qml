@@ -70,6 +70,9 @@ Popup {
         // Clip handler
         setClip(-1, -1)
 
+        // Crop
+        rectangleCrop.visible = false
+
         // Filters
         rectangleFilter.visible = false
 /*
@@ -252,15 +255,16 @@ Popup {
 
                 SliderThemed {
                     id: sliderSpeed
-                    from: 2
-                    wheelEnabled: true
                     anchors.right: parent.right
                     anchors.rightMargin: 0
-                    stepSize: 1
-                    to: 0
+                    wheelEnabled: true
                     anchors.left: textSpeed.right
                     anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
+
+                    stepSize: 1
+                    from: 2
+                    to: 0
                     value: 1
                 }
             }
@@ -286,14 +290,15 @@ Popup {
                 SliderThemed {
                     id: sliderQuality
                     anchors.verticalCenterOffset: 0
-                    from: 5
-                    to: 1
-                    stepSize: 1
                     anchors.left: textQuality.right
                     anchors.leftMargin: 16
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
+
+                    from: 5
+                    to: 1
+                    stepSize: 1
                     value: 3
                 }
             }
@@ -350,10 +355,13 @@ Popup {
 
                 Text {
                     id: titleClip
-                    text: qsTr("Clip video")
+                    anchors.left: parent.left
+                    anchors.leftMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
-                    font.bold: false
+
+                    text: qsTr("Clip video")
                     font.pixelSize: 24
+                    color: Theme.colorText
                 }
 
                 TextFieldThemed {
@@ -381,8 +389,28 @@ Popup {
             }
 
             Item {
+                id: rectangleCrop
+                height: 48
+                anchors.left: parent.left
+                anchors.leftMargin: 0
+                anchors.right: parent.right
+                anchors.rightMargin: 0
+
+                Text {
+                    id: titleCrop
+                    anchors.left: parent.left
+                    anchors.leftMargin: 0
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: qsTr("Crop video")
+                    font.pixelSize: 24
+                    color: Theme.colorText
+                }
+            }
+
+            Item {
                 id: rectangleFilter
-                height: 80
+                height: 48
                 anchors.right: parent.right
                 anchors.rightMargin: 0
                 anchors.left: parent.left
@@ -390,38 +418,28 @@ Popup {
 
                 Text {
                     id: titleFilter
-                    x: 16
-                    text: qsTr("Apply filters")
-                    anchors.top: parent.top
-                    anchors.topMargin: 12
-                    font.bold: false
+                    anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
                     anchors.leftMargin: 0
-                    font.pixelSize: 24
-                }
 
-                CheckBoxThemed {
-                    id: checkBox_crop
-                    x: 280
-                    y: 61
-                    text: qsTr("crop")
-                    anchors.verticalCenter: checkBox_stab.verticalCenter
+                    text: qsTr("Apply filters")
+                    font.pixelSize: 24
+                    color: Theme.colorText
                 }
 
                 CheckBoxThemed {
                     id: checkBox_defish
-                    x: 159
-                    y: 61
                     text: qsTr("defisheye")
-                    anchors.verticalCenter: checkBox_stab.verticalCenter
+                    anchors.left: titleFilter.right
+                    anchors.leftMargin: 48
+                    anchors.verticalCenter: parent.verticalCenter
                 }
 
                 CheckBoxThemed {
                     id: checkBox_stab
                     text: qsTr("stabilization")
-                    anchors.top: titleFilter.bottom
-                    anchors.topMargin: 0
-                    anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: checkBox_defish.right
                     anchors.leftMargin: 16
                 }
             }
