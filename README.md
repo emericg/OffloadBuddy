@@ -6,14 +6,12 @@ OffloadBuddy
 [![License: GPL v3](https://img.shields.io/badge/license-GPL%20v3-blue.svg?style=flat-square)](http://www.gnu.org/licenses/gpl-3.0)
 
 
-## Introduction
-
 OffloadBuddy is a multimedia offloading software with a few tricks up his sleeve!
 It's designed to remove the hassle of handling and transferring the many videos and pictures file from your devices like action cameras, regular cameras and smartphones...
 
 Works on Linux, macOS and Windows!
 
-FEATURES:
+### Features:
 
 - [x] Import datas from SD cards, mass storage or MTP devices (Linux & macOS)
   - [x] Organize and sort your media library
@@ -35,9 +33,9 @@ FEATURES:
 ### Screenshots!
 
 ![GUI1](https://i.imgur.com/LRKR1UW.jpg)
-![GUI2](https://i.imgur.com/pAsn76s.png)
-![GUI3](https://i.imgur.com/mlbIdCa.png)
-![GUI3](https://i.imgur.com/frkN44D.png)
+![GUI2](https://i.imgur.com/pAsn76s.jpg)
+![GUI3](https://i.imgur.com/mlbIdCa.jpg)
+![GUI3](https://i.imgur.com/frkN44D.jpg)
 
 
 ## Documentation
