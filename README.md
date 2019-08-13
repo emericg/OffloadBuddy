@@ -11,26 +11,33 @@ OffloadBuddy
 OffloadBuddy is a multimedia offloading software with a few tricks up his sleeve!
 It's designed to remove the hassle of handling and transferring the many videos and pictures file from your devices like action cameras, regular cameras and smartphones...
 
-Works with Linux, macOS and Windows!
+Works on Linux, macOS and Windows!
 
 FEATURES:
 
-- [x] Import datas from SD cards, mass storage or MTP devices
-  - [x] Organize your media library
+- [x] Import datas from SD cards, mass storage or MTP devices (Linux & macOS)
+  - [x] Organize and sort your media library
   - [x] Copy, merge or reencode medias
-  - [x] Show and export telemetry (WIP)
-- [x] Create short video clips from your videos
-- [ ] Extract photos from your videos
-- [ ] Create timelapse from videos
+  - [ ] Change wrong dates (WIP)
+  - [x] Show and export GoPro telemetry & GPS traces (WIP)
+- [x] Create short video clips (and GIFs) from your videos!
 - [x] Assemble photo timelapses into videos
-- [ ] GoPro firmware updates (WIP)
+- [ ] Extract photos/screenshots from videos
+- [ ] Create timelapse from videos
+- [x] Apply filters to medias
+  - [ ] Reframe medias (WIP)
+  - [x] Rotate medias (WIP)
+  - [ ] Defisheye medias
+  - [ ] Stabilize videos
+- [ ] GoPro firmware updates
 
 
 ### Screenshots!
 
-![GUI1](https://i.imgur.com/tqCeaEC.png)
-![GUI2](https://i.imgur.com/96E5Y29.png)
-![GUI3](https://i.imgur.com/wnG32fh.png)
+![GUI1](https://i.imgur.com/LRKR1UW.jpg)
+![GUI2](https://i.imgur.com/pAsn76s.png)
+![GUI3](https://i.imgur.com/mlbIdCa.png)
+![GUI3](https://i.imgur.com/frkN44D.png)
 
 
 ## Documentation
