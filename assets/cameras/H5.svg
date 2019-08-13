@@ -14,7 +14,7 @@
    height="128"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.92.2 2405546, 2018-03-11"
+   inkscape:version="0.92.4 5da689c313, 2019-01-14"
    version="1.0"
    sodipodi:docname="H5.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
@@ -642,6 +642,11 @@
         <dc:title>HERO5</dc:title>
         <cc:license
            rdf:resource="http://creativecommons.org/licenses/by-sa/4.0/" />
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Emeric Grange</dc:title>
+          </cc:Agent>
+        </dc:creator>
       </cc:Work>
       <cc:License
          rdf:about="http://creativecommons.org/licenses/by-sa/4.0/">

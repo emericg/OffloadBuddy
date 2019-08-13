@@ -20,7 +20,7 @@
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    style="display:inline">
   <title
-     id="title902">HERO6</title>
+     id="title98">sony_fdr</title>
   <defs
      id="defs4">
     <linearGradient
@@ -600,9 +600,9 @@
      borderopacity="1"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="8.0044493"
-     inkscape:cx="7.6110261"
-     inkscape:cy="70.215492"
+     inkscape:zoom="11.320001"
+     inkscape:cx="45.843751"
+     inkscape:cy="74.418003"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -625,7 +625,9 @@
      inkscape:snap-grids="true"
      inkscape:snap-smooth-nodes="true"
      inkscape:snap-others="false"
-     inkscape:object-nodes="true">
+     inkscape:object-nodes="true"
+     inkscape:bbox-paths="true"
+     inkscape:snap-bbox-edge-midpoints="true">
     <inkscape:grid
        type="xygrid"
        id="grid3672"
@@ -642,9 +644,14 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title>HERO6</dc:title>
+        <dc:title>sony_fdr</dc:title>
         <cc:license
            rdf:resource="http://creativecommons.org/licenses/by-sa/4.0/" />
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Emeric Grange</dc:title>
+          </cc:Agent>
+        </dc:creator>
       </cc:Work>
       <cc:License
          rdf:about="http://creativecommons.org/licenses/by-sa/4.0/">
@@ -671,19 +678,19 @@
      transform="translate(0,106)">
     <path
        style="display:inline;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:7.69274044"
-       d="m 5,-84 c -2,0 -3,1 -3,3 v 78 c 0,2 1,3 3,3 h 104 c 2,0 3,-0.99999928 3,-3 v -43 c 0,-2 1,-3 3,-3 h 8 c 2,0 3,-1 3,-3 v -29 c 0,-2.030479 -1,-3 -3,-3 z"
+       d="m 3,-85 c -2,0 -3,1 -3,3 v 80 c 0,2 1,3 3,3 h 106 c 2,0 3,-0.99999928000001 3,-3 v -45 c 0,-2 1,-3 3,-3 h 10 c 2,0 3,-1 3,-3 v -29 c 0,-2.030479 -1,-3 -3,-3 z"
        id="rect2915"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="csssssccccscc" />
     <rect
-       style="display:inline;opacity:1;fill:#7f7f7f;fill-opacity:1;stroke:none;stroke-width:0.98645663;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="display:inline;opacity:1;fill:#7f7f7f;fill-opacity:1;stroke:none;stroke-width:0.98645657;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect4626-3"
-       width="34"
-       height="36"
-       x="61"
-       y="-59"
-       ry="3.64732"
-       rx="3.6473198" />
+       width="35.999996"
+       height="38"
+       x="60.000004"
+       y="-60"
+       ry="3"
+       rx="3" />
     <rect
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.98645663;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect4626"
@@ -691,8 +698,8 @@
        height="33.965118"
        x="62"
        y="-58"
-       ry="3.64732"
-       rx="3.6473198" />
+       ry="3"
+       rx="3" />
     <rect
        style="opacity:1;fill:#7f7f7f;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:3.00094485;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:15;stroke-opacity:1;paint-order:stroke fill markers"
        id="rect112"
@@ -704,7 +711,7 @@
        ry="2" />
     <path
        style="display:inline;opacity:1;fill:#7f7f7f;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:3.00094485;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:15;stroke-opacity:1;paint-order:stroke fill markers"
-       d="m 121,-84 h 2 c 2,0 3,1 3,3 v 29 c 0,2 -1,3 -3,3 h -2 z"
+       d="m 121,-85 h 4 c 2,0 3,1 3,3 v 29 c 0,2 -1,3 -3,3 h -4 z"
        id="rect112-3"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="csssccc" />
@@ -718,11 +725,11 @@
        rx="2"
        ry="2" />
     <rect
-       style="opacity:1;fill:#7f7f7f;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:3.00094485;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:15;stroke-opacity:1;paint-order:stroke fill markers"
+       style="opacity:1;fill:#7f7f7f;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:3.00094509;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:15;stroke-opacity:1;paint-order:stroke fill markers"
        id="rect96"
-       width="2"
-       height="84"
-       x="5"
-       y="-84" />
+       width="4"
+       height="86"
+       x="4"
+       y="-85" />
   </g>
 </svg>

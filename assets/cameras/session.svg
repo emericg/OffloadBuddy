@@ -14,7 +14,7 @@
    height="128"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.92.2 2405546, 2018-03-11"
+   inkscape:version="0.92.4 5da689c313, 2019-01-14"
    version="1.0"
    sodipodi:docname="session.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
@@ -600,9 +600,9 @@
      borderopacity="1"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="4.0022248"
-     inkscape:cx="-13.655197"
-     inkscape:cy="70.750955"
+     inkscape:zoom="5.6600006"
+     inkscape:cx="-19.699527"
+     inkscape:cy="53.602819"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -668,6 +668,11 @@
         <dc:title>session</dc:title>
         <cc:license
            rdf:resource="http://creativecommons.org/licenses/by-sa/4.0/" />
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Emeric Grange</dc:title>
+          </cc:Agent>
+        </dc:creator>
       </cc:Work>
       <cc:License
          rdf:about="http://creativecommons.org/licenses/by-sa/4.0/">

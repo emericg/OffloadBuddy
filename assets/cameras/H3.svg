@@ -14,7 +14,7 @@
    height="128"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.92.2 2405546, 2018-03-11"
+   inkscape:version="0.92.4 5da689c313, 2019-01-14"
    version="1.0"
    sodipodi:docname="H3.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
@@ -600,9 +600,9 @@
      borderopacity="1"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.6568543"
-     inkscape:cx="105.60278"
-     inkscape:cy="56.550783"
+     inkscape:zoom="16"
+     inkscape:cx="116.13842"
+     inkscape:cy="75.761653"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -644,6 +644,11 @@
         <dc:title>HERO3</dc:title>
         <cc:license
            rdf:resource="http://creativecommons.org/licenses/by-sa/4.0/" />
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Emeric Grange</dc:title>
+          </cc:Agent>
+        </dc:creator>
       </cc:Work>
       <cc:License
          rdf:about="http://creativecommons.org/licenses/by-sa/4.0/">
@@ -670,13 +675,13 @@
      transform="translate(0,106)">
     <path
        style="display:inline;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:7.93701458"
-       d="m 7.96875,-85.65625 c -4,0 -7,3 -7,7 v 74 c 0,4 3,7 7,7 h 112 c 4,0 7,-3 7,-6.9995789 V -78.65625 c 0,-4 -3,-7 -7,-7 z"
+       d="m 8,-86 c -4,0 -8,4 -8,8 v 72 c 0,4 4,8 8,8 h 112 c 4,0 8,-4.0004211 8,-8 v -72 c 0,-4 -4,-8 -8,-8 z"
        id="rect2915"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="csssssscc" />
     <path
        style="display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:6.32368326"
-       d="m 98.648282,-81.696546 c 6.930378,0 13.204658,2.853504 17.746338,7.466998 4.54168,4.613494 7.35077,10.986976 7.35077,18.026929 0,7.039953 -2.80909,13.413435 -7.35077,18.026927 -4.54168,4.613493 -10.81596,7.467001 -17.746338,7.467001 -6.930385,0 -13.204643,-2.853508 -17.746312,-7.467001 -4.541687,-4.613492 -7.35078,-10.986974 -7.35078,-18.026927 0,-7.039953 2.809093,-13.413435 7.35078,-18.026929 4.541669,-4.613494 10.815927,-7.466998 17.746312,-7.466998 z m 0,12.746963 c -3.465174,0 -6.60232,1.426755 -8.873169,3.733502 -2.270822,2.306746 -3.675378,5.493487 -3.675378,9.013462 0,3.519976 1.404556,6.706716 3.675378,9.013463 2.270849,2.306747 5.407995,3.733501 8.873169,3.733501 3.465188,0 6.602318,-1.426754 8.873178,-3.733502 2.27083,-2.306746 3.67538,-5.493486 3.67538,-9.013462 0,-3.519975 -1.40455,-6.706716 -3.67538,-9.013462 -2.27086,-2.306747 -5.40799,-3.733502 -8.873178,-3.733502 z"
+       d="m 98.679532,-82.040296 c 6.930378,0 13.204658,2.853504 17.746338,7.466998 4.54168,4.613494 7.35077,10.986976 7.35077,18.026929 0,7.039953 -2.80909,13.413435 -7.35077,18.026927 -4.54168,4.613493 -10.81596,7.467001 -17.746338,7.467001 -6.930385,0 -13.204643,-2.853508 -17.746312,-7.467001 -4.541687,-4.613492 -7.35078,-10.986974 -7.35078,-18.026927 0,-7.039953 2.809093,-13.413435 7.35078,-18.026929 4.541669,-4.613494 10.815927,-7.466998 17.746312,-7.466998 z m 0,12.746963 c -3.465174,0 -6.60232,1.426755 -8.873169,3.733502 -2.270822,2.306746 -3.675378,5.493487 -3.675378,9.013462 0,3.519976 1.404556,6.706716 3.675378,9.013463 2.270849,2.306747 5.407995,3.733501 8.873169,3.733501 3.465188,0 6.602318,-1.426754 8.873178,-3.733502 2.27083,-2.306746 3.67538,-5.493486 3.67538,-9.013462 0,-3.519975 -1.40455,-6.706716 -3.67538,-9.013462 -2.27086,-2.306747 -5.40799,-3.733502 -8.873178,-3.733502 z"
        id="rect2915-3"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="ssssssssssssssssss" />
@@ -685,26 +690,27 @@
        id="rect918"
        width="40"
        height="37"
-       x="8"
-       y="-79"
-       ry="3.6473224" />
+       x="8.03125"
+       y="-79.34375"
+       ry="3.6473224"
+       rx="3.6473224" />
     <circle
        style="opacity:1;fill:#a8a8a8;fill-opacity:1;stroke:none;stroke-width:10;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path903"
-       cx="28"
-       cy="-22"
+       cx="28.03125"
+       cy="-22.34375"
        r="12" />
     <circle
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:10;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path905"
-       cx="50.5"
-       cy="-15.5"
+       cx="50.53125"
+       cy="-15.84375"
        r="5.5" />
     <circle
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:10;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path907"
-       cx="50.5"
-       cy="-28.5"
+       cx="50.53125"
+       cy="-28.84375"
        r="5.5" />
   </g>
 </svg>

@@ -14,7 +14,7 @@
    height="128"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.92.2 2405546, 2018-03-11"
+   inkscape:version="0.92.4 5da689c313, 2019-01-14"
    version="1.0"
    sodipodi:docname="H4.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
@@ -601,8 +601,8 @@
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
      inkscape:zoom="8"
-     inkscape:cx="44.63845"
-     inkscape:cy="42.803"
+     inkscape:cx="82.232563"
+     inkscape:cy="73.917162"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -644,6 +644,11 @@
         <dc:title>HERO4</dc:title>
         <cc:license
            rdf:resource="http://creativecommons.org/licenses/by-sa/4.0/" />
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Emeric Grange</dc:title>
+          </cc:Agent>
+        </dc:creator>
       </cc:Work>
       <cc:License
          rdf:about="http://creativecommons.org/licenses/by-sa/4.0/">
@@ -670,7 +675,7 @@
      transform="translate(0,106)">
     <path
        style="display:inline;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:7.93701458"
-       d="m 7.96875,-85.65625 c -4,0 -7,3 -7,7 v 74 c 0,4 3,7 7,7 h 112 c 4,0 7,-3 7,-6.9995789 V -78.65625 c 0,-4 -3,-7 -7,-7 z"
+       d="m 8,-86 c -4,0 -8,4 -8,8 v 72 c 0,4 4,8 8,8 h 112 c 4,0 8,-4.0004211 8,-8 v -72 c 0,-4 -4,-8 -8,-8 z"
        id="rect2915"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="csssssscc" />

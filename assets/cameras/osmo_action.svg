@@ -16,11 +16,11 @@
    sodipodi:version="0.32"
    inkscape:version="0.92.4 5da689c313, 2019-01-14"
    version="1.0"
-   sodipodi:docname="osmos.svg"
+   sodipodi:docname="osmo_action.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    style="display:inline">
   <title
-     id="title902">HERO6</title>
+     id="title98">osmo_action</title>
   <defs
      id="defs4">
     <linearGradient
@@ -639,9 +639,14 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title>HERO6</dc:title>
+        <dc:title>osmo_action</dc:title>
         <cc:license
            rdf:resource="http://creativecommons.org/licenses/by-sa/4.0/" />
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Emeric Grange</dc:title>
+          </cc:Agent>
+        </dc:creator>
       </cc:Work>
       <cc:License
          rdf:about="http://creativecommons.org/licenses/by-sa/4.0/">

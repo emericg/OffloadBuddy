@@ -14,7 +14,7 @@
    height="128"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.92.2 2405546, 2018-03-11"
+   inkscape:version="0.92.4 5da689c313, 2019-01-14"
    version="1.0"
    sodipodi:docname="fusion.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
@@ -600,14 +600,14 @@
      borderopacity="1"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.6600005"
-     inkscape:cx="75.632137"
-     inkscape:cy="105.45651"
+     inkscape:zoom="16.008899"
+     inkscape:cx="88.186111"
+     inkscape:cy="25.774287"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:showpageshadow="false"
-     showguides="false"
+     showguides="true"
      inkscape:guide-bbox="true"
      inkscape:window-width="1920"
      inkscape:window-height="1056"
@@ -617,10 +617,12 @@
      inkscape:pagecheckerboard="true"
      borderlayer="true"
      inkscape:snap-bbox="true"
-     inkscape:snap-nodes="false"
-     inkscape:snap-others="false"
+     inkscape:snap-nodes="true"
+     inkscape:snap-others="true"
      inkscape:snap-grids="true"
-     inkscape:bbox-nodes="true">
+     inkscape:bbox-nodes="true"
+     inkscape:snap-object-midpoints="true"
+     inkscape:snap-center="true">
     <sodipodi:guide
        orientation="1,0"
        position="0,112"
@@ -643,7 +645,7 @@
        inkscape:locked="false" />
     <sodipodi:guide
        orientation="0,1"
-       position="60.863576,64.084768"
+       position="33,72"
        id="guide2391"
        inkscape:locked="false" />
     <inkscape:grid
@@ -653,6 +655,11 @@
        enabled="true"
        empspacing="8"
        snapvisiblegridlinesonly="true" />
+    <sodipodi:guide
+       position="48,96"
+       orientation="1,0"
+       id="guide100"
+       inkscape:locked="false" />
   </sodipodi:namedview>
   <metadata
      id="metadata7">
@@ -662,9 +669,14 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title>fusion</dc:title>
+        <dc:title>Fusion</dc:title>
         <cc:license
            rdf:resource="http://creativecommons.org/licenses/by-sa/4.0/" />
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Emeric Grange</dc:title>
+          </cc:Agent>
+        </dc:creator>
       </cc:Work>
       <cc:License
          rdf:about="http://creativecommons.org/licenses/by-sa/4.0/">
@@ -697,13 +709,13 @@
        sodipodi:nodetypes="csssssscc" />
     <path
        style="display:inline;fill:#a8a8a8;fill-opacity:1;stroke:none;stroke-width:11.80797958"
-       d="M 19.807985,-97.992168 C 13.26636,-97.992168 8,-93.47496 8,-87.660183 l 0.024464,37.448768 h 40.542871 l 7.910805,11.866206 h 39.643217 l 7.910803,-11.866206 h 15.73241 l 0.23513,-37.448768 c 0.0365,-5.814664 -5.26636,-10.331985 -11.80796,-10.331985 -54.955822,-0.0176 -37.2311,0 -88.383755,0 z"
+       d="M 19.807985,-97.992168 C 13.26636,-97.992168 8,-93.47496 8,-87.660183 V -50 h 40 l 9,12 h 40 l 7,-12 15.76457,-0.211415 0.23513,-37.448768 c 0.0365,-5.814664 -5.26636,-10.331985 -11.80796,-10.331985 -54.955822,-0.0176 -37.2311,0 -88.383755,0 z"
        id="rect2915-6"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="csccccccscc" />
     <path
        style="display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:4.88987398"
-       d="m 76.304377,-90 c 5.883036,0 11.209133,2.384574 15.064472,6.239908 3.85534,3.855338 6.239919,9.181428 6.239919,15.064474 0,5.883041 -2.384579,11.209138 -6.239919,15.064472 -3.855339,3.855332 -9.181436,6.239908 -15.064472,6.239908 -5.883043,0 -11.209133,-2.384576 -15.064473,-6.239908 C 57.384566,-57.48648 55,-62.812577 55,-68.695618 55,-74.578664 57.384566,-79.904754 61.239904,-83.760092 65.095244,-87.615426 70.421334,-90 76.304377,-90 Z m 0,10.652193 c -2.94152,0 -5.60457,1.192288 -7.532228,3.119952 -1.927678,1.927668 -3.119967,4.590717 -3.119967,7.532237 0,2.941519 1.192289,5.604567 3.119967,7.532234 1.927658,1.927667 4.590708,3.119954 7.532228,3.119954 2.941516,0 5.604565,-1.192287 7.532242,-3.119955 1.927662,-1.927666 3.119953,-4.590714 3.119953,-7.532233 0,-2.94152 -1.192291,-5.604569 -3.119953,-7.532237 -1.927677,-1.927664 -4.590726,-3.119952 -7.532242,-3.119952 z"
+       d="m 76.499996,-90 c 5.937054,0 11.312055,2.40647 15.202794,6.297204 3.89074,3.890738 6.297214,9.265732 6.297214,15.202797 0,5.93706 -2.406474,11.312062 -6.297214,15.202796 C 87.812051,-49.406471 82.43705,-47 76.499996,-47 c -5.937061,0 -11.312055,-2.406471 -15.202795,-6.297203 -3.890738,-3.890734 -6.297199,-9.265736 -6.297199,-15.202796 0,-5.937065 2.406461,-11.312059 6.297199,-15.202797 C 65.187941,-87.59353 70.562935,-90 76.499996,-90 Z m 0,10.750003 c -2.968529,0 -5.656031,1.203235 -7.601389,3.148599 -1.945378,1.945368 -3.148614,4.63287 -3.148614,7.601399 0,2.968528 1.203236,5.656029 3.148614,7.601396 1.945358,1.945367 4.63286,3.148602 7.601389,3.148602 2.968525,0 5.656026,-1.203235 7.601403,-3.148603 1.945362,-1.945366 3.1486,-4.632867 3.1486,-7.601395 0,-2.968529 -1.203238,-5.656031 -3.1486,-7.601399 -1.945377,-1.945364 -4.632878,-3.148599 -7.601403,-3.148599 z"
        id="rect2915-3"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="ssssssssssssssssss" />
@@ -711,7 +723,7 @@
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.34025025;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect931"
        width="32"
-       height="33.23077"
+       height="32"
        x="15.999999"
        y="-90"
        rx="3.62903"
