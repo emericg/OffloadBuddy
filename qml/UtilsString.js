@@ -1,5 +1,5 @@
 // UtilsString.js
-// Version 0.4
+// Version 0.5
 .pragma library
 
 function padNumberInternal(n) {
@@ -214,21 +214,21 @@ function orientationToString(orientation) {
 
     if (orientation > 0) {
         if (orientation === 1)
-            text = qsTr("Mirror");
+            text = qsTr("Mirrored");
         else if (orientation === 2)
-            text = qsTr("Flip");
+            text = qsTr("Flipped");
         else if (orientation === 3)
-            text = qsTr("Rotate 180°");
+            text = qsTr("Rotated 180°");
         else if (orientation === 4)
-            text = qsTr("Rotate 90°");
+            text = qsTr("Rotated 90°");
         else if (orientation === 5)
-            text = qsTr("Mirror and rotate 90°");
+            text = qsTr("Mirrored and rotated 90°");
         else if (orientation === 6)
-            text = qsTr("Flip and rotate 90°");
+            text = qsTr("Flipped and rotated 90°");
         else if (orientation === 7)
-            text = qsTr("Rotate 270°");
+            text = qsTr("Rotated 270°");
     } else {
-        text = qsTr("No transformation");
+        //text = qsTr("No transformation");
     }
 
     return text;

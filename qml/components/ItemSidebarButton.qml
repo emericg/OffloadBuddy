@@ -25,6 +25,7 @@ Item {
         if (myDevice) {
             title = modelData.model
             source = "qrc:/menus/device.svg"
+            //source = getDevicePicture(modelData.model)
             myDeviceClicked.connect(sideBar.myDeviceClicked)
         }
     }

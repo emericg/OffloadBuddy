@@ -255,11 +255,10 @@ Item {
 
             Text {
                 id: labelMaxSpeed
-                text: qsTr("Max speed:")
-                anchors.left: speedAVG.right
+                text: qsTr("max:")
+                anchors.left: speedMIN.right
                 anchors.leftMargin: 32
                 anchors.verticalCenter: labelAvgSpeed.verticalCenter
-                font.bold: true
                 font.pixelSize: Theme.fontSizeContentText
                 color: Theme.colorText
             }
@@ -271,7 +270,6 @@ Item {
                 anchors.topMargin: 8
                 anchors.left: parent.left
                 anchors.leftMargin: 8
-                font.bold: true
                 font.pixelSize: Theme.fontSizeContentText
                 color: Theme.colorText
             }
@@ -279,11 +277,10 @@ Item {
             Text {
                 id: labelMaxAltitude
                 y: 32
-                text: qsTr("Max altitude:")
-                anchors.left: altiAVG.right
+                text: qsTr("max:")
+                anchors.left: altiMIN.right
                 anchors.leftMargin: 32
                 anchors.verticalCenter: labelAvgAltitude.verticalCenter
-                font.bold: true
                 font.pixelSize: Theme.fontSizeContentText
                 color: Theme.colorText
             }
@@ -295,29 +292,26 @@ Item {
                 anchors.topMargin: 8
                 anchors.left: parent.left
                 anchors.leftMargin: 8
-                font.bold: true
                 font.pixelSize: Theme.fontSizeContentText
                 color: Theme.colorText
             }
 
             Text {
                 id: labelMinSpeed
-                text: qsTr("Min speed:")
-                anchors.left: speedMAX.right
+                text: qsTr("min:")
+                anchors.left: speedAVG.right
                 anchors.leftMargin: 32
                 anchors.verticalCenter: labelAvgSpeed.verticalCenter
-                font.bold: true
                 font.pixelSize: Theme.fontSizeContentText
                 color: Theme.colorText
             }
 
             Text {
                 id: labelMinAltitude
-                text: qsTr("Min altitude:")
-                anchors.left: altiMAX.right
+                text: qsTr("min:")
+                anchors.left: altiAVG.right
                 anchors.leftMargin: 32
                 anchors.verticalCenter: labelAvgAltitude.verticalCenter
-                font.bold: true
                 font.pixelSize: Theme.fontSizeContentText
                 color: Theme.colorText
             }
@@ -327,7 +321,6 @@ Item {
                 text: qsTr("Max G force:")
                 anchors.top: labelAvgAltitude.bottom
                 anchors.topMargin: 8
-                font.bold: true
                 anchors.left: parent.left
                 anchors.leftMargin: 8
                 font.pixelSize: Theme.fontSizeContentText
@@ -337,6 +330,7 @@ Item {
             Text {
                 id: speedAVG
                 text: qsTr("AVG")
+                font.bold: true
                 anchors.verticalCenter: labelAvgSpeed.verticalCenter
                 anchors.left: labelAvgSpeed.right
                 anchors.leftMargin: 12
@@ -347,6 +341,7 @@ Item {
             Text {
                 id: speedMAX
                 text: qsTr("MAX")
+                font.bold: true
                 anchors.left: labelMaxSpeed.right
                 anchors.leftMargin: 12
                 anchors.verticalCenter: labelMaxSpeed.verticalCenter
@@ -357,6 +352,7 @@ Item {
             Text {
                 id: speedMIN
                 text: qsTr("MIN")
+                font.bold: true
                 anchors.left: labelMinSpeed.right
                 anchors.leftMargin: 12
                 anchors.verticalCenter: labelMinSpeed.verticalCenter
@@ -367,6 +363,7 @@ Item {
             Text {
                 id: altiAVG
                 text: qsTr("AVG")
+                font.bold: true
                 anchors.left: labelAvgAltitude.right
                 anchors.leftMargin: 12
                 anchors.verticalCenter: labelAvgAltitude.verticalCenter
@@ -377,6 +374,7 @@ Item {
             Text {
                 id: altiMAX
                 text: qsTr("MAX")
+                font.bold: true
                 anchors.left: labelMaxAltitude.right
                 anchors.leftMargin: 12
                 anchors.verticalCenter: labelMaxAltitude.verticalCenter
@@ -387,6 +385,7 @@ Item {
             Text {
                 id: altiMIN
                 text: qsTr("MIN")
+                font.bold: true
                 anchors.left: labelMinAltitude.right
                 anchors.leftMargin: 12
                 anchors.verticalCenter: labelMinAltitude.verticalCenter
@@ -397,6 +396,7 @@ Item {
             Text {
                 id: acclMAX
                 text: qsTr("MAX")
+                font.bold: true
                 anchors.left: labelGforce.right
                 anchors.leftMargin: 12
                 anchors.verticalCenter: labelGforce.verticalCenter
@@ -406,12 +406,11 @@ Item {
 
             Text {
                 id: labelDuration
-                text: qsTr("Duration:")
+                text: qsTr("Track duration:")
                 anchors.top: parent.top
                 anchors.topMargin: 8
                 anchors.left: parent.left
                 anchors.leftMargin: 8
-                font.bold: true
                 font.pixelSize: Theme.fontSizeContentText
                 color: Theme.colorText
             }
@@ -419,6 +418,7 @@ Item {
             Text {
                 id: trackDuration
                 text: "text"
+                font.bold: true
                 anchors.left: labelDuration.right
                 anchors.leftMargin: 12
                 anchors.verticalCenter: labelDuration.verticalCenter
@@ -429,11 +429,9 @@ Item {
             Text {
                 id: labelDistance
                 text: qsTr("Distance traveled:")
-                anchors.top: labelDuration.bottom
-                anchors.topMargin: 8
-                anchors.left: parent.left
-                anchors.leftMargin: 8
-                font.bold: true
+                anchors.verticalCenter: labelDuration.verticalCenter
+                anchors.left: trackDuration.right
+                anchors.leftMargin: 32
                 font.pixelSize: Theme.fontSizeContentText
                 color: Theme.colorText
             }
@@ -441,6 +439,7 @@ Item {
             Text {
                 id: trackDistance
                 text: "text"
+                font.bold: true
                 anchors.left: labelDistance.right
                 anchors.leftMargin: 12
                 anchors.verticalCenter: labelDistance.verticalCenter
@@ -463,11 +462,13 @@ Item {
 
             ChartView {
                 id: speedsGraph
-                width: 302
-                height: 173
+                width: 480
+                height: 240
 
                 title: "Speed (" + UtilsString.speedUnit(settingsManager.appunits) + ")"
                 titleColor: Theme.colorText
+                titleFont.pixelSize: 14
+                titleFont.bold: true
 
                 antialiasing: true
                 //legend.visible: false // Needs Qt 5.10+ / Qt Charts 2.3
@@ -478,69 +479,74 @@ Item {
                     id: speedsSeries
                     axisX: ValueAxis { id: axisSpeedX0; visible: false; gridVisible: false; }
                     axisY: ValueAxis { id: axisSpeedY0; visible: true; gridVisible: true;
-                                       labelsFont.pixelSize: 12; labelsColor: Theme.colorText; labelFormat: "%0.1f";
+                                       labelsFont.pixelSize: 10; labelsColor: Theme.colorText; labelFormat: "%0.1f";
                                        gridLineColor: Theme.colorText; }
                 }
             }
 
             ChartView {
                 id: altiGraph
-                width: 304
-                height: 173
+                width: 480
+                height: 240
 
                 title: "Altitude (" + UtilsString.altitudeUnit(settingsManager.appunits) + ")"
                 titleColor: Theme.colorText
+                titleFont.pixelSize: 14
+                titleFont.bold: true
                 backgroundColor: "transparent"
                 antialiasing: true
 
                 LineSeries {
                     id: altiSeries
-                    color: "green"
                     axisX: ValueAxis { id: axisAltiX0; visible: false; gridVisible: false; }
                     axisY: ValueAxis { id: axisAltiY0; visible: true; gridVisible: true;
-                                       labelsFont.pixelSize: 12; labelsColor: Theme.colorText; labelFormat: "%i";
+                                       labelsFont.pixelSize: 10; labelsColor: Theme.colorText; labelFormat: "%i";
                                        gridLineColor: Theme.colorText; }
                 }
             }
 
             ChartView {
                 id: acclGraph
-                width: 302
-                height: 173
+                width: 480
+                height: 240
 
                 title: "Acceleration"
                 titleColor: Theme.colorText
+                titleFont.pixelSize: 14
+                titleFont.bold: true
                 backgroundColor: "transparent"
                 antialiasing: true
 
                 ValueAxis { id: axisAcclX0; visible: false; gridVisible: false; }
                 ValueAxis { id: axisAcclY0; visible: true; gridVisible: true;
-                            labelsFont.pixelSize: 12; labelsColor: Theme.colorText; labelFormat: "%i";
+                            labelsFont.pixelSize: 10; labelsColor: Theme.colorText; labelFormat: "%i";
                             gridLineColor: Theme.colorText; }
 
-                SplineSeries { id: acclX; axisX: axisAcclX0; axisY: axisAcclY0; }
-                SplineSeries { id: acclY; axisX: axisAcclX0; axisY: axisAcclY0; }
-                SplineSeries { id: acclZ; axisX: axisAcclX0; axisY: axisAcclY0; }
+                LineSeries { id: acclX; axisX: axisAcclX0; axisY: axisAcclY0; }
+                LineSeries { id: acclY; axisX: axisAcclX0; axisY: axisAcclY0; }
+                LineSeries { id: acclZ; axisX: axisAcclX0; axisY: axisAcclY0; }
             }
 
             ChartView {
                 id: gyroGraph
-                width: 302
-                height: 173
+                width: 480
+                height: 240
 
                 title: "Gyroscope"
                 titleColor: Theme.colorText
+                titleFont.pixelSize: 14
+                titleFont.bold: true
                 backgroundColor: "transparent"
                 antialiasing: true
 
                 ValueAxis { id: axisGyroX0; visible: false; gridVisible: false; }
                 ValueAxis { id: axisGyroY0; visible: true; gridVisible: true;
-                            labelsFont.pixelSize: 12; labelsColor: Theme.colorText; labelFormat: "%i";
+                            labelsFont.pixelSize: 10; labelsColor: Theme.colorText; labelFormat: "%i";
                             gridLineColor: Theme.colorText; }
 
-                LineSeries { id: gyroX; axisX: axisGyroX0; axisY: axisGyroY0; color: "red"; }
-                LineSeries { id: gyroY; axisX: axisGyroX0; axisY: axisGyroY0; color: "green"; }
-                LineSeries { id: gyroZ; axisX: axisGyroX0; axisY: axisGyroY0; color: "blue"; }
+                LineSeries { id: gyroX; axisX: axisGyroX0; axisY: axisGyroY0; }
+                LineSeries { id: gyroY; axisX: axisGyroX0; axisY: axisGyroY0; }
+                LineSeries { id: gyroZ; axisX: axisGyroX0; axisY: axisGyroY0; }
             }
         }
     }

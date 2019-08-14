@@ -213,6 +213,7 @@ Item {
                 height: 40
                 source: "qrc:/icons_material/baseline-insert_chart-24px.svg"
                 visible: (shot && shot.hasGPMF && shot.hasGPS)
+                onClicked: contentOverview.openTelemetryPopup()
             }
 
             ItemImageButton {

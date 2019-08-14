@@ -27,6 +27,7 @@
         <file>PopupExit.qml</file>
         <file>PopupEncodePicture.qml</file>
         <file>PopupEncodeVideo.qml</file>
+        <file>PopupExtractTelemetry.qml</file>
         <file>MediaDetailMap.qml</file>
         <file>MediaDetailTelemetry.qml</file>
         <file>MediaDetailOverview.qml</file>

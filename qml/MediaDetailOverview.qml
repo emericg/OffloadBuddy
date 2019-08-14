@@ -126,6 +126,9 @@ Item {
             popupEncodePicture.open()
         }
     }
+    function openTelemetryPopup() {
+        popupTelemetry.open()
+    }
     function openDeletePopup() {
         popupDelete.open()
     }
@@ -138,6 +141,16 @@ Item {
 
     PopupDate {
         id: popupDate
+        x: (applicationWindow.width / 2) - (popupDate.width / 2) - (applicationSidebar.width)
+        y: (applicationWindow.height / 2) - (popupDate.height / 2) - (rectangleHeader.height)
+
+        onConfirmed: {
+            //
+        }
+    }
+
+    PopupExtractTelemetry {
+        id: popupTelemetry
         x: (applicationWindow.width / 2) - (popupDate.width / 2) - (applicationSidebar.width)
         y: (applicationWindow.height / 2) - (popupDate.height / 2) - (rectangleHeader.height)
 

@@ -7,7 +7,7 @@ import "UtilsString.js" as UtilsString
 import "UtilsPath.js" as UtilsPath
 
 Popup {
-    id: popupEncodePicture
+    id: popupExtractTelemetry
     width: 640
     height: 400
     padding: 24
@@ -35,7 +35,7 @@ Popup {
             anchors.left: parent.left
             anchors.right: parent.right
 
-            text: qsTr("(Re)Encode picture")
+            text: qsTr("Extract telemetry")
             font.pixelSize: 24
             color: Theme.colorText
         }
@@ -80,70 +80,42 @@ Popup {
                     spacing: 16
 
                     RadioButtonThemed {
-                        id: rbPNG
-                        text: "PNG"
+                        id: rbGPX
+                        text: "GPX"
                         anchors.verticalCenter: parent.verticalCenter
                     }
                     RadioButtonThemed {
-                        id: rbJPEG
-                        text: "JPEG"
+                        id: rbIGC
+                        text: "IGC"
                         checked: true
                         anchors.verticalCenter: parent.verticalCenter
                     }
                     RadioButtonThemed {
-                        id: rbWEBP
-                        text: "WebP"
+                        id: rbKML
+                        text: "KML"
                         anchors.verticalCenter: parent.verticalCenter
-                    }
-                    RadioButtonThemed {
-                        id: rbAVIF
-                        text: "AVIF"
-                        anchors.verticalCenter: parent.verticalCenter
-                        visible: false
-                    }
-                    RadioButtonThemed {
-                        id: rbHEIF
-                        text: "HEIF"
-                        anchors.verticalCenter: parent.verticalCenter
-                        visible: false
                     }
                 }
             }
 
             Item {
+                id: element2
                 height: 48
                 anchors.right: parent.right
                 anchors.rightMargin: 0
                 anchors.left: parent.left
                 anchors.leftMargin: 0
 
-                visible: !rbPNG.checked
-
-                Text {
-                    id: element2
-                    width: 128
+                Switch {
+                    id: switchEGM96
+                    y: 152
+                    text: qsTr("EGM96 correction")
+                    anchors.left: parent.left
+                    anchors.leftMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
-
-                    text: qsTr("Quality")
-                    font.pixelSize: 16
-                    color: Theme.colorSubText
-                }
-
-                SliderThemed {
-                    id: slider
-                    anchors.left: element2.right
-                    anchors.leftMargin: 16
-                    anchors.right: parent.right
-                    anchors.rightMargin: 0
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    from: 5
-                    to: 10
-                    stepSize: 1
-                    value: 8
                 }
             }
-/*
+            /*
             Rectangle { // separator
                 height: 1
                 anchors.right: parent.right
@@ -194,7 +166,7 @@ Popup {
 
                         for (var child in settingsManager.directoriesList) {
                             if (settingsManager.directoriesList[child].available &&
-                                settingsManager.directoriesList[child].directoryContent !== 1)
+                                    settingsManager.directoriesList[child].directoryContent !== 1)
                                 cbDestinations.append( { "text": settingsManager.directoriesList[child].directoryPath } )
                         }
                         cbDestinations.append( { "text": qsTr("Select path manually") } )
@@ -280,20 +252,33 @@ Popup {
                 text: qsTr("Cancel")
                 primaryColor: Theme.colorPrimary
                 onClicked: {
-                    popupEncodePicture.close();
+                    popupExtractTelemetry.close();
                 }
             }
             ButtonImageWireframe {
-                id: buttonEncode
+                id: buttonExtractTelemetry
                 anchors.verticalCenter: parent.verticalCenter
 
-                text: qsTr("Encode")
-                source: "qrc:/icons_material/baseline-memory-24px.svg"
+                text: qsTr("Extract telemetry")
+                source: "qrc:/icons_material/baseline-insert_chart-24px.svg"
+                fullColor: true
+                primaryColor: Theme.colorSecondary
+                onClicked: {
+                    popupExtractTelemetry.confirmed();
+                    popupExtractTelemetry.close();
+                }
+            }
+            ButtonImageWireframe {
+                id: buttonExtractGps
+                anchors.verticalCenter: parent.verticalCenter
+
+                text: qsTr("Extract GPS")
+                source: "qrc:/icons_material/baseline-map-24px.svg"
                 fullColor: true
                 primaryColor: Theme.colorPrimary
                 onClicked: {
-                    popupEncodePicture.confirmed();
-                    popupEncodePicture.close();
+                    popupExtractTelemetry.confirmed();
+                    popupExtractTelemetry.close();
                 }
             }
         }
