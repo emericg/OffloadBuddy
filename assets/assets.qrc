@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
+        <file>icons_material/baseline-archive-24px.svg</file>
         <file>icons_material/baseline-aspect_ratio-24px.svg</file>
         <file>icons_material/baseline-autorenew-24px.svg</file>
         <file>icons_material/baseline-av_timer-24px.svg</file>

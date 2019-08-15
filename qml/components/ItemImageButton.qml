@@ -48,9 +48,7 @@ Item {
         color: parent.highlightColor
         opacity: background ? 0.66 : 0
 
-        Behavior on opacity {
-            OpacityAnimator { duration: 333 }
-        }
+        Behavior on opacity { OpacityAnimator { duration: 333 } }
     }
 
     Image {

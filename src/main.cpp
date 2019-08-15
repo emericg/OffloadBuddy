@@ -72,6 +72,9 @@ void print_build_infos()
 #ifdef ENABLE_LIBEXIF
     qDebug() << "- libexif enabled";
 #endif
+#ifdef ENABLE_EXIV2
+    qDebug() << "- exiv2 enabled";
+#endif
 #ifdef ENABLE_MINIVIDEO
     int mv_maj, mv_min, mv_patch;
     minivideo_get_infos(&mv_maj, &mv_min, &mv_patch, nullptr, nullptr, nullptr);

@@ -7,9 +7,9 @@ import "UtilsString.js" as UtilsString
 import "UtilsPath.js" as UtilsPath
 
 Popup {
-    id: popupExtractTelemetry
+    id: popupOffload
     width: 640
-    height: 400
+    height: 480
     padding: 24
 
     signal confirmed()
@@ -35,7 +35,7 @@ Popup {
             anchors.left: parent.left
             anchors.right: parent.right
 
-            text: qsTr("Extract telemetry")
+            text: qsTr("Offloading")
             font.pixelSize: 24
             color: Theme.colorText
         }
@@ -53,8 +53,8 @@ Popup {
             anchors.left: parent.left
             anchors.leftMargin: 0
 
+
             Item {
-                id: element1
                 height: 48
                 anchors.right: parent.right
                 anchors.rightMargin: 0
@@ -62,44 +62,34 @@ Popup {
                 anchors.leftMargin: 0
 
                 Text {
-                    id: rectangleFormat
+                    id: labelIgnoreJunk
                     width: 128
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: qsTr("Format")
+                    text: qsTr("Ignore LRVs and THM files")
                     font.pixelSize: 16
                     color: Theme.colorSubText
-                }
-
-                Row {
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: rectangleFormat.right
-                    anchors.leftMargin: 16
-                    anchors.right: parent.right
-                    anchors.rightMargin: 0
-                    spacing: 16
-
-                    RadioButtonThemed {
-                        id: rbGPX
-                        text: "GPX"
-                        checked: true
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-                    RadioButtonThemed {
-                        id: rbIGC
-                        text: "IGC"
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-                    RadioButtonThemed {
-                        id: rbKML
-                        text: "KML"
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
                 }
             }
 
             Item {
-                id: element2
+                height: 48
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.rightMargin: 0
+                anchors.leftMargin: 0
+
+                Text {
+                    id: labelIgnoreAudio
+                    width: 128
+                    color: Theme.colorSubText
+                    text: qsTr("Ignore HD Audio files")
+                    anchors.verticalCenter: parent.verticalCenter
+                    font.pixelSize: 16
+                }
+            }
+
+            Item {
                 height: 48
                 anchors.right: parent.right
                 anchors.rightMargin: 0
@@ -107,32 +97,50 @@ Popup {
                 anchors.leftMargin: 0
 
                 Text {
-                    id: element3
+                    id: labelMerge
                     width: 128
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: qsTr("EGM96 correction")
+                    text: qsTr("Merge chaptered files")
                     font.pixelSize: 16
                     color: Theme.colorSubText
                 }
+            }
 
-                SwitchThemed {
-                    id: switchEGM96
-                    anchors.left: element3.right
-                    anchors.leftMargin: 16
+            Item {
+                height: 48
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.leftMargin: 0
+                anchors.rightMargin: 0
+
+                Text {
+                    id: labelMetadatas
+                    width: 128
+                    color: Theme.colorSubText
+                    text: qsTr("Extract metadatas")
                     anchors.verticalCenter: parent.verticalCenter
-
-                    checked: true
+                    font.pixelSize: 16
                 }
             }
-/*
-            Rectangle { // separator
-                height: 1
-                anchors.right: parent.right
+
+            Item {
+                height: 48
                 anchors.left: parent.left
-                color: "#f4f4f4"
+                anchors.right: parent.right
+                anchors.rightMargin: 0
+                anchors.leftMargin: 0
+
+                Text {
+                    id: labelDelete
+                    width: 128
+                    color: Theme.colorSubText
+                    text: qsTr("Delete offloaded files")
+                    anchors.verticalCenter: parent.verticalCenter
+                    font.pixelSize: 16
+                }
             }
-*/
+
             Item { // spacer
                 height: 16
                 anchors.right: parent.right
@@ -176,7 +184,7 @@ Popup {
 
                         for (var child in settingsManager.directoriesList) {
                             if (settingsManager.directoriesList[child].available &&
-                                    settingsManager.directoriesList[child].directoryContent !== 1)
+                                settingsManager.directoriesList[child].directoryContent !== 1)
                                 cbDestinations.append( { "text": settingsManager.directoriesList[child].directoryPath } )
                         }
                         cbDestinations.append( { "text": qsTr("Select path manually") } )
@@ -249,7 +257,7 @@ Popup {
         Row {
             id: rowButtons
             height: 40
-            spacing: 12
+            spacing: 24
             anchors.right: parent.right
             anchors.rightMargin: 0
             anchors.bottom: parent.bottom
@@ -262,33 +270,20 @@ Popup {
                 text: qsTr("Cancel")
                 primaryColor: Theme.colorPrimary
                 onClicked: {
-                    popupExtractTelemetry.close();
+                    popupOffload.close();
                 }
             }
             ButtonImageWireframe {
-                id: buttonExtractTelemetry
+                id: buttonOffload
                 anchors.verticalCenter: parent.verticalCenter
 
-                text: qsTr("Extract telemetry")
-                source: "qrc:/icons_material/baseline-insert_chart-24px.svg"
-                fullColor: true
-                primaryColor: Theme.colorSecondary
-                onClicked: {
-                    popupExtractTelemetry.confirmed();
-                    popupExtractTelemetry.close();
-                }
-            }
-            ButtonImageWireframe {
-                id: buttonExtractGps
-                anchors.verticalCenter: parent.verticalCenter
-
-                text: qsTr("Extract GPS")
-                source: "qrc:/icons_material/baseline-map-24px.svg"
+                text: qsTr("Offload")
+                source: "qrc:/icons_material/baseline-archive-24px.svg"
                 fullColor: true
                 primaryColor: Theme.colorPrimary
                 onClicked: {
-                    popupExtractTelemetry.confirmed();
-                    popupExtractTelemetry.close();
+                    popupOffload.confirmed();
+                    popupOffload.close();
                 }
             }
         }

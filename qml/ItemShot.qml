@@ -106,7 +106,7 @@ Rectangle {
         }
     }
 
-    function openShot() {
+    function openShot(mouse) {
         if (mouse.button === Qt.LeftButton) {
             if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== Shared.STORAGE_MTP)) {
                 // Show the "shot details" screen
@@ -128,47 +128,46 @@ Rectangle {
     }
 
     function openMenu() {
-        if (!actionMenu.visible) {
-            var folder = true
-            var copy = true
-            var merge = false
-            var encode = false
-            var telemetry_gpmf = false
-            var telemetry_gps = false
-            var remove = true
+        var folder = true
+        var copy = true
+        var merge = false
+        var encode = true
+        var telemetry_gpmf = false
+        var telemetry_gps = false
+        var remove = true
 
-            if (shot.fileType === Shared.FILE_VIDEO) { // all kind of videos
-                if (shot.chapters > 1)
-                    merge = true
-                encode = true
+        if (shot.fileType === Shared.FILE_VIDEO) { // all kind of videos
+            if (shot.chapters > 1)
+                merge = true
 
-                if (shot.hasGPMF)
-                    telemetry_gpmf = true
-                if (shot.hasGPS)
-                    telemetry_gps = true
-            } else if (shot.shotType > Shared.SHOT_PICTURE) { // only multi picture
-                encode = true
+            if (shot.hasGPMF)
+                telemetry_gpmf = true
+            if (shot.hasGPS)
+                telemetry_gps = true
+        } else if (shot.fileType === Shared.FILE_PICTURE) { // all kind of photos
+            //
+            if (shot.shotType > Shared.SHOT_PICTURE) { // only multi picture
+                //
             }
-            if (shotDevice) {
-                if (shotDevice.deviceStorage === Shared.STORAGE_MTP) {
-                    folder = false
-                    merge = false
-                    encode = false
-                }
-                if (shotDevice.readOnly)
-                    remove = false
-            } else {
-                copy = false
-            }
-
-            actionMenu.setMenuButtons(folder, copy, merge, encode, telemetry_gpmf, telemetry_gps, remove)
-
-            actionMenu.visible = true
-            actionMenu.x = mouseAreaOutsideView.mouseX + 8
-            actionMenu.y = mouseAreaOutsideView.mouseY + 8
-        } else {
-            actionMenu.visible = false
         }
+
+        if (shotDevice) {
+            if (shotDevice.deviceStorage === Shared.STORAGE_MTP) {
+                folder = false
+                merge = false
+                encode = false
+            }
+            if (shotDevice.readOnly)
+                remove = false
+        } else {
+            copy = false
+        }
+
+        actionMenu.setMenuButtons(folder, copy, merge, encode, telemetry_gpmf, telemetry_gps, remove)
+
+        actionMenu.visible = true
+        actionMenu.x = mouseAreaOutsideView.mouseX + 8
+        actionMenu.y = mouseAreaOutsideView.mouseY + 8
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -434,66 +433,14 @@ Rectangle {
             }
 
             // action menu
-            if (mouse.button === Qt.RightButton && !mediaGrid.selectionMode) {
-                //console.log("ItemShot::onClicked::Qt.RightButton")
-
-                var folder = true
-                var copy = true
-                var merge = false
-                var encode = false
-                var telemetry_gpmf = false
-                var telemetry_gps = false
-                var remove = true
-
-                if (shot.fileType === Shared.FILE_VIDEO) {
-                    if (shot.chapters > 1)
-                        merge = true
-                    encode = true
-                } else if (shot.shotType > Shared.SHOT_PICTURE) {
-                    encode = true
-                }
-                if (shot.hasGPMF)
-                    telemetry_gpmf = true
-                if (shot.hasGPS)
-                    telemetry_gps = true
-                if (shotDevice) {
-                    if (shotDevice.deviceStorage === Shared.STORAGE_MTP) {
-                        folder = false
-                        merge = false
-                        encode = false
-                    }
-                    if (shotDevice.readOnly)
-                        remove = false
-                } else {
-                    copy = false
-                }
-
-                actionMenu.setMenuButtons(folder, copy, merge, encode, telemetry_gpmf, telemetry_gps, remove)
-
-                actionMenu.visible = true
-                actionMenu.x = mouseAreaOutsideView.mouseX + 8
-                actionMenu.y = mouseAreaOutsideView.mouseY + 8
-            } else {
+            if (mouse.button === Qt.RightButton && !mediaGrid.selectionMode)
+                openMenu()
+            else
                 actionMenu.visible = false
-            }
         }
         onDoubleClicked: {
             //console.log("ItemShot::onDoubleClicked")
-
-            if (mouse.button === Qt.LeftButton) {
-                if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== Shared.STORAGE_MTP)) {
-                    // Show the "shot details" screen
-                    actionMenu.visible = false
-                    shotsView.currentIndex = index
-
-                    shot.getMetadatasFromVideoGPMF();
-
-                    if (shotDevice)
-                        screenDevice.state = "stateMediaDetails"
-                    else
-                        screenLibrary.state = "stateMediaDetails"
-                }
-            }
+            openShot(mouse)
         }
         onPressAndHold: {
             //console.log("ItemShot::onPressAndHold")

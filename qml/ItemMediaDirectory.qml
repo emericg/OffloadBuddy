@@ -161,6 +161,7 @@ Rectangle {
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
 
+        highlightMode: "color"
         highlightColor: Theme.colorError
         source: "qrc:/icons_material/baseline-delete-24px.svg"
         onClicked: settingsManager.deleteDirectory(textField_path.text)

@@ -25,6 +25,7 @@
         <file>PopupDate.qml</file>
         <file>PopupDelete.qml</file>
         <file>PopupExit.qml</file>
+        <file>PopupOffload.qml</file>
         <file>PopupEncodePicture.qml</file>
         <file>PopupEncodeVideo.qml</file>
         <file>PopupExtractTelemetry.qml</file>
@@ -49,6 +50,7 @@
         <file alias="ComboBoxThemed.qml">ThemedComponents/ComboBoxThemed.qml</file>
         <file alias="ProgressBarThemed.qml">ThemedComponents/ProgressBarThemed.qml</file>
         <file alias="RadioButtonThemed.qml">ThemedComponents/RadioButtonThemed.qml</file>
+        <file alias="SwitchThemed.qml">ThemedComponents/SwitchThemed.qml</file>
         <file alias="SliderThemed.qml">ThemedComponents/SliderThemed.qml</file>
         <file alias="TextFieldThemed.qml">ThemedComponents/TextFieldThemed.qml</file>
     </qresource>

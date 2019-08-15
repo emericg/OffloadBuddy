@@ -2,6 +2,7 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 
 import com.offloadbuddy.theme 1.0
+import com.offloadbuddy.shared 1.0
 import "UtilsString.js" as UtilsString
 
 Item {
@@ -96,10 +97,11 @@ Item {
         id: popupEncodeVideo
         x: (applicationWindow.width / 2) - (popupEncodeVideo.width / 2) - (applicationSidebar.width / 2)
         y: (applicationWindow.height / 2) - (popupEncodeVideo.height / 2)
-
-        onConfirmed: {
-            //
-        }
+    }
+    PopupEncodePicture {
+        id: popupEncodePicture
+        x: (applicationWindow.width / 2) - (popupEncodePicture.width / 2) - (applicationSidebar.width / 2)
+        y: (applicationWindow.height / 2) - (popupEncodePicture.height / 2)
     }
 
     PopupDelete {
@@ -266,10 +268,10 @@ Item {
                 displayText: qsTr("Show ALL media directories")
                 visible: (cbMediaDirectories.count > 2)
 
-                Component.onCompleted: updateDirectories()
+                Component.onCompleted: comboBox_directories.updateDirectories()
                 Connections {
                     target: settingsManager
-                    onDirectoriesUpdated: updateDirectories()
+                    onDirectoriesUpdated: comboBox_directories.updateDirectories()
                 }
 
                 function updateDirectories() {
@@ -472,14 +474,20 @@ Item {
             onVisibleChanged: shotsView.interactive = !shotsView.interactive
         }
         function actionMenuTriggered(index) {
-            //console.log("actionMenuTriggered(" + index + ") selected shot: '" + shotsview.currentItem.shot.name + "'")
+            //console.log("actionMenuTriggered(" + index + ") selected shot: '" + shotsView.currentItem.shot.name + "'")
 
             if (index === 0) {
                 selectedItem.shot.openFolder()
             }
             if (index === 3) {
-                popupEncodeVideo.updateEncodePanel(selectedItem.shot)
-                popupEncodeVideo.open()
+                if (selectedItem.shot.fileType === Shared.FILE_VIDEO ||
+                    selectedItem.shot.shotType > Shared.SHOT_PICTURE) {
+                    popupEncodeVideo.updateEncodePanel(selectedItem.shot)
+                    popupEncodeVideo.open()
+                } else if (selectedItem.shot.fileType === Shared.FILE_PICTURE) {
+                    //popupEncodePicture.updateEncodePanel(selectedItem.shot)
+                    popupEncodePicture.open()
+                }
             }
             if (index === 16) {
                 var indexes = []

@@ -348,11 +348,16 @@ QVariant ShotModel::data(const QModelIndex & index, int role) const
             return shot->getDate();
         if (role == PointerRole)
             return QVariant::fromValue(shot);
-        if (role == PathRole && !shot->getFiles().empty())
-            return shot->getFiles().at(0)->filesystemPath;
+        if (role == PathRole)
+        {
+            if (!shot->getFiles().empty())
+                return shot->getFiles().at(0)->filesystemPath;
+            else
+                qWarning() << "shot" << shot->getName() << "has no files (?)";
+        }
 
         // If we made it here...
-        qDebug() << "Ooops missing ShotModel role !!!";
+        qWarning() << "Ooops missing ShotModel role !!! " << role;
     }
 
     return QVariant();
