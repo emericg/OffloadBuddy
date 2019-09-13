@@ -1,5 +1,4 @@
 language: cpp
-dist: xenial
 
 os:
   - linux
@@ -31,6 +30,7 @@ before_script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then source /opt/qt512/bin/qt512-env.sh; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export PATH=$PATH:/usr/local/opt/qt/bin:/usr/local/bin; fi
   - cd contribs/; python3 contribs.py; cd ..;
+  - qmake --version
   - qmake DEFINES+=USE_CONTRIBS CONFIG+=release PREFIX=/usr
 
 script:

@@ -7,7 +7,7 @@ OffloadBuddy
 
 
 OffloadBuddy is a multimedia offloading software with a few tricks up his sleeve!
-It's designed to remove the hassle of handling and transferring the many videos and pictures file from your devices like action cameras, regular cameras and smartphones...
+It's designed to remove the hassle of handling and transferring the many videos and pictures files from your devices like action cameras, regular cameras and smartphones...
 
 Works on Linux, macOS and Windows!
 
@@ -76,7 +76,7 @@ You can browse the code on the GitHub page, submit patches and pull requests! Yo
 
 ### Users
 
-You can help us find and report bugs, propose new features, help with translation, documentation and more! Visit the Issues section of the GitHub page to start!
+You can help us find and report bugs, suggest new features, help with translation, documentation and more! Visit the Issues section of the GitHub page to start!
 
 ## License
 

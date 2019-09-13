@@ -99,127 +99,66 @@ ApplicationWindow {
             id: screenAbout
         }
 
+        ScreenComponents {
+            anchors.fill: parent
+            id: screenComponents
+        }
+
         state: "library"
         states: [
             State {
                 name: "library"
-
-                PropertyChanges {
-                    target: screenLibrary
-                    visible: true
-                }
-                PropertyChanges {
-                    target: screenDevice
-                    visible: false
-                }
-                PropertyChanges {
-                    target: screenJobs
-                    visible: false
-                }
-                PropertyChanges {
-                    target: screenSettings
-                    visible: false
-                }
-                PropertyChanges {
-                    target: screenAbout
-                    visible: false
-                }
+                PropertyChanges { target: screenLibrary; visible: true; }
+                PropertyChanges { target: screenDevice; visible: false; }
+                PropertyChanges { target: screenJobs; visible: false; }
+                PropertyChanges { target: screenSettings; visible: false; }
+                PropertyChanges { target: screenAbout; visible: false; }
+                PropertyChanges { target: screenComponents; visible: false; }
             },
             State {
                 name: "device"
-
-                PropertyChanges {
-                    target: screenLibrary
-                    visible: false
-                }
-                PropertyChanges {
-                    target: screenDevice
-                    visible: true
-                }
-                PropertyChanges {
-                    target: screenJobs
-                    visible: false
-                }
-                PropertyChanges {
-                    target: screenSettings
-                    visible: false
-                }
-                PropertyChanges {
-                    target: screenAbout
-                    visible: false
-                }
+                PropertyChanges { target: screenLibrary; visible: false; }
+                PropertyChanges { target: screenDevice; visible: true; }
+                PropertyChanges { target: screenJobs; visible: false; }
+                PropertyChanges { target: screenSettings; visible: false; }
+                PropertyChanges { target: screenAbout; visible: false; }
+                PropertyChanges { target: screenComponents; visible: false; }
             },
             State {
                 name: "jobs"
-
-                PropertyChanges {
-                    target: screenLibrary
-                    visible: false
-                }
-                PropertyChanges {
-                    target: screenDevice
-                    visible: false
-                }
-                PropertyChanges {
-                    target: screenJobs
-                    visible: true
-                }
-                PropertyChanges {
-                    target: screenSettings
-                    visible: false
-                }
-                PropertyChanges {
-                    target: screenAbout
-                    visible: false
-                }
+                PropertyChanges { target: screenLibrary; visible: false; }
+                PropertyChanges { target: screenDevice; visible: false; }
+                PropertyChanges { target: screenJobs; visible: true; }
+                PropertyChanges { target: screenSettings; visible: false; }
+                PropertyChanges { target: screenAbout; visible: false; }
+                PropertyChanges { target: screenComponents; visible: false; }
             },
             State {
                 name: "settings"
-
-                PropertyChanges {
-                    target: screenLibrary
-                    visible: false
-                }
-                PropertyChanges {
-                    target: screenDevice
-                    visible: false
-                }
-                PropertyChanges {
-                    target: screenJobs
-                    visible: false
-                }
-                PropertyChanges {
-                    target: screenSettings
-                    visible: true
-                }
-                PropertyChanges {
-                    target: screenAbout
-                    visible: false
-                }
+                PropertyChanges { target: screenLibrary; visible: false; }
+                PropertyChanges { target: screenDevice; visible: false; }
+                PropertyChanges { target: screenJobs; visible: false; }
+                PropertyChanges { target: screenSettings; visible: true; }
+                PropertyChanges { target: screenAbout; visible: false; }
+                PropertyChanges { target: screenComponents; visible: false; }
             },
             State {
                 name: "about"
-
-                PropertyChanges {
-                    target: screenLibrary
-                    visible: false
-                }
-                PropertyChanges {
-                    target: screenDevice
-                    visible: false
-                }
-                PropertyChanges {
-                    target: screenJobs
-                    visible: false
-                }
-                PropertyChanges {
-                    target: screenSettings
-                    visible: false
-                }
-                PropertyChanges {
-                    target: screenAbout
-                    visible: true
-                }
+                PropertyChanges { target: screenLibrary; visible: false; }
+                PropertyChanges { target: screenDevice; visible: false; }
+                PropertyChanges { target: screenJobs; visible: false; }
+                PropertyChanges { target: screenSettings; visible: false; }
+                PropertyChanges { target: screenAbout; visible: true; }
+                PropertyChanges { target: screenComponents; visible: false; }
+            },
+            State {
+                name: "components"
+                PropertyChanges { target: screenLibrary; visible: false; }
+                PropertyChanges { target: screenDevice; visible: false; }
+                PropertyChanges { target: screenJobs; visible: false; }
+                PropertyChanges { target: screenSettings; visible: false; }
+                PropertyChanges { target: screenAbout; visible: false; }
+                PropertyChanges { target: screenComponents; visible: true; }
             }
         ]
     }

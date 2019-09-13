@@ -67,9 +67,9 @@ Item {
             }
         } else if (event.key === Qt.Key_Backspace) {
             event.accepted = true;
-            if (applicationContent.state == "library")
+            if (applicationContent.state === "library")
                 screenLibrary.state = "stateMediaGrid";
-            else if (applicationContent.state == "device")
+            else if (applicationContent.state === "device")
                 screenDevice.state = "stateMediaGrid";
         } else if (event.key === Qt.Key_Delete) {
             event.accepted = true;
@@ -249,7 +249,7 @@ Item {
                 menuText: qsTr("Overview")
                 source: "qrc:/icons_material/baseline-aspect_ratio-24px.svg"
                 onClicked: screenMedia.state = "overview"
-                selected: screenMedia.state === "overview"
+                selected: (screenMedia.state === "overview")
             }
             ItemMenuButton {
                 id: menuTelemetry
@@ -258,7 +258,7 @@ Item {
                 menuText: qsTr("Telemetry")
                 source: "qrc:/icons_material/baseline-insert_chart-24px.svg"
                 onClicked: screenMedia.state = "metadatas"
-                selected: screenMedia.state === "metadatas"
+                selected: (screenMedia.state === "metadatas")
                 visible: (shot && shot.hasGPMF && shot.hasGPS)
             }
             ItemMenuButton {
@@ -268,7 +268,7 @@ Item {
                 menuText: qsTr("Map")
                 source: "qrc:/icons_material/baseline-map-24px.svg"
                 onClicked: screenMedia.state = "map"
-                selected: screenMedia.state === "map"
+                selected: (screenMedia.state === "map")
                 visible: (shot && shot.fileType === Shared.FILE_PICTURE && shot.latitude !== 0.0)
             }
         }
