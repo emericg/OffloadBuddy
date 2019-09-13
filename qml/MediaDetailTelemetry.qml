@@ -480,7 +480,7 @@ Item {
                     axisX: ValueAxis { id: axisSpeedX0; visible: false; gridVisible: false; }
                     axisY: ValueAxis { id: axisSpeedY0; visible: true; gridVisible: true;
                                        labelsFont.pixelSize: 10; labelsColor: Theme.colorText; labelFormat: "%0.1f";
-                                       gridLineColor: Theme.colorText; }
+                                       /*gridLineColor: Theme.colorSeparator;*/ }
                 }
             }
 
@@ -501,7 +501,7 @@ Item {
                     axisX: ValueAxis { id: axisAltiX0; visible: false; gridVisible: false; }
                     axisY: ValueAxis { id: axisAltiY0; visible: true; gridVisible: true;
                                        labelsFont.pixelSize: 10; labelsColor: Theme.colorText; labelFormat: "%i";
-                                       gridLineColor: Theme.colorText; }
+                                       /*gridLineColor: Theme.colorSeparator;*/ }
                 }
             }
 
@@ -520,7 +520,7 @@ Item {
                 ValueAxis { id: axisAcclX0; visible: false; gridVisible: false; }
                 ValueAxis { id: axisAcclY0; visible: true; gridVisible: true;
                             labelsFont.pixelSize: 10; labelsColor: Theme.colorText; labelFormat: "%i";
-                            gridLineColor: Theme.colorText; }
+                            /*gridLineColor: Theme.colorSeparator;*/ }
 
                 LineSeries { id: acclX; axisX: axisAcclX0; axisY: axisAcclY0; }
                 LineSeries { id: acclY; axisX: axisAcclX0; axisY: axisAcclY0; }
@@ -542,7 +542,7 @@ Item {
                 ValueAxis { id: axisGyroX0; visible: false; gridVisible: false; }
                 ValueAxis { id: axisGyroY0; visible: true; gridVisible: true;
                             labelsFont.pixelSize: 10; labelsColor: Theme.colorText; labelFormat: "%i";
-                            gridLineColor: Theme.colorText; }
+                            /*gridLineColor: Theme.colorSeparator;*/ }
 
                 LineSeries { id: gyroX; axisX: axisGyroX0; axisY: axisGyroY0; }
                 LineSeries { id: gyroY; axisX: axisGyroX0; axisY: axisGyroY0; }

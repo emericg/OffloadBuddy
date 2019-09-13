@@ -199,10 +199,11 @@ Item {
 
                 model: ListModel {
                     id: cbAppTheme
-                    ListElement { text: "PLAIN AND BORING"; }
+                    ListElement { text: "LIGHT AND WARM"; }
                     ListElement { text: "DARK AND SPOOKY"; }
+                    ListElement { text: "PLAIN AND BORING"; }
                     ListElement { text: "BLOOD AND TEARS"; }
-                    ListElement { text: "MIGHTY KITTEN"; }
+                    ListElement { text: "MIGHTY KITTENS"; }
                 }
 
                 Component.onCompleted: {

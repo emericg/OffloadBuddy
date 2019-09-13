@@ -58,7 +58,7 @@ Popup {
                     popupExit.close();
                 }
             }
-            ButtonImageWireframe {
+            ButtonWireframeImage {
                 id: buttonExit
                 anchors.verticalCenter: parent.verticalCenter
 

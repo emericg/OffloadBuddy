@@ -9,30 +9,34 @@ RadioButton {
     checked: false
 
     indicator: Rectangle {
-        implicitWidth: 26
-        implicitHeight: 26
+        implicitWidth: 24
+        implicitHeight: 24
         x: control.leftPadding
         y: parent.height / 2 - height / 2
-        radius: 13
-        border.color: control.down ? Theme.colorSecondary : Theme.colorButton
+
+        radius: 12
+        color: Theme.colorComponentBackground
+        border.color: control.down ? Theme.colorPrimary : Theme.colorComponentBorder
 
         Rectangle {
             width: 14
             height: 14
-            x: 6
-            y: 6
-            radius: 8
-            color: control.down ? Theme.colorButton : Theme.colorSecondary
+            x: 5
+            y: 5
+
+            radius: 7
             visible: control.checked
+            color: control.down ? Theme.colorPrimary : Theme.colorPrimary
         }
     }
 
     contentItem: Text {
+        leftPadding: control.indicator.width + control.spacing
+        verticalAlignment: Text.AlignVCenter
+
         text: control.text
         font: control.font
+        color: Theme.colorSubText
         opacity: enabled ? 1.0 : 0.3
-        color: control.down ? Theme.colorText : Theme.colorText
-        verticalAlignment: Text.AlignVCenter
-        leftPadding: control.indicator.width + control.spacing
     }
 }

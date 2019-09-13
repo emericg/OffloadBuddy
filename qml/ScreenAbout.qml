@@ -99,7 +99,13 @@ Item {
             text: qsTr("Visit us on <html><style type=\"text/css\"></style><a href=\"https://github.com/emericg/OffloadBuddy\">GitHub</a></html>!")
             color: Theme.colorText
             font.pixelSize: 18
-            onLinkActivated: Qt.openUrlExternally("https://github.com/emericg/OffloadBuddy")
+            onLinkActivated: Qt.openUrlExternally(link)
+
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.NoButton
+                cursorShape: parent.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
+            }
         }
 
         ImageSvg {
@@ -137,7 +143,13 @@ Item {
             text: qsTr("Report bugs or post feature request on our <html><style type=\"text/css\"></style><a href=\"https://github.com/emericg/OffloadBuddy/issues\">issue tracker</a></html>!")
             color: Theme.colorText
             font.pixelSize: 18
-            onLinkActivated: Qt.openUrlExternally("https://github.com/emericg/OffloadBuddy/issues")
+            onLinkActivated: Qt.openUrlExternally(link)
+
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.NoButton
+                cursorShape: parent.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
+            }
         }
     }
 }

@@ -93,7 +93,7 @@ Popup {
                     popupDelete.close();
                 }
             }
-            ButtonImageWireframe {
+            ButtonWireframeImage {
                 id: buttonConfirm
                 anchors.verticalCenter: parent.verticalCenter
 

@@ -116,7 +116,7 @@ Popup {
                     color: Theme.colorSubText
                 }
 
-                SwitchThemed {
+                SwitchThemedDesktop {
                     id: switchEGM96
                     anchors.left: element3.right
                     anchors.leftMargin: 16
@@ -265,7 +265,7 @@ Popup {
                     popupExtractTelemetry.close();
                 }
             }
-            ButtonImageWireframe {
+            ButtonWireframeImage {
                 id: buttonExtractTelemetry
                 anchors.verticalCenter: parent.verticalCenter
 
@@ -278,7 +278,7 @@ Popup {
                     popupExtractTelemetry.close();
                 }
             }
-            ButtonImageWireframe {
+            ButtonWireframeImage {
                 id: buttonExtractGps
                 anchors.verticalCenter: parent.verticalCenter
 

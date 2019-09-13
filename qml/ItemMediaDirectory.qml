@@ -13,33 +13,41 @@ Rectangle {
     height: 48
     radius: 8
 
-    property var directory
-    property bool directoryAvailable: directory.available
-    property bool directorySpace: directory.spaceAvailable
+    property var directory: null
 
     Component.onCompleted: updateInfos()
-    onDirectoryAvailableChanged: updateInfos()
-    onDirectorySpaceChanged: updateInfos()
+    Connections {
+        target: directory
+        onAvailableChanged:updateInfos()
+        onSpaceAvailableChanged: updateInfos()
+    }
+    Connections {
+        target: settingsManager
+        onAppthemeChanged: updateInfos()
+    }
 
     function updateInfos() {
-        if (directory.available === false)
-            itemMediaDirectory.color = Theme.colorSomethingsWrong
-        else
-            itemMediaDirectory.color = "transparent"
+        itemMediaDirectory.color = (directory.available) ? "transparent" : Theme.colorWarning
 
         deviceSpaceText.text = UtilsString.bytesToString_short(directory.spaceUsed) + " used / "
                                 + UtilsString.bytesToString_short(directory.spaceAvailable) + " available / "
                                 + UtilsString.bytesToString_short(directory.spaceTotal) + " total"
+
+        progressBar.value = directory.storageLevel
     }
+
+    ////////
 
     TextFieldThemed {
         id: textField_path
-        width: 400
+        width: 512
         height: 40
-        text: directory.directoryPath
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
-        anchors.leftMargin: 0
+        anchors.leftMargin: 6 //directory.available ? 0 : 6
+
+        readOnly: !directory.available
+        text: directory.directoryPath
 
         FileDialog {
             id: fileDialogChange
@@ -75,6 +83,7 @@ Rectangle {
             anchors.rightMargin: 2
             anchors.verticalCenter: parent.verticalCenter
 
+            embedded: true
             //imageSource: "qrc:/icons_material/outline-folder-24px.svg"
             text: qsTr("change")
             onClicked: {

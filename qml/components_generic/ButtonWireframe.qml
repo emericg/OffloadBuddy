@@ -5,7 +5,6 @@ import com.offloadbuddy.theme 1.0
 
 Button {
     id: control
-    implicitWidth: 128
     implicitHeight: 40
 
     property bool fullColor: false
@@ -28,10 +27,11 @@ Button {
     background: Rectangle {
         implicitWidth: 128
         implicitHeight: 40
-        radius: 4
+
+        radius: Theme.radiusComponent
         border.width: 1
         border.color: fullColor ? control.primaryColor : control.secondaryColor
         opacity: enabled ? (control.down ? 0.5 : 1.0) : 0.3
-        color: fullColor ? control.primaryColor : "transparent"
+        color: fullColor ? control.primaryColor : Theme.colorComponentBackground
     }
 }

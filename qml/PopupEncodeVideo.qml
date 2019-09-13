@@ -582,7 +582,7 @@ Popup {
                     popupEncodeVideo.close();
                 }
             }
-            ButtonImageWireframe {
+            ButtonWireframeImage {
                 id: buttonEncode
                 anchors.verticalCenter: parent.verticalCenter
 

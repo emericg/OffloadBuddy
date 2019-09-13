@@ -12,7 +12,7 @@ CheckBox {
         implicitHeight: 26
         x: control.leftPadding
         y: parent.height / 2 - height / 2
-        border.color: control.down ? Theme.colorSecondary : Theme.colorButton
+        border.color: control.down ? Theme.colorSecondary : Theme.colorComponent
 
         Rectangle {
             width: 14

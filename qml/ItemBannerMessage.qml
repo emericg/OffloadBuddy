@@ -8,7 +8,7 @@ Rectangle {
     id: banner
     z: 1
     height: 56
-    color: Theme.colorInfoBanner
+    color: Theme.colorActionbar
 
     anchors.left: parent.left
     anchors.leftMargin: 0
@@ -36,7 +36,7 @@ Rectangle {
         anchors.leftMargin: 16
         anchors.verticalCenter: parent.verticalCenter
         text: "banner text"
-        color: Theme.colorInfoBannerText
+        color: Theme.colorActionbarContent
         font.pixelSize: Theme.fontSizeBannerText
     }
     ItemImageButton {

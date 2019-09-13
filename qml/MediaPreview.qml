@@ -487,7 +487,7 @@ Rectangle {
                 id: soundline
                 width: 128
                 anchors.left: buttonSound.right
-                anchors.leftMargin: 8
+                anchors.leftMargin: 0
                 anchors.verticalCenter: parent.verticalCenter
 
                 from: 0
@@ -499,7 +499,7 @@ Rectangle {
             Text {
                 id: timecode
                 anchors.left: soundline.right
-                anchors.leftMargin: 12
+                anchors.leftMargin: 24
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: "0:12 / 0:24"
@@ -578,7 +578,7 @@ Rectangle {
             Rectangle {
                 id: timeline
                 height: 40
-                color: Theme.colorButton
+                color: Theme.colorComponent
                 anchors.left: buttonStartCut.right
                 anchors.leftMargin: 0
                 anchors.right: buttonStopCut.left

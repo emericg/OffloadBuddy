@@ -273,7 +273,7 @@ Popup {
                     popupOffload.close();
                 }
             }
-            ButtonImageWireframe {
+            ButtonWireframeImage {
                 id: buttonOffload
                 anchors.verticalCenter: parent.verticalCenter
 

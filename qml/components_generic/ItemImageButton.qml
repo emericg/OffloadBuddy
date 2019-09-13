@@ -15,7 +15,10 @@ Item {
 
     // settings
     property string highlightMode: "circle" // circle / color / off
-    property string highlightColor: Theme.colorForeground
+
+    property string highlightColor: Theme.colorPrimary
+    property string backgroundColor: Theme.colorForeground
+
     property string iconColor: Theme.colorIcon
     property bool background: false
     property string tooltipText: ""
@@ -27,17 +30,14 @@ Item {
         anchors.fill: parent
         onClicked: itemImageButton.clicked()
 
-        hoverEnabled: highlightMode !== "off"
+        hoverEnabled: (highlightMode !== "off")
         onEntered: {
+            bgRect.opacity = (highlightMode === "circle") ? 1 : 0.50
             itemImageButton.highlighted = true
-            if (highlightMode === "circle")
-                bgRect.opacity = 1
         }
         onExited: {
+            bgRect.opacity = background ? 0.50 : 0
             itemImageButton.highlighted = false
-
-            if (highlightMode === "circle")
-                bgRect.opacity = background ? 0.66 : 0
         }
     }
 
@@ -45,8 +45,9 @@ Item {
         id: bgRect
         anchors.fill: parent
         radius: 50
-        color: parent.highlightColor
-        opacity: background ? 0.66 : 0
+        color: parent.backgroundColor
+        opacity: background ? 0.50 : 0
+        visible: (highlightMode === "circle" || background)
 
         Behavior on opacity { OpacityAnimator { duration: 333 } }
     }

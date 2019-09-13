@@ -418,7 +418,7 @@ Popup {
                     popupDate.close();
                 }
             }
-            ButtonImageWireframe {
+            ButtonWireframeImage {
                 id: buttonExit
                 anchors.verticalCenter: parent.verticalCenter
 

@@ -5,23 +5,24 @@ import com.offloadbuddy.theme 1.0
 
 ProgressBar {
     id: control
-    implicitHeight: 8
+    value: 0.5
+    height: 6
 
     // theming
     background: Rectangle {
         implicitWidth: 200
-        implicitHeight: control.height
-        color: Theme.colorProgressBarBg
+        implicitHeight: 6
+        color: Theme.colorForeground
     }
 
     contentItem: Item {
         implicitWidth: 200
-        implicitHeight: control.height
+        implicitHeight: 6
 
         Rectangle {
             width: control.visualPosition * parent.width
-            height: control.height
-            color: Theme.colorSecondary
+            height: parent.height
+            color: Theme.colorPrimary
         }
     }
 }

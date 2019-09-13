@@ -36,7 +36,7 @@ Item {
             color: Theme.colorHeaderContent
         }
 
-        ButtonImageThemed {
+        ButtonImage {
             id: buttonClear
             width: 256
             anchors.right: parent.right

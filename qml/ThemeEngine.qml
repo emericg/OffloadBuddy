@@ -3,45 +3,81 @@ import QtQuick 2.9
 
 Item {
     enum ThemeNames {
-        PLAIN_AND_BORING = 0,
+        LIGHT_AND_WARM = 0,
         DARK_AND_SPOOKY = 1,
-        BLOOD_AND_TEARS = 2,
-        MIGHTY_KITTEN = 3,
+        PLAIN_AND_BORING = 2,
+        BLOOD_AND_TEARS = 3,
+        MIGHTY_KITTENS = 4,
 
         LAST_THEME
     }
     property int currentTheme: -1
 
-    // Colors
+    ////////////////
+
+    // Header
+    property string colorHeader
+    property string colorHeaderContent
+    property string colorHeaderStatusbar
+
+    // Sidebar
     property string colorSidebar
     property string colorSidebarContent
 
-    property string colorHeader
-    property string colorHeaderContent
+    // Action bar
+    property string colorActionbar
+    property string colorActionbarContent
 
-    property string colorInfoBanner: "#fed859" // TODO
-    property string colorInfoBannerText: "#ffffff" // TODO
+    // Tablet bar
+    property string colorTabletmenu
+    property string colorTabletmenuContent
+    property string colorTabletmenuHighlight
 
+    // Content
     property string colorBackground
     property string colorForeground
-    property string colorText
-    property string colorSubText
-    property string colorIcon
+
     property string colorPrimary
     property string colorSecondary
     property string colorWarning
     property string colorError
 
-    // Qt Quick controls theming // DEPRECATED?
-    property string colorButton: "#e0e0e0"
-    property string colorButtonText: "#000000"
-    property string colorButtonDown: "#bdbdbd"
-    property string colorButtonHover: "#E4E4E4"
-    property string colorProgressBar: "#46b0f4"
-    property string colorProgressBarBg: "#E4E4E4"
+    property string colorText
+    property string colorSubText
+    property string colorIcon
+    property string colorSeparator
+    property string colorHighContrast
+
+    // Qt Quick controls & theming
+    property string colorComponent
+    property string colorComponentContent
+    property string colorComponentBorder
+    property string colorComponentHover
+    property string colorComponentDown
+    property string colorComponentBackground
+    property int radiusComponent: 3
+
+    ////////////////
 
     // Selector (arrow or bar)
     property string selector: "arrow"
+
+    ////////////////
+
+    // Fixed palette
+    readonly property string colorMaterialBlue: "#2196f3"
+    readonly property string colorMaterialIndigo: "#3f51b5"
+    readonly property string colorMaterialPurple: "#9c27b0"
+    readonly property string colorMaterialDeepPurple: "#673ab7"
+    readonly property string colorMaterialRed: "#f44336"
+    readonly property string colorMaterialLightGreen: "#8bc34a"
+
+    readonly property string colorMaterialDarkGrey: "#e0e0e0"
+    readonly property string colorMaterialGrey: "#eeeeee"
+    readonly property string colorMaterialLightGrey: "#fafafa"
+    readonly property string colorMaterialThisblue: "#448aff"
+
+    ////////////////
 
     // Fonts (sizes in pixel)
     readonly property int fontSizeHeaderTitle: 30
@@ -49,6 +85,8 @@ Item {
     readonly property int fontSizeBannerText: 20
     readonly property int fontSizeContentTitle: 24
     readonly property int fontSizeContentText: 15
+
+    ////////////////////////////////////////////////////////////////////////////
 
     function loadTheme(themeIndex) {
 
@@ -59,75 +97,126 @@ Item {
 
         currentTheme = themeIndex
 
-        if (themeIndex === ThemeEngine.PLAIN_AND_BORING) {
+        if (themeIndex === ThemeEngine.LIGHT_AND_WARM) {
 
-            // "PLAIN AND BORING"
+            // "LIGHT AND WARM"
 
-            colorSidebar =          "#607D8B"
-            colorSidebarContent =   "#ffffff"
+            colorHeader =           "#CBCBCB"
+            colorHeaderContent =    "#353637"
 
-            colorHeader =           "#E9E9E9"
-            colorHeaderContent =    "#353637" // sub: "#000000"
+            colorSidebar =          "#2e2e2e"
+            colorSidebarContent =   "white"
 
-            colorBackground =       "#FFFFFF"
-            colorForeground =       "#F0F0F0"
+            colorActionbar =        "#fed859"
+            colorActionbarContent = "white"
 
-            colorText =             "#000000"
-            colorSubText =          "#606060"
-            colorIcon =             "#000000"
+            colorBackground =       "#EEEEEE"
+            colorForeground =       "#E0E0E0"
 
-            colorPrimary =          "#03A9F4"
-            colorSecondary =        "#3ae374"
-            colorWarning =          "#FFC107"
-            colorError =            "#FF5722"
+            colorText =             "#222222"
+            colorSubText =          "#111111"
+            colorIcon =             "#333333"
+            colorSeparator =        "#E4E4E4"
+            colorHighContrast =     "black"
 
-            colorButton =           "#D9D9D9"
-            colorButtonDown =       "#c1c1c1"
-            colorButtonText =       "#000000"
-            colorButtonHover =      "#E0E0E0"
-            colorProgressBarBg =    "#E0E0E0"
+            colorPrimary =          "#ffca28"
+            colorSecondary =        "#ffdd28"
+            colorWarning =          "#ffac00"
+            colorError =            "#dc322f"
 
-            selector =              "arrow"
+            colorComponent =        "#DBDBDB"
+            colorComponentContent = "black"
+            colorComponentBorder =  "#c1c1c1"
+            colorComponentHover =   "#c1c1c1"
+            colorComponentDown =    "#E4E4E4"
+            colorComponentBackground = "#FAFAFA"
+
+            selector = "arrow"
 
         } else if (themeIndex === ThemeEngine.DARK_AND_SPOOKY) {
 
             // "DARK AND SPOOKY"
 
-            colorSidebar =          "#2e2e2e"
-            colorSidebarContent =   "#ffffff"
-
             colorHeader =           "#282828"
-            colorHeaderContent =    "#a0a0a0" // sub: "#a89a9a"
+            colorHeaderContent =    "#b0b0b0"
 
-            colorBackground =       "#444444"
+            colorSidebar =          "#2e2e2e"
+            colorSidebarContent =   "white"
+
+            colorActionbar =        "#fed859"
+            colorActionbarContent = "white"
+
+            colorBackground =       "#404040"
             colorForeground =       "#555555"
 
-            colorText =             "#ffffff"
-            colorSubText =          "#dddddd"
-            colorIcon =             "#ffffff"
+            colorText =             "white"
+            colorSubText =          "#EEEEEE"
+            colorIcon =             "white"
+            colorSeparator =        "#E4E4E4"
+            colorHighContrast =     "white"
 
-            colorPrimary =          "#ff9f1a"
-            colorSecondary =        "#c56cf0"
-            colorWarning =          "#ee2b57"
-            colorError =            "#ee2b57"
+            colorPrimary =          "#ff9f1a" // indigo: "#6C5ECD"
+            colorSecondary =        "#ffb81a" // indigo2: "#9388e5"
+            colorWarning =          "#ca41f4"
+            colorError =            "#dc322f"
 
-            colorButton =           "#555555"
-            colorButtonDown =       "#333333"
-            colorButtonText =       "#ffffff"
-            colorButtonHover =      "#E4E4E4"
-            colorProgressBarBg =    "#E4E4E4"
+            colorComponent =        "#555555"
+            colorComponentContent = "white"
+            colorComponentBorder =  "#666666"
+            colorComponentHover =   "#333333"
+            colorComponentDown =    "#333333"
+            colorComponentBackground = "#505050"
 
-            selector =              "arrow"
+            selector = "arrow"
+
+        } else if (themeIndex === ThemeEngine.PLAIN_AND_BORING) {
+
+            // "PLAIN AND BORING"
+
+            colorHeader =           "#E9E9E9"
+            colorHeaderContent =    "#353637"
+
+            colorSidebar =          "#607D8B"
+            colorSidebarContent =   "white"
+
+            colorActionbar =        "#fed859"
+            colorActionbarContent = "white"
+
+            colorBackground =       "white"
+            colorForeground =       "#F0F0F0"
+
+            colorText =             "black"
+            colorSubText =          "#606060"
+            colorIcon =             "black"
+            colorSeparator =        "#E0E0E0"
+            colorHighContrast =     "black"
+
+            colorPrimary =          "#03A9F4"
+            colorSecondary =        "#03c1f4"
+            colorWarning =          "#FFC107"
+            colorError =            "#FF5722"
+
+            colorComponent =        "#D9D9D9"
+            colorComponentContent = "black"
+            colorComponentBorder =  "#E0E0E0"
+            colorComponentHover =   "#E0E0E0"
+            colorComponentDown =    "#c1c1c1"
+            colorComponentBackground = "#FEFEFE"
+
+            selector = "arrow"
 
         } else if (themeIndex === ThemeEngine.BLOOD_AND_TEARS) {
 
             // "BLOOD AND TEARS"
 
+            colorHeader =           "#141414"
+            colorHeaderContent =    "white"
+
             colorSidebar =          "#181818"
             colorSidebarContent =   "#bebebe"
 
-            colorHeader =           "#141414"
-            colorHeaderContent =    "#ffffff" // sub: "#a3a3a0"
+            colorActionbar =        "#fed859"
+            colorActionbarContent = "white"
 
             colorBackground =       "#222222"
             colorForeground =       "#333333"
@@ -135,23 +224,26 @@ Item {
             colorText =             "#d2d2d2"
             colorSubText =          "#a3a3a0"
             colorIcon =             "#a3a3a0"
+            colorSeparator =        "#E4E4E4"
+            colorHighContrast =     "white"
 
             colorPrimary =          "#009ee2"
-            colorSecondary =        "#009ee2"
+            colorSecondary =        "#00bee2"
             colorWarning =          "#fa6871"
             colorError =            "#FFDB63"
 
-            colorButton =           "#ffffff"
-            colorButtonText =       "#000000"
-            colorButtonDown =       "#bdbdbd"
-            colorButtonHover =      "#E4E4E4"
-            colorProgressBarBg =    "#E4E4E4"
+            colorComponent =        "white"
+            colorComponentContent = "black"
+            colorComponentBorder =  "#E4E4E4"
+            colorComponentHover =   "#bdbdbd"
+            colorComponentDown =    "#BBBBBB"
+            colorComponentBackground = "#EEEEEE"
 
             selector =              "bar"
 
-        } else if (themeIndex === ThemeEngine.MIGHTY_KITTEN) {
+        } else if (themeIndex === ThemeEngine.MIGHTY_KITTENS) {
 
-            // "MIGHTY KITTEN"
+            // "MIGHTY KITTENS"
             // pink "#ED65A7"
             // pink bright "#E21F8D"
             // purple "#944197"
@@ -161,13 +253,13 @@ Item {
             // light blue "#44C5DA"
             // yellow "#FCCD13" "#FFE400"
 
+            colorHeader =           "#F99DCE"
+            colorHeaderContent =    "#E31D8D"
+
             colorSidebar =          "#E31D8D"
             colorSidebarContent =   "#FFFBE2"
 
-            colorHeader =           "#F99DCE"
-            colorHeaderContent =    "#E31D8D" // sub: "#8F4594"
-
-            colorBackground =       "#ffffff"
+            colorBackground =       "white"
             colorForeground =       "#ffe7f3"
 
             colorText =             "#944197"
@@ -175,17 +267,20 @@ Item {
             colorIcon =             "#944197"
 
             colorPrimary =          "#FFE400"
-            colorSecondary =        "#FFE400"
+            colorSecondary =        "#fff600"
             colorWarning =          "#944197"
             colorError =            "#FFDB63"
+            colorSeparator =        "#E4E4E4"
+            colorHighContrast =     "red"
 
-            colorButton =           "#FF3BB3"
-            colorButtonText =       "#ffffff"
-            colorButtonDown =       "#F592C1"
-            colorButtonHover =      "#E4E4E4"
-            colorProgressBarBg =    "#E4E4E4"
+            colorComponent =        "#FF3BB3"
+            colorComponentContent = "white"
+            colorComponentBorder =  "#F592C1"
+            colorComponentHover =   "#E4E4E4"
+            colorComponentDown =    "#F592C1"
+            colorComponentBackground = "#E4E4E4"
 
-            selector =              "arrow"
+            selector = "arrow"
         }
     }
 }

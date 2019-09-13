@@ -24,7 +24,7 @@ Rectangle {
         anchors.left: parent.left
         anchors.leftMargin: 16
 
-        ButtonImageWireframe {
+        ButtonWireframeImage {
             id: buttonOffloadCopy
             anchors.verticalCenter: parent.verticalCenter
 
@@ -35,7 +35,7 @@ Rectangle {
             source: "qrc:/icons_material/baseline-save_alt-24px.svg"
             onClicked: currentDevice.offloadCopySelection(mediaGrid.selectionList);
         }
-        ButtonImageWireframe {
+        ButtonWireframeImage {
             id: buttonOffloadMerge
             anchors.verticalCenter: parent.verticalCenter
 
@@ -46,7 +46,7 @@ Rectangle {
             source: "qrc:/icons_material/baseline-save_alt-24px.svg"
             onClicked: currentDevice.offloadMergeSelection(mediaGrid.selectionList);
         }
-        ButtonImageWireframe {
+        ButtonWireframeImage {
             id: buttonMergeShots
             anchors.verticalCenter: parent.verticalCenter
 
@@ -57,7 +57,7 @@ Rectangle {
             source: "qrc:/icons_material/baseline-merge_type-24px.svg"
             //onClicked:
         }
-        ButtonImageWireframe {
+        ButtonWireframeImage {
             id: buttonTelemetry
             anchors.verticalCenter: parent.verticalCenter
 
@@ -72,7 +72,7 @@ Rectangle {
                 }
             }
         }
-        ButtonImageWireframe {
+        ButtonWireframeImage {
             id: buttonDelete
             anchors.verticalCenter: parent.verticalCenter
 

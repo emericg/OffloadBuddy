@@ -283,7 +283,7 @@ Popup {
                     popupEncodePicture.close();
                 }
             }
-            ButtonImageWireframe {
+            ButtonWireframeImage {
                 id: buttonEncode
                 anchors.verticalCenter: parent.verticalCenter
 

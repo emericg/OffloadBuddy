@@ -15,12 +15,12 @@ Slider {
         width: control.availableWidth
         height: implicitHeight
         radius: 2
-        color: Theme.colorProgressBarBg
+        color: Theme.colorForeground
 
         Rectangle {
             width: control.visualPosition * parent.width
             height: parent.height
-            color: Theme.colorSecondary
+            color: Theme.colorPrimary
             radius: 2
         }
     }
@@ -31,7 +31,7 @@ Slider {
         implicitWidth: 20
         implicitHeight: 20
         radius: 10
-        color: control.pressed ? "#f0f0f0" : "#f6f6f6"
-        border.color: "#bdbebf"
+        color: control.pressed ? Theme.colorPrimary : Theme.colorPrimary
+        border.color: Theme.colorPrimary
     }
 }
