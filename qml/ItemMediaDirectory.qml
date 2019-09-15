@@ -18,14 +18,13 @@ Rectangle {
     Component.onCompleted: updateInfos()
     Connections {
         target: directory
-        onAvailableChanged:updateInfos()
+        onAvailableChanged: updateInfos()
         onSpaceAvailableChanged: updateInfos()
     }
     Connections {
-        target: settingsManager
-        onAppthemeChanged: updateInfos()
+        target: Theme
+        onCurrentThemeChanged: updateInfos()
     }
-
     function updateInfos() {
         itemMediaDirectory.color = (directory.available) ? "transparent" : Theme.colorWarning
 

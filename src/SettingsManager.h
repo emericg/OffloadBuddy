@@ -101,34 +101,34 @@ public:
     void setAppPath(QString &path);
 
     unsigned getAppTheme() const { return m_appTheme; }
-    void setAppTheme(unsigned value) { m_appTheme = value; writeSettings(); }
+    void setAppTheme(unsigned value);
 
     unsigned getAppUnits() const { return m_appUnits; }
-    void setAppUnits(unsigned value) { m_appUnits = value; writeSettings(); }
+    void setAppUnits(unsigned value);
 
     bool getAutoLaunch() const { return m_autoLaunch; }
-    void setAutoLaunch(bool value) { m_autoLaunch = value; writeSettings(); }
+    void setAutoLaunch(bool value);
 
     bool getAutoMerge() const { return m_autoMerge; }
-    void setAutoMerge(bool value) { m_autoMerge = value; writeSettings(); }
+    void setAutoMerge(bool value);
 
     bool getAutoMetadata() const { return m_autoTelemetry; }
-    void setAutoMetadata(bool value) { m_autoTelemetry = value; writeSettings(); }
+    void setAutoMetadata(bool value);
 
     bool getAutoDelete() const { return m_autoDelete; }
-    void setAutoDelete(bool value) { m_autoDelete = value; writeSettings(); }
+    void setAutoDelete(bool value);
 
     bool getIgnoreJunk() const { return m_ignoreJunk; }
-    void setIgnoreJunk(bool value) { m_ignoreJunk = value; writeSettings(); }
+    void setIgnoreJunk(bool value);
 
     bool getIgnoreHdAudio() const { return m_ignoreHdAudio; }
-    void setIgnoreHdAudio(bool value) { m_ignoreHdAudio = value; writeSettings(); }
+    void setIgnoreHdAudio(bool value);
 
     bool getMtpFullScan() const { return m_mtpFullScan; }
-    void setMtpFullScan(bool value) { m_mtpFullScan = value; }
+    void setMtpFullScan(bool value);
 
     unsigned getContentHierarchy() const { return m_contentHierarchy; }
-    void setContentHierarchy(unsigned value) { m_contentHierarchy = value; writeSettings(); }
+    void setContentHierarchy(unsigned value);
 
     QVariant getDirectories() const { if (m_mediaDirectories.size() > 0) { return QVariant::fromValue(m_mediaDirectories); } return QVariant(); }
     const QList <QObject *> *getDirectoriesList() const { return &m_mediaDirectories; }

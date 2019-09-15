@@ -143,34 +143,7 @@ Item {
             deviceModelText.anchors.topMargin = 26
 
         deviceModelText.text = currentDevice.brand + " " + currentDevice.model;
-
-        if (currentDevice.model.includes("HERO7 White") ||
-            currentDevice.model.includes("HERO7 Silver")) {
-            deviceImage.source = "qrc:/cameras/H7w.svg"
-        } else if (currentDevice.model.includes("HERO7") ||
-                   currentDevice.model.includes("HERO6") ||
-                   currentDevice.model.includes("HERO5")) {
-            deviceImage.source = "qrc:/cameras/H5.svg"
-        } else if (currentDevice.model.includes("Session")) {
-            deviceImage.source = "qrc:/cameras/session.svg"
-        } else if (currentDevice.model.includes("HERO4")) {
-            deviceImage.source = "qrc:/cameras/H4.svg"
-        } else if (currentDevice.model.includes("HERO3") ||
-                   currentDevice.model.includes("Hero3")) {
-            deviceImage.source = "qrc:/cameras/H3.svg"
-        } else if (currentDevice.model.includes("FUSION") ||
-                   currentDevice.model.includes("Fusion")) {
-            deviceImage.source = "qrc:/cameras/fusion.svg"
-        } else if (currentDevice.model.includes("HD2")) {
-            deviceImage.source = "qrc:/cameras/H2.svg"
-        } else {
-            if (currentDevice.deviceType === 2)
-                deviceImage.source = "qrc:/cameras/generic_smartphone.svg"
-            else if (currentDevice.deviceType === 3)
-                deviceImage.source = "qrc:/cameras/generic_camera.svg"
-            else
-                deviceImage.source = "qrc:/cameras/generic_actioncam.svg"
-        }
+        deviceImage.source = getDevicePicture(currentDevice.model)
 
         // Storage and battery infos
         updateStorage()
@@ -184,6 +157,39 @@ Item {
         if (currentDevice.deviceStorage === 2) { // MTP
             banner.openMessage(qsTr("Metadatas are not available from MTP devices. Offload medias first, or plug SD cards directly."))
         }
+    }
+
+    function getDevicePicture(deviceName) {
+        var camera_model = "qrc:/cameras/";
+
+        if (deviceName.includes("HERO7 White") || deviceName.includes("HERO8 White") ||
+            deviceName.includes("HERO7 Silver") || deviceName.includes("HERO8 Silver")) {
+            camera_model += "H7w"
+        } else if (deviceName.includes("HERO8") || deviceName.includes("HERO7") ||
+                   deviceName.includes("HERO6") || deviceName.includes("HERO5")) {
+            camera_model += "H5"
+        } else if (deviceName.includes("Session")) {
+            camera_model += "session"
+        } else if (deviceName.includes("HERO4")) {
+            camera_model += "H4"
+        } else if (deviceName.includes("HERO3") || deviceName.includes("Hero3")) {
+            camera_model += "H3"
+        } else if (deviceName.includes("FUSION") || deviceName.includes("Fusion")) {
+            camera_model += "fusion"
+        } else if (deviceName.includes("HD2")) {
+            camera_model += "H2"
+        } else {
+            // fallback
+            if (myDevice.deviceType === 2)
+                camera_model += "generic_smartphone"
+            else if (myDevice.deviceType === 3)
+                camera_model += "generic_camera"
+            else
+                camera_model += "generic_actioncam"
+        }
+
+        //if (inverted) camera_model += "-inverted"
+        return camera_model + ".svg"
     }
 
     function initGridViewSettings() {
@@ -298,11 +304,9 @@ Item {
             anchors.fill: parent
         }
 
-        Image {
+        ImageSvg {
             id: deviceImage
-            opacity: 0.8
             width: 128
-            antialiasing: true
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 8
             anchors.right: parent.right
@@ -311,9 +315,10 @@ Item {
             anchors.topMargin: 8
 
             source: "qrc:/cameras/generic_actioncam.svg"
-            sourceSize.width: deviceImage.width
-            sourceSize.height: deviceImage.height
             fillMode: Image.PreserveAspectCrop
+            color: Theme.colorHeaderContent
+            //opacity: 0.8
+            antialiasing: true
         }
 
         Text {

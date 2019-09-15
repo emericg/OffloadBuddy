@@ -85,6 +85,7 @@ Item {
     readonly property int fontSizeBannerText: 20
     readonly property int fontSizeContentTitle: 24
     readonly property int fontSizeContentText: 15
+    readonly property int fontSizeComponentText: 14
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -94,8 +95,6 @@ Item {
             themeIndex = 0
             console.log("ThemeEngine::loadTheme(" + themeIndex + ") ERROR Unknown theme!")
         }
-
-        currentTheme = themeIndex
 
         if (themeIndex === ThemeEngine.LIGHT_AND_WARM) {
 
@@ -130,6 +129,7 @@ Item {
             colorComponentHover =   "#c1c1c1"
             colorComponentDown =    "#E4E4E4"
             colorComponentBackground = "#FAFAFA"
+            radiusComponent = 3
 
             selector = "arrow"
 
@@ -157,7 +157,7 @@ Item {
 
             colorPrimary =          "#ff9f1a" // indigo: "#6C5ECD"
             colorSecondary =        "#ffb81a" // indigo2: "#9388e5"
-            colorWarning =          "#ca41f4"
+            colorWarning =          "#e38541"
             colorError =            "#dc322f"
 
             colorComponent =        "#555555"
@@ -166,6 +166,7 @@ Item {
             colorComponentHover =   "#333333"
             colorComponentDown =    "#333333"
             colorComponentBackground = "#505050"
+            radiusComponent = 3
 
             selector = "arrow"
 
@@ -202,6 +203,7 @@ Item {
             colorComponentHover =   "#E0E0E0"
             colorComponentDown =    "#c1c1c1"
             colorComponentBackground = "#FEFEFE"
+            radiusComponent = 3
 
             selector = "arrow"
 
@@ -213,7 +215,7 @@ Item {
             colorHeaderContent =    "white"
 
             colorSidebar =          "#181818"
-            colorSidebarContent =   "#bebebe"
+            colorSidebarContent =   "#DDDDDD"
 
             colorActionbar =        "#fed859"
             colorActionbarContent = "white"
@@ -229,15 +231,16 @@ Item {
 
             colorPrimary =          "#009ee2"
             colorSecondary =        "#00bee2"
-            colorWarning =          "#fa6871"
-            colorError =            "#FFDB63"
+            colorWarning =          "#FFDB63"
+            colorError =            "#fa6871"
 
             colorComponent =        "white"
             colorComponentContent = "black"
             colorComponentBorder =  "#E4E4E4"
             colorComponentHover =   "#bdbdbd"
-            colorComponentDown =    "#BBBBBB"
+            colorComponentDown =    "#CCCCCC"
             colorComponentBackground = "#EEEEEE"
+            radiusComponent = 1
 
             selector =              "bar"
 
@@ -254,13 +257,13 @@ Item {
             // yellow "#FCCD13" "#FFE400"
 
             colorHeader =           "#F99DCE"
-            colorHeaderContent =    "#E31D8D"
+            colorHeaderContent =    "#944197"
 
             colorSidebar =          "#E31D8D"
             colorSidebarContent =   "#FFFBE2"
 
             colorBackground =       "white"
-            colorForeground =       "#ffe7f3"
+            colorForeground =       "#ffddee"
 
             colorText =             "#944197"
             colorSubText =          "#944197"
@@ -269,18 +272,22 @@ Item {
             colorPrimary =          "#FFE400"
             colorSecondary =        "#fff600"
             colorWarning =          "#944197"
-            colorError =            "#FFDB63"
+            colorError =            "#fa6871"
             colorSeparator =        "#E4E4E4"
             colorHighContrast =     "red"
 
-            colorComponent =        "#FF3BB3"
+            colorComponent =        "#ff6ec7"
             colorComponentContent = "white"
             colorComponentBorder =  "#F592C1"
             colorComponentHover =   "#E4E4E4"
             colorComponentDown =    "#F592C1"
-            colorComponentBackground = "#E4E4E4"
+            colorComponentBackground = "#fff4f9"
+            radiusComponent = 4
 
             selector = "arrow"
         }
+
+        // This will emit the signal 'onCurrentThemeChanged'
+        currentTheme = themeIndex
     }
 }

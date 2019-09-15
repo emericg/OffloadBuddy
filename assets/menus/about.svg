@@ -18,7 +18,7 @@
    id="svg7384"
    style="enable-background:new"
    version="1.1"
-   inkscape:version="0.92.2 2405546, 2018-03-11"
+   inkscape:version="0.92.4 5da689c313, 2019-01-14"
    width="64">
   <sodipodi:namedview
      inkscape:bbox-nodes="true"
@@ -27,8 +27,8 @@
      borderlayer="false"
      borderopacity="1"
      inkscape:current-layer="layer9"
-     inkscape:cx="-10.233798"
-     inkscape:cy="34.288307"
+     inkscape:cx="24.452591"
+     inkscape:cy="38.350685"
      gridtolerance="10"
      inkscape:guide-bbox="true"
      guidetolerance="10"
@@ -47,11 +47,11 @@
      inkscape:snap-bbox-edge-midpoints="true"
      inkscape:snap-bbox-midpoints="false"
      inkscape:snap-center="false"
-     inkscape:snap-global="false"
+     inkscape:snap-global="true"
      inkscape:snap-grids="true"
      inkscape:snap-intersection-paths="true"
      inkscape:snap-midpoints="true"
-     inkscape:snap-nodes="false"
+     inkscape:snap-nodes="true"
      inkscape:snap-object-midpoints="true"
      inkscape:snap-others="true"
      inkscape:snap-page="true"
@@ -62,7 +62,7 @@
      inkscape:window-width="1920"
      inkscape:window-x="0"
      inkscape:window-y="0"
-     inkscape:zoom="8"
+     inkscape:zoom="22.627417"
      inkscape:pagecheckerboard="true">
     <inkscape:grid
        color="#000000"
@@ -139,6 +139,13 @@
      inkscape:label="status"
      style="display:inline"
      transform="translate(-505.0004,379.00336)">
+    <rect
+       style="opacity:0.3;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.5;stroke-linecap:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-dashoffset:15;stroke-opacity:0.36400003;paint-order:stroke fill markers"
+       id="rect831"
+       width="9.7979555"
+       height="31.37945"
+       x="532.09772"
+       y="-363.16855" />
     <g
        id="g5648"
        inkscape:label="dialog-error"
@@ -148,7 +155,7 @@
        inkscape:connector-curvature="0"
        d="m 537.0004,-373.62836 c -14.70473,0 -26.625,11.92085 -26.625,26.625 0,14.70473 11.92027,26.625 26.625,26.625 14.70473,0 26.625,-11.92027 26.625,-26.625 0,-14.70415 -11.92027,-26.625 -26.625,-26.625 z m 0,10.45981 c 2.62584,0 4.75447,2.12865 4.75447,4.75447 0,2.62585 -2.12863,4.75447 -4.75447,4.75447 -2.62584,0 -4.75447,-2.12862 -4.75447,-4.75447 0,-2.62582 2.12863,-4.75447 4.75447,-4.75447 z m -3.80357,12.36162 h 3.80357 3.80357 v 19.01785 h -7.60714 z"
        id="path5652"
-       style="opacity:1;fill:#d7d7d7;fill-opacity:1;stroke:none;stroke-width:3.80357099" />
+       style="opacity:1;fill-opacity:1;stroke:none;stroke-width:3.80357099" />
   </g>
   <g
      inkscape:groupmode="layer"

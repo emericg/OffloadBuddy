@@ -20,7 +20,6 @@ Item {
         anchors.topMargin: 4
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
-        source: "qrc:/menus/device.svg"
         color: Theme.colorSidebarContent
     }
 

@@ -24,42 +24,42 @@ Item {
     Component.onCompleted: {
         if (myDevice) {
             title = modelData.model
-            source = "qrc:/menus/device.svg"
-            //source = getDevicePicture(modelData.model)
+            source = getDevicePicture(modelData.model)
             myDeviceClicked.connect(sideBar.myDeviceClicked)
         }
     }
 
-    function getDevicePicture(deviceName) {
-        if (deviceName.includes("HERO7 White") ||
-            deviceName.includes("HERO7 Silver")) {
-            return "qrc:/cameras/H7w.svg"
-        } else if (deviceName.includes("HERO7") ||
-                   deviceName.includes("HERO6") ||
-                   deviceName.includes("HERO5")) {
-            return "qrc:/cameras/H5.svg"
+    function getDevicePicture(deviceName,) {
+        var camera_model = "qrc:/cameras/";
+
+        if (deviceName.includes("HERO7 White") || deviceName.includes("HERO8 White") ||
+            deviceName.includes("HERO7 Silver") || deviceName.includes("HERO8 Silver")) {
+            camera_model += "H7w"
+        } else if (deviceName.includes("HERO8") || deviceName.includes("HERO7") ||
+                   deviceName.includes("HERO6") || deviceName.includes("HERO5")) {
+            camera_model += "H5"
         } else if (deviceName.includes("Session")) {
-            return "qrc:/cameras/session.svg"
+            camera_model += "session"
         } else if (deviceName.includes("HERO4")) {
-            return "qrc:/cameras/H4.svg"
-        } else if (deviceName.includes("HERO3") ||
-                   deviceName.includes("Hero3")) {
-            return "qrc:/cameras/H3.svg"
-        } else if (deviceName.includes("FUSION") ||
-                   deviceName.includes("Fusion")) {
-            return "qrc:/cameras/fusion.svg"
+            camera_model += "H4"
+        } else if (deviceName.includes("HERO3") || deviceName.includes("Hero3")) {
+            camera_model += "H3"
+        } else if (deviceName.includes("FUSION") || deviceName.includes("Fusion")) {
+            camera_model += "fusion"
         } else if (deviceName.includes("HD2")) {
-            return "qrc:/cameras/H2.svg"
+            camera_model += "H2"
+        } else {
+            // fallback
+            if (myDevice.deviceType === 2)
+                camera_model += "generic_smartphone"
+            else if (myDevice.deviceType === 3)
+                camera_model += "generic_camera"
+            else
+                camera_model += "generic_actioncam"
         }
 
-        // fallback
-        if (myDevice.deviceType === 2)
-            return "qrc:/cameras/generic_smartphone.svg"
-        else if (myDevice.deviceType === 3)
-            return "qrc:/cameras/generic_camera.svg"
-
-        // fallback
-        return "qrc:/cameras/generic_actioncam.svg"
+        //if (inverted) camera_model += "-inverted"
+        return camera_model + ".svg"
     }
 
     // SELECTOR

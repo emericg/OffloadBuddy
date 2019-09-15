@@ -58,15 +58,6 @@ SettingsManager::~SettingsManager()
 }
 
 /* ************************************************************************** */
-
-void SettingsManager::setAppPath(QString &path)
-{
-    QDir p(path);
-    p.cdUp();
-    m_appPath = p.absolutePath();
-}
-
-/* ************************************************************************** */
 /* ************************************************************************** */
 
 bool SettingsManager::readSettings()
@@ -241,3 +232,108 @@ void SettingsManager::directoryModified()
 }
 
 /* ************************************************************************** */
+/* ************************************************************************** */
+
+void SettingsManager::setAppPath(QString &path)
+{
+    QDir p(path);
+    p.cdUp();
+    m_appPath = p.absolutePath();
+}
+
+void SettingsManager::setAppTheme(unsigned value)
+{
+    if (m_appTheme != value)
+    {
+        m_appTheme = value;
+        writeSettings();
+        Q_EMIT appThemeChanged();
+    }
+}
+
+void SettingsManager::setAppUnits(unsigned value)
+{
+    if (m_appUnits != value)
+    {
+        m_appUnits = value;
+        writeSettings();
+        Q_EMIT appUnitsChanged();
+    }
+}
+
+void SettingsManager::setAutoLaunch(bool value)
+{
+    if (m_autoLaunch != value)
+    {
+        m_autoLaunch = value;
+        writeSettings();
+        Q_EMIT autoLaunchChanged();
+    }
+}
+
+void SettingsManager::setAutoMerge(bool value)
+{
+    if (m_autoMerge != value)
+    {
+        m_autoMerge = value;
+        writeSettings();
+        Q_EMIT autoMergeChanged();
+    }
+}
+
+void SettingsManager::setAutoMetadata(bool value)
+{
+    if (m_autoTelemetry != value)
+    {
+        m_autoTelemetry = value;
+        writeSettings();
+        Q_EMIT autoMetadataChanged();
+    }
+}
+void SettingsManager::setAutoDelete(bool value)
+{
+    if (m_autoDelete != value)
+    {
+        m_autoDelete = value;
+        writeSettings();
+        Q_EMIT autoDeleteChanged();
+    }
+}
+
+void SettingsManager::setIgnoreJunk(bool value)
+{
+    if (m_ignoreJunk != value)
+    {
+        m_ignoreJunk = value;
+        writeSettings();
+        Q_EMIT ignoreJunkChanged();
+    }
+}
+
+void SettingsManager::setIgnoreHdAudio(bool value)
+{
+    if (m_ignoreHdAudio != value)
+    {
+        m_ignoreHdAudio = value;
+        writeSettings();
+        Q_EMIT ignoreHdAudioChanged();
+    }
+}
+
+void SettingsManager::setMtpFullScan(bool value)
+{
+    if (m_mtpFullScan != value)
+    {
+        m_mtpFullScan = value;
+    }
+}
+
+void SettingsManager::setContentHierarchy(unsigned value)
+{
+    if (m_contentHierarchy != value)
+    {
+        m_contentHierarchy = value;
+        writeSettings();
+        Q_EMIT contentHierarchyChanged();
+    }
+}

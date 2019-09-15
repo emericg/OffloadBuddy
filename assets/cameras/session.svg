@@ -601,8 +601,8 @@
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
      inkscape:zoom="5.6600006"
-     inkscape:cx="-19.699527"
-     inkscape:cy="53.602819"
+     inkscape:cx="-33.434172"
+     inkscape:cy="76.29818"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -698,28 +698,14 @@
      style="display:inline"
      transform="translate(0,106)">
     <path
-       style="display:inline;fill:#a8a8a8;fill-opacity:1;stroke:none;stroke-width:11.82635784"
-       d="m 25,-90 c -6,0 -9,3 -9,9 v 78 c 0,6 3,9 9,9 h 78 c 6,0 9,-3 9,-9 v -78 c 0,-6 -3,-9 -9,-9 z"
-       id="rect2915"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="csssssscc" />
+       style="display:inline;fill-opacity:1;stroke:none;stroke-width:11.82635784;opacity:1"
+       d="M 25 16 C 19 16 16 19 16 25 L 16 103 C 16 109 19 112 25 112 L 103 112 C 109 112 112 109 112 103 L 112 25 C 112 19 109 16 103 16 L 25 16 z M 29 20 L 101 20 C 106 20 108 22 108 27 L 108 101 C 108 106 106 108 101 108 L 27 108 C 22 108 20 106 20 101 L 20 28 L 29 20 z "
+       transform="translate(0,-106)"
+       id="rect2915" />
     <path
-       style="display:inline;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:10.98161697"
-       d="m 29,-86 -9,8 v 73 c 0,5 2,7 7,7 h 74 c 5,0 7,-2 7,-7 v -74 c 0,-5 -2,-7 -7,-7 z"
-       id="rect2915-3"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccssssscc" />
-    <circle
-       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:8.61046028;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="path910"
-       cx="64"
-       cy="-41.999439"
-       r="39.999439" />
-    <circle
-       style="opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:2.03030753;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="path912"
-       cx="64"
-       cy="-41.999439"
-       r="19.99972" />
+       style="display:inline;opacity:0.6;fill-opacity:1;stroke:none;stroke-width:10.98161697"
+       d="m 29,-86 -9,8 v 73 c 0,5 2,7 7,7 h 74 c 5,0 7,-2 7,-7 v -74 c 0,-5 -2,-7 -7,-7 z m 35,4.00195 A 39.999439,39.999439 0 0 1 104,-42 39.999439,39.999439 0 0 1 64,-2 39.999439,39.999439 0 0 1 24,-42 39.999439,39.999439 0 0 1 64,-81.99805 Z M 64,-62 a 19.99972,19.99972 0 0 0 -20,20 19.99972,19.99972 0 0 0 20,20 19.99972,19.99972 0 0 0 20,-20 19.99972,19.99972 0 0 0 -20,-20 z"
+       id="rect2915-3-3" />
   </g>
 </svg>

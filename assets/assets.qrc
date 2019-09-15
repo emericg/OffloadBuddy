@@ -78,7 +78,6 @@
         <file alias="selector_arrow.svg">menus/selector_arrow.svg</file>
         <file alias="selector_bar.svg">menus/selector_bar.svg</file>
         <file alias="media.svg">menus/media.svg</file>
-        <file alias="device.svg">menus/device.svg</file>
         <file alias="jobs.svg">menus/jobs.svg</file>
         <file alias="settings.svg">menus/settings.svg</file>
         <file alias="about.svg">menus/about.svg</file>
