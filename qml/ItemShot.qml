@@ -233,7 +233,7 @@ Rectangle {
             anchors.leftMargin: 4
             lineHeight: 1
             style: Text.Raised
-            styleColor: "#000000"
+            styleColor: "black"
             font.bold: true
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter

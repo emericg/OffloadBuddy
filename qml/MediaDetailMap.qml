@@ -75,8 +75,7 @@ Item {
                 id: button_map_dezoom
                 width: 40
                 height: 40
-                iconColor: "#606060"
-                highlightColor: "#F0F0F0"
+                background: true
 
                 source: "qrc:/icons_material/baseline-zoom_out-24px.svg"
                 onClicked: parent.parent.zoomLevel--
@@ -86,8 +85,7 @@ Item {
                 id: button_map_zoom
                 width: 40
                 height: 40
-                iconColor: "#606060"
-                highlightColor: "#F0F0F0"
+                background: true
 
                 source: "qrc:/icons_material/baseline-zoom_in-24px.svg"
                 onClicked: parent.parent.zoomLevel++

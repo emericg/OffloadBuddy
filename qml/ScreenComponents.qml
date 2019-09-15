@@ -243,8 +243,6 @@ Item {
                         settingsManager.apptheme = currentIndex;
                     else
                         cbinit = true;
-
-                    Theme.loadTheme(currentIndex)
                 }
             }
 

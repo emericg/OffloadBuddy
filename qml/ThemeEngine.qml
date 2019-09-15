@@ -85,9 +85,15 @@ Item {
     readonly property int fontSizeBannerText: 20
     readonly property int fontSizeContentTitle: 24
     readonly property int fontSizeContentText: 15
-    readonly property int fontSizeComponentText: 14
+    readonly property int fontSizeComponentText: 15
 
     ////////////////////////////////////////////////////////////////////////////
+
+    Component.onCompleted: loadTheme(settingsManager.apptheme)
+    Connections {
+        target: settingsManager
+        onAppThemeChanged: loadTheme(settingsManager.apptheme)
+    }
 
     function loadTheme(themeIndex) {
 
@@ -113,7 +119,7 @@ Item {
             colorForeground =       "#E0E0E0"
 
             colorText =             "#222222"
-            colorSubText =          "#111111"
+            colorSubText =          "#555555"
             colorIcon =             "#333333"
             colorSeparator =        "#E4E4E4"
             colorHighContrast =     "black"
@@ -224,9 +230,9 @@ Item {
             colorForeground =       "#333333"
 
             colorText =             "#d2d2d2"
-            colorSubText =          "#a3a3a0"
-            colorIcon =             "#a3a3a0"
-            colorSeparator =        "#E4E4E4"
+            colorSubText =          "#a3a3a3"
+            colorIcon =             "#d2d2d2"
+            colorSeparator =        "#666666"
             colorHighContrast =     "white"
 
             colorPrimary =          "#009ee2"
@@ -242,7 +248,7 @@ Item {
             colorComponentBackground = "#EEEEEE"
             radiusComponent = 1
 
-            selector =              "bar"
+            selector = "bar"
 
         } else if (themeIndex === ThemeEngine.MIGHTY_KITTENS) {
 
@@ -261,6 +267,9 @@ Item {
 
             colorSidebar =          "#E31D8D"
             colorSidebarContent =   "#FFFBE2"
+
+            colorActionbar =        "#fed859"
+            colorActionbarContent = "white"
 
             colorBackground =       "white"
             colorForeground =       "#ffddee"

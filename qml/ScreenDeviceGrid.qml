@@ -194,7 +194,6 @@ Item {
 
     function initGridViewSettings() {
         rectangleTransfer.visible = false
-        rectangleDelete.stopTheBlink()
         rectangleDelete.visible = false
         actionMenu.visible = false
 
@@ -424,52 +423,37 @@ Item {
             value: 0.5
         }
 
-        Item {
+        ButtonWireframe {
             id: rectangleTransfer
-            width: 240
+            width: 220
             height: 40
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 16
             anchors.left: parent.left
             anchors.leftMargin: 16
 
-            Rectangle {
-                id: rectangleTransferDecorated
-                color: Theme.colorPrimary
-                width: parent.width
-                height: parent.height
-                radius: 4
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-            }
-
-            MouseArea {
-                anchors.fill: parent
-                onPressed: {
-                    rectangleTransferDecorated.width = rectangleTransferDecorated.width - 8
-                    rectangleTransferDecorated.height = rectangleTransferDecorated.height - 8
-                }
-                onReleased: {
-                    rectangleTransferDecorated.width = rectangleTransferDecorated.width + 8
-                    rectangleTransferDecorated.height = rectangleTransferDecorated.height + 8
-                }
-                onClicked: {
-                    currentDevice.offloadAll();
-                }
-            }
-
-            Text {
-                id: textTransfer
-                anchors.fill: parent
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-                text: qsTr("Offload content")
-                color: "white"
-                font.bold: true
-                font.pixelSize: 15
-            }
+            text: qsTr("Offload content")
+            fullColor: true
+            //primaryColor: Theme.colorMaterialBlue
+            //secondaryColor: Theme.colorForeground
+            onClicked: currentDevice.offloadAll();
         }
 
+        ButtonWireframe {
+            id: rectangleDelete
+            width: 240
+            height: 40
+            anchors.left: rectangleTransfer.right
+            anchors.leftMargin: 16
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 16
+
+            text: qsTr("Delete ALL content!");
+            fullColor: true
+            primaryColor: Theme.colorError
+            //onClicked: currentDevice.offloadAll();
+        }
+/*
         Item {
             id: rectangleDelete
             width: 240
@@ -559,7 +543,7 @@ Item {
                 anchors.fill: parent
             }
         }
-
+*/
         ComboBoxThemed {
             id: comboBox_orderby
             width: 220

@@ -9,18 +9,19 @@ Item {
     implicitWidth: 40
     implicitHeight: 40
 
+    // states
     signal clicked()
     property bool highlighted: false
     property bool selected: false
 
     // settings
     property string highlightMode: "circle" // circle / color / off
+    property bool background: false
 
+    property string iconColor: Theme.colorIcon
     property string highlightColor: Theme.colorPrimary
     property string backgroundColor: Theme.colorForeground
 
-    property string iconColor: Theme.colorIcon
-    property bool background: false
     property string tooltipText: ""
 
     // image

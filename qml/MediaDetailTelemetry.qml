@@ -179,8 +179,7 @@ Item {
                     id: button_map_dezoom
                     width: 40
                     height: 40
-                    iconColor: "#606060"
-                    highlightColor: "#F0F0F0"
+                    background: true
 
                     source: "qrc:/icons_material/baseline-zoom_out-24px.svg"
                     onClicked: {
@@ -193,8 +192,7 @@ Item {
                     id: button_map_zoom
                     width: 40
                     height: 40
-                    iconColor: "#606060"
-                    highlightColor: "#F0F0F0"
+                    background: true
 
                     source: "qrc:/icons_material/baseline-zoom_in-24px.svg"
                     onClicked: {
@@ -479,8 +477,8 @@ Item {
                     id: speedsSeries
                     axisX: ValueAxis { id: axisSpeedX0; visible: false; gridVisible: false; }
                     axisY: ValueAxis { id: axisSpeedY0; visible: true; gridVisible: true;
-                                       labelsFont.pixelSize: 10; labelsColor: Theme.colorText; labelFormat: "%0.1f";
-                                       /*gridLineColor: Theme.colorSeparator;*/ }
+                                       labelsFont.pixelSize: 12; labelsColor: Theme.colorSubText; labelFormat: "%0.1f";
+                                       gridLineColor: Theme.colorSeparator; }
                 }
             }
 
@@ -500,8 +498,8 @@ Item {
                     id: altiSeries
                     axisX: ValueAxis { id: axisAltiX0; visible: false; gridVisible: false; }
                     axisY: ValueAxis { id: axisAltiY0; visible: true; gridVisible: true;
-                                       labelsFont.pixelSize: 10; labelsColor: Theme.colorText; labelFormat: "%i";
-                                       /*gridLineColor: Theme.colorSeparator;*/ }
+                                       labelsFont.pixelSize: 12; labelsColor: Theme.colorSubText; labelFormat: "%i";
+                                       gridLineColor: Theme.colorSeparator; }
                 }
             }
 
@@ -519,8 +517,8 @@ Item {
 
                 ValueAxis { id: axisAcclX0; visible: false; gridVisible: false; }
                 ValueAxis { id: axisAcclY0; visible: true; gridVisible: true;
-                            labelsFont.pixelSize: 10; labelsColor: Theme.colorText; labelFormat: "%i";
-                            /*gridLineColor: Theme.colorSeparator;*/ }
+                            labelsFont.pixelSize: 12; labelsColor: Theme.colorSubText; labelFormat: "%i";
+                            gridLineColor: Theme.colorSeparator; }
 
                 LineSeries { id: acclX; axisX: axisAcclX0; axisY: axisAcclY0; }
                 LineSeries { id: acclY; axisX: axisAcclX0; axisY: axisAcclY0; }
@@ -541,8 +539,8 @@ Item {
 
                 ValueAxis { id: axisGyroX0; visible: false; gridVisible: false; }
                 ValueAxis { id: axisGyroY0; visible: true; gridVisible: true;
-                            labelsFont.pixelSize: 10; labelsColor: Theme.colorText; labelFormat: "%i";
-                            /*gridLineColor: Theme.colorSeparator;*/ }
+                            labelsFont.pixelSize: 12; labelsColor: Theme.colorSubText; labelFormat: "%i";
+                            gridLineColor: Theme.colorSeparator; }
 
                 LineSeries { id: gyroX; axisX: axisGyroX0; axisY: axisGyroY0; }
                 LineSeries { id: gyroY; axisX: axisGyroX0; axisY: axisGyroY0; }

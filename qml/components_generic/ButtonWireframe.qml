@@ -11,9 +11,6 @@ Button {
     property string primaryColor: "#5483EF"
     property string secondaryColor: "#D0D0D0"
 
-    font.pixelSize: 18
-    font.bold: false
-
     contentItem: Text {
         text: control.text
         font: control.font

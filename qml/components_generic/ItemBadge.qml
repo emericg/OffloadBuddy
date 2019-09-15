@@ -45,7 +45,7 @@ Item {
         anchors.leftMargin: 6
         anchors.verticalCenter: parent.verticalCenter
 
-        color: "#ffffff"
+        color: "white"
         text: badge.legend
         horizontalAlignment: Text.AlignHCenter
         font.pixelSize: 12
@@ -59,7 +59,7 @@ Item {
         anchors.leftMargin: 6
         anchors.verticalCenter: parent.verticalCenter
 
-        color: "#ffffff"
+        color: "white"
         text: badge.text
         horizontalAlignment: Text.AlignHCenter
         font.pixelSize: 12

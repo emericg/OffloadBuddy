@@ -148,7 +148,7 @@ Popup {
                 height: 1
                 anchors.right: parent.right
                 anchors.left: parent.left
-                color: "#f4f4f4"
+                color: Theme.colorSeparator
             }
 */
             Item { // spacer

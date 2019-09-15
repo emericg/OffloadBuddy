@@ -507,7 +507,6 @@ Rectangle {
                 font.bold: true
                 font.pixelSize: 15
             }
-
 /*
             Button {
                 id: buttonStartCut
