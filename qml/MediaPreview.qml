@@ -2,10 +2,10 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtMultimedia 5.9
 
-import com.offloadbuddy.theme 1.0
+import ThemeEngine 1.0
 import com.offloadbuddy.shared 1.0
-import "UtilsNumber.js" as UtilsNumber
-import "UtilsString.js" as UtilsString
+import "qrc:/js/UtilsNumber.js" as UtilsNumber
+import "qrc:/js/UtilsString.js" as UtilsString
 
 Rectangle {
     id: mediaArea

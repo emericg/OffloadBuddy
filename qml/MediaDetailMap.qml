@@ -5,9 +5,9 @@ import QtLocation 5.9
 import QtPositioning 5.9
 import QtMultimedia 5.9
 
-import com.offloadbuddy.theme 1.0
+import ThemeEngine 1.0
 import com.offloadbuddy.shared 1.0
-import "UtilsString.js" as UtilsString
+import "qrc:/js/UtilsString.js" as UtilsString
 
 Item {
     id: contentMap

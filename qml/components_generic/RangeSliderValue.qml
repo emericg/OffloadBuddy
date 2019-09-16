@@ -1,8 +1,8 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 
-import com.offloadbuddy.theme 1.0
-import "qrc:/qml/UtilsNumber.js" as UtilsNumber
+import ThemeEngine 1.0
+import "qrc:/js/UtilsNumber.js" as UtilsNumber
 
 RangeSlider {
     id: control

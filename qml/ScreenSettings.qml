@@ -2,9 +2,9 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Dialogs 1.2
 
-import com.offloadbuddy.theme 1.0
-import "UtilsString.js" as UtilsString
-import "UtilsPath.js" as UtilsPath
+import ThemeEngine 1.0
+import "qrc:/js/UtilsString.js" as UtilsString
+import "qrc:/js/UtilsPath.js" as UtilsPath
 
 Item {
     width: 1280

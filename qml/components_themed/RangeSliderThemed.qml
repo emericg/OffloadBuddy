@@ -1,11 +1,12 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 
-import com.offloadbuddy.theme 1.0
+import ThemeEngine 1.0
 
 RangeSlider {
     id: control
     implicitWidth: 200
+    implicitHeight: Theme.componentHeight
 
     first.value: 0.25
     second.value: 0.75

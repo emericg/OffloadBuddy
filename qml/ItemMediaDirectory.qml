@@ -2,9 +2,9 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Dialogs 1.2
 
-import com.offloadbuddy.theme 1.0
-import "UtilsString.js" as UtilsString
-import "UtilsPath.js" as UtilsPath
+import ThemeEngine 1.0
+import "qrc:/js/UtilsString.js" as UtilsString
+import "qrc:/js/UtilsPath.js" as UtilsPath
 
 Rectangle {
     id: itemMediaDirectory
@@ -41,9 +41,9 @@ Rectangle {
         id: textField_path
         width: 512
         height: 40
-        anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
         anchors.leftMargin: 6 //directory.available ? 0 : 6
+        anchors.verticalCenter: parent.verticalCenter
 
         readOnly: !directory.available
         text: directory.directoryPath
@@ -156,6 +156,7 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
 
         text: qsTr("Directory is not available right now :/")
+        clip: true
         color: "white"
         font.bold: true
         font.pixelSize: 18

@@ -152,7 +152,7 @@ int main(int argc, char *argv[])
 
     qmlRegisterSingletonType(
         QUrl("qrc:/qml/ThemeEngine.qml"),
-        "com.offloadbuddy.theme", 1, 0,
+        "ThemeEngine", 1, 0,
         "Theme");
 
     qmlRegisterUncreatableMetaObject(

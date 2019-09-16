@@ -98,7 +98,7 @@ public:
     static SettingsManager *getInstance();
 
     QString getAppPath() const { return m_appPath; }
-    void setAppPath(QString &path);
+    void setAppPath(const QString &value);
 
     unsigned getAppTheme() const { return m_appTheme; }
     void setAppTheme(unsigned value);

@@ -3,7 +3,7 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.2
 
-import com.offloadbuddy.theme 1.0
+import ThemeEngine 1.0
 
 Rectangle {
     id: sideBar

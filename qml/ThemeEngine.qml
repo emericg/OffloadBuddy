@@ -147,7 +147,7 @@ Item {
             // "DARK AND SPOOKY"
 
             colorHeader =           "#282828"
-            colorHeaderContent =    "#b0b0b0"
+            colorHeaderContent =    "#c0c0c0"
 
             colorSidebar =          "#2e2e2e"
             colorSidebarContent =   "white"

@@ -1,11 +1,12 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 
-import com.offloadbuddy.theme 1.0
+import ThemeEngine 1.0
 
 Slider {
     id: control
     implicitWidth: 200
+    implicitHeight: Theme.componentHeight
     value: 0.5
 
     background: Rectangle {

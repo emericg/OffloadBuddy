@@ -1,10 +1,6 @@
 <RCC>
     <qresource prefix="/qml">
         <file>Application.qml</file>
-        <file>ThemeEngine.qml</file>
-        <file>UtilsPath.js</file>
-        <file>UtilsNumber.js</file>
-        <file>UtilsString.js</file>
         <file>Sidebar.qml</file>
         <file>ScreenLibrary.qml</file>
         <file>ScreenLibraryGrid.qml</file>
@@ -34,6 +30,8 @@
         <file>MediaDetailTelemetry.qml</file>
         <file>MediaDetailOverview.qml</file>
         <file>MediaPreview.qml</file>
+
+        <file>ThemeEngine.qml</file>
         <file>WindowGeometrySaver.qml</file>
 
         <file alias="ImageSvg.qml">components_generic/ImageSvg.qml</file>
@@ -43,7 +41,8 @@
         <file alias="ItemImageButton.qml">components_generic/ItemImageButton.qml</file>
         <file alias="ItemMenuButton.qml">components_generic/ItemMenuButton.qml</file>
         <file alias="ItemSidebarButton.qml">components_generic/ItemSidebarButton.qml</file>
-        <file alias="ButtonImage.qml">components_generic/ButtonImageThemed.qml</file>
+        <file alias="ButtonImage.qml">components_generic/ButtonImage.qml</file>
+        <file alias="ButtonImageThemed.qml">components_generic/ButtonImageThemed.qml</file>
         <file alias="ButtonWireframe.qml">components_generic/ButtonWireframe.qml</file>
         <file alias="ButtonWireframeImage.qml">components_generic/ButtonWireframeImage.qml</file>
         <file alias="RangeSliderValue.qml">components_generic/RangeSliderValue.qml</file>
@@ -60,5 +59,10 @@
         <file alias="TextFieldThemed.qml">components_themed/TextFieldThemed.qml</file>
         <file alias="CheckBoxThemed.qml">components_themed/CheckBoxThemed.qml</file>
         <file alias="ComboBoxThemed.qml">components_themed/ComboBoxThemed.qml</file>
+    </qresource>
+    <qresource prefix="/js">
+        <file>UtilsPath.js</file>
+        <file>UtilsNumber.js</file>
+        <file>UtilsString.js</file>
     </qresource>
 </RCC>

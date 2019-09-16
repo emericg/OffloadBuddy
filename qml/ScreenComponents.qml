@@ -2,8 +2,8 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Dialogs 1.3
 
-import com.offloadbuddy.theme 1.0
-import "UtilsString.js" as UtilsString
+import ThemeEngine 1.0
+import "qrc:/js/UtilsString.js" as UtilsString
 
 Item {
     id: screenComponent
@@ -71,7 +71,7 @@ Item {
                     id: codecVideoText
                     anchors.fill: parent
 
-                    text: qsTr("CODEC")
+                    text: "CODEC"
                     color: Theme.colorText
                     font.capitalization: Font.AllUppercase
                     font.pixelSize: 16
@@ -95,7 +95,7 @@ Item {
                 id: menuFirst
                 height: parent.height
 
-                menuText: qsTr("First")
+                menuText: "First"
                 source: "qrc:/icons_material/baseline-aspect_ratio-24px.svg"
                 selected: true
                 onClicked: {
@@ -108,7 +108,7 @@ Item {
                 id: menuSecond
                 height: parent.height
 
-                menuText: qsTr("Second")
+                menuText: "Second"
                 source: "qrc:/icons_material/baseline-insert_chart-24px.svg"
                 onClicked: {
                     menuFirst.selected = false
@@ -120,7 +120,7 @@ Item {
                 id: menuThird
                 height: parent.height
 
-                menuText: qsTr("Third")
+                menuText: "Third"
                 source: "qrc:/icons_material/baseline-map-24px.svg"
                 onClicked: {
                     menuFirst.selected = false
@@ -162,7 +162,7 @@ Item {
                 anchors.leftMargin: 32
                 anchors.verticalCenter: parent.verticalCenter
 
-                text: qsTr("Action bar")
+                text: "Action bar"
                 verticalAlignment: Text.AlignVCenter
                 font.pixelSize: 18
                 font.bold: true
@@ -176,7 +176,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
 
                 fullColor: true
-                text: qsTr("Action 1")
+                text: "Action 1"
             }
 
             ButtonWireframeImage {
@@ -186,7 +186,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
 
                 fullColor: true
-                text: qsTr("Action 2")
+                text: "Action 2"
                 source: "qrc:/icons_material/baseline-accessibility-24px.svg"
             }
 
@@ -252,7 +252,7 @@ Item {
                 anchors.leftMargin: 24
                 anchors.verticalCenter: element.verticalCenter
 
-                text: qsTr("light")
+                text: "light"
                 checked: true
                 //onCheckedChanged:
             }
@@ -262,7 +262,7 @@ Item {
                 anchors.leftMargin: 24
                 anchors.verticalCenter: element.verticalCenter
 
-                text: qsTr("dark")
+                text: "dark"
                 checked: false
                 //onCheckedChanged:
             }
@@ -273,7 +273,7 @@ Item {
                 anchors.left: parent.left
                 anchors.leftMargin: 32
 
-                text: qsTr("Application theme")
+                text: "Application theme"
                 font.pixelSize: 16
                 font.bold: true
                 color: Theme.colorText
@@ -302,30 +302,31 @@ Item {
                 anchors.topMargin: 32
                 anchors.left: parent.left
                 anchors.leftMargin: 32
+
                 source: "qrc:/icons_material/baseline-accessibility-24px.svg"
                 background: true
                 highlightMode: "color"
             }
             ItemImageButton {
                 id: itemImageButton2
-                y: 200
                 width: 48
                 height: 48
-                anchors.verticalCenter: itemImageButton1.verticalCenter
-                source: "qrc:/icons_material/baseline-accessibility-24px.svg"
                 anchors.leftMargin: 16
                 anchors.left: itemImageButton1.right
+                anchors.verticalCenter: itemImageButton1.verticalCenter
+
+                source: "qrc:/icons_material/baseline-accessibility-24px.svg"
                 background: false
                 highlightMode: "circle"
             }
             ItemImageButton {
                 id: itemImageButton3
-                y: 200
                 width: 48
                 height: 48
-                anchors.verticalCenter: itemImageButton1.verticalCenter
                 anchors.leftMargin: 16
                 anchors.left: itemImageButton2.right
+                anchors.verticalCenter: itemImageButton1.verticalCenter
+
                 source: "qrc:/icons_material/baseline-accessibility-24px.svg"
                 highlightMode: "color"
                 highlightColor: Theme.colorError
@@ -334,96 +335,109 @@ Item {
 
             ItemImageButton {
                 id: itemImageButton11
-                y: 200
-                anchors.verticalCenter: itemImageButton1.verticalCenter
-                source: "qrc:/icons_material/baseline-accessibility-24px.svg"
                 anchors.leftMargin: 175
                 anchors.left: itemImageButton3.right
+                anchors.verticalCenter: itemImageButton1.verticalCenter
+
+                source: "qrc:/icons_material/baseline-accessibility-24px.svg"
                 highlightMode: "color"
             }
             ItemImageButton {
                 id: itemImageButton22
-                y: 200
-                anchors.verticalCenter: itemImageButton1.verticalCenter
-                source: "qrc:/icons_material/baseline-accessibility-24px.svg"
                 anchors.leftMargin: 16
                 anchors.left: itemImageButton11.right
+                anchors.verticalCenter: itemImageButton1.verticalCenter
+
+                source: "qrc:/icons_material/baseline-accessibility-24px.svg"
                 background: true
                 highlightMode: "circle"
             }
             ItemImageButton {
                 id: itemImageButton33
-                y: 200
-                anchors.verticalCenter: itemImageButton1.verticalCenter
-                source: "qrc:/icons_material/baseline-accessibility-24px.svg"
                 anchors.leftMargin: 16
                 anchors.left: itemImageButton22.right
+                anchors.verticalCenter: itemImageButton1.verticalCenter
+
+                source: "qrc:/icons_material/baseline-accessibility-24px.svg"
                 highlightMode: "color"
                 highlightColor: Theme.colorError
                 tooltipText: "another tooltip!"
             }
 
-            ButtonImage {
+            ////////
+
+            ButtonImageThemed {
                 id: buttonImage1
                 anchors.top: itemImageButton1.bottom
                 anchors.topMargin: 16
                 anchors.left: parent.left
                 anchors.leftMargin: 32
 
-                text: qsTr("ButtonImage")
+                text: "ButtonImageThemed"
+                source: "qrc:/icons_material/baseline-accessibility-24px.svg"
+            }
+            ButtonImage {
+                id: buttonImage2
+                anchors.left: buttonImage1.right
+                anchors.leftMargin: 32
+                anchors.verticalCenter: buttonImage1.verticalCenter
+
+                text: "ButtonImage"
                 source: "qrc:/icons_material/baseline-accessibility-24px.svg"
             }
 
             ButtonWireframeImage {
-                id: buttonImage2
+                id: buttonImage11
                 anchors.top: buttonImage1.bottom
                 anchors.topMargin: 16
                 anchors.left: parent.left
                 anchors.leftMargin: 32
 
-                text: qsTr("ButtonWireframeImage")
+                text: "ButtonWireframeImage"
                 source: "qrc:/icons_material/baseline-accessibility-24px.svg"
             }
             ButtonWireframe {
-                id: buttonImage3
-                anchors.left: buttonImage2.right
+                id: buttonImage22
+                anchors.left: buttonImage11.right
                 anchors.leftMargin: 32
-                anchors.verticalCenter: buttonImage2.verticalCenter
+                anchors.verticalCenter: buttonImage11.verticalCenter
 
-                text: qsTr("ButtonWireframe")
+                text: "ButtonWireframe"
             }
 
             ButtonWireframeImage {
-                id: buttonImage22
-                anchors.top: buttonImage2.bottom
+                id: buttonImage111
+                anchors.top: buttonImage11.bottom
                 anchors.topMargin: 16
                 anchors.left: parent.left
                 anchors.leftMargin: 32
 
                 fullColor: true
-                text: qsTr("ButtonWireframeImage")
+                text: "ButtonWireframeImage"
                 source: "qrc:/icons_material/baseline-accessibility-24px.svg"
             }
             ButtonWireframe {
-                id: buttonImage33
-                anchors.left: buttonImage22.right
+                id: buttonImage222
+                anchors.left: buttonImage111.right
                 anchors.leftMargin: 32
-                anchors.verticalCenter: buttonImage22.verticalCenter
+                anchors.verticalCenter: buttonImage111.verticalCenter
 
                 fullColor: true
-                text: qsTr("ButtonWireframe")
+                text: "ButtonWireframe"
             }
+
+            ////////
 
             ItemBadge {
                 id: badge1
                 width: 128
-                anchors.top: buttonImage22.bottom
+                anchors.top: buttonImage111.bottom
                 anchors.topMargin: 32
                 anchors.left: parent.left
                 anchors.leftMargin: 32
 
-                legend: qsTr("license")
-                text: qsTr("LGPL 3")
+                legend: "license"
+                text: "LGPL 3"
                 onClicked: Qt.openUrlExternally("https://www.gnu.org/licenses/lgpl-3.0.html")
             }
             ItemCodec {
@@ -432,7 +446,7 @@ Item {
                 anchors.leftMargin: 32
                 anchors.verticalCenter: badge1.verticalCenter
 
-                text: qsTr("H.264")
+                text: "H.264"
                 color: Theme.colorForeground
             }
         }
@@ -463,12 +477,12 @@ Item {
 
             RangeSliderThemed {
                 id: rangeSliderThemed
-                y: 73
-                anchors.verticalCenter: progressBarThemed.verticalCenter
-                second.value: 0.75
-                anchors.leftMargin: 32
-                first.value: 0.25
                 anchors.left: sliderThemed.right
+                anchors.leftMargin: 32
+                anchors.verticalCenter: progressBarThemed.verticalCenter
+
+                second.value: 0.75
+                first.value: 0.25
             }
 
             SliderThemed {
@@ -504,7 +518,7 @@ Item {
                 id: buttonThemed
                 x: 32
                 y: 128
-                text: qsTr("Button")
+                text: "Button"
                 anchors.left: parent.left
                 anchors.leftMargin: 32
                 anchors.bottom: parent.bottom
@@ -517,7 +531,7 @@ Item {
                 anchors.left: rangeSliderThemed.right
                 anchors.leftMargin: 16
 
-                text: qsTr("Switch")
+                text: "Switch"
                 checked: true
             }
 
@@ -528,7 +542,7 @@ Item {
                 anchors.leftMargin: 16
                 anchors.verticalCenter: progressBarThemed.verticalCenter
 
-                text: qsTr("Switch")
+                text: "Switch"
                 checked: true
             }
 
@@ -544,7 +558,7 @@ Item {
             CheckBoxThemed {
                 id: checkBox
                 y: 88
-                text: qsTr("Check Box")
+                text: "Check Box"
                 anchors.left: spinBox.right
                 anchors.leftMargin: 32
                 anchors.verticalCenter: buttonThemed.verticalCenter
@@ -609,18 +623,14 @@ Item {
 
             Slider {
                 id: slider
-                x: 264
-                y: 73
                 anchors.verticalCenter: progressBar.verticalCenter
-                value: 0.5
                 anchors.leftMargin: 32
                 anchors.left: progressBar.right
+                value: 0.5
             }
 
             ProgressBar {
                 id: progressBar
-                x: 32
-                y: 90
                 anchors.bottom: button.top
                 anchors.bottomMargin: 32
                 value: 0.5
@@ -633,14 +643,14 @@ Item {
                 anchors.left: rangeSlider.right
                 anchors.leftMargin: 16
 
-                text: qsTr("Switch")
+                text: "Switch"
                 checked: true
             }
 
             Button {
                 id: button
                 width: 128
-                text: qsTr("Button")
+                text: "Button"
                 anchors.left: parent.left
                 anchors.leftMargin: 32
                 anchors.bottom: parent.bottom
@@ -659,7 +669,7 @@ Item {
                 id: textField
                 y: 88
                 width: 128
-                text: qsTr("Text Field")
+                text: "Text Field"
                 anchors.left: roundButton.right
                 anchors.leftMargin: 32
                 anchors.verticalCenter: roundButton.verticalCenter
@@ -668,7 +678,7 @@ Item {
             CheckBox {
                 id: checkBox1
                 y: 88
-                text: qsTr("Check Box")
+                text: "Check Box"
                 anchors.left: spinBox1.right
                 anchors.leftMargin: 32
                 anchors.verticalCenter: button.verticalCenter
@@ -749,7 +759,6 @@ Item {
                         anchors.bottomMargin: 0
                         anchors.right: parent.right
                         anchors.rightMargin: 0
-
                         color: Theme.colorSecondary
                     }
                 }
