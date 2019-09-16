@@ -5,9 +5,12 @@ import com.offloadbuddy.theme 1.0
 
 SpinBox {
     id: control
+    implicitWidth: 128
+    implicitHeight: Theme.componentHeight
+
+    clip: true
     value: 50
     editable: true
-    clip: true
     font.pixelSize: 14
 
     property string legend: ""
@@ -17,7 +20,7 @@ SpinBox {
         text: control.textFromValue(control.value, control.locale) + legend
         font: control.font
 
-        color: Theme.colorText
+        color: Theme.colorComponentText
         selectionColor: Theme.colorText
         selectedTextColor: "white"
         horizontalAlignment: Qt.AlignHCenter
@@ -49,7 +52,7 @@ SpinBox {
 
             text: "+"
             font.pixelSize: 18
-            color: enabled ? Theme.colorText : Theme.colorSubText
+            color: enabled ? Theme.colorComponentContent : Theme.colorSubText
             fontSizeMode: Text.Fit
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
@@ -70,7 +73,7 @@ SpinBox {
 
             text: "-"
             font.pixelSize: 30
-            color: enabled ? Theme.colorText : Theme.colorSubText
+            color: enabled ? Theme.colorComponentContent : Theme.colorSubText
             fontSizeMode: Text.Fit
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
@@ -78,7 +81,6 @@ SpinBox {
     }
 
     background: Rectangle {
-        implicitWidth: 128
         radius: 4
         z: 3
 

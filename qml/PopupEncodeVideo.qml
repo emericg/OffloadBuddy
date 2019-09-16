@@ -574,6 +574,7 @@ Popup {
 
             ButtonWireframe {
                 id: buttonCancel
+                width: 96
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Cancel")
@@ -584,6 +585,7 @@ Popup {
             }
             ButtonWireframeImage {
                 id: buttonEncode
+                width: 128
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Encode")

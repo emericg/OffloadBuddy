@@ -172,7 +172,7 @@ Item {
             ButtonWireframe {
                 id: button_a1
                 anchors.right: button_a2.left
-                anchors.rightMargin: 32
+                anchors.rightMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
 
                 fullColor: true

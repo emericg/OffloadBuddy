@@ -5,18 +5,15 @@ import com.offloadbuddy.theme 1.0
 
 TextField {
     id: textFieldThemed
-    width: 128
-    height: 40
+    implicitWidth: 128
+    implicitHeight: Theme.componentHeight
 
-    text: "textfield"
-    color: Theme.colorText
+    text: "Text Field"
+    color: Theme.colorComponentText
 
     background: Rectangle {
-        implicitWidth: 200
-        implicitHeight: 40
-
-        color: textFieldThemed.activeFocus ? Theme.colorComponentBackground : Theme.colorComponentBackground
-        border.color: textFieldThemed.activeFocus ? Theme.colorPrimary : Theme.colorComponentBorder
         border.width: 2
+        border.color: textFieldThemed.activeFocus ? Theme.colorPrimary : Theme.colorComponentBorder
+        color: textFieldThemed.activeFocus ? Theme.colorComponentBackground : Theme.colorComponentBackground
     }
 }

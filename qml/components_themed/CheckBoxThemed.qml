@@ -5,31 +5,39 @@ import com.offloadbuddy.theme 1.0
 
 CheckBox {
     id: control
+    implicitHeight: Theme.componentHeight
+
+    text: "Check Box"
     checked: false
-/*
+
     indicator: Rectangle {
-        implicitWidth: 26
-        implicitHeight: 26
         x: control.leftPadding
-        y: parent.height / 2 - height / 2
-        border.color: control.down ? Theme.colorSecondary : Theme.colorComponent
+        y: (parent.height / 2) - (height / 2)
+        width: 26
+        height: 26
+
+        color: Theme.colorComponentBackground
+        border.width: 1
+        border.color: control.down ? Theme.colorSecondary : Theme.colorComponentBorder
 
         Rectangle {
-            width: 14
-            height: 14
             x: 6
             y: 6
-            color: Theme.colorSecondary
+            width: 14
+            height: 14
+
             visible: control.checked
+            color: Theme.colorSecondary
         }
     }
-*/
+
     contentItem: Text {
         text: control.text
         font: control.font
-        opacity: enabled ? 1.0 : 0.3
-        color: control.down ? Theme.colorSubText : Theme.colorText
-        verticalAlignment: Text.AlignVCenter
         leftPadding: control.indicator.width + control.spacing
+        verticalAlignment: Text.AlignVCenter
+
+        color: control.down ? Theme.colorSubText : Theme.colorText
+        opacity: enabled ? 1.0 : 0.3
     }
 }

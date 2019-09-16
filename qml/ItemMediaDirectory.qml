@@ -83,7 +83,6 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
 
             embedded: true
-            //imageSource: "qrc:/icons_material/outline-folder-24px.svg"
             text: qsTr("change")
             onClicked: {
                 fileDialogChange.folder =  "file:///" + textField_path.text

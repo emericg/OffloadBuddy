@@ -5,11 +5,13 @@ import com.offloadbuddy.theme 1.0
 
 Button {
     id: control
-    implicitHeight: 40
+    implicitHeight: Theme.componentHeight
 
     property bool fullColor: false
     property string primaryColor: "#5483EF"
     property string secondaryColor: "#D0D0D0"
+
+    font.pixelSize: 16 // fullColor ? 16 : 15
 
     contentItem: Text {
         text: control.text
@@ -22,10 +24,7 @@ Button {
     }
 
     background: Rectangle {
-        implicitWidth: 128
-        implicitHeight: 40
-
-        radius: Theme.radiusComponent
+        radius: Theme.componentRadius
         border.width: 1
         border.color: fullColor ? control.primaryColor : control.secondaryColor
         opacity: enabled ? (control.down ? 0.5 : 1.0) : 0.3

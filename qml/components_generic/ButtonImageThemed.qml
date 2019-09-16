@@ -7,6 +7,7 @@ import com.offloadbuddy.theme 1.0
 Button {
     id: control
     width: contenttext.width + imgSize*3
+    implicitHeight: Theme.componentHeight
 
     property url source: ""
     property int imgSize: 28
@@ -41,9 +42,7 @@ Button {
     }
 
     background: Rectangle {
-        implicitWidth: 128
-        implicitHeight: 40
-        radius: Theme.radiusComponent
+        radius: Theme.componentRadius
         opacity: enabled ? 1 : 0.3
         color: control.down ? Theme.colorComponentDown : Theme.colorComponent
     }

@@ -301,7 +301,7 @@ Popup {
                     color: Theme.colorText
                 }
 
-                SpinBox {
+                SpinBoxThemed {
                     id: spinBoxYear
                     from: 2000
                     to: 2200
@@ -320,7 +320,7 @@ Popup {
                     color: Theme.colorText
                 }
 
-                SpinBox {
+                SpinBoxThemed {
                     id: spinBoxMonth
                     value: 1
                     from: 1
@@ -339,7 +339,7 @@ Popup {
                     color: Theme.colorText
                 }
 
-                SpinBox {
+                SpinBoxThemed {
                     id: spinBoxDay
                     value: 3
                     from: 1
@@ -369,7 +369,7 @@ Popup {
                     color: Theme.colorText
                 }
 
-                SpinBox {
+                SpinBoxThemed {
                     id: spinBoxHours
                     value: 0
                     from: 0
@@ -388,7 +388,7 @@ Popup {
                     color: Theme.colorText
                 }
 
-                SpinBox {
+                SpinBoxThemed {
                     id: spinBoxMinutes
                     value: 0
                     from: 0
@@ -410,6 +410,7 @@ Popup {
 
             ButtonWireframe {
                 id: buttonCancel
+                width: 96
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Cancel")
@@ -420,6 +421,7 @@ Popup {
             }
             ButtonWireframeImage {
                 id: buttonExit
+                width: 128
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Change")

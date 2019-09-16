@@ -50,6 +50,7 @@ Popup {
 
             ButtonWireframe {
                 id: buttonCancel
+                width: 96
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Cancel")
@@ -63,6 +64,7 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Exit")
+                width: 128
                 source: "qrc:/icons_material/baseline-exit_to_app-24px.svg"
                 fullColor: true
                 primaryColor: Theme.colorWarning

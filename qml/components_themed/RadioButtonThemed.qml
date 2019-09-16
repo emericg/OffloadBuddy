@@ -5,38 +5,40 @@ import com.offloadbuddy.theme 1.0
 
 RadioButton {
     id: control
-    text: "RadioButton"
+
+    text: "Radio Button"
     checked: false
 
     indicator: Rectangle {
-        implicitWidth: 24
-        implicitHeight: 24
         x: control.leftPadding
-        y: parent.height / 2 - height / 2
-
+        y: (parent.height / 2) - (height / 2)
+        width: 24
+        height: 24
         radius: 12
+
         color: Theme.colorComponentBackground
-        border.color: control.down ? Theme.colorPrimary : Theme.colorComponentBorder
+        border.width: 1
+        border.color: control.down ? Theme.colorSecondary : Theme.colorComponentBorder
 
         Rectangle {
-            width: 14
-            height: 14
             x: 5
             y: 5
-
+            width: 14
+            height: 14
             radius: 7
+
             visible: control.checked
-            color: control.down ? Theme.colorPrimary : Theme.colorPrimary
+            color: Theme.colorSecondary
         }
     }
 
     contentItem: Text {
+        text: control.text
+        font: control.font
         leftPadding: control.indicator.width + control.spacing
         verticalAlignment: Text.AlignVCenter
 
-        text: control.text
-        font: control.font
-        color: Theme.colorSubText
+        color: control.down ? Theme.colorSubText : Theme.colorText
         opacity: enabled ? 1.0 : 0.3
     }
 }

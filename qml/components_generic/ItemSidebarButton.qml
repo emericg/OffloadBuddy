@@ -72,8 +72,8 @@ Item {
         Rectangle {
             anchors.fill: parent
             height: parent.height
-            color: (Theme.selector === "bar") ? "black" : Theme.colorSidebarContent
-            opacity: (Theme.selector === "bar") ? 1 : 0.2
+            color: (Theme.sidebarSelector === "bar") ? "black" : Theme.colorSidebarContent
+            opacity: (Theme.sidebarSelector === "bar") ? 1 : 0.2
         }
         ImageSvg {
             id: selectorArrow
@@ -83,15 +83,15 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
 
             source: "qrc:/menus/selector_arrow.svg"
-            color: Theme.colorSidebarContent
-            visible: false // (Theme.selector === "arrow")
+            color: Theme.colorBackground
+            visible: (Theme.sidebarSelector === "arrow")
         }
         Rectangle {
             id: selectorBar
             width: 4
             height: parent.height
             color: Theme.colorPrimary
-            visible: (Theme.selector === "bar")
+            visible: (Theme.sidebarSelector === "bar")
         }
     }
 

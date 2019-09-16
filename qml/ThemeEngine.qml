@@ -50,17 +50,19 @@ Item {
 
     // Qt Quick controls & theming
     property string colorComponent
+    property string colorComponentText
     property string colorComponentContent
     property string colorComponentBorder
     property string colorComponentHover
     property string colorComponentDown
     property string colorComponentBackground
-    property int radiusComponent: 3
+    property int componentRadius: 3
+    property int componentHeight: 40
 
     ////////////////
 
-    // Selector (arrow or bar)
-    property string selector: "arrow"
+    // sidebarSelector (arrow or bar)
+    property string sidebarSelector: "arrow"
 
     ////////////////
 
@@ -112,7 +114,7 @@ Item {
             colorSidebar =          "#2e2e2e"
             colorSidebarContent =   "white"
 
-            colorActionbar =        "#fed859"
+            colorActionbar =        "#8cd200"
             colorActionbarContent = "white"
 
             colorBackground =       "#EEEEEE"
@@ -130,14 +132,15 @@ Item {
             colorError =            "#dc322f"
 
             colorComponent =        "#DBDBDB"
+            colorComponentText =    "black"
             colorComponentContent = "black"
             colorComponentBorder =  "#c1c1c1"
             colorComponentHover =   "#c1c1c1"
             colorComponentDown =    "#E4E4E4"
             colorComponentBackground = "#FAFAFA"
-            radiusComponent = 3
+            componentRadius = 3
 
-            selector = "arrow"
+            sidebarSelector = ""
 
         } else if (themeIndex === ThemeEngine.DARK_AND_SPOOKY) {
 
@@ -167,14 +170,15 @@ Item {
             colorError =            "#dc322f"
 
             colorComponent =        "#555555"
+            colorComponentText =    "white"
             colorComponentContent = "white"
             colorComponentBorder =  "#666666"
             colorComponentHover =   "#333333"
             colorComponentDown =    "#333333"
             colorComponentBackground = "#505050"
-            radiusComponent = 3
+            componentRadius = 3
 
-            selector = "arrow"
+            sidebarSelector = ""
 
         } else if (themeIndex === ThemeEngine.PLAIN_AND_BORING) {
 
@@ -204,14 +208,15 @@ Item {
             colorError =            "#FF5722"
 
             colorComponent =        "#D9D9D9"
+            colorComponentText =    "black"
             colorComponentContent = "black"
             colorComponentBorder =  "#E0E0E0"
             colorComponentHover =   "#E0E0E0"
             colorComponentDown =    "#c1c1c1"
             colorComponentBackground = "#FEFEFE"
-            radiusComponent = 3
+            componentRadius = 3
 
-            selector = "arrow"
+            sidebarSelector = "arrow"
 
         } else if (themeIndex === ThemeEngine.BLOOD_AND_TEARS) {
 
@@ -223,7 +228,7 @@ Item {
             colorSidebar =          "#181818"
             colorSidebarContent =   "#DDDDDD"
 
-            colorActionbar =        "#fed859"
+            colorActionbar =        "#009ee2"
             colorActionbarContent = "white"
 
             colorBackground =       "#222222"
@@ -241,14 +246,15 @@ Item {
             colorError =            "#fa6871"
 
             colorComponent =        "white"
+            colorComponentText =    "black"
             colorComponentContent = "black"
             colorComponentBorder =  "#E4E4E4"
             colorComponentHover =   "#bdbdbd"
             colorComponentDown =    "#CCCCCC"
-            colorComponentBackground = "#EEEEEE"
-            radiusComponent = 1
+            colorComponentBackground = "white"
+            componentRadius = 1
 
-            selector = "bar"
+            sidebarSelector = "bar"
 
         } else if (themeIndex === ThemeEngine.MIGHTY_KITTENS) {
 
@@ -268,7 +274,7 @@ Item {
             colorSidebar =          "#E31D8D"
             colorSidebarContent =   "#FFFBE2"
 
-            colorActionbar =        "#fed859"
+            colorActionbar =        "#FFE400"
             colorActionbarContent = "white"
 
             colorBackground =       "white"
@@ -286,14 +292,15 @@ Item {
             colorHighContrast =     "red"
 
             colorComponent =        "#ff6ec7"
+            colorComponentText =    "#944197"
             colorComponentContent = "white"
             colorComponentBorder =  "#F592C1"
             colorComponentHover =   "#E4E4E4"
             colorComponentDown =    "#F592C1"
             colorComponentBackground = "#fff4f9"
-            radiusComponent = 4
+            componentRadius = 4
 
-            selector = "arrow"
+            sidebarSelector = ""
         }
 
         // This will emit the signal 'onCurrentThemeChanged'
