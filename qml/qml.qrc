@@ -31,8 +31,8 @@
         <file>MediaDetailOverview.qml</file>
         <file>MediaPreview.qml</file>
 
-        <file>ThemeEngine.qml</file>
         <file>WindowGeometrySaver.qml</file>
+        <file>ThemeEngine.qml</file>
 
         <file alias="ImageSvg.qml">components_generic/ImageSvg.qml</file>
         <file alias="ItemBadge.qml">components_generic/ItemBadge.qml</file>

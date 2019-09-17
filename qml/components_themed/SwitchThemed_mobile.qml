@@ -13,8 +13,8 @@ Switch {
         height: 16
         radius: 16
 
-        color: control.checked ? Theme.colorSecondary : Theme.colorComponent
-        //border.color: control.checked ? Theme.colorSecondary : Theme.colorComponent
+        color: control.checked ? Theme.colorSecondary : Theme.colorComponentDown
+        //border.color: control.checked ? Theme.colorSecondary : Theme.colorComponentBackground
 
         Rectangle {
             x: control.checked ? (parent.width - width) : 0
@@ -23,8 +23,8 @@ Switch {
             height: width
             radius: width/2
 
-            color: control.checked ? Theme.colorPrimary : Theme.colorComponentBackground
-            border.color: control.checked ? Theme.colorPrimary : Theme.colorComponentBackground
+            color: control.checked ? Theme.colorPrimary : Theme.colorComponent
+            border.color: control.checked ? Theme.colorPrimary : Theme.colorComponent
         }
     }
 

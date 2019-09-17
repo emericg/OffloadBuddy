@@ -303,6 +303,8 @@ Popup {
 
                 SpinBoxThemed {
                     id: spinBoxYear
+
+                    locale: Qt.locale('C')
                     from: 2000
                     to: 2200
                     value: 2019

@@ -86,5 +86,6 @@ SpinBox {
 
         color: "transparent"
         border.color: Theme.colorComponentBorder
+        border.width: 1
     }
 }

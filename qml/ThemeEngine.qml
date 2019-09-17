@@ -104,6 +104,8 @@ Item {
             console.log("ThemeEngine::loadTheme(" + themeIndex + ") ERROR Unknown theme!")
         }
 
+        if (themeIndex === currentTheme) return;
+
         if (themeIndex === ThemeEngine.LIGHT_AND_WARM) {
 
             // "LIGHT AND WARM"
