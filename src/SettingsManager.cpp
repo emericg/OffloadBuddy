@@ -195,7 +195,7 @@ bool SettingsManager::writeSettings()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void SettingsManager::addDirectory(QString path)
+void SettingsManager::addDirectory(const QString &path)
 {
     if (!path.isEmpty())
     {

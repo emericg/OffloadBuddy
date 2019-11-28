@@ -19,6 +19,7 @@ MOC_DIR     = build/
 RCC_DIR     = build/
 UI_DIR      = build/
 QMLCACHE_DIR= build/
+
 DESTDIR     = bin/
 
 # Project files ################################################################
@@ -150,7 +151,7 @@ contains(DEFINES, USE_CONTRIBS) {
 
 } else {
 
-    !unix { warning("Building OffloadBuddy without contribs on windows is untested...") }
+    !unix { warning("Building $${TARGET} without contribs on windows is untested...") }
 
     CONFIG += link_pkgconfig
     macx { PKG_CONFIG = /usr/local/bin/pkg-config } # use pkg-config from brew

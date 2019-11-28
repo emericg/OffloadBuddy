@@ -71,7 +71,7 @@ private slots:
 
 public:
     MediaDirectory();
-    MediaDirectory(QString &path, int content);
+    MediaDirectory(const QString &path, int content);
     ~MediaDirectory();
 
 public slots:

@@ -68,7 +68,7 @@ MediaDirectory::MediaDirectory()
  * Do not check if the path exists, we are allow to save paths that have been
  * disconnected since (ex: removable medias).
  */
-MediaDirectory::MediaDirectory(QString &path, int content)
+MediaDirectory::MediaDirectory(const QString &path, int content)
 {
     setPath(path);
     setContent(content);

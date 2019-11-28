@@ -281,7 +281,6 @@ Popup {
             }
             ButtonWireframeImage {
                 id: buttonExtractGps
-                width: 128
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Extract GPS")

@@ -72,7 +72,7 @@ void FileScanner::chooseMtpStorage(StorageMtp *mtpStorage)
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void FileScanner::scanFilesystemDirectory(QString &dir_path)
+void FileScanner::scanFilesystemDirectory(const QString &dir_path)
 {
     //qDebug() << "  * Scanning subdir:" << dir_path;
 
@@ -156,7 +156,7 @@ void FileScanner::scanFilesystemDirectory(QString &dir_path)
     }
 }
 
-bool FileScanner::scanFilesystemFile(QString &file_path, ofb_file *f, ofb_shot *s)
+bool FileScanner::scanFilesystemFile(const QString &file_path, ofb_file *f, ofb_shot *s)
 {
     //qDebug() << "  * Scanning file:" << file_path;
 

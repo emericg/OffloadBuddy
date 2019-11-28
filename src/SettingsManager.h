@@ -134,7 +134,7 @@ public:
     const QList <QObject *> *getDirectoriesList() const { return &m_mediaDirectories; }
 
 public slots:
-    void addDirectory(QString path);
+    void addDirectory(const QString &path);
     void deleteDirectory(const QString &path);
     void directoryModified();
     void changeAppUnits() { emit appUnitsChanged(); }

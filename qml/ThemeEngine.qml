@@ -53,7 +53,6 @@ Item {
     property string colorComponentText
     property string colorComponentContent
     property string colorComponentBorder
-    property string colorComponentHover
     property string colorComponentDown
     property string colorComponentBackground
     property int componentRadius: 3
@@ -137,7 +136,6 @@ Item {
             colorComponentText =    "black"
             colorComponentContent = "black"
             colorComponentBorder =  "#c1c1c1"
-            colorComponentHover =   "#c1c1c1"
             colorComponentDown =    "#E4E4E4"
             colorComponentBackground = "#FAFAFA"
             componentRadius = 3
@@ -175,7 +173,6 @@ Item {
             colorComponentText =    "white"
             colorComponentContent = "white"
             colorComponentBorder =  "#666666"
-            colorComponentHover =   "#333333"
             colorComponentDown =    "#333333"
             colorComponentBackground = "#505050"
             componentRadius = 3
@@ -213,7 +210,6 @@ Item {
             colorComponentText =    "black"
             colorComponentContent = "black"
             colorComponentBorder =  "#E0E0E0"
-            colorComponentHover =   "#E0E0E0"
             colorComponentDown =    "#c1c1c1"
             colorComponentBackground = "#FEFEFE"
             componentRadius = 3
@@ -251,7 +247,6 @@ Item {
             colorComponentText =    "black"
             colorComponentContent = "black"
             colorComponentBorder =  "#E4E4E4"
-            colorComponentHover =   "#bdbdbd"
             colorComponentDown =    "#CCCCCC"
             colorComponentBackground = "white"
             componentRadius = 1
@@ -297,7 +292,6 @@ Item {
             colorComponentText =    "#944197"
             colorComponentContent = "white"
             colorComponentBorder =  "#F592C1"
-            colorComponentHover =   "#E4E4E4"
             colorComponentDown =    "#F592C1"
             colorComponentBackground = "#fff4f9"
             componentRadius = 4

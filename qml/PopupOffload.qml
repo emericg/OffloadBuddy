@@ -53,7 +53,6 @@ Popup {
             anchors.left: parent.left
             anchors.leftMargin: 0
 
-
             Item {
                 height: 48
                 anchors.right: parent.right
