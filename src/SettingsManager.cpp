@@ -93,13 +93,22 @@ bool SettingsManager::readSettings()
         if (settings.contains("global/ignoreHdAudio"))
             m_ignoreHdAudio = settings.value("global/ignoreHdAudio").toBool();
 
+        if (settings.contains("global/thumbQuality"))
+            m_thumbQuality = settings.value("global/thumbQuality").toUInt();
+
+        if (settings.contains("global/thumbFormat"))
+            m_thumbFormat = settings.value("global/thumbFormat").toUInt();
+
+        if (settings.contains("global/thumbSize"))
+            m_thumbSize = settings.value("global/thumbSize").toUInt();
+
         if (settings.contains("global/contentHierarchy"))
             m_contentHierarchy = settings.value("global/contentHierarchy").toUInt();
 
         for (int i = 1; i <= MEDIA_DIRECTORIES_MAX_COUNT; i++)
         {
-            QString p = "mediadirectory/" + QString::number(i) + "/path";
-            QString t = "mediadirectory/" + QString::number(i) + "/content";
+            QString p = "MediaDirectories/" + QString::number(i) + "/path";
+            QString t = "MediaDirectories/" + QString::number(i) + "/content";
 
             if (settings.contains(p) && settings.contains(t))
             {
@@ -155,6 +164,9 @@ bool SettingsManager::writeSettings()
         settings.setValue("global/autoDelete", m_autoDelete);
         settings.setValue("global/ignoreJunk", m_ignoreJunk);
         settings.setValue("global/ignoreHdAudio", m_ignoreHdAudio);
+        settings.setValue("global/thumbQuality", m_thumbQuality);
+        settings.setValue("global/thumbFormat", m_thumbFormat);
+        settings.setValue("global/thumbSize", m_thumbSize);
         settings.setValue("global/contentHierarchy", m_contentHierarchy);
         settings.sync();
 
@@ -164,8 +176,8 @@ bool SettingsManager::writeSettings()
             MediaDirectory *dd = qobject_cast<MediaDirectory*>(d);
             if (dd)
             {
-                QString p = "mediadirectory/" + QString::number(i) + "/path";
-                QString t = "mediadirectory/" + QString::number(i) + "/content";
+                QString p = "MediaDirectories/" + QString::number(i) + "/path";
+                QString t = "MediaDirectories/" + QString::number(i) + "/content";
                 settings.setValue(p, dd->getPath());
                 settings.setValue(t, dd->getContent());
                 i++;
@@ -173,8 +185,8 @@ bool SettingsManager::writeSettings()
         }
         for (; i < MEDIA_DIRECTORIES_MAX_COUNT; i++)
         {
-            QString p = "mediadirectory/" + QString::number(i) + "/path";
-            QString t = "mediadirectory/" + QString::number(i) + "/content";
+            QString p = "MediaDirectories/" + QString::number(i) + "/path";
+            QString t = "MediaDirectories/" + QString::number(i) + "/content";
             settings.remove(p);
             settings.remove(t);
         }
@@ -320,6 +332,36 @@ void SettingsManager::setIgnoreHdAudio(bool value)
         m_ignoreHdAudio = value;
         writeSettings();
         Q_EMIT ignoreHdAudioChanged();
+    }
+}
+
+void SettingsManager::setThumbQuality(unsigned value)
+{
+    if (m_thumbQuality != value)
+    {
+        m_thumbQuality = value;
+        writeSettings();
+        Q_EMIT thumbQualityChanged();
+    }
+}
+
+void SettingsManager::setThumbFormat(unsigned value)
+{
+    if (m_thumbFormat != value)
+    {
+        m_thumbFormat = value;
+        writeSettings();
+        Q_EMIT thumbFormatChanged();
+    }
+}
+
+void SettingsManager::setThumbSize(unsigned value)
+{
+    if (m_thumbSize != value)
+    {
+        m_thumbSize = value;
+        writeSettings();
+        Q_EMIT thumbSizeChanged();
     }
 }
 

@@ -49,6 +49,9 @@ class SettingsManager: public QObject
     Q_PROPERTY(bool automerge READ getAutoMerge WRITE setAutoMerge NOTIFY autoMergeChanged)
     Q_PROPERTY(bool autometadata READ getAutoMetadata WRITE setAutoMetadata NOTIFY autoMetadataChanged)
     Q_PROPERTY(bool autodelete READ getAutoDelete WRITE setAutoDelete NOTIFY autoDeleteChanged)
+    Q_PROPERTY(uint thumbQuality READ getThumbQuality WRITE setThumbQuality NOTIFY thumbQualityChanged)
+    Q_PROPERTY(uint thumbFormat READ getThumbFormat WRITE setThumbFormat NOTIFY thumbFormatChanged)
+    Q_PROPERTY(uint thumbSize READ getThumbSize WRITE setThumbSize NOTIFY thumbSizeChanged)
     Q_PROPERTY(bool ignorejunk READ getIgnoreJunk WRITE setIgnoreJunk NOTIFY ignoreJunkChanged)
     Q_PROPERTY(bool ignorehdaudio READ getIgnoreHdAudio WRITE setIgnoreHdAudio NOTIFY ignoreHdAudioChanged)
     Q_PROPERTY(bool mtpfullscan READ getMtpFullScan WRITE setMtpFullScan NOTIFY mtpFullScanChanged)
@@ -67,6 +70,9 @@ class SettingsManager: public QObject
     bool m_autoMerge = true;
     bool m_autoTelemetry = true;
     bool m_autoDelete = false;
+    unsigned m_thumbQuality = 1;
+    unsigned m_thumbFormat = 2;
+    unsigned m_thumbSize = 2;
     bool m_mtpFullScan = false;
     unsigned m_contentHierarchy = 0;
 
@@ -90,6 +96,9 @@ Q_SIGNALS:
     void autoDeleteChanged();
     void ignoreJunkChanged();
     void ignoreHdAudioChanged();
+    void thumbQualityChanged();
+    void thumbFormatChanged();
+    void thumbSizeChanged();
     void mtpFullScanChanged();
     void contentHierarchyChanged();
     void directoriesUpdated();
@@ -124,6 +133,15 @@ public:
     bool getIgnoreHdAudio() const { return m_ignoreHdAudio; }
     void setIgnoreHdAudio(bool value);
 
+    unsigned getThumbQuality() const { return m_thumbQuality; }
+    void setThumbQuality(unsigned value);
+
+    unsigned getThumbFormat() const { return m_thumbFormat; }
+    void setThumbFormat(unsigned value);
+
+    unsigned getThumbSize() const { return m_thumbSize; }
+    void setThumbSize(unsigned value);
+
     bool getMtpFullScan() const { return m_mtpFullScan; }
     void setMtpFullScan(bool value);
 
@@ -137,7 +155,6 @@ public slots:
     void addDirectory(const QString &path);
     void deleteDirectory(const QString &path);
     void directoryModified();
-    void changeAppUnits() { emit appUnitsChanged(); }
 };
 
 /* ************************************************************************** */

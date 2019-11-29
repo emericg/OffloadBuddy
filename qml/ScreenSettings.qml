@@ -128,15 +128,8 @@ Item {
                     text: qsTr("Metric")
                     font.pixelSize: 16
 
-                    Component.onCompleted: {
-                        if (settingsManager.appunits === 0) {checked = true; }
-                    }
-                    onCheckedChanged: {
-                        if (checked === true) {
-                            settingsManager.appunits = 0
-                            settingsManager.changeAppUnits()
-                        }
-                    }
+                    Component.onCompleted: { checked =  (settingsManager.appunits === 0); }
+                    onCheckedChanged: { if (checked === true) { settingsManager.appunits = 0 }; }
                 }
 
                 RadioButtonThemed {
@@ -146,15 +139,8 @@ Item {
                     text: qsTr("Imperial")
                     font.pixelSize: 16
 
-                    Component.onCompleted: {
-                        if (settingsManager.appunits === 1) {checked = true; }
-                    }
-                    onCheckedChanged: {
-                        if (checked === true) {
-                            settingsManager.appunits = 1
-                            settingsManager.changeAppUnits()
-                        }
-                    }
+                    Component.onCompleted: { checked =  (settingsManager.appunits === 1); }
+                    onCheckedChanged: { if (checked === true) { settingsManager.appunits = 1 }; }
                 }
             }
 
@@ -181,52 +167,26 @@ Item {
 
                     text: qsTr("Low")
                     font.pixelSize: 16
-/*
-                    Component.onCompleted: {
-                        if (settingsManager.appunits === 0) {checked = true; }
-                    }
-                    onCheckedChanged: {
-                        if (checked === true) {
-                            settingsManager.appunits = 0
-                            settingsManager.changeAppUnits()
-                        }
-                    }*/
+                    Component.onCompleted: checked = (settingsManager.thumbQuality === 0)
+                    onCheckedChanged: { if (checked === true) { settingsManager.thumbQuality = 0 }; }
                 }
-
                 RadioButtonThemed {
                     id: radioThumbnailMedium
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Balanced")
                     font.pixelSize: 16
-
-                    Component.onCompleted: {
-                        if (settingsManager.appunits === 1) {checked = true; }
-                    }
-                    onCheckedChanged: {
-                        if (checked === true) {
-                            settingsManager.appunits = 1
-                            settingsManager.changeAppUnits()
-                        }
-                    }
+                    Component.onCompleted: checked = (settingsManager.thumbQuality === 1)
+                    onCheckedChanged: { if (checked === true) { settingsManager.thumbQuality = 1 }; }
                 }
-
                 RadioButtonThemed {
                     id: radioThumbnailHigh
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Ludicrous")
                     font.pixelSize: 16
-/*
-                    Component.onCompleted: {
-                        if (settingsManager.appunits === 1) {checked = true; }
-                    }
-                    onCheckedChanged: {
-                        if (checked === true) {
-                            settingsManager.appunits = 1
-                            settingsManager.changeAppUnits()
-                        }
-                    }*/
+                    Component.onCompleted: checked = (settingsManager.thumbQuality === 2)
+                    onCheckedChanged: { if (checked === true) { settingsManager.thumbQuality = 2 }; }
                 }
             }
 
@@ -245,6 +205,43 @@ Item {
                     color: Theme.colorText
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignLeft
+                }
+
+                RadioButtonThemed {
+                    id: radioThumbnail11
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: qsTr("1:1")
+                    font.pixelSize: 16
+                    Component.onCompleted: checked = (settingsManager.thumbFormat === 1)
+                    onCheckedChanged: { if (checked === true) settingsManager.thumbFormat = 1; }
+                }
+                RadioButtonThemed {
+                    id: radioThumbnail43
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: qsTr("4:3")
+                    font.pixelSize: 16
+                    Component.onCompleted: checked = (settingsManager.thumbFormat === 2)
+                    onCheckedChanged: { if (checked === true) settingsManager.thumbFormat = 2; }
+                }
+                RadioButtonThemed {
+                    id: radioThumbnail16
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: qsTr("16:9")
+                    font.pixelSize: 16
+                    Component.onCompleted: checked = (settingsManager.thumbFormat === 3)
+                    onCheckedChanged: { if (checked === true) settingsManager.thumbFormat = 3; }
+                }
+                RadioButtonThemed {
+                    id: radioThumbnail21
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: qsTr("2:1")
+                    font.pixelSize: 16
+                    Component.onCompleted: checked = (settingsManager.thumbFormat === 4)
+                    onCheckedChanged: { if (checked === true) settingsManager.thumbFormat = 4; }
                 }
             }
 

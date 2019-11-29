@@ -824,7 +824,32 @@ Item {
                 mediaGrid.exitSelectionMode();
             }
 
-            property real cellFormat: 4/3
+            Connections {
+                target: settingsManager
+                onThumbFormatChanged: {
+                    if (settingsManager.thumbFormat === 1)
+                        shotsView.cellFormat = 1.0
+                    else if (settingsManager.thumbFormat === 2)
+                        shotsView.cellFormat = 4/3
+                    else if (settingsManager.thumbFormat === 3)
+                        shotsView.cellFormat = 16/9
+                    else if (settingsManager.thumbFormat === 4)
+                        shotsView.cellFormat = 2.0
+
+                    shotsView.computeCellSize()
+                }
+            }
+
+            property real cellFormat: {
+                if (settingsManager.thumbFormat === 1)
+                    return 1.0
+                else if (settingsManager.thumbFormat === 2)
+                    return 4/3
+                else if (settingsManager.thumbFormat === 3)
+                    return 16/9
+                else if (settingsManager.thumbFormat === 4)
+                    return 2.0
+            }
             property int cellSizeTarget: 279
             property int cellSize: 279
             property int cellMarginTarget: 12

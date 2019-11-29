@@ -195,7 +195,7 @@ Rectangle {
 
         fillMode: Image.PreserveAspectCrop
         antialiasing: false
-        smooth: false // for perf reasons
+        smooth: (settingsManager.thumbQuality === 2)
         sourceSize.width: 512
         sourceSize.height: 512 // big enough so we have good quality regarding of the thumb size
     }
