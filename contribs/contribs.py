@@ -20,19 +20,44 @@ import urllib.request
 print("\n> OffloadBuddy contribs builder")
 
 ## DEPENDENCIES ################################################################
+# These dependencies are needed for this script to run
 
 ## linux:
-# cmake libtool automake m4 libudev-dev
+# python3 cmake libtool automake m4 libudev-dev
 
 ## macOS:
-# brew install python cmake pkg-config
-# brew install automake libtool gettext iconv libudev
+# brew install python cmake automake
+# brew install libtool pkg-config
+# brew install  gettext iconv libudev
 # brew link --force gettext
+# xcode (10+)
 
 ## Windows:
 # python3 (https://www.python.org/downloads/)
 # cmake (https://cmake.org/download/)
-# MSVC 2017
+# MSVC (2017+)
+
+## HOST ########################################################################
+
+# Supported platforms / architectures:
+# Natives:
+# - Linux
+# - Darwin (macOS)
+# - Windows
+# Cross compilation (from Linux):
+# - Windows (mingw32-w64)
+# Cross compilation (from macOS):
+# - iOS (simulator, armv7a, armv8a)
+# Cross compilation (from Linux or macOS):
+# - Android (armv7a, armv8a)
+
+OS_HOST = platform.system()
+ARCH_HOST = platform.machine()
+CPU_COUNT = multiprocessing.cpu_count()
+
+print("HOST SYSTEM : " + platform.system() + " (" + platform.release() + ") [" + os.name + "]")
+print("HOST ARCH   : " + ARCH_HOST)
+print("HOST CPUs   : " + str(CPU_COUNT) + " cores")
 
 ## SANITY CHECKS ###############################################################
 
@@ -49,24 +74,6 @@ if platform.machine() not in ("x86_64", "AMD64"):
     print("This script needs a 64bits OS")
     sys.exit()
 
-## HOST ########################################################################
-
-# Supported platforms / architectures:
-# Natives:
-# - Linux
-# - Darwin (macOS)
-# - Windows
-# Cross compilation (from Linux):
-# - Windows (mingw32-w64)
-
-OS_HOST = platform.system()
-ARCH_HOST = platform.machine()
-CPU_COUNT = multiprocessing.cpu_count()
-
-print("HOST SYSTEM : " + platform.system() + " (" + platform.release() + ") [" + os.name + "]")
-print("HOST ARCH   : " + ARCH_HOST)
-print("HOST CPUs   : " + str(CPU_COUNT) + " cores")
-
 ## SETTINGS ####################################################################
 
 contribs_dir = os.getcwd() + "/"
@@ -76,14 +83,41 @@ clean = False
 rebuild = False
 ANDROID_NDK_HOME = os.getenv('ANDROID_NDK_HOME', '')
 
+## MATRIX ######################################################################
+
+# TODO
+
+## TARGETS #####################################################################
+
+TARGETS = []
+
+if OS_HOST == "Linux":
+    TARGETS.append(["linux", "x86_64"])
+    #if ANDROID_NDK_HOME:
+    #    TARGETS.append(["android", "armv7"])
+    #    TARGETS.append(["android", "armv8"])
+    #    TARGETS.append(["android", "x86"])
+    #    TARGETS.append(["android", "x86_64"])
+    #TARGETS.append(["windows", "x86_64"]) # Windows cross compilation
+
+if OS_HOST == "Darwin":
+    TARGETS.append(["macOS", "x86_64"])
+    #TARGETS.append(["iOS", "simulator"])
+    #TARGETS.append(["iOS", "armv7"])
+    #TARGETS.append(["iOS", "armv8"])
+
+if OS_HOST == "Windows":
+    TARGETS.append(["windows", "x86_64"])
+    #TARGETS.append(["windows", "armv7"]) # WinRT
+
 ## ARGUMENTS ###################################################################
 
 parser = argparse.ArgumentParser(prog='contribs.py',
-                                 description='ReShoot contribs builder',
+                                 description='OffloadBuddy contribs builder',
                                  formatter_class=argparse.RawTextHelpFormatter)
 
 parser.add_argument('-c', '--clean', help="clean everything and exit (downloaded files and all temporary directories)", action='store_true')
-parser.add_argument('-r', '--rebuild', help="rebuild the contribs even if already builded", action='store_true')
+parser.add_argument('-r', '--rebuild', help="rebuild the contribs even if already built", action='store_true')
 parser.add_argument('--android-ndk', dest='androidndk', help="specify a custom path to the android-ndk (if ANDROID_NDK_HOME environment variable doesn't exists)")
 
 if len(sys.argv) > 1:
@@ -111,6 +145,9 @@ if clean:
     print(">> Contribs cleaned!")
     sys.exit()
 
+if not os.path.exists(src_dir):
+    os.makedirs(src_dir)
+
 ## UTILS #######################################################################
 
 def copytree(src, dst, symlinks=False, ignore=None):
@@ -132,9 +169,6 @@ def copytree_wildcard(src, dst, symlinks=False, ignore=None):
         shutil.copy2(item, dst)
 
 ## SOFTWARES ###################################################################
-
-if not os.path.exists(src_dir):
-    os.makedirs(src_dir)
 
 ## libUSB & libMTP
 ## version: git (1.0.22+)
@@ -179,25 +213,10 @@ if not os.path.exists("src/" + FILE_minivideo):
 ## linuxdeployqt
 ## version: git
 if OS_HOST == "Linux":
-    FILE_linuxdeployqt = "linuxdeployqt-5-x86_64.AppImage"
+    FILE_linuxdeployqt = "linuxdeployqt-6-x86_64.AppImage"
     if not os.path.exists("src/" + FILE_linuxdeployqt):
         print("> Downloading " + FILE_linuxdeployqt + "...")
-        urllib.request.urlretrieve("https://github.com/probonopd/linuxdeployqt/releases/download/5/" + FILE_linuxdeployqt, src_dir + FILE_linuxdeployqt)
-
-## CHOOSE TARGETS ##############################################################
-
-TARGETS = []
-
-if OS_HOST == "Linux":
-    TARGETS.append(["linux", "x86_64"])
-    #TARGETS.append(["windows", "x86_64"]) # Windows cross compilation
-
-if OS_HOST == "Darwin":
-    TARGETS.append(["macOS", "x86_64"])
-
-if OS_HOST == "Windows":
-    TARGETS.append(["windows", "x86_64"])
-    #TARGETS.append(["windows", "armv7"]) # WinRT
+        urllib.request.urlretrieve("https://github.com/probonopd/linuxdeployqt/releases/download/6/" + FILE_linuxdeployqt, src_dir + FILE_linuxdeployqt)
 
 ## EXECUTE #####################################################################
 
@@ -223,12 +242,25 @@ for TARGET in TARGETS:
     ## CMAKE command selection
     CMAKE_cmd = ["cmake"]
     CMAKE_gen = "Unix Makefiles"
+    build_shared = "ON"
+    build_static = "OFF"
+
     if OS_HOST == "Linux":
         if OS_TARGET == "windows":
             if ARCH_TARGET == "i686":
                 CMAKE_cmd = ["i686-w64-mingw32-cmake"]
             else:
                 CMAKE_cmd = ["x86_64-w64-mingw32-cmake"]
+    elif OS_HOST == "Darwin":
+        if OS_TARGET == "iOS":
+            build_shared = "OFF"
+            build_static = "ON"
+            if ARCH_TARGET == "armv7":
+                CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + contribs_dir + "/tools/ios.toolchain.cmake", "-DIOS_PLATFORM=OS"]
+            if ARCH_TARGET == "armv8":
+                CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + contribs_dir + "/tools/ios.toolchain.cmake", "-DIOS_PLATFORM=OS64", "-DENABLE_BITCODE=0", "-DENABLE_ARC=1"]
+            else:
+                CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + contribs_dir + "/tools/ios.toolchain.cmake", "-DIOS_PLATFORM=SIMULATOR64"]
     elif OS_HOST == "Windows":
         if ARCH_TARGET == "x86_64":
             CMAKE_gen = "Visual Studio 15 2017 Win64"
@@ -236,6 +268,15 @@ for TARGET in TARGETS:
             CMAKE_gen = "Visual Studio 15 2017 ARM"
         else:
             CMAKE_gen = "Visual Studio 15 2017"
+
+    if OS_HOST == "Linux" or OS_HOST == "Darwin":
+        if OS_TARGET == "android":
+            if ARCH_TARGET == "armv7":
+                CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_HOME + "/build/cmake/android.toolchain.cmake", "-DANDROID_TOOLCHAIN=clang", "-DANDROID_ABI=arm64-v8a", "-DANDROID_PLATFORM=android-21"]
+            elif ARCH_TARGET == "armv8":
+                CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_HOME + "/build/cmake/android.toolchain.cmake", "-DANDROID_TOOLCHAIN=clang", "-DANDROID_ABI=armeabi-v7a", "-DANDROID_PLATFORM=android-21"]
+            else:
+                CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_HOME + "/build/cmake/android.toolchain.cmake", "-DANDROID_TOOLCHAIN=clang", "-DANDROID_ABI=x86-64", "-DANDROID_PLATFORM=android-21"]
 
     ############################################################################
 
@@ -273,18 +314,20 @@ for TARGET in TARGETS:
         os.system("make -j" + str(CPU_COUNT))
         os.system("make install")
 
-    subprocess.check_call(CMAKE_cmd + ["-G", CMAKE_gen, "-DCMAKE_BUILD_TYPE=Release", "-DBUILD_STATIC_LIBS:BOOL=OFF", "-DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=TRUE", "-DCMAKE_INSTALL_PREFIX=" + env_dir + "/usr", ".."], cwd=build_dir + DIR_libexif + "/build")
+    # libexif
+    subprocess.check_call(CMAKE_cmd + ["-G", CMAKE_gen, "-DCMAKE_BUILD_TYPE=Release", "-DBUILD_SHARED_LIBS:BOOL=" + build_shared, "-DBUILD_STATIC_LIBS:BOOL=" + build_static, "-DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=TRUE", "-DCMAKE_INSTALL_PREFIX=" + env_dir + "/usr", ".."], cwd=build_dir + DIR_libexif + "/build")
     subprocess.check_call(["cmake", "--build", ".", "--config", "Release"], cwd=build_dir + DIR_libexif + "/build")
     subprocess.check_call(["cmake", "--build", ".", "--target", "install", "--config", "Release"], cwd=build_dir + DIR_libexif + "/build")
 
-    subprocess.check_call(CMAKE_cmd + ["-G", CMAKE_gen, "-DCMAKE_BUILD_TYPE=Release", "-DBUILD_STATIC_LIBS:BOOL=OFF", "-DCMAKE_INSTALL_PREFIX=" + env_dir + "/usr", ".."], cwd=build_dir + DIR_minivideo + "/minivideo/build")
+    # minivideo
+    subprocess.check_call(CMAKE_cmd + ["-G", CMAKE_gen, "-DCMAKE_BUILD_TYPE=Release", "-DBUILD_SHARED_LIBS:BOOL=" + build_shared, "-DBUILD_STATIC_LIBS:BOOL=" + build_static, "-DCMAKE_INSTALL_PREFIX=" + env_dir + "/usr", ".."], cwd=build_dir + DIR_minivideo + "/minivideo/build")
     subprocess.check_call(["cmake", "--build", ".", "--config", "Release"], cwd=build_dir + DIR_minivideo + "/minivideo/build")
     subprocess.check_call(["cmake", "--build", ".", "--target", "install", "--config", "Release"], cwd=build_dir + DIR_minivideo + "/minivideo/build")
 
     ############################################################################
 
     ## ffmpeg binaries download & install
-    FFMPEG_version = "4.1"
+    FFMPEG_version = "4.2.1"
     FFMPEG_key = ""
 
     if OS_TARGET == "windows":

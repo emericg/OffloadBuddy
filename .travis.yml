@@ -10,14 +10,17 @@ before_install:
       sudo add-apt-repository ppa:jonathonf/ffmpeg-4 -y;
       sudo apt-get update -q;
     fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+#      brew update;
+#    fi
 
 install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
       sudo apt-get install qt512base qt512tools qt512quickcontrols qt512quickcontrols2 qt512graphicaleffects qt512svg qt512imageformats qt512charts-no-lgpl qt512location qt512multimedia -y;
       sudo apt-get install libgl1-mesa-dev libva-dev libvdpau-dev -y;
       sudo apt-get install ffmpeg libavcodec-dev libavdevice-dev -y;
+      sudo apt-get install libudev-dev libusb-dev -y;
       sudo apt-get install libtool automake m4 -y;
-      sudo apt-get install libudev-dev libusb-dev;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       brew install qt;
