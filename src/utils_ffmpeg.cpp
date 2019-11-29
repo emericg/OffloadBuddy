@@ -1,5 +1,4 @@
 /*!
- * This file is part of OffloadBuddy.
  * COPYRIGHT (C) 2018 Emeric Grange - All Rights Reserved
  *
  * This program is free software: you can redistribute it and/or modify

@@ -54,7 +54,7 @@ Item {
             altiAVG.text = UtilsString.altitudeToString(shot.avgAlti, 0, settingsManager.appunits)
             altiMAX.text = UtilsString.altitudeToString(shot.maxAlti, 0, settingsManager.appunits)
 
-            trackDuration.text = UtilsString.durationToString(shot.duration)
+            trackDuration.text = UtilsString.durationToString_long(shot.duration)
             trackDistance.text = UtilsString.distanceToString(shot.distanceKm, 1, settingsManager.appunits)
             acclMAX.text = (shot.maxG / 9.80665).toFixed(1) + " G's"
 

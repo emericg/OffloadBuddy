@@ -262,7 +262,7 @@ Rectangle {
                 onPositionChanged: {
                     //timelinePosition.width = timeline.width * (videoPlayer.position / videoPlayer.duration)
                     timeline.value = (videoPlayer.position / videoPlayer.duration)
-                    timecode.text = UtilsString.durationToString_player(videoPlayer.position) + " / " + UtilsString.durationToString_condensed(videoPlayer.duration)
+                    timecode.text = UtilsString.durationToString_ISO8601_compact(videoPlayer.position) + " / " + UtilsString.durationToString_compact(videoPlayer.duration)
                 }
             }
         }

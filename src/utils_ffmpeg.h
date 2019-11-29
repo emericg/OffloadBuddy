@@ -1,5 +1,4 @@
 /*!
- * This file is part of OffloadBuddy.
  * COPYRIGHT (C) 2018 Emeric Grange - All Rights Reserved
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +20,9 @@
 
 #ifndef UTILS_FFMPEG_H
 #define UTILS_FFMPEG_H
-#ifdef ENABLE_FFMPEG
 /* ************************************************************************** */
+
+#ifdef ENABLE_FFMPEG
 
 #ifdef __cplusplus
 extern "C"
@@ -75,6 +75,7 @@ void ffmpeg_list_encoders(bool hw_only = false);
 bool ffmpeg_get_keyframes(const AVStream *stream, const int64_t target,
                           int64_t &prev, int64_t &next);
 
-/* ************************************************************************** */
 #endif // ENABLE_FFMPEG
+
+/* ************************************************************************** */
 #endif // UTILS_FFMPEG_H

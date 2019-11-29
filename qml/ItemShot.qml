@@ -3,6 +3,7 @@ import QtQuick.Controls 2.2
 
 import ThemeEngine 1.0
 import com.offloadbuddy.shared 1.0
+import "qrc:/js/UtilsMedia.js" as UtilsMedia
 import "qrc:/js/UtilsString.js" as UtilsString
 
 Rectangle {
@@ -74,7 +75,7 @@ Rectangle {
         if (fileType === Shared.FILE_VIDEO) {
             if (duration > 0) {
                 text_left.visible = true
-                text_left.text = UtilsString.durationToString_condensed(duration)
+                text_left.text = UtilsString.durationToString_ISO8601_compact_loose(duration)
             }
             if (shot.chapters > 1)
                 icon_left.source = "qrc:/icons_material/baseline-video_library-24px.svg"

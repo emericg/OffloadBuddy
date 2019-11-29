@@ -4,6 +4,7 @@ import QtMultimedia 5.9
 
 import ThemeEngine 1.0
 import com.offloadbuddy.shared 1.0
+import "qrc:/js/UtilsMedia.js" as UtilsMedia
 import "qrc:/js/UtilsString.js" as UtilsString
 
 Item {
@@ -25,10 +26,10 @@ Item {
 
         date.text = shot.date.toUTCString()
         size.text = UtilsString.bytesToString_short(shot.datasize)
-        definition.text = shot.width + "x" + shot.height + "   (" + UtilsString.varToString(shot.width, shot.height) + ")"
+        definition.text = shot.width + "x" + shot.height + "   (" + UtilsMedia.varToString(shot.width, shot.height) + ")"
 
         labelOrientation.visible = (shot.orientation)
-        orientation.text = UtilsString.orientationToString(shot.orientation)
+        orientation.text = UtilsMedia.orientationToString(shot.orientation)
 
         // FILE_PICTURE
         if (shot.fileType === Shared.FILE_PICTURE) {
@@ -90,9 +91,9 @@ Item {
             chapters.text = shot.chapters + qsTr(" chapters")
 
             labelDuration.visible = true
-            duration.text = UtilsString.durationToString(shot.duration)
-            framerate.text = UtilsString.framerateToString(shot.framerate)
-            bitrate.text = UtilsString.bitrateToString(shot.bitrate)
+            duration.text = UtilsString.durationToString_short(shot.duration)
+            framerate.text = UtilsMedia.framerateToString(shot.framerate)
+            bitrate.text = UtilsMedia.bitrateToString(shot.bitrate)
 
             labelAudioChannels.visible = (shot.audioCodec.length)
             if (shot.audioCodec.length) {
@@ -103,7 +104,7 @@ Item {
                 else
                     audioChannels.text = shot.audioChannels + qsTr(" channels")
 
-                //audioBitrate.text = UtilsString.bitrateToString(shot.audioBitrate)
+                //audioBitrate.text = UtilsMedia.bitrateToString(shot.audioBitrate)
                 //audioSamplerate.text = shot.audioSamplerate
             }
 
