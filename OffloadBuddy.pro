@@ -47,6 +47,7 @@ SOURCES  += src/main.cpp \
             src/GpmfBuffer.cpp \
             src/GpmfKLV.cpp \
             src/GpmfTags.cpp \
+            src/utils_app.cpp \
             src/utils_ffmpeg.cpp \
             src/utils_maths.cpp
 
@@ -71,6 +72,7 @@ HEADERS  += src/SettingsManager.h \
             src/GpmfBuffer.h \
             src/GpmfKLV.h \
             src/GpmfTags.h \
+            src/utils_app.h \
             src/utils_ffmpeg.h \
             src/utils_maths.h \
             src/utils_enums.h

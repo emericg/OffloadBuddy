@@ -26,6 +26,7 @@
 
 #include "GridThumbnailer.h"
 #include "ItemImage.h"
+#include "utils_app.h"
 
 #include <singleapplication.h>
 
@@ -128,6 +129,9 @@ int main(int argc, char *argv[])
 
     ////////////////////////////////////////////////////////////////////////////
 
+    UtilsApp *utilsApp = new UtilsApp();
+    if (!utilsApp) return EXIT_FAILURE;
+
     SettingsManager *sm = SettingsManager::getInstance();
     if (sm)
     {
@@ -167,6 +171,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     QQmlContext *engine_context = engine.rootContext();
     engine_context->setContextProperty("settingsManager", sm);
+    engine_context->setContextProperty("app", utilsApp);
     engine_context->setContextProperty("mediaLibrary", ml);
     engine_context->setContextProperty("deviceManager", dm);
     engine_context->setContextProperty("jobManager", jm);
