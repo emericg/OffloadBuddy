@@ -25,6 +25,7 @@ DESTDIR     = bin/
 # Project files ################################################################
 
 SOURCES  += src/main.cpp \
+            src/macosdockmanager.mm \
             src/SettingsManager.cpp \
             src/JobManager.cpp \
             src/JobWorkerAsync.cpp \
@@ -52,6 +53,7 @@ SOURCES  += src/main.cpp \
             src/utils_maths.cpp
 
 HEADERS  += src/SettingsManager.h \
+            src/macosdockmanager.h \
             src/JobManager.h \
             src/JobWorkerAsync.h \
             src/JobWorkerSync.h \
@@ -195,6 +197,9 @@ linux {
 }
 
 macx {
+    # Needed by MacOSDockManager
+    LIBS += -framework AppKit
+
     # Automatic bundle packaging
     deploy.commands = macdeployqt $${OUT_PWD}/$${DESTDIR}/$${TARGET}.app -qmldir=qml/ -appstore-compliant
     install.depends = deploy

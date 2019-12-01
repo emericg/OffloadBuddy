@@ -23,6 +23,7 @@
 #include "MediaLibrary.h"
 #include "DeviceManager.h"
 #include "JobManager.h"
+#include "macosdockmanager.h"
 
 #include "GridThumbnailer.h"
 #include "ItemImage.h"
@@ -182,11 +183,14 @@ int main(int argc, char *argv[])
     if (engine.rootObjects().isEmpty())
         return -1;
 
-#ifdef QT_NO_DEBUG
     QQuickWindow *window = qobject_cast<QQuickWindow *>(engine.rootObjects().value(0));
-    QObject::connect(&app, &SingleApplication::instanceStarted, window, &QQuickWindow::show);
-    QObject::connect(&app, &SingleApplication::instanceStarted, window, &QQuickWindow::raise);
+
+#if defined(Q_OS_MACOS)
+    MacOSDockManager *dockIconHandler = MacOSDockManager::getInstance();
+    QObject::connect(dockIconHandler, &MacOSDockManager::dockIconClicked, window, &QQuickWindow::show);
+    QObject::connect(dockIconHandler, &MacOSDockManager::dockIconClicked, window, &QQuickWindow::raise);
 #endif
+
 
     return app.exec();
 }

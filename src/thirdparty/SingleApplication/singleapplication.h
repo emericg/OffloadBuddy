@@ -35,7 +35,7 @@
 class SingleApplicationPrivate;
 
 /**
- * @brief The SingleApplication class handles multipe instances of the same
+ * @brief The SingleApplication class handles multiple instances of the same
  * Application
  * @see QCoreApplication
  */
@@ -74,7 +74,7 @@ public:
      * if there is already a primary instance.
      * @arg {Mode} mode - Whether for the SingleApplication block to be applied
      * User wide or System wide.
-     * @arg {int} timeout - Timeout to wait in miliseconds.
+     * @arg {int} timeout - Timeout to wait in milliseconds.
      * @note argc and argv may be changed as Qt removes arguments that it
      * recognizes
      * @note Mode::SecondaryNotification only works if set on both the primary
@@ -124,7 +124,6 @@ public:
 Q_SIGNALS:
     void instanceStarted();
     void receivedMessage( quint32 instanceId, QByteArray message );
-    void dockClicked();
 
 private:
     SingleApplicationPrivate *d_ptr;
