@@ -116,7 +116,7 @@ Popup {
 
                     verticalAlignment: Text.AlignVCenter
                     font.pixelSize: 16
-                    color: Theme.colorSubText
+                    color: Theme.colorText
                 }
 
                 ImageSvg {
@@ -178,7 +178,7 @@ Popup {
 
                     font.pixelSize: 16
                     verticalAlignment: Text.AlignVCenter
-                    color: Theme.colorSubText
+                    color: Theme.colorText
                 }
 
                 ImageSvg {
@@ -238,7 +238,7 @@ Popup {
 
                     font.pixelSize: 16
                     verticalAlignment: Text.AlignVCenter
-                    color: Theme.colorSubText
+                    color: Theme.colorText
                 }
 
                 ImageSvg {

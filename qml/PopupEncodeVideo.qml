@@ -116,8 +116,8 @@ Popup {
             if (clipStop < 0) clipStop = currentShot.duration
             clipStartMs = clipStart
             clipDurationMs = clipStop - clipStart
-            textField_clipstart.text = UtilsString.durationToString_ffmpeg(clipStart)
-            textField_clipstop.text = UtilsString.durationToString_ffmpeg(clipStop)
+            textField_clipstart.text = UtilsString.durationToString_ISO8601_full(clipStart)
+            textField_clipstop.text = UtilsString.durationToString_ISO8601_full(clipStop)
 
             cbCOPY.visible = true
             cbCOPY.checked = true
@@ -202,34 +202,41 @@ Popup {
 
                     CheckBoxThemed {
                         id: cbCOPY
+                        anchors.verticalCenter: parent.verticalCenter
                         text: qsTr("COPY")
                         onClicked: setCopy()
                     }
                     RadioButtonThemed {
                         id: rbH264
+                        anchors.verticalCenter: parent.verticalCenter
                         text: "H.264"
                         checked: true
                     }
                     RadioButtonThemed {
                         id: rbH265
+                        anchors.verticalCenter: parent.verticalCenter
                         text: "H.265"
                     }
                     RadioButtonThemed {
                         id: rbVP9
+                        anchors.verticalCenter: parent.verticalCenter
                         text: "VP9"
                     }
                     RadioButtonThemed {
                         id: rbAV1
+                        anchors.verticalCenter: parent.verticalCenter
                         text: "AV1"
                         visible: false
                     }
                     RadioButtonThemed {
                         id: rbProRes
+                        anchors.verticalCenter: parent.verticalCenter
                         text: "ProRes"
                         visible: false
                     }
                     RadioButtonThemed {
                         id: rbGIF
+                        anchors.verticalCenter: parent.verticalCenter
                         text: "GIF"
                     }
                 }
@@ -551,7 +558,7 @@ Popup {
                     anchors.rightMargin: 2
                     anchors.verticalCenter: parent.verticalCenter
 
-                    //imageSource: "qrc:/icons_material/outline-folder-24px.svg"
+                    embedded: true
                     text: qsTr("change")
                     onClicked: {
                         fileDialogChange.folder =  "file:///" + textField_path.text

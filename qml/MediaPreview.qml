@@ -143,7 +143,7 @@ Rectangle {
             overlays.height = Math.ceil(mediaHeight * ratio)
         } else {
             //console.log(">2")
-            overlays.width = Math.ceil(mediaWidth * (mediaArea.height / mediaHeight))
+            overlays.width = Math.ceil(mediaWidth * (mediaArea.height / mediaHeight)) + 1
             overlays.height = Math.ceil(mediaHeight * (mediaArea.height / mediaHeight))
         }
 
@@ -262,7 +262,7 @@ Rectangle {
                 onPositionChanged: {
                     //timelinePosition.width = timeline.width * (videoPlayer.position / videoPlayer.duration)
                     timeline.value = (videoPlayer.position / videoPlayer.duration)
-                    timecode.text = UtilsString.durationToString_ISO8601_compact(videoPlayer.position) + " / " + UtilsString.durationToString_compact(videoPlayer.duration)
+                    timecode.text = UtilsString.durationToString_ISO8601_compact(videoPlayer.position) + " / " + UtilsString.durationToString_ISO8601_compact(videoPlayer.duration)
                 }
             }
         }
