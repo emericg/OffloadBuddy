@@ -54,6 +54,10 @@ Rectangle {
 
         if (shot.previewVideo) {
             videoPlayer.source = "file:///" + shot.previewVideo
+            timeline.visible = true
+            cutline.visible = false
+            cutline.first.value = 0
+            cutline.second.value = 1
         } else {
             // error icon?
         }
@@ -403,6 +407,32 @@ Rectangle {
                 opacity: 0.9
                 color: "#222222"
             }
+
+            RangeSliderThemed {
+                id: cutline
+                height: 12
+                width: mediaControls.width
+                anchors.top: parent.top
+                anchors.topMargin: -(height/2 + 2)
+                anchors.left: parent.left
+                anchors.leftMargin: -6
+                anchors.right: parent.right
+                anchors.rightMargin: -6
+
+                from: 0
+                to: 1
+                first.value: 0
+                second.value: 1
+
+                first.onMoved: {
+                    mediaArea.startLimit = videoPlayer.duration * first.value
+                    mediaControls.sseekk(first.value)
+                }
+                second.onMoved: {
+                    mediaArea.stopLimit = videoPlayer.duration * second.value
+                    mediaControls.sseekk(second.value)
+                }
+            }
             SliderThemed {
                 id: timeline
                 height: 12
@@ -417,22 +447,24 @@ Rectangle {
                 from: 0
                 to: 1
 
-                onMoved: {
-                    var wasRunning = videoPlayer.isRunning
-                    if (Qt.platform.os === "osx") {
-                        if (wasRunning) {
-                            videoPlayer.pause()
-                            videoPlayer.isRunning = false
-                        }
+                onMoved: mediaControls.sseekk(value)
+            }
+
+            function sseekk(value) {
+                var wasRunning = videoPlayer.isRunning
+                if (Qt.platform.os === "osx") {
+                    if (wasRunning) {
+                        videoPlayer.pause()
+                        videoPlayer.isRunning = false
                     }
+                }
 
-                    videoPlayer.seek(videoPlayer.duration * timeline.value)
+                videoPlayer.seek(videoPlayer.duration * value)
 
-                    if (Qt.platform.os === "osx") {
-                        if (wasRunning) {
-                            videoPlayer.play()
-                            videoPlayer.isRunning = true
-                        }
+                if (Qt.platform.os === "osx") {
+                    if (wasRunning) {
+                        videoPlayer.play()
+                        videoPlayer.isRunning = true
                     }
                 }
             }
@@ -507,40 +539,42 @@ Rectangle {
                 font.bold: true
                 font.pixelSize: 15
             }
-/*
-            Button {
-                id: buttonStartCut
-                width: 40
-                height: 40
-                text: "["
-                anchors.left: buttonPlay.right
-                anchors.leftMargin: 0
+
+            ItemImageButton {
+                id: buttonToggleRotate
+                width: 36
+                height: 36
+                anchors.right: buttonToggleCut.left
+                anchors.rightMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
 
+                iconColor: overlayRotations.visible ? "yellow" : "white"
+                highlightColor: Theme.colorPrimary
+                highlightMode: "color"
+
+                source: "qrc:/icons_material/baseline-rotate_90_degrees_ccw-24px.svg"
                 onClicked: {
-                    mediaArea.startLimit = videoPlayer.position
-                    //clipStart = mediaPlayer.position
-                    //console.log("clipStart: " + clipStart)
-                    timelineLimitStart.width = timeline.width * (videoPlayer.position / videoPlayer.duration);
+                    overlayRotations.visible = !overlayRotations.visible
                 }
             }
-            Button {
-                id: buttonStopCut
-                width: 40
-                height: 40
-                text: "]"
-                anchors.right: buttonSound.left
-                anchors.rightMargin: 0
+            ItemImageButton {
+                id: buttonToggleCut
+                width: 36
+                height: 36
+                anchors.right: buttonScreenshot.left
+                anchors.rightMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
 
+                iconColor: cutline.visible ? "yellow" : "white"
+                highlightColor: Theme.colorPrimary
+                highlightMode: "color"
+
+                source: "qrc:/icons_material/baseline-flip-24px.svg"
                 onClicked: {
-                    mediaArea.stopLimit = videoPlayer.position
-                    //clipStop = mediaPlayer.position
-                    //console.log("clipStop: " + clipStart)
-                    timelineLimitStop.width = timeline.width * (((videoPlayer.duration - videoPlayer.position) / videoPlayer.duration));
+                    timeline.visible = !timeline.visible
+                    cutline.visible = !cutline.visible
                 }
             }
-*/
             ItemImageButton {
                 id: buttonScreenshot
                 width: 36
@@ -573,95 +607,6 @@ Rectangle {
                 source: "qrc:/icons_material/baseline-fullscreen-24px.svg"
                 onClicked: mediaArea.toogleFullScreen()
             }
-/*
-            Rectangle {
-                id: timeline
-                height: 40
-                color: Theme.colorComponent
-                anchors.left: buttonStartCut.right
-                anchors.leftMargin: 0
-                anchors.right: buttonStopCut.left
-                anchors.rightMargin: 0
-                anchors.verticalCenter: parent.verticalCenter
-
-                Rectangle {
-                    id: timelinePosition
-                    width: 0
-                    height: 40
-                    color: Theme.colorPrimary
-                    anchors.left: parent.left
-                    anchors.leftMargin: 0
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-
-                MouseArea {
-                    id: timelineSeeker
-                    anchors.fill: parent
-
-                    onClicked: {
-                        var fff = (mouseX / timeline.width)
-                        var wasRunning = videoPlayer.isRunning
-
-                        if (wasRunning) {
-                            videoPlayer.pause()
-                            videoPlayer.isRunning = false
-                        }
-
-                        videoPlayer.seek(videoPlayer.duration * fff)
-
-                        if (wasRunning) {
-                            videoPlayer.play()
-                            videoPlayer.isRunning = true
-                        }
-                    }
-                }
-
-                Rectangle {
-                    id: timelineLimitStart
-                    height: 40
-                    color: "#cfa9ff"
-                    anchors.left: parent.left
-                    anchors.leftMargin: 0
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-
-                Rectangle {
-                    id: timelineLimitStop
-                    height: 40
-                    color: "#cfa9ff"
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.right: parent.right
-                    anchors.rightMargin: 0
-                }
-            }
-
-            Rectangle {
-                id: soundline
-                width: 80
-                height: 28
-                //color: "#d0d0d0"
-                border.width: 2
-                border.color: Theme.colorPrimary
-                anchors.right: buttonScreenshot.left
-                anchors.rightMargin: 0
-                anchors.verticalCenter: parent.verticalCenter
-
-                Rectangle {
-                    id: soundlinePosition
-                    width: 0
-                    height: 28
-                    color: Theme.colorPrimary
-                    anchors.left: parent.left
-                    anchors.leftMargin: 0
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: videoPlayer.volume = (mouseX / soundline.width)
-                }
-            }
-*/
         }
     }
 }
