@@ -127,7 +127,7 @@ bool MediaDirectory::isAvailableFor(unsigned shotType, int64_t shotSize)
 
     refreshMediaDirectory();
 
-    if (m_available)
+    if (m_available && m_storage && !m_storage->isReadOnly())
     {
         if (shotSize < getSpaceAvailable())
         {
@@ -173,12 +173,14 @@ void MediaDirectory::refreshMediaDirectory()
     {
         //qDebug() << "refreshMediaDirectory(" << m_storage->rootPath() << ")";
 
-        // basic checks // need at least 128MB
-        if (m_storage->bytesAvailable() > 128*1024*1024 &&
-            !m_storage->isReadOnly())
+        m_available = true;
+        emit availableUpdated();
+/*
+        // basic checks // need at least 16MB
+        if (m_storage->bytesAvailable() > 16*1024*1024 && !m_storage->isReadOnly())
         {
 #ifdef __linux
-            // adanced permission checks
+            // advanced permission checks
             QFileInfo fi(m_path);
             QFile::Permissions  e = fi.permissions();
             if (!e.testFlag(QFileDevice::WriteUser))
@@ -195,12 +197,14 @@ void MediaDirectory::refreshMediaDirectory()
         }
         else
         {
-            m_available = false;
-            emit availableUpdated();
+            qDebug() << "MediaDirectory(" << m_storage->rootPath() << ") is not available: read only or full";
         }
+*/
     }
     else
     {
+        qDebug() << "MediaDirectory(" << m_storage->rootPath() << ") is not available: invalid";
+
         m_available = false;
         emit availableUpdated();
     }

@@ -65,7 +65,6 @@ bool SettingsManager::readSettings()
     bool status = false;
 
     QSettings settings("OffloadBuddy", "OffloadBuddy");
-    settings.sync();
 
     if (settings.status() == QSettings::NoError)
     {
