@@ -143,10 +143,10 @@ int main(int argc, char *argv[])
     }
 
     MediaLibrary *ml = new MediaLibrary;
-    ml->searchMediaDirectories();
+    //ml->searchMediaDirectories();
 
     DeviceManager *dm = new DeviceManager;
-    dm->searchDevices();
+    //dm->searchDevices();
 
     JobManager *jm = JobManager::getInstance();
     jm->attachLibrary(ml);

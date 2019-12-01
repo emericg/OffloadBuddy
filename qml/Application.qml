@@ -39,6 +39,11 @@ ApplicationWindow {
         window: applicationWindow
     }
 
+    Component.onCompleted: {
+        mediaLibrary.searchMediaDirectories()
+        deviceManager.searchDevices()
+    }
+
     // Menubar /////////////////////////////////////////////////////////////////
 /*
     menuBar: MenuBar {

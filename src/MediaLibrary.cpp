@@ -49,6 +49,8 @@ void MediaLibrary::scanMediaDirectory(MediaDirectory *md)
 {
     if (md && md->isAvailable())
     {
+        //qDebug() << "scanMediaDirectory() dir:" << md->getPath();
+
         QThread *thread = new QThread();
         FileScanner *fs = new FileScanner();
 
