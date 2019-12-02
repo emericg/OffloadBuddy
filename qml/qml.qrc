@@ -40,6 +40,7 @@
         <file alias="ItemDataBar.qml">components_generic/ItemDataBar.qml</file>
         <file alias="ItemImageButton.qml">components_generic/ItemImageButton.qml</file>
         <file alias="ItemMenuButton.qml">components_generic/ItemMenuButton.qml</file>
+        <file alias="ItemLilMenuButton.qml">components_generic/ItemLilMenuButton.qml</file>
         <file alias="ItemSidebarButton.qml">components_generic/ItemSidebarButton.qml</file>
         <file alias="ButtonImage.qml">components_generic/ButtonImage.qml</file>
         <file alias="ButtonImageThemed.qml">components_generic/ButtonImageThemed.qml</file>

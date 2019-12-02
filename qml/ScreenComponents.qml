@@ -176,6 +176,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
 
                 fullColor: true
+                primaryColor: Theme.colorActionbarHighlight
                 text: "Action 1"
             }
 
@@ -186,21 +187,22 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
 
                 fullColor: true
+                primaryColor: Theme.colorActionbarHighlight
                 text: "Action 2"
                 source: "qrc:/icons_material/baseline-accessibility-24px.svg"
             }
 
             ItemImageButton {
                 id: itemImageButtonX
-                width: 48
-                height: 48
+                width: 40
+                height: 40
                 anchors.right: parent.right
                 anchors.rightMargin: 32
                 anchors.verticalCenter: parent.verticalCenter
 
                 source: "qrc:/icons_material/baseline-close-24px.svg"
                 iconColor: "white"
-                //highlightColor: Theme.colorActionbar2
+                backgroundColor: Theme.colorActionbarHighlight
             }
         }
 
@@ -448,6 +450,99 @@ Item {
 
                 text: "H.264"
                 color: Theme.colorForeground
+            }
+
+            ////////
+
+            Row {
+                id: rowLilMenuTxt
+                height: 40
+                anchors.top: badge1.bottom
+                anchors.topMargin: 32
+                anchors.left: parent.left
+                anchors.leftMargin: 32
+
+                ItemLilMenuButton {
+                    id: lilmenu1
+                    height: parent.height
+
+                    text: "4/3"
+                    selected: true
+                    onClicked: {
+                        lilmenu1.selected = true
+                        lilmenu2.selected = false
+                        lilmenu3.selected = false
+                    }
+                }
+                ItemLilMenuButton {
+                    id: lilmenu2
+                    height: parent.height
+
+                    text: "16/9"
+                    onClicked: {
+                        lilmenu1.selected = false
+                        lilmenu2.selected = true
+                        lilmenu3.selected = false
+                    }
+                }
+                ItemLilMenuButton {
+                    id: lilmenu3
+                    height: parent.height
+
+                    text: "21/9"
+                    onClicked: {
+                        lilmenu1.selected = false
+                        lilmenu2.selected = false
+                        lilmenu3.selected = true
+                    }
+                }
+            }
+
+            Row {
+                id: rowLilMenuImg
+                height: 40
+                anchors.top: badge1.bottom
+                anchors.topMargin: 32
+                anchors.left: rowLilMenuTxt.right
+                anchors.leftMargin: 32
+
+                ItemLilMenuButton {
+                    id: lilmenu11
+                    height: parent.height
+
+                    source: "qrc:/icons_material/baseline-date_range-24px.svg"
+                    sourceSize: 18
+                    selected: true
+                    onClicked: {
+                        lilmenu11.selected = true
+                        lilmenu22.selected = false
+                        lilmenu33.selected = false
+                    }
+                }
+                ItemLilMenuButton {
+                    id: lilmenu22
+                    height: parent.height
+
+                    source: "qrc:/icons_material/baseline-date_range-24px.svg"
+                    sourceSize: 22
+                    onClicked: {
+                        lilmenu11.selected = false
+                        lilmenu22.selected = true
+                        lilmenu33.selected = false
+                    }
+                }
+                ItemLilMenuButton {
+                    id: lilmenu33
+                    height: parent.height
+
+                    source: "qrc:/icons_material/baseline-date_range-24px.svg"
+                    sourceSize: 26
+                    onClicked: {
+                        lilmenu11.selected = false
+                        lilmenu22.selected = false
+                        lilmenu33.selected = true
+                    }
+                }
             }
         }
 

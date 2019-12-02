@@ -27,6 +27,7 @@ Item {
     // Action bar
     property string colorActionbar
     property string colorActionbarContent
+    property string colorActionbarHighlight
 
     // Tablet bar
     property string colorTabletmenu
@@ -115,6 +116,7 @@ Item {
 
             colorActionbar =        "#8cd200"
             colorActionbarContent = "white"
+            colorActionbarHighlight = "#73AD00"
 
             colorBackground =       "#EEEEEE"
             colorForeground =       "#E0E0E0"
@@ -150,8 +152,9 @@ Item {
             colorSidebar =          "#2e2e2e"
             colorSidebarContent =   "white"
 
-            colorActionbar =        "#fed859"
+            colorActionbar =        "#FED259"
             colorActionbarContent = "white"
+            colorActionbarHighlight = "#FFBA00"
 
             colorBackground =       "#404040"
             colorForeground =       "#555555"
@@ -189,6 +192,7 @@ Item {
 
             colorActionbar =        "#fed859"
             colorActionbarContent = "white"
+            colorActionbarHighlight = "#FFC831"
 
             colorBackground =       "white"
             colorForeground =       "#F0F0F0"
@@ -226,6 +230,7 @@ Item {
 
             colorActionbar =        "#009ee2"
             colorActionbarContent = "white"
+            colorActionbarHighlight = "#0089C3"
 
             colorBackground =       "#222222"
             colorForeground =       "#333333"
@@ -271,6 +276,7 @@ Item {
 
             colorActionbar =        "#FFE400"
             colorActionbarContent = "white"
+            colorActionbarHighlight = "#FFBF00"
 
             colorBackground =       "white"
             colorForeground =       "#ffddee"

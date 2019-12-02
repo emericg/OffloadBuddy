@@ -112,6 +112,7 @@ Rectangle {
 
         source: "qrc:/icons_material/baseline-close-24px.svg"
         iconColor: "white"
+        backgroundColor: Theme.colorWarning
         onClicked: mediaGrid.exitSelectionMode()
     }
 }
