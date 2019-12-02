@@ -90,10 +90,10 @@ Item {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    Component.onCompleted: loadTheme(settingsManager.apptheme)
+    Component.onCompleted: loadTheme(settingsManager.appTheme)
     Connections {
         target: settingsManager
-        onAppThemeChanged: loadTheme(settingsManager.apptheme)
+        onAppThemeChanged: loadTheme(settingsManager.appTheme)
     }
 
     function loadTheme(themeIndex) {

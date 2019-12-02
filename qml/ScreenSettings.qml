@@ -91,13 +91,13 @@ Item {
                     }
 
                     Component.onCompleted: {
-                        currentIndex = settingsManager.apptheme;
+                        currentIndex = settingsManager.appTheme;
                         if (currentIndex === -1) { currentIndex = 0 }
                     }
                     property bool cbinit: false
                     onCurrentIndexChanged: {
                         if (cbinit)
-                            settingsManager.apptheme = currentIndex;
+                            settingsManager.appTheme = currentIndex;
                         else
                             cbinit = true;
                     }
@@ -128,8 +128,8 @@ Item {
                     text: qsTr("Metric")
                     font.pixelSize: 16
 
-                    Component.onCompleted: { checked =  (settingsManager.appunits === 0); }
-                    onCheckedChanged: { if (checked === true) { settingsManager.appunits = 0 }; }
+                    Component.onCompleted: { checked =  (settingsManager.appUnits === 0); }
+                    onCheckedChanged: { if (checked === true) { settingsManager.appUnits = 0 }; }
                 }
 
                 RadioButtonThemed {
@@ -139,8 +139,8 @@ Item {
                     text: qsTr("Imperial")
                     font.pixelSize: 16
 
-                    Component.onCompleted: { checked =  (settingsManager.appunits === 1); }
-                    onCheckedChanged: { if (checked === true) { settingsManager.appunits = 1 }; }
+                    Component.onCompleted: { checked =  (settingsManager.appUnits === 1); }
+                    onCheckedChanged: { if (checked === true) { settingsManager.appUnits = 1 }; }
                 }
             }
 

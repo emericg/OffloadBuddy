@@ -23,10 +23,8 @@
 /* ************************************************************************** */
 
 #include <QUrl>
-#include <QSize>
 #include <QString>
 #include <QObject>
-#include <QVariantMap>
 
 /* ************************************************************************** */
 
@@ -34,17 +32,34 @@ class UtilsApp : public QObject
 {
     Q_OBJECT
 
+    QString m_appPath;
+
+    // Singleton
+    static UtilsApp *instance;
+    UtilsApp();
+    ~UtilsApp();
+
 public:
-    explicit UtilsApp(QObject* parent = nullptr);
-   ~UtilsApp();
+    static UtilsApp *getInstance();
 
-    static Q_INVOKABLE void openWith(const QString &path);
-
-    static Q_INVOKABLE QUrl getStandardPath(const QString &type);
+    QString getAppPath() const { return m_appPath; }
+    void setAppPath(const QString &value);
 
     static Q_INVOKABLE QString appVersion();
     static Q_INVOKABLE QString appBuildDate();
+    static Q_INVOKABLE QString appBuildMode();
+
     static Q_INVOKABLE void appExit();
+    static Q_INVOKABLE void openWith(const QString &path);
+    static Q_INVOKABLE QUrl getStandardPath(const QString &type);
+
+#if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
+    static Q_INVOKABLE bool getMobileStoragePermission();
+    static Q_INVOKABLE int getMobileStorageCount();
+    static Q_INVOKABLE QString getMobileStorageInternal();
+    static Q_INVOKABLE QString getMobileStorageExternal(int index = 0);
+    static Q_INVOKABLE QStringList getMobileStorageExternals();
+#endif
 };
 
 /* ************************************************************************** */

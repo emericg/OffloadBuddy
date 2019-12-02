@@ -234,13 +234,13 @@ Item {
                 }
 
                 Component.onCompleted: {
-                    currentIndex = settingsManager.apptheme;
+                    currentIndex = settingsManager.appTheme;
                     if (currentIndex === -1) { currentIndex = 0 }
                 }
                 property bool cbinit: false
                 onCurrentIndexChanged: {
                     if (cbinit)
-                        settingsManager.apptheme = currentIndex;
+                        settingsManager.appTheme = currentIndex;
                     else
                         cbinit = true;
                 }

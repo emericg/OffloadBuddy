@@ -43,8 +43,8 @@ class SettingsManager: public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(uint apptheme READ getAppTheme WRITE setAppTheme NOTIFY appThemeChanged)
-    Q_PROPERTY(uint appunits READ getAppUnits WRITE setAppUnits NOTIFY appUnitsChanged)
+    Q_PROPERTY(uint appTheme READ getAppTheme WRITE setAppTheme NOTIFY appThemeChanged)
+    Q_PROPERTY(uint appUnits READ getAppUnits WRITE setAppUnits NOTIFY appUnitsChanged)
     Q_PROPERTY(bool autolaunch READ getAutoLaunch WRITE setAutoLaunch NOTIFY autoLaunchChanged)
     Q_PROPERTY(bool automerge READ getAutoMerge WRITE setAutoMerge NOTIFY autoMergeChanged)
     Q_PROPERTY(bool autometadata READ getAutoMetadata WRITE setAutoMetadata NOTIFY autoMetadataChanged)
@@ -56,10 +56,7 @@ class SettingsManager: public QObject
     Q_PROPERTY(bool ignorehdaudio READ getIgnoreHdAudio WRITE setIgnoreHdAudio NOTIFY ignoreHdAudioChanged)
     Q_PROPERTY(bool mtpfullscan READ getMtpFullScan WRITE setMtpFullScan NOTIFY mtpFullScanChanged)
     Q_PROPERTY(uint contenthierarchy READ getContentHierarchy WRITE setContentHierarchy NOTIFY contentHierarchyChanged)
-
     Q_PROPERTY(QVariant directoriesList READ getDirectories NOTIFY directoriesUpdated)
-
-    QString m_appPath;
 
     // Global
     unsigned m_appTheme = 0;
@@ -105,9 +102,6 @@ Q_SIGNALS:
 
 public:
     static SettingsManager *getInstance();
-
-    QString getAppPath() const { return m_appPath; }
-    void setAppPath(const QString &value);
 
     unsigned getAppTheme() const { return m_appTheme; }
     void setAppTheme(unsigned value);

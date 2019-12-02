@@ -25,7 +25,7 @@ Item {
 
             rectangleCoordinates.visible = true
             coordinates.text = shot.latitudeString + "    " + shot.longitudeString
-            altitude.text = UtilsString.altitudeToString(shot.altitude, 0, settingsManager.appunits)
+            altitude.text = UtilsString.altitudeToString(shot.altitude, 0, settingsManager.appUnits)
         }
     }
 

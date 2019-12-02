@@ -22,7 +22,7 @@
 #include "JobWorkerAsync.h"
 #include "JobManager.h"
 #include "Shot.h"
-#include "SettingsManager.h"
+#include "utils_app.h"
 
 #include <QProcess>
 #include <QFileInfo>
@@ -138,13 +138,13 @@ void JobWorkerAsync::queueWork(Job *job)
 
             QString file_extension = "mp4";
 
-            SettingsManager *sm = SettingsManager::getInstance();
+            UtilsApp *app = UtilsApp::getInstance();
 
             // FFMPEG binary
 #ifdef Q_OS_WIN
-            ptiwrap->command = sm->getAppPath() + "/ffmpeg.exe";
+            ptiwrap->command = app->getAppPath() + "/ffmpeg.exe";
 #else
-            ptiwrap->command = sm->getAppPath() + "/ffmpeg";
+            ptiwrap->command = app->getAppPath() + "/ffmpeg";
 
             if (!QFileInfo::exists(ptiwrap->command))
             {

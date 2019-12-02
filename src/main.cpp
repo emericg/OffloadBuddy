@@ -132,17 +132,16 @@ int main(int argc, char *argv[])
 
     ////////////////////////////////////////////////////////////////////////////
 
-    UtilsApp *utilsApp = new UtilsApp();
+    UtilsApp *utilsApp = UtilsApp::getInstance();
     if (!utilsApp) return EXIT_FAILURE;
 
     SettingsManager *sm = SettingsManager::getInstance();
-    if (sm)
+    if (!sm) return EXIT_FAILURE;
+
+    if (argc > 0 && argv[0])
     {
-        if (argc > 0 && argv[0])
-        {
-            QString path = QString::fromLocal8Bit(argv[0]);
-            sm->setAppPath(path);
-        }
+        QString path = QString::fromLocal8Bit(argv[0]);
+        utilsApp->setAppPath(path);
     }
 
     MediaLibrary *ml = new MediaLibrary;

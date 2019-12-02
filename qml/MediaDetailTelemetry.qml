@@ -21,8 +21,8 @@ Item {
     }
 
     function updateUnits() {
-        speedsGraph.title = "Speed (" + UtilsString.speedUnit(settingsManager.appunits) + ")"
-        altiGraph.title = "Altitude (" + UtilsString.altitudeUnit(settingsManager.appunits) + ")"
+        speedsGraph.title = "Speed (" + UtilsString.speedUnit(settingsManager.appUnits) + ")"
+        altiGraph.title = "Altitude (" + UtilsString.altitudeUnit(settingsManager.appUnits) + ")"
         updateMetadatas()
     }
 
@@ -38,24 +38,24 @@ Item {
 
         if (shot) {
             // Graphs datas
-            speedsGraph.title = "Speed (" + UtilsString.speedUnit(settingsManager.appunits) + ")"
-            shot.updateSpeedsSerie(speedsSeries, settingsManager.appunits)
-            altiGraph.title = "Altitude (" + UtilsString.altitudeUnit(settingsManager.appunits) + ")"
-            shot.updateAltiSerie(altiSeries, settingsManager.appunits);
+            speedsGraph.title = "Speed (" + UtilsString.speedUnit(settingsManager.appUnits) + ")"
+            shot.updateSpeedsSerie(speedsSeries, settingsManager.appUnits)
+            altiGraph.title = "Altitude (" + UtilsString.altitudeUnit(settingsManager.appUnits) + ")"
+            shot.updateAltiSerie(altiSeries, settingsManager.appUnits);
             shot.updateAcclSeries(acclX, acclY, acclZ);
             shot.updateGyroSeries(gyroX, gyroY, gyroZ);
 
             // Text datas
-            speedMIN.text = UtilsString.speedToString(shot.minSpeed, 2, settingsManager.appunits)
-            speedAVG.text = UtilsString.speedToString(shot.avgSpeed, 2, settingsManager.appunits)
-            speedMAX.text = UtilsString.speedToString(shot.maxSpeed, 2, settingsManager.appunits)
+            speedMIN.text = UtilsString.speedToString(shot.minSpeed, 2, settingsManager.appUnits)
+            speedAVG.text = UtilsString.speedToString(shot.avgSpeed, 2, settingsManager.appUnits)
+            speedMAX.text = UtilsString.speedToString(shot.maxSpeed, 2, settingsManager.appUnits)
 
-            altiMIN.text = UtilsString.altitudeToString(shot.minAlti, 0, settingsManager.appunits)
-            altiAVG.text = UtilsString.altitudeToString(shot.avgAlti, 0, settingsManager.appunits)
-            altiMAX.text = UtilsString.altitudeToString(shot.maxAlti, 0, settingsManager.appunits)
+            altiMIN.text = UtilsString.altitudeToString(shot.minAlti, 0, settingsManager.appUnits)
+            altiAVG.text = UtilsString.altitudeToString(shot.avgAlti, 0, settingsManager.appUnits)
+            altiMAX.text = UtilsString.altitudeToString(shot.maxAlti, 0, settingsManager.appUnits)
 
             trackDuration.text = UtilsString.durationToString_long(shot.duration)
-            trackDistance.text = UtilsString.distanceToString(shot.distanceKm, 1, settingsManager.appunits)
+            trackDistance.text = UtilsString.distanceToString(shot.distanceKm, 1, settingsManager.appUnits)
             acclMAX.text = (shot.maxG / 9.80665).toFixed(1) + " G's"
 
             // Graphs axis
@@ -463,7 +463,7 @@ Item {
                 width: 480
                 height: 240
 
-                title: "Speed (" + UtilsString.speedUnit(settingsManager.appunits) + ")"
+                title: "Speed (" + UtilsString.speedUnit(settingsManager.appUnits) + ")"
                 titleColor: Theme.colorText
                 titleFont.pixelSize: 14
                 titleFont.bold: true
@@ -487,7 +487,7 @@ Item {
                 width: 480
                 height: 240
 
-                title: "Altitude (" + UtilsString.altitudeUnit(settingsManager.appunits) + ")"
+                title: "Altitude (" + UtilsString.altitudeUnit(settingsManager.appUnits) + ")"
                 titleColor: Theme.colorText
                 titleFont.pixelSize: 14
                 titleFont.bold: true

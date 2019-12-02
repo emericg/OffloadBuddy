@@ -245,16 +245,6 @@ void SettingsManager::directoryModified()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void SettingsManager::setAppPath(const QString &value)
-{
-    if (m_appPath != value)
-    {
-        QDir newpath(value);
-        newpath.cdUp();
-        m_appPath = newpath.absolutePath();
-    }
-}
-
 void SettingsManager::setAppTheme(unsigned value)
 {
     if (m_appTheme != value)
