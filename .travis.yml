@@ -1,4 +1,6 @@
 language: cpp
+dist: xenial
+osx_image: xcode11.2
 
 os:
   - linux
@@ -10,9 +12,9 @@ before_install:
       sudo add-apt-repository ppa:jonathonf/ffmpeg-4 -y;
       sudo apt-get update -q;
     fi
-#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-#      brew update;
-#    fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      brew update;
+    fi
 
 install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
