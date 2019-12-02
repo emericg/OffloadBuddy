@@ -15,8 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * \date      2018
  * \author    Emeric Grange <emeric.grange@gmail.com>
+ * \date      2018
  */
 
 #include "SettingsManager.h"
@@ -35,14 +35,14 @@
 #include <minivideo.h>
 #endif
 
+#include <QtGlobal>
 #include <QTranslator>
 #include <QLibraryInfo>
-
-#include <QGuiApplication>
+#include <QApplication>
+#include <QIcon>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickWindow>
-#include <QIcon>
 
 /* ************************************************************************** */
 
@@ -101,8 +101,9 @@ int main(int argc, char *argv[])
 {
     print_build_infos();
 
-    QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+    //QCoreApplication::setAttribute(Qt::AA_UseOpenGLES);
 
 #ifdef QT_NO_DEBUG
     SingleApplication app(argc, argv);
@@ -110,14 +111,15 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 #endif
 
+#if !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS)
+    QIcon appIcon(":/appicons/offloadbuddy.svg");
+    app.setWindowIcon(appIcon);
+#endif
+
     app.setApplicationName("OffloadBuddy");
     app.setApplicationDisplayName("OffloadBuddy");
     app.setOrganizationDomain("OffloadBuddy");
     app.setOrganizationName("OffloadBuddy");
-
-    // icon
-    QIcon appIcon(":/appicons/offloadbuddy.svg");
-    app.setWindowIcon(appIcon);
 
     // i18n
     QTranslator qtTranslator;
@@ -155,10 +157,8 @@ int main(int argc, char *argv[])
 
     ////////////////////////////////////////////////////////////////////////////
 
-    qmlRegisterSingletonType(
-        QUrl("qrc:/qml/ThemeEngine.qml"),
-        "ThemeEngine", 1, 0,
-        "Theme");
+    qmlRegisterSingletonType(QUrl("qrc:/qml/ThemeEngine.qml"),
+                             "ThemeEngine", 1, 0, "Theme");
 
     qmlRegisterUncreatableMetaObject(
         Shared::staticMetaObject,
@@ -169,28 +169,29 @@ int main(int argc, char *argv[])
     qmlRegisterType<Shot>("com.offloadbuddy.shared", 1, 0, "Shot");
     qmlRegisterType<ItemImage>("com.offloadbuddy.shared", 1, 0, "ItemImage");
 
+    // Then we start the UI
     QQmlApplicationEngine engine;
     QQmlContext *engine_context = engine.rootContext();
     engine_context->setContextProperty("settingsManager", sm);
-    engine_context->setContextProperty("app", utilsApp);
     engine_context->setContextProperty("mediaLibrary", ml);
     engine_context->setContextProperty("deviceManager", dm);
     engine_context->setContextProperty("jobManager", jm);
-
     engine.addImageProvider("GridThumbnailer", new GridThumbnailer);
+    engine_context->setContextProperty("app", utilsApp);
 
     engine.load(QUrl(QStringLiteral("qrc:/qml/Application.qml")));
     if (engine.rootObjects().isEmpty())
-        return -1;
+        return EXIT_FAILURE;
 
+    // QQuickWindow must be valid at this point
     QQuickWindow *window = qobject_cast<QQuickWindow *>(engine.rootObjects().value(0));
+    engine_context->setContextProperty("quickWindow", window);
 
 #if defined(Q_OS_MACOS)
     MacOSDockManager *dockIconHandler = MacOSDockManager::getInstance();
     QObject::connect(dockIconHandler, &MacOSDockManager::dockIconClicked, window, &QQuickWindow::show);
     QObject::connect(dockIconHandler, &MacOSDockManager::dockIconClicked, window, &QQuickWindow::raise);
 #endif
-
 
     return app.exec();
 }

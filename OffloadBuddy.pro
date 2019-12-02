@@ -3,29 +3,38 @@ TARGET  = OffloadBuddy
 VERSION = 0.3
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
-CONFIG += c++14
+CONFIG += c++11
 QT     += core qml quickcontrols2 svg
 QT     += multimedia location sql charts
 
 # Validate Qt version
 if (lessThan(QT_MAJOR_VERSION, 5) | lessThan(QT_MINOR_VERSION, 9)) {
-    error("You need Qt 5.9 to build $${TARGET}...")
+    error("You need AT LEAST Qt 5.9 to build $${TARGET}")
 }
 
-# Build artifacts ##############################################################
+# Project features #############################################################
 
-OBJECTS_DIR = build/
-MOC_DIR     = build/
-RCC_DIR     = build/
-UI_DIR      = build/
-QMLCACHE_DIR= build/
+# Use Qt Quick compiler
+# CONFIG += qtquickcompiler
 
-DESTDIR     = bin/
+# Use contribs (otherwise use system libs)
+# DEFINES += USE_CONTRIBS
+
+win32 { DEFINES += _USE_MATH_DEFINES }
+
+# SingleApplication for desktop OS
+include(src/thirdparty/SingleApplication/singleapplication.pri)
+DEFINES += QAPPLICATION_CLASS=QApplication
+
+unix { DEFINES += ENABLE_LIBMTP }
+DEFINES += ENABLE_FFMPEG
+DEFINES += ENABLE_MINIVIDEO
+DEFINES += ENABLE_LIBEXIF
+#DEFINES += ENABLE_EXIV2
 
 # Project files ################################################################
 
 SOURCES  += src/main.cpp \
-            src/macosdockmanager.mm \
             src/SettingsManager.cpp \
             src/JobManager.cpp \
             src/JobWorkerAsync.cpp \
@@ -53,7 +62,6 @@ SOURCES  += src/main.cpp \
             src/utils_maths.cpp
 
 HEADERS  += src/SettingsManager.h \
-            src/macosdockmanager.h \
             src/JobManager.h \
             src/JobWorkerAsync.h \
             src/JobWorkerSync.h \
@@ -79,11 +87,12 @@ HEADERS  += src/SettingsManager.h \
             src/utils_maths.h \
             src/utils_enums.h
 
-RESOURCES += qml/qml.qrc \
-             i18n/i18n.qrc \
-             assets/assets.qrc
+RESOURCES   += qml/qml.qrc \
+               i18n/i18n.qrc \
+               assets/assets.qrc
 
-OTHER_FILES += .travis.yml \
+OTHER_FILES += .gitignore \
+               .travis.yml \
                contribs/contribs.py \
                deploy_linux.sh \
                deploy_macos.sh \
@@ -91,40 +100,7 @@ OTHER_FILES += .travis.yml \
 
 #TRANSLATIONS = i18n/offloadbuddy_fr.ts
 
-lupdate_only { SOURCES += qml/*.qml qml/*.js }
-
-# App features #################################################################
-
-# Use Qt Quick compiler
-# CONFIG += qtquickcompiler
-
-DEFINES += ENABLE_FFMPEG
-DEFINES += ENABLE_LIBEXIF
-DEFINES += ENABLE_MINIVIDEO
-unix { DEFINES += ENABLE_LIBMTP }
-
-#DEFINES += USE_CONTRIBS
-
-# SingleApplication for desktop OS
-include(src/thirdparty/SingleApplication/singleapplication.pri)
-DEFINES += QAPPLICATION_CLASS=QApplication
-
-# macOS icon
-ICON = assets/desktop/$$lower($${TARGET}).icns
-# Windows icon
-RC_ICONS = assets/desktop/$$lower($${TARGET}).ico
-
-# Build settings ###############################################################
-
-unix {
-    # Enables AddressSanitizer
-    #QMAKE_CXXFLAGS += -fsanitize=address,undefined
-    #QMAKE_LFLAGS += -fsanitize=address,undefined
-
-    #QMAKE_CXXFLAGS += -Wno-nullability-completeness
-}
-
-DEFINES += QT_DEPRECATED_WARNINGS
+lupdate_only { SOURCES += qml/*.qml qml/*.js qml/components/*.qml }
 
 # Dependencies #################################################################
 
@@ -134,6 +110,7 @@ contains(DEFINES, USE_CONTRIBS) {
     linux { PLATFORM = "linux" }
     macx { PLATFORM = "macOS" }
     win32 { PLATFORM = "windows" }
+
     CONTRIBS_DIR = $${PWD}/contribs/env/$${PLATFORM}_$${ARCH}/usr
 
     INCLUDEPATH     += $${CONTRIBS_DIR}/include/
@@ -168,27 +145,49 @@ contains(DEFINES, USE_CONTRIBS) {
     contains(DEFINES, ENABLE_FFMPEG) { PKGCONFIG += libavformat libavcodec libswscale libswresample libavutil }
 }
 
+# Build settings ###############################################################
+
+unix {
+    # Enables AddressSanitizer
+    #QMAKE_CXXFLAGS += -fsanitize=address,undefined
+    #QMAKE_LFLAGS += -fsanitize=address,undefined
+
+    #QMAKE_CXXFLAGS += -Wno-nullability-completeness
+}
+
+DEFINES += QT_DEPRECATED_WARNINGS
+
+# Build artifacts ##############################################################
+
+OBJECTS_DIR = build/
+MOC_DIR     = build/
+RCC_DIR     = build/
+UI_DIR      = build/
+QMLCACHE_DIR= build/
+
+DESTDIR     = bin/
+
 ################################################################################
 # Application deployment and installation steps
 
-linux {
+linux:!android {
     TARGET = $$lower($${TARGET})
 
-    # Automatic application packaging # Needs linuxdeployqt installed
+    # Application packaging # Needs linuxdeployqt installed
     #deploy.commands = $${OUT_PWD}/$${DESTDIR}/ -qmldir=qml/
     #install.depends = deploy
     #QMAKE_EXTRA_TARGETS += install deploy
 
     # Installation
     isEmpty(PREFIX) { PREFIX = /usr/local }
-    target_app.files      += $${OUT_PWD}/$${DESTDIR}/$$lower($${TARGET})
-    target_app.path        = $${PREFIX}/bin/
-    target_icon.files     += $${OUT_PWD}/assets/desktop/$$lower($${TARGET}).svg
-    target_icon.path       = $${PREFIX}/share/pixmaps/
-    target_appentry.files += $${OUT_PWD}/assets/desktop/$$lower($${TARGET}).desktop
-    target_appentry.path   = $${PREFIX}/share/applications
-    target_appdata.files  += $${OUT_PWD}/assets/desktop/$$lower($${TARGET}).appdata.xml
-    target_appdata.path    = $${PREFIX}/share/appdata
+    target_app.files       += $${OUT_PWD}/$${DESTDIR}/$$lower($${TARGET})
+    target_app.path         = $${PREFIX}/bin/
+    target_icon.files      += $${OUT_PWD}/assets/desktop/$$lower($${TARGET}).svg
+    target_icon.path        = $${PREFIX}/share/pixmaps/
+    target_appentry.files  += $${OUT_PWD}/assets/desktop/$$lower($${TARGET}).desktop
+    target_appentry.path    = $${PREFIX}/share/applications
+    target_appdata.files   += $${OUT_PWD}/assets/desktop/$$lower($${TARGET}).appdata.xml
+    target_appdata.path     = $${PREFIX}/share/appdata
     INSTALLS += target_app target_icon target_appentry target_appdata
 
     # Clean appdir/ and bin/ directories
@@ -197,27 +196,61 @@ linux {
 }
 
 macx {
-    # Needed by MacOSDockManager
-    LIBS += -framework AppKit
+    #QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.12
+    #message("QMAKE_MACOSX_DEPLOYMENT_TARGET: $$QMAKE_MACOSX_DEPLOYMENT_TARGET")
 
-    # Automatic bundle packaging
+    # Bundle name
+    QMAKE_TARGET_BUNDLE_PREFIX = com.emeric
+    QMAKE_BUNDLE = offloadbuddy
+    CONFIG += app_bundle
+
+    # OS icons
+    ICON = $${PWD}/assets/macos/$$lower($${TARGET}).icns
+    #QMAKE_ASSET_CATALOGS = $${PWD}/assets/macos/Images.xcassets
+    #QMAKE_ASSET_CATALOGS_APP_ICON = "AppIcon"
+
+    # OS infos
+    #QMAKE_INFO_PLIST = $${PWD}/assets/desktop/Info.plist
+
+    # macOSDockManager
+    SOURCES += src/macosdockmanager.mm
+    HEADERS += src/macosdockmanager.h
+    LIBS    += -framework AppKit
+
+    # OS entitlement (sandbox and stuff)
+    ENTITLEMENTS.name = CODE_SIGN_ENTITLEMENTS
+    ENTITLEMENTS.value = $${PWD}/assets/macos/$$lower($${TARGET}).entitlements
+    QMAKE_MAC_XCODE_SETTINGS += ENTITLEMENTS
+
+    #======== Automatic bundle packaging
+
+    # Deploy step (app bundle packaging)
     deploy.commands = macdeployqt $${OUT_PWD}/$${DESTDIR}/$${TARGET}.app -qmldir=qml/ -appstore-compliant
     install.depends = deploy
     QMAKE_EXTRA_TARGETS += install deploy
 
-    # Installation
+    # Installation step (note: app bundle packaging)
     isEmpty(PREFIX) { PREFIX = /usr/local }
     target.files += $${OUT_PWD}/${DESTDIR}/${TARGET}.app
     target.path = $$(HOME)/Applications
     INSTALLS += target
 
-    # Clean ${TARGET}.app directory
+    # Clean step
     QMAKE_DISTCLEAN += -r $${OUT_PWD}/${DESTDIR}/${TARGET}.app
 }
 
 win32 {
-    # Automatic application packaging
+    # OS icon
+    RC_ICONS = $${PWD}/assets/windows/$$lower($${TARGET}).ico
+
+    # Deploy step
     deploy.commands = $$quote(windeployqt $${OUT_PWD}/$${DESTDIR}/ --qmldir qml/)
     install.depends = deploy
     QMAKE_EXTRA_TARGETS += install deploy
+
+    # Installation step
+    # TODO?
+
+    # Clean step
+    # TODO
 }

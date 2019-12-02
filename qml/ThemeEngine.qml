@@ -9,7 +9,7 @@ Item {
         BLOOD_AND_TEARS = 3,
         MIGHTY_KITTENS = 4,
 
-        LAST_THEME
+        THEME_LAST
     }
     property int currentTheme: -1
 
@@ -97,11 +97,9 @@ Item {
     }
 
     function loadTheme(themeIndex) {
+        //console.log("ThemeEngine.loadTheme(" + themeIndex + ")")
 
-        if (themeIndex >= ThemeEngine.LAST_THEME) {
-            themeIndex = 0
-            console.log("ThemeEngine::loadTheme(" + themeIndex + ") ERROR Unknown theme!")
-        }
+        if (themeIndex >= ThemeEngine.THEME_LAST) themeIndex = 0
 
         if (themeIndex === currentTheme) return;
 
