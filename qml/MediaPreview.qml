@@ -504,7 +504,7 @@ Rectangle {
                 highlightColor: Theme.colorPrimary
                 highlightMode: "color"
 
-                source: "qrc:/icons_material/baseline-volume_up-24px.svg"
+                source: (soundline.value === 0) ? "qrc:/icons_material/baseline-volume_off-24px.svg" : "qrc:/icons_material/baseline-volume_up-24px.svg"
                 property real savedVolume: videoPlayer.volume
                 onClicked: {
                     if (videoPlayer.volume) {
