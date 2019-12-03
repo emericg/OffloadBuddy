@@ -38,9 +38,9 @@ Popup {
 
         // Framerate handler
         if (shot.shotType === Shared.SHOT_PICTURE_MULTI ||
-                shot.shotType === Shared.SHOT_PICTURE_BURST ||
-                shot.shotType === Shared.SHOT_PICTURE_TIMELAPSE ||
-                shot.shotType === Shared.SHOT_PICTURE_NIGHTLAPSE) {
+            shot.shotType === Shared.SHOT_PICTURE_BURST ||
+            shot.shotType === Shared.SHOT_PICTURE_TIMELAPSE ||
+            shot.shotType === Shared.SHOT_PICTURE_NIGHTLAPSE) {
             // timelapses
             sliderFps.value = 30
             sliderFps.from = 5
@@ -144,7 +144,7 @@ Popup {
 
     background: Rectangle {
         color: Theme.colorBackground
-        radius: 2
+        radius: Theme.componentRadius
     }
 
     /*contentItem: */Item {
@@ -362,22 +362,24 @@ Popup {
 
                 Text {
                     id: titleClip
+                    width: 128
                     anchors.left: parent.left
                     anchors.leftMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Clip video")
-                    font.pixelSize: 24
-                    color: Theme.colorText
+                    font.pixelSize: 16
+                    color: Theme.colorSubText
                 }
 
                 TextFieldThemed {
                     id: textField_clipstart
                     width: 128
+                    height: 36
                     anchors.verticalCenter: parent.verticalCenter
                     horizontalAlignment: Text.AlignHCenter
                     anchors.left: titleClip.right
-                    anchors.leftMargin: 48
+                    anchors.leftMargin: 16
 
                     placeholderText: "00:00:00"
                     validator: RegExpValidator { regExp: /^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$/ }
@@ -385,6 +387,7 @@ Popup {
                 TextFieldThemed {
                     id: textField_clipstop
                     width: 128
+                    height: 36
                     anchors.left: textField_clipstart.right
                     anchors.leftMargin: 16
                     anchors.verticalCenter: textField_clipstart.verticalCenter
@@ -405,13 +408,14 @@ Popup {
 
                 Text {
                     id: titleCrop
+                    width: 128
                     anchors.left: parent.left
                     anchors.leftMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Crop video")
-                    font.pixelSize: 24
-                    color: Theme.colorText
+                    font.pixelSize: 16
+                    color: Theme.colorSubText
                 }
             }
 
@@ -425,20 +429,21 @@ Popup {
 
                 Text {
                     id: titleFilter
+                    width: 128
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
                     anchors.leftMargin: 0
 
                     text: qsTr("Apply filters")
-                    font.pixelSize: 24
-                    color: Theme.colorText
+                    font.pixelSize: 16
+                    color: Theme.colorSubText
                 }
 
                 CheckBoxThemed {
                     id: checkBox_defish
                     text: qsTr("defisheye")
                     anchors.left: titleFilter.right
-                    anchors.leftMargin: 48
+                    anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
                 }
 

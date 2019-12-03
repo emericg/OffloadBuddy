@@ -61,7 +61,7 @@ Popup {
 
     background: Rectangle {
         color: Theme.colorBackground
-        radius: 2
+        radius: Theme.componentRadius
     }
 
     /*contentItem: */Item {
@@ -298,7 +298,7 @@ Popup {
                     id: elementYear
                     text: qsTr("Year")
                     font.pixelSize: 16
-                    color: Theme.colorText
+                    color: Theme.colorSubText
                 }
 
                 SpinBoxThemed {
@@ -319,7 +319,7 @@ Popup {
                     id: elementMonth
                     text: qsTr("Month")
                     font.pixelSize: 16
-                    color: Theme.colorText
+                    color: Theme.colorSubText
                 }
 
                 SpinBoxThemed {
@@ -338,7 +338,7 @@ Popup {
                     id: elementDay
                     text: qsTr("Day")
                     font.pixelSize: 16
-                    color: Theme.colorText
+                    color: Theme.colorSubText
                 }
 
                 SpinBoxThemed {
@@ -368,7 +368,7 @@ Popup {
                     id: elementHours
                     text: qsTr("Hours")
                     font.pixelSize: 16
-                    color: Theme.colorText
+                    color: Theme.colorSubText
                 }
 
                 SpinBoxThemed {
@@ -387,7 +387,7 @@ Popup {
                     id: elementMinutes
                     text: qsTr("Minutes")
                     font.pixelSize: 16
-                    color: Theme.colorText
+                    color: Theme.colorSubText
                 }
 
                 SpinBoxThemed {

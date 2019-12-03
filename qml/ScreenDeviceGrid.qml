@@ -838,6 +838,18 @@ Item {
 
                     shotsView.computeCellSize()
                 }
+                onThumbSizeChanged: {
+                    if (settingsManager.thumbSize === 1)
+                        shotsView.cellSizeTarget = 221
+                    else if (settingsManager.thumbSize === 2)
+                        shotsView.cellSizeTarget = 279
+                    else if (settingsManager.thumbSize === 3)
+                        shotsView.cellSizeTarget = 376
+                    else if (settingsManager.thumbSize === 4)
+                        shotsView.cellSizeTarget = 512
+
+                    shotsView.computeCellSize()
+                }
             }
 
             property real cellFormat: {
@@ -850,8 +862,17 @@ Item {
                 else if (settingsManager.thumbFormat === 4)
                     return 2.0
             }
-            property int cellSizeTarget: 279
-            property int cellSize: 279
+            property int cellSizeTarget: {
+                if (settingsManager.thumbSize === 1)
+                    return 221
+                else if (settingsManager.thumbSize === 2)
+                    return 279
+                else if (settingsManager.thumbSize === 3)
+                    return 376
+                else if (settingsManager.thumbSize === 4)
+                    return 512
+            }
+            property int cellSize: cellSizeTarget
             property int cellMarginTarget: 12
             property int cellMargin: 12
 

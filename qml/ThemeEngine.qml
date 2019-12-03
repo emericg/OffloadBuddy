@@ -87,7 +87,7 @@ Item {
     readonly property int fontSizeBannerText: 20
     readonly property int fontSizeContentTitle: 24
     readonly property int fontSizeContentText: 15
-    readonly property int fontSizeComponentText: 15
+    readonly property int fontSizeComponentText: 16
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -268,11 +268,11 @@ Item {
             // light blue "#44C5DA"
             // yellow "#FCCD13" "#FFE400"
 
-            colorHeader =           "#F99DCE"
+            colorHeader =           "#FFB4DC"
             colorHeaderContent =    "#944197"
 
             colorSidebar =          "#E31D8D"
-            colorSidebarContent =   "#FFFBE2"
+            colorSidebarContent =   "#FFF06D"
 
             colorActionbar =        "#FFE400"
             colorActionbarContent = "white"
@@ -292,7 +292,7 @@ Item {
             colorSeparator =        "#E4E4E4"
             colorHighContrast =     "red"
 
-            colorComponent =        "#ff6ec7"
+            colorComponent =        "#FF87D0"
             colorComponentText =    "#944197"
             colorComponentContent = "white"
             colorComponentBorder =  "#F592C1"

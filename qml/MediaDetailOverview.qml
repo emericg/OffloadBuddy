@@ -39,7 +39,7 @@ Item {
 
             codecAudio.visible = false
             codecVideo.visible = true
-            codecVideoText.text = shot.codecVideo
+            codecVideo.text = shot.codecVideo
 
             if (shot.duration > 1) {
                 labelDuration.visible = true
@@ -73,7 +73,7 @@ Item {
 
             if (shot.codecVideo.length) {
                 codecVideo.visible = true
-                codecVideoText.text = shot.codecVideo
+                codecVideo.text = shot.codecVideo
                 codec.text = shot.codecVideo
             } else {
                 codecVideo.visible = false
@@ -81,7 +81,7 @@ Item {
 
             if (shot.audioCodec.length) {
                 codecAudio.visible = true
-                codecAudioText.text = shot.audioCodec
+                codecAudio.text = shot.audioCodec
                 codec.text +=  " / " + shot.audioCodec
             } else {
                 codecAudio.visible = false

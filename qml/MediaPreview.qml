@@ -28,6 +28,8 @@ Rectangle {
         output.rotation = 0
         output.transform = noflip
         overlayRotations.visible = false
+        overlayRotations.anchors.top = overlays.top
+        overlayRotations.anchors.bottom = undefined
 
         imageOutput.visible = true
         mediaOutput.visible = false
@@ -48,6 +50,8 @@ Rectangle {
         output.rotation = 0
         output.transform = noflip
         overlayRotations.visible = false
+        overlayRotations.anchors.top = undefined
+        overlayRotations.anchors.bottom = overlays.bottom
 
         imageOutput.visible = false
         mediaOutput.visible = true
@@ -162,7 +166,7 @@ Rectangle {
     Matrix4x4 { id: vhflip; matrix: Qt.matrix4x4(-1, 0, 0, output.width, 0, -1, 0, output.height, 0, 0, 1, 0, 0, 0, 0, 1) }
 
     function setFlip(value) {
-        console.log("setflip() " + value)
+        //console.log("setflip() " + value)
 
         if (value === "vertical")
             output.vflipped = !output.vflipped
@@ -180,7 +184,7 @@ Rectangle {
     }
 
     function setRotation(value) {
-        console.log("setRotation() " + value)
+        //console.log("setRotation() " + value)
 
         output.rotation += value
         output.rotation = UtilsNumber.mod(output.rotation, 360)
@@ -289,96 +293,78 @@ Rectangle {
 */
         ////////////////
 
-        Item {
-            id: overlayRotations
-            anchors.fill: parent
-            anchors.left: parent.left
-            anchors.leftMargin: 16
-            anchors.top: parent.top
-            anchors.topMargin: 16
-
-            visible: false // mouseArea.hovered
-            opacity: 0.66
-
-            Row {
-                id: row
-                Column {
-                    ItemImageButton {
-                        id: buttonRotateLeft
-                        width: 40
-                        height: 40
-
-                        background: true
-                        iconColor: "white"
-                        highlightColor: Theme.colorForeground
-                        source: "qrc:/icons_material/baseline-rotate_left-24px.svg"
-                        onClicked: mediaArea.setRotation(-90)
-                    }
-                    ItemImageButton {
-                        id: buttonRotateRight
-                        width: 40
-                        height: 40
-
-                        background: true
-                        iconColor: "white"
-                        highlightColor: Theme.colorForeground
-                        source: "qrc:/icons_material/baseline-rotate_right-24px.svg"
-                        onClicked: mediaArea.setRotation(+90)
-                    }
-                }
-                Column {
-                    ItemImageButton {
-                        id: buttonFlipV
-                        width: 40
-                        height: 40
-
-                        background: true
-                        iconColor: "white"
-                        highlightColor: Theme.colorForeground
-                        source: "qrc:/icons_material/baseline-flip-24px.svg"
-                        onClicked: mediaArea.setFlip("vertical")
-                    }
-                    ItemImageButton {
-                        id: buttonFlipH
-                        width: 40
-                        height: 40
-                        rotation: 90
-
-                        background: true
-                        iconColor: "white"
-                        highlightColor: Theme.colorForeground
-                        source: "qrc:/icons_material/baseline-flip-24px.svg"
-                        onClicked: mediaArea.setFlip("horizontal")
-                    }
-                }
-            }
-            ItemImageButton {
-                id: buttonRotateSave
-                width: 40
-                height: 40
-                anchors.horizontalCenter: row.horizontalCenter
-                anchors.top: row.bottom
-
-                background: true
-                iconColor: "green"
-                highlightColor: Theme.colorForeground
-                visible: (output.rotation != 0 || output.vflipped || output.hflipped)
-                source: "qrc:/icons_material/baseline-save-24px.svg"
-                //onClicked: shot.saveRotation(angle)
-            }
-        }
-
         MouseArea {
             id: mouseArea
             anchors.fill: parent
             hoverEnabled: true
-            propagateComposedEvents: true
+            //propagateComposedEvents: true
 
             property bool hovered: false
 
             onDoubleClicked: toogleFullScreen()
             onEntered: { hovered = true; }
             onExited: { hovered = false; }
+        }
+
+        Row {
+            id: overlayRotations
+            anchors.right: parent.right
+            anchors.rightMargin: 16
+            anchors.top: parent.top
+            anchors.topMargin: 16
+            anchors.bottomMargin: 56
+
+            visible: false
+            spacing: 4
+
+            ItemImageButton {
+                //id: buttonRotateSave
+                background: true
+                iconColor: "white"
+                backgroundColor: "#222222"
+                highlightColor: "green"
+                highlightMode: "color"
+                visible: (output.rotation != 0 || output.vflipped || output.hflipped)
+                source: "qrc:/icons_material/baseline-save-24px.svg"
+                //onClicked: shot.saveRotation(angle)
+            }
+            ItemImageButton {
+                //id: buttonRotateLeft
+                background: true
+                iconColor: (output.rotation >= 180) ? Theme.colorPrimary : "white"
+                backgroundColor: "#222222"
+                highlightMode: "color"
+                source: "qrc:/icons_material/baseline-rotate_left-24px.svg"
+                onClicked: mediaArea.setRotation(-90)
+            }
+            ItemImageButton {
+                //id: buttonRotateRight
+                background: true
+                iconColor: (output.rotation > 0 && output.rotation <= 180) ? Theme.colorPrimary : "white"
+                backgroundColor: "#222222"
+                highlightMode: "color"
+                source: "qrc:/icons_material/baseline-rotate_right-24px.svg"
+                onClicked: mediaArea.setRotation(+90)
+            }
+            ItemImageButton {
+                //id: buttonFlipV
+                background: true
+                iconColor: (output.vflipped) ? Theme.colorPrimary : "white"
+                backgroundColor: "#222222"
+                highlightMode: "color"
+                source: "qrc:/icons_material/baseline-flip-24px.svg"
+                onClicked: mediaArea.setFlip("vertical")
+            }
+            ItemImageButton {
+                //id: buttonFlipH
+                rotation: 90
+                background: true
+                iconColor: (output.hflipped) ? Theme.colorPrimary : "white"
+                backgroundColor: "#222222"
+                highlightMode: "color"
+                source: "qrc:/icons_material/baseline-flip-24px.svg"
+                onClicked: mediaArea.setFlip("horizontal")
+            }
         }
 
         ////////////////
@@ -548,12 +534,15 @@ Rectangle {
                 anchors.rightMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
 
-                iconColor: overlayRotations.visible ? "yellow" : "white"
+                iconColor: overlayRotations.visible ? Theme.colorPrimary : "white"
                 highlightColor: Theme.colorPrimary
                 highlightMode: "color"
 
                 source: "qrc:/icons_material/baseline-rotate_90_degrees_ccw-24px.svg"
                 onClicked: {
+                    timeline.visible = true
+                    cutline.visible = false
+
                     overlayRotations.visible = !overlayRotations.visible
                 }
             }
@@ -565,12 +554,14 @@ Rectangle {
                 anchors.rightMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
 
-                iconColor: cutline.visible ? "yellow" : "white"
+                iconColor: cutline.visible ? Theme.colorPrimary : "white"
                 highlightColor: Theme.colorPrimary
                 highlightMode: "color"
 
                 source: "qrc:/icons_material/baseline-flip-24px.svg"
                 onClicked: {
+                    overlayRotations.visible = false
+
                     timeline.visible = !timeline.visible
                     cutline.visible = !cutline.visible
                 }

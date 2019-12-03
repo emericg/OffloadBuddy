@@ -21,7 +21,7 @@ Popup {
 
     background: Rectangle {
         color: Theme.colorBackground
-        radius: 2
+        radius: Theme.componentRadius
     }
 
     contentItem: Item {

@@ -146,6 +146,16 @@ Item {
 
             ////////
 
+            Text {
+                height: 40
+
+                text: qsTr("Thumbnails")
+                verticalAlignment: Text.AlignVCenter
+                color: Theme.colorText
+                font.bold: true
+                font.pixelSize: 16
+            }
+
             Row {
                 height: 40
                 spacing: 32
@@ -153,14 +163,12 @@ Item {
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: qsTr("Thumbnail quality")
-                    font.bold: true
+                    text: qsTr("Quality")
                     font.pixelSize: 16
                     color: Theme.colorText
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignLeft
                 }
-
                 Row {
                     height: 32
                     anchors.verticalCenter: parent.verticalCenter
@@ -195,14 +203,12 @@ Item {
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: qsTr("Thumbnail format")
-                    font.bold: true
+                    text: qsTr("Aspet ratio")
                     font.pixelSize: 16
                     color: Theme.colorText
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignLeft
                 }
-
                 Row {
                     height: 32
                     anchors.verticalCenter: parent.verticalCenter
@@ -230,6 +236,47 @@ Item {
                         text: "2:1"
                         selected: (settingsManager.thumbFormat === 4)
                         onClicked: settingsManager.thumbFormat = 4
+                    }
+                }
+
+                Item { width: 1; height: 1; } // spacer
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: qsTr("Default size")
+                    font.pixelSize: 16
+                    color: Theme.colorText
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignLeft
+                }
+                Row {
+                    height: 32
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    ItemLilMenuButton {
+                        height: parent.height
+                        text: qsTr("little")
+                        selected: (settingsManager.thumbSize === 1)
+                        onClicked: settingsManager.thumbSize = 1
+                    }
+                    ItemLilMenuButton {
+                        height: parent.height
+                        text: qsTr("medium")
+                        selected: (settingsManager.thumbSize === 2)
+                        onClicked: settingsManager.thumbSize = 2
+                    }
+                    ItemLilMenuButton {
+                        height: parent.height
+                        text: qsTr("big")
+                        selected: (settingsManager.thumbSize === 3)
+                        onClicked: settingsManager.thumbSize = 3
+                    }
+                    ItemLilMenuButton {
+                        height: parent.height
+                        text: qsTr("huge")
+                        selected: (settingsManager.thumbSize === 4)
+                        onClicked: settingsManager.thumbSize = 4
                     }
                 }
             }

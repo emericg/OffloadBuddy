@@ -10,7 +10,7 @@ Rectangle {
     implicitWidth: 640
     implicitHeight: 48
 
-    radius: 2
+    radius: Theme.componentRadius
     color: Theme.colorForeground
 
     property var job: null
@@ -124,24 +124,13 @@ Rectangle {
         anchors.rightMargin: 12
 
         ItemImageButton {
-            id: rectangleOpen
-            width: 40
-            height: 40
-            anchors.verticalCenter: parent.verticalCenter
-
-            visible: (job.type !== 3) // not a deletion
-            highlightColor: Theme.colorBackground
-            source: "qrc:/icons_material/outline-folder-24px.svg"
-            onClicked: job.openDestination()
-        }
-
-        ItemImageButton {
             id: rectanglePlayPause
             width: 40
             height: 40
             anchors.verticalCenter: parent.verticalCenter
 
-            highlightColor: Theme.colorBackground
+            visible: (job.state === 1 || job.state === 2) // running
+            highlightMode: "color"
             source: "qrc:/icons_material/baseline-pause_circle_outline-24px.svg"
             //onClicked:
         }
@@ -152,9 +141,22 @@ Rectangle {
             height: 40
             anchors.verticalCenter: parent.verticalCenter
 
-            highlightColor: Theme.colorBackground
+            visible: (job.state === 1 || job.state === 2) // running
+            highlightMode: "color"
             source: "qrc:/icons_material/baseline-cancel-24px.svg"
             //onClicked:
+        }
+
+        ItemImageButton {
+            id: rectangleOpen
+            width: 40
+            height: 40
+            anchors.verticalCenter: parent.verticalCenter
+
+            visible: (job.type !== 3) // not a deletion
+            highlightMode: "color"
+            source: "qrc:/icons_material/outline-folder-24px.svg"
+            onClicked: job.openDestination()
         }
     }
 }

@@ -33,6 +33,8 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
 
             iconColor: Theme.colorHeaderContent
+            backgroundColor: Theme.colorForeground
+
             source: "qrc:/others/navigate_before_big.svg"
             onClicked: applicationContent.state = "library"
         }
@@ -59,26 +61,9 @@ Item {
             anchors.left: textShotName.right
             anchors.leftMargin: 32
 
-            Rectangle {
+            ItemCodec {
                 id: codecVideo
-                width: 80
-                height: 28
-                opacity: 0.8
-                radius: 3
-                color: Theme.colorBackground
-
-                Text {
-                    id: codecVideoText
-                    anchors.fill: parent
-
-                    text: "CODEC"
-                    color: Theme.colorText
-                    font.capitalization: Font.AllUppercase
-                    font.pixelSize: 16
-                    font.bold: true
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                }
+                text: "H.264"
             }
         }
 
@@ -307,7 +292,7 @@ Item {
 
                 source: "qrc:/icons_material/baseline-accessibility-24px.svg"
                 background: true
-                highlightMode: "color"
+                highlightMode: "circle"
             }
             ItemImageButton {
                 id: itemImageButton2
@@ -318,8 +303,8 @@ Item {
                 anchors.verticalCenter: itemImageButton1.verticalCenter
 
                 source: "qrc:/icons_material/baseline-accessibility-24px.svg"
-                background: false
-                highlightMode: "circle"
+                background: true
+                highlightMode: "color"
             }
             ItemImageButton {
                 id: itemImageButton3
@@ -330,19 +315,21 @@ Item {
                 anchors.verticalCenter: itemImageButton1.verticalCenter
 
                 source: "qrc:/icons_material/baseline-accessibility-24px.svg"
-                highlightMode: "color"
+                background: true
+                highlightMode: "both"
                 highlightColor: Theme.colorError
                 tooltipText: "this one has a tooltip!"
             }
 
             ItemImageButton {
                 id: itemImageButton11
-                anchors.leftMargin: 175
+                anchors.leftMargin: 160
                 anchors.left: itemImageButton3.right
                 anchors.verticalCenter: itemImageButton1.verticalCenter
 
                 source: "qrc:/icons_material/baseline-accessibility-24px.svg"
-                highlightMode: "color"
+                background: false
+                highlightMode: "circle"
             }
             ItemImageButton {
                 id: itemImageButton22
@@ -351,8 +338,8 @@ Item {
                 anchors.verticalCenter: itemImageButton1.verticalCenter
 
                 source: "qrc:/icons_material/baseline-accessibility-24px.svg"
-                background: true
-                highlightMode: "circle"
+                background: false
+                highlightMode: "color"
             }
             ItemImageButton {
                 id: itemImageButton33
@@ -361,7 +348,8 @@ Item {
                 anchors.verticalCenter: itemImageButton1.verticalCenter
 
                 source: "qrc:/icons_material/baseline-accessibility-24px.svg"
-                highlightMode: "color"
+                background: false
+                highlightMode: "both"
                 highlightColor: Theme.colorError
                 tooltipText: "another tooltip!"
             }

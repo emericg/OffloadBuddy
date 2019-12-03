@@ -1,13 +1,15 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 
+import ThemeEngine 1.0
+
 Rectangle {
     id: actionMenuItem
     width: 180
     height: menuHolder.height + 12
     visible: isOpen
     focus: isOpen
-    radius: 2
+    radius: Theme.componentRadius
 
     signal menuSelected(int index)
     property bool isOpen: false

@@ -15,8 +15,9 @@ Item {
     property bool selected: false
     property bool highlighted: false
 
-    property string colorContent: Theme.colorHeaderContent
-    property string colorBackground: Theme.colorForeground
+    property string colorBackground: Theme.colorComponent
+    property string colorHighlight: Theme.colorHighContrast
+    property string colorContent: Theme.colorComponentContent
 
     property string text: ""
     property url source: ""
@@ -40,11 +41,10 @@ Item {
     Rectangle {
         id: bgRect
         anchors.fill: parent
-
         color: itemMenuButton.colorBackground
     }
     Rectangle {
-        id: bgRect2
+        id: bgHightlight
         anchors.fill: parent
 
         visible: parent.selected
@@ -55,9 +55,9 @@ Item {
         id: bgFocus
         anchors.fill: parent
 
-        color: itemMenuButton.colorContent
         opacity: 0
-        Behavior on opacity { OpacityAnimator { duration: 250 } }
+        color: itemMenuButton.colorHighlight
+        Behavior on opacity { OpacityAnimator { duration: 233 } }
     }
 
     ImageSvg {
@@ -68,8 +68,8 @@ Item {
         anchors.horizontalCenter: itemMenuButton.horizontalCenter
 
         source: itemMenuButton.source
-        color: (selected) ? Theme.colorText : Theme.colorSubText
-        opacity: itemMenuButton.enabled ? 1.0 : 0.3
+        color: itemMenuButton.colorContent
+        opacity: (itemMenuButton.selected) ? 1 : 0.66
     }
     Text {
         id: contentText
@@ -77,10 +77,10 @@ Item {
         anchors.verticalCenter: itemMenuButton.verticalCenter
         anchors.horizontalCenter: itemMenuButton.horizontalCenter
 
-        //visible: !(parent.text.isEmpty())
         text: parent.text
         font.pixelSize: 16
-        color: (selected) ? Theme.colorText : Theme.colorSubText
+        color: itemMenuButton.colorContent
+        opacity: (itemMenuButton.selected) ? 1 : 0.66
         verticalAlignment: Text.AlignVCenter
     }
 }

@@ -99,6 +99,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
 
             iconColor: Theme.colorHeaderContent
+            backgroundColor: Theme.colorForeground
 
             source: "qrc:/others/navigate_before_big.svg"
             onClicked: {
@@ -131,48 +132,14 @@ Item {
             anchors.left: textShotName.right
             anchors.leftMargin: 32
 
-            Rectangle {
+            ItemCodec {
                 id: codecVideo
-                width: 80
-                height: 28
-                opacity: 0.8
-                radius: 3
-                color: Theme.colorBackground
-
-                Text {
-                    id: codecVideoText
-                    anchors.fill: parent
-
-                    text: qsTr("CODEC")
-                    color: Theme.colorText
-                    font.capitalization: Font.AllUppercase
-                    font.pixelSize: 16
-                    font.bold: true
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                }
+                text: qsTr("CODEC")
             }
 
-            Rectangle {
+            ItemCodec {
                 id: codecAudio
-                width: 80
-                height: 28
-                opacity: 0.8
-                radius: 3
-                color: Theme.colorBackground
-
-                Text {
-                    id: codecAudioText
-                    anchors.fill: parent
-
-                    text: qsTr("CODEC")
-                    color: Theme.colorText
-                    font.capitalization: Font.AllUppercase
-                    font.pixelSize: 16
-                    font.bold: true
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                }
+                text: qsTr("CODEC")
             }
         }
 
@@ -188,6 +155,7 @@ Item {
                 width: 40
                 height: 40
                 source: "qrc:/icons_material/baseline-rotate_90_degrees_ccw-24px.svg"
+                backgroundColor: Theme.colorForeground
                 onClicked: contentOverview.toggleRotate()
             }
 
@@ -196,6 +164,7 @@ Item {
                 width: 40
                 height: 40
                 source: "qrc:/icons_material/baseline-date_range-24px.svg"
+                backgroundColor: Theme.colorForeground
                 onClicked: contentOverview.openDatePopup()
             }
 
@@ -204,6 +173,7 @@ Item {
                 width: 40
                 height: 40
                 source: "qrc:/icons_material/baseline-settings_applications-24px.svg"
+                backgroundColor: Theme.colorForeground
                 onClicked: contentOverview.openEncodePopup()
             }
 
@@ -213,6 +183,7 @@ Item {
                 height: 40
                 source: "qrc:/icons_material/baseline-insert_chart-24px.svg"
                 visible: (shot && shot.hasGPMF && shot.hasGPS)
+                backgroundColor: Theme.colorForeground
                 onClicked: contentOverview.openTelemetryPopup()
             }
 
@@ -221,6 +192,7 @@ Item {
                 width: 40
                 height: 40
                 source: "qrc:/icons_material/outline-folder-24px.svg"
+                backgroundColor: Theme.colorForeground
                 onClicked: shot.openFolder()
             }
 
@@ -229,6 +201,7 @@ Item {
                 width: 40
                 height: 40
                 source: "qrc:/icons_material/baseline-delete-24px.svg"
+                backgroundColor: Theme.colorForeground
                 onClicked: contentOverview.openDeletePopup()
             }
         }

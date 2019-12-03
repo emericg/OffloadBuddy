@@ -200,48 +200,100 @@ Item {
             font.pixelSize: Theme.fontSizeHeaderText
         }
 
-        SliderThemed {
-            id: sliderZoom
-            width: 200
+        Row {
+            id: rowLilMenuFormat
             height: 40
-            anchors.verticalCenter: textZoom.verticalCenter
-            anchors.left: textZoom.right
-            anchors.leftMargin: 4
-            stepSize: 1
-            from: 1
-            value: 2
-            to: 4
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 16
+            anchors.left: parent.left
+            anchors.leftMargin: 16
 
-            onValueChanged: {
-                if (value == 1.0) {
-                    shotsView.cellSizeTarget = 221;
-                    shotsView.computeCellSize();
-                } else if (value == 2.0) {
-                    shotsView.cellSizeTarget = 279;
-                    shotsView.computeCellSize();
-                } else if (value == 3.0) {
-                    shotsView.cellSizeTarget = 376;
-                    shotsView.computeCellSize();
-                } else if (value == 4.0) {
-                    shotsView.cellSizeTarget = 512;
-                    shotsView.computeCellSize();
+            ItemLilMenuButton {
+                height: parent.height
+                text: "1:1"
+                selected: (shotsView.cellFormat === 1.0)
+                onClicked: {
+                    shotsView.cellFormat = 1.0
+                    shotsView.computeCellSize()
+                }
+            }
+            ItemLilMenuButton {
+                height: parent.height
+                text: "4:3"
+                selected: (shotsView.cellFormat === 4/3)
+                onClicked:  {
+                    shotsView.cellFormat = 4/3
+                    shotsView.computeCellSize()
+                }
+            }
+            ItemLilMenuButton {
+                height: parent.height
+                text: "16:9"
+                selected: (shotsView.cellFormat === 16/9)
+                onClicked:  {
+                    shotsView.cellFormat = 16/9
+                    shotsView.computeCellSize()
+                }
+            }
+            ItemLilMenuButton {
+                height: parent.height
+                text: "2:1"
+                selected: (shotsView.cellFormat === 2.0)
+                onClicked:  {
+                    shotsView.cellFormat = 2.0
+                    shotsView.computeCellSize()
                 }
             }
         }
 
-        Text {
-            id: textZoom
+        Row {
+            id: rowLilMenuZoom
             height: 40
-            anchors.left: parent.left
-            anchors.leftMargin: 16
-
-            text: qsTr("ZOOM")
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 16
-            font.pixelSize: Theme.fontSizeHeaderText
-            color: Theme.colorHeaderContent
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
+            anchors.left: rowLilMenuFormat.right
+            anchors.leftMargin: 16
+
+            ItemLilMenuButton {
+                height: parent.height
+                source: "qrc:/icons_material/baseline-photo-24px.svg"
+                sourceSize: 18
+                selected: (shotsView.cellSizeTarget === 221)
+                onClicked: {
+                    shotsView.cellSizeTarget = 221;
+                    shotsView.computeCellSize();
+                }
+            }
+            ItemLilMenuButton {
+                height: parent.height
+                source: "qrc:/icons_material/baseline-photo-24px.svg"
+                sourceSize: 22
+                selected: (shotsView.cellSizeTarget === 279)
+                onClicked: {
+                    shotsView.cellSizeTarget = 279;
+                    shotsView.computeCellSize();
+                }
+            }
+            ItemLilMenuButton {
+                height: parent.height
+                source: "qrc:/icons_material/baseline-photo-24px.svg"
+                sourceSize: 26
+                selected: (shotsView.cellSizeTarget === 376)
+                onClicked: {
+                    shotsView.cellSizeTarget = 376;
+                    shotsView.computeCellSize();
+                }
+            }
+            ItemLilMenuButton {
+                height: parent.height
+                source: "qrc:/icons_material/baseline-photo-24px.svg"
+                sourceSize: 30
+                selected: (shotsView.cellSizeTarget === 512)
+                onClicked: {
+                    shotsView.cellSizeTarget = 512;
+                    shotsView.computeCellSize();
+                }
+            }
         }
 
         Row {
@@ -533,6 +585,18 @@ Item {
 
                     shotsView.computeCellSize()
                 }
+                onThumbSizeChanged: {
+                    if (settingsManager.thumbSize === 1)
+                        shotsView.cellSizeTarget = 221
+                    else if (settingsManager.thumbSize === 2)
+                        shotsView.cellSizeTarget = 279
+                    else if (settingsManager.thumbSize === 3)
+                        shotsView.cellSizeTarget = 376
+                    else if (settingsManager.thumbSize === 4)
+                        shotsView.cellSizeTarget = 512
+
+                    shotsView.computeCellSize()
+                }
             }
 
             property real cellFormat: {
@@ -545,8 +609,17 @@ Item {
                 else if (settingsManager.thumbFormat === 4)
                     return 2.0
             }
-            property int cellSizeTarget: 279
-            property int cellSize: 279
+            property int cellSizeTarget: {
+                if (settingsManager.thumbSize === 1)
+                    return 221
+                else if (settingsManager.thumbSize === 2)
+                    return 279
+                else if (settingsManager.thumbSize === 3)
+                    return 376
+                else if (settingsManager.thumbSize === 4)
+                    return 512
+            }
+            property int cellSize: cellSizeTarget
             property int cellMarginTarget: 12
             property int cellMargin: 12
 
