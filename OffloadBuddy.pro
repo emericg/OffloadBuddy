@@ -205,8 +205,8 @@ macx {
     CONFIG += app_bundle
 
     # OS icons
-    ICON = $${PWD}/assets/macos/$$lower($${TARGET}).icns
-    #QMAKE_ASSET_CATALOGS = $${PWD}/assets/macos/Images.xcassets
+    ICON = $${PWD}/assets/desktop/$$lower($${TARGET}).icns
+    #QMAKE_ASSET_CATALOGS = $${PWD}/assets/desktop/Images.xcassets
     #QMAKE_ASSET_CATALOGS_APP_ICON = "AppIcon"
 
     # OS infos
@@ -219,7 +219,7 @@ macx {
 
     # OS entitlement (sandbox and stuff)
     ENTITLEMENTS.name = CODE_SIGN_ENTITLEMENTS
-    ENTITLEMENTS.value = $${PWD}/assets/macos/$$lower($${TARGET}).entitlements
+    ENTITLEMENTS.value = $${PWD}/assets/desktop/$$lower($${TARGET}).entitlements
     QMAKE_MAC_XCODE_SETTINGS += ENTITLEMENTS
 
     #======== Automatic bundle packaging
@@ -241,7 +241,7 @@ macx {
 
 win32 {
     # OS icon
-    RC_ICONS = $${PWD}/assets/windows/$$lower($${TARGET}).ico
+    RC_ICONS = $${PWD}/assets/desktop/$$lower($${TARGET}).ico
 
     # Deploy step
     deploy.commands = $$quote(windeployqt $${OUT_PWD}/$${DESTDIR}/ --qmldir qml/)
