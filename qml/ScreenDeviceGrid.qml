@@ -162,11 +162,14 @@ Item {
     function getDevicePicture(deviceName) {
         var camera_model = "qrc:/cameras/";
 
-        if (deviceName.includes("HERO7 White") || deviceName.includes("HERO8 White") ||
-            deviceName.includes("HERO7 Silver") || deviceName.includes("HERO8 Silver")) {
+        if (deviceName.includes("HERO8")) {
+            camera_model += "H8"
+        } else if (deviceName.includes("HERO7 White") ||
+                   deviceName.includes("HERO7 Silver")) {
             camera_model += "H7w"
-        } else if (deviceName.includes("HERO8") || deviceName.includes("HERO7") ||
-                   deviceName.includes("HERO6") || deviceName.includes("HERO5")) {
+        } else if (deviceName.includes("HERO7") ||
+                   deviceName.includes("HERO6") ||
+                   deviceName.includes("HERO5")) {
             camera_model += "H5"
         } else if (deviceName.includes("Session")) {
             camera_model += "session"
@@ -176,6 +179,8 @@ Item {
             camera_model += "H3"
         } else if (deviceName.includes("FUSION") || deviceName.includes("Fusion")) {
             camera_model += "fusion"
+        } else if (deviceName.includes("MAX") || deviceName.includes("Max")) {
+            camera_model += "max"
         } else if (deviceName.includes("HD2")) {
             camera_model += "H2"
         } else {
@@ -201,7 +206,7 @@ Item {
             if (currentDevice.deviceType === 2)
                 imageEmpty.source = "qrc:/devices/card.svg"
             else
-                imageEmpty.source = "qrc:/devices/phone.svg"
+                imageEmpty.source = "qrc:/devices/camera.svg"
         else
             imageEmpty.source = "qrc:/devices/usb.svg"
     }

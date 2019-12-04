@@ -89,15 +89,18 @@
         <file alias="generic_actioncam.svg">cameras/generic_actioncam.svg</file>
         <file alias="generic_camera.svg">cameras/generic_camera.svg</file>
         <file alias="generic_smartphone.svg">cameras/generic_smartphone.svg</file>
+        <file alias="H8.svg">cameras/H8.svg</file>
         <file alias="H7w.svg">cameras/H7w.svg</file>
         <file alias="H5.svg">cameras/H5.svg</file>
         <file alias="H4.svg">cameras/H4.svg</file>
         <file alias="H3.svg">cameras/H3.svg</file>
         <file alias="H2.svg">cameras/H2.svg</file>
         <file alias="session.svg">cameras/session.svg</file>
+        <file alias="max.svg">cameras/max.svg</file>
         <file alias="fusion.svg">cameras/fusion.svg</file>
     </qresource>
     <qresource prefix="/devices">
+        <file alias="camera.svg">devices/camera.svg</file>
         <file alias="card.svg">devices/card.svg</file>
         <file alias="disk.svg">devices/disk.svg</file>
         <file alias="phone.svg">devices/phone.svg</file>
