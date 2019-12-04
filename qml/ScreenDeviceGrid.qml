@@ -4,6 +4,7 @@ import QtQuick.Controls 2.2
 import ThemeEngine 1.0
 import com.offloadbuddy.shared 1.0
 import "qrc:/js/UtilsString.js" as UtilsString
+import "qrc:/js/UtilsDevice.js" as UtilsDevice
 
 Item {
     id: mediaGrid
@@ -31,13 +32,27 @@ Item {
         selectionCount++;
 
         currentDevice.getShotByProxyIndex(index).selected = true;
+
+        // save state
+        if (deviceSavedState) {
+            deviceSavedState.selectionMode = selectionMode
+            deviceSavedState.selectionList = selectionList
+            deviceSavedState.selectionCount = selectionCount
+        }
     }
     function deselectFile(index) {
         var i = selectionList.indexOf(index);
         if (i > -1) { selectionList.splice(i, 1); selectionCount--; }
-        if (selectionList.length === 0) selectionMode = false;
+        if (selectionList.length <= 0 || selectionCount <= 0) { exitSelectionMode() }
 
         currentDevice.getShotByProxyIndex(index).selected = false;
+
+        // save state
+        if (deviceSavedState) {
+            deviceSavedState.selectionMode = selectionMode
+            deviceSavedState.selectionList = selectionList
+            deviceSavedState.selectionCount = selectionCount
+        }
     }
 
     function selectAll() {
@@ -50,10 +65,15 @@ Item {
 
             currentDevice.getShotByProxyIndex(i).selected = true;
         }
+
+        // save state
+        if (deviceSavedState) {
+            deviceSavedState.selectionMode = selectionMode
+            deviceSavedState.selectionList = selectionList
+            deviceSavedState.selectionCount = selectionCount
+        }
     }
-    function listSelectedFiles() {
-        //
-    }
+
     function exitSelectionMode() {
         selectionMode = false;
         selectionList = [];
@@ -62,31 +82,79 @@ Item {
         for (var i = 0; i < shotsView.count; i++) {
             currentDevice.getShotByProxyIndex(i).selected = false;
         }
+
+        // save state
+        if (deviceSavedState) {
+            deviceSavedState.selectionMode = selectionMode
+            deviceSavedState.selectionList = selectionList
+            deviceSavedState.selectionCount = selectionCount
+        }
     }
 
     ////////
 
     Connections {
         target: currentDevice
-        onStateUpdated: mediaGrid.updateGridViewSettings()
-        onDeviceUpdated: mediaGrid.updateDeviceHeader()
+        onStateUpdated: updateGridState()
         onStorageUpdated: updateStorage()
         onBatteryUpdated: updateBattery()
     }
 
     function restoreState() {
-        sliderZoom.value = deviceSavedState.zoomLevel
+        //console.log("ScreenDeviceGrid.restoreState()")
+
+        // Grid filters and settings
         comboBox_orderby.currentIndex = deviceSavedState.orderBy
         comboBox_filterby.currentIndex = deviceSavedState.filterBy
+        sliderZoom.value = deviceSavedState.zoomLevel
+
+        // Banner // TODO reopen ONLY if needed
+        bannerMessage.close()
+        if (currentDevice.deviceStorage === 1) { // VFS
+            bannerMessage.openMessage(qsTr("Previews are not available (yet) with MTP devices..."))
+        }
+        if (currentDevice.deviceStorage === 2) { // MTP
+            bannerMessage.openMessage(qsTr("Metadatas are not available from MTP devices. Offload medias first, or plug SD cards directly."))
+        }
+
+        // Grid index
         shotsView.currentIndex = deviceSavedState.selectedIndex
 
-        //selectionMode = deviceSavedState.selectionMode;
-        //selectionList = deviceSavedState.selectionList;
-        //selectionCount = deviceSavedState.selectionCount;
+        // Grid selection
+        selectionMode = deviceSavedState.selectionMode
+        selectionList = deviceSavedState.selectionList
+        selectionCount = deviceSavedState.selectionCount
+
+        // Grid menu
+        actionMenu.visible = false
+    }
+
+    function initDeviceHeader() {
+        if (typeof currentDevice === "undefined" || !currentDevice) return
+
+        //console.log("ScreenDeviceGrid.initDeviceHeader()")
+
+        // Header text and picture
+        if (currentDevice.batteryLevel > 0.0 && currentDevice.storageLevel > 0.0)
+            deviceModelText.anchors.topMargin = 12
+        else if (currentDevice.batteryLevel <= 0.0 && currentDevice.storageLevel <= 0.0)
+            deviceModelText.anchors.topMargin = 38
+        else
+            deviceModelText.anchors.topMargin = 26
+
+        deviceModelText.text = currentDevice.brand + " " + currentDevice.model;
+        deviceImage.source = UtilsDevice.getDevicePicture(currentDevice.model)
+
+        // Storage and battery infos
+        updateStorage()
+        updateBattery()
     }
 
     function updateBattery() {
-        //console.log("currentDevice.batteryLevel" + currentDevice.batteryLevel)
+        if (typeof currentDevice === "undefined" || !currentDevice) return
+
+        //console.log("ScreenDeviceGrid.updateBattery() currentDevice.batteryLevel" + currentDevice.batteryLevel)
+
         if (currentDevice.batteryLevel > 0.0) {
             deviceBatteryIcon.visible = true
             deviceBatteryBar.visible = true
@@ -98,7 +166,10 @@ Item {
     }
 
     function updateStorage() {
-        //console.log("currentDevice.storageLevel" + currentDevice.storageLevel)
+        if (typeof currentDevice === "undefined" || !currentDevice) return
+
+        //console.log("ScreenDeviceGrid.updateStorage() currentDevice.storageLevel" + currentDevice.storageLevel)
+
         if (currentDevice.spaceTotal > 0) {
             deviceSpaceText.text = UtilsString.bytesToString_short(currentDevice.spaceUsed)
                     + qsTr(" used of ") + UtilsString.bytesToString_short(currentDevice.spaceTotal)
@@ -133,74 +204,11 @@ Item {
         }
     }
 
-    function updateDeviceHeader() {
-        // Header
-        if (currentDevice.batteryLevel > 0.0 && currentDevice.storageLevel > 0.0)
-            deviceModelText.anchors.topMargin = 12
-        else if (currentDevice.batteryLevel <= 0.0 && currentDevice.storageLevel <= 0.0)
-            deviceModelText.anchors.topMargin = 38
-        else
-            deviceModelText.anchors.topMargin = 26
-
-        deviceModelText.text = currentDevice.brand + " " + currentDevice.model;
-        deviceImage.source = getDevicePicture(currentDevice.model)
-
-        // Storage and battery infos
-        updateStorage()
-        updateBattery()
-
-        // Banner
-        banner.close()
-        if (currentDevice.deviceStorage === 1) { // VFS
-            banner.openMessage(qsTr("Previews are not available (yet) with MTP devices..."))
-        }
-        if (currentDevice.deviceStorage === 2) { // MTP
-            banner.openMessage(qsTr("Metadatas are not available from MTP devices. Offload medias first, or plug SD cards directly."))
-        }
-    }
-
-    function getDevicePicture(deviceName) {
-        var camera_model = "qrc:/cameras/";
-
-        if (deviceName.includes("HERO8")) {
-            camera_model += "H8"
-        } else if (deviceName.includes("HERO7 White") ||
-                   deviceName.includes("HERO7 Silver")) {
-            camera_model += "H7w"
-        } else if (deviceName.includes("HERO7") ||
-                   deviceName.includes("HERO6") ||
-                   deviceName.includes("HERO5")) {
-            camera_model += "H5"
-        } else if (deviceName.includes("Session")) {
-            camera_model += "session"
-        } else if (deviceName.includes("HERO4")) {
-            camera_model += "H4"
-        } else if (deviceName.includes("HERO3") || deviceName.includes("Hero3")) {
-            camera_model += "H3"
-        } else if (deviceName.includes("FUSION") || deviceName.includes("Fusion")) {
-            camera_model += "fusion"
-        } else if (deviceName.includes("MAX") || deviceName.includes("Max")) {
-            camera_model += "max"
-        } else if (deviceName.includes("HD2")) {
-            camera_model += "H2"
-        } else {
-            // fallback
-            if (myDevice.deviceType === 2)
-                camera_model += "generic_smartphone"
-            else if (myDevice.deviceType === 3)
-                camera_model += "generic_camera"
-            else
-                camera_model += "generic_actioncam"
-        }
-
-        //if (inverted) camera_model += "-inverted"
-        return camera_model + ".svg"
-    }
-
     function initGridViewSettings() {
-        rectangleTransfer.visible = false
-        rectangleDelete.visible = false
-        actionMenu.visible = false
+        if (typeof currentDevice === "undefined" || !currentDevice) return
+
+        //console.log("ScreenDeviceGrid.initGridViewSettings() [device "+ currentDevice + "]
+        //    (state " + currentDevice.deviceState + ") (shotcount: " + shotsView.count + ")")
 
         if (currentDevice && currentDevice.deviceStorage === 0)
             if (currentDevice.deviceType === 2)
@@ -211,35 +219,50 @@ Item {
             imageEmpty.source = "qrc:/devices/usb.svg"
     }
 
-    function updateGridViewSettings() {
-        //console.log("updateGridViewSettings() [device "+ currentDevice + "]
-        //    (state " + currentDevice.deviceState + ") (shotcount: " + shotsview.count + ")")
+    function updateGridState() {
+        if (typeof currentDevice === "undefined" || !currentDevice) return
 
-        // restore state
-        if (deviceSavedState)
-            shotsView.currentIndex = deviceSavedState.selectedIndex
+        if (currentDevice.deviceState === 0) { // idle
+            loadingFader.stop()
 
-        if (shotsView.count == 0) {
-            exitSelectionMode()
-            shotsView.currentIndex = -1
-        }
-
-        if (currentDevice) {
-            if (currentDevice.deviceState === 1) { // scanning
+            if (shotsView.count <= 0) {
                 circleEmpty.visible = true
-                loadingFader.start()
-            } else if (currentDevice.deviceState === 0) { // idle
-                loadingFader.stop()
-                if (shotsView.count > 0) {
-                    circleEmpty.visible = false
-                    rectangleTransfer.visible = true
 
-                    if (currentDevice.readOnly === true)
-                        rectangleDelete.visible = false
-                    else
-                        rectangleDelete.visible = true
-                }
+                rectangleTransfer.visible = false
+                rectangleDelete.visible = false
+            } else {
+                circleEmpty.visible = false
+                rectangleTransfer.visible = true
+
+                if (currentDevice.readOnly === true)
+                    rectangleDelete.visible = false
+                else
+                    rectangleDelete.visible = true
             }
+        } else { // scanning
+            rectangleTransfer.visible = false
+            rectangleDelete.visible = false
+        }
+    }
+
+    function updateGridViewSettings() {
+        if (typeof currentDevice === "undefined" || !currentDevice) return
+
+        console.log("ScreenDeviceGrid.updateGridViewSettings() [device "+ currentDevice + "]
+            (state " + currentDevice.deviceState + ") (shotcount: " + shotsView.count + ")")
+
+        // Grid State
+        updateGridState()
+
+        //
+        if (shotsView.count <= 0) {
+            shotsView.currentIndex = -1
+            mediaGrid.exitSelectionMode()
+            circleEmpty.visible = true
+        } else {
+            // Restore grid index
+            if (deviceSavedState && deviceSavedState.selectedIndex <= shotsView.count)
+                shotsView.currentIndex = deviceSavedState.selectedIndex
         }
     }
 
@@ -439,8 +462,6 @@ Item {
 
             text: qsTr("Offload content")
             fullColor: true
-            //primaryColor: Theme.colorMaterialBlue
-            //secondaryColor: Theme.colorForeground
             onClicked: currentDevice.offloadAll();
         }
 
@@ -571,7 +592,7 @@ Item {
             property bool cbinit: false
             onCurrentIndexChanged: {
                 if (cbinit) {
-                    exitSelectionMode()
+                    mediaGrid.exitSelectionMode()
                     shotsView.currentIndex = -1
 
                     if (currentIndex == 0)
@@ -582,14 +603,14 @@ Item {
                         currentDevice.orderByShotType()
                     else if (currentIndex == 3)
                         currentDevice.orderByName()
-                } else
+                } else {
                     cbinit = true;
+                }
 
                 displayText = qsTr("Order by:") + " " + cbShotsOrderby.get(currentIndex).text
 
                 // save state
-                if (deviceSavedState)
-                    deviceSavedState.orderBy = currentIndex
+                if (deviceSavedState) deviceSavedState.orderBy = currentIndex
             }
         }
 
@@ -614,7 +635,7 @@ Item {
             property bool cbinit: false
             onCurrentIndexChanged: {
                 if (cbinit) {
-                    exitSelectionMode()
+                    mediaGrid.exitSelectionMode()
                     shotsView.currentIndex = -1
 
                     currentDevice.filterByType(cbMediaFilters.get(currentIndex).text)
@@ -623,12 +644,12 @@ Item {
                         displayText = cbMediaFilters.get(currentIndex).text
                     else
                         displayText = qsTr("Filter by:") + " " + cbMediaFilters.get(currentIndex).text
-                } else
+                } else {
                     cbinit = true;
+                }
 
                 // save state
-                if (deviceSavedState)
-                    deviceSavedState.filterBy = currentIndex
+                if (deviceSavedState) deviceSavedState.filterBy = currentIndex
             }
         }
 
@@ -660,8 +681,7 @@ Item {
                 }
 
                 // save state
-                if (deviceSavedState)
-                    deviceSavedState.zoomLevel = value
+                if (deviceSavedState) deviceSavedState.zoomLevel = value
             }
         }
 
@@ -684,21 +704,21 @@ Item {
 
     Column {
         id: menusArea
-        z: 1
         anchors.top: rectangleHeader.bottom
         anchors.topMargin: 0
         anchors.left: parent.left
         anchors.leftMargin: 0
         anchors.right: parent.right
         anchors.rightMargin: 0
+        z: 1
 
         ItemBannerActions {
-            id: menuSelection
+            id: bannerSelection
             visible: (mediaGrid.selectionCount)
         }
 
         ItemBannerMessage {
-            id: banner
+            id: bannerMessage
         }
     }
 
@@ -706,12 +726,15 @@ Item {
 
     Item {
         id: rectangleDeviceShots
-        anchors.topMargin: 0
 
         anchors.top: menusArea.bottom
+        anchors.topMargin: 0
         anchors.right: parent.right
+        anchors.rightMargin: 0
         anchors.left: parent.left
+        anchors.leftMargin: 0
         anchors.bottom: parent.bottom
+        anchors.bottomMargin: 0
 
         Rectangle {
             id: circleEmpty
@@ -856,6 +879,8 @@ Item {
                         shotsView.cellSizeTarget = 512
 
                     shotsView.computeCellSize()
+
+                    sliderZoom.value = settingsManager.thumbSize
                 }
             }
 

@@ -14,19 +14,17 @@ Item {
     property var currentDevice: null
 
     onCurrentDeviceChanged: {
-        if (currentDevice) {
-            //console.log("Device is now " + currentDevice.uuid)
-            screenDeviceGrid.updateDeviceHeader()
-            screenDeviceGrid.initGridViewSettings()
-            screenDeviceGrid.updateGridViewSettings()
-        }
+        if (typeof currentDevice === "undefined" || !currentDevice) return
 
-        if (currentDevice && !deviceSavedStateList[currentDevice.uuid]) {
+        //console.log("Device is now " + currentDevice.uuid)
+
+        // No saved state? Initialize it!
+        if (!(deviceSavedStateList[currentDevice.uuid])) {
             deviceSavedStateList[currentDevice.uuid] = ({ orderBy: 0,
                                                           filterBy: 0,
-                                                          zoomLevel: 2.0,
+                                                          zoomLevel: settingsManager.thumbSize,
                                                           mainState: "stateMediaGrid",
-                                                          selectedIndex: 0,
+                                                          selectedIndex: -1,
                                                           selectionMode: false,
                                                           selectionList: [],
                                                           selectionCount: 0,
@@ -34,13 +32,16 @@ Item {
                                                           detail_state: "overview" })
         }
 
-        if (currentDevice && deviceSavedStateList[currentDevice.uuid]) {
-            // restore state
-            deviceSavedState = deviceSavedStateList[currentDevice.uuid]
-            state = deviceSavedState.mainState
-            screenDeviceGrid.restoreState()
-            screenMedia.restoreState()
-        }
+        // Restore state
+        deviceSavedState = deviceSavedStateList[currentDevice.uuid]
+
+        screenDeviceGrid.updateGridState()
+        screenDeviceGrid.initDeviceHeader()
+        screenDeviceGrid.initGridViewSettings()
+        screenDeviceGrid.restoreState()
+        screenMedia.restoreState()
+
+        screenDevice.state = deviceSavedState.mainState
     }
 
     // KEYS HANDLING ///////////////////////////////////////////////////////////

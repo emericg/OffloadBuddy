@@ -5,7 +5,7 @@ import ThemeEngine 1.0
 import "qrc:/js/UtilsString.js" as UtilsString
 
 Rectangle {
-    id: menuSelection
+    id: itemBannerActions
     height: 56
     anchors.right: parent.right
     anchors.rightMargin: 0

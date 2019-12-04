@@ -62,6 +62,7 @@
         <file alias="ComboBoxThemed.qml">components_themed/ComboBoxThemed.qml</file>
     </qresource>
     <qresource prefix="/js">
+    <file alias="UtilsDevice.js">components_js/UtilsDevice.js</file>
     <file alias="UtilsMedia.js">components_js/UtilsMedia.js</file>
     <file alias="UtilsNumber.js">components_js/UtilsNumber.js</file>
     <file alias="UtilsPath.js">components_js/UtilsPath.js</file>

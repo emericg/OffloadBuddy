@@ -34,7 +34,7 @@ Item {
     function deselectFile(index) {
         var i = selectionList.indexOf(index);
         if (i > -1) { selectionList.splice(i, 1); selectionCount--; }
-        if (selectionList.length === 0) selectionMode = false;
+        if (selectionList.length <= 0 || selectionCount <= 0) { exitSelectionMode() }
 
         mediaLibrary.getShotByProxyIndex(index).selected = false;
     }
@@ -50,9 +50,7 @@ Item {
             mediaLibrary.getShotByProxyIndex(i).selected = true;
         }
     }
-    function listSelectedFiles() {
-        //
-    }
+
     function exitSelectionMode() {
         selectionMode = false;
         selectionList = [];
@@ -66,27 +64,31 @@ Item {
     ////////
 
     function initGridViewSettings() {
+        // Grid menu
         actionMenu.visible = false
     }
 
     function updateGridViewSettings() {
-        if (shotsView.count == 0) {
-            shotsView.currentIndex = -1
-            mediaGrid.exitSelectionMode()
-        }
+        if (typeof mediaLibrary === "undefined" || !mediaLibrary) return
 
-        if (mediaLibrary) {
-            if (mediaLibrary.libraryState === 1) { // scanning
-                circleEmpty.visible = true
-                loadingFader.start()
-            } else if (mediaLibrary.libraryState === 0) { // idle
-                loadingFader.stop()
-                if (shotsView.count > 0) {
-                    circleEmpty.visible = false
-                }
+        // Grid State
+        if (mediaLibrary.libraryState === 1) { // scanning
+            circleEmpty.visible = true
+            loadingFader.start()
+        } else if (mediaLibrary.libraryState === 0) { // idle
+            loadingFader.stop()
+            if (shotsView.count > 0) {
+                circleEmpty.visible = false
             }
         }
 
+        if (shotsView.count <= 0) {
+            shotsView.currentIndex = -1
+            mediaGrid.exitSelectionMode()
+            circleEmpty.visible = true
+        }
+
+        // Header texts
         textFilesCount.text = qsTr("%1 shots  /  %2 files".arg(mediaLibrary.shotModel.getShotCount()).arg(mediaLibrary.shotModel.getFileCount()))
         textFilesSize.text = qsTr("%1 of space used".arg(UtilsString.bytesToString_short(mediaLibrary.shotModel.getDiskSpace())))
     }
@@ -342,7 +344,9 @@ Item {
                         exitSelectionMode()
                         shotsView.currentIndex = -1
 
-                        if (currentIndex == 0) {
+                        if (currentIndex < 0) {
+                            //
+                        } else if (currentIndex === 0) {
                             mediaLibrary.filterByFolder("")
                             displayText = qsTr("Show") + " " + cbMediaDirectories.get(currentIndex).text
                         } else {
@@ -441,7 +445,7 @@ Item {
         anchors.rightMargin: 0
 
         ItemBannerActions {
-            id: menuSelection
+            id: bannerSelection
             visible: (mediaGrid.selectionCount)
         }
     }
