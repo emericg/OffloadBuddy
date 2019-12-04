@@ -23,8 +23,10 @@ Popup {
 
     property var mediaProvider: null
     property var currentShot: null
+
     property int clipStartMs: -1
     property int clipDurationMs: -1
+    property int clipOrientation: -1
 
     function updateEncodePanel(shot) {
         currentShot = shot
@@ -70,6 +72,9 @@ Popup {
         // Clip handler
         setClip(-1, -1)
 
+        // Orientation
+        setOrientation(-1, false, false)
+
         // Crop
         rectangleCrop.visible = false
 
@@ -90,7 +95,7 @@ Popup {
 */
     }
 
-    function setCopy() {
+    function toggleCopy() {
         if (cbCOPY.checked === true) {
             rbH264.enabled = false
             rbH265.enabled = false
@@ -111,6 +116,8 @@ Popup {
     }
 
     function setClip(clipStart, clipStop) {
+        //console.log("setClip() " + clipStart + "/" + clipStop)
+
         if (clipStart > 0 || clipStop > 0) {
             if (clipStart < 0) clipStart = 0
             if (clipStop < 0) clipStop = currentShot.duration
@@ -121,7 +128,7 @@ Popup {
 
             cbCOPY.visible = true
             cbCOPY.checked = true
-            setCopy()
+            toggleCopy()
             rectangleClip.visible = true
 
             if (clipDurationMs < 10000) {
@@ -135,9 +142,35 @@ Popup {
 
             cbCOPY.visible = false
             cbCOPY.checked = false
-            setCopy()
+            toggleCopy()
             rectangleClip.visible = false
         }
+    }
+
+    function setOrientation(rotation, vflip, hflip) {
+        console.log("setOrientation() " + rotation + vflip + hflip)
+
+        if (rotation || vflip || hflip) {
+            clipOrientation = 1
+            rectangleOrientation.visible = true
+
+            // TODO
+            // http://ffmpeg.org/ffmpeg-all.html#transpose-1
+            //0 = 90CounterCLockwise and Vertical Flip (default)
+            //1 = 90Clockwise
+            //2 = 90CounterClockwise
+            //3 = 90Clockwise and Vertical Flip
+            //-vf "transpose=2,transpose=2" for 180 degrees.
+        } else {
+            clipOrientation = -1
+            rectangleOrientation.visible = false
+        }
+    }
+
+    function setPanScan(x, y, width, height) {
+        //console.log("setPanScan() " + x + y + width + height)
+
+        // TODO
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -204,7 +237,7 @@ Popup {
                         id: cbCOPY
                         anchors.verticalCenter: parent.verticalCenter
                         text: qsTr("COPY")
-                        onClicked: setCopy()
+                        onClicked: toggleCopy()
                     }
                     RadioButtonThemed {
                         id: rbH264
@@ -349,6 +382,27 @@ Popup {
                     anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
                     value: 30
+                }
+            }
+
+            Item {
+                id: rectangleOrientation
+                height: 48
+                anchors.right: parent.right
+                anchors.rightMargin: 0
+                anchors.left: parent.left
+                anchors.leftMargin: 0
+
+                Text {
+                    id: titleOrientation
+                    width: 128
+                    anchors.left: parent.left
+                    anchors.leftMargin: 0
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: qsTr("Orientation")
+                    font.pixelSize: 16
+                    color: Theme.colorSubText
                 }
             }
 

@@ -122,6 +122,9 @@ Item {
         if (shot.fileType === Shared.FILE_VIDEO) {
             popupEncodeVideo.updateEncodePanel(shot)
             popupEncodeVideo.setClip(mediaPreview.startLimit, mediaPreview.stopLimit)
+            popupEncodeVideo.setOrientation(mediaPreview.rotation, mediaPreview.hflipped, mediaPreview.vflipped)
+            popupEncodeVideo.setPanScan(mediaPreview.panscan_x, mediaPreview.panscan_y,
+                                        mediaPreview.panscan_width, mediaPreview.panscan_height)
             popupEncodeVideo.open()
         } else if (shot.fileType === Shared.FILE_PICTURE) {
             popupEncodePicture.open()

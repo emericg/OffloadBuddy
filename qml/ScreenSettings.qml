@@ -422,7 +422,7 @@ Item {
 
             Column {
                 id: rectangleMedias
-                spacing: 16
+                spacing: 8
 
                 anchors.right: parent.right
                 anchors.rightMargin: 0
@@ -471,24 +471,14 @@ Item {
                 ListView {
                     id: mediadirectoriesview
                     width: parent.width
-                    height: 128 // WHATWHATWWHATHAT
+                    height: settingsManager.directoriesList.length * 48
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+
+                    spacing: 8
                     interactive: false
                     model: settingsManager.directoriesList
                     delegate: ItemMediaDirectory { directory: modelData; }
-
-                    spacing: 8
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-/*
-                    anchors.top: textMediasTitle.bottom
-                    anchors.topMargin: 8
-                    anchors.bottom: parent.bottom
-                    anchors.bottomMargin: 8
-                    anchors.left: parent.left
-                    anchors.leftMargin: 32
-                    anchors.right: parent.right
-                    anchors.rightMargin: 32
-*/
                 }
             }
         }

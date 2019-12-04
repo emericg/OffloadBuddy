@@ -726,6 +726,8 @@ Item {
                 id: imageEmpty
                 width: 256
                 height: 256
+                sourceSize.width: width
+                sourceSize.height: height
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
                 fillMode: Image.PreserveAspectFit

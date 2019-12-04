@@ -18,9 +18,11 @@ Rectangle {
     onMyDeviceClicked: {
         if (typeof devicePtr !== "undefined") {
             //console.log(devicePtr + ' component was triggered')
-            applicationContent.state = "device"
-            screenDevice.currentDevice = devicePtr
-            currentDevicePtr = devicePtr // save current device
+            if (!(applicationContent.state === "device" && screenDevice.currentDevice === devicePtr)) {
+                applicationContent.state = "device"
+                screenDevice.currentDevice = devicePtr
+                currentDevicePtr = devicePtr // save current device
+            }
         }
     }
 

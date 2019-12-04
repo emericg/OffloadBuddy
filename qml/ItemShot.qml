@@ -189,15 +189,18 @@ Rectangle {
     Image {
         id: imageFs
         anchors.fill: parent
+
         autoTransform: true
         asynchronous: true
-        visible: (imageFs.progress === 1.0)
-
-        fillMode: Image.PreserveAspectCrop
         antialiasing: false
+        visible: (imageFs.progress === 1.0)
+        fillMode: Image.PreserveAspectCrop
+
+        // extra filtering?
         smooth: (settingsManager.thumbQuality === 2)
-        sourceSize.width: 512
-        sourceSize.height: 512 // big enough so we have good quality regarding of the thumb size
+        // big enough so we have good quality regarding of the thumb size
+        sourceSize.width: (sm.thumbQuality >= 1) ? 512 : 400
+        sourceSize.height: (sm.thumbQuality >= 1) ? 512 : 400
     }
 
     ItemImage {

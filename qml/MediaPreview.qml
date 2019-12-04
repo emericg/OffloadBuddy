@@ -15,11 +15,24 @@ Rectangle {
     anchors.right: infosGeneric.left
     anchors.margins: 16
 
+    property bool isFullScreen: false
     color: (isFullScreen || (shot && shot.fileType === Shared.FILE_PICTURE)) ? "transparent" : "black"
 
-    property bool isFullScreen: false
+    ////////
+
     property int startLimit: -1
     property int stopLimit: -1
+
+    property bool hflipped: false
+    property bool vflipped: false
+    property int rotation: 0
+
+    property int panscan_x: 0
+    property int panscan_y: 0
+    property int panscan_width: 0
+    property int panscan_height: 0
+
+    ////////
 
     function setImageMode() {
         console.log("MediaPreview::setImageMode()  >  '" + shot.previewPhoto + "'")
@@ -27,9 +40,12 @@ Rectangle {
         output.scale = 1
         output.rotation = 0
         output.transform = noflip
+        overlayClip.visible = false
         overlayRotations.visible = false
-        overlayRotations.anchors.top = overlays.top
         overlayRotations.anchors.bottom = undefined
+        overlayRotations.anchors.bottomMargin = 0
+        overlayRotations.anchors.top = overlays.top
+        overlayRotations.anchors.topMargin = 16
 
         imageOutput.visible = true
         mediaOutput.visible = false
@@ -49,9 +65,12 @@ Rectangle {
         output.scale = 1
         output.rotation = 0
         output.transform = noflip
+        overlayClip.visible = false
         overlayRotations.visible = false
         overlayRotations.anchors.top = undefined
+        overlayRotations.anchors.topMargin = 0
         overlayRotations.anchors.bottom = overlays.bottom
+        overlayRotations.anchors.bottomMargin = 56
 
         imageOutput.visible = false
         mediaOutput.visible = true
@@ -97,7 +116,7 @@ Rectangle {
         if (!mediaArea.isFullScreen) {
             //console.log("Check if fullscreen is necessary: " + (shot.width / shot.height) + " vs " + (mediaArea.width / mediaArea.height))
             if ((shot.width / shot.height) < (mediaArea.width / mediaArea.height))
-                return
+                return;
         }
 
         // Set fullscreen
@@ -109,10 +128,10 @@ Rectangle {
             //infosFiles.visible = true
             mediaArea.anchors.right = infosGeneric.left
 /*
-            mediaControls.anchors.top = mediaOutput.bottom
-            mediaControls.anchors.topMargin = 0
             mediaControls.anchors.bottom = undefined
             mediaControls.anchors.bottomMargin = undefined
+            mediaControls.anchors.top = mediaOutput.bottom
+            mediaControls.anchors.topMargin = 0
 */
         } else {
             buttonFullscreen.source = "qrc:/icons_material/baseline-fullscreen_exit-24px.svg"
@@ -128,9 +147,6 @@ Rectangle {
         }
 
         computeSize(shot.width, shot.height)
-
-        //if (videoPlayer.position > 0)
-        //    timelinePosition.width = timeline.width * (videoPlayer.position / videoPlayer.duration)
     }
 
     function computeSize(mediaWidth, mediaHeight) {
@@ -169,15 +185,15 @@ Rectangle {
         //console.log("setflip() " + value)
 
         if (value === "vertical")
-            output.vflipped = !output.vflipped
-        if (value === "horizontal")
-            output.hflipped = !output.hflipped
+            mediaArea.vflipped = !mediaArea.vflipped
+        else if (value === "horizontal")
+            mediaArea.hflipped = !mediaArea.hflipped
 
-        if (output.vflipped && output.hflipped)
+        if (mediaArea.vflipped && mediaArea.hflipped)
             output.transform = vhflip
-        else if (output.vflipped)
+        else if (mediaArea.vflipped)
             output.transform = vflip
-        else if (output.hflipped)
+        else if (mediaArea.hflipped)
             output.transform = hflip
         else
             output.transform = noflip
@@ -186,8 +202,10 @@ Rectangle {
     function setRotation(value) {
         //console.log("setRotation() " + value)
 
-        output.rotation += value
-        output.rotation = UtilsNumber.mod(output.rotation, 360)
+        mediaArea.rotation += value
+        mediaArea.rotation = UtilsNumber.mod(mediaArea.rotation, 360)
+
+        output.rotation = mediaArea.rotation
 
         if (output.rotation == 90 || output.rotation == 270) {
             output.scale = shot.height / shot.width
@@ -205,9 +223,6 @@ Rectangle {
         id: output
         anchors.fill: parent
 
-        property bool vflipped: false
-        property bool hflipped: false
-
         Image {
             id: imageOutput
             anchors.fill: parent
@@ -223,10 +238,7 @@ Rectangle {
             source: videoPlayer
 
             anchors.fill: parent
-            anchors.bottomMargin: 0 //mediaControls.visible ? 40 : 0
-
-            property int clipStart: 0
-            property int clipStop: (shot) ? shot.duration : 0
+            anchors.bottomMargin: 0 // mediaControls.visible ? 40 : 0
 
             MediaPlayer {
                 id: videoPlayer
@@ -255,20 +267,15 @@ Rectangle {
                     }
                 }
                 onSourceChanged: {
-                    //videoPlayer.stop()
                     isRunning = false
                     mediaArea.startLimit = -1
                     mediaArea.stopLimit = -1
-                    //timelineLimitStart.width = 0
-                    //timelineLimitStop.width = 0
-                    //timelinePosition.width = 0
                     mediaBanner.close()
                 }
                 onVolumeChanged: {
-                    //soundlinePosition.width = (soundline.width * volume)
+                    //
                 }
                 onPositionChanged: {
-                    //timelinePosition.width = timeline.width * (videoPlayer.position / videoPlayer.duration)
                     timeline.value = (videoPlayer.position / videoPlayer.duration)
                     timecode.text = UtilsString.durationToString_ISO8601_compact(videoPlayer.position) + " / " + UtilsString.durationToString_ISO8601_compact(videoPlayer.duration)
                 }
@@ -306,6 +313,36 @@ Rectangle {
             onExited: { hovered = false; }
         }
 
+        Item {
+            id: overlayClip
+            anchors.right: parent.right
+            anchors.rightMargin: 16
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 56
+
+            width: overlayClipText.width + 16
+            height: 32
+            visible: false
+
+            Rectangle {
+                anchors.fill: parent
+                radius: Theme.componentRadius
+                color: "#222222"
+                opacity: 0.9
+            }
+
+            Text {
+                id: overlayClipText
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+
+                text: UtilsString.durationToString_ISO8601_full(mediaArea.startLimit) + qsTr(" to ") + UtilsString.durationToString_ISO8601_full(mediaArea.stopLimit)
+                color: "white"
+                font.bold: true
+                font.pixelSize: 15
+            }
+        }
+
         Row {
             id: overlayRotations
             anchors.right: parent.right
@@ -324,7 +361,7 @@ Rectangle {
                 backgroundColor: "#222222"
                 highlightColor: "green"
                 highlightMode: "color"
-                visible: (output.rotation != 0 || output.vflipped || output.hflipped)
+                visible: (output.rotation != 0 || mediaArea.vflipped || mediaArea.hflipped)
                 source: "qrc:/icons_material/baseline-save-24px.svg"
                 //onClicked: shot.saveRotation(angle)
             }
@@ -349,7 +386,7 @@ Rectangle {
             ItemImageButton {
                 //id: buttonFlipV
                 background: true
-                iconColor: (output.vflipped) ? Theme.colorPrimary : "white"
+                iconColor: (mediaArea.vflipped) ? Theme.colorPrimary : "white"
                 backgroundColor: "#222222"
                 highlightMode: "color"
                 source: "qrc:/icons_material/baseline-flip-24px.svg"
@@ -359,7 +396,7 @@ Rectangle {
                 //id: buttonFlipH
                 rotation: 90
                 background: true
-                iconColor: (output.hflipped) ? Theme.colorPrimary : "white"
+                iconColor: (mediaArea.hflipped) ? Theme.colorPrimary : "white"
                 backgroundColor: "#222222"
                 highlightMode: "color"
                 source: "qrc:/icons_material/baseline-flip-24px.svg"
@@ -542,12 +579,38 @@ Rectangle {
                 onClicked: {
                     timeline.visible = true
                     cutline.visible = false
+                    overlayClip.visible = false
 
                     overlayRotations.visible = !overlayRotations.visible
                 }
             }
             ItemImageButton {
                 id: buttonToggleCut
+                width: 36
+                height: 36
+                anchors.right: buttonTogglePanscan.left
+                anchors.rightMargin: 16
+                anchors.verticalCenter: parent.verticalCenter
+
+                iconColor: cutline.visible ? Theme.colorPrimary : "white"
+                highlightColor: Theme.colorPrimary
+                highlightMode: "color"
+
+                source: "qrc:/icons_material/baseline-timer-24px.svg"
+                onClicked: {
+                    overlayRotations.visible = false
+
+                    timeline.visible = !timeline.visible
+                    cutline.visible = !cutline.visible
+                    overlayClip.visible = !overlayClip.visible
+
+                    if (mediaArea.startLimit < 0 && mediaArea.stopLimit < 0) {
+                       overlayClipText.text = UtilsString.durationToString_ISO8601_full(0) + qsTr(" to ") + UtilsString.durationToString_ISO8601_full(videoPlayer.duration)
+                    }
+                }
+            }
+            ItemImageButton {
+                id: buttonTogglePanscan
                 width: 36
                 height: 36
                 anchors.right: buttonScreenshot.left
@@ -558,12 +621,9 @@ Rectangle {
                 highlightColor: Theme.colorPrimary
                 highlightMode: "color"
 
-                source: "qrc:/icons_material/baseline-flip-24px.svg"
+                source: "qrc:/icons_material/baseline-straighten-24px.svg"
                 onClicked: {
-                    overlayRotations.visible = false
-
-                    timeline.visible = !timeline.visible
-                    cutline.visible = !cutline.visible
+                    //
                 }
             }
             ItemImageButton {

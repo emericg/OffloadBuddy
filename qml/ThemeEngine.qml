@@ -214,7 +214,7 @@ Item {
             colorComponentBorder =  "#E0E0E0"
             colorComponentDown =    "#c1c1c1"
             colorComponentBackground = "#FEFEFE"
-            componentRadius = 3
+            componentRadius = 4
 
             sidebarSelector = "arrow"
 
@@ -298,7 +298,7 @@ Item {
             colorComponentBorder =  "#F592C1"
             colorComponentDown =    "#F592C1"
             colorComponentBackground = "#fff4f9"
-            componentRadius = 4
+            componentRadius = 6
 
             sidebarSelector = ""
         }
