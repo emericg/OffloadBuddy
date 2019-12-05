@@ -41,6 +41,8 @@ extern "C"
 #include "minivideo.h"
 #endif
 
+#include "SettingsManager.h"
+
 #include <QImageReader>
 #include <QImage>
 #include <QDebug>
@@ -87,10 +89,11 @@ QImage GridThumbnailer::requestImage(const QString &id, QSize *size,
     qDebug() << "@ requestedTimecode: " << timecode_s;
     qDebug() << "@ requestedSize: " << requestedSize;
 */
-    QImageReader img_infos(path);
+
     QImage thumb;
 
     // First, try QImageReader
+    QImageReader img_infos(path);
     if (img_infos.canRead())
     {
         // check size first, don't even try to thumbnail very big (>10K) pictures
@@ -280,10 +283,22 @@ bool decode_packet(AVPacket *pPacket, AVCodecContext *pCodecContext, AVFrame *pF
 
             /// SCALING (ffmpeg) ///////////////////////////////////////////////
 
+            int filtering_mode = SWS_FAST_BILINEAR;
+            SettingsManager *sm = SettingsManager::getInstance();
+            if (sm)
+            {
+                if (sm->getThumbQuality() == 0)
+                    filtering_mode = SWS_FAST_BILINEAR;
+                else if (sm->getThumbQuality() == 1)
+                    filtering_mode = SWS_BILINEAR;
+                else if (sm->getThumbQuality() == 2)
+                    filtering_mode = SWS_BILINEAR; // SWS_BICUBIC ?
+            }
+
             // create scaling context
             struct SwsContext *sws_ctx = sws_getContext(src_w, src_h, src_pix_fmt,
                                                         dst_w, dst_h, dst_pix_fmt,
-                                                        SWS_BILINEAR,
+                                                        filtering_mode,
                                                         nullptr, nullptr, nullptr);
             if (!sws_ctx)
             {
@@ -424,8 +439,8 @@ bool GridThumbnailer::getImage_withFfmpeg(const QString &path, QImage &img,
     videoCodecContext->skip_loop_filter = AVDISCARD_ALL;
     videoCodecContext->flags2 |= AV_CODEC_FLAG2_FAST;
 
-    videoCodecContext->thread_count = 4;
-    videoCodecContext->thread_type = FF_THREAD_SLICE;
+    videoCodecContext->thread_count = 1;
+    videoCodecContext->thread_type = FF_THREAD_FRAME;
     //videoCodecContext->thread_type = FF_THREAD_FRAME | FF_THREAD_SLICE;
 
     if (avcodec_open2(videoCodecContext, videoCodec, nullptr) < 0)

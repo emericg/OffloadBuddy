@@ -197,13 +197,13 @@ void MediaDirectory::refreshMediaDirectory()
         }
         else
         {
-            qDebug() << "MediaDirectory(" << m_storage->rootPath() << ") is not available: read only or full";
+            qDebug() << "MediaDirectory(" << m_path << ") is not available: read only or full";
         }
 */
     }
     else
     {
-        qDebug() << "MediaDirectory(" << m_storage->rootPath() << ") is not available: invalid";
+        qDebug() << "MediaDirectory(" << m_path << ") is not available: invalid";
 
         m_available = false;
         emit availableUpdated();
