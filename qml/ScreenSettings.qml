@@ -158,11 +158,12 @@ Item {
                 font.pixelSize: 16
             }
 
-            Row {
+            Item {
+                width: 1
                 height: 40
-                spacing: 32
 
                 Text {
+                    id: titleQuality
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Quality")
@@ -171,8 +172,17 @@ Item {
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignLeft
                 }
+
+                Rectangle {
+                    anchors.fill: rowLilMenuQuality
+                    color: Theme.colorComponent
+                    radius: Theme.componentRadius
+                }
                 Row {
+                    id: rowLilMenuQuality
                     height: 32
+                    anchors.left: titleQuality.right
+                    anchors.leftMargin: 32
                     anchors.verticalCenter: parent.verticalCenter
 
                     ItemLilMenuButton {
@@ -189,7 +199,7 @@ Item {
                     }
                     ItemLilMenuButton {
                         height: parent.height
-                        text: qsTr("Ludicrous")
+                        text: qsTr("High")
                         selected: (settingsManager.thumbQuality === 2)
                         onClicked: settingsManager.thumbQuality = 2
                     }
@@ -198,11 +208,12 @@ Item {
 
             ////////
 
-            Row {
+            Item {
+                width: 1
                 height: 40
-                spacing: 32
 
                 Text {
+                    id: titleAR
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Aspet ratio")
@@ -211,8 +222,17 @@ Item {
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignLeft
                 }
+
+                Rectangle {
+                    anchors.fill: rowLilMenuAR
+                    color: Theme.colorComponent
+                    radius: Theme.componentRadius
+                }
                 Row {
+                    id: rowLilMenuAR
                     height: 32
+                    anchors.left: titleAR.right
+                    anchors.leftMargin: 32
                     anchors.verticalCenter: parent.verticalCenter
 
                     ItemLilMenuButton {
@@ -233,17 +253,12 @@ Item {
                         selected: (settingsManager.thumbFormat === 3)
                         onClicked: settingsManager.thumbFormat = 3
                     }
-                    ItemLilMenuButton {
-                        height: parent.height
-                        text: "2:1"
-                        selected: (settingsManager.thumbFormat === 4)
-                        onClicked: settingsManager.thumbFormat = 4
-                    }
                 }
 
-                Item { width: 1; height: 1; } // spacer
-
                 Text {
+                    id: titleSize
+                    anchors.left: rowLilMenuAR.right
+                    anchors.leftMargin: 64
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Default size")
@@ -252,31 +267,40 @@ Item {
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignLeft
                 }
+
+                Rectangle {
+                    anchors.fill: rowLilMenuSize
+                    color: Theme.colorComponent
+                    radius: Theme.componentRadius
+                }
                 Row {
+                    id: rowLilMenuSize
                     height: 32
+                    anchors.left: titleSize.right
+                    anchors.leftMargin: 32
                     anchors.verticalCenter: parent.verticalCenter
 
                     ItemLilMenuButton {
                         height: parent.height
-                        text: qsTr("little")
+                        text: qsTr("Small")
                         selected: (settingsManager.thumbSize === 1)
                         onClicked: settingsManager.thumbSize = 1
                     }
                     ItemLilMenuButton {
                         height: parent.height
-                        text: qsTr("medium")
+                        text: qsTr("Medium")
                         selected: (settingsManager.thumbSize === 2)
                         onClicked: settingsManager.thumbSize = 2
                     }
                     ItemLilMenuButton {
                         height: parent.height
-                        text: qsTr("big")
+                        text: qsTr("Big")
                         selected: (settingsManager.thumbSize === 3)
                         onClicked: settingsManager.thumbSize = 3
                     }
                     ItemLilMenuButton {
                         height: parent.height
-                        text: qsTr("huge")
+                        text: qsTr("Huge")
                         selected: (settingsManager.thumbSize === 4)
                         onClicked: settingsManager.thumbSize = 4
                     }

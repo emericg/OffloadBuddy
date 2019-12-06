@@ -442,6 +442,11 @@ Item {
 
             ////////
 
+            Rectangle {
+                anchors.fill: rowLilMenuTxt
+                color: Theme.colorComponent
+                radius: Theme.componentRadius
+            }
             Row {
                 id: rowLilMenuTxt
                 height: 40
@@ -486,6 +491,11 @@ Item {
                 }
             }
 
+            Rectangle {
+                anchors.fill: rowLilMenuImg
+                color: Theme.colorComponent
+                radius: Theme.componentRadius
+            }
             Row {
                 id: rowLilMenuImg
                 height: 40

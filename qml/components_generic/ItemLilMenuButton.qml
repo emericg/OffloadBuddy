@@ -5,7 +5,7 @@ import QtGraphicalEffects 1.0
 import ThemeEngine 1.0
 
 Item {
-    id: itemMenuButton
+    id: itemLilMenuButton
     implicitWidth: 64
     implicitHeight: 32
 
@@ -25,38 +25,43 @@ Item {
 
     MouseArea {
         anchors.fill: parent
-        onClicked: itemMenuButton.clicked()
+        onClicked: parent.clicked()
 
         hoverEnabled: true
         onEntered: {
             bgFocus.opacity = 0.1
-            itemMenuButton.highlighted = true
+            parent.highlighted = true
         }
         onExited: {
             bgFocus.opacity = 0
-            itemMenuButton.highlighted = false
+            parent.highlighted = false
         }
     }
-
+/*
     Rectangle {
         id: bgRect
         anchors.fill: parent
-        color: itemMenuButton.colorBackground
+
+        color: parent.colorBackground
+        radius: Theme.componentRadius
     }
+*/
     Rectangle {
         id: bgHightlight
         anchors.fill: parent
 
         visible: parent.selected
         opacity: 0.1
-        color: itemMenuButton.colorContent
+        color: parent.colorContent
+        radius: Theme.componentRadius
     }
     Rectangle {
         id: bgFocus
         anchors.fill: parent
 
         opacity: 0
-        color: itemMenuButton.colorHighlight
+        color: parent.colorHighlight
+        radius: Theme.componentRadius
         Behavior on opacity { OpacityAnimator { duration: 233 } }
     }
 
@@ -64,23 +69,23 @@ Item {
         id: contentImage
         width: parent.sourceSize
         height: parent.sourceSize
-        anchors.verticalCenter: itemMenuButton.verticalCenter
-        anchors.horizontalCenter: itemMenuButton.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenter: parent.horizontalCenter
 
-        source: itemMenuButton.source
-        color: itemMenuButton.colorContent
-        opacity: (itemMenuButton.selected) ? 1 : 0.66
+        source: parent.source
+        color: parent.colorContent
+        opacity: (parent.selected) ? 1 : 0.5
     }
     Text {
         id: contentText
         height: parent.height
-        anchors.verticalCenter: itemMenuButton.verticalCenter
-        anchors.horizontalCenter: itemMenuButton.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenter: parent.horizontalCenter
 
         text: parent.text
         font.pixelSize: 16
-        color: itemMenuButton.colorContent
-        opacity: (itemMenuButton.selected) ? 1 : 0.66
+        color: parent.colorContent
+        opacity: (parent.selected) ? 1 : 0.5
         verticalAlignment: Text.AlignVCenter
     }
 }

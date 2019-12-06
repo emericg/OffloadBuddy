@@ -106,7 +106,6 @@ Item {
         // Grid filters and settings
         comboBox_orderby.currentIndex = deviceSavedState.orderBy
         comboBox_filterby.currentIndex = deviceSavedState.filterBy
-        sliderZoom.value = deviceSavedState.zoomLevel
 
         // Banner // TODO reopen ONLY if needed
         bannerMessage.close()
@@ -248,8 +247,8 @@ Item {
     function updateGridViewSettings() {
         if (typeof currentDevice === "undefined" || !currentDevice) return
 
-        console.log("ScreenDeviceGrid.updateGridViewSettings() [device "+ currentDevice + "]
-            (state " + currentDevice.deviceState + ") (shotcount: " + shotsView.count + ")")
+        //console.log("ScreenDeviceGrid.updateGridViewSettings() [device "+ currentDevice + "]
+        //    (state " + currentDevice.deviceState + ") (shotcount: " + shotsView.count + ")")
 
         // Grid State
         updateGridState()
@@ -341,11 +340,8 @@ Item {
             anchors.top: parent.top
             anchors.topMargin: 8
 
-            source: "qrc:/cameras/generic_actioncam.svg"
             fillMode: Image.PreserveAspectCrop
             color: Theme.colorHeaderContent
-            //opacity: 0.8
-            antialiasing: true
         }
 
         Text {
@@ -388,7 +384,6 @@ Item {
 
             source: "qrc:/icons_material/outline-sd_card-24px.svg"
             color: Theme.colorHeaderContent
-
         }
         ImageSvg {
             id: deviceBatteryIcon
@@ -450,6 +445,189 @@ Item {
             anchors.rightMargin: 2
             value: 0.5
         }
+
+        ////////
+
+
+        ComboBoxThemed {
+            id: comboBox_orderby
+            width: 220
+            height: 40
+            anchors.top: parent.top
+            anchors.topMargin: 16
+            anchors.left: parent.left
+            anchors.leftMargin: 16
+            displayText: qsTr("Order by: Date")
+
+            model: ListModel {
+                id: cbShotsOrderby
+                ListElement { text: qsTr("Date"); }
+                ListElement { text: qsTr("Duration"); }
+                ListElement { text: qsTr("Shot type"); }
+                //ListElement { text: qsTr("GPS location"); }
+                ListElement { text: qsTr("Name"); }
+            }
+
+            property bool cbinit: false
+            onCurrentIndexChanged: {
+                if (cbinit) {
+                    mediaGrid.exitSelectionMode()
+                    shotsView.currentIndex = -1
+
+                    if (currentIndex == 0)
+                        currentDevice.orderByDate()
+                    else if (currentIndex == 1)
+                        currentDevice.orderByDuration()
+                    else if (currentIndex == 2)
+                        currentDevice.orderByShotType()
+                    else if (currentIndex == 3)
+                        currentDevice.orderByName()
+                } else {
+                    cbinit = true;
+                }
+
+                displayText = qsTr("Order by:") + " " + cbShotsOrderby.get(currentIndex).text
+
+                // save state
+                if (deviceSavedState) deviceSavedState.orderBy = currentIndex
+            }
+        }
+
+        ComboBoxThemed {
+            id: comboBox_filterby
+            width: 240
+            height: 40
+            anchors.top: parent.top
+            anchors.topMargin: 16
+            anchors.left: comboBox_orderby.right
+            anchors.leftMargin: 16
+            displayText: qsTr("No filter")
+
+            model: ListModel {
+                id: cbMediaFilters
+                ListElement { text: qsTr("No filter"); }
+                ListElement { text: qsTr("Videos"); }
+                ListElement { text: qsTr("Photos"); }
+                ListElement { text: qsTr("Timelapses"); }
+            }
+
+            property bool cbinit: false
+            onCurrentIndexChanged: {
+                if (cbinit) {
+                    mediaGrid.exitSelectionMode()
+                    shotsView.currentIndex = -1
+
+                    currentDevice.filterByType(cbMediaFilters.get(currentIndex).text)
+
+                    if (currentIndex == 0)
+                        displayText = cbMediaFilters.get(currentIndex).text
+                    else
+                        displayText = qsTr("Filter by:") + " " + cbMediaFilters.get(currentIndex).text
+                } else {
+                    cbinit = true;
+                }
+
+                // save state
+                if (deviceSavedState) deviceSavedState.filterBy = currentIndex
+            }
+        }
+
+        Rectangle {
+            anchors.fill: rowLilMenuFormat
+            color: Theme.colorComponent
+            radius: Theme.componentRadius
+        }
+        Row {
+            id: rowLilMenuFormat
+            height: 36
+            anchors.left: comboBox_filterby.right
+            anchors.leftMargin: 16
+            anchors.verticalCenter: comboBox_filterby.verticalCenter
+
+            ItemLilMenuButton {
+                height: parent.height
+                text: "1:1"
+                selected: (shotsView.cellFormat === 1.0)
+                onClicked: {
+                    shotsView.cellFormat = 1.0
+                    shotsView.computeCellSize()
+                }
+            }
+            ItemLilMenuButton {
+                height: parent.height
+                text: "4:3"
+                selected: (shotsView.cellFormat === 4/3)
+                onClicked:  {
+                    shotsView.cellFormat = 4/3
+                    shotsView.computeCellSize()
+                }
+            }
+            ItemLilMenuButton {
+                height: parent.height
+                text: "16:9"
+                selected: (shotsView.cellFormat === 16/9)
+                onClicked:  {
+                    shotsView.cellFormat = 16/9
+                    shotsView.computeCellSize()
+                }
+            }
+        }
+
+        Rectangle {
+            anchors.fill: rowLilMenuZoom
+            color: Theme.colorComponent
+            radius: Theme.componentRadius
+        }
+        Row {
+            id: rowLilMenuZoom
+            height: 36
+            anchors.left: rowLilMenuFormat.right
+            anchors.leftMargin: 16
+            anchors.verticalCenter: rowLilMenuFormat.verticalCenter
+
+            ItemLilMenuButton {
+                height: parent.height
+                source: "qrc:/icons_material/baseline-photo-24px.svg"
+                sourceSize: 18
+                selected: (shotsView.cellSizeTarget === 221)
+                onClicked: {
+                    shotsView.cellSizeTarget = 221;
+                    shotsView.computeCellSize();
+                }
+            }
+            ItemLilMenuButton {
+                height: parent.height
+                source: "qrc:/icons_material/baseline-photo-24px.svg"
+                sourceSize: 22
+                selected: (shotsView.cellSizeTarget === 279)
+                onClicked: {
+                    shotsView.cellSizeTarget = 279;
+                    shotsView.computeCellSize();
+                }
+            }
+            ItemLilMenuButton {
+                height: parent.height
+                source: "qrc:/icons_material/baseline-photo-24px.svg"
+                sourceSize: 26
+                selected: (shotsView.cellSizeTarget === 376)
+                onClicked: {
+                    shotsView.cellSizeTarget = 376;
+                    shotsView.computeCellSize();
+                }
+            }
+            ItemLilMenuButton {
+                height: parent.height
+                source: "qrc:/icons_material/baseline-photo-24px.svg"
+                sourceSize: 30
+                selected: (shotsView.cellSizeTarget === 512)
+                onClicked: {
+                    shotsView.cellSizeTarget = 512;
+                    shotsView.computeCellSize();
+                }
+            }
+        }
+
+        ////////
 
         ButtonWireframe {
             id: rectangleTransfer
@@ -570,134 +748,6 @@ Item {
             }
         }
 */
-        ComboBoxThemed {
-            id: comboBox_orderby
-            width: 220
-            height: 40
-            anchors.top: parent.top
-            anchors.topMargin: 16
-            anchors.left: parent.left
-            anchors.leftMargin: 16
-            displayText: qsTr("Order by: Date")
-
-            model: ListModel {
-                id: cbShotsOrderby
-                ListElement { text: qsTr("Date"); }
-                ListElement { text: qsTr("Duration"); }
-                ListElement { text: qsTr("Shot type"); }
-                //ListElement { text: qsTr("GPS location"); }
-                ListElement { text: qsTr("Name"); }
-            }
-
-            property bool cbinit: false
-            onCurrentIndexChanged: {
-                if (cbinit) {
-                    mediaGrid.exitSelectionMode()
-                    shotsView.currentIndex = -1
-
-                    if (currentIndex == 0)
-                        currentDevice.orderByDate()
-                    else if (currentIndex == 1)
-                        currentDevice.orderByDuration()
-                    else if (currentIndex == 2)
-                        currentDevice.orderByShotType()
-                    else if (currentIndex == 3)
-                        currentDevice.orderByName()
-                } else {
-                    cbinit = true;
-                }
-
-                displayText = qsTr("Order by:") + " " + cbShotsOrderby.get(currentIndex).text
-
-                // save state
-                if (deviceSavedState) deviceSavedState.orderBy = currentIndex
-            }
-        }
-
-        ComboBoxThemed {
-            id: comboBox_filterby
-            width: 240
-            height: 40
-            anchors.top: parent.top
-            anchors.topMargin: 16
-            anchors.left: comboBox_orderby.right
-            anchors.leftMargin: 16
-            displayText: qsTr("No filter")
-
-            model: ListModel {
-                id: cbMediaFilters
-                ListElement { text: qsTr("No filter"); }
-                ListElement { text: qsTr("Videos"); }
-                ListElement { text: qsTr("Photos"); }
-                ListElement { text: qsTr("Timelapses"); }
-            }
-
-            property bool cbinit: false
-            onCurrentIndexChanged: {
-                if (cbinit) {
-                    mediaGrid.exitSelectionMode()
-                    shotsView.currentIndex = -1
-
-                    currentDevice.filterByType(cbMediaFilters.get(currentIndex).text)
-
-                    if (currentIndex == 0)
-                        displayText = cbMediaFilters.get(currentIndex).text
-                    else
-                        displayText = qsTr("Filter by:") + " " + cbMediaFilters.get(currentIndex).text
-                } else {
-                    cbinit = true;
-                }
-
-                // save state
-                if (deviceSavedState) deviceSavedState.filterBy = currentIndex
-            }
-        }
-
-        SliderThemed {
-            id: sliderZoom
-            width: 200
-            height: 40
-            anchors.verticalCenter: textZoom.verticalCenter
-            anchors.left: textZoom.right
-            anchors.leftMargin: 4
-            stepSize: 1
-            from: 1
-            value: 2
-            to: 4
-
-            onValueChanged: {
-                if (value == 1.0) {
-                    shotsView.cellSizeTarget = 221;
-                    shotsView.computeCellSize();
-                } else if (value == 2.0) {
-                    shotsView.cellSizeTarget = 279;
-                    shotsView.computeCellSize();
-                } else if (value == 3.0) {
-                    shotsView.cellSizeTarget = 376;
-                    shotsView.computeCellSize();
-                } else if (value == 4.0) {
-                    shotsView.cellSizeTarget = 512;
-                    shotsView.computeCellSize();
-                }
-
-                // save state
-                if (deviceSavedState) deviceSavedState.zoomLevel = value
-            }
-        }
-
-        Text {
-            id: textZoom
-            height: 40
-            anchors.verticalCenter: comboBox_filterby.verticalCenter
-            anchors.left: comboBox_filterby.right
-            anchors.leftMargin: 16
-
-            text: qsTr("ZOOM")
-            font.pixelSize: Theme.fontSizeHeaderText
-            color: Theme.colorHeaderContent
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-        }
     }
 
     // MENUS ///////////////////////////////////////////////////////////////////
@@ -863,8 +913,6 @@ Item {
                         shotsView.cellFormat = 4/3
                     else if (settingsManager.thumbFormat === 3)
                         shotsView.cellFormat = 16/9
-                    else if (settingsManager.thumbFormat === 4)
-                        shotsView.cellFormat = 2.0
 
                     shotsView.computeCellSize()
                 }
@@ -879,8 +927,6 @@ Item {
                         shotsView.cellSizeTarget = 512
 
                     shotsView.computeCellSize()
-
-                    sliderZoom.value = settingsManager.thumbSize
                 }
             }
 
@@ -891,8 +937,6 @@ Item {
                     return 4/3
                 else if (settingsManager.thumbFormat === 3)
                     return 16/9
-                else if (settingsManager.thumbFormat === 4)
-                    return 2.0
             }
             property int cellSizeTarget: {
                 if (settingsManager.thumbSize === 1)

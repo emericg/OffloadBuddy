@@ -100,6 +100,7 @@ Item {
         x: (applicationWindow.width / 2) - (popupEncodeVideo.width / 2) - (applicationSidebar.width / 2)
         y: (applicationWindow.height / 2) - (popupEncodeVideo.height / 2)
     }
+
     PopupEncodePicture {
         id: popupEncodePicture
         x: (applicationWindow.width / 2) - (popupEncodePicture.width / 2) - (applicationSidebar.width / 2)
@@ -202,162 +203,69 @@ Item {
             font.pixelSize: Theme.fontSizeHeaderText
         }
 
-        Row {
-            id: rowLilMenuFormat
+        ComboBoxThemed {
+            id: comboBox_directories
             height: 40
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 16
             anchors.left: parent.left
             anchors.leftMargin: 16
-
-            ItemLilMenuButton {
-                height: parent.height
-                text: "1:1"
-                selected: (shotsView.cellFormat === 1.0)
-                onClicked: {
-                    shotsView.cellFormat = 1.0
-                    shotsView.computeCellSize()
-                }
-            }
-            ItemLilMenuButton {
-                height: parent.height
-                text: "4:3"
-                selected: (shotsView.cellFormat === 4/3)
-                onClicked:  {
-                    shotsView.cellFormat = 4/3
-                    shotsView.computeCellSize()
-                }
-            }
-            ItemLilMenuButton {
-                height: parent.height
-                text: "16:9"
-                selected: (shotsView.cellFormat === 16/9)
-                onClicked:  {
-                    shotsView.cellFormat = 16/9
-                    shotsView.computeCellSize()
-                }
-            }
-            ItemLilMenuButton {
-                height: parent.height
-                text: "2:1"
-                selected: (shotsView.cellFormat === 2.0)
-                onClicked:  {
-                    shotsView.cellFormat = 2.0
-                    shotsView.computeCellSize()
-                }
-            }
-        }
-
-        Row {
-            id: rowLilMenuZoom
-            height: 40
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 16
-            anchors.left: rowLilMenuFormat.right
-            anchors.leftMargin: 16
 
-            ItemLilMenuButton {
-                height: parent.height
-                source: "qrc:/icons_material/baseline-photo-24px.svg"
-                sourceSize: 18
-                selected: (shotsView.cellSizeTarget === 221)
-                onClicked: {
-                    shotsView.cellSizeTarget = 221;
-                    shotsView.computeCellSize();
+            ListModel {
+                id: cbMediaDirectories
+                ListElement { text: qsTr("ALL media directories"); }
+            }
+
+            model: cbMediaDirectories
+            displayText: qsTr("Show ALL media directories")
+            visible: (cbMediaDirectories.count > 2)
+
+            Component.onCompleted: comboBox_directories.updateDirectories()
+            Connections {
+                target: settingsManager
+                onDirectoriesUpdated: comboBox_directories.updateDirectories()
+            }
+
+            function updateDirectories() {
+                cbMediaDirectories.clear()
+                cbMediaDirectories.append( { text: qsTr("ALL media directories") } );
+
+                for (var child in settingsManager.directoriesList) {
+                    //if (settingsManager.directoriesList[child].available)
+                    cbMediaDirectories.append( { "text": settingsManager.directoriesList[child].directoryPath } )
                 }
             }
-            ItemLilMenuButton {
-                height: parent.height
-                source: "qrc:/icons_material/baseline-photo-24px.svg"
-                sourceSize: 22
-                selected: (shotsView.cellSizeTarget === 279)
-                onClicked: {
-                    shotsView.cellSizeTarget = 279;
-                    shotsView.computeCellSize();
-                }
-            }
-            ItemLilMenuButton {
-                height: parent.height
-                source: "qrc:/icons_material/baseline-photo-24px.svg"
-                sourceSize: 26
-                selected: (shotsView.cellSizeTarget === 376)
-                onClicked: {
-                    shotsView.cellSizeTarget = 376;
-                    shotsView.computeCellSize();
-                }
-            }
-            ItemLilMenuButton {
-                height: parent.height
-                source: "qrc:/icons_material/baseline-photo-24px.svg"
-                sourceSize: 30
-                selected: (shotsView.cellSizeTarget === 512)
-                onClicked: {
-                    shotsView.cellSizeTarget = 512;
-                    shotsView.computeCellSize();
+
+            property bool cbinit: false
+            width: 476
+            onCurrentIndexChanged: {
+                if (cbinit) {
+                    exitSelectionMode()
+                    shotsView.currentIndex = -1
+
+                    if (currentIndex < 0) {
+                        //
+                    } else if (currentIndex === 0) {
+                        mediaLibrary.filterByFolder("")
+                        displayText = qsTr("Show") + " " + cbMediaDirectories.get(currentIndex).text
+                    } else {
+                        mediaLibrary.filterByFolder(cbMediaDirectories.get(currentIndex).text)
+                        displayText = cbMediaDirectories.get(currentIndex).text
+                    }
+                } else {
+                    cbinit = true;
                 }
             }
         }
 
         Row {
-            id: row
+            id: rowFilter
             height: 40
             spacing: 16
             anchors.left: parent.left
             anchors.leftMargin: 16
             anchors.top: parent.top
             anchors.topMargin: 16
-
-            ComboBoxThemed {
-                id: comboBox_directories
-                width: 300
-                height: 40
-                anchors.verticalCenter: parent.verticalCenter
-
-                ListModel {
-                    id: cbMediaDirectories
-                    ListElement { text: qsTr("ALL media directories"); }
-                }
-
-                model: cbMediaDirectories
-                displayText: qsTr("Show ALL media directories")
-                visible: (cbMediaDirectories.count > 2)
-
-                Component.onCompleted: comboBox_directories.updateDirectories()
-                Connections {
-                    target: settingsManager
-                    onDirectoriesUpdated: comboBox_directories.updateDirectories()
-                }
-
-                function updateDirectories() {
-                    cbMediaDirectories.clear()
-                    cbMediaDirectories.append( { text: qsTr("ALL media directories") } );
-
-                    for (var child in settingsManager.directoriesList) {
-                        //if (settingsManager.directoriesList[child].available)
-                            cbMediaDirectories.append( { "text": settingsManager.directoriesList[child].directoryPath } )
-                    }
-                }
-
-                property bool cbinit: false
-                onCurrentIndexChanged: {
-                    if (cbinit) {
-                        exitSelectionMode()
-                        shotsView.currentIndex = -1
-
-                        if (currentIndex < 0) {
-                            //
-                        } else if (currentIndex === 0) {
-                            mediaLibrary.filterByFolder("")
-                            displayText = qsTr("Show") + " " + cbMediaDirectories.get(currentIndex).text
-                        } else {
-                            mediaLibrary.filterByFolder(cbMediaDirectories.get(currentIndex).text)
-                            displayText = cbMediaDirectories.get(currentIndex).text
-                        }
-                    } else {
-                        cbinit = true;
-                    }
-                }
-            }
 
             ComboBoxThemed {
                 id: comboBox_orderby
@@ -427,6 +335,101 @@ Item {
                     } else {
                         cbinit = true;
                     }
+                }
+            }
+        }
+
+        Rectangle {
+            anchors.fill: rowLilMenuFormat
+            color: Theme.colorComponent
+            radius: Theme.componentRadius
+        }
+        Row {
+            id: rowLilMenuFormat
+            height: 36
+            anchors.left: rowFilter.right
+            anchors.leftMargin: 16
+            anchors.verticalCenter: rowFilter.verticalCenter
+
+            ItemLilMenuButton {
+                height: parent.height
+                text: "1:1"
+                selected: (shotsView.cellFormat === 1.0)
+                onClicked: {
+                    shotsView.cellFormat = 1.0
+                    shotsView.computeCellSize()
+                }
+            }
+            ItemLilMenuButton {
+                height: parent.height
+                text: "4:3"
+                selected: (shotsView.cellFormat === 4/3)
+                onClicked:  {
+                    shotsView.cellFormat = 4/3
+                    shotsView.computeCellSize()
+                }
+            }
+            ItemLilMenuButton {
+                height: parent.height
+                text: "16:9"
+                selected: (shotsView.cellFormat === 16/9)
+                onClicked:  {
+                    shotsView.cellFormat = 16/9
+                    shotsView.computeCellSize()
+                }
+            }
+        }
+
+        Rectangle {
+            anchors.fill: rowLilMenuZoom
+            color: Theme.colorComponent
+            radius: Theme.componentRadius
+        }
+        Row {
+            id: rowLilMenuZoom
+            height: 36
+            anchors.left: rowLilMenuFormat.right
+            anchors.leftMargin: 16
+            anchors.verticalCenter: rowLilMenuFormat.verticalCenter
+
+            ItemLilMenuButton {
+                height: parent.height
+                source: "qrc:/icons_material/baseline-photo-24px.svg"
+                sourceSize: 18
+                selected: (shotsView.cellSizeTarget === 221)
+                onClicked: {
+                    shotsView.cellSizeTarget = 221;
+                    shotsView.computeCellSize();
+                }
+            }
+            ItemLilMenuButton {
+                height: parent.height
+                source: "qrc:/icons_material/baseline-photo-24px.svg"
+                sourceSize: 22
+                selected: (shotsView.cellSizeTarget === 279)
+                onClicked: {
+                    shotsView.cellSizeTarget = 279;
+                    shotsView.computeCellSize();
+                }
+            }
+            ItemLilMenuButton {
+                height: parent.height
+                source: "qrc:/icons_material/baseline-photo-24px.svg"
+                sourceSize: 26
+                selected: (shotsView.cellSizeTarget === 376)
+                onClicked: {
+                    shotsView.cellSizeTarget = 376;
+                    shotsView.computeCellSize();
+                }
+            }
+            ItemLilMenuButton {
+                height: parent.height
+                source: "qrc:/icons_material/baseline-photo-24px.svg"
+                sourceSize: 30
+                selected: (shotsView.cellSizeTarget === 512)
+                onClicked: {
+                    shotsView.cellSizeTarget = 512;
+                    shotsView.computeCellSize();
                 }
             }
         }
@@ -584,8 +587,6 @@ Item {
                         shotsView.cellFormat = 4/3
                     else if (settingsManager.thumbFormat === 3)
                         shotsView.cellFormat = 16/9
-                    else if (settingsManager.thumbFormat === 4)
-                        shotsView.cellFormat = 2.0
 
                     shotsView.computeCellSize()
                 }
@@ -610,8 +611,6 @@ Item {
                     return 4/3
                 else if (settingsManager.thumbFormat === 3)
                     return 16/9
-                else if (settingsManager.thumbFormat === 4)
-                    return 2.0
             }
             property int cellSizeTarget: {
                 if (settingsManager.thumbSize === 1)
