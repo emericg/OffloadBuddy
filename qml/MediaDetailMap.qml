@@ -39,8 +39,9 @@ Item {
         copyrightsVisible: false
         gesture.enabled: false
         plugin: Plugin { name: "mapboxgl" } // "osm", "mapboxgl", "esri"
-        //center: QtPositioning.coordinate(45.5, 6)
+
         //zoomLevel: 2
+        //center: QtPositioning.coordinate(45.5, 6)
 
         MapQuickItem {
             id: mapMarker

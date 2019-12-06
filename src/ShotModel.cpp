@@ -350,10 +350,13 @@ QVariant ShotModel::data(const QModelIndex & index, int role) const
             return QVariant::fromValue(shot);
         if (role == PathRole)
         {
-            if (!shot->getFiles().empty())
-                return shot->getFiles().at(0)->filesystemPath;
-            else
+            if (shot->getFiles().empty())
+            {
                 qWarning() << "shot" << shot->getName() << "has no files (?)";
+                return QVariant();
+            }
+
+            return shot->getFiles().at(0)->filesystemPath;
         }
 
         // If we made it here...

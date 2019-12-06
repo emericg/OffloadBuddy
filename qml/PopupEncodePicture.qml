@@ -20,6 +20,18 @@ Popup {
 
     ////////////////////////////////////////////////////////////////////////////
 
+    property var mediaProvider: null
+    property var currentShot: null
+
+    function updateEncodePanel() {
+        currentShot = shot
+
+        // Handle destination(s)
+        comboBoxDestination.updateDestinations()
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
     background: Rectangle {
         color: Theme.colorBackground
         radius: Theme.componentRadius
@@ -188,7 +200,6 @@ Popup {
 
                     model: cbDestinations
 
-                    Component.onCompleted: updateDestinations()
                     function updateDestinations() {
                         cbDestinations.clear()
 

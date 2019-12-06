@@ -171,12 +171,17 @@ Popup {
                     model: cbDestinations
 
                     Component.onCompleted: updateDestinations()
+                    Connections {
+                        target: settingsManager
+                        onDirectoriesUpdated: updateDestinations()
+                    }
+
                     function updateDestinations() {
                         cbDestinations.clear()
 
                         for (var child in settingsManager.directoriesList) {
                             if (settingsManager.directoriesList[child].available &&
-                                    settingsManager.directoriesList[child].directoryContent !== 1)
+                                settingsManager.directoriesList[child].directoryContent !== 1)
                                 cbDestinations.append( { "text": settingsManager.directoriesList[child].directoryPath } )
                         }
                         cbDestinations.append( { "text": qsTr("Select path manually") } )

@@ -47,6 +47,7 @@ class MediaLibrary: public ShotProvider
     Q_PROPERTY(int libraryState READ getLibraryState NOTIFY stateUpdated)
 
     deviceState_e m_libraryState = DEVICE_STATE_IDLE;
+    int m_libraryScan = 0;
 
     void scanMediaDirectory(MediaDirectory *md);
 
@@ -58,12 +59,13 @@ public:
     ~MediaLibrary();
 
 public slots:
-    void searchMediaDirectories();
-    void searchMediaDirectory(const QString &path);
+    Q_INVOKABLE void searchMediaDirectories();
+    Q_INVOKABLE void searchMediaDirectory(const QString &path);
+    Q_INVOKABLE void cleanMediaDirectory(const QString &path);
 
     int getLibraryState() const { return m_libraryState; }
-    void workerScanningStarted(const QString &s);
-    void workerScanningFinished(const QString &s);
+    void workerScanningStarted(const QString &path);
+    void workerScanningFinished(const QString &path);
 
     //
     void reencodeSelected(const QString &shot_uuid, const QString &codec,

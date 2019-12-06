@@ -220,8 +220,8 @@ public:
 
 public slots:
     //
-    void workerScanningStarted(const QString &s);
-    void workerScanningFinished(const QString &s);
+    void workerScanningStarted(const QString &path);
+    void workerScanningFinished(const QString &path);
 
     //
     int getDeviceState() const { return m_deviceState; }

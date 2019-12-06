@@ -44,8 +44,8 @@ MediaDirectory::MediaDirectory()
     // Windows 'C:/Users/USERNAME/Videos/OffloadBuddy'
 
     QString path = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + "/OffloadBuddy";
-
     QDir path_dir(path);
+
     if (!path_dir.exists())
     {
         path_dir.mkpath(path);
@@ -56,9 +56,9 @@ MediaDirectory::MediaDirectory()
         setPath(path);
         setContent(CONTENT_ALL);
 
-        m_updateTimer.setInterval(MEDIA_DIRECTORIES_REFRESH_INTERVAL * 1000);
-        connect(&m_updateTimer, &QTimer::timeout, this, &MediaDirectory::refreshMediaDirectory);
-        m_updateTimer.start();
+        m_refreshTimer.setInterval(MEDIA_DIRECTORIES_REFRESH_INTERVAL * 1000);
+        connect(&m_refreshTimer, &QTimer::timeout, this, &MediaDirectory::refreshMediaDirectory);
+        m_refreshTimer.start();
     }
 }
 
@@ -73,9 +73,9 @@ MediaDirectory::MediaDirectory(const QString &path, int content)
     setPath(path);
     setContent(content);
 
-    m_updateTimer.setInterval(MEDIA_DIRECTORIES_REFRESH_INTERVAL * 1000);
-    connect(&m_updateTimer, &QTimer::timeout, this, &MediaDirectory::refreshMediaDirectory);
-    m_updateTimer.start();
+    m_refreshTimer.setInterval(MEDIA_DIRECTORIES_REFRESH_INTERVAL * 1000);
+    connect(&m_refreshTimer, &QTimer::timeout, this, &MediaDirectory::refreshMediaDirectory);
+    m_refreshTimer.start();
 }
 
 MediaDirectory::~MediaDirectory()
@@ -102,8 +102,7 @@ void MediaDirectory::setPath(const QString &path)
     m_path = path;
 
     // Make sure the path is terminated with a separator.
-    if (!m_path.endsWith('/'))
-        m_path += '/';
+    if (!m_path.endsWith('/')) m_path += '/';
 
     emit directoryUpdated();
 
@@ -141,6 +140,15 @@ bool MediaDirectory::isAvailableFor(unsigned shotType, int64_t shotSize)
     }
 
     return available;
+}
+
+void MediaDirectory::setScanning(bool scanning)
+{
+    if (scanning != m_scanning)
+    {
+        m_scanning = scanning;
+        emit scanningUpdated();
+    }
 }
 
 /* ************************************************************************** */

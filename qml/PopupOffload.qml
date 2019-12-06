@@ -178,6 +178,11 @@ Popup {
                     model: cbDestinations
 
                     Component.onCompleted: updateDestinations()
+                    Connections {
+                        target: settingsManager
+                        onDirectoriesUpdated: updateDestinations()
+                    }
+
                     function updateDestinations() {
                         cbDestinations.clear()
 

@@ -45,7 +45,9 @@ class MediaDirectory: public QObject
 
     Q_PROPERTY(QString directoryPath READ getPath WRITE setPath NOTIFY directoryUpdated)
     Q_PROPERTY(int directoryContent READ getContent WRITE setContent NOTIFY directoryUpdated)
+
     Q_PROPERTY(bool available READ isAvailable NOTIFY availableUpdated)
+    Q_PROPERTY(bool scanning READ isScanning NOTIFY scanningUpdated)
 
     Q_PROPERTY(bool readOnly READ isReadOnly NOTIFY storageUpdated)
     Q_PROPERTY(qint64 spaceTotal READ getSpaceTotal NOTIFY storageUpdated)
@@ -57,13 +59,16 @@ class MediaDirectory: public QObject
     int m_content_type = 0;
     int m_storage_type = 0;
 
-    QStorageInfo *m_storage = nullptr;
     bool m_available = false;
-    QTimer m_updateTimer;
+    bool m_scanning = false;
+
+    QStorageInfo *m_storage = nullptr;
+    QTimer m_refreshTimer;
 
 Q_SIGNALS:
     void directoryUpdated();
     void availableUpdated();
+    void scanningUpdated();
     void storageUpdated();
 
 private slots:
@@ -77,13 +82,16 @@ public:
 public slots:
     QString getPath() { return m_path; }
     void setPath(const QString &path);
+
     int getContent() { return m_content_type; }
     void setContent(int content);
 
     bool isAvailable() { return m_available; }
     bool isAvailableFor(unsigned shotType, int64_t shotSize);
 
-    //
+    bool isScanning() { return m_scanning; }
+    void setScanning(bool scanning);
+
     bool isReadOnly();
     int64_t getSpaceTotal();
     int64_t getSpaceUsed();

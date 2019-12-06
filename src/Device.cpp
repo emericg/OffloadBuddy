@@ -152,7 +152,7 @@ bool Device::addStorages_mtp(ofb_mtp_device *device)
 
             // automatically delete thread and everything when the work is done
             connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-            connect(fs, SIGNAL (scanningFinished(QString)), fs, SLOT (deleteLater()));
+            connect(fs, SIGNAL(scanningFinished(QString)), fs, SLOT (deleteLater()));
             connect(fs, SIGNAL(scanningFinished(QString)), thread, SLOT(quit()));
 
             thread->start();
@@ -230,7 +230,7 @@ bool Device::addStorage_filesystem(const QString &path)
 
             // automatically delete thread and everything when the work is done
             connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-            connect(fs, SIGNAL (scanningFinished(QString)), fs, SLOT (deleteLater()));
+            connect(fs, SIGNAL(scanningFinished(QString)), fs, SLOT (deleteLater()));
             connect(fs, SIGNAL(scanningFinished(QString)), thread, SLOT(quit()));
 
             thread->start();
@@ -242,19 +242,19 @@ bool Device::addStorage_filesystem(const QString &path)
 
 /* ************************************************************************** */
 
-void Device::workerScanningStarted(const QString &s)
+void Device::workerScanningStarted(const QString &path)
 {
-    //qDebug() << "> Device::workerScanningStarted(" << s << ")";
-    Q_UNUSED(s)
+    //qDebug() << "> Device::workerScanningStarted(" << path << ")";
+    Q_UNUSED(path)
 
     m_deviceState = DEVICE_STATE_SCANNING;
     emit stateUpdated();
 }
 
-void Device::workerScanningFinished(const QString &s)
+void Device::workerScanningFinished(const QString &path)
 {
-    //qDebug() << "> Device::workerScanningFinished(" << s << ")";
-    Q_UNUSED(s)
+    //qDebug() << "> Device::workerScanningFinished(" << path << ")";
+    Q_UNUSED(path)
 
     m_deviceState = DEVICE_STATE_IDLE;
     emit stateUpdated();

@@ -46,10 +46,12 @@ Item {
 
         anchors.top: rectangleHeader.bottom
         anchors.topMargin: 0
+        anchors.left: parent.left
+        anchors.leftMargin: 0
+        anchors.right: parent.right
+        anchors.rightMargin: 0
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0
-        anchors.left: parent.left
-        anchors.right: parent.right
 
         Column {
             anchors.topMargin: 32
@@ -471,7 +473,7 @@ Item {
                 ListView {
                     id: mediadirectoriesview
                     width: parent.width
-                    height: settingsManager.directoriesList.length * 48
+                    height: settingsManager.directoriesList.length * 64 // 48px for the widget and 16px for spacing
                     anchors.left: parent.left
                     anchors.right: parent.right
 

@@ -74,9 +74,6 @@ bool SettingsManager::readSettings()
         if (settings.contains("global/appUnits"))
             m_appUnits = settings.value("global/appUnits").toUInt();
 
-        if (settings.contains("global/autoLaunch"))
-            m_autoLaunch = settings.value("global/autoLaunch").toBool();
-
         if (settings.contains("global/autoMerge"))
             m_autoMerge = settings.value("global/autoMerge").toBool();
 
@@ -121,18 +118,7 @@ bool SettingsManager::readSettings()
 
         if (m_mediaDirectories.isEmpty())
         {
-            // Create a default entry
-            MediaDirectory *d = new MediaDirectory();
-            m_mediaDirectories.push_back(d);
-/*
-            // Create a default entries
-            QString pathV = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + "/GoPro";
-            QString pathP = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/GoPro";
-            MediaDirectory *dv = new MediaDirectory(pathV, 1);
-            m_mediaDirectories.push_back(dv);
-            MediaDirectory *dp = new MediaDirectory(pathP, 2);
-            m_mediaDirectories.push_back(dp);
-*/
+            //createDefaultDirectory();
         }
 
         emit directoriesUpdated();
@@ -157,7 +143,6 @@ bool SettingsManager::writeSettings()
     {
         settings.setValue("global/appTheme", m_appTheme);
         settings.setValue("global/appUnits", m_appUnits);
-        settings.setValue("global/autoLaunch", m_autoLaunch);
         settings.setValue("global/autoMerge", m_autoMerge);
         settings.setValue("global/autoMetadata", m_autoTelemetry);
         settings.setValue("global/autoDelete", m_autoDelete);
@@ -210,15 +195,19 @@ void SettingsManager::addDirectory(const QString &path)
 {
     if (!path.isEmpty())
     {
-        MediaDirectory *d = new MediaDirectory(path, 0);
-        m_mediaDirectories.push_back(d);
+        MediaDirectory *dd = new MediaDirectory(path, 0);
+        if (dd->isAvailable())
+        {
+            m_mediaDirectories.push_back(dd);
+            emit directoryAdded(dd->getPath());
+            emit directoriesUpdated();
 
-        directoryModified();
-        emit directoriesUpdated();
+            directoryModified();
+        }
     }
 }
 
-void SettingsManager::deleteDirectory(const QString &path)
+void SettingsManager::removeDirectory(const QString &path)
 {
     if (!path.isEmpty())
     {
@@ -228,18 +217,44 @@ void SettingsManager::deleteDirectory(const QString &path)
             if (dd && dd->getPath() == path)
             {
                 m_mediaDirectories.removeOne(d);
+                emit directoryRemoved(dd->getPath());
+                emit directoriesUpdated();
+
+                directoryModified();
                 break;
             }
         }
+    }
 
-        directoryModified();
-        emit directoriesUpdated();
+    if (m_mediaDirectories.isEmpty())
+    {
+        //createDefaultDirectory();
     }
 }
 
 void SettingsManager::directoryModified()
 {
     writeSettings();
+}
+
+void SettingsManager::createDefaultDirectory()
+{
+    // Create a default entry
+    MediaDirectory *d = new MediaDirectory();
+    if (d)
+    {
+        m_mediaDirectories.push_back(d);
+        writeSettings();
+    }
+/*
+    // Create a default entries
+    QString pathV = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + "/GoPro";
+    QString pathP = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/GoPro";
+    MediaDirectory *dv = new MediaDirectory(pathV, 1);
+    m_mediaDirectories.push_back(dv);
+    MediaDirectory *dp = new MediaDirectory(pathP, 2);
+    m_mediaDirectories.push_back(dp);
+*/
 }
 
 /* ************************************************************************** */
@@ -262,16 +277,6 @@ void SettingsManager::setAppUnits(unsigned value)
         m_appUnits = value;
         writeSettings();
         Q_EMIT appUnitsChanged();
-    }
-}
-
-void SettingsManager::setAutoLaunch(bool value)
-{
-    if (m_autoLaunch != value)
-    {
-        m_autoLaunch = value;
-        writeSettings();
-        Q_EMIT autoLaunchChanged();
     }
 }
 

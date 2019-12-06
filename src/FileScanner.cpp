@@ -50,8 +50,7 @@ void FileScanner::chooseFilesystem(const QString &path)
     m_abort_scan = false;
     m_selected_filesystem = path;
 
-    if (m_selected_filesystem.endsWith('/'))
-        m_selected_filesystem.chop(1);
+    if (!m_selected_filesystem.endsWith('/')) m_selected_filesystem += '/';
 }
 
 void FileScanner::chooseMtpStorage(StorageMtp *mtpStorage)
@@ -80,7 +79,10 @@ void FileScanner::scanFilesystemDirectory(const QString &dir_path)
     foreach (QString subelement_name, dir.entryList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot))
     {
         //qDebug() << "  * Scanning subelement:" << subelement_name;
-        QString subelement_path = dir_path + QDir::separator() + subelement_name;
+
+        QString subelement_path = dir_path;
+        if (!subelement_path.endsWith('/')) subelement_path += '/';
+        subelement_path += subelement_name;
 
         if (m_abort_scan)
             return;
@@ -205,7 +207,7 @@ void FileScanner::scanFilesystem()
 
     scanFilesystemDirectory(m_selected_filesystem);
 
-    //qDebug() << "> SCANNING FINISHED";
+    //qDebug() << "> SCANNING FINISHED (filesystem)";
     emit scanningFinished(m_selected_filesystem);
 }
 
@@ -217,15 +219,15 @@ void FileScanner::scanFilesystemDCIM()
         return;
     }
 
-    QString dcim_path = m_selected_filesystem + QDir::separator() + "DCIM";
+    QString dcim_path = m_selected_filesystem + "DCIM/";
 
-    //qDebug() << "> SCANNING STARTED (filesystem)";
+    //qDebug() << "> SCANNING STARTED (filesystem DCIM)";
     //qDebug() << "  * DCIM:" << dcim_path;
     emit scanningStarted(m_selected_filesystem);
 
     scanFilesystemDirectory(dcim_path);
 
-    //qDebug() << "> SCANNING FINISHED";
+    //qDebug() << "> SCANNING FINISHED (filesystem DCIM)";
     emit scanningFinished(m_selected_filesystem);
 }
 

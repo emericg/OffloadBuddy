@@ -333,7 +333,7 @@ Item {
                     cbMediaDirectories.append( { text: qsTr("ALL media directories") } );
 
                     for (var child in settingsManager.directoriesList) {
-                        if (settingsManager.directoriesList[child].available)
+                        //if (settingsManager.directoriesList[child].available)
                             cbMediaDirectories.append( { "text": settingsManager.directoriesList[child].directoryPath } )
                     }
                 }

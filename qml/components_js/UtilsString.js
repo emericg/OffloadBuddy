@@ -1,5 +1,5 @@
 // UtilsString.js
-// Version 0.5
+// Version 0.6
 .pragma library
 
 /* ************************************************************************** */
@@ -241,7 +241,7 @@ function durationToString_ISO8601_full(duration_ms) {
 /* ************************************************************************** */
 
 /*!
- * bytesToString_short()
+ * bytesToString()
  * unit: 0 is KB, 1 is KiB
  */
 function bytesToString(bytes, unit) {
@@ -252,7 +252,9 @@ function bytesToString(bytes, unit) {
     //if (bytes > 1024*1024*1024*1024) return 'NaN';
 
     if (bytes > 0) {
-        if ((bytes/(base*base*base)) >= 128.0)
+        if ((bytes/(base*base*base)) >= 1000.0)
+            text = (bytes/(base*base*base*base)).toFixed(1) + " " + ((unit === 1) ? "TiB" : "TB");
+        else if ((bytes/(base*base*base)) >= 128.0)
             text = (bytes/(base*base*base)).toFixed(0) + " " + ((unit === 1) ? "GiB" : "GB");
         else if ((bytes/(base*base*base)) >= 1.0)
             text = (bytes/(base*base*base)).toFixed(1) + " " + ((unit === 1) ? "GiB" : "GB");
@@ -277,7 +279,9 @@ function bytesToString_short(bytes, unit) {
     //if (bytes > 1024*1024*1024*1024) return 'NaN';
 
     if (bytes > 0) {
-        if ((bytes/(base*base*base)) >= 128.0)
+        if ((bytes/(base*base*base)) >= 1000.0)
+            text = (bytes/(base*base*base*base)).toFixed(1) + " " + ((unit === 1) ? "TiB" : "TB");
+        else if ((bytes/(base*base*base)) >= 128.0)
             text = (bytes/(base*base*base)).toFixed(0) + " " + ((unit === 1) ? "GiB" : "GB");
         else if ((bytes/(base*base*base)) >= 1.0)
             text = (bytes/(base*base*base)).toFixed(1) + " " + ((unit === 1) ? "GiB" : "GB");

@@ -80,19 +80,9 @@ Popup {
 
         // Filters
         rectangleFilter.visible = false
-/*
-        // Handle destination(s)
-        cbDestinations.clear()
-        cbDestinations.append( { "text": qsTr("auto") } )
 
-        for (var child in settingsManager.directoriesList) {
-            //console.log("destination: " + settingsManager.directoriesList[child].directoryPath)
-            if (settingsManager.directoriesList[child].available)
-                if (settingsManager.directoriesList[child].directoryContent < 2)
-                    cbDestinations.append( { "text": settingsManager.directoriesList[child].directoryPath } )
-        }
-        comboBoxDestination.currentIndex = 0
-*/
+        // Handle destination(s)
+        comboBoxDestination.updateDestinations()
     }
 
     function toggleCopy() {
@@ -553,13 +543,12 @@ Popup {
 
                     model: cbDestinations
 
-                    Component.onCompleted: updateDestinations()
                     function updateDestinations() {
                         cbDestinations.clear()
 
                         for (var child in settingsManager.directoriesList) {
                             if (settingsManager.directoriesList[child].available &&
-                                    settingsManager.directoriesList[child].directoryContent !== 2)
+                                settingsManager.directoriesList[child].directoryContent !== 2)
                                 cbDestinations.append( { "text": settingsManager.directoriesList[child].directoryPath } )
                         }
                         cbDestinations.append( { "text": qsTr("Select path manually") } )

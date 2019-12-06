@@ -11,38 +11,32 @@ Rectangle {
     width: parent.width
     implicitWidth: 800
     height: 48
-    radius: 8
+    radius: Theme.componentRadius
+    color: (directory.available) ? "transparent" : Theme.colorWarning
 
     property var directory: null
 
-    Component.onCompleted: updateInfos()
     Connections {
         target: directory
         onAvailableChanged: updateInfos()
-        onSpaceAvailableChanged: updateInfos()
     }
-    Connections {
-        target: Theme
-        onCurrentThemeChanged: updateInfos()
-    }
-    function updateInfos() {
-        itemMediaDirectory.color = (directory.available) ? "transparent" : Theme.colorWarning
 
-        deviceSpaceText.text = UtilsString.bytesToString_short(directory.spaceUsed) + " used / "
-                                + UtilsString.bytesToString_short(directory.spaceAvailable) + " available / "
-                                + UtilsString.bytesToString_short(directory.spaceTotal) + " total"
+    function updateInfos() {
+        deviceSpaceText.text = UtilsString.bytesToString_short(directory.spaceUsed) + " used / " +
+                               UtilsString.bytesToString_short(directory.spaceAvailable) + " available / " +
+                               UtilsString.bytesToString_short(directory.spaceTotal) + " total"
 
         progressBar.value = directory.storageLevel
     }
 
-    ////////
+    ////////////////////////////////////////////////////////////////////////////
 
     TextFieldThemed {
         id: textField_path
         width: 512
         height: 40
         anchors.left: parent.left
-        anchors.leftMargin: 6 //directory.available ? 0 : 6
+        anchors.leftMargin: 4 // directory.available ? 0 : 4
         anchors.verticalCenter: parent.verticalCenter
 
         readOnly: !directory.available
@@ -67,12 +61,30 @@ Rectangle {
             width: 32
             height: 32
             anchors.right: button_change.left
-            anchors.rightMargin: 8
+            anchors.rightMargin: 4
             anchors.verticalCenter: parent.verticalCenter
-            enabled: directory.available
 
+            visible: directory.available
+            enabled: directory.available
             source: "qrc:/icons_material/baseline-refresh-24px.svg"
             onClicked: mediaLibrary.searchMediaDirectory(directory.directoryPath)
+
+            NumberAnimation on rotation {
+                id: refreshAnimation
+                duration: 2000
+                from: 0
+                to: 360
+                loops: Animation.Infinite
+                running: directory.scanning
+                onStopped: refreshAnimationStop.start()
+            }
+            NumberAnimation on rotation {
+                id: refreshAnimationStop
+                duration: 1000;
+                to: 360;
+                easing.type: Easing.Linear
+                running: false
+            }
         }
         ButtonThemed {
             id: button_change
@@ -129,8 +141,9 @@ Rectangle {
         anchors.leftMargin: 16
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: 10
-        value: directory.storageLevel
+
         visible: directory.available
+        value: directory.storageLevel
     }
     Text {
         id: deviceSpaceText
@@ -141,9 +154,11 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: -6
 
-        text: UtilsString.bytesToString_short(directory.spaceUsed) + " used / " + UtilsString.bytesToString_short(directory.spaceAvailable) + " available / " + UtilsString.bytesToString_short(directory.spaceTotal) + " total"
-        color: Theme.colorText
         visible: directory.available
+        color: Theme.colorText
+        text: UtilsString.bytesToString_short(directory.spaceUsed) + " used / " +
+              UtilsString.bytesToString_short(directory.spaceAvailable) + " available / " +
+              UtilsString.bytesToString_short(directory.spaceTotal) + " total"
     }
     Text {
         id: textError
@@ -172,6 +187,6 @@ Rectangle {
         highlightMode: "color"
         highlightColor: Theme.colorError
         source: "qrc:/icons_material/baseline-delete-24px.svg"
-        onClicked: settingsManager.deleteDirectory(textField_path.text)
+        onClicked: settingsManager.removeDirectory(textField_path.text)
     }
 }

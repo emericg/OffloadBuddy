@@ -45,23 +45,22 @@ class SettingsManager: public QObject
 
     Q_PROPERTY(uint appTheme READ getAppTheme WRITE setAppTheme NOTIFY appThemeChanged)
     Q_PROPERTY(uint appUnits READ getAppUnits WRITE setAppUnits NOTIFY appUnitsChanged)
-    Q_PROPERTY(bool autolaunch READ getAutoLaunch WRITE setAutoLaunch NOTIFY autoLaunchChanged)
-    Q_PROPERTY(bool automerge READ getAutoMerge WRITE setAutoMerge NOTIFY autoMergeChanged)
-    Q_PROPERTY(bool autometadata READ getAutoMetadata WRITE setAutoMetadata NOTIFY autoMetadataChanged)
-    Q_PROPERTY(bool autodelete READ getAutoDelete WRITE setAutoDelete NOTIFY autoDeleteChanged)
     Q_PROPERTY(uint thumbQuality READ getThumbQuality WRITE setThumbQuality NOTIFY thumbQualityChanged)
     Q_PROPERTY(uint thumbFormat READ getThumbFormat WRITE setThumbFormat NOTIFY thumbFormatChanged)
     Q_PROPERTY(uint thumbSize READ getThumbSize WRITE setThumbSize NOTIFY thumbSizeChanged)
+    Q_PROPERTY(bool automerge READ getAutoMerge WRITE setAutoMerge NOTIFY autoMergeChanged)
+    Q_PROPERTY(bool autometadata READ getAutoMetadata WRITE setAutoMetadata NOTIFY autoMetadataChanged)
+    Q_PROPERTY(bool autodelete READ getAutoDelete WRITE setAutoDelete NOTIFY autoDeleteChanged)
     Q_PROPERTY(bool ignorejunk READ getIgnoreJunk WRITE setIgnoreJunk NOTIFY ignoreJunkChanged)
     Q_PROPERTY(bool ignorehdaudio READ getIgnoreHdAudio WRITE setIgnoreHdAudio NOTIFY ignoreHdAudioChanged)
     Q_PROPERTY(bool mtpfullscan READ getMtpFullScan WRITE setMtpFullScan NOTIFY mtpFullScanChanged)
     Q_PROPERTY(uint contenthierarchy READ getContentHierarchy WRITE setContentHierarchy NOTIFY contentHierarchyChanged)
+
     Q_PROPERTY(QVariant directoriesList READ getDirectories NOTIFY directoriesUpdated)
 
     // Global
     unsigned m_appTheme = 0;
     unsigned m_appUnits = 0;
-    bool m_autoLaunch = false;
     bool m_ignoreJunk = true;
     bool m_ignoreHdAudio = true;
     bool m_autoMerge = true;
@@ -87,7 +86,6 @@ class SettingsManager: public QObject
 Q_SIGNALS:
     void appThemeChanged();
     void appUnitsChanged();
-    void autoLaunchChanged();
     void autoMergeChanged();
     void autoMetadataChanged();
     void autoDeleteChanged();
@@ -98,7 +96,10 @@ Q_SIGNALS:
     void thumbSizeChanged();
     void mtpFullScanChanged();
     void contentHierarchyChanged();
+
     void directoriesUpdated();
+    void directoryAdded(const QString &);
+    void directoryRemoved(const QString &);
 
 public:
     static SettingsManager *getInstance();
@@ -108,9 +109,6 @@ public:
 
     unsigned getAppUnits() const { return m_appUnits; }
     void setAppUnits(unsigned value);
-
-    bool getAutoLaunch() const { return m_autoLaunch; }
-    void setAutoLaunch(bool value);
 
     bool getAutoMerge() const { return m_autoMerge; }
     void setAutoMerge(bool value);
@@ -147,8 +145,9 @@ public:
 
 public slots:
     void addDirectory(const QString &path);
-    void deleteDirectory(const QString &path);
+    void removeDirectory(const QString &path);
     void directoryModified();
+    void createDefaultDirectory();
 };
 
 /* ************************************************************************** */

@@ -207,7 +207,7 @@ void DeviceManager::searchDevices()
             connect(m_deviceScanner, SIGNAL(scanningFinished()), this, SLOT(workerScanningFinished()));
 
             // we just keep the scanner always on now...
-            //connect(m_deviceScanner, SIGNAL (scanningFinished()), m_deviceScanner, SLOT (deleteLater()));
+            //connect(m_deviceScanner, SIGNAL(scanningFinished()), m_deviceScanner, SLOT (deleteLater()));
             //connect(m_deviceScanner, SIGNAL(scanningFinished()), m_deviceScannerThread, SLOT(quit()));
             // automatically delete thread when its work is done
             //connect(m_deviceScannerThread, SIGNAL(finished()), m_deviceScannerThread, SLOT(deleteLater()));

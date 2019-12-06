@@ -34,7 +34,12 @@
 
 MediaLibrary::MediaLibrary()
 {
-    //
+    SettingsManager *sm = SettingsManager::getInstance();
+    if (sm)
+    {
+        connect(sm, SIGNAL(directoryAdded(QString)), this, SLOT(searchMediaDirectory(QString)));
+        connect(sm, SIGNAL(directoryRemoved(QString)), this, SLOT(cleanMediaDirectory(QString)));
+    }
 }
 
 MediaLibrary::~MediaLibrary()
@@ -49,27 +54,30 @@ void MediaLibrary::scanMediaDirectory(MediaDirectory *md)
 {
     if (md && md->isAvailable())
     {
-        //qDebug() << "scanMediaDirectory() dir:" << md->getPath();
-
-        QThread *thread = new QThread();
-        FileScanner *fs = new FileScanner();
-
-        if (thread && fs)
+        if (m_shotModel)
         {
-            fs->chooseFilesystem(md->getPath());
-            fs->moveToThread(thread);
+            //qDebug() << "scanMediaDirectory() with MediaDirectory path:" << md->getPath();
 
-            connect(thread, SIGNAL(started()), fs, SLOT(scanFilesystem()));
-            connect(fs, SIGNAL(fileFound(ofb_file *, ofb_shot *)), m_shotModel, SLOT(addFile(ofb_file *, ofb_shot *)));
-            connect(fs, SIGNAL(scanningStarted(QString)), this, SLOT(workerScanningStarted(QString)));
-            connect(fs, SIGNAL(scanningFinished(QString)), this, SLOT(workerScanningFinished(QString)));
+            QThread *thread = new QThread();
+            FileScanner *fs = new FileScanner();
 
-            // automatically delete thread and everything when the work is done
-            connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-            connect(fs, SIGNAL (scanningFinished(QString)), fs, SLOT (deleteLater()));
-            connect(fs, SIGNAL(scanningFinished(QString)), thread, SLOT(quit()));
+            if (thread && fs)
+            {
+                fs->chooseFilesystem(md->getPath());
+                fs->moveToThread(thread);
 
-            thread->start();
+                connect(thread, SIGNAL(started()), fs, SLOT(scanFilesystem()));
+                connect(fs, SIGNAL(fileFound(ofb_file *, ofb_shot *)), m_shotModel, SLOT(addFile(ofb_file *, ofb_shot *)));
+                connect(fs, SIGNAL(scanningStarted(QString)), this, SLOT(workerScanningStarted(QString)));
+                connect(fs, SIGNAL(scanningFinished(QString)), this, SLOT(workerScanningFinished(QString)));
+
+                // automatically delete thread and everything when the work is done
+                connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+                connect(fs, SIGNAL(scanningFinished(QString)), fs, SLOT (deleteLater()));
+                connect(fs, SIGNAL(scanningFinished(QString)), thread, SLOT(quit()));
+
+                thread->start();
+            }
         }
     }
 }
@@ -78,24 +86,18 @@ void MediaLibrary::scanMediaDirectory(MediaDirectory *md)
 
 void MediaLibrary::searchMediaDirectory(const QString &path)
 {
-    if (m_shotModel)
-    {
-        if (m_libraryState != DEVICE_STATE_SCANNING)
-        {
-            SettingsManager *s = SettingsManager::getInstance();
-            if (s)
-            {
-                const QList <QObject *> *mediaDirectories = s->getDirectoriesList();
+    //qDebug() << "searchMediaDirectory() with path:" << path;
 
-                for (auto d: *mediaDirectories)
-                {
-                    MediaDirectory *dd = qobject_cast<MediaDirectory*>(d);
-                    if (dd && dd->getPath() == path)
-                    {
-                        m_shotModel->sanetize();
-                        scanMediaDirectory(dd);
-                    }
-                }
+    SettingsManager *sm = SettingsManager::getInstance();
+    if (sm)
+    {
+        const QList <QObject *> *mediaDirectories = sm->getDirectoriesList();
+        for (auto d: *mediaDirectories)
+        {
+            MediaDirectory *dd = qobject_cast<MediaDirectory*>(d);
+            if (dd && dd->getPath() == path)
+            {
+                scanMediaDirectory(dd);
             }
         }
     }
@@ -105,13 +107,12 @@ void MediaLibrary::searchMediaDirectory(const QString &path)
 
 void MediaLibrary::searchMediaDirectories()
 {
-    SettingsManager *s = SettingsManager::getInstance();
-    if (s)
+    //qDebug() << "searchMediaDirectories()";
+
+    SettingsManager *sm = SettingsManager::getInstance();
+    if (sm)
     {
-        // TODO connect to directoriesUpdated()
-
-        const QList <QObject *> *mediaDirectories = s->getDirectoriesList();
-
+        const QList <QObject *> *mediaDirectories = sm->getDirectoriesList();
         for (auto d: *mediaDirectories)
         {
             MediaDirectory *dd = qobject_cast<MediaDirectory*>(d);
@@ -121,20 +122,75 @@ void MediaLibrary::searchMediaDirectories()
 }
 
 /* ************************************************************************** */
+
+void MediaLibrary::cleanMediaDirectory(const QString &path)
+{
+    //qDebug() << "cleanMediaDirectory() with path:" << path;
+    Q_UNUSED(path)
+
+    if (m_shotModel)
+    {
+        if (m_libraryState != DEVICE_STATE_SCANNING)
+        {
+            m_shotModel->sanetize();
+
+            // TODO...
+        }
+    }
+}
+
+/* ************************************************************************** */
 /* ************************************************************************** */
 
-void MediaLibrary::workerScanningStarted(const QString &s)
+void MediaLibrary::workerScanningStarted(const QString &path)
 {
-    qDebug() << "> MediaLibrary::workerScanningStarted(" << s << ")";
+    //qDebug() << "> MediaLibrary::workerScanningStarted(" << path << ")";
+
+    SettingsManager *sm = SettingsManager::getInstance();
+    if (sm)
+    {
+        const QList <QObject *> *mediaDirectories = sm->getDirectoriesList();
+        for (auto d: *mediaDirectories)
+        {
+            MediaDirectory *dd = qobject_cast<MediaDirectory*>(d);
+            if (dd && dd->getPath() == path)
+            {
+                dd->setScanning(true);
+            }
+        }
+    }
+
+    if (m_libraryScan < 0) m_libraryScan = 0;
+    m_libraryScan++;
+
     m_libraryState = DEVICE_STATE_SCANNING;
     emit stateUpdated();
 }
 
-void MediaLibrary::workerScanningFinished(const QString &s)
+void MediaLibrary::workerScanningFinished(const QString &path)
 {
-    qDebug() << "> MediaLibrary::workerScanningFinished(" << s << ")";
-    m_libraryState = DEVICE_STATE_IDLE;
-    emit stateUpdated();
+    //qDebug() << "> MediaLibrary::workerScanningFinished(" << path << ")";
+
+    SettingsManager *sm = SettingsManager::getInstance();
+    if (sm)
+    {
+        const QList <QObject *> *mediaDirectories = sm->getDirectoriesList();
+        for (auto d: *mediaDirectories)
+        {
+            MediaDirectory *dd = qobject_cast<MediaDirectory*>(d);
+            if (dd && dd->getPath() == path)
+            {
+                dd->setScanning(false);
+            }
+        }
+    }
+
+    m_libraryScan--;
+    if (m_libraryScan <= 0)
+    {
+        m_libraryState = DEVICE_STATE_IDLE;
+        emit stateUpdated();
+    }
 }
 
 /* ************************************************************************** */
@@ -142,15 +198,14 @@ void MediaLibrary::workerScanningFinished(const QString &s)
 
 QStringList MediaLibrary::getSelectedUuids(const QVariant &indexes)
 {
-    qDebug() << "MediaLibrary::getSelectedUuids(" << indexes << ")";
-
-    QStringList selectedUuids;
+    //qDebug() << "MediaLibrary::getSelectedUuids(" << indexes << ")";
 
     // indexes from qml gridview (after filtering)
     QJSValue jsArray = indexes.value<QJSValue>();
     const unsigned length = jsArray.property("length").toUInt();
     QList<QPersistentModelIndex> proxyIndexes;
 
+    QStringList selectedUuids;
     for (unsigned i = 0; i < length; i++)
     {
         QModelIndex proxyIndex = m_shotFilter->index(jsArray.property(i).toInt(), 0);
@@ -170,13 +225,12 @@ QStringList MediaLibrary::getSelectedPaths(const QVariant &indexes)
 {
     //qDebug() << "MediaLibrary::getSelectedPaths(" << indexes << ")";
 
-    QStringList selectedPaths;
-
     // indexes from qml gridview (after filtering)
     QJSValue jsArray = indexes.value<QJSValue>();
     const unsigned jsArray_length = jsArray.property("length").toUInt();
     QList<QPersistentModelIndex> proxyIndexes;
 
+    QStringList selectedPaths;
     for (unsigned i = 0; i < jsArray_length; i++)
     {
         QModelIndex proxyIndex = m_shotFilter->index(jsArray.property(i).toInt(), 0);
