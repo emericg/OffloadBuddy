@@ -146,7 +146,9 @@ void FileScanner::scanFilesystemDirectory(const QString &dir_path)
 
                     // Send the file back to the UI
                     if (shotStatus)
+                    {
                         emit fileFound(f, s);
+                    }
                     else
                     {
                         delete f;

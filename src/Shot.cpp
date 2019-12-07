@@ -123,6 +123,7 @@ void Shot::addFile(ofb_file *file)
             else
             {
                 qWarning() << "Shot::addFile(" << file->extension << ") UNKNOWN FORMAT";
+                delete file;
             }
         }
         else
@@ -170,6 +171,7 @@ void Shot::addFile(ofb_file *file)
             else
             {
                 qWarning() << "Shot::addFile(" << file->extension << ") UNKNOWN FORMAT";
+                delete file;
             }
         }
     }

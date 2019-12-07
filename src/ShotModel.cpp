@@ -114,6 +114,10 @@ void ShotModel::addFile(ofb_file *f, ofb_shot *s)
             shot->setCameraId(s->camera_id);
             addShot(shot);
         }
+        else
+        {
+            delete f;
+        }
     }
 
     delete s;
