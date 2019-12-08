@@ -544,7 +544,7 @@ Item {
                     popupEncodeVideo.updateEncodePanel(selectedItem.shot)
                     popupEncodeVideo.open()
                 } else if (selectedItem.shot.fileType === Shared.FILE_PICTURE) {
-                    //popupEncodePicture.updateEncodePanel(selectedItem.shot)
+                    popupEncodePicture.updateEncodePanel(selectedItem.shot)
                     popupEncodePicture.open()
                 }
             }

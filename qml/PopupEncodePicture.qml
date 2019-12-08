@@ -23,7 +23,7 @@ Popup {
     property var mediaProvider: null
     property var currentShot: null
 
-    function updateEncodePanel() {
+    function updateEncodePanel(shot) {
         currentShot = shot
 
         // Handle destination(s)

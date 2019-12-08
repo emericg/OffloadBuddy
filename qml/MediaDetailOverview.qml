@@ -127,6 +127,7 @@ Item {
                                         mediaPreview.panscan_width, mediaPreview.panscan_height)
             popupEncodeVideo.open()
         } else if (shot.fileType === Shared.FILE_PICTURE) {
+            popupEncodePicture.updateEncodePanel(shot)
             popupEncodePicture.open()
         }
     }
