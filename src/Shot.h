@@ -99,6 +99,7 @@ class Shot: public QObject
     Q_PROPERTY(unsigned fileType READ getFileType NOTIFY shotUpdated)
 
     Q_PROPERTY(QString uuid READ getUuid NOTIFY shotUpdated)
+    Q_PROPERTY(QString folder READ getFolderString NOTIFY shotUpdated)
 
     Q_PROPERTY(QString name READ getName NOTIFY shotUpdated)
     Q_PROPERTY(QString camera READ getCameraSource NOTIFY shotUpdated)
@@ -110,7 +111,7 @@ class Shot: public QObject
     Q_PROPERTY(QString previewPhoto READ getPreviewPhoto NOTIFY shotUpdated)
     Q_PROPERTY(QString previewVideo READ getPreviewVideo NOTIFY shotUpdated)
     Q_PROPERTY(QImage previewMtp READ getPreviewMtp NOTIFY shotUpdated)
-    Q_PROPERTY(QString fileList READ getFilesQString NOTIFY shotUpdated)
+    Q_PROPERTY(QString fileList READ getFilesString NOTIFY shotUpdated)
 
     Q_PROPERTY(qint64 duration READ getDuration NOTIFY shotUpdated)
     Q_PROPERTY(QDateTime date READ getDate NOTIFY shotUpdated)
@@ -326,9 +327,10 @@ public slots:
     unsigned getState() const { return m_state; }
     void setState(Shared::ShotState state) { m_state = state; emit stateUpdated(); }
 
-    QString & getFolder();
-    QString getFilesQString() const;
-    QStringList getFilesQStringList() const;
+    QString &getFolderRefString();
+    QString getFolderString();
+    QString getFilesString() const;
+    QStringList getFilesStringList() const;
 
     QString getUuid() const { return m_uuid; }
 

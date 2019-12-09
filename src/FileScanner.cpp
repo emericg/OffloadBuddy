@@ -50,6 +50,7 @@ void FileScanner::chooseFilesystem(const QString &path)
     m_abort_scan = false;
     m_selected_filesystem = path;
 
+    // Make sure the path is terminated with a separator.
     if (!m_selected_filesystem.endsWith('/')) m_selected_filesystem += '/';
 }
 

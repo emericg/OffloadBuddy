@@ -141,17 +141,20 @@ void JobWorkerAsync::queueWork(Job *job)
             UtilsApp *app = UtilsApp::getInstance();
 
             // FFMPEG binary
-#ifdef Q_OS_WIN
-            ptiwrap->command = app->getAppPath() + "/ffmpeg.exe";
-#else
             ptiwrap->command = app->getAppPath() + "/ffmpeg";
+#ifdef Q_OS_WIN
+            ptiwrap->command += ".exe";
+#endif
 
             if (!QFileInfo::exists(ptiwrap->command))
             {
                 // No ffmpeg bundled? Just try to use ffmpeg from the system...
                 ptiwrap->command = "ffmpeg";
-            }
+#ifdef Q_OS_WIN
+                ptiwrap->command += ".exe";
 #endif
+            }
+
             // FFMPEG arguments
             ptiwrap->arguments << "-y" /*<< "-loglevel" << "warning" << "-stats"*/;
 
@@ -245,6 +248,19 @@ void JobWorkerAsync::queueWork(Job *job)
                 ptiwrap->arguments << "-t" << getFFmpegDurationString(job->settings.durationMs);
             }
 
+            // http://ffmpeg.org/ffmpeg-all.html#transpose-1
+            //0 = 90CounterCLockwise and Vertical Flip (default)
+            //1 = 90Clockwise
+            //2 = 90CounterClockwise
+            //3 = 90Clockwise and Vertical Flip
+            //-vf "transpose=2,transpose=2" for 180 degrees.
+
+            //-filter:v "crop=out_w:out_h:x:y"
+            //ptiwrap->arguments << "-vf" << "crop=out_w:out_h:x:y";
+
+            //-vf scale=320:240
+            //ptiwrap->arguments << "-vf" << "scale=320:240";
+
             // Defisheye filter
             // HERO4? lenscorrection=k1=-0.6:k2=0.55
             // ? lenscorrection=k1=-0.56:k2=0.3
@@ -266,6 +282,7 @@ void JobWorkerAsync::queueWork(Job *job)
 
             // Recap encoding arguments:
             qDebug() << "ENCODING JOB:";
+            qDebug() << ">" << ptiwrap->command;
             qDebug() << ">" << ptiwrap->arguments;
         }
 /*

@@ -659,7 +659,7 @@ QStringList Device::getSelectedPaths(const QVariant &indexes)
         proxyIndexes.append(QPersistentModelIndex(proxyIndex));
 
         Shot *shot = qvariant_cast<Shot*>(m_shotFilter->data(proxyIndexes.at(i), ShotModel::PointerRole));
-        if (shot) selectedPaths += shot->getFilesQStringList();
+        if (shot) selectedPaths += shot->getFilesStringList();
         //qDebug() << "MediaLibrary::listSelected(" <<  shot->getFilesQStringList();
     }
 

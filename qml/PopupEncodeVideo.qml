@@ -26,12 +26,19 @@ Popup {
 
     property int clipStartMs: -1
     property int clipDurationMs: -1
-    property int clipOrientation: -1
+    property int clipRotation: 0
+    property bool clipVFlip: false
+    property bool clipHFlip: false
 
     function updateEncodePanel(shot) {
         currentShot = shot
 
+        //titleArea.text = qsTr("Encoding panel")
+        rectangleCodec.visible = true
+        rectangleFormat.visible = false
+
         // GIF only appear for short videos
+        // TODO or small timelapse
         if (shot.duration < 10000) {
             rbGIF.visible = true
         } else {
@@ -48,6 +55,13 @@ Popup {
             sliderFps.from = 5
             sliderFps.to = 120
             sliderFps.stepSize = 1
+
+            // GIF only appear for short timelapse
+            if (shot.duration < 1000) { // check value
+                rbGIF.visible = true
+            } else {
+                rbGIF.visible = false
+            }
         } else {
             // videos
             var divider = 1
@@ -67,13 +81,20 @@ Popup {
             } else {
                 sliderFps.visible = false
             }
+
+            // GIF only appear for short videos
+            if (shot.duration < 10000) {
+                rbGIF.visible = true
+            } else {
+                rbGIF.visible = false
+            }
         }
 
         // Clip handler
         setClip(-1, -1)
 
         // Orientation
-        setOrientation(-1, false, false)
+        setOrientation(0, false, false)
 
         // Crop
         rectangleCrop.visible = false
@@ -83,26 +104,6 @@ Popup {
 
         // Handle destination(s)
         comboBoxDestination.updateDestinations()
-    }
-
-    function toggleCopy() {
-        if (cbCOPY.checked === true) {
-            rbH264.enabled = false
-            rbH265.enabled = false
-            rbVP9.enabled = false
-            rbGIF.enabled = false
-            rectangleQuality.visible = false
-            rectangleSpeed.visible = false
-            rectangleFramerate.visible = false
-        } else {
-            rbH264.enabled = true
-            rbH265.enabled = true
-            rbVP9.enabled = true
-            rbGIF.enabled = true
-            rectangleQuality.visible = true
-            rectangleSpeed.visible = true
-            rectangleFramerate.visible = true
-        }
     }
 
     function setClip(clipStart, clipStop) {
@@ -138,29 +139,50 @@ Popup {
     }
 
     function setOrientation(rotation, vflip, hflip) {
-        console.log("setOrientation() " + rotation + vflip + hflip)
+        //console.log("setOrientation() " + rotation + " " + vflip + " " + hflip)
 
         if (rotation || vflip || hflip) {
-            clipOrientation = 1
             rectangleOrientation.visible = true
-
-            // TODO
-            // http://ffmpeg.org/ffmpeg-all.html#transpose-1
-            //0 = 90CounterCLockwise and Vertical Flip (default)
-            //1 = 90Clockwise
-            //2 = 90CounterClockwise
-            //3 = 90Clockwise and Vertical Flip
-            //-vf "transpose=2,transpose=2" for 180 degrees.
+            clipRotation = rotation
+            clipVFlip = vflip
+            clipHFlip = hflip
         } else {
-            clipOrientation = -1
             rectangleOrientation.visible = false
+            clipRotation = 0
+            clipVFlip = false
+            clipHFlip = false
         }
     }
 
     function setPanScan(x, y, width, height) {
         //console.log("setPanScan() " + x + y + width + height)
 
-        // TODO
+        if (x || y || width || height) {
+            rectangleCrop.visible = true
+            // TODO
+        } else {
+            rectangleCrop.visible = false
+        }
+    }
+
+    function toggleCopy() {
+        if (cbCOPY.checked === true) {
+            rbH264.enabled = false
+            rbH265.enabled = false
+            rbVP9.enabled = false
+            rbGIF.enabled = false
+            rectangleQuality.visible = false
+            rectangleSpeed.visible = false
+            rectangleFramerate.visible = false
+        } else {
+            rbH264.enabled = true
+            rbH265.enabled = true
+            rbVP9.enabled = true
+            rbGIF.enabled = true
+            rectangleQuality.visible = true
+            rectangleSpeed.visible = true
+            rectangleFramerate.visible = true
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -171,11 +193,10 @@ Popup {
     }
 
     /*contentItem: */Item {
-        id: element
         anchors.fill: parent
 
         Text {
-            id: textArea
+            id: titleArea
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
@@ -188,8 +209,7 @@ Popup {
         /////////
 
         Column {
-            id: column
-            anchors.top: textArea.bottom
+            anchors.top: titleArea.bottom
             anchors.topMargin: 16
             anchors.bottom: rowButtons.top
             anchors.bottomMargin: 0
@@ -266,7 +286,7 @@ Popup {
             }
 
             Item {
-                id: rectangleSpeed
+                id: rectangleFormat
                 height: 48
                 anchors.left: parent.left
                 anchors.leftMargin: 0
@@ -274,28 +294,50 @@ Popup {
                 anchors.rightMargin: 0
 
                 Text {
-                    id: textSpeed
+                    id: textFormat
                     width: 128
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: qsTr("Speed index")
+                    text: qsTr("Format")
                     font.pixelSize: 16
                     color: Theme.colorSubText
                 }
 
-                SliderThemed {
-                    id: sliderSpeed
-                    anchors.right: parent.right
-                    anchors.rightMargin: 0
-                    wheelEnabled: true
-                    anchors.left: textSpeed.right
+                Row {
+                    anchors.left: textFormat.right
                     anchors.leftMargin: 16
+                    anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
+                    spacing: 16
 
-                    stepSize: 1
-                    from: 2
-                    to: 0
-                    value: 1
+                    RadioButtonThemed {
+                        id: rbPNG
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "PNG"
+                    }
+                    RadioButtonThemed {
+                        id: rbJPEG
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "JPEG"
+                        checked: true
+                    }
+                    RadioButtonThemed {
+                        id: rbWEBP
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "WebP"
+                    }
+                    RadioButtonThemed {
+                        id: rbAVIF
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "AVIF"
+                        visible: false
+                    }
+                    RadioButtonThemed {
+                        id: rbHEIF
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "HEIF"
+                        visible: false
+                    }
                 }
             }
 
@@ -330,6 +372,40 @@ Popup {
                     to: 1
                     stepSize: 1
                     value: 3
+                }
+            }
+
+            Item {
+                id: rectangleSpeed
+                height: 48
+                anchors.left: parent.left
+                anchors.leftMargin: 0
+                anchors.right: parent.right
+                anchors.rightMargin: 0
+
+                Text {
+                    id: textSpeed
+                    width: 128
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: qsTr("Speed index")
+                    font.pixelSize: 16
+                    color: Theme.colorSubText
+                }
+
+                SliderThemed {
+                    id: sliderSpeed
+                    anchors.right: parent.right
+                    anchors.rightMargin: 0
+                    wheelEnabled: true
+                    anchors.left: textSpeed.right
+                    anchors.leftMargin: 16
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    stepSize: 1
+                    from: 2
+                    to: 0
+                    value: 1
                 }
             }
 
@@ -393,6 +469,43 @@ Popup {
                     text: qsTr("Orientation")
                     font.pixelSize: 16
                     color: Theme.colorSubText
+                }
+
+                Row {
+                    id: row
+                    anchors.left: titleOrientation.right
+                    anchors.leftMargin: 16
+                    anchors.right: parent.right
+                    anchors.rightMargin: 0
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: 8
+
+                    Text {
+                        text: qsTr("Rotation")
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                    TextFieldThemed {
+                        width: 56
+                        height: 28
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        text: clipRotation + "°"
+                    }
+
+                    CheckBoxThemed {
+                        id: checkBox_hflip
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        text: qsTr("Horizontal flip")
+                        checked: clipHFlip
+                    }
+                    CheckBoxThemed {
+                        id: checkBox_vflip
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        text: qsTr("Vertical flip")
+                        checked: clipVFlip
+                    }
                 }
             }
 
@@ -460,6 +573,31 @@ Popup {
                     text: qsTr("Crop video")
                     font.pixelSize: 16
                     color: Theme.colorSubText
+                }
+
+                Row {
+                    anchors.left: titleCrop.right
+                    anchors.leftMargin: 16
+                    anchors.right: parent.right
+
+                    TextFieldThemed {
+                        id: textField_crop
+                        width: 128
+                        height: 32
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        horizontalAlignment: Text.AlignHCenter
+                        placeholderText: "0x0"
+                    }
+                    TextFieldThemed {
+                        id: textField_cropcoord
+                        width: 128
+                        height: 32
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        horizontalAlignment: Text.AlignHCenter
+                        placeholderText: "0:0"
+                    }
                 }
             }
 
@@ -648,35 +786,42 @@ Popup {
                 fullColor: true
                 primaryColor: Theme.colorPrimary
                 onClicked: {
-                    var codec = "H.264"
+                    var encodingParams = {}
+
                     if (rbH264.checked)
-                        codec = rbH264.text
+                        encodingParams["codec"] = "H.264";
                     else if (rbH265.checked)
-                        codec = rbH265.text
+                        encodingParams["codec"] = "H.265";
                     else if (rbVP9.checked)
-                        codec = rbVP9.text
+                        encodingParams["codec"] = "VP9";
                     else if (rbGIF.checked)
-                        codec = rbGIF.text
+                        encodingParams["codec"] = "GIF";
 
                     if (clipStartMs > 0 && clipDurationMs > 0)
                         if (cbCOPY.checked)
-                            codec = "copy"
+                            encodingParams["codec"] = "copy";
 
-                    var fps = -1;
                     if (sliderFps.value.toFixed(3) !== currentShot.framerate.toFixed(3))
-                        fps = sliderFps.value
+                        encodingParams["fps"] = sliderFps.value;
+
+                    if (clipStartMs > 0)
+                        encodingParams["clipStartMs"] = clipStartMs;
+                    if (clipDurationMs > 0)
+                        encodingParams["clipDurationMs"] = clipDurationMs;
+
+                    encodingParams["speed"] = sliderSpeed.value;
+                    encodingParams["quality"] = sliderQuality.value;
+
+                    encodingParams["path"] = textField_path.text;
+
+                    ////
 
                     if (typeof currentDevice !== "undefined")
-                        mediaProvider = currentDevice
+                        mediaProvider = currentDevice;
                     else if (typeof mediaLibrary !== "undefined")
-                        mediaProvider = mediaLibrary
+                        mediaProvider = mediaLibrary;
 
-                    mediaProvider.reencodeSelected(currentShot.uuid, codec,
-                                                   sliderQuality.value,
-                                                   sliderSpeed.value,
-                                                   fps,
-                                                   clipStartMs,
-                                                   clipDurationMs)
+                    mediaProvider.reencodeSelectedNew(currentShot.uuid, encodingParams)
                     popupEncodeVideo.close()
                 }
             }

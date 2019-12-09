@@ -20,17 +20,27 @@ Popup {
 
     ////////////////////////////////////////////////////////////////////////////
 
+    property var mediaProvider: null
+    property var currentShot: null
+
+    function updateTelemetryPanel(shot) {
+        currentShot = shot
+
+        // TODO
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
     background: Rectangle {
         color: Theme.colorBackground
         radius: Theme.componentRadius
     }
 
     /*contentItem:*/ Item {
-        id: element
         anchors.fill: parent
 
         Text {
-            id: textArea
+            id: titleArea
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
@@ -43,8 +53,7 @@ Popup {
         /////////
 
         Column {
-            id: column
-            anchors.top: textArea.bottom
+            anchors.top: titleArea.bottom
             anchors.topMargin: 16
             anchors.bottom: rowButtons.top
             anchors.bottomMargin: 0
@@ -54,7 +63,7 @@ Popup {
             anchors.leftMargin: 0
 
             Item {
-                id: element1
+                id: elementTelemetry
                 height: 48
                 anchors.right: parent.right
                 anchors.rightMargin: 0
@@ -62,44 +71,34 @@ Popup {
                 anchors.leftMargin: 0
 
                 Text {
-                    id: rectangleFormat
+                    id: titleTelemetry
                     width: 128
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: qsTr("Format")
+                    text: qsTr("Telemetry")
                     font.pixelSize: 16
                     color: Theme.colorSubText
                 }
 
                 Row {
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: rectangleFormat.right
+                    anchors.left: titleTelemetry.right
                     anchors.leftMargin: 16
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     spacing: 16
 
                     RadioButtonThemed {
-                        id: rbGPX
-                        text: "GPX"
+                        id: rbJSON
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "JSON"
                         checked: true
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-                    RadioButtonThemed {
-                        id: rbIGC
-                        text: "IGC"
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-                    RadioButtonThemed {
-                        id: rbKML
-                        text: "KML"
-                        anchors.verticalCenter: parent.verticalCenter
                     }
                 }
             }
 
             Item {
-                id: element2
+                id: elementGPS
                 height: 48
                 anchors.right: parent.right
                 anchors.rightMargin: 0
@@ -107,22 +106,68 @@ Popup {
                 anchors.leftMargin: 0
 
                 Text {
-                    id: element3
+                    id: titleGPS
                     width: 128
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: qsTr("EGM96 correction")
+                    text: qsTr("GPS trace")
+                    font.pixelSize: 16
+                    color: Theme.colorSubText
+                }
+
+                Row {
+                    anchors.left: titleGPS.right
+                    anchors.leftMargin: 16
+                    anchors.right: parent.right
+                    anchors.rightMargin: 0
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: 16
+
+                    RadioButtonThemed {
+                        id: rbGPX
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "GPX"
+                        checked: true
+                    }
+                    RadioButtonThemed {
+                        id: rbIGC
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "IGC"
+                    }
+                    RadioButtonThemed {
+                        id: rbKML
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "KML"
+                    }
+                }
+            }
+
+            Item {
+                id: elementAltitude
+                height: 48
+                anchors.right: parent.right
+                anchors.rightMargin: 0
+                anchors.left: parent.left
+                anchors.leftMargin: 0
+
+                Text {
+                    id: titleAltitude
+                    width: 128
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: qsTr("Altitude")
                     font.pixelSize: 16
                     color: Theme.colorSubText
                 }
 
                 SwitchThemedDesktop {
                     id: switchEGM96
-                    anchors.left: element3.right
+                    anchors.left: titleAltitude.right
                     anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
 
                     checked: true
+                    text: "EGM96 correction"
                 }
             }
 /*
@@ -165,33 +210,16 @@ Popup {
 
                     ListModel {
                         id: cbDestinations
-                        //ListElement { text: "auto"; }
+                        ListElement { text: qsTr("Next to the video file"); }
+                        ListElement { text: qsTr("Select path manually"); }
                     }
 
                     model: cbDestinations
 
-                    Component.onCompleted: updateDestinations()
-                    Connections {
-                        target: settingsManager
-                        onDirectoriesUpdated: updateDestinations()
-                    }
-
-                    function updateDestinations() {
-                        cbDestinations.clear()
-
-                        for (var child in settingsManager.directoriesList) {
-                            if (settingsManager.directoriesList[child].available &&
-                                settingsManager.directoriesList[child].directoryContent !== 1)
-                                cbDestinations.append( { "text": settingsManager.directoriesList[child].directoryPath } )
-                        }
-                        cbDestinations.append( { "text": qsTr("Select path manually") } )
-
-                        comboBoxDestination.currentIndex = 0
-                        textField_path.text = settingsManager.directoriesList[0].directoryPath
-                    }
-
                     property bool cbinit: false
                     onCurrentIndexChanged: {
+                        if (currentShot) textField_path.text = currentShot.getFolderString()
+
                         if (cbinit) {
                             if (comboBoxDestination.currentIndex === cbDestinations.count) {
                                 //
@@ -212,11 +240,6 @@ Popup {
                 anchors.rightMargin: 0
 
                 visible: (comboBoxDestination.currentIndex === (cbDestinations.count - 1))
-                //text: directory.directoryPath
-
-                onVisibleChanged: {
-                    //
-                }
 
                 FileDialog {
                     id: fileDialogChange
@@ -241,6 +264,7 @@ Popup {
 
                     //imageSource: "qrc:/icons_material/outline-folder-24px.svg"
                     text: qsTr("change")
+                    embedded: true
                     onClicked: {
                         fileDialogChange.folder =  "file:///" + textField_path.text
                         fileDialogChange.open()

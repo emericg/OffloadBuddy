@@ -410,7 +410,7 @@ QList <ofb_file *> Shot::getFiles(bool withPreviews, bool withHdAudio) const
     return list;
 }
 
-QStringList Shot::getFilesQStringList() const
+QStringList Shot::getFilesStringList() const
 {
     QStringList list;
 
@@ -428,7 +428,7 @@ QStringList Shot::getFilesQStringList() const
     return list;
 }
 
-QString & Shot::getFolder()
+QString & Shot::getFolderRefString()
 {
     if (m_folder.isEmpty())
     {
@@ -444,9 +444,17 @@ QString & Shot::getFolder()
         QDir p(m_folder);
         p.cdUp();
         m_folder = p.absolutePath();
+
+        // Make sure the path is terminated with a separator.
+        if (!m_folder.endsWith('/')) m_folder += '/';
     }
 
     return m_folder;
+}
+
+QString Shot::getFolderString()
+{
+    return getFolderRefString();
 }
 
 int Shot::getFileCount()
@@ -462,7 +470,7 @@ int Shot::getFileCount()
     return count;
 }
 
-QString Shot::getFilesQString() const
+QString Shot::getFilesString() const
 {
     QString list;
 

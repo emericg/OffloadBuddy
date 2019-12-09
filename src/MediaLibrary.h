@@ -25,11 +25,10 @@
 
 #include "ShotProvider.h"
 
-#include <QDebug>
 #include <QObject>
 #include <QVariant>
-#include <QTimer>
 #include <QList>
+#include <QStringList>
 
 class MediaDirectory;
 
@@ -68,6 +67,7 @@ public slots:
     void workerScanningFinished(const QString &path);
 
     //
+    void reencodeSelectedNew(const QString &shot_uuid, const QVariant &values);
     void reencodeSelected(const QString &shot_uuid, const QString &codec,
                           float quality, float speed, float fps,
                           int start, int duration);

@@ -132,14 +132,15 @@ Item {
         }
     }
     function openTelemetryPopup() {
+        popupTelemetry.updateTelemetryPanel(shot)
         popupTelemetry.open()
     }
     function openDeletePopup() {
         popupDelete.open()
     }
     function openDatePopup() {
-        popupDate.open()
         popupDate.loadDates()
+        popupDate.open()
     }
 
     // POPUPS //////////////////////////////////////////////////////////////////
