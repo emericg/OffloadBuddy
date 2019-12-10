@@ -10,7 +10,7 @@ import "qrc:/js/UtilsPath.js" as UtilsPath
 Popup {
     id: popupEncodeVideo
     width: 640
-    height: 480
+    height: 540
     padding: 24
 
     signal confirmed()
@@ -33,16 +33,10 @@ Popup {
     function updateEncodePanel(shot) {
         currentShot = shot
 
-        //titleArea.text = qsTr("Encoding panel")
-        rectangleCodec.visible = true
-        rectangleFormat.visible = false
-
-        // GIF only appear for short videos
-        // TODO or small timelapse
-        if (shot.duration < 10000) {
-            rbGIF.visible = true
-        } else {
-            rbGIF.visible = false
+        if (shot.fileType === Shared.FILE_VIDEO || shot.shotType > Shared.SHOT_PICTURE) {
+            setVideoMode()
+        } else if (shot.fileType === Shared.FILE_PICTURE) {
+            setImageMode()
         }
 
         // Framerate handler
@@ -89,6 +83,9 @@ Popup {
                 rbGIF.visible = false
             }
         }
+
+        // Resolution
+        rectangleResolution.visible = false
 
         // Clip handler
         setClip(-1, -1)
@@ -155,7 +152,7 @@ Popup {
     }
 
     function setPanScan(x, y, width, height) {
-        //console.log("setPanScan() " + x + y + width + height)
+        //console.log("setPanScan() " + x + ":" + y + " " + width + "x" + height)
 
         if (x || y || width || height) {
             rectangleCrop.visible = true
@@ -163,6 +160,24 @@ Popup {
         } else {
             rectangleCrop.visible = false
         }
+    }
+
+    ////////
+
+    function setImageMode() {
+        titleArea.text = qsTr("Encoding panel")
+        rectangleCodec.visible = false
+        rectangleFormat.visible = true
+        rectangleSpeed.visible = false
+        rectangleFramerate.visible = false
+    }
+
+    function setVideoMode() {
+        titleArea.text = qsTr("Encoding panel")
+        rectangleCodec.visible = true
+        rectangleFormat.visible = false
+        rectangleSpeed.visible = true
+        rectangleFramerate.visible = true
     }
 
     function toggleCopy() {
@@ -361,17 +376,17 @@ Popup {
 
                 SliderThemed {
                     id: sliderQuality
-                    anchors.verticalCenterOffset: 0
                     anchors.left: textQuality.right
                     anchors.leftMargin: 16
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
+                    anchors.verticalCenterOffset: 0
 
-                    from: 5
-                    to: 1
+                    from: -2
+                    to: 2
                     stepSize: 1
-                    value: 3
+                    value: 0
                 }
             }
 
@@ -406,6 +421,57 @@ Popup {
                     from: 2
                     to: 0
                     value: 1
+                }
+            }
+
+            Item {
+                id: rectangleResolution
+                height: 48
+                anchors.left: parent.left
+                anchors.leftMargin: 0
+                anchors.right: parent.right
+                anchors.rightMargin: 0
+
+                Text {
+                    id: textResolution
+                    width: 128
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: qsTr("Resolution")
+                    font.pixelSize: 16
+                    color: Theme.colorSubText
+                }
+
+                ComboBoxThemed {
+                    id: comboBoxResolution
+                    anchors.left: textResolution.right
+                    anchors.leftMargin: 16
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    ListModel {
+                        id: cbResolutions
+                        ListElement { text: "720p"; }
+                        ListElement { text: "1080p"; }
+                        ListElement { text: "1440p"; }
+                        ListElement { text: "2160p"; }
+                    }
+
+                    model: cbResolutions
+
+                    function updateResolutions() {
+                        //
+                    }
+
+                    property bool cbinit: false
+                    onCurrentIndexChanged: {
+                        if (cbinit) {
+                            if (comboBoxResolution.currentIndex === cbResolutions.count) {
+                                //
+                            }
+                        } else {
+                            cbinit = true;
+                        }
+                    }
                 }
             }
 
@@ -692,11 +758,12 @@ Popup {
                         cbDestinations.append( { "text": qsTr("Select path manually") } )
 
                         comboBoxDestination.currentIndex = 0
-                        textField_path.text = settingsManager.directoriesList[0].directoryPath
                     }
 
                     property bool cbinit: false
                     onCurrentIndexChanged: {
+                        textField_path.text = settingsManager.directoriesList[comboBoxDestination.currentIndex].directoryPath
+
                         if (cbinit) {
                             if (comboBoxDestination.currentIndex === cbDestinations.count) {
                                 //
@@ -786,30 +853,52 @@ Popup {
                 fullColor: true
                 primaryColor: Theme.colorPrimary
                 onClicked: {
+                    if (typeof currentShot === "undefined" || !currentShot) return
+
                     var encodingParams = {}
 
-                    if (rbH264.checked)
-                        encodingParams["codec"] = "H.264";
-                    else if (rbH265.checked)
-                        encodingParams["codec"] = "H.265";
-                    else if (rbVP9.checked)
-                        encodingParams["codec"] = "VP9";
-                    else if (rbGIF.checked)
-                        encodingParams["codec"] = "GIF";
+                    if (rectangleCodec.visible) {
+                        if (rbH264.checked)
+                            encodingParams["codec"] = "H.264";
+                        else if (rbH265.checked)
+                            encodingParams["codec"] = "H.265";
+                        else if (rbVP9.checked)
+                            encodingParams["codec"] = "VP9";
+                        else if (rbAV1.checked)
+                            encodingParams["codec"] = "AV1";
+                        else if (rbProRes.checked)
+                            encodingParams["codec"] = "PRORES";
+                        else if (rbGIF.checked)
+                            encodingParams["codec"] = "GIF";
 
-                    if (clipStartMs > 0 && clipDurationMs > 0)
-                        if (cbCOPY.checked)
-                            encodingParams["codec"] = "copy";
+                        if (clipStartMs > 0 && clipDurationMs > 0)
+                            if (cbCOPY.checked)
+                                encodingParams["codec"] = "copy";
 
-                    if (sliderFps.value.toFixed(3) !== currentShot.framerate.toFixed(3))
-                        encodingParams["fps"] = sliderFps.value;
+                        encodingParams["speed"] = sliderSpeed.value;
 
-                    if (clipStartMs > 0)
-                        encodingParams["clipStartMs"] = clipStartMs;
-                    if (clipDurationMs > 0)
-                        encodingParams["clipDurationMs"] = clipDurationMs;
+                        if (sliderFps.value.toFixed(3) !== currentShot.framerate.toFixed(3))
+                            encodingParams["fps"] = sliderFps.value;
 
-                    encodingParams["speed"] = sliderSpeed.value;
+                        if (clipStartMs > 0)
+                            encodingParams["clipStartMs"] = clipStartMs;
+                        if (clipDurationMs > 0)
+                            encodingParams["clipDurationMs"] = clipDurationMs;
+                    }
+
+                    if (rectangleFormat.visible) {
+                        if (rbPNG.checked)
+                            encodingParams["codec"] = "PNG";
+                        if (rbJPEG.checked)
+                            encodingParams["codec"] = "JPEG";
+                        if (rbWEBP.checked)
+                            encodingParams["codec"] = "WEBP";
+                        if (rbAVIF.checked)
+                            encodingParams["codec"] = "AVIF";
+                        if (rbHEIF.checked)
+                            encodingParams["codec"] = "HEIF";
+                    }
+
                     encodingParams["quality"] = sliderQuality.value;
 
                     encodingParams["path"] = textField_path.text;
@@ -820,8 +909,10 @@ Popup {
                         mediaProvider = currentDevice;
                     else if (typeof mediaLibrary !== "undefined")
                         mediaProvider = mediaLibrary;
+                    else
+                        return
 
-                    mediaProvider.reencodeSelectedNew(currentShot.uuid, encodingParams)
+                    mediaProvider.reencodeSelected(currentShot.uuid, encodingParams)
                     popupEncodeVideo.close()
                 }
             }

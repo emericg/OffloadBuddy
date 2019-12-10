@@ -192,8 +192,9 @@ void JobWorkerAsync::queueWork(Job *job)
 
                 ptiwrap->arguments << "-tune" << "film";
 
-                int crf = 21; // default usecase should be 24
-                crf += job->settings.quality;
+                // CRF scale range is 0–51
+                // (0 is lossless, 23 is default, 51 is worst) // sane range is 17–28
+                int crf = 21 - job->settings.quality;
                 ptiwrap->arguments << "-crf" << QString::number(crf);
 
                 // AAC audio copy
@@ -214,8 +215,7 @@ void JobWorkerAsync::queueWork(Job *job)
                 else
                     ptiwrap->arguments << "-preset" << "medium";
 
-                int crf = 25; // default usecase should be 28
-                crf += job->settings.quality;
+                int crf = 28 - job->settings.quality;
                 ptiwrap->arguments << "-crf" << QString::number(crf);
 
                 // AAC audio copy
@@ -226,9 +226,13 @@ void JobWorkerAsync::queueWork(Job *job)
             {
                 file_extension = "mkv";
 
+                // CRF scale range is 0–63
+                // (0 is lossless, 23 is default, 63 is worst) // sane range is 15–35
+                int crf = 35 - job->settings.quality;
+
                 // VP9 video
                 ptiwrap->arguments << "-c:v" << "libvpx-vp9";
-                ptiwrap->arguments <<"-crf" << "40" << "-b:v" << "0" <<"-cpu-used" << "2";
+                ptiwrap->arguments <<"-crf" << QString::number(crf) << "-b:v" << "0" <<"-cpu-used" << "2";
                 // Opus audio
                 ptiwrap->arguments << "-c:a" << "libopus";
                 ptiwrap->arguments << "-b:a" << "70K";
@@ -240,12 +244,37 @@ void JobWorkerAsync::queueWork(Job *job)
                 ptiwrap->arguments << "-vf" << "scale=480:-1";
             }
 
+            if (job->settings.codec == "PNG")
+            {
+                file_extension = "png";
+            }
+            if (job->settings.codec == "JPEG")
+            {
+                file_extension = "jpg";
+
+                int qscale = 5 - job->settings.quality;
+                ptiwrap->arguments << "-q:v" << QString::number(qscale);
+            }
+            if (job->settings.codec == "WEBP")
+            {
+                file_extension = "webp";
+
+                int qscale = 60 + (job->settings.quality * 4);
+                ptiwrap->arguments << "-q:v" << QString::number(qscale);
+            }
+
             QString reencode_or_clipped = "_reencoded";
             if (job->settings.durationMs > 0)
             {
                 reencode_or_clipped = "_clipped";
                 ptiwrap->arguments << "-ss" << getFFmpegDurationString(job->settings.startMs);
                 ptiwrap->arguments << "-t" << getFFmpegDurationString(job->settings.durationMs);
+            }
+
+            // Change output framerate
+            if (job->settings.fps > 0)
+            {
+                ptiwrap->arguments << "-r" << QString::number(job->settings.fps);
             }
 
             // http://ffmpeg.org/ffmpeg-all.html#transpose-1
@@ -266,15 +295,11 @@ void JobWorkerAsync::queueWork(Job *job)
             // ? lenscorrection=k1=-0.56:k2=0.3
             //ptiwrap->arguments << "-vf" << "lenscorrection=k1=-0.6:k2=0.55";
 
-            // Change output framerate
-            if (job->settings.fps > 0)
-            {
-                ptiwrap->arguments << "-r" << QString::number(job->settings.fps);
-            }
 
             // keep metadatas?
             //-map_metadata 0
 
+            // Re-encoding
             ptiwrap->destFile = element->destination_dir + element->files.front().name + reencode_or_clipped + "." + file_extension;
             ptiwrap->arguments << ptiwrap->destFile;
 

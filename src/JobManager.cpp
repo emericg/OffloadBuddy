@@ -117,7 +117,7 @@ QString JobManager::getAutoDestinationString(Shot *s)
     return dest;
 }
 
-QString JobManager::getandmakeDestination(Shot *s, Device *d)
+QString JobManager::getandmakeDestination(Shot *s, Device *d, MediaDirectory *md)
 {
     SettingsManager *sm = SettingsManager::getInstance();
 
@@ -127,13 +127,19 @@ QString JobManager::getandmakeDestination(Shot *s, Device *d)
 
     if (s && sm)
     {
-        destDir = getAutoDestinationString(s);
+        if (md)
+        {
+            destDir = md->getPath();
+        }
+        else
+        {
+            destDir = getAutoDestinationString(s);
+        }
 
         // Destination directory and its subdirectories
 
         if (sm->getContentHierarchy() >= HIERARCHY_DATE)
         {
-            destDir += QDir::separator();
             destDir += s->getDate().toString("yyyy-MM-dd");
             destDir += QDir::separator();
         }
@@ -247,7 +253,7 @@ bool JobManager::addJobs(JobType type, Device *d, MediaLibrary *ml,  QList<Shot 
     for (auto shot: list)
     {
         JobElement *je = new JobElement;
-        je->destination_dir = getandmakeDestination(shot, d);
+        je->destination_dir = getandmakeDestination(shot, d, md);
         je->parent_shots = shot;
         QList <ofb_file *> files = shot->getFiles(getPreviews, getHdAudio);
         for (auto f: files)

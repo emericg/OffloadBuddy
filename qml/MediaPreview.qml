@@ -17,6 +17,7 @@ Rectangle {
 
     property bool isFullScreen: false
     color: (isFullScreen || (shot && shot.fileType === Shared.FILE_PICTURE)) ? "transparent" : "black"
+    clip: true
 
     ////////
 
@@ -164,11 +165,11 @@ Rectangle {
         if (media_ar > area_ar) {
             //console.log(">1")
             overlays.width = Math.ceil(mediaWidth * ratio)
-            overlays.height = Math.ceil(mediaHeight * ratio)
+            overlays.height = Math.ceil(mediaHeight * ratio) + 2
         } else {
             //console.log(">2")
-            overlays.width = Math.ceil(mediaWidth * (mediaArea.height / mediaHeight)) + 1
-            overlays.height = Math.ceil(mediaHeight * (mediaArea.height / mediaHeight))
+            overlays.width = Math.ceil(mediaWidth * (mediaArea.height / mediaHeight)) + 2
+            overlays.height = Math.ceil(mediaHeight * (mediaArea.height / mediaHeight)) + 2
         }
 
         //console.log("> media size    : " + mediaWidth + "x" + mediaHeight)
@@ -568,7 +569,7 @@ Rectangle {
                 width: 36
                 height: 36
                 anchors.right: buttonToggleCut.left
-                anchors.rightMargin: 16
+                anchors.rightMargin: 8
                 anchors.verticalCenter: parent.verticalCenter
 
                 iconColor: overlayRotations.visible ? Theme.colorPrimary : "white"
@@ -589,7 +590,7 @@ Rectangle {
                 width: 36
                 height: 36
                 anchors.right: buttonTogglePanscan.left
-                anchors.rightMargin: 16
+                anchors.rightMargin: 8
                 anchors.verticalCenter: parent.verticalCenter
 
                 iconColor: cutline.visible ? Theme.colorPrimary : "white"
@@ -614,7 +615,7 @@ Rectangle {
                 width: 36
                 height: 36
                 anchors.right: buttonScreenshot.left
-                anchors.rightMargin: 16
+                anchors.rightMargin: 8
                 anchors.verticalCenter: parent.verticalCenter
 
                 iconColor: cutline.visible ? Theme.colorPrimary : "white"
@@ -631,7 +632,7 @@ Rectangle {
                 width: 36
                 height: 36
                 anchors.right: buttonFullscreen.left
-                anchors.rightMargin: 16
+                anchors.rightMargin: 8
                 anchors.verticalCenter: parent.verticalCenter
 
                 iconColor: "white"

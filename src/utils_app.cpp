@@ -84,6 +84,9 @@ void UtilsApp::setAppPath(const QString &value)
         QDir newpath(value);
         newpath.cdUp();
         m_appPath = newpath.absolutePath();
+
+        // Make sure the path is terminated with a separator.
+        if (!m_appPath.endsWith('/')) m_appPath += '/';
     }
 }
 

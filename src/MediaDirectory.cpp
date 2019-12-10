@@ -43,7 +43,9 @@ MediaDirectory::MediaDirectory()
     // macOS '/Users/USERNAME/Movies/OffloadBuddy'
     // Windows 'C:/Users/USERNAME/Videos/OffloadBuddy'
 
-    QString path = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + "/OffloadBuddy";
+    QString path = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation);
+    if (!path.endsWith('/')) path += '/';
+    path += "OffloadBuddy/";
     QDir path_dir(path);
 
     if (!path_dir.exists())

@@ -272,11 +272,6 @@ Item {
         x: (applicationWindow.width / 2) - (popupEncodeVideo.width / 2) - (applicationSidebar.width / 2)
         y: (applicationWindow.height / 2) - (popupEncodeVideo.height / 2)
     }
-    PopupEncodePicture {
-        id: popupEncodePicture
-        x: (applicationWindow.width / 2) - (popupEncodePicture.width / 2) - (applicationSidebar.width / 2)
-        y: (applicationWindow.height / 2) - (popupEncodePicture.height / 2)
-    }
 
     PopupDelete {
         id: confirmDeleteMultipleFilesPopup
@@ -865,14 +860,8 @@ Item {
                 currentDevice.offloadMergeSelected(selectedItemUuid)
             }
             if (index === 3) {
-                if (selectedItem.shot.fileType === Shared.FILE_VIDEO ||
-                    selectedItem.shot.shotType > Shared.SHOT_PICTURE) {
-                    popupEncodeVideo.updateEncodePanel(selectedItem.shot)
-                    popupEncodeVideo.open()
-                } else if (selectedItem.shot.fileType === Shared.FILE_PICTURE) {
-                    popupEncodePicture.updateEncodePanel(selectedItem.shot)
-                    popupEncodePicture.open()
-                }
+                popupEncodeVideo.updateEncodePanel(selectedItem.shot)
+                popupEncodeVideo.open()
             }
             if (index === 16) {
                 var indexes = []

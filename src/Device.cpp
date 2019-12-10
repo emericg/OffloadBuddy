@@ -21,8 +21,13 @@
 
 #include "Device.h"
 #include "DeviceScanner.h"
-#include "JobManager.h"
 #include "FileScanner.h"
+#include "JobManager.h"
+#include "SettingsManager.h"
+
+#include <QMap>
+#include <QJSValue>
+#include <QVariant>
 
 #include <QStorageInfo>
 #include <QFile>
@@ -691,26 +696,58 @@ void Device::offloadMergeSelected(const QString &shot_uuid)
         jm->addJob(JOB_COPY, this, nullptr, shot);
 }
 
-void Device::reencodeSelected(const QString &shot_uuid, const QString &codec,
-                              float quality, float speed, float fps,
-                              int start, int duration)
+void Device::reencodeSelected(const QString &shot_uuid, const QVariant &values)
 {
     qDebug() << "Device::reencodeSelected(" << shot_uuid << ")";
 
+    QVariant variant = qvariant_cast<QJSValue>(values).toVariant();
+    if (variant.type() != QMetaType::QVariantMap) return;
+    QVariantMap variantMap = variant.toMap();
+    //qDebug() << "> variantMap " << variantMap;
+
+    // Job settings
+    JobEncodeSettings sett;
+
+    if (variantMap.contains("codec"))
+        sett.codec = variantMap.value("codec").toString();
+
+    if (variantMap.contains("quality"))
+        sett.quality = variantMap.value("quality").toInt();
+    if (variantMap.contains("speed"))
+        sett.speed = variantMap.value("speed").toInt();
+
+    if (variantMap.contains("fps"))
+        sett.fps = variantMap.value("fps").toFloat();
+
+    if (variantMap.contains("clipStartMs"))
+        sett.startMs = variantMap.value("clipStartMs").toInt();
+    if (variantMap.contains("clipDurationMs"))
+        sett.durationMs = variantMap.value("clipDurationMs").toInt();
+
+    // MediaDirectory
+    MediaDirectory *md = nullptr;
+    if (variantMap.contains("path"))
+    {
+        QString selectedPath = variantMap.value("path").toString();
+        SettingsManager *sm = SettingsManager::getInstance();
+        if (sm)
+        {
+            const QList <QObject *> *mediaDirectories = sm->getDirectoriesList();
+            for (auto d: *mediaDirectories)
+            {
+                MediaDirectory *dd = qobject_cast<MediaDirectory*>(d);
+                if (dd && dd->getPath() == selectedPath)
+                {
+                    md = dd;
+                }
+            }
+        }
+    }
+
+    // Job
     JobManager *jm = JobManager::getInstance();
     Shot *shot = m_shotModel->getShotWithUuid(shot_uuid);
-
-    JobEncodeSettings sett;
-    sett.codec = codec;
-    sett.quality = quality;
-    sett.speed = speed;
-    if (fps > 0) sett.fps = fps;
-
-    if (start > 0) sett.startMs = start;
-    if (duration > 0) sett.durationMs = duration;
-
-    if (jm && shot)
-        jm->addJob(JOB_REENCODE, this, nullptr, shot, nullptr, &sett);
+    if (jm && shot) jm->addJob(JOB_REENCODE, this, nullptr, shot, md, &sett);
 }
 
 void Device::deleteSelected(const QString &shot_uuid)

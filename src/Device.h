@@ -40,6 +40,7 @@ typedef void LIBMTP_devicestorage_t;
 #include <QObject>
 #include <QVariant>
 #include <QList>
+#include <QStringList>
 
 #include <QStorageInfo>
 #include <QTimer>
@@ -264,9 +265,7 @@ public slots:
     //
     void offloadCopySelected(const QString &shot_uuid);
     void offloadMergeSelected(const QString &shot_uuid);
-    void reencodeSelected(const QString &shot_uuid, const QString &codec,
-                          float quality, float speed, float fps,
-                          int start, int duration);
+    void reencodeSelected(const QString &shot_uuid, const QVariant &values);
     void deleteSelected(const QString &shot_uuid);
 
     //

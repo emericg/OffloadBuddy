@@ -23,7 +23,6 @@
         <file>PopupDelete.qml</file>
         <file>PopupExit.qml</file>
         <file>PopupOffload.qml</file>
-        <file>PopupEncodePicture.qml</file>
         <file>PopupEncodeVideo.qml</file>
         <file>PopupExtractTelemetry.qml</file>
         <file>MediaDetailMap.qml</file>

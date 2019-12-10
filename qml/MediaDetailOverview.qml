@@ -119,17 +119,13 @@ Item {
     }
 
     function openEncodePopup() {
-        if (shot.fileType === Shared.FILE_VIDEO) {
-            popupEncodeVideo.updateEncodePanel(shot)
-            popupEncodeVideo.setClip(mediaPreview.startLimit, mediaPreview.stopLimit)
-            popupEncodeVideo.setOrientation(mediaPreview.rotation, mediaPreview.hflipped, mediaPreview.vflipped)
-            popupEncodeVideo.setPanScan(mediaPreview.panscan_x, mediaPreview.panscan_y,
-                                        mediaPreview.panscan_width, mediaPreview.panscan_height)
-            popupEncodeVideo.open()
-        } else if (shot.fileType === Shared.FILE_PICTURE) {
-            popupEncodePicture.updateEncodePanel(shot)
-            popupEncodePicture.open()
-        }
+        popupEncodeVideo.updateEncodePanel(shot)
+        popupEncodeVideo.setClip(mediaPreview.startLimit, mediaPreview.stopLimit)
+        popupEncodeVideo.setOrientation(mediaPreview.rotation,
+                                        mediaPreview.hflipped, mediaPreview.vflipped)
+        popupEncodeVideo.setPanScan(mediaPreview.panscan_x, mediaPreview.panscan_y,
+                                    mediaPreview.panscan_width, mediaPreview.panscan_height)
+        popupEncodeVideo.open()
     }
     function openTelemetryPopup() {
         popupTelemetry.updateTelemetryPanel(shot)
@@ -182,16 +178,6 @@ Item {
                 // then back to media grid
                 screenDevice.state = "stateMediaGrid"
             }
-        }
-    }
-
-    PopupEncodePicture {
-        id: popupEncodePicture
-        x: (applicationWindow.width / 2) - (popupEncodePicture.width / 2) - (applicationSidebar.width)
-        y: (applicationWindow.height / 2) - (popupEncodePicture.height / 2) - (rectangleHeader.height)
-
-        onConfirmed: {
-            //
         }
     }
 

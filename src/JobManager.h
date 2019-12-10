@@ -232,7 +232,7 @@ class JobManager: public QObject
 
     MediaDirectory *getAutoDestination(Shot *s);
     QString getAutoDestinationString(Shot *s);
-    QString getandmakeDestination(Shot *s, Device *d);
+    QString getandmakeDestination(Shot *s, Device *d, MediaDirectory *md = nullptr);
 
     MediaLibrary *m_library = nullptr;
 

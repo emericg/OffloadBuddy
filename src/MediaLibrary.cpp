@@ -20,10 +20,10 @@
  */
 
 #include "MediaLibrary.h"
-#include "SettingsManager.h"
 #include "MediaDirectory.h"
 #include "FileScanner.h"
 #include "JobManager.h"
+#include "SettingsManager.h"
 
 #include <QMap>
 #include <QJSValue>
@@ -250,9 +250,9 @@ QStringList MediaLibrary::getSelectedPaths(const QVariant &indexes)
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void MediaLibrary::reencodeSelectedNew(const QString &shot_uuid, const QVariant &values)
+void MediaLibrary::reencodeSelected(const QString &shot_uuid, const QVariant &values)
 {
-    qDebug() << "MediaLibrary::reencodeSelectedNew(" << shot_uuid << ")";
+    qDebug() << "MediaLibrary::reencodeSelected(" << shot_uuid << ")";
 
     QVariant variant = qvariant_cast<QJSValue>(values).toVariant();
     if (variant.type() != QMetaType::QVariantMap) return;
@@ -302,28 +302,6 @@ void MediaLibrary::reencodeSelectedNew(const QString &shot_uuid, const QVariant 
     JobManager *jm = JobManager::getInstance();
     Shot *shot = m_shotModel->getShotWithUuid(shot_uuid);
     if (jm && shot) jm->addJob(JOB_REENCODE, nullptr, this, shot, md, &sett);
-}
-
-void MediaLibrary::reencodeSelected(const QString &shot_uuid, const QString &codec,
-                                    float quality, float speed, float fps,
-                                    int start, int duration)
-{
-    qDebug() << "MediaLibrary::reencodeSelected(" << shot_uuid << ")";
-
-    JobManager *jm = JobManager::getInstance();
-    Shot *shot = m_shotModel->getShotWithUuid(shot_uuid);
-
-    JobEncodeSettings sett;
-    sett.codec = codec;
-    sett.quality = quality;
-    sett.speed = speed;
-    if (fps > 0) sett.fps = fps;
-
-    if (start > 0) sett.startMs = start;
-    if (duration > 0) sett.durationMs = duration;
-
-    if (jm && shot)
-        jm->addJob(JOB_REENCODE, nullptr, this, shot, nullptr, &sett);
 }
 
 void MediaLibrary::deleteSelected(const QString &shot_uuid)
