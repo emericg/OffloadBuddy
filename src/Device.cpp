@@ -324,7 +324,7 @@ int Device::getMtpDeviceCount() const
 
 void Device::getMtpIds(unsigned &devBus, unsigned &devNum, const int index) const
 {
-    if (index >= m_mtpDevices.size())
+    if (!m_mtpDevices.isEmpty() && index < m_mtpDevices.size() && m_mtpDevices.at(index))
     {
         devBus = m_mtpDevices.at(index)->devBus;
         devNum = m_mtpDevices.at(index)->devNum;
@@ -338,7 +338,7 @@ void Device::getMtpIds(unsigned &devBus, unsigned &devNum, const int index) cons
 
 std::pair<unsigned, unsigned> Device::getMtpIds(const int index) const
 {
-    if (index >= m_mtpDevices.size())
+    if (!m_mtpDevices.isEmpty() && index < m_mtpDevices.size() && m_mtpDevices.at(index))
     {
         return std::make_pair(m_mtpDevices.at(index)->devBus, m_mtpDevices.at(index)->devNum);
     }
@@ -352,7 +352,7 @@ int Device::getMtpBatteryCount() const
 
     for (auto d: m_mtpDevices)
     {
-        if (d->battery > 0.f)
+        if (d && d->battery > 0.f)
             batteries++;
     }
 
@@ -368,7 +368,7 @@ float Device::getMtpBatteryLevel(const int index) const
         int total = 0;
         for (auto d: m_mtpDevices)
         {
-            if (d->battery > 0.f)
+            if (d && d->battery > 0.f)
             {
                 level += d->battery / 100.f;
                 total++;
@@ -380,7 +380,7 @@ float Device::getMtpBatteryLevel(const int index) const
     else if (index <= getMtpBatteryCount())
     {
         auto d = m_mtpDevices.at(index);
-        level = d->battery / 100.f;
+        if (d) level = d->battery / 100.f;
     }
 
     return level;
