@@ -29,9 +29,10 @@
 
 
 #include <QObject>
-#include <QVariant>
+#include <QUrl>
 #include <QList>
 #include <QHash>
+#include <QVariant>
 #include <QThread>
 #include <QDesktopServices>
 

@@ -103,7 +103,16 @@ int main(int argc, char *argv[])
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
-    //QCoreApplication::setAttribute(Qt::AA_UseOpenGLES);
+
+#if defined(Q_OS_LINUX)
+    // NVIDIA suspend&resume hack
+    if (QLibraryInfo::version() >= QVersionNumber(5, 13, 0))
+    {
+        auto format = QSurfaceFormat::defaultFormat();
+        format.setOption(QSurfaceFormat::ResetNotification);
+        QSurfaceFormat::setDefaultFormat(format);
+    }
+#endif
 
 #ifdef QT_NO_DEBUG
     SingleApplication app(argc, argv);
@@ -175,8 +184,8 @@ int main(int argc, char *argv[])
     engine_context->setContextProperty("mediaLibrary", ml);
     engine_context->setContextProperty("deviceManager", dm);
     engine_context->setContextProperty("jobManager", jm);
-    engine.addImageProvider("GridThumbnailer", new GridThumbnailer);
     engine_context->setContextProperty("app", utilsApp);
+    engine.addImageProvider("GridThumbnailer", new GridThumbnailer);
 
     engine.load(QUrl(QStringLiteral("qrc:/qml/Application.qml")));
     if (engine.rootObjects().isEmpty())
