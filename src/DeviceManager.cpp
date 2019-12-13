@@ -481,15 +481,15 @@ void DeviceManager::addMtpDevice(ofb_mtp_device *deviceInfos)
         {
             // TODO // Search for duplicate device
 
-            qDebug() << "?? Fusioooooooon" << deviceInfos->model << d->getModel() << d->getStorageCount();
-
             // FUSION hack
-            // search for another FUSION device
-            // TODO // handle more than one fusion
+            // Search for another FUSION device
+            // TODO // Handle more than one fusion
             if (deviceInfos->model.contains("Fusion", Qt::CaseInsensitive) &&
                 d->getModel().contains("Fusion", Qt::CaseInsensitive) &&
                 d->getStorageCount() < 2)
             {
+                qDebug() << "?? Fusioooooooon" << deviceInfos->model << d->getModel() << d->getStorageCount();
+
                 deviceMerge = true;
                 break;
             }

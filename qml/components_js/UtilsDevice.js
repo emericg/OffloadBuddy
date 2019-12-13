@@ -4,9 +4,12 @@
 
 /* ************************************************************************** */
 
-function getDevicePicture(deviceName) {
+function getDevicePicture(device) {
+    var deviceName = device.model
+    var deviceType = device.deviceType
     var camera_model = "qrc:/cameras/";
 
+    // Using device name
     if (deviceName.includes("HERO8")) {
         camera_model += "H8"
     } else if (deviceName.includes("HERO7 White") ||
@@ -29,13 +32,25 @@ function getDevicePicture(deviceName) {
     } else if (deviceName.includes("HD2")) {
         camera_model += "H2"
     } else {
-        // fallback
-        if (myDevice.deviceType === 2)
+        // Using device type
+        if (deviceType === 2)
             camera_model += "generic_smartphone"
-        else if (myDevice.deviceType === 3)
+        else if (deviceType === 3)
             camera_model += "generic_camera"
         else
-            camera_model += "generic_actioncam"
+        {
+            // fallback
+            if (deviceName.toUpperCase().includes("VIRB") ||
+                deviceName.toUpperCase().includes("CONTOUR") ||
+                deviceName.toUpperCase().includes("PIXPRO") ||
+                deviceName.toUpperCase().includes("OSMO")) {
+                // other known actioncam product line?
+                camera_model += "generic_actioncam"
+            } else {
+                // assume smartphone...
+                camera_model += "generic_smartphone"
+            }
+        }
     }
 
     //if (inverted) camera_model += "-inverted"

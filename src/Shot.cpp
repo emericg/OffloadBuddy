@@ -101,8 +101,7 @@ void Shot::addFile(ofb_file *file)
                 m_pictures.push_front(file);
                 getMetadatasFromPicture();
             }
-            else if (file->extension == "mp4" || file->extension == "m4v" ||
-                     file->extension == "mov" ||
+            else if (file->extension == "mp4" || file->extension == "m4v" || file->extension == "mov" ||
                      file->extension == "mkv" || file->extension == "webm")
             {
                 m_videos.push_front(file);
@@ -139,20 +138,16 @@ void Shot::addFile(ofb_file *file)
                     m_date_file = file->modification_date;
             }
 
-            if (file->extension == "jpg" ||
-                file->extension == "jpeg" ||
-                file->extension == "png" ||
-                file->extension == "gpr")
+            if (file->extension == "jpg" || file->extension == "jpeg" ||
+                file->extension == "png" || file->extension == "gpr" ||
+                file->extension == "webp")
             {
                 m_pictures.push_back(file);
 
                 if (m_pictures.size() == 1) getMetadatasFromPicture();
             }
-            else if (file->extension == "mp4" ||
-                     file->extension == "m4v" ||
-                     file->extension == "mov" ||
-                     file->extension == "mkv" ||
-                     file->extension == "webm")
+            else if (file->extension == "mp4" || file->extension == "m4v" || file->extension == "mov" ||
+                     file->extension == "mkv" || file->extension == "webm")
             {
                 m_videos.push_back(file);
                 getMetadatasFromVideo(m_videos.size() - 1);

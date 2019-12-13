@@ -142,7 +142,7 @@ Item {
             deviceModelText.anchors.topMargin = 26
 
         deviceModelText.text = currentDevice.brand + " " + currentDevice.model;
-        deviceImage.source = UtilsDevice.getDevicePicture(currentDevice.model)
+        deviceImage.source = UtilsDevice.getDevicePicture(currentDevice)
 
         // Storage and battery infos
         updateStorage()

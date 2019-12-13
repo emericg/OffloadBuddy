@@ -25,7 +25,7 @@ Item {
     Component.onCompleted: {
         if (myDevice) {
             title = modelData.model
-            source = UtilsDevice.getDevicePicture(modelData.model)
+            source = UtilsDevice.getDevicePicture(myDevice)
             myDeviceClicked.connect(sideBar.myDeviceClicked)
         }
     }

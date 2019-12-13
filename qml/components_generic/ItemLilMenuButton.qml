@@ -83,7 +83,7 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
 
         text: parent.text
-        font.pixelSize: 16
+        font.pixelSize: 15
         color: parent.colorContent
         opacity: (parent.selected) ? 1 : 0.5
         verticalAlignment: Text.AlignVCenter
