@@ -68,6 +68,15 @@ bool SettingsManager::readSettings()
 
     if (settings.status() == QSettings::NoError)
     {
+        if (settings.contains("ApplicationWindow/x"))
+            m_appPosition.setWidth(settings.value("ApplicationWindow/x").toInt());
+        if (settings.contains("ApplicationWindow/y"))
+            m_appPosition.setHeight(settings.value("ApplicationWindow/y").toInt());
+        if (settings.contains("ApplicationWindow/width"))
+            m_appSize.setWidth(settings.value("ApplicationWindow/width").toInt());
+        if (settings.contains("ApplicationWindow/height"))
+            m_appSize.setHeight(settings.value("ApplicationWindow/height").toInt());
+
         if (settings.contains("global/appTheme"))
             m_appTheme = settings.value("global/appTheme").toUInt();
 

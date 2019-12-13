@@ -26,6 +26,7 @@
 #include <QObject>
 #include <QVariant>
 #include <QList>
+#include <QSize>
 
 #include <QTimer>
 
@@ -43,6 +44,9 @@ class SettingsManager: public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(QSize initialSize READ getInitialSize NOTIFY initialSizeChanged)
+    Q_PROPERTY(QSize initialPosition READ getInitialPosition NOTIFY initialSizeChanged)
+
     Q_PROPERTY(uint appTheme READ getAppTheme WRITE setAppTheme NOTIFY appThemeChanged)
     Q_PROPERTY(uint appUnits READ getAppUnits WRITE setAppUnits NOTIFY appUnitsChanged)
     Q_PROPERTY(uint thumbQuality READ getThumbQuality WRITE setThumbQuality NOTIFY thumbQualityChanged)
@@ -57,6 +61,9 @@ class SettingsManager: public QObject
     Q_PROPERTY(uint contenthierarchy READ getContentHierarchy WRITE setContentHierarchy NOTIFY contentHierarchyChanged)
 
     Q_PROPERTY(QVariant directoriesList READ getDirectories NOTIFY directoriesUpdated)
+
+    QSize m_appSize;
+    QSize m_appPosition;
 
     // Global
     unsigned m_appTheme = 0;
@@ -84,6 +91,7 @@ class SettingsManager: public QObject
     bool writeSettings();
 
 Q_SIGNALS:
+    void initialSizeChanged();
     void appThemeChanged();
     void appUnitsChanged();
     void autoMergeChanged();
@@ -103,6 +111,9 @@ Q_SIGNALS:
 
 public:
     static SettingsManager *getInstance();
+
+    QSize getInitialSize() { return m_appSize; }
+    QSize getInitialPosition() { return m_appPosition; }
 
     unsigned getAppTheme() const { return m_appTheme; }
     void setAppTheme(unsigned value);

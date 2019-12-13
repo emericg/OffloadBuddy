@@ -31,6 +31,11 @@ ApplicationWindow {
     minimumWidth: 1280
     minimumHeight: 720
 
+    x: settingsManager.initialPosition.width
+    y: settingsManager.initialPosition.height
+    width: settingsManager.initialSize.width
+    height: settingsManager.initialSize.height
+
     title: "OffloadBuddy"
     color: Theme.colorBackground
     visible: true
