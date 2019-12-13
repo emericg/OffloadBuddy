@@ -95,8 +95,8 @@ void Shot::addFile(ofb_file *file)
                 m_date_file = file->modification_date;
 
             if (file->extension == "jpg" || file->extension == "jpeg" ||
-                file->extension == "png" ||
-                file->extension == "gpr")
+                file->extension == "png" || file->extension == "gpr" ||
+                file->extension == "webp")
             {
                 m_pictures.push_front(file);
                 getMetadatasFromPicture();
@@ -145,7 +145,8 @@ void Shot::addFile(ofb_file *file)
                 file->extension == "gpr")
             {
                 m_pictures.push_back(file);
-                getMetadatasFromPicture();
+
+                if (m_pictures.size() == 1) getMetadatasFromPicture();
             }
             else if (file->extension == "mp4" ||
                      file->extension == "m4v" ||
@@ -557,12 +558,15 @@ bool Shot::getMetadatasFromPicture(int index)
 
 #ifdef ENABLE_LIBEXIF
 
-    // Check if the file is already parsed;
+    // Check if the file is already parsed
+    if (!m_pictures.at(index)->ed)
+    {
+        //qDebug() << "Shot::getMetadatasFromPicture() PARSING ON MAIN THREAD";
+
+        m_pictures.at(index)->ed = exif_data_new_from_file(m_pictures.at(index)->filesystemPath.toLocal8Bit());
+    }
+
     ExifData *ed = m_pictures.at(index)->ed;
-
-     if (!ed)
-        ed = exif_data_new_from_file(m_pictures.at(index)->filesystemPath.toLocal8Bit());
-
     if (ed)
     {
         hasEXIF = true;
@@ -841,7 +845,7 @@ bool Shot::getMetadatasFromPicture(int index)
 
 bool Shot::getMetadatasFromVideo(int index)
 {
-    //qDebug() << "Shot::getMetadatasFromVideoGPMF(" << index << " " << m_videos.at(index)->filesystemPath;
+    //qDebug() << "Shot::getMetadatasFromVideo(" << index << " " << m_videos.at(index)->filesystemPath;
 
     if (m_videos.empty())
         return false;
@@ -853,6 +857,8 @@ bool Shot::getMetadatasFromVideo(int index)
     // Check if the file is already parsed
     if (!m_videos.at(index)->media)
     {
+        //qDebug() << "Shot::getMetadatasFromVideo() PARSING ON MAIN THREAD";
+
         // If not, open it
         int minivideo_retcode = minivideo_open(m_videos.at(index)->filesystemPath.toLocal8Bit(), &m_videos.at(index)->media);
         if (minivideo_retcode == 1)
@@ -866,9 +872,7 @@ bool Shot::getMetadatasFromVideo(int index)
         }
         else
         {
-            qDebug() << "minivideo_open() failed with retcode: " << minivideo_retcode;
-            qDebug() << "minivideo_open() cannot open: " << m_videos.at(index)->filesystemPath;
-            qDebug() << "minivideo_open() cannot open: " << m_videos.at(index)->filesystemPath.toLocal8Bit();
+            qDebug() << "minivideo_open() failed with retcode: " << minivideo_retcode << " cannot open: " << m_videos.at(index)->filesystemPath;
         }
     }
 

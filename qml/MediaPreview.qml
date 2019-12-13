@@ -154,6 +154,12 @@ Rectangle {
         //console.log("Check if fullscreen is necessary: " + (shot.width / shot.height) + " vs " + (mediaArea.width / mediaArea.height))
         //if ((shot.width / shot.height) < (mediaArea.width / mediaArea.height))
 
+        // no metadatas?
+        if (!mediaWidth || !shot.mediaHeight) {
+            mediaWidth = output.width
+            mediaHeight = output.height
+        }
+
         var media_ar = (mediaWidth / mediaHeight)
         //console.log("media ratio: " + media_ar)
         var area_ar = (mediaArea.width / mediaArea.height)

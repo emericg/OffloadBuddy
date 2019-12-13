@@ -37,10 +37,6 @@ Item {
 
             infosVideo.visible = false
 
-            codecAudio.visible = false
-            codecVideo.visible = true
-            codecVideo.text = shot.codecVideo
-
             if (shot.duration > 1) {
                 labelDuration.visible = true
                 duration.text = shot.duration + " " + qsTr("pictures")
@@ -71,22 +67,6 @@ Item {
             infosPicture.visible = false
             infosVideo.visible = true
 
-            if (shot.codecVideo.length) {
-                codecVideo.visible = true
-                codecVideo.text = shot.codecVideo
-                codec.text = shot.codecVideo
-            } else {
-                codecVideo.visible = false
-            }
-
-            if (shot.audioCodec.length) {
-                codecAudio.visible = true
-                codecAudio.text = shot.audioCodec
-                codec.text +=  " / " + shot.audioCodec
-            } else {
-                codecAudio.visible = false
-            }
-
             labelChapters.visible = (shot.chapters > 1)
             chapters.text = shot.chapters + qsTr(" chapters")
 
@@ -110,6 +90,22 @@ Item {
 
             labelTimecode.visible = (shot.timecode)
             timecode.text = shot.timecode
+        }
+
+        if (shot.codecVideo.length) {
+            codecVideo.visible = true
+            codecVideo.text = shot.codecVideo
+            codec.text = shot.codecVideo
+        } else {
+            codecVideo.visible = false
+        }
+
+        if (shot.audioCodec.length) {
+            codecAudio.visible = true
+            codecAudio.text = shot.audioCodec
+            codec.text +=  " / " + shot.audioCodec
+        } else {
+            codecAudio.visible = false
         }
 
         size.text = UtilsString.bytesToString_short(shot.datasize)

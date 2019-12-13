@@ -121,7 +121,11 @@ void FileScanner::scanFilesystemDirectory(const QString &dir_path)
                     // Pre-parse metadatas on scanning thread
                     if (shotStatus)
                     {
-                        if (f->extension.endsWith(".mp4", Qt::CaseInsensitive))
+                        if (f->extension == "mp4" ||
+                            f->extension == "m4v" ||
+                            f->extension == "mov" ||
+                            f->extension == "mkv" ||
+                            f->extension == "webm")
                         {
                             int minivideo_retcode = minivideo_open(f->filesystemPath.toLocal8Bit(), &f->media);
                             if (minivideo_retcode == 1)
@@ -138,11 +142,14 @@ void FileScanner::scanFilesystemDirectory(const QString &dir_path)
                                 qDebug() << "minivideo_open() failed with retcode: " << minivideo_retcode;
                             }
                         }
-                        else if (f->extension.endsWith(".jpg", Qt::CaseInsensitive) ||
-                                 f->extension.endsWith(".jpeg", Qt::CaseInsensitive))
+/*
+                        // Disabled for now, so we don't parse 10k files from a timelapse before they have been associated with a shot
+                        else if (f->extension == "jpg" ||
+                                 f->extension == "jpeg")
                         {
                             f->ed = exif_data_new_from_file(f->filesystemPath.toLocal8Bit());
                         }
+*/
                     }
 
                     // Send the file back to the UI
