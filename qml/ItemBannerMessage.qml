@@ -47,6 +47,7 @@ Rectangle {
 
         source: "qrc:/icons_material/baseline-close-24px.svg"
         iconColor: "white"
+        backgroundColor: Theme.colorActionbarHighlight
         onClicked: banner.close()
     }
 }

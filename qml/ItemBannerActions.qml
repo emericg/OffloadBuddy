@@ -15,60 +15,53 @@ Rectangle {
     color: Theme.colorPrimary
 
     Row {
-        id: row1
         spacing: 16
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
         anchors.top: parent.top
-        anchors.topMargin: 0
         anchors.left: parent.left
         anchors.leftMargin: 16
+        anchors.bottom: parent.bottom
 
         ButtonWireframeImage {
-            id: buttonOffloadCopy
+            id: buttonOffload
             anchors.verticalCenter: parent.verticalCenter
 
-            visible: applicationContent.state === "device"
-
             fullColor: true
-            text: qsTr("Offload (copy)")
+            text: (applicationContent.state === "device") ? qsTr("Offload") : qsTr("Move")
             source: "qrc:/icons_material/baseline-save_alt-24px.svg"
-            onClicked: currentDevice.offloadCopySelection(mediaGrid.selectionList);
+            onClicked: {
+                if (applicationContent.state === "library") {
+                    //
+                } else if (applicationContent.state === "device") {
+                    //
+                }
+            }
         }
-        ButtonWireframeImage {
-            id: buttonOffloadMerge
-            anchors.verticalCenter: parent.verticalCenter
 
-            visible: applicationContent.state === "device"
-
-            fullColor: true
-            text: qsTr("Offload (merge)")
-            source: "qrc:/icons_material/baseline-save_alt-24px.svg"
-            onClicked: currentDevice.offloadMergeSelection(mediaGrid.selectionList);
-        }
         ButtonWireframeImage {
             id: buttonMergeShots
             anchors.verticalCenter: parent.verticalCenter
 
-            visible: (mediaGrid.selectionCount >= 2)
+            visible: (applicationContent.state !== "device" && mediaGrid.selectionCount >= 2)
 
             fullColor: true
             text: qsTr("Merge shots together")
             source: "qrc:/icons_material/baseline-merge_type-24px.svg"
-            //onClicked:
+            onClicked: {
+                //
+            }
         }
         ButtonWireframeImage {
             id: buttonTelemetry
             anchors.verticalCenter: parent.verticalCenter
 
             fullColor: true
-            text: qsTr("Extract metadatas")
+            text: qsTr("Extract telemetry")
             source: "qrc:/icons_material/baseline-insert_chart_outlined-24px.svg"
             onClicked: {
                 if (applicationContent.state === "library") {
-                    //mediaLibrary.extractTelemetrySelection(mediaGrid.selectionList);
+                    //
                 } else if (applicationContent.state === "device") {
-                    //currentDevice.extractTelemetrySelection(mediaGrid.selectionList);
+                    //
                 }
             }
         }
