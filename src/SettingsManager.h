@@ -79,7 +79,7 @@ class SettingsManager: public QObject
     bool m_mtpFullScan = false;
 
     // Media directories
-    static const max_media_directories = 16;
+    static const int max_media_directories = 16;
     unsigned m_contentHierarchy = 0;
     QList <QObject *> m_mediaDirectories;
 

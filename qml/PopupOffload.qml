@@ -64,23 +64,15 @@ Popup {
 
                 visible: isGoPro
 
-                Text {
-                    id: labelIgnoreJunk
-                    width: 180
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    text: qsTr("Ignore LRVs and THM files")
-                    font.pixelSize: 16
-                    color: Theme.colorSubText
-                }
                 SwitchThemedDesktop {
                     id: switchIgnoreJunk
                     anchors.left: labelIgnoreJunk.right
                     anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
 
-                    checked: true
-                    //text: ""
+                    enabled: false
+                    checked: settingsManager.ignorejunk
+                    text: qsTr("Ignore LRVs and THM files")
                 }
             }
 
@@ -88,56 +80,35 @@ Popup {
                 height: 48
                 anchors.left: parent.left
                 anchors.right: parent.right
-                anchors.rightMargin: 0
-                anchors.leftMargin: 0
 
                 visible: isGoPro
 
-                Text {
-                    id: labelIgnoreAudio
-                    width: 180
-                    color: Theme.colorSubText
-                    text: qsTr("Ignore HD Audio files")
-                    anchors.verticalCenter: parent.verticalCenter
-                    font.pixelSize: 16
-                }
                 SwitchThemedDesktop {
                     id: switchIgnoreAudio
-                    anchors.left: labelIgnoreAudio.right
-                    anchors.leftMargin: 16
+                    anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
 
-                    checked: true
-                    //text: ""
+                    enabled: false
+                    checked: settingsManager.ignorehdaudio
+                    text: qsTr("Ignore HD Audio files")
                 }
             }
 
             Item {
                 height: 48
                 anchors.right: parent.right
-                anchors.rightMargin: 0
                 anchors.left: parent.left
-                anchors.leftMargin: 0
 
                 visible: isGoPro
 
-                Text {
-                    id: labelMerge
-                    width: 180
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    text: qsTr("Merge chaptered files")
-                    font.pixelSize: 16
-                    color: Theme.colorSubText
-                }
                 SwitchThemedDesktop {
                     id: switchMerge
-                    anchors.left: labelMerge.right
-                    anchors.leftMargin: 16
+                    anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
 
-                    checked: true
-                    //text: ""
+                    enabled: false
+                    checked: settingsManager.automerge
+                    text: qsTr("Merge chaptered files together")
                 }
             }
 
@@ -145,27 +116,17 @@ Popup {
                 height: 48
                 anchors.left: parent.left
                 anchors.right: parent.right
-                anchors.leftMargin: 0
-                anchors.rightMargin: 0
 
                 visible: isGoPro
 
-                Text {
-                    id: labelMetadatas
-                    width: 180
-                    color: Theme.colorSubText
-                    text: qsTr("Extract metadatas")
-                    anchors.verticalCenter: parent.verticalCenter
-                    font.pixelSize: 16
-                }
                 SwitchThemedDesktop {
                     id: switchMetadatas
-                    anchors.left: labelMetadatas.right
-                    anchors.leftMargin: 16
+                    anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
 
-                    checked: true
-                    //text: ""
+                    enabled: false
+                    checked: settingsManager.autometadata
+                    text: qsTr("Extract telemetry along with each shot")
                 }
             }
 
@@ -178,13 +139,14 @@ Popup {
 
                 visible: !isReadOnly
 
-                Text {
-                    id: labelDelete
-                    width: 180
-                    color: Theme.colorSubText
-                    text: qsTr("Delete offloaded files")
+                SwitchThemedDesktop {
+                    id: switchDelete
+                    anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
-                    font.pixelSize: 16
+
+                    enabled: false
+                    checked: settingsManager.autodelete
+                    text: qsTr("Delete offloaded files")
                 }
             }
 /*

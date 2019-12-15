@@ -273,6 +273,27 @@ Item {
         y: (applicationWindow.height / 2) - (popupEncodeVideo.height / 2)
     }
 
+    PopupOffload {
+        id: popupOffloadAll
+        x: (applicationWindow.width / 2) - (popupOffloadAll.width / 2) - (applicationSidebar.width / 2)
+        y: (applicationWindow.height / 2) - (popupOffloadAll.height / 2)
+
+        onConfirmed: {
+            currentDevice.offloadAll()
+        }
+    }
+
+    PopupDelete {
+        id: confirmDeleteAll
+        x: (applicationWindow.width / 2) - (confirmDeleteAll.width / 2) - (applicationSidebar.width / 2)
+        y: (applicationWindow.height / 2) - (confirmDeleteAll.height / 2)
+
+        message: qsTr("Are you sure you want to delete ALL of the files from this device?")
+        onConfirmed: {
+            currentDevice.deleteAll()
+        }
+    }
+
     PopupDelete {
         id: confirmDeleteMultipleFilesPopup
         x: (applicationWindow.width / 2) - (confirmDeleteMultipleFilesPopup.width / 2) - (applicationSidebar.width / 2)
@@ -280,11 +301,11 @@ Item {
 
         message: qsTr("Are you sure you want to delete selected files?")
         onConfirmed: {
-            var indexes = mediaGrid.selectionList;
-            mediaGrid.exitSelectionMode();
+            var indexes = mediaGrid.selectionList
+            mediaGrid.exitSelectionMode()
 
-            //var uuid_list = currentDevice.getSelectedUuids(indexes);
-            //var path_list = currentDevice.getSelectedPaths(indexes);
+            //var uuid_list = currentDevice.getSelectedUuids(indexes)
+            //var path_list = currentDevice.getSelectedPaths(indexes)
             //console.log("paths; " + path_list)
 
             // actual deletion
@@ -301,8 +322,8 @@ Item {
         onConfirmed: {
             currentDevice.deleteSelected(selectedItemUuid)
 
-            shotsView.currentIndex = -1;
-            mediaGrid.exitSelectionMode();
+            shotsView.currentIndex = -1
+            mediaGrid.exitSelectionMode()
         }
     }
 
@@ -635,7 +656,7 @@ Item {
 
             text: qsTr("Offload content")
             fullColor: true
-            onClicked: currentDevice.offloadAll();
+            onClicked: popupOffloadAll.open()
         }
 
         ButtonWireframe {
@@ -647,102 +668,11 @@ Item {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 16
 
-            text: qsTr("Delete ALL content!");
+            text: qsTr("Delete ALL content!")
             fullColor: true
             primaryColor: Theme.colorError
-            //onClicked: currentDevice.offloadAll();
+            onClicked: confirmDeleteAll.open()
         }
-/*
-        Item {
-            id: rectangleDelete
-            width: 240
-            height: 40
-            anchors.left: rectangleTransfer.right
-            anchors.leftMargin: 16
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 16
-
-            property bool weAreBlinking: false
-            property double startTime: 0
-
-            function startTheBlink() {
-                if (weAreBlinking === true) {
-                    if ((new Date().getTime() - startTime) > 500) {
-                        stopTheBlink();
-                        currentDevice.deleteAll();
-                    }
-                } else {
-                    startTime = new Date().getTime()
-                    weAreBlinking = true;
-                    timerReset.start();
-                    blinkReset.start();
-                    textReset.text = qsTr("!!! CONFIRM !!!");
-                }
-            }
-            function stopTheBlink() {
-                weAreBlinking = false;
-                timerReset.stop();
-                blinkReset.stop();
-                textReset.text = qsTr("Delete ALL content!");
-                rectangleDeleteDecorated.color = Theme.colorWarning;
-            }
-
-            Rectangle {
-                id: rectangleDeleteDecorated
-                color: Theme.colorWarning
-                width: parent.width
-                height: parent.height
-                radius: 4
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-
-                SequentialAnimation on color {
-                    id: blinkReset
-                    running: false
-                    loops: Animation.Infinite
-                    ColorAnimation { from: Theme.colorWarning; to: "red"; duration: 1000 }
-                    ColorAnimation { from: "red"; to: Theme.colorWarning; duration: 1000 }
-                }
-            }
-
-            Timer {
-                id: timerReset
-                interval: 4000
-                running: false
-                repeat: false
-                onTriggered: {
-                    rectangleDelete.stopTheBlink()
-                }
-            }
-
-            MouseArea {
-                anchors.fill: parent
-
-                onPressed: {
-                    rectangleDeleteDecorated.width = rectangleDeleteDecorated.width - 8
-                    rectangleDeleteDecorated.height = rectangleDeleteDecorated.height - 8
-                }
-                onReleased: {
-                    rectangleDeleteDecorated.width = rectangleDeleteDecorated.width + 8
-                    rectangleDeleteDecorated.height = rectangleDeleteDecorated.height + 8
-                }
-                onClicked: {
-                    rectangleDelete.startTheBlink()
-                }
-            }
-
-            Text {
-                id: textReset
-                color: "white"
-                text: qsTr("Delete ALL content")
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-                font.pixelSize: 15
-                font.bold: true
-                anchors.fill: parent
-            }
-        }
-*/
     }
 
     // MENUS ///////////////////////////////////////////////////////////////////
@@ -1004,9 +934,9 @@ Item {
                     actionMenu.visible = false
                     screenDevice.state = "stateMediaDetails"
                 } else if (event.key === Qt.Key_PageUp) {
-                    shotsView.currentIndex = 0;
+                    shotsView.currentIndex = 0
                 } else if (event.key === Qt.Key_PageDown) {
-                    shotsView.currentIndex = shotsView.count - 1;
+                    shotsView.currentIndex = shotsView.count - 1
                 } else if ((event.key === Qt.Key_A) && (event.modifiers & Qt.ControlModifier)) {
                     mediaGrid.selectAll()
                 } else if (event.key === Qt.Key_Clear) {
@@ -1015,12 +945,12 @@ Item {
                     console.log("shotsview::Key_Menu")
                 } else if (event.key === Qt.Key_Delete) {
                     if (selectionMode) {
-                        confirmDeleteSingleFilePopup.files = currentDevice.getSelectedPaths(selectionList);
+                        confirmDeleteSingleFilePopup.files = currentDevice.getSelectedPaths(selectionList)
                         confirmDeleteSingleFilePopup.open()
                     } else {
                         var indexes = []
                         indexes.push(shotsView.currentIndex)
-                        confirmDeleteSingleFilePopup.files = currentDevice.getSelectedPaths(indexes);
+                        confirmDeleteSingleFilePopup.files = currentDevice.getSelectedPaths(indexes)
                         confirmDeleteSingleFilePopup.open()
                     }
                 }
