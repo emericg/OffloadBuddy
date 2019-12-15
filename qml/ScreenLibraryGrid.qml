@@ -665,7 +665,7 @@ Item {
                 } else if (event.key === Qt.Key_Clear) {
                     mediaGrid.exitSelectionMode()
                 } else if (event.key === Qt.Key_Menu) {
-                    console.log("shotsview::Key_Menu")
+                    //console.log("shotsview::Key_Menu")
                 } else if (event.key === Qt.Key_Delete) {
                     if (selectionMode) {
                         confirmDeleteSingleFilePopup.files = mediaLibrary.getSelectedPaths(selectionList);

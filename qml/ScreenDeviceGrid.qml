@@ -80,7 +80,7 @@ Item {
         selectionCount = 0;
 
         for (var i = 0; i < shotsView.count; i++) {
-            currentDevice.getShotByProxyIndex(i).selected = false;
+            if (currentDevice) currentDevice.getShotByProxyIndex(i).selected = false;
         }
 
         // save state
@@ -279,7 +279,7 @@ Item {
         y: (applicationWindow.height / 2) - (popupOffloadAll.height / 2)
 
         onConfirmed: {
-            currentDevice.offloadAll()
+            currentDevice.offloadAll(popupOffloadAll.selectedPath)
         }
     }
 
@@ -942,7 +942,7 @@ Item {
                 } else if (event.key === Qt.Key_Clear) {
                     mediaGrid.exitSelectionMode()
                 } else if (event.key === Qt.Key_Menu) {
-                    console.log("shotsview::Key_Menu")
+                    //console.log("shotsview::Key_Menu")
                 } else if (event.key === Qt.Key_Delete) {
                     if (selectionMode) {
                         confirmDeleteSingleFilePopup.files = currentDevice.getSelectedPaths(selectionList)

@@ -17,6 +17,8 @@ Popup {
     property var isGoPro: true
     property var isReadOnly: false
 
+    property string selectedPath: ""
+
     modal: true
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
@@ -300,6 +302,7 @@ Popup {
                 fullColor: true
                 primaryColor: Theme.colorPrimary
                 onClicked: {
+                    popupOffload.selectedPath = textField_path.text
                     popupOffload.confirmed();
                     popupOffload.close();
                 }

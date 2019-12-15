@@ -584,23 +584,42 @@ int64_t Device::getSpaceAvailable_withrefresh()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void Device::offloadAll()
+void Device::offloadAll(const QString &path)
 {
     //qDebug() << "offloadAll()";
     //qDebug() << "(a) shots count: " << m_shotModel->getShotCount();
 
     JobManager *jm = JobManager::getInstance();
-    //SettingsManager *sm = SettingsManager::getInstance();
+    SettingsManager *sm = SettingsManager::getInstance();
 
     QList<Shot *> shots;
     m_shotModel->getShots(shots);
 
+    // MediaDirectory
+    MediaDirectory *md = nullptr;
+    if (!path.isEmpty())
+    {
+        QString selectedPath = path;
+        if (sm)
+        {
+            const QList <QObject *> *mediaDirectories = sm->getDirectoriesList();
+            for (auto d: *mediaDirectories)
+            {
+                MediaDirectory *dd = qobject_cast<MediaDirectory*>(d);
+                if (dd && dd->getPath() == selectedPath)
+                {
+                    md = dd;
+                }
+            }
+        }
+    }
+
     if (jm && !shots.empty())
     {
         //if (sm->getAutoMerge())
-        //    jm->addJobs(JOB_MERGE, this, shots);
+        //    jm->addJobs(JOB_MERGE, this, shots, md);
         //else
-            jm->addJobs(JOB_COPY, this, nullptr, shots);
+            jm->addJobs(JOB_COPY, this, nullptr, shots, md);
     }
 }
 
@@ -629,12 +648,12 @@ QStringList Device::getSelectedUuids(const QVariant &indexes)
 
     // indexes from qml gridview (after filtering)
     QJSValue jsArray = indexes.value<QJSValue>();
-    const unsigned length = jsArray.property("length").toUInt();
+    const int jsArray_length = jsArray.property("length").toInt();
     QList<QPersistentModelIndex> proxyIndexes;
 
-    for (unsigned i = 0; i < length; i++)
+    for (int i = 0; i < jsArray_length; i++)
     {
-        QModelIndex proxyIndex = m_shotFilter->index(jsArray.property(i).toInt(), 0);
+        QModelIndex proxyIndex = m_shotFilter->index(jsArray.property(static_cast<quint32>(i)).toInt(), 0);
         proxyIndexes.append(QPersistentModelIndex(proxyIndex));
 
         Shot *shot = qvariant_cast<Shot*>(m_shotFilter->data(proxyIndexes.at(i), ShotModel::PointerRole));
@@ -655,12 +674,12 @@ QStringList Device::getSelectedPaths(const QVariant &indexes)
 
     // indexes from qml gridview (after filtering)
     QJSValue jsArray = indexes.value<QJSValue>();
-    const unsigned jsArray_length = jsArray.property("length").toUInt();
+    const int jsArray_length = jsArray.property("length").toInt();
     QList<QPersistentModelIndex> proxyIndexes;
 
-    for (unsigned i = 0; i < jsArray_length; i++)
+    for (int i = 0; i < jsArray_length; i++)
     {
-        QModelIndex proxyIndex = m_shotFilter->index(jsArray.property(i).toInt(), 0);
+        QModelIndex proxyIndex = m_shotFilter->index(jsArray.property(static_cast<quint32>(i)).toInt(), 0);
         proxyIndexes.append(QPersistentModelIndex(proxyIndex));
 
         Shot *shot = qvariant_cast<Shot*>(m_shotFilter->data(proxyIndexes.at(i), ShotModel::PointerRole));
@@ -691,9 +710,7 @@ void Device::offloadMergeSelected(const QString &shot_uuid)
 
     JobManager *jm = JobManager::getInstance();
     Shot *shot = m_shotModel->getShotWithUuid(shot_uuid);
-
-    if (jm && shot)
-        jm->addJob(JOB_COPY, this, nullptr, shot);
+    if (jm && shot) jm->addJob(JOB_COPY, this, nullptr, shot);
 }
 
 void Device::reencodeSelected(const QString &shot_uuid, const QVariant &values)
@@ -756,9 +773,7 @@ void Device::deleteSelected(const QString &shot_uuid)
 
     JobManager *jm = JobManager::getInstance();
     Shot *shot = m_shotModel->getShotWithUuid(shot_uuid);
-
-    if (jm && shot)
-        jm->addJob(JOB_DELETE, this, nullptr, shot);
+    if (jm && shot) jm->addJob(JOB_DELETE, this, nullptr, shot);
 }
 
 /* ************************************************************************** */
@@ -777,8 +792,7 @@ void Device::deleteSelection(const QVariant &indexes)
     }
 
     JobManager *jm = JobManager::getInstance();
-    if (jm && !list.empty())
-        jm->addJobs(JOB_DELETE, this, nullptr, list);
+    if (jm && !list.empty()) jm->addJobs(JOB_DELETE, this, nullptr, list);
 }
 
 void Device::offloadCopySelection(const QVariant &indexes)
@@ -794,8 +808,7 @@ void Device::offloadCopySelection(const QVariant &indexes)
     }
 
     JobManager *jm = JobManager::getInstance();
-    if (jm && !list.empty())
-        jm->addJobs(JOB_COPY, this, nullptr, list);
+    if (jm && !list.empty()) jm->addJobs(JOB_COPY, this, nullptr, list);
 }
 
 void Device::offloadMergeSelection(const QVariant &indexes)
@@ -811,8 +824,7 @@ void Device::offloadMergeSelection(const QVariant &indexes)
     }
 
     JobManager *jm = JobManager::getInstance();
-    if (jm && !list.empty())
-        jm->addJobs(JOB_COPY, this, nullptr, list);
+    if (jm && !list.empty()) jm->addJobs(JOB_COPY, this, nullptr, list);
 }
 
 /* ************************************************************************** */

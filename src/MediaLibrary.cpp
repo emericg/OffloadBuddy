@@ -205,13 +205,13 @@ QStringList MediaLibrary::getSelectedUuids(const QVariant &indexes)
 
     // indexes from qml gridview (after filtering)
     QJSValue jsArray = indexes.value<QJSValue>();
-    const unsigned length = jsArray.property("length").toUInt();
+    const int jsArray_length = jsArray.property("length").toInt();
     QList<QPersistentModelIndex> proxyIndexes;
 
     QStringList selectedUuids;
-    for (unsigned i = 0; i < length; i++)
+    for (int i = 0; i < jsArray_length; i++)
     {
-        QModelIndex proxyIndex = m_shotFilter->index(jsArray.property(i).toInt(), 0);
+        QModelIndex proxyIndex = m_shotFilter->index(jsArray.property(static_cast<quint32>(i)).toInt(), 0);
         proxyIndexes.append(QPersistentModelIndex(proxyIndex));
 
         Shot *shot = qvariant_cast<Shot*>(m_shotFilter->data(proxyIndexes.at(i), ShotModel::PointerRole));
@@ -230,13 +230,13 @@ QStringList MediaLibrary::getSelectedPaths(const QVariant &indexes)
 
     // indexes from qml gridview (after filtering)
     QJSValue jsArray = indexes.value<QJSValue>();
-    const unsigned jsArray_length = jsArray.property("length").toUInt();
+    const int jsArray_length = jsArray.property("length").toInt();
     QList<QPersistentModelIndex> proxyIndexes;
 
     QStringList selectedPaths;
-    for (unsigned i = 0; i < jsArray_length; i++)
+    for (int i = 0; i < jsArray_length; i++)
     {
-        QModelIndex proxyIndex = m_shotFilter->index(jsArray.property(i).toInt(), 0);
+        QModelIndex proxyIndex = m_shotFilter->index(jsArray.property(static_cast<quint32>(i)).toInt(), 0);
         proxyIndexes.append(QPersistentModelIndex(proxyIndex));
 
         Shot *shot = qvariant_cast<Shot*>(m_shotFilter->data(proxyIndexes.at(i), ShotModel::PointerRole));

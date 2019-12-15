@@ -22,7 +22,8 @@ Item {
         if (!(deviceSavedStateList[currentDevice.uuid])) {
             deviceSavedStateList[currentDevice.uuid] = ({ orderBy: 0,
                                                           filterBy: 0,
-                                                          zoomLevel: settingsManager.thumbSize,
+                                                          thumbSize: settingsManager.thumbSize,
+                                                          thumbFormat: settingsManager.thumbFormat,
                                                           mainState: "stateMediaGrid",
                                                           selectedIndex: -1,
                                                           selectionMode: false,

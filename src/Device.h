@@ -259,7 +259,7 @@ public slots:
     float getMtpBatteryLevel(const int index = 0) const;
 
     //
-    void offloadAll();
+    void offloadAll(const QString &path);
     void deleteAll();
 
     //
