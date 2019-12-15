@@ -22,9 +22,10 @@
 #define UTILS_APP_H
 /* ************************************************************************** */
 
+#include <QObject>
 #include <QUrl>
 #include <QString>
-#include <QObject>
+#include <QStringList>
 
 /* ************************************************************************** */
 
@@ -50,6 +51,7 @@ public:
     static Q_INVOKABLE QString appBuildMode();
 
     static Q_INVOKABLE void appExit();
+
     static Q_INVOKABLE void openWith(const QString &path);
     static Q_INVOKABLE QUrl getStandardPath(const QString &type);
 

@@ -1,5 +1,5 @@
 // UtilsString.js
-// Version 0.6
+// Version 0.7
 .pragma library
 
 /* ************************************************************************** */
@@ -86,6 +86,7 @@ function durationToString_short(duration) {
 /*!
  * durationToString_compact()
  * Format is 'XXh XXm XXs [XXms]'
+ * Last second is rounded and milliseconds are hidden unless duration is less than two seconds.
  */
 function durationToString_compact(duration) {
     var text = '';
@@ -103,12 +104,11 @@ function durationToString_compact(duration) {
     if (minutes > 0) {
         text += minutes.toString() + qsTr("m") + " ";
     }
-    if (seconds > 0) {
-        text += seconds.toString() + qsTr("s") + " ";
-    }
 
     if (seconds <= 1 && ms > 0) {
-        text = ms.toString() + qsTr("ms");
+        text += seconds.toString() + qsTr("s") + " " + ms.toString() + qsTr("ms");
+    } else {
+        text += Math.round((duration - (hours * 3600000) - (minutes * 60000)) / 1000).toString() + qsTr("s");
     }
 
     return text;

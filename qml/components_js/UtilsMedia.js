@@ -262,7 +262,7 @@ function orientationToString(orientation) {
 }
 
 /*!
- * projectionToString
+ * projectionToString()
  */
 function projectionToString(proj) {
     var proj_string = '';
@@ -287,7 +287,7 @@ function projectionToString(proj) {
 }
 
 /*!
- * scanmodeToString
+ * scanmodeToString()
  */
 function scanmodeToString(scanmode) {
     var scanmode_string = '';

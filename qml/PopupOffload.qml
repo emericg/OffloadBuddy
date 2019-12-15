@@ -14,6 +14,9 @@ Popup {
 
     signal confirmed()
 
+    property var isGoPro: true
+    property var isReadOnly: false
+
     modal: true
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
@@ -26,7 +29,6 @@ Popup {
     }
 
     /*contentItem:*/ Item {
-        id: element
         anchors.fill: parent
 
         Text {
@@ -60,15 +62,26 @@ Popup {
                 anchors.left: parent.left
                 anchors.leftMargin: 0
 
+                visible: isGoPro
+
                 Text {
                     id: labelIgnoreJunk
-                    width: 128
+                    width: 180
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Ignore LRVs and THM files")
                     font.pixelSize: 16
                     color: Theme.colorSubText
                 }
+                SwitchThemedDesktop {
+                    id: switchIgnoreJunk
+                    anchors.left: labelIgnoreJunk.right
+                    anchors.leftMargin: 16
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    checked: true
+                    //text: ""
+                }
             }
 
             Item {
@@ -78,13 +91,24 @@ Popup {
                 anchors.rightMargin: 0
                 anchors.leftMargin: 0
 
+                visible: isGoPro
+
                 Text {
                     id: labelIgnoreAudio
-                    width: 128
+                    width: 180
                     color: Theme.colorSubText
                     text: qsTr("Ignore HD Audio files")
                     anchors.verticalCenter: parent.verticalCenter
                     font.pixelSize: 16
+                }
+                SwitchThemedDesktop {
+                    id: switchIgnoreAudio
+                    anchors.left: labelIgnoreAudio.right
+                    anchors.leftMargin: 16
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    checked: true
+                    //text: ""
                 }
             }
 
@@ -95,15 +119,26 @@ Popup {
                 anchors.left: parent.left
                 anchors.leftMargin: 0
 
+                visible: isGoPro
+
                 Text {
                     id: labelMerge
-                    width: 128
+                    width: 180
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Merge chaptered files")
                     font.pixelSize: 16
                     color: Theme.colorSubText
                 }
+                SwitchThemedDesktop {
+                    id: switchMerge
+                    anchors.left: labelMerge.right
+                    anchors.leftMargin: 16
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    checked: true
+                    //text: ""
+                }
             }
 
             Item {
@@ -113,13 +148,24 @@ Popup {
                 anchors.leftMargin: 0
                 anchors.rightMargin: 0
 
+                visible: isGoPro
+
                 Text {
                     id: labelMetadatas
-                    width: 128
+                    width: 180
                     color: Theme.colorSubText
                     text: qsTr("Extract metadatas")
                     anchors.verticalCenter: parent.verticalCenter
                     font.pixelSize: 16
+                }
+                SwitchThemedDesktop {
+                    id: switchMetadatas
+                    anchors.left: labelMetadatas.right
+                    anchors.leftMargin: 16
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    checked: true
+                    //text: ""
                 }
             }
 
@@ -130,16 +176,25 @@ Popup {
                 anchors.rightMargin: 0
                 anchors.leftMargin: 0
 
+                visible: !isReadOnly
+
                 Text {
                     id: labelDelete
-                    width: 128
+                    width: 180
                     color: Theme.colorSubText
                     text: qsTr("Delete offloaded files")
                     anchors.verticalCenter: parent.verticalCenter
                     font.pixelSize: 16
                 }
             }
-
+/*
+            Rectangle { // separator
+                height: 1
+                anchors.right: parent.right
+                anchors.left: parent.left
+                color: Theme.colorSeparator
+            }
+*/
             Item { // spacer
                 height: 16
                 anchors.right: parent.right
@@ -194,11 +249,12 @@ Popup {
                         cbDestinations.append( { "text": qsTr("Select path manually") } )
 
                         comboBoxDestination.currentIndex = 0
-                        textField_path.text = settingsManager.directoriesList[0].directoryPath
                     }
 
                     property bool cbinit: false
                     onCurrentIndexChanged: {
+                        textField_path.text = settingsManager.directoriesList[comboBoxDestination.currentIndex].directoryPath
+
                         if (cbinit) {
                             if (comboBoxDestination.currentIndex === cbDestinations.count) {
                                 //
@@ -219,11 +275,6 @@ Popup {
                 anchors.rightMargin: 0
 
                 visible: (comboBoxDestination.currentIndex === (cbDestinations.count - 1))
-                //text: directory.directoryPath
-
-                onVisibleChanged: {
-                    //
-                }
 
                 FileDialog {
                     id: fileDialogChange
@@ -280,7 +331,6 @@ Popup {
             }
             ButtonWireframeImage {
                 id: buttonOffload
-                width: 128
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Offload")

@@ -21,16 +21,13 @@
 
 #include "SettingsManager.h"
 #include "MediaDirectory.h"
-#include "Shot.h"
 
+#include <QApplication>
 #include <QStandardPaths>
-#include <QStorageInfo>
+#include <QLocale>
 #include <QDir>
-
 #include <QSettings>
 #include <QDebug>
-
-#define MEDIA_DIRECTORIES_MAX_COUNT 16
 
 /* ************************************************************************** */
 
@@ -64,7 +61,7 @@ bool SettingsManager::readSettings()
 {
     bool status = false;
 
-    QSettings settings("OffloadBuddy", "OffloadBuddy");
+    QSettings settings(QApplication::organizationName(), QApplication::applicationName());
 
     if (settings.status() == QSettings::NoError)
     {
@@ -110,7 +107,7 @@ bool SettingsManager::readSettings()
         if (settings.contains("global/contentHierarchy"))
             m_contentHierarchy = settings.value("global/contentHierarchy").toUInt();
 
-        for (int i = 1; i <= MEDIA_DIRECTORIES_MAX_COUNT; i++)
+        for (int i = 1; i <= max_media_directories; i++)
         {
             QString p = "MediaDirectories/" + QString::number(i) + "/path";
             QString t = "MediaDirectories/" + QString::number(i) + "/content";
@@ -146,7 +143,7 @@ bool SettingsManager::writeSettings()
 {
     bool status = false;
 
-    QSettings settings("OffloadBuddy", "OffloadBuddy");
+    QSettings settings(QApplication::organizationName(), QApplication::applicationName());
 
     if (settings.isWritable())
     {
@@ -176,7 +173,7 @@ bool SettingsManager::writeSettings()
                 i++;
             }
         }
-        for (; i < MEDIA_DIRECTORIES_MAX_COUNT; i++)
+        for (; i <= max_media_directories; i++)
         {
             QString p = "MediaDirectories/" + QString::number(i) + "/path";
             QString t = "MediaDirectories/" + QString::number(i) + "/content";

@@ -20,6 +20,11 @@
 
 #include "utils_app.h"
 
+#if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
+#include "utils_android.h"
+#include "utils_ios.h"
+#endif
+
 #include <cmath>
 
 #include <QDir>
@@ -139,6 +144,10 @@ void UtilsApp::openWith(const QString &path)
 
 QUrl UtilsApp::getStandardPath(const QString &type)
 {
+#if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
+    android_ask_storage_permissions();
+#endif
+
     QUrl path;
     QStringList paths;
 
@@ -150,7 +159,11 @@ QUrl UtilsApp::getStandardPath(const QString &type)
         paths = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation);
     else
     {
+#if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
+        paths = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
+#else
         paths = QStandardPaths::standardLocations(QStandardPaths::HomeLocation);
+#endif
     }
 
     if (!paths.isEmpty())
@@ -158,5 +171,53 @@ QUrl UtilsApp::getStandardPath(const QString &type)
 
     return path;
 }
+
+/* ************************************************************************** */
+
+#if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
+
+bool UtilsApp::getMobileStoragePermission()
+{
+    return android_ask_storage_permissions();
+}
+
+int UtilsApp::getMobileStorageCount()
+{
+    QStringList storages = android_get_storages_by_api();
+    return storages.size();
+}
+
+QString UtilsApp::getMobileStorageInternal()
+{
+    QString internal;
+    QStringList storages = android_get_storages_by_api();
+
+    if (storages.size() > 0)
+        internal = storages.at(0);
+
+    return internal;
+}
+
+QString UtilsApp::getMobileStorageExternal(int index)
+{
+    QStringList storages = android_get_storages_by_api();
+
+    if (storages.size() > index)
+        return storages.at(1 + index);
+
+    return QString();
+}
+
+QStringList UtilsApp::getMobileStorageExternals()
+{
+    QStringList storages = android_get_storages_by_api();
+
+    if (storages.size() > 0)
+        storages.removeFirst();
+
+    return storages;
+}
+
+#endif // defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
 
 /* ************************************************************************** */

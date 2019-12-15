@@ -58,8 +58,8 @@ class SettingsManager: public QObject
     Q_PROPERTY(bool ignorejunk READ getIgnoreJunk WRITE setIgnoreJunk NOTIFY ignoreJunkChanged)
     Q_PROPERTY(bool ignorehdaudio READ getIgnoreHdAudio WRITE setIgnoreHdAudio NOTIFY ignoreHdAudioChanged)
     Q_PROPERTY(bool mtpfullscan READ getMtpFullScan WRITE setMtpFullScan NOTIFY mtpFullScanChanged)
-    Q_PROPERTY(uint contenthierarchy READ getContentHierarchy WRITE setContentHierarchy NOTIFY contentHierarchyChanged)
 
+    Q_PROPERTY(uint contenthierarchy READ getContentHierarchy WRITE setContentHierarchy NOTIFY contentHierarchyChanged)
     Q_PROPERTY(QVariant directoriesList READ getDirectories NOTIFY directoriesUpdated)
 
     QSize m_appSize;
@@ -77,9 +77,10 @@ class SettingsManager: public QObject
     unsigned m_thumbFormat = 2;
     unsigned m_thumbSize = 2;
     bool m_mtpFullScan = false;
-    unsigned m_contentHierarchy = 0;
 
     // Media directories
+    static const max_media_directories = 16;
+    unsigned m_contentHierarchy = 0;
     QList <QObject *> m_mediaDirectories;
 
     // Singleton
@@ -104,7 +105,6 @@ Q_SIGNALS:
     void thumbSizeChanged();
     void mtpFullScanChanged();
     void contentHierarchyChanged();
-
     void directoriesUpdated();
     void directoryAdded(const QString &);
     void directoryRemoved(const QString &);

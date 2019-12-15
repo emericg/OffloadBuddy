@@ -155,7 +155,7 @@ Rectangle {
         //if ((shot.width / shot.height) < (mediaArea.width / mediaArea.height))
 
         // no metadatas?
-        if (!mediaWidth || !shot.mediaHeight) {
+        if (!mediaWidth || !mediaHeight) {
             mediaWidth = output.width
             mediaHeight = output.height
         }
