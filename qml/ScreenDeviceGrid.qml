@@ -80,7 +80,8 @@ Item {
         selectionCount = 0;
 
         for (var i = 0; i < shotsView.count; i++) {
-            if (currentDevice) currentDevice.getShotByProxyIndex(i).selected = false;
+            if (currentDevice && currentDevice.getShotByProxyIndex(i))
+                currentDevice.getShotByProxyIndex(i).selected = false;
         }
 
         // save state
@@ -106,6 +107,7 @@ Item {
         // Grid filters and settings
         comboBox_orderby.currentIndex = deviceSavedState.orderBy
         comboBox_filterby.currentIndex = deviceSavedState.filterBy
+        shotsView.setThumFormat()
 
         // Banner // TODO reopen ONLY if needed
         bannerMessage.close()
@@ -473,7 +475,6 @@ Item {
             anchors.topMargin: 16
             anchors.left: parent.left
             anchors.leftMargin: 16
-            displayText: qsTr("Order by: Date")
 
             model: ListModel {
                 id: cbShotsOrderby
@@ -517,7 +518,6 @@ Item {
             anchors.topMargin: 16
             anchors.left: comboBox_orderby.right
             anchors.leftMargin: 16
-            displayText: qsTr("No filter")
 
             model: ListModel {
                 id: cbMediaFilters
@@ -535,8 +535,8 @@ Item {
 
                     currentDevice.filterByType(cbMediaFilters.get(currentIndex).text)
 
-                    if (currentIndex == 0)
-                        displayText = cbMediaFilters.get(currentIndex).text
+                    if (currentIndex === 0)
+                        displayText = cbMediaFilters.get(currentIndex).text // "No filter"
                     else
                         displayText = qsTr("Filter by:") + " " + cbMediaFilters.get(currentIndex).text
                 } else {
@@ -565,26 +565,26 @@ Item {
                 text: "1:1"
                 selected: (shotsView.cellFormat === 1.0)
                 onClicked: {
-                    shotsView.cellFormat = 1.0
-                    shotsView.computeCellSize()
+                    deviceSavedState.thumbFormat = 1
+                    shotsView.setThumFormat()
                 }
             }
             ItemLilMenuButton {
                 height: parent.height
                 text: "4:3"
                 selected: (shotsView.cellFormat === 4/3)
-                onClicked:  {
-                    shotsView.cellFormat = 4/3
-                    shotsView.computeCellSize()
+                onClicked: {
+                    deviceSavedState.thumbFormat = 2
+                    shotsView.setThumFormat()
                 }
             }
             ItemLilMenuButton {
                 height: parent.height
                 text: "16:9"
                 selected: (shotsView.cellFormat === 16/9)
-                onClicked:  {
-                    shotsView.cellFormat = 16/9
-                    shotsView.computeCellSize()
+                onClicked: {
+                    deviceSavedState.thumbFormat = 3
+                    shotsView.setThumFormat()
                 }
             }
         }
@@ -607,8 +607,8 @@ Item {
                 sourceSize: 18
                 selected: (shotsView.cellSizeTarget === 221)
                 onClicked: {
-                    shotsView.cellSizeTarget = 221;
-                    shotsView.computeCellSize();
+                    deviceSavedState.thumbSize = 1
+                    shotsView.setThumFormat()
                 }
             }
             ItemLilMenuButton {
@@ -617,8 +617,8 @@ Item {
                 sourceSize: 22
                 selected: (shotsView.cellSizeTarget === 279)
                 onClicked: {
-                    shotsView.cellSizeTarget = 279;
-                    shotsView.computeCellSize();
+                    deviceSavedState.thumbSize = 2
+                    shotsView.setThumFormat()
                 }
             }
             ItemLilMenuButton {
@@ -627,8 +627,8 @@ Item {
                 sourceSize: 26
                 selected: (shotsView.cellSizeTarget === 376)
                 onClicked: {
-                    shotsView.cellSizeTarget = 376;
-                    shotsView.computeCellSize();
+                    deviceSavedState.thumbSize = 3
+                    shotsView.setThumFormat()
                 }
             }
             ItemLilMenuButton {
@@ -637,8 +637,8 @@ Item {
                 sourceSize: 30
                 selected: (shotsView.cellSizeTarget === 512)
                 onClicked: {
-                    shotsView.cellSizeTarget = 512;
-                    shotsView.computeCellSize();
+                    deviceSavedState.thumbSize = 4
+                    shotsView.setThumFormat()
                 }
             }
         }
@@ -823,50 +823,44 @@ Item {
                 mediaGrid.exitSelectionMode();
             }
 
+            function setThumFormat() {
+                if (deviceSavedState.thumbFormat === 1)
+                    shotsView.cellFormat = 1.0
+                else if (deviceSavedState.thumbFormat === 2)
+                    shotsView.cellFormat = 4/3
+                else if (deviceSavedState.thumbFormat === 3)
+                    shotsView.cellFormat = 16/9
+
+                if (deviceSavedState.thumbSize === 1)
+                    shotsView.cellSizeTarget = 221
+                else if (deviceSavedState.thumbSize === 2)
+                    shotsView.cellSizeTarget = 279
+                else if (deviceSavedState.thumbSize === 3)
+                    shotsView.cellSizeTarget = 376
+                else if (deviceSavedState.thumbSize === 4)
+                    shotsView.cellSizeTarget = 512
+
+                shotsView.computeCellSize()
+            }
+
             Connections {
                 target: settingsManager
                 onThumbFormatChanged: {
-                    if (settingsManager.thumbFormat === 1)
-                        shotsView.cellFormat = 1.0
-                    else if (settingsManager.thumbFormat === 2)
-                        shotsView.cellFormat = 4/3
-                    else if (settingsManager.thumbFormat === 3)
-                        shotsView.cellFormat = 16/9
-
-                    shotsView.computeCellSize()
+                    if (deviceSavedState) {
+                        deviceSavedState.thumbFormat = settingsManager.thumbFormat
+                        shotsView.computeCellSize()
+                    }
                 }
                 onThumbSizeChanged: {
-                    if (settingsManager.thumbSize === 1)
-                        shotsView.cellSizeTarget = 221
-                    else if (settingsManager.thumbSize === 2)
-                        shotsView.cellSizeTarget = 279
-                    else if (settingsManager.thumbSize === 3)
-                        shotsView.cellSizeTarget = 376
-                    else if (settingsManager.thumbSize === 4)
-                        shotsView.cellSizeTarget = 512
-
-                    shotsView.computeCellSize()
+                    if (deviceSavedState) {
+                        deviceSavedState.thumbSize = settingsManager.thumbSize
+                        shotsView.computeCellSize()
+                    }
                 }
             }
 
-            property real cellFormat: {
-                if (settingsManager.thumbFormat === 1)
-                    return 1.0
-                else if (settingsManager.thumbFormat === 2)
-                    return 4/3
-                else if (settingsManager.thumbFormat === 3)
-                    return 16/9
-            }
-            property int cellSizeTarget: {
-                if (settingsManager.thumbSize === 1)
-                    return 221
-                else if (settingsManager.thumbSize === 2)
-                    return 279
-                else if (settingsManager.thumbSize === 3)
-                    return 376
-                else if (settingsManager.thumbSize === 4)
-                    return 512
-            }
+            property real cellFormat
+            property int cellSizeTarget
             property int cellSize: cellSizeTarget
             property int cellMarginTarget: 12
             property int cellMargin: 12
