@@ -112,7 +112,9 @@ Rectangle {
         overlayRotations.visible = !overlayRotations.visible
     }
 
-    function toogleFullScreen() {
+    function toggleFullScreen() {
+        if (typeof shot === "undefined" || !shot) return
+
         // Check if fullscreen is necessary (preview is already maxed out)
         if (!mediaArea.isFullScreen) {
             //console.log("Check if fullscreen is necessary: " + (shot.width / shot.height) + " vs " + (mediaArea.width / mediaArea.height))
@@ -315,7 +317,7 @@ Rectangle {
 
             property bool hovered: false
 
-            onDoubleClicked: toogleFullScreen()
+            onDoubleClicked: toggleFullScreen()
             onEntered: { hovered = true; }
             onExited: { hovered = false; }
         }
@@ -663,7 +665,7 @@ Rectangle {
                 highlightMode: "color"
 
                 source: "qrc:/icons_material/baseline-fullscreen-24px.svg"
-                onClicked: mediaArea.toogleFullScreen()
+                onClicked: mediaArea.toggleFullScreen()
             }
         }
     }

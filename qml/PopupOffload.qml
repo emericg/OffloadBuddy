@@ -261,7 +261,7 @@ Popup {
                     anchors.rightMargin: 2
                     anchors.verticalCenter: parent.verticalCenter
 
-                    //imageSource: "qrc:/icons_material/outline-folder-24px.svg"
+                    embedded: true
                     text: qsTr("change")
                     onClicked: {
                         fileDialogChange.folder =  "file:///" + textField_path.text

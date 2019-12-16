@@ -14,9 +14,8 @@ Item {
     property var currentDevice: null
 
     onCurrentDeviceChanged: {
+        //console.log("onCurrentDeviceChanged() Device is now " + currentDevice.uuid)
         if (typeof currentDevice === "undefined" || !currentDevice) return
-
-        //console.log("Device is now " + currentDevice.uuid)
 
         // No saved state? Initialize it!
         if (!(deviceSavedStateList[currentDevice.uuid])) {
@@ -33,12 +32,13 @@ Item {
                                                           detail_state: "overview" })
         }
 
-        // Restore state
+        // Select saved state
         deviceSavedState = deviceSavedStateList[currentDevice.uuid]
 
         screenDeviceGrid.updateGridState()
         screenDeviceGrid.initDeviceHeader()
         screenDeviceGrid.initGridViewSettings()
+
         screenDeviceGrid.restoreState()
         screenMedia.restoreState()
 

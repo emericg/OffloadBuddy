@@ -119,7 +119,10 @@ Item {
         }
 
         // Grid index
-        shotsView.currentIndex = deviceSavedState.selectedIndex
+        if (deviceSavedState.selectedIndex >= 0 && deviceSavedState.selectedIndex < shotsView.count)
+            shotsView.currentIndex = deviceSavedState.selectedIndex
+        else
+            shotsView.currentIndex = -1
 
         // Grid selection
         selectionMode = deviceSavedState.selectionMode
@@ -262,8 +265,11 @@ Item {
             circleEmpty.visible = true
         } else {
             // Restore grid index
-            if (deviceSavedState && deviceSavedState.selectedIndex <= shotsView.count)
-                shotsView.currentIndex = deviceSavedState.selectedIndex
+            if (deviceSavedState)
+                if (deviceSavedState.selectedIndex >= 0 && deviceSavedState.selectedIndex < shotsView.count)
+                    shotsView.currentIndex = deviceSavedState.selectedIndex
+                else
+                    shotsView.currentIndex = -1
         }
     }
 
@@ -803,6 +809,8 @@ Item {
             actionMenu.visible = false
         }
 
+        // GridView ////////////////////////////////////////////////////////////
+
         GridView {
             id: shotsView
             anchors.fill: parent
@@ -818,10 +826,17 @@ Item {
             onCountChanged: updateGridViewSettings()
             onWidthChanged: computeCellSize()
 
-            Component.onCompleted: {
-                currentIndex = -1;
-                mediaGrid.exitSelectionMode();
-            }
+            ////////
+
+            property real cellFormat
+            property int cellSizeTarget
+            property int cellSize: cellSizeTarget
+            property int cellMarginTarget: 12
+            property int cellMargin: 12
+
+            //property int cellMargin: (parent.width%cellSize) / Math.floor(parent.width/cellSize);
+            cellWidth: cellSize + cellMargin
+            cellHeight: Math.round(cellSize / cellFormat) + cellMargin
 
             function setThumFormat() {
                 if (deviceSavedState.thumbFormat === 1)
@@ -843,6 +858,16 @@ Item {
                 shotsView.computeCellSize()
             }
 
+            function computeCellSize() {
+                var availableWidth = shotsView.width - cellMarginTarget
+                var cellColumnsTarget = Math.trunc(availableWidth / cellSizeTarget)
+                // 1 // Adjust only cellSize
+                cellSize = (availableWidth - cellMarginTarget * cellColumnsTarget) / cellColumnsTarget
+                // Recompute
+                cellWidth = cellSize + cellMargin
+                cellHeight = Math.round(cellSize / cellFormat) + cellMarginTarget
+            }
+
             Connections {
                 target: settingsManager
                 onThumbFormatChanged: {
@@ -859,45 +884,24 @@ Item {
                 }
             }
 
-            property real cellFormat
-            property int cellSizeTarget
-            property int cellSize: cellSizeTarget
-            property int cellMarginTarget: 12
-            property int cellMargin: 12
-
-            //property int cellMargin: (parent.width%cellSize) / Math.floor(parent.width/cellSize);
-            cellWidth: cellSize + cellMargin
-            cellHeight: Math.round(cellSize / cellFormat) + cellMargin
+            ////////
 
             onCurrentIndexChanged: {
-                //console.log("onCurrentIndexChanged() selected index: " + shotsview.currentIndex)
-                //console.log("onCurrentIndexChanged() selected row/column: " + shotsview.childAt())
-
-                //console.log("onCurrentIndexChanged() selected shot: " + shotsview.currentIndex)
+                //console.log("onCurrentIndexChanged() selected index: " + shotsView.currentIndex)
+                //console.log("onCurrentIndexChanged() selected item: " + shotsView.currentItem)
+                //console.log("onCurrentIndexChanged() selected row/column: " + shotsView.childAt())
+                //console.log("onCurrentIndexChanged() selected shot: " + selectedItem)
                 //console.log("onCurrentIndexChanged() selected shots [ " + selectionList + "]")
 
-                //console.log("highlight: " + rectangleDeviceShots.highlight.x + "/" + rectangleDeviceShots.highlight.y)
-
                 // save state
-                if (deviceSavedState && shotsView.currentIndex != 0)
-                    deviceSavedState.selectedIndex = shotsView.currentIndex
+                if (deviceSavedState)
+                    if (shotsView.currentIndex != 0 && shotsView.currentItem != null)
+                        deviceSavedState.selectedIndex = shotsView.currentIndex
             }
             onCurrentItemChanged: {
-                //console.log("onCurrentItemChanged() item: " + shotsview.currentItem)
-                //shotsview.currentItem.visible = false;
-                //console.log("onCurrentItemChanged() item: " + shotsview.currentItem.shot.name)
-
-                //screenDeviceShots.selectionList.push(shotsview.currentItem.shot.name)
-            }
-
-            function computeCellSize() {
-                var availableWidth = shotsView.width - cellMarginTarget
-                var cellColumnsTarget = Math.trunc(availableWidth / cellSizeTarget)
-                // 1 // Adjust only cellSize
-                cellSize = (availableWidth - cellMarginTarget * cellColumnsTarget) / cellColumnsTarget
-                // Recompute
-                cellWidth = cellSize + cellMargin
-                cellHeight = Math.round(cellSize / cellFormat) + cellMarginTarget
+                //console.log("onCurrentItemChanged() index: " + shotsView.currentIndex)
+                //console.log("onCurrentItemChanged() item: " + shotsView.currentItem)
+                //console.log("onCurrentItemChanged() item: " + shotsView.currentItem.shot.name)
             }
 
             ////////
@@ -907,6 +911,10 @@ Item {
 
             ScrollBar.vertical: ScrollBar { z: 1 }
 
+            highlight: highlight
+            highlightFollowsCurrentItem: true
+            highlightMoveDuration: 0
+
             flickableChildren: MouseArea {
                 id: mouseAreaInsideView
                 anchors.fill: parent
@@ -915,13 +923,10 @@ Item {
                 onClicked: {
                     mediaGrid.exitSelectionMode()
                     shotsView.currentIndex = -1
+                    deviceSavedState.selectedIndex = -1
                     actionMenu.visible = false
                 }
             }
-
-            highlight: highlight
-            highlightFollowsCurrentItem: true
-            highlightMoveDuration: 0
 
             Keys.onPressed: {
                 if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
@@ -936,7 +941,7 @@ Item {
                 } else if (event.key === Qt.Key_Clear) {
                     mediaGrid.exitSelectionMode()
                 } else if (event.key === Qt.Key_Menu) {
-                    //console.log("shotsview::Key_Menu")
+                    //console.log("shotsView::Key_Menu")
                 } else if (event.key === Qt.Key_Delete) {
                     if (selectionMode) {
                         confirmDeleteSingleFilePopup.files = currentDevice.getSelectedPaths(selectionList)

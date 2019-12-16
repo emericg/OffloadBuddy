@@ -14,6 +14,8 @@ Item {
     property Shot shot: null
 
     onShotChanged: {
+        if (typeof shot === "undefined" || !shot) return
+
         // if we 'just' changed shot, we reset the state // FIXME forward/backward reset it too
         screenMedia.state = "overview"
         updateShotDetails()
@@ -251,7 +253,7 @@ Item {
 
     onStateChanged: {
         // save state
-        if (deviceSavedState && typeof deviceSavedState !== "undefined")
+        if (typeof deviceSavedState !== "undefined" && deviceSavedState)
             deviceSavedState.detail_state = state
     }
 
@@ -311,10 +313,9 @@ Item {
         id: rectangleContent
 
         anchors.top: rectangleHeader.bottom
+        anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.topMargin: 0
 
         MediaDetailOverview {
             id: contentOverview
