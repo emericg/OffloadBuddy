@@ -238,6 +238,10 @@ bool Shot::parseGpmfSampleFast(GpmfBuffer &buf, int &devc_count)
                             break;
                         case GPMF_TAG_GPSU:
                         {
+                            if (gps_fix > 2)
+                            {
+                                hasGPS = true;
+                            }
                             if (gps_fix > 1)
                             {
                                 // ex: '161222124837.150'
@@ -250,7 +254,6 @@ bool Shot::parseGpmfSampleFast(GpmfBuffer &buf, int &devc_count)
                                     gps_tmcd += str.substr(6,2) + ":" + str.substr(8,2) + ":" + str.substr(10,2) + "Z";
                                 }
 
-                                hasGPS = true;
                                 QString dt = QString::fromStdString(gps_tmcd);
                                 m_date_gps = QDateTime::fromString(dt, "yyyy-MM-ddThh:mm:ssZ");
                                 emit shotUpdated();
@@ -262,10 +265,6 @@ bool Shot::parseGpmfSampleFast(GpmfBuffer &buf, int &devc_count)
                         }
                         case GPMF_TAG_GPS5:
                         {
-                            if (gps_fix > 1)
-                            {
-                                //parseData_gps5(buf, strm, scales, gps_tmcd, gps_fix, gps_dop);
-                            }
                             break;
                         }
                         default:
@@ -312,7 +311,7 @@ void Shot::parseData_gps5(GpmfBuffer &buf, GpmfKLV &klv,
     gps_params.second = gps_fix;
     Q_UNUSED(gps_dop)
 
-    if (gps_fix > 1 && !m_date_gps.isValid())
+    if (gps_fix > 2 && !m_date_gps.isValid())
     {
         QString dt = QString::fromStdString(gps_tmcd);
         m_date_gps = QDateTime::fromString(dt, "yyyy-MM-ddThh:mm:ssZ");
@@ -320,33 +319,47 @@ void Shot::parseData_gps5(GpmfBuffer &buf, GpmfKLV &klv,
     }
 
     std::pair<float, float> gps_coord;
+    float alti, speed;
     for (uint64_t i = 0; i < klv.repeat; i++)
     {
-        gps_coord.first = static_cast<float>(buf.read_i32(e)) / scales[0]; // latitude
-        gps_coord.second = static_cast<float>(buf.read_i32(e)) / scales[1]; // longitude
-        m_gps.push_back(gps_coord);
-        m_gps_params.emplace_back(gps_params);
-
-        if (m_gps.size() == 1)
+        if (gps_fix > 2) // We use 3D lock only, even that is shaky...
         {
-            m_gps_altitude_offset = 0; // TODO
-        }
-        m_alti.push_back(static_cast<float>((buf.read_i32(e)) / scales[2]) + m_gps_altitude_offset); // altitude
+            gps_coord.first = static_cast<float>(buf.read_i32(e)) / scales[0]; // latitude
+            gps_coord.second = static_cast<float>(buf.read_i32(e)) / scales[1]; // longitude
 
-        buf.read_i32(e); // speed 2D // but we don't care
-        m_speed.push_back(static_cast<float>(buf.read_i32(e)) / scales[4]); // speed 3D
+            alti = static_cast<float>(buf.read_i32(e)) / scales[2];
+            speed = static_cast<float>(buf.read_i32(e)) / scales[4];
 
-        // Compute distance between this point and the previous one
-        if (m_gps.size() > 1)
-        {
-            unsigned previous_point_id = m_gps.size() - 2;
-
-            if (gps_fix >= 2 && m_gps_params.at(previous_point_id).second >= 2)
+            // yes, some points are REALLY messed up...
+            // (also, assume noones goes to space with its camera)
+            if (alti > -50 && alti < 80000 && speed >= 0 && speed < 3000)
             {
-                hasGPS = true;
-                distance_km += haversine_km(gps_coord.first, gps_coord.second,
-                                            m_gps.at(previous_point_id).first,
-                                            m_gps.at(previous_point_id).second);
+                m_gps.push_back(gps_coord);
+                m_gps_params.emplace_back(gps_params);
+
+                if (m_gps.size() == 1)
+                {
+                    m_gps_altitude_offset = 0; // TODO
+                }
+                m_alti.push_back(alti + m_gps_altitude_offset); // altitude
+
+                buf.read_i32(e);
+                m_speed.push_back(speed);
+
+                // Compute distance between this point and the previous one
+                if (m_gps.size() > 1)
+                {
+                    unsigned previous_point_id = m_gps.size() - 2;
+
+                    // 3D lock REQUIRED
+                    if (gps_fix > 2 && m_gps_params.at(previous_point_id).second >= 2)
+                    {
+                        hasGPS = true;
+                        distance_km += haversine_km(gps_coord.first, gps_coord.second,
+                                                    m_gps.at(previous_point_id).first,
+                                                    m_gps.at(previous_point_id).second);
+                    }
+                }
             }
         }
     }
