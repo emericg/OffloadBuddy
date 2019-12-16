@@ -114,6 +114,11 @@ ApplicationWindow {
             id: screenComponents
         }
 
+        onStateChanged: {
+            screenLibrary.updateFocus()
+            screenDevice.updateFocus()
+        }
+
         state: "library"
         states: [
             State {

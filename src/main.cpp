@@ -174,7 +174,6 @@ int main(int argc, char *argv[])
         "Shared",             // name in QML (does not have to match C++ name)
         "Error: only enums"); // error in case someone tries to create a MyNamespace object
 
-    qmlRegisterType<Shot>("com.offloadbuddy.shared", 1, 0, "Shot");
     qmlRegisterType<ItemImage>("com.offloadbuddy.shared", 1, 0, "ItemImage");
 
     // Then we start the UI

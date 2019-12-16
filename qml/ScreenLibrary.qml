@@ -14,6 +14,10 @@ Item {
         onStateUpdated: screenLibraryGrid.updateGridViewSettings()
     }
 
+    function updateFocus() {
+        screenMedia.updateFocus()
+    }
+
     // KEYS HANDLING ///////////////////////////////////////////////////////////
 
     Shortcut {
@@ -71,6 +75,7 @@ Item {
     ScreenMedia {
         anchors.fill: parent
         id: screenMedia
+        startedFrom: "library"
     }
 
     // STATES //////////////////////////////////////////////////////////////////

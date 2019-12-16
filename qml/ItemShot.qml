@@ -12,7 +12,7 @@ Rectangle {
     height: Math.round(width / cellFormat)
     color: Theme.colorForeground
 
-    property Shot shot: pointer
+    property var shot: pointer
     property var shotDevice: null
 
     property real cellFormat: 4/3

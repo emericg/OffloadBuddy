@@ -13,6 +13,10 @@ Item {
     property var deviceSavedState: null
     property var currentDevice: null
 
+    function updateFocus() {
+        screenMedia.updateFocus()
+    }
+
     onCurrentDeviceChanged: {
         //console.log("onCurrentDeviceChanged() Device is now " + currentDevice.uuid)
         if (typeof currentDevice === "undefined" || !currentDevice) return
@@ -89,6 +93,7 @@ Item {
     ScreenMedia {
         anchors.fill: parent
         id: screenMedia
+        startedFrom: "device"
     }
 
     // STATES //////////////////////////////////////////////////////////////////

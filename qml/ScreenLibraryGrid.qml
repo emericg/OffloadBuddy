@@ -323,7 +323,7 @@ Item {
                         mediaLibrary.filterByType(cbMediaFilters.get(currentIndex).text)
 
                         if (currentIndex == 0)
-                            displayText = cbMediaFilters.get(currentIndex).text
+                            displayText = cbMediaFilters.get(currentIndex).text // "No filter"
                         else
                             displayText = qsTr("Filter by:") + " " + cbMediaFilters.get(currentIndex).text
                     } else {

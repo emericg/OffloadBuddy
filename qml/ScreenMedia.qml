@@ -11,32 +11,43 @@ Item {
     height: 720
     anchors.fill: parent
 
-    property Shot shot: null
+    property string startedFrom: ""
+    property var shot: null
 
     onShotChanged: {
+        //console.log("screenMedia - onShotChanged() Shot is now " + shot.name)
         if (typeof shot === "undefined" || !shot) return
 
         // if we 'just' changed shot, we reset the state // FIXME forward/backward reset it too
         screenMedia.state = "overview"
         updateShotDetails()
+        updateFocus()
 
         // save state
-        if (typeof deviceSavedState !== "undefined" && deviceSavedState)
+        if (typeof deviceSavedState !== "undefined" && deviceSavedState) {
+            console.log("SHOT " + screenMedia.shot.name + " FOR DEVICE" + currentDevice.uuid)
             deviceSavedState.detail_shot = screenMedia.shot
+        }
     }
 
     onVisibleChanged: {
-        if (visible === false)
-            contentOverview.setPause()
+        updateFocus()
+    }
+
+    function updateFocus() {
+        focus = (startedFrom === "device" && applicationContent.state === "device" && screenDevice.state === "stateMediaDetails") ||
+                (startedFrom === "library" && applicationContent.state === "library" && screenLibrary.state === "stateMediaDetails")
+
+        if (focus === false) contentOverview.setPause()
     }
 
     function restoreState() {
-        screenMedia.shot = deviceSavedState.detail_shot // ???
+        screenMedia.shot = deviceSavedState.detail_shot
         screenMedia.state = deviceSavedState.detail_state
     }
 
     function updateShotDetails() {
-        if (shot) {
+        if (screenMedia.shot) {
             textShotName.text = shot.name
 
             if (shot.hasGPMF && shot.hasGPS) {
@@ -59,13 +70,13 @@ Item {
 
     // KEYS HANDLING ///////////////////////////////////////////////////////////
 
-    focus: (applicationContent.state === "device" && screenDevice.state === "stateMediaDetails") ||
-           (applicationContent.state === "library" && screenLibrary.state === "stateMediaDetails")
     Keys.onPressed: {
         if (event.key === Qt.Key_Space) {
-            if (screenMedia.state === "overview" && shot.fileType === Shared.FILE_VIDEO) {
-                event.accepted = true;
-                contentOverview.setPlayPause();
+            if (screenMedia.shot) {
+                if (screenMedia.shot.fileType === Shared.FILE_VIDEO) {
+                    event.accepted = true;
+                    contentOverview.setPlayPause();
+                }
             }
         } else if (event.key === Qt.Key_Backspace) {
             event.accepted = true;
