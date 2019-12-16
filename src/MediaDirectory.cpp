@@ -213,7 +213,7 @@ void MediaDirectory::refreshMediaDirectory()
     }
     else
     {
-        qDebug() << "MediaDirectory(" << m_path << ") is not available: invalid";
+        //qDebug() << "MediaDirectory(" << m_path << ") is not available: invalid";
 
         m_available = false;
         emit availableUpdated();

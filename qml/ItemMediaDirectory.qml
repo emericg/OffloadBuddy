@@ -15,6 +15,7 @@ Rectangle {
     color: (directory.available) ? "transparent" : Theme.colorWarning
 
     property var directory: null
+    property bool confirmation: false
 
     Connections {
         target: directory
@@ -80,8 +81,8 @@ Rectangle {
             }
             NumberAnimation on rotation {
                 id: refreshAnimationStop
-                duration: 1000;
-                to: 360;
+                duration: 1000
+                to: 360
                 easing.type: Easing.Linear
                 running: false
             }
@@ -142,7 +143,7 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: 10
 
-        visible: directory.available
+        visible: directory.available && !itemMediaDirectory.confirmation
         value: directory.storageLevel
     }
     Text {
@@ -154,7 +155,7 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: -6
 
-        visible: directory.available
+        visible: directory.available && !itemMediaDirectory.confirmation
         color: Theme.colorText
         text: UtilsString.bytesToString_short(directory.spaceUsed) + " used / " +
               UtilsString.bytesToString_short(directory.spaceAvailable) + " available / " +
@@ -163,7 +164,7 @@ Rectangle {
     Text {
         id: textError
         height: 20
-        visible: !directory.available
+        visible: !directory.available && !itemMediaDirectory.confirmation
         anchors.right: rectangleDelete.left
         anchors.rightMargin: 16
         anchors.left: comboBox_content.right
@@ -184,9 +185,57 @@ Rectangle {
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
 
+        visible: !itemMediaDirectory.confirmation
+
+        iconColor: directory.available ? Theme.colorIcon : "white"
         highlightMode: "color"
         highlightColor: Theme.colorError
         source: "qrc:/icons_material/baseline-delete-24px.svg"
-        onClicked: settingsManager.removeDirectory(textField_path.text)
+        onClicked: itemMediaDirectory.confirmation = true
+    }
+
+    ////////
+
+    Rectangle {
+        anchors.fill: rowConfirmation
+        visible: itemMediaDirectory.confirmation
+        color: itemMediaDirectory.color
+    }
+    Row {
+        id: rowConfirmation
+        anchors.right: parent.right
+        anchors.rightMargin: 16
+        anchors.verticalCenter: parent.verticalCenter
+
+        spacing: 16
+        visible: (itemMediaDirectory.confirmation)
+
+        Text {
+            id: textConfirmation
+            height: 32
+            anchors.verticalCenter: parent.verticalCenter
+
+            text: qsTr("Are you sure ?")
+            font.bold: true
+            font.pixelSize: 16
+            color: directory.available ? Theme.colorText : "white"
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+        }
+        ButtonWireframe {
+            height: 32
+            anchors.verticalCenter: parent.verticalCenter
+            text: qsTr("Cancel")
+            primaryColor: Theme.colorPrimary
+            onClicked: itemMediaDirectory.confirmation = false
+        }
+        ButtonWireframe {
+            height: 32
+            anchors.verticalCenter: parent.verticalCenter
+            text: qsTr("Yes")
+            fullColor: true
+            primaryColor: Theme.colorPrimary
+            onClicked: settingsManager.removeDirectory(textField_path.text)
+        }
     }
 }

@@ -96,6 +96,7 @@ Rectangle {
         text: qsTr("%n element(s) selected", "", mediaGrid.selectionCount)
         color: "white"
         font.pixelSize: 16
+        font.bold: true
     }
     ItemImageButton {
         id: rectangleClear
