@@ -165,6 +165,14 @@ bool Shot::parseGpmfSample(GpmfBuffer &buf, int &devc_count)
         }
     }
 
+    if (m_gps.size() > 1)
+    {
+        // We have a GPS track
+        hasGPS = true;
+        emit shotUpdated();
+    }
+
+
     return status;
 }
 
@@ -238,10 +246,6 @@ bool Shot::parseGpmfSampleFast(GpmfBuffer &buf, int &devc_count)
                             break;
                         case GPMF_TAG_GPSU:
                         {
-                            if (gps_fix > 2)
-                            {
-                                hasGPS = true;
-                            }
                             if (gps_fix > 1)
                             {
                                 // ex: '161222124837.150'
@@ -256,9 +260,8 @@ bool Shot::parseGpmfSampleFast(GpmfBuffer &buf, int &devc_count)
 
                                 QString dt = QString::fromStdString(gps_tmcd);
                                 m_date_gps = QDateTime::fromString(dt, "yyyy-MM-ddThh:mm:ssZ");
-                                emit shotUpdated();
 
-                                //qDebug() << "GPS FIX: " << QString::fromStdString(gps_tmcd);
+                                emit shotUpdated();
                                 return true;
                             }
                             break;
@@ -304,62 +307,78 @@ void Shot::parseData_gps5(GpmfBuffer &buf, GpmfKLV &klv,
     if (klv.fcc != GPMF_TAG_GPS5 || klv.type != GPMF_TYPE_SIGNED_LONG || klv.structsize != 20)
         return;
 
-    int e = 0;
+    // We use 3D lock and good DOP only, and even that is shaky at best...
+    if (gps_fix < 3 || gps_dop > 500)
+        return;
 
-    std::pair<std::string, float> gps_params;
-    gps_params.first = gps_tmcd;
-    gps_params.second = gps_fix;
-    Q_UNUSED(gps_dop)
-
-    if (gps_fix > 2 && !m_date_gps.isValid())
+    // Update GPS date?
+    if (gps_fix > 1 && !m_date_gps.isValid())
     {
         QString dt = QString::fromStdString(gps_tmcd);
         m_date_gps = QDateTime::fromString(dt, "yyyy-MM-ddThh:mm:ssZ");
         emit shotUpdated();
     }
 
+    // Update altitude offset?
+    if (m_gps.size() == 1)
+    {
+        m_gps_altitude_offset = 0; // TODO
+    }
+
+    //qDebug() << "GPS   FIX: " << gps_fix << "  DOP: " << gps_dop;
+
+    std::pair<std::string, float> gps_params;
+    gps_params.first = gps_tmcd;
+    gps_params.second = gps_fix;
+
     std::pair<float, float> gps_coord;
     float alti, speed;
+    int e = 0;
+
     for (uint64_t i = 0; i < klv.repeat; i++)
     {
-        if (gps_fix > 2) // We use 3D lock only, even that is shaky...
+        gps_coord.first = static_cast<float>(buf.read_i32(e)) / scales[0]; // latitude
+        gps_coord.second = static_cast<float>(buf.read_i32(e)) / scales[1]; // longitude
+
+        alti = static_cast<float>(buf.read_i32(e)) / scales[2];
+        buf.read_i32(e);
+        speed = static_cast<float>(buf.read_i32(e)) / scales[4];
+
+        // yes, some points are REALLY messed up...
+        // (also, assume no ones goes to space with their camera)
         {
-            gps_coord.first = static_cast<float>(buf.read_i32(e)) / scales[0]; // latitude
-            gps_coord.second = static_cast<float>(buf.read_i32(e)) / scales[1]; // longitude
-
-            alti = static_cast<float>(buf.read_i32(e)) / scales[2];
-            speed = static_cast<float>(buf.read_i32(e)) / scales[4];
-
-            // yes, some points are REALLY messed up...
-            // (also, assume noones goes to space with its camera)
-            if (alti > -50 && alti < 80000 && speed >= 0 && speed < 3000)
+            if ((gps_coord.first < 0.001f && gps_coord.first > -0.001f) ||
+                (gps_coord.second < 0.001f && gps_coord.second > -0.001f))
             {
-                m_gps.push_back(gps_coord);
-                m_gps_params.emplace_back(gps_params);
+                //qDebug() << "GPS (null coordinates)  lat: " << gps_coord.first << "  long: " << gps_coord.second;
+                //qDebug() << "GPS (null coordinates)  FIX: " << gps_fix << "  DOP: " << gps_dop;
+                continue;
+            }
+            if (alti < -150 || alti > 80000 || speed < 0 || speed > 3000)
+            {
+                //qDebug() << "GPS (bad data)  alti: " << alti << "  speed: " << speed;
+                //qDebug() << "GPS (bad data)  FIX: " << gps_fix << "  DOP: " << gps_dop;
+                continue;
+            }
+        }
 
-                if (m_gps.size() == 1)
-                {
-                    m_gps_altitude_offset = 0; // TODO
-                }
-                m_alti.push_back(alti + m_gps_altitude_offset); // altitude
+        m_gps.push_back(gps_coord);
+        m_gps_params.emplace_back(gps_params);
 
-                buf.read_i32(e);
-                m_speed.push_back(speed);
+        m_alti.push_back(alti + m_gps_altitude_offset);
+        m_speed.push_back(speed);
 
-                // Compute distance between this point and the previous one
-                if (m_gps.size() > 1)
-                {
-                    unsigned previous_point_id = m_gps.size() - 2;
+        // Compute distance between this point and the previous one
+        if (m_gps.size() > 1)
+        {
+            unsigned previous_point_id = m_gps.size() - 2;
 
-                    // 3D lock REQUIRED
-                    if (gps_fix > 2 && m_gps_params.at(previous_point_id).second >= 2)
-                    {
-                        hasGPS = true;
-                        distance_km += haversine_km(gps_coord.first, gps_coord.second,
-                                                    m_gps.at(previous_point_id).first,
-                                                    m_gps.at(previous_point_id).second);
-                    }
-                }
+            // 3D lock REQUIRED
+            if (gps_fix > 2 && m_gps_params.at(previous_point_id).second >= 2)
+            {
+                distance_km += haversine_km(gps_coord.first, gps_coord.second,
+                                            m_gps.at(previous_point_id).first,
+                                            m_gps.at(previous_point_id).second);
             }
         }
     }
@@ -372,7 +391,7 @@ void Shot::parseData_triplet(GpmfBuffer &buf, GpmfKLV &klv,
                              std::vector <TriFloat> &datalist)
 {
     int e = 0;
-    int datasize = klv.structsize / getGpmfTypeSize((GpmfType_e)klv.type);
+    int datasize = klv.structsize / getGpmfTypeSize(static_cast<GpmfType_e>(klv.type));
 
     if (klv.type == GPMF_TYPE_NESTED || datasize != 3)
         return;
@@ -452,29 +471,24 @@ void Shot::updateSpeedsSerie(QLineSeries *serie, int appUnit)
     avgSpeed = 0;
     maxSpeed = -500000;
 
-    int speed_sync = 0;
+    float speed_sync = 0;
 
     int id = 0;
     QVector<QPointF> points;
     for (unsigned i = 0; i < m_speed.size(); i++)
     {
-        if (m_gps_params.at(i).second >= 3) // we need at the very least a 2D lock for accurate speed
-        {
-            current = m_speed.at(i);
+        current = m_speed.at(i);
 
-            //if (appUnit == 1) // imperial
-            //    current /= 1609.344f;
+        //if (appUnit == 1) // imperial
+        //    current /= 1609.344f;
 
-            avgSpeed += current;
-            speed_sync++;
+        avgSpeed += current;
+        speed_sync++;
 
-            if (current < minSpeed)
-                minSpeed = current;
-            else if (current > maxSpeed)
-                maxSpeed = current;
-        }
-        else
-            current = 0;
+        if (current < minSpeed)
+            minSpeed = current;
+        else if (current > maxSpeed)
+            maxSpeed = current;
 
         points.insert(id, QPointF(id, current));
         id++;
@@ -495,29 +509,24 @@ void Shot::updateAltiSerie(QLineSeries *serie, int appUnit)
     avgAlti = 0;
     maxAlti = -500000;
 
-    int alti_sync = 0;
+    float alti_sync = 0;
 
     int id = 0;
     QVector<QPointF> points;
     for (unsigned i = 0; i < m_alti.size(); i++)
     {
-        if (m_gps_params.at(i).second >= 3) // we need at least a 3D lock for accurate altitude
-        {
-            current = m_alti.at(i);
+        current = m_alti.at(i);
 
-            //if (appUnit == 1) // imperial
-            //    current /= 0.3048f;
+        //if (appUnit == 1) // imperial
+        //    current /= 0.3048f;
 
-            avgAlti += current;
-            alti_sync++;
+        avgAlti += current;
+        alti_sync++;
 
-            if (current < minAlti)
-                minAlti = current;
-            else if (current > maxAlti)
-                maxAlti = current;
-        }
-        else
-            current = 0;
+        if (current < minAlti)
+            minAlti = current;
+        else if (current > maxAlti)
+            maxAlti = current;
 
         points.insert(id, QPointF(id, current));
         id++;
