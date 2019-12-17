@@ -6,7 +6,7 @@ import ThemeEngine 1.0
 
 Button {
     id: control
-    width: contenttext.width + imgSize*3
+    width: contentText.width + imgSize*3
     implicitHeight: Theme.componentHeight
 
     property url source: ""
@@ -20,8 +20,21 @@ Button {
     font.bold: true
 
     contentItem: Item {
+        ImageSvg {
+            id: contentImage
+            width: imgSize
+            height: imgSize
+
+            anchors.right: contentText.left
+            anchors.rightMargin: imgSize/3
+            anchors.verticalCenter: parent.verticalCenter
+
+            opacity: enabled ? 1.0 : 0.3
+            source: control.source
+            color: fullColor ? "white" : control.primaryColor
+        }
         Text {
-            id: contenttext
+            id: contentText
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.horizontalCenterOffset: (imgSize/2 + imgSize/6)
@@ -32,19 +45,6 @@ Button {
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight
-        }
-        ImageSvg {
-            id: contentimage
-            width: imgSize
-            height: imgSize
-
-            anchors.right: contenttext.left
-            anchors.rightMargin: imgSize/3
-            anchors.verticalCenter: parent.verticalCenter
-
-            opacity: enabled ? 1.0 : 0.3
-            source: control.source
-            color: fullColor ? "white" : control.primaryColor
         }
     }
 

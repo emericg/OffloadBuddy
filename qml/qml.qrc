@@ -11,14 +11,6 @@
         <file>ScreenSettings.qml</file>
         <file>ScreenAbout.qml</file>
         <file>ScreenComponents.qml</file>
-        <file>ItemBannerActions.qml</file>
-        <file>ItemBannerMessage.qml</file>
-        <file>ItemDeviceMenu.qml</file>
-        <file>ItemMediaDirectory.qml</file>
-        <file>ItemJob.qml</file>
-        <file>ItemShot.qml</file>
-        <file>ActionMenu.qml</file>
-        <file>ActionButton.qml</file>
         <file>PopupDate.qml</file>
         <file>PopupDelete.qml</file>
         <file>PopupExit.qml</file>
@@ -33,6 +25,16 @@
         <file>WindowGeometrySaver.qml</file>
         <file>ThemeEngine.qml</file>
 
+        <file alias="ItemBannerActions.qml">components/ItemBannerActions.qml</file>
+        <file alias="ItemBannerMessage.qml">components/ItemBannerMessage.qml</file>
+        <file alias="ItemDeviceMenu.qml">components/ItemDeviceMenu.qml</file>
+        <file alias="ItemMediaDirectory.qml">components/ItemMediaDirectory.qml</file>
+        <file alias="ItemJob.qml">components/ItemJob.qml</file>
+        <file alias="ItemShot.qml">components/ItemShot.qml</file>
+        <file alias="ActionMenu.qml">components/ActionMenu.qml</file>
+        <file alias="ActionButton.qml">components/ActionButton.qml</file>
+        <file alias="ItemSidebarButton.qml">components/ItemSidebarButton.qml</file>
+
         <file alias="ImageSvg.qml">components_generic/ImageSvg.qml</file>
         <file alias="ItemBadge.qml">components_generic/ItemBadge.qml</file>
         <file alias="ItemCodec.qml">components_generic/ItemCodec.qml</file>
@@ -40,7 +42,6 @@
         <file alias="ItemImageButton.qml">components_generic/ItemImageButton.qml</file>
         <file alias="ItemMenuButton.qml">components_generic/ItemMenuButton.qml</file>
         <file alias="ItemLilMenuButton.qml">components_generic/ItemLilMenuButton.qml</file>
-        <file alias="ItemSidebarButton.qml">components_generic/ItemSidebarButton.qml</file>
         <file alias="ButtonImage.qml">components_generic/ButtonImage.qml</file>
         <file alias="ButtonImageThemed.qml">components_generic/ButtonImageThemed.qml</file>
         <file alias="ButtonWireframe.qml">components_generic/ButtonWireframe.qml</file>
