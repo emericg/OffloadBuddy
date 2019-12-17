@@ -247,7 +247,7 @@ Popup {
                     sidebarVisible: true
                     selectExisting: true
                     selectMultiple: false
-                    selectFolder: false
+                    selectFolder: true
 
                     onAccepted: {
                         textField_path.text = UtilsPath.cleanUrl(fileDialogChange.fileUrl);
@@ -262,7 +262,6 @@ Popup {
                     anchors.rightMargin: 2
                     anchors.verticalCenter: parent.verticalCenter
 
-                    //imageSource: "qrc:/icons_material/outline-folder-24px.svg"
                     text: qsTr("change")
                     embedded: true
                     onClicked: {

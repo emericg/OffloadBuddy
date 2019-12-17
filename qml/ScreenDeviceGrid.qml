@@ -472,7 +472,6 @@ Item {
 
         ////////
 
-
         ComboBoxThemed {
             id: comboBox_orderby
             width: 220
@@ -496,6 +495,7 @@ Item {
                 if (cbinit) {
                     mediaGrid.exitSelectionMode()
                     shotsView.currentIndex = -1
+                    actionMenu.visible = false
 
                     if (currentIndex == 0)
                         currentDevice.orderByDate()
@@ -538,6 +538,7 @@ Item {
                 if (cbinit) {
                     mediaGrid.exitSelectionMode()
                     shotsView.currentIndex = -1
+                    actionMenu.visible = false
 
                     currentDevice.filterByType(cbMediaFilters.get(currentIndex).text)
 

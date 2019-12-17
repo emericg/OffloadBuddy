@@ -234,8 +234,9 @@ Item {
             width: 476
             onCurrentIndexChanged: {
                 if (cbinit) {
-                    exitSelectionMode()
+                    mediaGrid.exitSelectionMode()
                     shotsView.currentIndex = -1
+                    actionMenu.visible = false
 
                     if (currentIndex < 0) {
                         //
@@ -280,8 +281,9 @@ Item {
                 property bool cbinit: false
                 onCurrentIndexChanged: {
                     if (cbinit) {
-                        exitSelectionMode()
+                        mediaGrid.exitSelectionMode()
                         shotsView.currentIndex = -1
+                        actionMenu.visible = false
 
                         if (currentIndex == 0)
                             mediaLibrary.orderByDate()
@@ -317,8 +319,9 @@ Item {
                 property bool cbinit: false
                 onCurrentIndexChanged: {
                     if (cbinit) {
-                        exitSelectionMode()
+                        mediaGrid.exitSelectionMode()
                         shotsView.currentIndex = -1
+                        actionMenu.visible = false
 
                         mediaLibrary.filterByType(cbMediaFilters.get(currentIndex).text)
 
@@ -562,8 +565,9 @@ Item {
             onWidthChanged: computeCellSize()
 
             Component.onCompleted: {
-                currentIndex = -1;
-                mediaGrid.exitSelectionMode();
+                mediaGrid.exitSelectionMode()
+                shotsView.currentIndex = -1
+                actionMenu.visible = false
             }
 
             Connections {

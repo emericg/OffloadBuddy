@@ -9,7 +9,7 @@ import "qrc:/js/UtilsPath.js" as UtilsPath
 Popup {
     id: popupOffload
     width: 640
-    height: 480
+    height: 520
     padding: 24
 
     signal confirmed()
@@ -196,10 +196,10 @@ Popup {
 
                     model: cbDestinations
 
-                    Component.onCompleted: updateDestinations()
+                    Component.onCompleted: comboBoxDestination.updateDestinations()
                     Connections {
                         target: settingsManager
-                        onDirectoriesUpdated: updateDestinations()
+                        onDirectoriesUpdated: comboBoxDestination.updateDestinations()
                     }
 
                     function updateDestinations() {
@@ -217,7 +217,10 @@ Popup {
 
                     property bool cbinit: false
                     onCurrentIndexChanged: {
-                        textField_path.text = settingsManager.directoriesList[comboBoxDestination.currentIndex].directoryPath
+                        if (settingsManager.directoriesList.length <= 0) return
+
+                        if (comboBoxDestination.currentIndex < cbDestinations.count)
+                            textField_path.text = comboBoxDestination.displayText
 
                         if (cbinit) {
                             if (comboBoxDestination.currentIndex === cbDestinations.count) {
@@ -246,7 +249,7 @@ Popup {
                     sidebarVisible: true
                     selectExisting: true
                     selectMultiple: false
-                    selectFolder: false
+                    selectFolder: true
 
                     onAccepted: {
                         textField_path.text = UtilsPath.cleanUrl(fileDialogChange.fileUrl);

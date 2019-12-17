@@ -10,7 +10,7 @@ import "qrc:/js/UtilsPath.js" as UtilsPath
 Popup {
     id: popupEncodeVideo
     width: 640
-    height: 540
+    height: 500
     padding: 24
 
     signal confirmed()
@@ -32,12 +32,6 @@ Popup {
 
     function updateEncodePanel(shot) {
         currentShot = shot
-
-        if (shot.fileType === Shared.FILE_VIDEO || shot.shotType > Shared.SHOT_PICTURE) {
-            setVideoMode()
-        } else if (shot.fileType === Shared.FILE_PICTURE) {
-            setImageMode()
-        }
 
         // Framerate handler
         if (shot.shotType === Shared.SHOT_PICTURE_MULTI ||
@@ -98,6 +92,13 @@ Popup {
 
         // Filters
         rectangleFilter.visible = false
+
+        // Set mode
+        if (shot.fileType === Shared.FILE_VIDEO || shot.shotType > Shared.SHOT_PICTURE) {
+            setVideoMode()
+        } else if (shot.fileType === Shared.FILE_PICTURE) {
+            setImageMode()
+        }
 
         // Handle destination(s)
         comboBoxDestination.updateDestinations()
@@ -165,7 +166,7 @@ Popup {
     ////////
 
     function setImageMode() {
-        titleArea.text = qsTr("Encoding panel")
+        titleArea.text = qsTr("Encoding panel (image)")
         rectangleCodec.visible = false
         rectangleFormat.visible = true
         rectangleSpeed.visible = false
@@ -173,7 +174,7 @@ Popup {
     }
 
     function setVideoMode() {
-        titleArea.text = qsTr("Encoding panel")
+        titleArea.text = qsTr("Encoding panel (video)")
         rectangleCodec.visible = true
         rectangleFormat.visible = false
         rectangleSpeed.visible = true
@@ -538,7 +539,6 @@ Popup {
                 }
 
                 Row {
-                    id: row
                     anchors.left: titleOrientation.right
                     anchors.leftMargin: 16
                     anchors.right: parent.right
@@ -548,6 +548,7 @@ Popup {
 
                     Text {
                         text: qsTr("Rotation")
+                        color: Theme.colorSubTest
                         anchors.verticalCenter: parent.verticalCenter
                     }
                     TextFieldThemed {
@@ -595,29 +596,44 @@ Popup {
                     color: Theme.colorSubText
                 }
 
-                TextFieldThemed {
-                    id: textField_clipstart
-                    width: 128
-                    height: 36
-                    anchors.verticalCenter: parent.verticalCenter
-                    horizontalAlignment: Text.AlignHCenter
+                Row {
                     anchors.left: titleClip.right
                     anchors.leftMargin: 16
+                    anchors.right: parent.right
+                    anchors.rightMargin: 0
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: 8
 
-                    placeholderText: "00:00:00"
-                    validator: RegExpValidator { regExp: /^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$/ }
-                }
-                TextFieldThemed {
-                    id: textField_clipstop
-                    width: 128
-                    height: 36
-                    anchors.left: textField_clipstart.right
-                    anchors.leftMargin: 16
-                    anchors.verticalCenter: textField_clipstart.verticalCenter
-                    horizontalAlignment: Text.AlignHCenter
+                    Text {
+                        text: qsTr("From")
+                        color: Theme.colorSubTest
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                    TextFieldThemed {
+                        id: textField_clipstart
+                        width: 128
+                        height: 32
+                        anchors.verticalCenter: parent.verticalCenter
+                        horizontalAlignment: Text.AlignHCenter
 
-                    placeholderText: "00:00:00"
-                    validator: RegExpValidator { regExp: /^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$/ }
+                        placeholderText: "00:00:00"
+                        validator: RegExpValidator { regExp: /^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$/ }
+                    }
+                    Text {
+                        text: qsTr("to")
+                        color: Theme.colorSubTest
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                    TextFieldThemed {
+                        id: textField_clipstop
+                        width: 128
+                        height: 32
+                        anchors.verticalCenter: textField_clipstart.verticalCenter
+                        horizontalAlignment: Text.AlignHCenter
+
+                        placeholderText: "00:00:00"
+                        validator: RegExpValidator { regExp: /^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$/ }
+                    }
                 }
             }
 
@@ -762,7 +778,10 @@ Popup {
 
                     property bool cbinit: false
                     onCurrentIndexChanged: {
-                        textField_path.text = settingsManager.directoriesList[comboBoxDestination.currentIndex].directoryPath
+                        if (settingsManager.directoriesList.length <= 0) return
+
+                        if (comboBoxDestination.currentIndex < cbDestinations.count)
+                            textField_path.text = comboBoxDestination.displayText
 
                         if (cbinit) {
                             if (comboBoxDestination.currentIndex === cbDestinations.count) {
@@ -784,7 +803,6 @@ Popup {
                 anchors.rightMargin: 0
 
                 visible: (comboBoxDestination.currentIndex === (cbDestinations.count - 1))
-                //text: directory.directoryPath
 
                 onVisibleChanged: {
                     //
@@ -796,7 +814,7 @@ Popup {
                     sidebarVisible: true
                     selectExisting: true
                     selectMultiple: false
-                    selectFolder: false
+                    selectFolder: true
 
                     onAccepted: {
                         textField_path.text = UtilsPath.cleanUrl(fileDialogChange.fileUrl);
