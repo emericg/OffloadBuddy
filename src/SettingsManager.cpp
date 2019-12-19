@@ -133,7 +133,7 @@ bool SettingsManager::readSettings()
     }
     else
     {
-        qDebug() << "QSettings READ error:" << settings.status();
+        qWarning() << "QSettings READ error:" << settings.status();
     }
 
     return status;
@@ -187,8 +187,12 @@ bool SettingsManager::writeSettings()
         }
         else
         {
-            qDebug() << "QSettings WRITE error:" << settings.status();
+            qWarning() << "QSettings WRITE error:" << settings.status();
         }
+    }
+    else
+    {
+        qWarning() << "QSettings WRITE error: read only file?";
     }
 
     return status;

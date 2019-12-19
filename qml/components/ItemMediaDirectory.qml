@@ -155,7 +155,7 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: -6
 
-        visible: directory.available && !itemMediaDirectory.confirmation
+        visible: directory.available && !itemMediaDirectory.confirmation && deviceSpaceText.width > 400
         color: Theme.colorText
         text: UtilsString.bytesToString_short(directory.spaceUsed) + " used / " +
               UtilsString.bytesToString_short(directory.spaceAvailable) + " available / " +

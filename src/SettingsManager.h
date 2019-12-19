@@ -28,11 +28,6 @@
 #include <QList>
 #include <QSize>
 
-#include <QTimer>
-
-class QStorageInfo;
-class MediaDirectory;
-
 /* ************************************************************************** */
 
 /*!

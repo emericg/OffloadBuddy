@@ -277,14 +277,10 @@ Item {
 
     PopupEncodeVideo {
         id: popupEncodeVideo
-        x: (applicationWindow.width / 2) - (popupEncodeVideo.width / 2) - (applicationSidebar.width / 2)
-        y: (applicationWindow.height / 2) - (popupEncodeVideo.height / 2)
     }
 
     PopupOffload {
         id: popupOffloadAll
-        x: (applicationWindow.width / 2) - (popupOffloadAll.width / 2) - (applicationSidebar.width / 2)
-        y: (applicationWindow.height / 2) - (popupOffloadAll.height / 2)
 
         onConfirmed: {
             currentDevice.offloadAll(popupOffloadAll.selectedPath)
@@ -293,8 +289,6 @@ Item {
 
     PopupDelete {
         id: confirmDeleteAll
-        x: (applicationWindow.width / 2) - (confirmDeleteAll.width / 2) - (applicationSidebar.width / 2)
-        y: (applicationWindow.height / 2) - (confirmDeleteAll.height / 2)
 
         message: qsTr("Are you sure you want to delete ALL of the files from this device?")
         onConfirmed: {
@@ -304,8 +298,6 @@ Item {
 
     PopupDelete {
         id: confirmDeleteMultipleFilesPopup
-        x: (applicationWindow.width / 2) - (confirmDeleteMultipleFilesPopup.width / 2) - (applicationSidebar.width / 2)
-        y: (applicationWindow.height / 2) - (confirmDeleteMultipleFilesPopup.height / 2)
 
         message: qsTr("Are you sure you want to delete selected files?")
         onConfirmed: {
@@ -323,8 +315,6 @@ Item {
 
     PopupDelete {
         id: confirmDeleteSingleFilePopup
-        x: (applicationWindow.width / 2) - (confirmDeleteSingleFilePopup.width / 2) - (applicationSidebar.width / 2)
-        y: (applicationWindow.height / 2) - (confirmDeleteSingleFilePopup.height / 2)
 
         message: qsTr("Are you sure you want to delete selected shot?")
         onConfirmed: {

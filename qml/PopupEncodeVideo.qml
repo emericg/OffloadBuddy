@@ -9,6 +9,8 @@ import "qrc:/js/UtilsPath.js" as UtilsPath
 
 Popup {
     id: popupEncodeVideo
+    x: (applicationWindow.width / 2) - (width / 2) - (applicationSidebar.width / 2)
+    y: (applicationWindow.height / 2) - (height / 2)
     width: 640
     height: 500
     padding: 24

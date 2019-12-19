@@ -20,12 +20,12 @@
 
 #include "utils_maths.h"
 
-#ifndef _USE_MATH_DEFINES
+#if defined(_MSC_VER) && !defined(_USE_MATH_DEFINES)
 #define _USE_MATH_DEFINES
 #endif
-#include <cmath>
 
-#define d2r (M_PI / 180.0)
+#include <cmath>
+#include <limits>
 
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ int roundTo(const int value, const int roundTo)
 }
 
 /* ************************************************************************** */
+
+#define d2r (M_PI / 180.0)
 
 double haversine_km(double lat1, double long1, double lat2, double long2)
 {

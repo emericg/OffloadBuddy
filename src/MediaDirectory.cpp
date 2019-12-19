@@ -70,10 +70,11 @@ MediaDirectory::MediaDirectory()
  * Do not check if the path exists, we are allow to save paths that have been
  * disconnected since (ex: removable medias).
  */
-MediaDirectory::MediaDirectory(const QString &path, int content)
+MediaDirectory::MediaDirectory(const QString &path, int content, bool primary)
 {
     setPath(path);
     setContent(content);
+    m_primary = primary;
 
     m_refreshTimer.setInterval(MEDIA_DIRECTORIES_REFRESH_INTERVAL * 1000);
     connect(&m_refreshTimer, &QTimer::timeout, this, &MediaDirectory::refreshMediaDirectory);

@@ -172,7 +172,6 @@ bool Shot::parseGpmfSample(GpmfBuffer &buf, int &devc_count)
         emit shotUpdated();
     }
 
-
     return status;
 }
 

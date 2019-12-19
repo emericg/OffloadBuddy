@@ -5,7 +5,7 @@ DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 CONFIG += c++11
 QT     += core qml quickcontrols2 svg
-QT     += multimedia location sql charts
+QT     += multimedia location charts
 
 # Validate Qt version
 if (lessThan(QT_MAJOR_VERSION, 5) | lessThan(QT_MINOR_VERSION, 9)) {

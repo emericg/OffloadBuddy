@@ -5,6 +5,8 @@ import ThemeEngine 1.0
 
 Popup {
     id: popupDate
+    x: (applicationWindow.width / 2) - (width / 2) - (applicationSidebar.width / 2)
+    y: (applicationWindow.height / 2) - (height / 2)
     width: 540
     height: 480
     padding: 24

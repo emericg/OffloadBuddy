@@ -19,14 +19,14 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#ifndef LIBRARY_DIRECTORY_H
-#define LIBRARY_DIRECTORY_H
+#ifndef MEDIA_DIRECTORY_H
+#define MEDIA_DIRECTORY_H
 /* ************************************************************************** */
 
 #include <QObject>
 #include <QVariant>
+#include <QString>
 #include <QList>
-
 #include <QTimer>
 
 class QStorageInfo;
@@ -45,6 +45,7 @@ class MediaDirectory: public QObject
 
     Q_PROPERTY(QString directoryPath READ getPath WRITE setPath NOTIFY directoryUpdated)
     Q_PROPERTY(int directoryContent READ getContent WRITE setContent NOTIFY directoryUpdated)
+    Q_PROPERTY(bool primary READ isPrimary NOTIFY directoryUpdated)
 
     Q_PROPERTY(bool available READ isAvailable NOTIFY availableUpdated)
     Q_PROPERTY(bool scanning READ isScanning NOTIFY scanningUpdated)
@@ -59,6 +60,7 @@ class MediaDirectory: public QObject
     int m_content_type = 0;
     int m_storage_type = 0;
 
+    bool m_primary = false;
     bool m_available = false;
     bool m_scanning = false;
 
@@ -76,7 +78,7 @@ private slots:
 
 public:
     MediaDirectory();
-    MediaDirectory(const QString &path, int content);
+    MediaDirectory(const QString &path, int content, bool primary = false);
     ~MediaDirectory();
 
 public slots:
@@ -85,6 +87,8 @@ public slots:
 
     int getContent() { return m_content_type; }
     void setContent(int content);
+
+    bool isPrimary() { return m_primary; }
 
     bool isAvailable() { return m_available; }
     bool isAvailableFor(unsigned shotType, int64_t shotSize);
@@ -101,4 +105,4 @@ public slots:
 };
 
 /* ************************************************************************** */
-#endif // LIBRARY_DIRECTORY_H
+#endif // MEDIA_DIRECTORY_H

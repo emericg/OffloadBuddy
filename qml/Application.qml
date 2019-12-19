@@ -182,8 +182,6 @@ ApplicationWindow {
 
     PopupExit {
         id: popupExit
-        x: (parent.width - popupExit.width) / 2
-        y: (parent.height - popupExit.height) / 2
         onConfirmed: Qt.quit()
     }
     onClosing: {

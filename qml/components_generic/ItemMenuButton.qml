@@ -9,7 +9,7 @@ Item {
     implicitWidth: 64
     implicitHeight: 64
 
-    width: 16 + contentImage.width + (imgSize / 3) + contentText.width + 16
+    width: 16 + contentImage.width + (imgSize / 2) + contentText.width + 16
     property int imgSize: 32
 
     signal clicked()
