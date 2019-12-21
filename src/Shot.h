@@ -105,8 +105,8 @@ class Shot: public QObject
     Q_PROPERTY(QString camera READ getCameraSource NOTIFY shotUpdated)
     Q_PROPERTY(qint64 size READ getSize NOTIFY shotUpdated)
     Q_PROPERTY(qint64 datasize READ getDataSize NOTIFY shotUpdated)
-    Q_PROPERTY(int chapters READ getChapterCount NOTIFY shotUpdated)
-    Q_PROPERTY(int highlightCount READ getHighlightCount NOTIFY shotUpdated)
+    Q_PROPERTY(unsigned chapters READ getChapterCount NOTIFY shotUpdated)
+    Q_PROPERTY(unsigned highlightCount READ getHighlightCount NOTIFY shotUpdated)
 
     Q_PROPERTY(QString previewPhoto READ getPreviewPhoto NOTIFY shotUpdated)
     Q_PROPERTY(QString previewVideo READ getPreviewVideo NOTIFY shotUpdated)
@@ -376,8 +376,8 @@ public slots:
     double getLongitude() const { return gps_long; }
     double getAltitude() const { return gps_alt; }
 
-    int getHighlightCount() const { return m_highlights.size(); }
-    int getGpsPointCount() const { return m_gps.size(); }
+    unsigned getHighlightCount() const { return m_highlights.size(); }
+    unsigned getGpsPointCount() const { return m_gps.size(); }
 
     int getFileId() const { return m_shot_id; }
     void setFileId(int id) { m_shot_id = id; }

@@ -462,8 +462,8 @@ void Shot::parseData_triplet(GpmfBuffer &buf, GpmfKLV &klv,
 
 void Shot::updateSpeedsSerie(QLineSeries *serie, int appUnit)
 {
-    if (serie == nullptr)
-        return;
+    Q_UNUSED(appUnit)
+    if (!serie) return;
 
     float current;
     minSpeed = 500000;
@@ -500,8 +500,8 @@ void Shot::updateSpeedsSerie(QLineSeries *serie, int appUnit)
 
 void Shot::updateAltiSerie(QLineSeries *serie, int appUnit)
 {
-    if (serie == nullptr)
-        return;
+    Q_UNUSED(appUnit)
+    if (!serie) return;
 
     float current;
     minAlti = 500000;

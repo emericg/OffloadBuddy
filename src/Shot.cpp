@@ -828,8 +828,8 @@ bool Shot::getMetadatasFromPicture(int index)
         //qDebug() << "Backup path with QImageReader";
 
         vcodec = img_infos.format();
-        width = img_infos.size().rwidth();
-        height = img_infos.size().rheight();
+        width = static_cast<unsigned>(img_infos.size().rwidth());
+        height = static_cast<unsigned>(img_infos.size().rheight());
         orientation = img_infos.transformation();
 
         status = true;
