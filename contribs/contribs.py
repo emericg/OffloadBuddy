@@ -94,10 +94,10 @@ TARGETS = []
 if OS_HOST == "Linux":
     TARGETS.append(["linux", "x86_64"])
     #if ANDROID_NDK_HOME:
-    #    TARGETS.append(["android", "armv7"])
     #    TARGETS.append(["android", "armv8"])
-    #    TARGETS.append(["android", "x86"])
+    #    TARGETS.append(["android", "armv7"])
     #    TARGETS.append(["android", "x86_64"])
+    #    TARGETS.append(["android", "x86"])
     #TARGETS.append(["windows", "x86_64"]) # Windows cross compilation
 
 if OS_HOST == "Darwin":
@@ -241,7 +241,7 @@ for TARGET in TARGETS:
 
     ## CMAKE command selection
     CMAKE_cmd = ["cmake"]
-    CMAKE_gen = "Unix Makefiles"
+    CMAKE_gen = "Ninja"
     build_shared = "ON"
     build_static = "OFF"
 
@@ -255,28 +255,30 @@ for TARGET in TARGETS:
         if OS_TARGET == "iOS":
             build_shared = "OFF"
             build_static = "ON"
+            if ARCH_TARGET == "simulator":
+                CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + contribs_dir + "/tools/ios.toolchain.cmake", "-DIOS_PLATFORM=SIMULATOR64"]
             if ARCH_TARGET == "armv7":
                 CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + contribs_dir + "/tools/ios.toolchain.cmake", "-DIOS_PLATFORM=OS"]
-            if ARCH_TARGET == "armv8":
-                CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + contribs_dir + "/tools/ios.toolchain.cmake", "-DIOS_PLATFORM=OS64", "-DENABLE_BITCODE=0", "-DENABLE_ARC=1"]
             else:
-                CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + contribs_dir + "/tools/ios.toolchain.cmake", "-DIOS_PLATFORM=SIMULATOR64"]
+                CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + contribs_dir + "/tools/ios.toolchain.cmake", "-DIOS_PLATFORM=OS64", "-DENABLE_BITCODE=0", "-DENABLE_ARC=1"]
     elif OS_HOST == "Windows":
-        if ARCH_TARGET == "x86_64":
-            CMAKE_gen = "Visual Studio 15 2017 Win64"
-        elif ARCH_TARGET == "armv7":
+        if ARCH_TARGET == "armv7":
             CMAKE_gen = "Visual Studio 15 2017 ARM"
-        else:
+        else if ARCH_TARGET == "x86":
             CMAKE_gen = "Visual Studio 15 2017"
+        else:
+            CMAKE_gen = "Visual Studio 15 2017 Win64"
 
     if OS_HOST == "Linux" or OS_HOST == "Darwin":
         if OS_TARGET == "android":
+            if ARCH_TARGET == "x86":
+                CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_HOME + "/build/cmake/android.toolchain.cmake", "-DANDROID_TOOLCHAIN=clang", "-DANDROID_ABI=x86", "-DANDROID_PLATFORM=android-21"]
+            if ARCH_TARGET == "x86_64":
+                CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_HOME + "/build/cmake/android.toolchain.cmake", "-DANDROID_TOOLCHAIN=clang", "-DANDROID_ABI=x86-64", "-DANDROID_PLATFORM=android-21"]
             if ARCH_TARGET == "armv7":
-                CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_HOME + "/build/cmake/android.toolchain.cmake", "-DANDROID_TOOLCHAIN=clang", "-DANDROID_ABI=arm64-v8a", "-DANDROID_PLATFORM=android-21"]
-            elif ARCH_TARGET == "armv8":
                 CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_HOME + "/build/cmake/android.toolchain.cmake", "-DANDROID_TOOLCHAIN=clang", "-DANDROID_ABI=armeabi-v7a", "-DANDROID_PLATFORM=android-21"]
             else:
-                CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_HOME + "/build/cmake/android.toolchain.cmake", "-DANDROID_TOOLCHAIN=clang", "-DANDROID_ABI=x86-64", "-DANDROID_PLATFORM=android-21"]
+                CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_HOME + "/build/cmake/android.toolchain.cmake", "-DANDROID_TOOLCHAIN=clang", "-DANDROID_ABI=arm64-v8a", "-DANDROID_PLATFORM=android-21"]
 
     ############################################################################
 
