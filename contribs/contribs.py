@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import os
 import sys
@@ -20,15 +20,15 @@ import urllib.request
 print("\n> OffloadBuddy contribs builder")
 
 ## DEPENDENCIES ################################################################
-# These dependencies are needed for this script to run
+# These software dependencies are needed for this script to run!
 
 ## linux:
-# python3 cmake libtool automake m4 libudev-dev
+# python3 cmake ninja libtool automake m4 libudev-dev
 
 ## macOS:
-# brew install python cmake automake
+# brew install python cmake automake ninja
 # brew install libtool pkg-config
-# brew install  gettext iconv libudev
+# brew install gettext iconv libudev
 # brew link --force gettext
 # xcode (10+)
 
@@ -76,39 +76,12 @@ if platform.machine() not in ("x86_64", "AMD64"):
 
 ## SETTINGS ####################################################################
 
-contribs_dir = os.getcwd() + "/"
-src_dir = contribs_dir + "src/"
+contribs_dir = os.getcwd()
+src_dir = contribs_dir + "/src/"
 
 clean = False
 rebuild = False
 ANDROID_NDK_HOME = os.getenv('ANDROID_NDK_HOME', '')
-
-## MATRIX ######################################################################
-
-# TODO
-
-## TARGETS #####################################################################
-
-TARGETS = []
-
-if OS_HOST == "Linux":
-    TARGETS.append(["linux", "x86_64"])
-    #if ANDROID_NDK_HOME:
-    #    TARGETS.append(["android", "armv8"])
-    #    TARGETS.append(["android", "armv7"])
-    #    TARGETS.append(["android", "x86_64"])
-    #    TARGETS.append(["android", "x86"])
-    #TARGETS.append(["windows", "x86_64"]) # Windows cross compilation
-
-if OS_HOST == "Darwin":
-    TARGETS.append(["macOS", "x86_64"])
-    #TARGETS.append(["iOS", "simulator"])
-    #TARGETS.append(["iOS", "armv7"])
-    #TARGETS.append(["iOS", "armv8"])
-
-if OS_HOST == "Windows":
-    TARGETS.append(["windows", "x86_64"])
-    #TARGETS.append(["windows", "armv7"]) # WinRT
 
 ## ARGUMENTS ###################################################################
 
@@ -132,16 +105,16 @@ if len(sys.argv) > 1:
 ## CLEAN #######################################################################
 
 if rebuild:
-    if os.path.exists(contribs_dir + "build/"):
-        shutil.rmtree(contribs_dir + "build/")
+    if os.path.exists(contribs_dir + "/build/"):
+        shutil.rmtree(contribs_dir + "/build/")
 
 if clean:
-    if os.path.exists(contribs_dir + "src/"):
-        shutil.rmtree(contribs_dir + "src/")
-    if os.path.exists(contribs_dir + "build/"):
-        shutil.rmtree(contribs_dir + "build/")
-    if os.path.exists(contribs_dir + "env/"):
-        shutil.rmtree(contribs_dir + "env/")
+    if os.path.exists(contribs_dir + "/src/"):
+        shutil.rmtree(contribs_dir + "/src/")
+    if os.path.exists(contribs_dir + "/build/"):
+        shutil.rmtree(contribs_dir + "/build/")
+    if os.path.exists(contribs_dir + "/env/"):
+        shutil.rmtree(contribs_dir + "/env/")
     print(">> Contribs cleaned!")
     sys.exit()
 
@@ -167,6 +140,34 @@ def copytree_wildcard(src, dst, symlinks=False, ignore=None):
         os.makedirs(dst)
     for item in glob.glob(src):
         shutil.copy2(item, dst)
+
+## TARGETS #####################################################################
+
+TARGETS = []
+
+if OS_HOST == "Linux":
+    TARGETS.append(["linux", "x86_64"])
+    #if ANDROID_NDK_HOME:
+    #    TARGETS.append(["android", "armv8"])
+    #    TARGETS.append(["android", "armv7"])
+    #    TARGETS.append(["android", "x86_64"])
+    #    TARGETS.append(["android", "x86"])
+    #TARGETS.append(["windows", "x86_64"]) # Windows cross compilation
+
+if OS_HOST == "Darwin":
+    TARGETS.append(["macOS", "x86_64"])
+    #TARGETS.append(["iOS", "simulator"])
+    #TARGETS.append(["iOS", "armv8"])
+    #TARGETS.append(["iOS", "armv7"])
+    #if ANDROID_NDK_HOME:
+    #    TARGETS.append(["android", "armv8"])
+    #    TARGETS.append(["android", "armv7"])
+    #    TARGETS.append(["android", "x86_64"])
+    #    TARGETS.append(["android", "x86"])
+
+if OS_HOST == "Windows":
+    TARGETS.append(["windows", "x86_64"])
+    #TARGETS.append(["windows", "armv7"]) # WinRT
 
 ## SOFTWARES ###################################################################
 
@@ -226,8 +227,8 @@ for TARGET in TARGETS:
     OS_TARGET = TARGET[0]
     ARCH_TARGET = TARGET[1]
 
-    build_dir = contribs_dir + "build/" + OS_TARGET + "_" + ARCH_TARGET + "/"
-    env_dir = contribs_dir + "env/" + OS_TARGET + "_" + ARCH_TARGET + "/"
+    build_dir = contribs_dir + "/build/" + OS_TARGET + "_" + ARCH_TARGET + "/"
+    env_dir = contribs_dir + "/env/" + OS_TARGET + "_" + ARCH_TARGET + "/"
 
     try:
         os.makedirs(build_dir)
@@ -253,18 +254,20 @@ for TARGET in TARGETS:
                 CMAKE_cmd = ["x86_64-w64-mingw32-cmake"]
     elif OS_HOST == "Darwin":
         if OS_TARGET == "iOS":
+            CMAKE_gen = "Xcode"
+            #IOS_DEPLOYMENT_TARGET="10.0"
             build_shared = "OFF"
             build_static = "ON"
             if ARCH_TARGET == "simulator":
                 CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + contribs_dir + "/tools/ios.toolchain.cmake", "-DIOS_PLATFORM=SIMULATOR64"]
-            if ARCH_TARGET == "armv7":
+            elif ARCH_TARGET == "armv7":
                 CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + contribs_dir + "/tools/ios.toolchain.cmake", "-DIOS_PLATFORM=OS"]
             else:
-                CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + contribs_dir + "/tools/ios.toolchain.cmake", "-DIOS_PLATFORM=OS64", "-DENABLE_BITCODE=0", "-DENABLE_ARC=1"]
+                CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + contribs_dir + "/tools/ios.toolchain.cmake", "-DIOS_PLATFORM=OS64", "-DENABLE_BITCODE=0"]
     elif OS_HOST == "Windows":
         if ARCH_TARGET == "armv7":
             CMAKE_gen = "Visual Studio 15 2017 ARM"
-        else if ARCH_TARGET == "x86":
+        elif ARCH_TARGET == "x86":
             CMAKE_gen = "Visual Studio 15 2017"
         else:
             CMAKE_gen = "Visual Studio 15 2017 Win64"
@@ -273,9 +276,9 @@ for TARGET in TARGETS:
         if OS_TARGET == "android":
             if ARCH_TARGET == "x86":
                 CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_HOME + "/build/cmake/android.toolchain.cmake", "-DANDROID_TOOLCHAIN=clang", "-DANDROID_ABI=x86", "-DANDROID_PLATFORM=android-21"]
-            if ARCH_TARGET == "x86_64":
+            elif ARCH_TARGET == "x86_64":
                 CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_HOME + "/build/cmake/android.toolchain.cmake", "-DANDROID_TOOLCHAIN=clang", "-DANDROID_ABI=x86-64", "-DANDROID_PLATFORM=android-21"]
-            if ARCH_TARGET == "armv7":
+            elif ARCH_TARGET == "armv7":
                 CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_HOME + "/build/cmake/android.toolchain.cmake", "-DANDROID_TOOLCHAIN=clang", "-DANDROID_ABI=armeabi-v7a", "-DANDROID_PLATFORM=android-21"]
             else:
                 CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_HOME + "/build/cmake/android.toolchain.cmake", "-DANDROID_TOOLCHAIN=clang", "-DANDROID_ABI=arm64-v8a", "-DANDROID_PLATFORM=android-21"]
