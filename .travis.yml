@@ -1,6 +1,6 @@
 language: cpp
 dist: xenial
-osx_image: xcode11.2
+osx_image: xcode11.3
 
 os:
   - linux
@@ -24,11 +24,11 @@ install:
       sudo apt-get install libgl1-mesa-dev libva-dev libvdpau-dev -y;
       sudo apt-get install ffmpeg libavcodec-dev libavdevice-dev -y;
       sudo apt-get install libudev-dev libusb-dev -y;
-      sudo apt-get install libtool automake m4 -y;
+      sudo apt-get install ninja libtool automake m4 -y;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       brew install qt;
-      brew install libtool;
+      brew install ninja libtool;
       brew install gettext;
       brew link --force gettext;
     fi
