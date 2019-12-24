@@ -1,6 +1,5 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
-import QtGraphicalEffects 1.0
 
 import ThemeEngine 1.0
 
@@ -35,9 +34,12 @@ Button {
         }
         Text {
             id: contentText
+            height: parent.height
+
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.horizontalCenterOffset: (imgSize/2 + imgSize/6)
+
             text: control.text
             font: control.font
             opacity: enabled ? (control.down ? 0.9 : 1.0) : 0.3

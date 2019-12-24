@@ -1,5 +1,5 @@
 // UtilsString.js
-// Version 0.7
+// Version 0.8
 .pragma library
 
 /* ************************************************************************** */
@@ -50,12 +50,12 @@ function durationToString_long(duration) {
 
 /*!
  * durationToString_short()
- * Format is 'XX hours XX min XX sec XX ms'
+ * Format is 'XX h XX m XX s XX ms'
  */
 function durationToString_short(duration) {
     var text = '';
 
-    if (duration <= 0) return qsTr("unknown");
+    if (duration <= 0) return qsTr("?");
 
     var hours = Math.floor(duration / 3600000);
     var minutes = Math.floor((duration - (hours * 3600000)) / 60000);
@@ -63,15 +63,10 @@ function durationToString_short(duration) {
     var ms = (duration - (hours * 3600000) - (minutes * 60000)) - (seconds * 1000);
 
     if (hours > 0) {
-        text += hours.toString();
-
-        if (hours > 1)
-            text += " " + qsTr("hours") + " ";
-        else
-            text += " " + qsTr("hour") + " ";
+        text += hours.toString() + " " + qsTr("m") + " ";
     }
     if (minutes > 0) {
-        text += minutes.toString() + " " + qsTr("min") + " ";
+        text += minutes.toString() + " " + qsTr("m") + " ";
     }
     if (seconds > 0) {
         text += seconds.toString() + " " + qsTr("s") + " ";

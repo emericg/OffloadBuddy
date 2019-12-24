@@ -1,12 +1,11 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
-import QtGraphicalEffects 1.0
 
 import ThemeEngine 1.0
 
 Button {
     id: control
-    width: contenttext.width + imgSize*3
+    width: contentText.width + imgSize*3
     implicitHeight: Theme.componentHeight
 
     property url source: ""
@@ -14,10 +13,11 @@ Button {
 
     contentItem: Item {
         Text {
-            id: contenttext
+            id: contentText
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.horizontalCenterOffset: (imgSize/2 + imgSize/6)
+
             text: control.text
             font: control.font
             opacity: enabled ? 1.0 : 0.3
@@ -27,11 +27,11 @@ Button {
             elide: Text.ElideRight
         }
         ImageSvg {
-            id: contentimage
+            id: contentImage
             width: imgSize
             height: imgSize
 
-            anchors.right: contenttext.left
+            anchors.right: contentText.left
             anchors.rightMargin: imgSize/3
             anchors.verticalCenter: parent.verticalCenter
 
