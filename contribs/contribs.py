@@ -82,6 +82,14 @@ clean = False
 rebuild = False
 ANDROID_NDK_HOME = os.getenv('ANDROID_NDK_HOME', '')
 
+# MSVC_GEN_VER
+if "14.0" in os.getenv('VisualStudioVersion', ''):
+    MSVC_GEN_VER = "Visual Studio 14 2015"
+elif "15.0" in os.getenv('VisualStudioVersion', ''):
+    MSVC_GEN_VER = "Visual Studio 15 2017"
+else:
+    MSVC_GEN_VER = "Visual Studio 16 2019"
+
 ## ARGUMENTS ###################################################################
 
 parser = argparse.ArgumentParser(prog='contribs.py',
@@ -91,6 +99,7 @@ parser = argparse.ArgumentParser(prog='contribs.py',
 parser.add_argument('-c', '--clean', help="clean everything and exit (downloaded files and all temporary directories)", action='store_true')
 parser.add_argument('-r', '--rebuild', help="rebuild the contribs even if already built", action='store_true')
 parser.add_argument('--android-ndk', dest='androidndk', help="specify a custom path to the android-ndk (if ANDROID_NDK_HOME environment variable doesn't exists)")
+parser.add_argument('--msvc', dest='msvcversion', help="specify a version for Visual Studio (2015/2017/2019)")
 
 if len(sys.argv) > 1:
     result = parser.parse_args()
@@ -100,6 +109,13 @@ if len(sys.argv) > 1:
         rebuild = result.rebuild
     if result.androidndk:
         ANDROID_NDK_HOME = result.androidndk
+    if result.msvcversion:
+        if result.msvcversion == 2015:
+            MSVC_GEN_VER = "Visual Studio 14 2015"
+        elif result.msvcversion == 2017:
+            MSVC_GEN_VER = "Visual Studio 15 2017"
+        elif result.msvcversion == 2019:
+            MSVC_GEN_VER = "Visual Studio 16 2019"
 
 ## CLEAN #######################################################################
 
@@ -265,18 +281,18 @@ for TARGET in TARGETS:
                 CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + contribs_dir + "/tools/ios.toolchain.cmake", "-DIOS_PLATFORM=OS64", "-DENABLE_BITCODE=0"]
     elif OS_HOST == "Windows":
         if ARCH_TARGET == "armv7":
-            CMAKE_gen = "Visual Studio 15 2017 ARM"
+            CMAKE_gen = MSVC_GEN_VER + " ARM"
         elif ARCH_TARGET == "x86":
-            CMAKE_gen = "Visual Studio 15 2017"
+            CMAKE_gen = MSVC_GEN_VER + " Win32"
         else:
-            CMAKE_gen = "Visual Studio 15 2017 Win64"
+            CMAKE_gen = MSVC_GEN_VER + " Win64"
 
     if OS_HOST == "Linux" or OS_HOST == "Darwin":
         if OS_TARGET == "android":
             if ARCH_TARGET == "x86":
                 CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_HOME + "/build/cmake/android.toolchain.cmake", "-DANDROID_TOOLCHAIN=clang", "-DANDROID_ABI=x86", "-DANDROID_PLATFORM=android-21"]
             elif ARCH_TARGET == "x86_64":
-                CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_HOME + "/build/cmake/android.toolchain.cmake", "-DANDROID_TOOLCHAIN=clang", "-DANDROID_ABI=x86-64", "-DANDROID_PLATFORM=android-21"]
+                CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_HOME + "/build/cmake/android.toolchain.cmake", "-DANDROID_TOOLCHAIN=clang", "-DANDROID_ABI=x86_64", "-DANDROID_PLATFORM=android-21"]
             elif ARCH_TARGET == "armv7":
                 CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_HOME + "/build/cmake/android.toolchain.cmake", "-DANDROID_TOOLCHAIN=clang", "-DANDROID_ABI=armeabi-v7a", "-DANDROID_PLATFORM=android-21"]
             else:
