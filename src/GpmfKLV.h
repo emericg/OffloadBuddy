@@ -52,7 +52,7 @@ typedef struct
 } GpmfKLV;
 
 /*!
- * \brief Read a GPMF KLV structure from raw datas
+ * \brief Read a GPMF KLV structure from raw data
  * \param klv: Structure to fill
  * \param buf: Data source
  * \return 0 if success

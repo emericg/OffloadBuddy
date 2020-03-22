@@ -315,7 +315,7 @@ bool JobManager::addJobs(JobType type, Device *d, MediaLibrary *ml,  QList<Shot 
         {
             m_selected_worker = m_job_web; // TODO
         }
-        else if (type == JOB_METADATAS || type == JOB_FIRMWARE_UPLOAD ||
+        else if (type == JOB_METADATA || type == JOB_FIRMWARE_UPLOAD ||
                  type == JOB_CLIP ||
                  type == JOB_COPY || type == JOB_MERGE)
         {

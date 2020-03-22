@@ -46,7 +46,7 @@ typedef enum JobType
 {
     JOB_INVALID = 0,
 
-    JOB_METADATAS,
+    JOB_METADATA,
 
     JOB_FORMAT,
     JOB_DELETE,
@@ -148,8 +148,8 @@ public:
     JobType getType() { return m_type; }
     QString getTypeString()
     {
-        if (m_type == JOB_METADATAS)
-            return tr("METADATAS EXTRACTION");
+        if (m_type == JOB_METADATA)
+            return tr("METADATA EXTRACTION");
         else if (m_type == JOB_COPY)
             return tr("COPYING");
         else if (m_type == JOB_MERGE)

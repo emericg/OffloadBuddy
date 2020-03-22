@@ -52,7 +52,7 @@ Item {
 
             if (shot.hasGPMF && shot.hasGPS) {
                 //if (not static) {
-                    contentTelemetry.updateMetadatas()
+                    contentTelemetry.updateMetadata()
                 //} else {
                 //    contentMap.updateMap()
                 //}
@@ -243,8 +243,8 @@ Item {
 
                 menuText: qsTr("Telemetry")
                 source: "qrc:/icons_material/baseline-insert_chart-24px.svg"
-                onClicked: screenMedia.state = "metadatas"
-                selected: (screenMedia.state === "metadatas")
+                onClicked: screenMedia.state = "metadata"
+                selected: (screenMedia.state === "metadata")
                 visible: (shot && shot.hasGPMF && shot.hasGPS)
             }
             ItemMenuButton {
@@ -287,7 +287,7 @@ Item {
             }
         },
         State {
-            name: "metadatas"
+            name: "metadata"
 
             PropertyChanges {
                 target: contentOverview

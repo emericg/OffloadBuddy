@@ -118,7 +118,7 @@ void FileScanner::scanFilesystemDirectory(const QString &dir_path)
                     if (!shotStatus)
                         shotStatus = getGenericShotInfos(*f, *s);
 
-                    // Pre-parse metadatas on scanning thread
+                    // Pre-parse metadata on scanning thread
                     if (shotStatus)
                     {
                         if (f->extension == "mp4" ||
@@ -197,7 +197,7 @@ bool FileScanner::scanFilesystemFile(const QString &file_path, ofb_file *f, ofb_
                 shotStatus = getGenericShotInfos(*f, *s);
 
             // This function is not run on the scanning thread, so pre-parsing
-            // metadatas here doesn't really make sense
+            // metadata here doesn't really make sense
         }
     }
 

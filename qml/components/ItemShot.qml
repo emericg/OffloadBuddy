@@ -114,7 +114,7 @@ Rectangle {
                 actionMenu.visible = false
                 shotsView.currentIndex = index
 
-                shot.getMetadatasFromVideoGPMF();
+                shot.getMetadataFromVideoGPMF();
 
                 if (shotDevice)
                     screenDevice.state = "stateMediaDetails"

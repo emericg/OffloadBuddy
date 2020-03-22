@@ -100,7 +100,7 @@ QImage GridThumbnailer::requestImage(const QString &id, QSize *size,
         if (img_infos.size().rwidth() > 0 && img_infos.size().rheight() > 0 &&
             img_infos.size().rwidth() < 10000 && img_infos.size().rheight() < 10000)
         {
-            // load datas into the QImage
+            // load data into the QImage
             img_infos.setAutoTransform(true);
             decoding_status = img_infos.read(&thumb);
 

@@ -296,7 +296,7 @@ void JobWorkerAsync::queueWork(Job *job)
             //ptiwrap->arguments << "-vf" << "lenscorrection=k1=-0.6:k2=0.55";
 
 
-            // keep metadatas?
+            // keep metadata?
             //-map_metadata 0
 
             // Re-encoding

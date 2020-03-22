@@ -78,7 +78,7 @@ typedef enum
     GPMF_TAG_GPRI = fourcc_be("GPRI"),        //!< GPS field from Karma, undocumented
     GPMF_TAG_GPLI = fourcc_be("GPLI"),        //!< GPS field from Karma, undocumented
 
-    // Camera datas
+    // Camera data
     GPMF_TAG_CAME = fourcc_be("CAME"),        //!< Camera GUID?
 
 } GpmfTag_e;

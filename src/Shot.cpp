@@ -99,13 +99,13 @@ void Shot::addFile(ofb_file *file)
                 file->extension == "webp")
             {
                 m_pictures.push_front(file);
-                getMetadatasFromPicture();
+                getMetadataFromPicture();
             }
             else if (file->extension == "mp4" || file->extension == "m4v" || file->extension == "mov" ||
                      file->extension == "mkv" || file->extension == "webm")
             {
                 m_videos.push_front(file);
-                getMetadatasFromVideo();
+                getMetadataFromVideo();
             }
             else if (file->extension == "lrv")
             {
@@ -144,13 +144,13 @@ void Shot::addFile(ofb_file *file)
             {
                 m_pictures.push_back(file);
 
-                if (m_pictures.size() == 1) getMetadatasFromPicture();
+                if (m_pictures.size() == 1) getMetadataFromPicture();
             }
             else if (file->extension == "mp4" || file->extension == "m4v" || file->extension == "mov" ||
                      file->extension == "mkv" || file->extension == "webm")
             {
                 m_videos.push_back(file);
-                getMetadatasFromVideo(m_videos.size() - 1);
+                getMetadataFromVideo(m_videos.size() - 1);
             }
             else if (file->extension == "lrv")
             {
@@ -204,10 +204,10 @@ QDateTime Shot::getDate() const
 
     if (m_date_gps.isValid())
         return m_date_gps;
-    if (m_date_metadatas.isValid())
+    if (m_date_metadata.isValid())
     {
-        if (m_date_metadatas > firstpossibledate && m_date_metadatas < QDateTime::currentDateTime())
-            return m_date_metadatas;
+        if (m_date_metadata > firstpossibledate && m_date_metadata < QDateTime::currentDateTime())
+            return m_date_metadata;
     }
 
     return m_date_file;
@@ -218,7 +218,7 @@ QDateTime Shot::getDateFile() const
 }
 QDateTime Shot::getDateMetadata() const
 {
-    return m_date_metadatas;
+    return m_date_metadata;
 }
 QDateTime Shot::getDateGPS() const
 {
@@ -542,7 +542,7 @@ static void show_tag(ExifData *d, ExifIfd ifd, ExifTag tag)
 }
 #endif // ENABLE_LIBEXIF
 
-bool Shot::getMetadatasFromPicture(int index)
+bool Shot::getMetadataFromPicture(int index)
 {
     bool status = false;
 
@@ -556,7 +556,7 @@ bool Shot::getMetadatasFromPicture(int index)
     // Check if the file is already parsed
     if (!m_pictures.at(index)->ed)
     {
-        //qDebug() << "Shot::getMetadatasFromPicture() PARSING ON MAIN THREAD";
+        //qDebug() << "Shot::getMetadataFromPicture() PARSING ON MAIN THREAD";
 
         m_pictures.at(index)->ed = exif_data_new_from_file(m_pictures.at(index)->filesystemPath.toLocal8Bit());
     }
@@ -679,7 +679,7 @@ bool Shot::getMetadatasFromPicture(int index)
 
             // ex: DateTime: 2018:08:10 10:37:08
             exif_entry_get_value(entry, buf, sizeof(buf));
-            m_date_metadatas = QDateTime::fromString(buf, "yyyy:MM:dd hh:mm:ss");
+            m_date_metadata = QDateTime::fromString(buf, "yyyy:MM:dd hh:mm:ss");
         }
 
         QDate gpsDate;
@@ -838,9 +838,9 @@ bool Shot::getMetadatasFromPicture(int index)
     return status;
 }
 
-bool Shot::getMetadatasFromVideo(int index)
+bool Shot::getMetadataFromVideo(int index)
 {
-    //qDebug() << "Shot::getMetadatasFromVideo(" << index << " " << m_videos.at(index)->filesystemPath;
+    //qDebug() << "Shot::getMetadataFromVideo(" << index << " " << m_videos.at(index)->filesystemPath;
 
     if (m_videos.empty())
         return false;
@@ -852,7 +852,7 @@ bool Shot::getMetadatasFromVideo(int index)
     // Check if the file is already parsed
     if (!m_videos.at(index)->media)
     {
-        //qDebug() << "Shot::getMetadatasFromVideo() PARSING ON MAIN THREAD";
+        //qDebug() << "Shot::getMetadataFromVideo() PARSING ON MAIN THREAD";
 
         // If not, open it
         int minivideo_retcode = minivideo_open(m_videos.at(index)->filesystemPath.toLocal8Bit(), &m_videos.at(index)->media);
@@ -874,7 +874,7 @@ bool Shot::getMetadatasFromVideo(int index)
     MediaFile_t *media = m_videos.at(index)->media;
     if (media)
     {
-        m_date_metadatas = QDateTime::fromTime_t(media->creation_time);
+        m_date_metadata = QDateTime::fromTime_t(media->creation_time);
 
         if (media->tracks_audio_count > 0)
         {
@@ -952,9 +952,9 @@ bool Shot::getMetadatasFromVideo(int index)
     return false;
 }
 
-bool Shot::getMetadatasFromVideoGPMF()
+bool Shot::getMetadataFromVideoGPMF()
 {
-    //qDebug() << "Shot::getMetadatasFromVideoGPMF()";
+    //qDebug() << "Shot::getMetadataFromVideoGPMF()";
 
     if (gpmf_parsed)
         return true;
@@ -990,7 +990,7 @@ bool Shot::getMetadatasFromVideoGPMF()
             }
         }
 
-        // PARSE METADATAS /////////////////////////////////////////////////////
+        // PARSE METADATA //////////////////////////////////////////////////////
 
         MediaFile_t *media = video->media;
         if (media)
@@ -1020,7 +1020,7 @@ bool Shot::getMetadatasFromVideoGPMF()
                             return false; // FIXME
                         }
 
-                        // Parse GPMF datas
+                        // Parse GPMF data
                         status = parseGpmfSample(buf, devc_count);
                         if (!status)
                         {
@@ -1053,7 +1053,7 @@ bool Shot::getMetadatasFromVideoGPMF()
     }
 
     emit shotUpdated();
-    emit metadatasUpdated();
+    emit metadataUpdated();
 
     return true;
 

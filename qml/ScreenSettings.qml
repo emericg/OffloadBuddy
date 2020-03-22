@@ -386,7 +386,7 @@ Item {
                 }
 
                 CheckBoxThemed {
-                    id: checkAutoMetadatas
+                    id: checkAutoMetadata
                     width: 350
                     height: 40
                     anchors.verticalCenter: parent.verticalCenter

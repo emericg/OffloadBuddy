@@ -115,7 +115,7 @@ Item {
             bannerMessage.openMessage(qsTr("Previews are not available (yet) with MTP devices..."))
         }
         if (currentDevice.deviceStorage === 2) { // MTP
-            bannerMessage.openMessage(qsTr("Metadatas are not available from MTP devices. Offload medias first, or plug SD cards directly."))
+            bannerMessage.openMessage(qsTr("Metadata are not available from MTP devices. Offload medias first, or plug SD cards directly."))
         }
 
         // Grid index

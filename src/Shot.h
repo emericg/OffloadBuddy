@@ -70,7 +70,7 @@ struct ofb_file
     uint32_t mtpObjectId = 0;
 #endif
 
-    // Metadatas
+    // Metadata
     MediaFile_t *media = nullptr;
     ExifData *ed = nullptr;
 };
@@ -138,12 +138,12 @@ class Shot: public QObject
     Q_PROPERTY(unsigned audioBitrate READ getAudioBitrate NOTIFY shotUpdated)
     Q_PROPERTY(unsigned audioSamplerate READ getAudioSamplerate NOTIFY shotUpdated)
 
-    Q_PROPERTY(QString latitudeString READ getLatitudeStr NOTIFY metadatasUpdated)
-    Q_PROPERTY(QString longitudeString READ getLongitudeStr NOTIFY metadatasUpdated)
-    Q_PROPERTY(QString altitudeString READ getAltitudeStr NOTIFY metadatasUpdated)
-    Q_PROPERTY(double latitude READ getLatitude NOTIFY metadatasUpdated)
-    Q_PROPERTY(double longitude READ getLongitude NOTIFY metadatasUpdated)
-    Q_PROPERTY(double altitude READ getAltitude NOTIFY metadatasUpdated)
+    Q_PROPERTY(QString latitudeString READ getLatitudeStr NOTIFY metadataUpdated)
+    Q_PROPERTY(QString longitudeString READ getLongitudeStr NOTIFY metadataUpdated)
+    Q_PROPERTY(QString altitudeString READ getAltitudeStr NOTIFY metadataUpdated)
+    Q_PROPERTY(double latitude READ getLatitude NOTIFY metadataUpdated)
+    Q_PROPERTY(double longitude READ getLongitude NOTIFY metadataUpdated)
+    Q_PROPERTY(double altitude READ getAltitude NOTIFY metadataUpdated)
 
     Shared::ShotType m_type = Shared::SHOT_UNKNOWN;
     Shared::ShotState m_state = Shared::SHOT_STATE_DEFAULT;
@@ -177,18 +177,18 @@ class Shot: public QObject
     QString m_camera_firmware;      //!< Firmware of the camera that produced the shot
 
     QDateTime m_date_file;
-    QDateTime m_date_metadatas;
+    QDateTime m_date_metadata;
     QDateTime m_date_gps;
     qint64 m_duration = 0;
 
-    // GLOBAL metadatas
+    // GLOBAL metadata
     unsigned orientation = 0;
     unsigned width = 0;
     unsigned height = 0;
 
     QList <QTime> m_highlights;
 
-    // GPS metadatas
+    // GPS metadata
     QString gps_lat_str;
     QString gps_long_str;
     QString gps_alt_str;
@@ -196,13 +196,13 @@ class Shot: public QObject
     double gps_long = 0.0;
     double gps_alt = 0.0;
 
-    // PICTURES metadatas
+    // PICTURES metadata
     QString focal;
     QString iso;
     QString esposure_time;
     bool flash = false;
 
-    // VIDEO metadatas
+    // VIDEO metadata
     QString vcodec;
     QString timecode;
     double framerate = 0.0;
@@ -213,8 +213,8 @@ class Shot: public QObject
     unsigned abitrate = 0;
     unsigned asamplerate = 0;
 
-    bool getMetadatasFromPicture(int index = 0);
-    bool getMetadatasFromVideo(int index = 0);
+    bool getMetadataFromPicture(int index = 0);
+    bool getMetadataFromVideo(int index = 0);
 
 
 
@@ -254,15 +254,15 @@ class Shot: public QObject
 
     bool hasEXIF = false;
     bool hasExif() { return hasEXIF; }
-    Q_PROPERTY(bool hasEXIF READ hasExif NOTIFY metadatasUpdated)
+    Q_PROPERTY(bool hasEXIF READ hasExif NOTIFY metadataUpdated)
 
     bool hasGPS = false;
     bool hasGpsSync() { return hasGPS; }
-    Q_PROPERTY(bool hasGPS READ hasGpsSync NOTIFY metadatasUpdated)
+    Q_PROPERTY(bool hasGPS READ hasGpsSync NOTIFY metadataUpdated)
 
     bool hasGPMF = false;
     bool hasGpmf() { return hasGPMF; }
-    Q_PROPERTY(bool hasGPMF READ hasGpmf NOTIFY metadatasUpdated)
+    Q_PROPERTY(bool hasGPMF READ hasGpmf NOTIFY metadataUpdated)
 
     float minAlti;
     float maxAlti;
@@ -270,9 +270,9 @@ class Shot: public QObject
     float getMinAlti() { return minAlti; }
     float getMaxAlti() { return maxAlti; }
     float getAvgAlti() { return avgAlti; }
-    Q_PROPERTY(float minAlti READ getMinAlti NOTIFY metadatasUpdated)
-    Q_PROPERTY(float maxAlti READ getMaxAlti NOTIFY metadatasUpdated)
-    Q_PROPERTY(float avgAlti READ getAvgAlti NOTIFY metadatasUpdated)
+    Q_PROPERTY(float minAlti READ getMinAlti NOTIFY metadataUpdated)
+    Q_PROPERTY(float maxAlti READ getMaxAlti NOTIFY metadataUpdated)
+    Q_PROPERTY(float avgAlti READ getAvgAlti NOTIFY metadataUpdated)
 
     float minSpeed;
     float maxSpeed;
@@ -280,20 +280,20 @@ class Shot: public QObject
     float getMinSpeed() { return minSpeed; }
     float getMaxSpeed() { return maxSpeed; }
     float getAvgSpeed() { return avgSpeed; }
-    Q_PROPERTY(float minSpeed READ getMinSpeed NOTIFY metadatasUpdated)
-    Q_PROPERTY(float maxSpeed READ getMaxSpeed NOTIFY metadatasUpdated)
-    Q_PROPERTY(float avgSpeed READ getAvgSpeed NOTIFY metadatasUpdated)
+    Q_PROPERTY(float minSpeed READ getMinSpeed NOTIFY metadataUpdated)
+    Q_PROPERTY(float maxSpeed READ getMaxSpeed NOTIFY metadataUpdated)
+    Q_PROPERTY(float avgSpeed READ getAvgSpeed NOTIFY metadataUpdated)
 
     float maxG = 1;
     float getMaxG() { return maxG; }
-    Q_PROPERTY(float maxG READ getMaxG NOTIFY metadatasUpdated)
+    Q_PROPERTY(float maxG READ getMaxG NOTIFY metadataUpdated)
 
     float distance_km = 0;
     float getDistanceKm() { return distance_km; }
-    Q_PROPERTY(float distanceKm READ getDistanceKm NOTIFY metadatasUpdated)
+    Q_PROPERTY(float distanceKm READ getDistanceKm NOTIFY metadataUpdated)
 
 public slots:
-    Q_INVOKABLE bool getMetadatasFromVideoGPMF();
+    Q_INVOKABLE bool getMetadataFromVideoGPMF();
     Q_INVOKABLE void updateSpeedsSerie(QLineSeries *serie, int appUnit);
     Q_INVOKABLE void updateAltiSerie(QLineSeries *serie, int appUnit);
     Q_INVOKABLE void updateAcclSeries(QLineSeries *x, QLineSeries *y, QLineSeries *z);
@@ -390,8 +390,8 @@ Q_SIGNALS:
     void shotUpdated();
     void stateUpdated();
     void selectionUpdated();
-    void metadatasUpdated();
-    void datasUpdated();
+    void metadataUpdated();
+    void dataUpdated();
 };
 
 //Q_DECLARE_METATYPE(Shot*);

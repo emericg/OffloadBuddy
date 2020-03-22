@@ -124,7 +124,7 @@ Popup {
                 visible: isGoPro
 
                 SwitchThemedDesktop {
-                    id: switchMetadatas
+                    id: switchMetadata
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
 

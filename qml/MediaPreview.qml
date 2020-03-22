@@ -156,7 +156,7 @@ Rectangle {
         //console.log("Check if fullscreen is necessary: " + (shot.width / shot.height) + " vs " + (mediaArea.width / mediaArea.height))
         //if ((shot.width / shot.height) < (mediaArea.width / mediaArea.height))
 
-        // no metadatas?
+        // no metadata?
         if (!mediaWidth || !mediaHeight) {
             mediaWidth = output.width
             mediaHeight = output.height

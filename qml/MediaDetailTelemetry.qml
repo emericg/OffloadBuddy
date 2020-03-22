@@ -23,10 +23,10 @@ Item {
     function updateUnits() {
         speedsGraph.title = "Speed (" + UtilsString.speedUnit(settingsManager.appUnits) + ")"
         altiGraph.title = "Altitude (" + UtilsString.altitudeUnit(settingsManager.appUnits) + ")"
-        updateMetadatas()
+        updateMetadata()
     }
 
-    function updateMetadatas() {
+    function updateMetadata() {
 
         // Graphs sizes
         altiGraph.legend.visible = false
@@ -37,7 +37,7 @@ Item {
         onHeightChanged()
 
         if (shot) {
-            // Graphs datas
+            // Graphs data
             speedsGraph.title = "Speed (" + UtilsString.speedUnit(settingsManager.appUnits) + ")"
             shot.updateSpeedsSerie(speedsSeries, settingsManager.appUnits)
             altiGraph.title = "Altitude (" + UtilsString.altitudeUnit(settingsManager.appUnits) + ")"
@@ -45,7 +45,7 @@ Item {
             shot.updateAcclSeries(acclX, acclY, acclZ);
             shot.updateGyroSeries(gyroX, gyroY, gyroZ);
 
-            // Text datas
+            // Text data
             speedMIN.text = UtilsString.speedToString(shot.minSpeed, 2, settingsManager.appUnits)
             speedAVG.text = UtilsString.speedToString(shot.avgSpeed, 2, settingsManager.appUnits)
             speedMAX.text = UtilsString.speedToString(shot.maxSpeed, 2, settingsManager.appUnits)
