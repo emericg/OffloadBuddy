@@ -114,7 +114,7 @@ Rectangle {
 
         model: ListModel {
             id: cbItemsContent
-            ListElement { text: qsTr("all medias"); }
+            ListElement { text: qsTr("all media"); }
             ListElement { text: qsTr("videos"); }
             ListElement { text: qsTr("pictures"); }
         }

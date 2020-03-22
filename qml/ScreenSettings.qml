@@ -362,7 +362,7 @@ Item {
                     height: 40
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: qsTr("Automatically delete offloaded medias")
+                    text: qsTr("Automatically delete offloaded media")
                     font.bold: false
                     font.pixelSize: 16
 
@@ -447,7 +447,7 @@ Item {
             ////////
 
             Column {
-                id: rectangleMedias
+                id: rectangleMedia
                 spacing: 8
 
                 anchors.right: parent.right
@@ -460,7 +460,7 @@ Item {
                     spacing: 32
 
                     Text {
-                        id: textMediasTitle
+                        id: textMediaTitle
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("Media directories")

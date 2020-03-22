@@ -68,7 +68,7 @@ MediaDirectory::MediaDirectory()
  * \brief Used when loading a saved MediaDirectory.
  *
  * Do not check if the path exists, we are allow to save paths that have been
- * disconnected since (ex: removable medias).
+ * disconnected since (ex: removable media).
  */
 MediaDirectory::MediaDirectory(const QString &path, int content, bool primary)
 {
