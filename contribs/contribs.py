@@ -280,14 +280,15 @@ for TARGET in TARGETS:
             else:
                 CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + contribs_dir + "/tools/ios.toolchain.cmake", "-DIOS_PLATFORM=OS64", "-DENABLE_BITCODE=0"]
     elif OS_HOST == "Windows":
+        CMAKE_gen = MSVC_GEN_VER
         if ARCH_TARGET == "armv7":
-            CMAKE_cmd = ["cmake", "-G " + MSVC_GEN_VER , "-A ARM"]
+            CMAKE_cmd = ["cmake", "-A", "ARM"]
         elif ARCH_TARGET == "armv8":
-            CMAKE_cmd = ["cmake", "-G " + MSVC_GEN_VER , "-A ARM64"]
+            CMAKE_cmd = ["cmake", "-A", "ARM64"]
         elif ARCH_TARGET == "x86":
-            CMAKE_cmd = ["cmake", "-G " + MSVC_GEN_VER , "-A Win32"]
+            CMAKE_cmd = ["cmake", "-A", "Win32"]
         else:
-            CMAKE_cmd = ["cmake", "-G " + MSVC_GEN_VER , "-A x64"]
+            CMAKE_cmd = ["cmake", "-A", "x64"]
     if OS_HOST == "Linux" or OS_HOST == "Darwin":
         if OS_TARGET == "android":
             if ARCH_TARGET == "x86":
