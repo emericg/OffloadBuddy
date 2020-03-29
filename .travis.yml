@@ -22,7 +22,7 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
       sudo apt-get install qt514base qt514tools qt514quickcontrols qt514quickcontrols2 qt514graphicaleffects qt514svg qt514imageformats qt514charts-no-lgpl qt514location qt514multimedia -y;
       sudo apt-get install libgl1-mesa-dev libva-dev libvdpau-dev -y;
-      sudo apt-get install ffmpeg libavcodec-dev libavdevice-dev -y;
+      sudo apt-get install libavformat-dev libavfilter-dev libavdevice-dev libavcodec-dev ffmpeg -y;
       sudo apt-get install libudev-dev libusb-dev -y;
       sudo apt-get install ninja libtool automake m4 -y;
     fi
