@@ -211,7 +211,7 @@ Item {
             Component.onCompleted: comboBox_directories.updateDirectories()
             Connections {
                 target: settingsManager
-                onDirectoriesUpdated: comboBox_directories.updateDirectories()
+                function onDirectoriesUpdated() { comboBox_directories.updateDirectories() }
             }
 
             function updateDirectories() {
@@ -520,8 +520,8 @@ Item {
         }
         Connections {
             target: actionMenu
-            onMenuSelected: rectangleLibraryGrid.actionMenuTriggered(index)
-            onVisibleChanged: shotsView.interactive = !shotsView.interactive
+            function onMenuSelected() { rectangleLibraryGrid.actionMenuTriggered(index) }
+            function onVisibleChanged() { shotsView.interactive = !shotsView.interactive }
         }
         function actionMenuTriggered(index) {
             //console.log("actionMenuTriggered(" + index + ") selected shot: '" + shotsView.currentItem.shot.name + "'")
@@ -566,7 +566,7 @@ Item {
 
             Connections {
                 target: settingsManager
-                onThumbFormatChanged: {
+                function onThumbFormatChanged() {
                     if (settingsManager.thumbFormat === 1)
                         shotsView.cellFormat = 1.0
                     else if (settingsManager.thumbFormat === 2)
@@ -576,7 +576,7 @@ Item {
 
                     shotsView.computeCellSize()
                 }
-                onThumbSizeChanged: {
+                function onThumbSizeChanged() {
                     if (settingsManager.thumbSize === 1)
                         shotsView.cellSizeTarget = 221
                     else if (settingsManager.thumbSize === 2)

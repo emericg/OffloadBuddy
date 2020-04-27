@@ -19,7 +19,7 @@ Rectangle {
 
     Connections {
         target: directory
-        onAvailableChanged: updateInfos()
+        function onAvailableChanged() { updateInfos() }
     }
 
     function updateInfos() {

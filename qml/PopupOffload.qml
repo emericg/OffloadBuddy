@@ -201,7 +201,7 @@ Popup {
                     Component.onCompleted: comboBoxDestination.updateDestinations()
                     Connections {
                         target: settingsManager
-                        onDirectoriesUpdated: comboBoxDestination.updateDestinations()
+                        function onDirectoriesUpdated() { comboBoxDestination.updateDestinations() }
                     }
 
                     function updateDestinations() {

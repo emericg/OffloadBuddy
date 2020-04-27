@@ -19,7 +19,7 @@ Rectangle {
 
     Connections {
         target: shot
-        onStateUpdated: handleState()
+        function onStateUpdated() { handleState() }
     }
 
     function handleState() {
