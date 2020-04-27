@@ -41,9 +41,11 @@ class SettingsManager: public QObject
 
     Q_PROPERTY(QSize initialSize READ getInitialSize NOTIFY initialSizeChanged)
     Q_PROPERTY(QSize initialPosition READ getInitialPosition NOTIFY initialSizeChanged)
+    Q_PROPERTY(uint initialVisibility READ getInitialVisibility NOTIFY initialSizeChanged)
 
     Q_PROPERTY(uint appTheme READ getAppTheme WRITE setAppTheme NOTIFY appThemeChanged)
     Q_PROPERTY(uint appUnits READ getAppUnits WRITE setAppUnits NOTIFY appUnitsChanged)
+    Q_PROPERTY(QString appLanguage READ getAppLanguage WRITE setAppLanguage NOTIFY appLanguageChanged)
     Q_PROPERTY(uint thumbQuality READ getThumbQuality WRITE setThumbQuality NOTIFY thumbQualityChanged)
     Q_PROPERTY(uint thumbFormat READ getThumbFormat WRITE setThumbFormat NOTIFY thumbFormatChanged)
     Q_PROPERTY(uint thumbSize READ getThumbSize WRITE setThumbSize NOTIFY thumbSizeChanged)
@@ -59,10 +61,12 @@ class SettingsManager: public QObject
 
     QSize m_appSize;
     QSize m_appPosition;
+    unsigned m_appVisibility;
 
     // Global
     unsigned m_appTheme = 0;
     unsigned m_appUnits = 0;
+    QString m_appLanguage = "auto";
     bool m_ignoreJunk = true;
     bool m_ignoreHdAudio = true;
     bool m_autoMerge = true;
@@ -90,6 +94,7 @@ Q_SIGNALS:
     void initialSizeChanged();
     void appThemeChanged();
     void appUnitsChanged();
+    void appLanguageChanged();
     void autoMergeChanged();
     void autoMetadataChanged();
     void autoDeleteChanged();
@@ -109,12 +114,16 @@ public:
 
     QSize getInitialSize() { return m_appSize; }
     QSize getInitialPosition() { return m_appPosition; }
+    unsigned getInitialVisibility() { return m_appVisibility; }
 
     unsigned getAppTheme() const { return m_appTheme; }
     void setAppTheme(unsigned value);
 
     unsigned getAppUnits() const { return m_appUnits; }
     void setAppUnits(unsigned value);
+
+    QString getAppLanguage() const { return m_appLanguage; }
+    void setAppLanguage(const QString &value);
 
     bool getAutoMerge() const { return m_autoMerge; }
     void setAutoMerge(bool value);

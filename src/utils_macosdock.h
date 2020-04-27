@@ -1,4 +1,5 @@
 /*!
+ * This file is part of WatchFlower.
  * COPYRIGHT (C) 2020 Emeric Grange - All Rights Reserved
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,49 +15,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * \author    Emeric Grange <emeric.grange@gmail.com>
  * \date      2019
+ * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#ifndef UTILS_SCREEN_H
-#define UTILS_SCREEN_H
+#ifndef UTILS_MACOS_DOCK_H
+#define UTILS_MACOS_DOCK_H
 /* ************************************************************************** */
 
 #include <QObject>
-#include <QString>
-#include <QVariantMap>
-#include <QQuickWindow>
 
 /* ************************************************************************** */
+#ifdef Q_OS_MACOS
 
 /*!
- * \brief The UtilsScreen class
+ * \brief macOS dock click handler
  */
-class UtilsScreen: public QObject
+class MacOSDockHandler : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(int screenDpi READ getScreenDpi NOTIFY screenChanged)
-    Q_PROPERTY(double screenSize READ getScreenSize NOTIFY screenChanged)
+    MacOSDockHandler();
+    ~MacOSDockHandler();
 
-    int m_screenDpi = -1;
-    double m_screenSize = -1.0;
-
-Q_SIGNALS:
-    void screenChanged();
+signals:
+    void dockIconClicked();
 
 public:
-    UtilsScreen() = default;
-    ~UtilsScreen() = default;
-
-    Q_INVOKABLE void getScreenInfos();
-
-    Q_INVOKABLE double getScreenSize();
-
-    Q_INVOKABLE int getScreenDpi();
-
-    Q_INVOKABLE QVariantMap getSafeAreaMargins(QQuickWindow *window);
+    static MacOSDockHandler *getInstance();
 };
 
+#endif // Q_OS_MACOS
 /* ************************************************************************** */
-#endif // UTILS_SCREEN_H
+#endif // UTILS_MACOS_DOCK_H

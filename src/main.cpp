@@ -19,15 +19,16 @@
  * \date      2018
  */
 
+#include "utils_app.h"
+#include "utils_screen.h"
+#include "utils_language.h"
+#include "utils_macosdock.h"
 #include "SettingsManager.h"
-#include "MediaLibrary.h"
 #include "DeviceManager.h"
 #include "JobManager.h"
-#include "macosdockmanager.h"
-
+#include "MediaLibrary.h"
 #include "GridThumbnailer.h"
 #include "ItemImage.h"
-#include "utils_app.h"
 
 #include <singleapplication.h>
 
@@ -99,8 +100,6 @@ static void exithandler()
 
 int main(int argc, char *argv[])
 {
-    print_build_infos();
-
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 
@@ -117,35 +116,41 @@ int main(int argc, char *argv[])
 #ifdef QT_NO_DEBUG
     SingleApplication app(argc, argv);
 #else
+    print_build_infos();
     QApplication app(argc, argv);
 #endif
 
-#if !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS)
     QIcon appIcon(":/appicons/offloadbuddy.svg");
     app.setWindowIcon(appIcon);
-#endif
-
     app.setApplicationName("OffloadBuddy");
     app.setApplicationDisplayName("OffloadBuddy");
     app.setOrganizationDomain("OffloadBuddy");
     app.setOrganizationName("OffloadBuddy");
 
-    // i18n
-    QTranslator qtTranslator;
-    qtTranslator.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-    app.installTranslator(&qtTranslator);
-
-    QTranslator appTranslator;
-    appTranslator.load(":/i18n/offloadbuddy.qm");
-    app.installTranslator(&appTranslator);
-
     ////////////////////////////////////////////////////////////////////////////
 
-    UtilsApp *utilsApp = UtilsApp::getInstance();
-    if (!utilsApp) return EXIT_FAILURE;
-
+    // Init OffloadBuddy components
     SettingsManager *sm = SettingsManager::getInstance();
-    if (!sm) return EXIT_FAILURE;
+    MediaLibrary *ml = new MediaLibrary;
+    DeviceManager *dm = new DeviceManager;
+    JobManager *jm = JobManager::getInstance();
+    if (!sm || !ml || !dm || !jm)
+    {
+        qWarning() << "Cannot init OffloadBuddy components!";
+        return EXIT_FAILURE;
+    }
+    jm->attachLibrary(ml);
+    atexit(exithandler); // will stop running job on exit
+
+    // Init OffloadBuddy utils
+    UtilsScreen *utilsScreen = new UtilsScreen();
+    UtilsApp *utilsApp = UtilsApp::getInstance();
+    UtilsLanguage *utilsLanguage = UtilsLanguage::getInstance();
+    if (!utilsScreen || !utilsApp || !utilsLanguage)
+    {
+        qWarning() << "Cannot init OffloadBuddy utils!";
+        return EXIT_FAILURE;
+    }
 
     if (argc > 0 && argv[0])
     {
@@ -153,20 +158,14 @@ int main(int argc, char *argv[])
         utilsApp->setAppPath(path);
     }
 
-    MediaLibrary *ml = new MediaLibrary;
-    //ml->searchMediaDirectories();
-
-    DeviceManager *dm = new DeviceManager;
-    //dm->searchDevices();
-
-    JobManager *jm = JobManager::getInstance();
-    jm->attachLibrary(ml);
-    atexit(exithandler); // will stop running job on exit
+    // Translate the application (demo mode always use english)
+    utilsLanguage->setAppName("offloadbuddy");
+    utilsLanguage->setAppInstance(&app);
+    utilsLanguage->loadLanguage(sm->getAppLanguage());
 
     ////////////////////////////////////////////////////////////////////////////
 
-    qmlRegisterSingletonType(QUrl("qrc:/qml/ThemeEngine.qml"),
-                             "ThemeEngine", 1, 0, "Theme");
+    qmlRegisterSingletonType(QUrl("qrc:/qml/ThemeEngine.qml"), "ThemeEngine", 1, 0, "Theme");
 
     qmlRegisterUncreatableMetaObject(
         Shared::staticMetaObject,
@@ -183,21 +182,28 @@ int main(int argc, char *argv[])
     engine_context->setContextProperty("mediaLibrary", ml);
     engine_context->setContextProperty("deviceManager", dm);
     engine_context->setContextProperty("jobManager", jm);
-    engine_context->setContextProperty("app", utilsApp);
+    engine_context->setContextProperty("utilsApp", utilsApp);
     engine.addImageProvider("GridThumbnailer", new GridThumbnailer);
 
+    // Load the main view
     engine.load(QUrl(QStringLiteral("qrc:/qml/Application.qml")));
     if (engine.rootObjects().isEmpty())
+    {
+        qWarning() << "Cannot init QmlApplicationEngine!";
         return EXIT_FAILURE;
+    }
+
+    // For i18n retranslate
+    utilsLanguage->setQmlEngine(&engine);
 
     // QQuickWindow must be valid at this point
     QQuickWindow *window = qobject_cast<QQuickWindow *>(engine.rootObjects().value(0));
     engine_context->setContextProperty("quickWindow", window);
 
 #if defined(Q_OS_MACOS)
-    MacOSDockManager *dockIconHandler = MacOSDockManager::getInstance();
-    QObject::connect(dockIconHandler, &MacOSDockManager::dockIconClicked, window, &QQuickWindow::show);
-    QObject::connect(dockIconHandler, &MacOSDockManager::dockIconClicked, window, &QQuickWindow::raise);
+    MacOSDockHandler *dockIconHandler = MacOSDockHandler::getInstance();
+    QObject::connect(dockIconHandler, &MacOSDockHandler::dockIconClicked, window, &QQuickWindow::show);
+    QObject::connect(dockIconHandler, &MacOSDockHandler::dockIconClicked, window, &QQuickWindow::raise);
 #endif
 
     return app.exec();

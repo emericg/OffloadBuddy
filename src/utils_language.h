@@ -1,6 +1,5 @@
 /*!
- * This file is part of WatchFlower.
- * COPYRIGHT (C) 2019 Emeric Grange - All Rights Reserved
+ * COPYRIGHT (C) 2020 Emeric Grange - All Rights Reserved
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,38 +14,50 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * \date      2019
  * \author    Emeric Grange <emeric.grange@gmail.com>
+ * \date      2020
  */
 
-#ifndef MACOS_DOCK_MANAGER_H
-#define MACOS_DOCK_MANAGER_H
+#ifndef UTILS_LANGUAGE_H
+#define UTILS_LANGUAGE_H
 /* ************************************************************************** */
 
 #include <QObject>
+#include <QCoreApplication>
+#include <QQmlApplicationEngine>
+#include <QTranslator>
+#include <QString>
 
 /* ************************************************************************** */
 
-#if defined(Q_OS_MACOS)
-
-/*!
- * \brief macOS dock manager, to hande dock icon clicks
- */
-class MacOSDockManager : public QObject
+class UtilsLanguage : public QObject
 {
     Q_OBJECT
 
-    MacOSDockManager();
-    ~MacOSDockManager();
+    QString m_appName;
+    QString m_appLanguage;
 
-signals:
-    void dockIconClicked();
+    QCoreApplication *m_qt_app = nullptr;
+    QQmlApplicationEngine *m_qml_engine = nullptr;
+
+    QTranslator *m_qtTranslator = nullptr;
+    QTranslator *m_appTranslator = nullptr;
+
+    // Singleton
+    static UtilsLanguage *instance;
+    UtilsLanguage();
+    ~UtilsLanguage();
 
 public:
-    static MacOSDockManager *getInstance();
+    static UtilsLanguage *getInstance();
+
+    void setAppName(const QString &name);
+    void setAppInstance(QCoreApplication *app);
+    void setQmlEngine(QQmlApplicationEngine *engine);
+
+    QString getCurrentLanguage() const { return m_appLanguage; }
+    Q_INVOKABLE void loadLanguage(const QString &lng);
 };
 
-#endif // defined(Q_OS_MACOS)
-
 /* ************************************************************************** */
-#endif // MACOS_DOCK_MANAGER_H
+#endif // UTILS_LANGUAGE_H

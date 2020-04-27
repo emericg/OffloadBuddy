@@ -15,10 +15,13 @@ Item {
 
     ////////////////
 
+    property int themeStatusbar
+    property string colorStatusbar
+
     // Header
     property string colorHeader
     property string colorHeaderContent
-    property string colorHeaderStatusbar
+    property string colorHeaderHighlight
 
     // Sidebar
     property string colorSidebar
@@ -47,6 +50,8 @@ Item {
     property string colorSubText
     property string colorIcon
     property string colorSeparator
+
+    property string colorLowContrast
     property string colorHighContrast
 
     // Qt Quick controls & theming
@@ -66,7 +71,7 @@ Item {
 
     ////////////////
 
-    // Fixed palette
+    // Palette colors
     readonly property string colorMaterialBlue: "#2196f3"
     readonly property string colorMaterialIndigo: "#3f51b5"
     readonly property string colorMaterialPurple: "#9c27b0"
@@ -81,7 +86,7 @@ Item {
 
     ////////////////
 
-    // Fonts (sizes in pixel)
+    // Fonts (sizes in pixel) (WIP)
     readonly property int fontSizeHeaderTitle: 30
     readonly property int fontSizeHeaderText: 17
     readonly property int fontSizeBannerText: 20

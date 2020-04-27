@@ -42,7 +42,7 @@ Item {
             anchors.leftMargin: 24
             anchors.bottom: textHeader.bottom
             anchors.bottomMargin: 6
-            text: qsTr("v%1  /  built %2").arg(app.appVersion()).arg(app.appBuildDate())
+            text: qsTr("v%1  /  built %2").arg(utilsApp.appVersion()).arg(utilsApp.appBuildDate())
             font.bold: true
             color: Theme.colorHeaderContent
         }

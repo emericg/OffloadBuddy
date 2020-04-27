@@ -1,6 +1,6 @@
 /*!
  * This file is part of WatchFlower.
- * COPYRIGHT (C) 2019 Emeric Grange - All Rights Reserved
+ * COPYRIGHT (C) 2020 Emeric Grange - All Rights Reserved
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,14 +19,14 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#include "macosdockmanager.h"
+#include "utils_macosdock.h"
 
-#if defined(Q_OS_MACOS)
+#ifdef Q_OS_MACOS
 
 #include <AppKit/AppKit.h>
 #include <objc/runtime.h>
 
-static MacOSDockManager *instance = nullptr;
+static MacOSDockHandler *instance = nullptr;
 
 /* ************************************************************************** */
 
@@ -53,25 +53,25 @@ void setupDockClickHandler()
 
 /* ************************************************************************** */
 
-MacOSDockManager *MacOSDockManager::getInstance()
+MacOSDockHandler *MacOSDockHandler::getInstance()
 {
     if (instance == nullptr)
     {
-        instance = new MacOSDockManager();
+        instance = new MacOSDockHandler();
     }
 
     return instance;
 }
 
-MacOSDockManager::MacOSDockManager() : QObject()
+MacOSDockHandler::MacOSDockHandler() : QObject()
 {
     setupDockClickHandler();
 }
 
-MacOSDockManager::~MacOSDockManager()
+MacOSDockHandler::~MacOSDockHandler()
 {
     delete instance;
 }
 
 /* ************************************************************************** */
-#endif // defined(Q_OS_MACOS)
+#endif // Q_OS_MACOS

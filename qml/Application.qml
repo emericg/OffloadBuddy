@@ -27,7 +27,8 @@ import ThemeEngine 1.0
 
 ApplicationWindow {
     id: applicationWindow
-    flags: Qt.Window // | Qt.FramelessWindowHint
+    flags: Qt.Window //| Qt.FramelessWindowHint
+
     minimumWidth: 1280
     minimumHeight: 720
 
@@ -35,18 +36,32 @@ ApplicationWindow {
     y: settingsManager.initialPosition.height
     width: settingsManager.initialSize.width
     height: settingsManager.initialSize.height
+    visibility: settingsManager.initialVisibility
 
     title: "OffloadBuddy"
     color: Theme.colorBackground
-    visible: true
 
     WindowGeometrySaver {
-        window: applicationWindow
+        windowInstance: applicationWindow
     }
+
+    // Events //////////////////////////////////////////////////////////////////
 
     Component.onCompleted: {
         mediaLibrary.searchMediaDirectories()
         deviceManager.searchDevices()
+    }
+    Shortcut {
+        sequence: StandardKey.Preferences
+        onActivated: applicationContent.state = "settings"
+    }
+    Shortcut {
+        sequence: StandardKey.Close
+        onActivated: applicationWindow.close()
+    }
+    Shortcut {
+        sequence: StandardKey.Quit
+        onActivated: utilsApp.appExit()
     }
 
     // Menubar /////////////////////////////////////////////////////////////////

@@ -73,12 +73,17 @@ bool SettingsManager::readSettings()
             m_appSize.setWidth(settings.value("ApplicationWindow/width").toInt());
         if (settings.contains("ApplicationWindow/height"))
             m_appSize.setHeight(settings.value("ApplicationWindow/height").toInt());
+        if (settings.contains("ApplicationWindow/visibility"))
+            m_appVisibility = settings.value("ApplicationWindow/visibility").toUInt();
 
         if (settings.contains("global/appTheme"))
             m_appTheme = settings.value("global/appTheme").toUInt();
 
         if (settings.contains("global/appUnits"))
             m_appUnits = settings.value("global/appUnits").toUInt();
+
+        if (settings.contains("global/appLanguage"))
+            m_appLanguage = settings.value("global/appLanguage").toString();
 
         if (settings.contains("global/autoMerge"))
             m_autoMerge = settings.value("global/autoMerge").toBool();
@@ -149,6 +154,7 @@ bool SettingsManager::writeSettings()
     {
         settings.setValue("global/appTheme", m_appTheme);
         settings.setValue("global/appUnits", m_appUnits);
+        settings.setValue("global/appLanguage", m_appLanguage);
         settings.setValue("global/autoMerge", m_autoMerge);
         settings.setValue("global/autoMetadata", m_autoTelemetry);
         settings.setValue("global/autoDelete", m_autoDelete);
@@ -287,6 +293,16 @@ void SettingsManager::setAppUnits(unsigned value)
         m_appUnits = value;
         writeSettings();
         Q_EMIT appUnitsChanged();
+    }
+}
+
+void SettingsManager::setAppLanguage(const QString &value)
+{
+    if (m_appLanguage != value)
+    {
+        m_appLanguage = value;
+        writeSettings();
+        Q_EMIT appLanguageChanged();
     }
 }
 

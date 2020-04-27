@@ -20,11 +20,11 @@ if (lessThan(QT_MAJOR_VERSION, 5) | lessThan(QT_MINOR_VERSION, 9)) {
 # Use contribs (otherwise use system libs)
 # DEFINES += USE_CONTRIBS
 
-win32 { DEFINES += _USE_MATH_DEFINES }
-
 # SingleApplication for desktop OS
 include(src/thirdparty/SingleApplication/singleapplication.pri)
 DEFINES += QAPPLICATION_CLASS=QApplication
+
+win32 { DEFINES += _USE_MATH_DEFINES }
 
 unix { DEFINES += ENABLE_LIBMTP }
 DEFINES += ENABLE_FFMPEG
@@ -58,6 +58,8 @@ SOURCES  += src/main.cpp \
             src/GpmfKLV.cpp \
             src/GpmfTags.cpp \
             src/utils_app.cpp \
+            src/utils_screen.cpp \
+            src/utils_language.cpp \
             src/utils_ffmpeg.cpp \
             src/utils_maths.cpp
 
@@ -83,6 +85,8 @@ HEADERS  += src/SettingsManager.h \
             src/GpmfKLV.h \
             src/GpmfTags.h \
             src/utils_app.h \
+            src/utils_screen.h \
+            src/utils_language.h \
             src/utils_ffmpeg.h \
             src/utils_maths.h \
             src/utils_enums.h
@@ -98,7 +102,7 @@ OTHER_FILES += .gitignore \
                deploy_macos.sh \
                deploy_windows.sh
 
-#TRANSLATIONS = i18n/offloadbuddy_fr.ts
+#TRANSLATIONS = i18n/offloadbuddy_en.ts
 
 lupdate_only { SOURCES += qml/*.qml qml/*.js qml/components/*.qml }
 
@@ -157,6 +161,8 @@ unix {
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
+CONFIG(release, debug|release) : DEFINES += QT_NO_DEBUG_OUTPUT
+
 # Build artifacts ##############################################################
 
 OBJECTS_DIR = build/
@@ -212,9 +218,9 @@ macx {
     # OS infos
     #QMAKE_INFO_PLIST = $${PWD}/assets/desktop/Info.plist
 
-    # macOSDockManager
-    SOURCES += src/macosdockmanager.mm
-    HEADERS += src/macosdockmanager.h
+    # macOS dock click handler
+    SOURCES += src/utils_macosdock.mm
+    HEADERS += src/utils_macosdock.h
     LIBS    += -framework AppKit
 
     # OS entitlement (sandbox and stuff)
