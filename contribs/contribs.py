@@ -218,7 +218,7 @@ if not os.path.exists("src/" + FILE_libexif):
     urllib.request.urlretrieve("https://github.com/emericg/libexif/archive/master.zip", src_dir + FILE_libexif)
 
 ## minivideo
-## version: git (0.10+)
+## version: git (0.12+)
 FILE_minivideo = "minivideo-master.zip"
 DIR_minivideo = "MiniVideo-master"
 
