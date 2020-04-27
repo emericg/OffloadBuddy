@@ -69,18 +69,52 @@ SingleApplicationPrivate::~SingleApplicationPrivate()
         delete socket;
     }
 
-    memory->lock();
-    InstancesInfo* inst = static_cast<InstancesInfo*>(memory->data());
-    if( server != nullptr ) {
-        server->close();
-        delete server;
-        inst->primary = false;
-        inst->primaryPid = -1;
-        inst->checksum = blockChecksum();
-    }
-    memory->unlock();
+    if( memory != nullptr ) {
+        memory->lock();
+        InstancesInfo* inst = static_cast<InstancesInfo*>(memory->data());
+        if( server != nullptr ) {
+            server->close();
+            delete server;
+            inst->primary = false;
+            inst->primaryPid = -1;
+            inst->primaryUser[0] =  '\0';
+            inst->checksum = blockChecksum();
+        }
+        memory->unlock();
 
-    delete memory;
+        delete memory;
+    }
+}
+
+QString SingleApplicationPrivate::getUsername()
+{
+#ifdef Q_OS_WIN
+      wchar_t username[UNLEN + 1];
+      // Specifies size of the buffer on input
+      DWORD usernameLength = UNLEN + 1;
+      if( GetUserNameW( username, &usernameLength ) )
+          return QString::fromWCharArray( username );
+#if QT_VERSION < QT_VERSION_CHECK(5, 10, 0)
+      return QString::fromLocal8Bit( qgetenv( "USERNAME" ) );
+#else
+      return qEnvironmentVariable( "USERNAME" );
+#endif
+#endif
+#ifdef Q_OS_UNIX
+      QString username;
+      uid_t uid = geteuid();
+      struct passwd *pw = getpwuid( uid );
+      if( pw )
+          username = QString::fromLocal8Bit( pw->pw_name );
+      if ( username.isEmpty() ) {
+#if QT_VERSION < QT_VERSION_CHECK(5, 10, 0)
+          username = QString::fromLocal8Bit( qgetenv( "USER" ) );
+#else
+          username = qEnvironmentVariable( "USER" );
+#endif
+      }
+      return username;
+#endif
 }
 
 void SingleApplicationPrivate::genBlockServerName()
@@ -105,28 +139,7 @@ void SingleApplicationPrivate::genBlockServerName()
 
     // User level block requires a user specific data in the hash
     if( options & SingleApplication::Mode::User ) {
-#ifdef Q_OS_WIN
-        wchar_t username [ UNLEN + 1 ];
-        // Specifies size of the buffer on input
-        DWORD usernameLength = UNLEN + 1;
-        if( GetUserNameW( username, &usernameLength ) ) {
-            appData.addData( QString::fromWCharArray(username).toUtf8() );
-        } else {
-            appData.addData( qgetenv("USERNAME") );
-        }
-#endif
-#ifdef Q_OS_UNIX
-        QByteArray username;
-        uid_t uid = geteuid();
-        struct passwd *pw = getpwuid(uid);
-        if( pw ) {
-            username = pw->pw_name;
-        }
-        if( username.isEmpty() ) {
-            username = qgetenv("USER");
-        }
-        appData.addData(username);
-#endif
+        appData.addData( getUsername().toUtf8() );
     }
 
     // Replace the backslash in RFC 2045 Base64 [a-zA-Z0-9+/=] to comply with
@@ -140,6 +153,7 @@ void SingleApplicationPrivate::initializeMemoryBlock()
     inst->primary = false;
     inst->secondary = 0;
     inst->primaryPid = -1;
+    inst->primaryUser[0] =  '\0';
     inst->checksum = blockChecksum();
 }
 
@@ -173,6 +187,8 @@ void SingleApplicationPrivate::startPrimary()
 
     inst->primary = true;
     inst->primaryPid = q->applicationPid();
+    strncpy( inst->primaryUser, getUsername().toUtf8().data(), 127 );
+    inst->primaryUser[127] = '\0';
     inst->checksum = blockChecksum();
 
     instanceNumber = 0;
@@ -257,6 +273,18 @@ qint64 SingleApplicationPrivate::primaryPid()
     return pid;
 }
 
+QString SingleApplicationPrivate::primaryUser()
+{
+    QByteArray username;
+
+    memory->lock();
+    InstancesInfo* inst = static_cast<InstancesInfo*>( memory->data() );
+    username = inst->primaryUser;
+    memory->unlock();
+
+    return QString::fromUtf8( username );
+}
+
 /**
  * @brief Executed when a connection has been made to the LocalServer
  */
@@ -305,7 +333,7 @@ void SingleApplicationPrivate::readInitMessageHeader( QLocalSocket *sock )
         return;
     }
 
-    if( sock->bytesAvailable() < static_cast<qint64>( sizeof( quint64 ) ) ) {
+    if( sock->bytesAvailable() < ( qint64 )sizeof( quint64 ) ) {
         return;
     }
 
@@ -316,13 +344,13 @@ void SingleApplicationPrivate::readInitMessageHeader( QLocalSocket *sock )
 #endif
 
     // Read the header to know the message length
-    qint64 msgLen = 0;
+    quint64 msgLen = 0;
     headerStream >> msgLen;
     ConnectionInfo &info = connectionMap[sock];
     info.stage = StageBody;
     info.msgLen = msgLen;
 
-    if ( sock->bytesAvailable() >= msgLen ) {
+    if ( sock->bytesAvailable() >= (qint64) msgLen ) {
         readInitMessageBody( sock );
     }
 }
@@ -336,7 +364,7 @@ void SingleApplicationPrivate::readInitMessageBody( QLocalSocket *sock )
     }
 
     ConnectionInfo &info = connectionMap[sock];
-    if( sock->bytesAvailable() < info.msgLen ) {
+    if( sock->bytesAvailable() < ( qint64 )info.msgLen ) {
         return;
     }
 
@@ -366,7 +394,7 @@ void SingleApplicationPrivate::readInitMessageBody( QLocalSocket *sock )
     quint16 msgChecksum = 0;
     readStream >> msgChecksum;
 
-    const quint16 actualChecksum = qChecksum( msgBytes.constData(), static_cast<quint32>( msgBytes.length() ) - sizeof( quint16 ) );
+    const quint16 actualChecksum = qChecksum( msgBytes.constData(), static_cast<quint32>( msgBytes.length() - sizeof( quint16 ) ) );
 
     bool isValid = readStream.status() == QDataStream::Ok &&
                    QLatin1String(latin1Name) == blockServerName &&
