@@ -13,19 +13,19 @@ Works on Linux, macOS and Windows!
 
 ### Features:
 
-- [x] Import datas from SD cards, mass storage or MTP devices (Linux & macOS)
+- [x] Import data from SD cards, mass storage or MTP devices (Linux & macOS)
   - [x] Organize and sort your media library
-  - [x] Copy, merge or reencode medias
+  - [x] Copy, merge or reencode media
   - [ ] Change wrong dates (WIP)
   - [x] Show and export GoPro telemetry & GPS traces (WIP)
 - [x] Create short video clips (and GIFs) from your videos!
 - [x] Assemble photo timelapses into videos
 - [ ] Extract photos/screenshots from videos
 - [ ] Create timelapse from videos
-- [x] Apply filters to medias
-  - [ ] Reframe medias (WIP)
-  - [x] Rotate medias (WIP)
-  - [ ] Defisheye medias
+- [x] Apply filters to media
+  - [ ] Reframe media (WIP)
+  - [x] Rotate media (WIP)
+  - [ ] Defisheye media
   - [ ] Stabilize videos
 - [ ] GoPro firmware updates
 
