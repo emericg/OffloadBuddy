@@ -64,179 +64,235 @@ Item {
         anchors.bottomMargin: 0
 
         Column {
-            anchors.topMargin: 24
-            anchors.leftMargin: 24
+            anchors.topMargin: 32
+            anchors.leftMargin: 32
             anchors.rightMargin: 24
             anchors.fill: parent
-            spacing: 4
+            spacing: 16
+
+            ////////
 
             TextArea {
-                id: textArea
+                id: textArea1
+                anchors.topMargin: -8
                 anchors.left: parent.left
-                //anchors.leftMargin: 24
+                anchors.leftMargin: -8
                 anchors.right: parent.right
-                //anchors.rightMargin: 24
+                anchors.rightMargin: -8
 
                 readOnly: true
                 wrapMode: Text.WordWrap
                 font.pixelSize: 18
                 color: Theme.colorText
                 text: qsTr("OffloadBuddy is a multimedia offloading software with a few tricks up his sleeve!\n" +
-                           "It's designed to remove the hassle of handling and transferring the many videos and pictures file from your devices like action cameras, regular cameras and smartphones...\n\n" +
-                           "✔ Import datas from SD cards, mass storage or MTP devices\n  - Copy, merge or reencode medias\n  - Consult and export shots metadatas\n  - Organize your media library\n" +
+                           "It's designed to remove the hassle of handling and transferring the many videos and pictures file from your devices like action cameras, regular cameras and smartphones...")
+            }
+
+            Item {
+                id: buttonArea
+                height: 40
+                anchors.left: parent.left
+                anchors.leftMargin: 8
+                anchors.right: parent.right
+
+                ButtonWireframeImage {
+                    id: button1
+                    width: 180
+                    anchors.left: parent.left
+                    anchors.leftMargin: 0
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    primaryColor: "#5483EF"
+
+                    text: qsTr("Website")
+                    imgSize: 32
+                    source: "qrc:/icons_material/baseline-link-24px.svg"
+                    onClicked: Qt.openUrlExternally("https://emeric.io/OffloadBuddy")
+                }
+
+                ButtonWireframeImage {
+                    id: button2
+                    width: 180
+                    anchors.left: button1.right
+                    anchors.leftMargin: 24
+                    anchors.verticalCenter: button1.verticalCenter
+
+                    primaryColor: "#5483EF"
+
+                    text: qsTr("Dev board")
+                    imgSize: 24
+                    source: "qrc:/logos/github.svg"
+                    onClicked: Qt.openUrlExternally("https://www.github.com/emericg/OffloadBuddy")
+                }
+            }
+
+            TextArea {
+                id: textArea2
+                anchors.left: parent.left
+                anchors.leftMargin: -8
+                anchors.right: parent.right
+                anchors.rightMargin: -8
+
+                readOnly: true
+                wrapMode: Text.WordWrap
+                font.pixelSize: 18
+                color: Theme.colorText
+                text: qsTr("✔ Import data from SD cards, mass storage or MTP devices\n  - Copy, merge or reencode media\n  - Consult and export shots metadata\n  - Organize your media library\n" +
                            "✔ Create clips or extract photos from your videos\n" +
                            "✔ Assemble photo timelapses into videos\n" +
                            "✔ GoPro firmware updates")
             }
 
-            Item { width: 32; height: 32; } // spacer
+            Item { width: 16; height: 16; } // spacer
 
-            Text {
-                id: element
-                anchors.right: parent.right
-                anchors.rightMargin: 0
-                //anchors.top: parent.top
-                //anchors.topMargin: 0
+            Column {
+                id: sectionOSS
                 anchors.left: parent.left
-                anchors.leftMargin: 0
-
-                color: Theme.colorText
-                text: qsTr("OffloadBuddy is made possible thanks to a couple of third party open source projects:")
-                wrapMode: Text.WordWrap
-                font.pixelSize: 18
-            }
-
-            Row {
-                height: 32
-                spacing: 24
+                anchors.right: parent.right
+                spacing: 4
 
                 Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: "⦁ Qt"
-                    color: Theme.colorText
-                    font.pixelSize: 16
-                }
-                ItemImageButton {
-                    anchors.verticalCenter: parent.verticalCenter
-                    source: "qrc:/icons_material/baseline-link-24px.svg"
-                    onClicked: Qt.openUrlExternally("https://www.qt.io")
-                }
-                ItemBadge {
-                    anchors.verticalCenter: parent.verticalCenter
-                    legend: qsTr("license")
-                    text: qsTr("LGPL 3")
-                    onClicked: Qt.openUrlExternally("https://www.gnu.org/licenses/lgpl-3.0.html")
-                }
-            }
-            Row {
-                height: 32
-                spacing: 24
+                    anchors.left: parent.left
+                    anchors.right: parent.right
 
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: "⦁ ffmpeg"
                     color: Theme.colorText
-                    font.pixelSize: 16
+                    text: qsTr("This application is made possible thanks to a couple of third party open source projects:")
+                    wrapMode: Text.WordWrap
+                    font.pixelSize: 18
                 }
-                ItemImageButton {
-                    anchors.verticalCenter: parent.verticalCenter
-                    source: "qrc:/icons_material/baseline-link-24px.svg"
-                    onClicked: Qt.openUrlExternally("https://www.ffmpeg.org")
-                }
-                ItemBadge {
-                    anchors.verticalCenter: parent.verticalCenter
-                    legend: qsTr("license")
-                    text: qsTr("LGPL 2.1")
-                    onClicked: Qt.openUrlExternally("https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html")
-                }
-            }
-            Row {
-                height: 32
-                spacing: 24
 
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: "⦁ minivideo"
-                    color: Theme.colorText
-                    font.pixelSize: 16
-                }
-                ItemImageButton {
-                    anchors.verticalCenter: parent.verticalCenter
-                    source: "qrc:/icons_material/baseline-link-24px.svg"
-                    onClicked: Qt.openUrlExternally("https://github.com/emericg/MiniVideo")
-                }
-                ItemBadge {
-                    anchors.verticalCenter: parent.verticalCenter
-                    legend: qsTr("license")
-                    text: qsTr("LGPL 3")
-                    onClicked: Qt.openUrlExternally("https://www.gnu.org/licenses/lgpl-3.0.html")
-                }
-            }
-            Row {
-                height: 32
-                spacing: 24
+                Row {
+                    height: 32
+                    spacing: 24
 
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: "⦁ libexif"
-                    color: Theme.colorText
-                    font.pixelSize: 16
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "⦁ Qt"
+                        color: Theme.colorText
+                        font.pixelSize: 16
+                    }
+                    ItemImageButton {
+                        anchors.verticalCenter: parent.verticalCenter
+                        source: "qrc:/icons_material/baseline-link-24px.svg"
+                        onClicked: Qt.openUrlExternally("https://www.qt.io")
+                    }
+                    ItemBadge {
+                        anchors.verticalCenter: parent.verticalCenter
+                        legend: qsTr("license")
+                        text: qsTr("LGPL 3")
+                        onClicked: Qt.openUrlExternally("https://www.gnu.org/licenses/lgpl-3.0.html")
+                    }
                 }
-                ItemImageButton {
-                    anchors.verticalCenter: parent.verticalCenter
-                    source: "qrc:/icons_material/baseline-link-24px.svg"
-                    onClicked: Qt.openUrlExternally("https://libexif.github.io")
-                }
-                ItemBadge {
-                    anchors.verticalCenter: parent.verticalCenter
-                    legend: qsTr("license")
-                    text: qsTr("LGPL 2.1")
-                    onClicked: Qt.openUrlExternally("https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html")
-                }
-            }
-            Row {
-                height: 32
-                spacing: 24
+                Row {
+                    height: 32
+                    spacing: 24
 
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: "⦁ Google material icons"
-                    color: Theme.colorText
-                    font.pixelSize: 16
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "⦁ ffmpeg"
+                        color: Theme.colorText
+                        font.pixelSize: 16
+                    }
+                    ItemImageButton {
+                        anchors.verticalCenter: parent.verticalCenter
+                        source: "qrc:/icons_material/baseline-link-24px.svg"
+                        onClicked: Qt.openUrlExternally("https://www.ffmpeg.org")
+                    }
+                    ItemBadge {
+                        anchors.verticalCenter: parent.verticalCenter
+                        legend: qsTr("license")
+                        text: qsTr("LGPL 2.1")
+                        onClicked: Qt.openUrlExternally("https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html")
+                    }
                 }
-                ItemImageButton {
-                    anchors.verticalCenter: parent.verticalCenter
-                    source: "qrc:/icons_material/baseline-link-24px.svg"
-                    onClicked: Qt.openUrlExternally("https://material.io/tools/icons")
-                }
-                ItemBadge {
-                    width: 140
-                    anchors.verticalCenter: parent.verticalCenter
-                    legend: qsTr("license")
-                    text: qsTr("Apache 2.0")
-                    onClicked: Qt.openUrlExternally("https://www.apache.org/licenses/LICENSE-2.0.txt")
-                }
-            }
-            Row {
-                height: 32
-                spacing: 24
+                Row {
+                    height: 32
+                    spacing: 24
 
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: "⦁ SingleApplication"
-                    color: Theme.colorText
-                    font.pixelSize: 16
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "⦁ minivideo"
+                        color: Theme.colorText
+                        font.pixelSize: 16
+                    }
+                    ItemImageButton {
+                        anchors.verticalCenter: parent.verticalCenter
+                        source: "qrc:/icons_material/baseline-link-24px.svg"
+                        onClicked: Qt.openUrlExternally("https://github.com/emericg/MiniVideo")
+                    }
+                    ItemBadge {
+                        anchors.verticalCenter: parent.verticalCenter
+                        legend: qsTr("license")
+                        text: qsTr("LGPL 3")
+                        onClicked: Qt.openUrlExternally("https://www.gnu.org/licenses/lgpl-3.0.html")
+                    }
                 }
-                ItemImageButton {
-                    anchors.verticalCenter: parent.verticalCenter
-                    source: "qrc:/icons_material/baseline-link-24px.svg"
-                    onClicked: Qt.openUrlExternally("https://github.com/itay-grudev/SingleApplication/")
+                Row {
+                    height: 32
+                    spacing: 24
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "⦁ libexif"
+                        color: Theme.colorText
+                        font.pixelSize: 16
+                    }
+                    ItemImageButton {
+                        anchors.verticalCenter: parent.verticalCenter
+                        source: "qrc:/icons_material/baseline-link-24px.svg"
+                        onClicked: Qt.openUrlExternally("https://libexif.github.io")
+                    }
+                    ItemBadge {
+                        anchors.verticalCenter: parent.verticalCenter
+                        legend: qsTr("license")
+                        text: qsTr("LGPL 2.1")
+                        onClicked: Qt.openUrlExternally("https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html")
+                    }
                 }
-                ItemBadge {
-                    anchors.verticalCenter: parent.verticalCenter
-                    legend: qsTr("license")
-                    text: qsTr("MIT")
-                    onClicked: Qt.openUrlExternally("https://github.com/itay-grudev/SingleApplication/blob/master/LICENSE")
+                Row {
+                    height: 32
+                    spacing: 24
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "⦁ Google material icons"
+                        color: Theme.colorText
+                        font.pixelSize: 16
+                    }
+                    ItemImageButton {
+                        anchors.verticalCenter: parent.verticalCenter
+                        source: "qrc:/icons_material/baseline-link-24px.svg"
+                        onClicked: Qt.openUrlExternally("https://material.io/tools/icons")
+                    }
+                    ItemBadge {
+                        width: 140
+                        anchors.verticalCenter: parent.verticalCenter
+                        legend: qsTr("license")
+                        text: qsTr("Apache 2.0")
+                        onClicked: Qt.openUrlExternally("https://www.apache.org/licenses/LICENSE-2.0.txt")
+                    }
+                }
+                Row {
+                    height: 32
+                    spacing: 24
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "⦁ SingleApplication"
+                        color: Theme.colorText
+                        font.pixelSize: 16
+                    }
+                    ItemImageButton {
+                        anchors.verticalCenter: parent.verticalCenter
+                        source: "qrc:/icons_material/baseline-link-24px.svg"
+                        onClicked: Qt.openUrlExternally("https://github.com/itay-grudev/SingleApplication/")
+                    }
+                    ItemBadge {
+                        anchors.verticalCenter: parent.verticalCenter
+                        legend: qsTr("license")
+                        text: qsTr("MIT")
+                        onClicked: Qt.openUrlExternally("https://github.com/itay-grudev/SingleApplication/blob/master/LICENSE")
+                    }
                 }
             }
         }
