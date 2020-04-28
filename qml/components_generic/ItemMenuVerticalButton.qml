@@ -6,24 +6,20 @@ import ThemeEngine 1.0
 
 Item {
     id: itemMenuButton
-    implicitWidth: 64
-    implicitHeight: 64
 
-    width: 16 + contentImage.width + (imgSize / 2) + contentText.width + 16
+    implicitWidth: 80
+    implicitHeight: 48
     property int imgSize: 32
 
     signal clicked()
     property bool selected: false
     property bool highlighted: false
 
-    property string colorBackground: Theme.colorForeground
-    property string colorHighlight: Theme.colorBackground
     property string colorContent: Theme.colorHeaderContent
-
+    property string colorBackground: Theme.colorForeground
     property string highlightMode: "background" // available: background & text
 
     property string menuText: ""
-    property string tooltipText: ""
     property url source: ""
 
     MouseArea {
@@ -46,40 +42,40 @@ Item {
         anchors.fill: parent
 
         visible: (selected && highlightMode === "background")
-        color: itemMenuButton.colorBackground
+        color: parent.colorBackground
     }
     Rectangle {
         id: bgFocus
         anchors.fill: parent
 
         visible: (highlightMode === "background")
-        color: itemMenuButton.colorHighlight
+        color: itemMenuButton.colorBackground
         opacity: 0
-        Behavior on opacity { OpacityAnimator { duration: 333 } }
+        Behavior on opacity { OpacityAnimator { duration: 250 } }
     }
 
     ImageSvg {
         id: contentImage
         width: imgSize
         height: imgSize
-        anchors.left: parent.left
-        anchors.leftMargin: 16
+        anchors.horizontalCenter: itemMenuButton.horizontalCenter
         anchors.verticalCenter: itemMenuButton.verticalCenter
+        anchors.verticalCenterOffset: -8
 
         source: itemMenuButton.source
         color: (!selected && highlightMode === "text") ? itemMenuButton.colorBackground : itemMenuButton.colorContent
-        opacity: itemMenuButton.enabled ? 1.0 : 0.33
+        opacity: itemMenuButton.enabled ? 1.0 : 0.3
     }
 
     Text {
         id: contentText
         height: parent.height
-        anchors.left: contentImage.right
-        anchors.leftMargin: (imgSize / 3)
+        anchors.top: contentImage.bottom
+        anchors.topMargin: -4
         anchors.verticalCenter: itemMenuButton.verticalCenter
 
         text: menuText
-        font.pixelSize: Theme.fontSizeComponent
+        font.pixelSize: 14
         font.bold: true
         color: (!selected && highlightMode === "text") ? itemMenuButton.colorBackground : itemMenuButton.colorContent
         verticalAlignment: Text.AlignVCenter

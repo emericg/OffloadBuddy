@@ -1,6 +1,6 @@
 /*!
  * This file is part of OffloadBuddy.
- * COPYRIGHT (C) 2018 Emeric Grange - All Rights Reserved
+ * COPYRIGHT (C) 2020 Emeric Grange - All Rights Reserved
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -159,8 +159,6 @@ int main(int argc, char *argv[])
     }
 
     // Translate the application (demo mode always use english)
-    utilsLanguage->setAppName("offloadbuddy");
-    utilsLanguage->setAppInstance(&app);
     utilsLanguage->loadLanguage(sm->getAppLanguage());
 
     ////////////////////////////////////////////////////////////////////////////

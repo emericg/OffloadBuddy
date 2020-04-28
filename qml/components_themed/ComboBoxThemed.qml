@@ -7,6 +7,7 @@ ComboBox {
     id: control
     implicitWidth: 120
     implicitHeight: Theme.componentHeight
+    font.pixelSize: Theme.fontSizeComponent
 
     contentItem: Text {
         leftPadding: 16
@@ -46,5 +47,4 @@ ComboBox {
             //border.color: Theme.colorComponent
         }
     }
-
 }

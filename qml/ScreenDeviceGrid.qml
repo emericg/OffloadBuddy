@@ -651,8 +651,10 @@ Item {
             anchors.left: parent.left
             anchors.leftMargin: 16
 
-            text: qsTr("Offload content")
             fullColor: true
+            primaryColor: "#5483EF"
+
+            text: qsTr("Offload content")
             onClicked: popupOffloadAll.open()
         }
 
@@ -665,9 +667,9 @@ Item {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 16
 
-            text: qsTr("Delete ALL content!")
             fullColor: true
             primaryColor: Theme.colorError
+            text: qsTr("Delete ALL content!")
             onClicked: confirmDeleteAll.open()
         }
     }

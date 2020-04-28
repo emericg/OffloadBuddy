@@ -11,42 +11,46 @@ RangeSlider {
     snapMode: RangeSlider.SnapAlways
 
     property string unit: ""
+    property bool kshort: false
     property string colorBg: Theme.colorComponent
     property string colorFg: Theme.colorPrimary
     property string colorTxt: "white"
+
+    property int hhh: 16
 
     background: Rectangle {
         x: control.leftPadding
         y: control.topPadding + (control.availableHeight / 2) - (height / 2)
         implicitWidth: 200
-        implicitHeight: 4
+        implicitHeight: hhh
         width: control.availableWidth
 
-        height: implicitHeight
-        radius: 2
+        height: hhh
+        radius: hhh
         color: colorBg
-        opacity: 0.9
+        opacity: 1
 
         Rectangle {
-            x: (control.first.visualPosition * parent.width)
-            width: (control.second.visualPosition * parent.width) - x
+            x: (h1.x + (h1.width / 3))
+            width: ((h2.x + (h2.width / 3)) - (h1.x + (h1.width / 3)))
             height: parent.height
             color: colorFg
-            radius: 2
+            radius: hhh
         }
     }
 
     first.handle: Rectangle {
+        id: h1
         x: control.leftPadding + first.visualPosition * (control.availableWidth - width)
         y: control.topPadding + (control.availableHeight / 2) - (height / 2)
-        implicitWidth: 22
-        implicitHeight: 22
+        implicitWidth: hhh
+        implicitHeight: hhh
         width: t1.width + 16
 
-        radius: 6
+        radius: hhh
         color: colorFg
         border.color: colorFg
-        opacity: first.pressed ? 0.9 : 1
+        opacity: first.pressed ? 1 : 1
 
         Text {
             id: t1
@@ -58,24 +62,28 @@ RangeSlider {
                 var vvalue = first.value
                 if (unit === "°" && settingsManager.tempUnit === "F") vvalue = UtilsNumber.tempCelsiusToFahrenheit(vvalue)
                 vvalue = vvalue.toFixed(0)
-                return ((first.value > 999) ? vvalue / 1000 : vvalue) + unit
+                return ((kshort && first.value > 999) ? (vvalue / 1000) : vvalue) + unit
             }
-            font.pixelSize: 14
             color: colorTxt
+            font.pixelSize: 10
+            font.bold: true
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
         }
     }
 
     second.handle: Rectangle {
+        id: h2
         x: control.leftPadding + second.visualPosition * (control.availableWidth - width)
         y: control.topPadding + (control.availableHeight / 2) - (height / 2)
-        implicitWidth: 22
-        implicitHeight: 22
+        implicitWidth: hhh
+        implicitHeight: hhh
         width: t2.width + 16
 
-        radius: 6
+        radius: hhh
         color: colorFg
         border.color: colorFg
-        opacity: second.pressed ? 0.9 : 1
+        opacity: second.pressed ? 1 : 1
 
         Text {
             id: t2
@@ -87,9 +95,10 @@ RangeSlider {
                 var vvalue = second.value
                 if (unit === "°" && settingsManager.tempUnit === "F") vvalue = UtilsNumber.tempCelsiusToFahrenheit(vvalue)
                 vvalue = vvalue.toFixed(0)
-                return ((second.value > 999) ? vvalue / 1000 : vvalue) + unit
+                return ((kshort && second.value > 999) ? (vvalue / 1000) : vvalue) + unit
             }
-            font.pixelSize: 14
+            font.pixelSize: 10
+            font.bold: true
             color: colorTxt
         }
     }

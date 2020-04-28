@@ -37,7 +37,6 @@
         <file alias="ImageSvg.qml">components_generic/ImageSvg.qml</file>
         <file alias="ItemBadge.qml">components_generic/ItemBadge.qml</file>
         <file alias="ItemCodec.qml">components_generic/ItemCodec.qml</file>
-        <file alias="ItemDataBar.qml">components_generic/ItemDataBar.qml</file>
         <file alias="ItemImageButton.qml">components_generic/ItemImageButton.qml</file>
         <file alias="ItemMenuButton.qml">components_generic/ItemMenuButton.qml</file>
         <file alias="ItemLilMenuButton.qml">components_generic/ItemLilMenuButton.qml</file>

@@ -26,6 +26,8 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
 
             fullColor: true
+            primaryColor: "#5483EF"
+
             text: (applicationContent.state === "device") ? qsTr("Offload") : qsTr("Move")
             source: "qrc:/icons_material/baseline-save_alt-24px.svg"
             onClicked: {
@@ -40,10 +42,11 @@ Rectangle {
         ButtonWireframeImage {
             id: buttonMergeShots
             anchors.verticalCenter: parent.verticalCenter
-
             visible: (applicationContent.state !== "device" && mediaGrid.selectionCount >= 2)
 
             fullColor: true
+            primaryColor: "#5483EF"
+
             text: qsTr("Merge shots together")
             source: "qrc:/icons_material/baseline-merge_type-24px.svg"
             onClicked: {
@@ -55,6 +58,8 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
 
             fullColor: true
+            primaryColor: "#5483EF"
+
             text: qsTr("Extract telemetry")
             source: "qrc:/icons_material/baseline-insert_chart_outlined-24px.svg"
             onClicked: {
@@ -71,6 +76,7 @@ Rectangle {
 
             fullColor: true
             primaryColor: Theme.colorWarning
+
             text: qsTr("Delete")
             source: "qrc:/icons_material/baseline-delete-24px.svg"
             onClicked: {

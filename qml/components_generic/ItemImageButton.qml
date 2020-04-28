@@ -45,10 +45,10 @@ Item {
     Rectangle {
         id: bgRect
         anchors.fill: parent
-        radius: 50
+        radius: itemImageButton.width
         color: parent.backgroundColor
         opacity: background ? 0.50 : 0
-        visible: (highlightMode === "circle" || highlightMode === "both" ||background)
+        visible: (highlightMode === "circle" || highlightMode === "both" || background)
 
         Behavior on opacity { OpacityAnimator { duration: 333 } }
     }
@@ -71,7 +71,7 @@ Item {
         width: contentImage.sourceSize.width
         height: contentImage.sourceSize.height
         cached: true
-        opacity: itemImageButton.enabled ? 1.0 : 0.3
+        opacity: itemImageButton.enabled ? 1.0 : 0.5
 
         color: {
             if (selected === true) {

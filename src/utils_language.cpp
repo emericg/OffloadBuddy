@@ -41,7 +41,9 @@ UtilsLanguage *UtilsLanguage::getInstance()
 
 UtilsLanguage::UtilsLanguage()
 {
-    //
+    // Set a default application name and instance
+    m_appName = QApplication::applicationName().toLower();
+    m_qt_app = QApplication::instance();
 }
 
 UtilsLanguage::~UtilsLanguage()
