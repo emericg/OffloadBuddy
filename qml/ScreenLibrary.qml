@@ -49,8 +49,6 @@ Item {
         }
     }
 */
-    // CONTENT /////////////////////////////////////////////////////////////////
-
     MouseArea {
         anchors.fill: parent
         propagateComposedEvents: true
@@ -67,6 +65,8 @@ Item {
             }
         }
     }
+
+    // CONTENT /////////////////////////////////////////////////////////////////
 
     ScreenLibraryGrid {
         anchors.fill: parent

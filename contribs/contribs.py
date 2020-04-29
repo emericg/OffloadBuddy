@@ -289,6 +289,7 @@ for TARGET in TARGETS:
             CMAKE_cmd = ["cmake", "-A", "Win32"]
         else:
             CMAKE_cmd = ["cmake", "-A", "x64"]
+
     if OS_HOST == "Linux" or OS_HOST == "Darwin":
         if OS_TARGET == "android":
             if ARCH_TARGET == "x86":

@@ -45,7 +45,7 @@ ApplicationWindow {
         windowInstance: applicationWindow
     }
 
-    // Events //////////////////////////////////////////////////////////////////
+    // Events handling /////////////////////////////////////////////////////////
 
     Component.onCompleted: {
         mediaLibrary.searchMediaDirectories()

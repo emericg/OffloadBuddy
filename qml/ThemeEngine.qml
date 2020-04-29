@@ -92,7 +92,7 @@ Item {
     readonly property int fontSizeBannerText: 20
     readonly property int fontSizeContentTitle: 24
     readonly property int fontSizeContentText: 15
-    readonly property int fontSizeComponentText: 16
+    readonly property int fontSizeComponent: 16
 
     ////////////////////////////////////////////////////////////////////////////
 

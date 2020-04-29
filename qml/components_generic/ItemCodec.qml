@@ -28,7 +28,7 @@ Item {
             text: codec.text
             color: codec.colorText
             font.capitalization: Font.AllUppercase
-            font.pixelSize: Theme.fontSizeComponentText
+            font.pixelSize: Theme.fontSizeComponent
             font.bold: true
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter

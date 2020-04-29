@@ -119,7 +119,7 @@ Item {
 
                     primaryColor: "#5483EF"
 
-                    text: qsTr("Dev board")
+                    text: qsTr("Issue tracker")
                     imgSize: 24
                     source: "qrc:/logos/github.svg"
                     onClicked: Qt.openUrlExternally("https://www.github.com/emericg/OffloadBuddy")
