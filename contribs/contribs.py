@@ -209,13 +209,22 @@ if OS_HOST != "Windows":
             urllib.urlretrieve("https://github.com/libmtp/libmtp/archive/master.zip", src_dir + FILE_libmtp)
 
 ## libexif
-## version: git (0.6.21+)
+## version: git (0.6.22+)
 FILE_libexif = "libexif-master.zip"
 DIR_libexif = "libexif-master"
 
 if not os.path.exists("src/" + FILE_libexif):
     print("> Downloading " + FILE_libexif + "...")
     urllib.request.urlretrieve("https://github.com/emericg/libexif/archive/master.zip", src_dir + FILE_libexif)
+
+## taglib
+## version: git (1.12 beta)
+FILE_taglib = "taglib-master.zip"
+DIR_taglib = "taglib-master"
+
+if not os.path.exists("src/" + FILE_taglib):
+    print("> Downloading " + FILE_taglib + "...")
+    urllib.request.urlretrieve("https://github.com/taglib/taglib/archive/master.zip", src_dir + FILE_taglib)
 
 ## minivideo
 ## version: git (0.12+)
@@ -225,6 +234,20 @@ DIR_minivideo = "MiniVideo-master"
 if not os.path.exists("src/" + FILE_minivideo):
     print("> Downloading " + FILE_minivideo + "...")
     urllib.request.urlretrieve("https://github.com/emericg/MiniVideo/archive/master.zip", src_dir + FILE_minivideo)
+
+## Android OpenSSL
+for TARGET in TARGETS:
+    if TARGET[0] == "android":
+        FILE_androidopenssl = "android_openssl-master.zip"
+        DIR_androidopenssl = "android_openssl"
+
+        if not os.path.exists("src/" + FILE_androidopenssl):
+            print("> Downloading " + FILE_androidopenssl + "...")
+            urllib.request.urlretrieve("https://github.com/KDAB/android_openssl/archive/master.zip", src_dir + FILE_androidopenssl)
+        if not os.path.isdir("env/" + DIR_androidopenssl):
+            zipSSL = zipfile.ZipFile(src_dir + FILE_androidopenssl)
+            zipSSL.extractall("env/")
+        break
 
 ## linuxdeployqt
 ## version: git
@@ -274,11 +297,14 @@ for TARGET in TARGETS:
             build_shared = "OFF"
             build_static = "ON"
             if ARCH_TARGET == "simulator":
-                CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + contribs_dir + "/tools/ios.toolchain.cmake", "-DIOS_PLATFORM=SIMULATOR64"]
+                CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + contribs_dir + "/tools/ios.toolchain.cmake", "-DPLATFORM=SIMULATOR64"]
             elif ARCH_TARGET == "armv7":
-                CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + contribs_dir + "/tools/ios.toolchain.cmake", "-DIOS_PLATFORM=OS"]
+                CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + contribs_dir + "/tools/ios.toolchain.cmake", "-DPLATFORM=OS"]
+            elif ARCH_TARGET == "armv8":
+                CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + contribs_dir + "/tools/ios.toolchain.cmake", "-DPLATFORM=OS64"]
             else:
-                CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + contribs_dir + "/tools/ios.toolchain.cmake", "-DIOS_PLATFORM=OS64", "-DENABLE_BITCODE=0"]
+                # Without custom toolchain
+                CMAKE_cmd = ["cmake", "-DCMAKE_SYSTEM_NAME=iOS","-DCMAKE_OSX_ARCHITECTURES=arm64","-DCMAKE_OSX_DEPLOYMENT_TARGET=10.0"]
     elif OS_HOST == "Windows":
         CMAKE_gen = MSVC_GEN_VER
         if ARCH_TARGET == "armv7":
@@ -350,14 +376,14 @@ for TARGET in TARGETS:
     ############################################################################
 
     ## ffmpeg binaries download & install
-    FFMPEG_version = "4.2.1"
+    FFMPEG_version = "4.3.0"
     FFMPEG_key = ""
 
     if OS_TARGET == "windows":
         FFMPEG_key = "win64"
     if OS_TARGET == "macOS":
         FFMPEG_key = "macos64"
-    if OS_TARGET == "linux":
+    if OS_TARGET == "linux" or OS_TARGET == "android":
         continue
 
     opener = urllib.request.build_opener()
@@ -368,7 +394,7 @@ for TARGET in TARGETS:
 
     FFMPEG_FOLDER = build_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-dev"
     FFMPEG_FILE = src_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-dev.zip"
-    FFMPEG_URL = "https://ffmpeg.zeranoe.com/builds/" + FFMPEG_key + "/dev/" + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-dev.zip"
+    FFMPEG_URL = "https://ffmpeg.zeranoe.com/builds/" + FFMPEG_key + "/dev/" + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-dev-lgpl.zip"
 
     if not os.path.exists(FFMPEG_FILE):
         print("> Downloading " + FFMPEG_URL)
@@ -389,7 +415,7 @@ for TARGET in TARGETS:
 
     FFMPEG_FOLDER = build_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-shared"
     FFMPEG_FILE = src_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-shared.zip"
-    FFMPEG_URL = "https://ffmpeg.zeranoe.com/builds/" + FFMPEG_key + "/shared/" + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-shared.zip"
+    FFMPEG_URL = "https://ffmpeg.zeranoe.com/builds/" + FFMPEG_key + "/shared/" + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-shared-lgpl.zip"
 
     if not os.path.exists(FFMPEG_FILE):
         print("> Downloading " + FFMPEG_URL)

@@ -8,6 +8,7 @@ os:
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+      sudo add-apt-repository ppa:ubuntu-toolchain-r/test
       sudo apt-add-repository ppa:beineri/opt-qt-5.14.2-xenial -y;
       sudo add-apt-repository ppa:savoury1/ffmpeg4 -y;
       sudo add-apt-repository ppa:savoury1/graphics -y;
@@ -22,7 +23,8 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
       sudo apt-get install qt514base qt514tools qt514quickcontrols qt514quickcontrols2 qt514graphicaleffects qt514svg qt514imageformats qt514charts-no-lgpl qt514location qt514multimedia -y;
       sudo apt-get install libgl1-mesa-dev libva-dev libvdpau-dev -y;
-      sudo apt-get install libavformat-dev libavfilter-dev libavdevice-dev libavcodec-dev ffmpeg -y;
+      sudo apt-get install libswscale5 libswresample3 libpostproc55 libavutil56 libavformat58 libavfilter7 libavdevice58 libavcodec58 ffmpeg -y;
+      sudo apt-get install libavutil-dev libavformat-dev libavfilter-dev libavdevice-dev libavcodec-dev -y;
       sudo apt-get install libudev-dev libusb-dev -y;
       sudo apt-get install ninja libtool automake m4 -y;
     fi
