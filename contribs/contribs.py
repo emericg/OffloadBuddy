@@ -392,8 +392,8 @@ for TARGET in TARGETS:
 
     ## HEADERS
 
-    FFMPEG_FOLDER = build_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-dev"
-    FFMPEG_FILE = src_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-dev.zip"
+    FFMPEG_FOLDER = build_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-dev-lgpl"
+    FFMPEG_FILE = src_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-dev-lgpl.zip"
     FFMPEG_URL = "https://ffmpeg.zeranoe.com/builds/" + FFMPEG_key + "/dev/" + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-dev-lgpl.zip"
 
     if not os.path.exists(FFMPEG_FILE):
@@ -413,8 +413,8 @@ for TARGET in TARGETS:
 
     ## LIBS
 
-    FFMPEG_FOLDER = build_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-shared"
-    FFMPEG_FILE = src_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-shared.zip"
+    FFMPEG_FOLDER = build_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-shared-lgpl"
+    FFMPEG_FILE = src_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-shared-lgpl.zip"
     FFMPEG_URL = "https://ffmpeg.zeranoe.com/builds/" + FFMPEG_key + "/shared/" + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-shared-lgpl.zip"
 
     if not os.path.exists(FFMPEG_FILE):
