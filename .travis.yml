@@ -8,7 +8,7 @@ os:
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-      sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+      sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y;
       sudo apt-add-repository ppa:beineri/opt-qt-5.14.2-xenial -y;
       sudo add-apt-repository ppa:savoury1/ffmpeg4 -y;
       sudo add-apt-repository ppa:savoury1/graphics -y;
