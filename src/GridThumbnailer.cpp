@@ -438,9 +438,7 @@ bool GridThumbnailer::getImage_withFfmpeg(const QString &path, QImage &img,
     // SPEED FLAGS // "ain't nobody got time for that"
     videoCodecContext->skip_loop_filter = AVDISCARD_ALL;
     videoCodecContext->flags2 |= AV_CODEC_FLAG2_FAST;
-
-    videoCodecContext->thread_count = 1;
-    videoCodecContext->thread_type = FF_THREAD_FRAME;
+    videoCodecContext->thread_count = 2;
     //videoCodecContext->thread_type = FF_THREAD_FRAME | FF_THREAD_SLICE;
 
     if (avcodec_open2(videoCodecContext, videoCodec, nullptr) < 0)
