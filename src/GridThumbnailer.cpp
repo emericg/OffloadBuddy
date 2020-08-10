@@ -33,8 +33,8 @@ extern "C"
 }
 #endif // __cplusplus
 
-#include "utils_maths.h"
-#include "utils_ffmpeg.h"
+#include "utils/utils_maths.h"
+#include "utils/utils_ffmpeg.h"
 #endif // ENABLE_FFMPEG
 
 #ifdef ENABLE_MINIVIDEO

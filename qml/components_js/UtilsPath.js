@@ -1,38 +1,52 @@
 // UtilsPath.js
-// Version 0.4
+// Version 6
 .pragma library
 
 /* ************************************************************************** */
 
 /*!
- * Take an url or string, and make sure we output a clean string path.
+ * Take a path (url or string) and make sure we output a clean string path.
  */
-function cleanUrl(urlIn) {
-    urlIn = Qt.resolvedUrl(urlIn)
-    if (!(typeof urlIn === 'string' || urlIn instanceof String)) {
-        urlIn = urlIn.toString();
+function cleanUrl(pathInput) {
+    var stringOut = '';
+
+    var input = Qt.resolvedUrl(pathInput)
+    if (!(typeof input === 'string' || input instanceof String)) {
+        input = input.toString();
     }
 
-    var pathOut = '';
-    if (typeof urlIn === 'string' || urlIn instanceof String) {
-        if (urlIn.slice(0, 8) === "file:///") {
-            var k = urlIn.charAt(9) === ':' ? 8 : 7;
-            pathOut = urlIn.substring(k);
+    if (typeof input === 'string' || input instanceof String) {
+        if (input.slice(0, 8) === "file:///") {
+            var k = input.charAt(9) === ':' ? 8 : 7;
+            stringOut = input.substring(k);
+        } else if (input.slice(0, 10) === "content://") {
+            // 'content://com.android.providers.media.documents/document/' + filename
+            // 'content://' + 'app.package' + '/root/' + path
+            var kk = input.indexOf("/root/"); kk += 5;
+            stringOut = input.substring(kk);
         } else {
-            pathOut = urlIn;
+            stringOut = input;
         }
     } else {
-        console.log("cleanUrl(urlIn) has been given an unknown type...");
+        console.log("cleanUrl() has been given an unknown type...");
     }
 
-    return pathOut;
+    //console.log("cleanUrl() in: " + pathInput + " / out: " + stringOut)
+    return stringOut;
 }
 
 /*!
- * Take an url or string, and make sure we output a clean url.
+ * Take a path (url or string) and make sure we output a clean url.
  */
-function makeUrl(urlIn) {
-    //
+function makeUrl(pathInput) {
+    var urlOut = '';
+
+    if (typeof pathInput === 'string' || pathInput instanceof String) {
+        urlOut = "file://" + pathInput;
+    }
+
+    //console.log("makeUrl() in: " + pathInput + " / out: " + urlOut)
+    return urlOut;
 }
 
 /*!
@@ -120,8 +134,9 @@ function isAudioFile(filePath) {
             extension === "m4a" || extension === "mp4a" ||  extension === "m4r" || extension === "aac" ||
             extension === "mka" ||
             extension === "wma" ||
+            extension === "flac" ||
             extension === "amb" || extension === "wav" || extension === "wave" ||
-            extension === "ogg" || extension === "opus" || extension === "vorbis" ) {
+            extension === "ogg" || extension === "opus" || extension === "vorbis") {
             valid = true;
         }
     }

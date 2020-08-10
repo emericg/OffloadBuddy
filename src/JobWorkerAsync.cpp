@@ -22,7 +22,7 @@
 #include "JobWorkerAsync.h"
 #include "JobManager.h"
 #include "Shot.h"
-#include "utils_app.h"
+#include "utils/utils_app.h"
 
 #include <QProcess>
 #include <QFileInfo>

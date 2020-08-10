@@ -23,7 +23,7 @@
 
 #include "Shot.h"
 #include "GpmfTags.h"
-#include "utils_maths.h"
+#include "utils/utils_maths.h"
 
 #include <QDir>
 #include <QUrl>

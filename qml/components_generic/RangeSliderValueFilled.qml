@@ -1,13 +1,13 @@
-import QtQuick 2.9
-import QtQuick.Controls 2.2
+import QtQuick 2.12
+import QtQuick.Controls 2.12
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsNumber.js" as UtilsNumber
 
 RangeSlider {
     id: control
-    first.value: 0.25
-    second.value: 0.75
+    //first.value: 0.25
+    //second.value: 0.75
     snapMode: RangeSlider.SnapAlways
 
     property string unit: ""

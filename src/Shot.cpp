@@ -23,7 +23,7 @@
 
 #include "Shot.h"
 #include "GpmfTags.h"
-#include "utils_maths.h"
+#include "utils/utils_maths.h"
 
 #include <QDir>
 #include <QUrl>
@@ -520,7 +520,7 @@ void Shot::openFolder() const
     QFileInfo d(folder);
     if (!folder.isEmpty() && d.exists())
     {
-        //qDebug() << "openFolder:" << folder;
+        //qDebug() << "Shot::openFolder()" << folder;
         QDesktopServices::openUrl(QUrl::fromLocalFile(folder));
     }
 }

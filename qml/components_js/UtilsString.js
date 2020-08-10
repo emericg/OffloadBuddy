@@ -1,16 +1,18 @@
 // UtilsString.js
-// Version 0.8
+// Version 9
 .pragma library
 
 /* ************************************************************************** */
 
 /*!
- * padNumberInternal()
- * Only used for duration whithin this file.
+ * _padNumber()
+ * Only used for padding durations whithin this file.
  */
-function padNumberInternal(n) {
+function _padNumber(n, width) {
+    width = width || 2;
+
     n = n + '';
-    return n.length >= 2 ? n : new Array(2 - n.length + 1).join('0') + n;
+    return (n.length >= width) ? n : new Array(width - n.length + 1).join('0') + n;
 }
 
 /*!
@@ -18,9 +20,9 @@ function padNumberInternal(n) {
  * Format is 'XX hours XX min XX sec XX ms'
  */
 function durationToString_long(duration) {
-    var text = '';
+    var text = "";
 
-    if (duration <= 0) return qsTr("Unknown duration");
+    if (duration < 0) return qsTr("Unknown duration");
 
     var hours = Math.floor(duration / 3600000);
     var minutes = Math.floor((duration - (hours * 3600000)) / 60000);
@@ -53,9 +55,10 @@ function durationToString_long(duration) {
  * Format is 'XX h XX m XX s XX ms'
  */
 function durationToString_short(duration) {
-    var text = '';
+    var text = "";
 
-    if (duration <= 0) return qsTr("?");
+    if (duration < 0) return qsTr("?");
+    if (duration === 0) return qsTr("0 s");
 
     var hours = Math.floor(duration / 3600000);
     var minutes = Math.floor((duration - (hours * 3600000)) / 60000);
@@ -81,12 +84,14 @@ function durationToString_short(duration) {
 /*!
  * durationToString_compact()
  * Format is 'XXh XXm XXs [XXms]'
+ *
  * Last second is rounded and milliseconds are hidden unless duration is less than two seconds.
  */
 function durationToString_compact(duration) {
-    var text = '';
+    var text = "";
 
-    if (duration <= 0) return qsTr("unknown");
+    if (duration < 0) return qsTr("unknown");
+    if (duration === 0) return qsTr("0s");
 
     var hours = Math.floor(duration / 3600000);
     var minutes = Math.floor((duration - (hours * 3600000)) / 60000);
@@ -114,21 +119,21 @@ function durationToString_compact(duration) {
 /*!
  * durationToString_ISO8601_compact()
  * Format is 'mm:ss' (strict)
-
+ *
  * Note: great for displaying media current position in player
  * Ref: https://en.wikipedia.org/wiki/ISO_8601#Times
  */
 function durationToString_ISO8601_compact(duration) {
-    var text = '';
+    var text = "";
 
     if (duration > 1000) {
         var hours = Math.floor(duration / 3600000);
         var minutes = Math.floor((duration - (hours * 3600000)) / 60000);
         var seconds = Math.floor((duration - (hours * 3600000) - (minutes * 60000)) / 1000);
 
-        if (hours > 0) text += padNumberInternal(hours).toString() + ":";
-        text += padNumberInternal(minutes).toString() + ":";
-        text += padNumberInternal(seconds).toString();
+        if (hours > 0) text += _padNumber(hours).toString() + ":";
+        text += _padNumber(minutes).toString() + ":";
+        text += _padNumber(seconds).toString();
     } else {
         text = "00:00";
     }
@@ -144,16 +149,16 @@ function durationToString_ISO8601_compact(duration) {
  * Ref: https://en.wikipedia.org/wiki/ISO_8601#Times
  */
 function durationToString_ISO8601_compact_loose(duration) {
-    var text = '';
+    var text = "";
 
     if (duration > 1000) {
         var hours = Math.floor(duration / 3600000);
         var minutes = Math.floor((duration - (hours * 3600000)) / 60000);
         var seconds = Math.round((duration - (hours * 3600000) - (minutes * 60000)) / 1000);
 
-        if (hours > 0) text += padNumberInternal(hours).toString() + ":";
-        text += padNumberInternal(minutes).toString() + ":";
-        text += padNumberInternal(seconds).toString();
+        if (hours > 0) text += _padNumber(hours).toString() + ":";
+        text += _padNumber(minutes).toString() + ":";
+        text += _padNumber(seconds).toString();
     } else if (duration > 0) {
         text = "~00:01";
     } else {
@@ -165,25 +170,63 @@ function durationToString_ISO8601_compact_loose(duration) {
 
 /*!
  * durationToString_ISO8601_regular()
- * Format is '00:00:00' (strict)
+ * Format is 'hh:mm:ss' (strict)
  *
  * Ref: https://en.wikipedia.org/wiki/ISO_8601#Times
  */
 function durationToString_ISO8601_regular(duration_ms) {
-    var text = '';
+    var text = "";
 
     if (duration_ms > 1000) {
         var hours = Math.floor(duration_ms / 3600000);
         var minutes = Math.floor((duration_ms - (hours * 3600000)) / 60000);
         var seconds = Math.round((duration_ms - (hours * 3600000) - (minutes * 60000)) / 1000);
 
-        text += padNumberInternal(hours).toString() + ":";
-        text += padNumberInternal(minutes).toString() + ":";
-        text += padNumberInternal(seconds).toString();
+        text += _padNumber(hours).toString() + ":";
+        text += _padNumber(minutes).toString() + ":";
+        text += _padNumber(seconds).toString();
     } else if (duration_ms > 0) {
         text = "00:00:01";
     } else {
         text = "00:00:00";
+    }
+
+    return text
+}
+
+/*!
+ * durationToString_ISO8601_full_loose()
+ * Format is 'hh:mm:ss.sss' (loose)
+ *
+ * Ref: https://en.wikipedia.org/wiki/ISO_8601#Times
+ */
+function durationToString_ISO8601_full_loose(duration_ms) {
+    var text = "";
+
+    if (duration_ms > 0) {
+        var hours = Math.floor(duration_ms / 3600000);
+        var minutes = Math.floor((duration_ms - (hours * 3600000)) / 60000);
+        var seconds = Math.floor((duration_ms - (hours * 3600000) - (minutes * 60000)) / 1000);
+        var milliseconds = Math.floor((duration_ms - (hours * 3600000) - (minutes * 60000)) - (seconds * 1000));
+
+        if (hours > 0) {
+            text += _padNumber(hours).toString();
+            text += ":";
+        }
+
+        if (minutes > 0) {
+            text += _padNumber(minutes).toString();
+            text += ":";
+        }
+
+        if (seconds > 0)
+            text += _padNumber(seconds).toString();
+        if (seconds === 0)
+            text += "00";
+        if (milliseconds > 0)
+            text += "." + _padNumber(milliseconds, 3).toString();
+    } else {
+        text = "00:00";
     }
 
     return text
@@ -197,7 +240,7 @@ function durationToString_ISO8601_regular(duration_ms) {
  * Ref: https://en.wikipedia.org/wiki/ISO_8601#Times
  */
 function durationToString_ISO8601_full(duration_ms) {
-    var text = '';
+    var text = "";
 
     if (duration_ms > 0) {
         var hours = Math.floor(duration_ms / 3600000);
@@ -206,26 +249,25 @@ function durationToString_ISO8601_full(duration_ms) {
         var milliseconds = Math.floor((duration_ms - (hours * 3600000) - (minutes * 60000)) - (seconds * 1000));
 
         if (hours > 0)
-            text += padNumberInternal(hours).toString();
+            text += _padNumber(hours).toString();
         if (hours === 0)
             text += "00";
 
         text += ":";
 
         if (minutes > 0)
-            text += padNumberInternal(minutes).toString();
+            text += _padNumber(minutes).toString();
         if (minutes === 0)
             text += "00";
 
         text += ":";
 
-        if (seconds > 0) {
-            text += padNumberInternal(seconds).toString();
+        if (seconds > 0)
+            text += _padNumber(seconds).toString();
         if (seconds === 0)
             text += "00";
-        if (milliseconds)
+        if (milliseconds > 0)
             text += "." + milliseconds.toString();
-        }
     } else {
         text = "00:00:00";
     }
@@ -240,7 +282,7 @@ function durationToString_ISO8601_full(duration_ms) {
  * unit: 0 is KB, 1 is KiB
  */
 function bytesToString(bytes, unit) {
-    var text = '';
+    var text = "";
     unit = unit || 0;
 
     var base = (unit === 1) ? 1024 : 1000
@@ -267,7 +309,7 @@ function bytesToString(bytes, unit) {
  * unit: 0 is KB, 1 is KiB
  */
 function bytesToString_short(bytes, unit) {
-    var text = '';
+    var text = "";
     unit = unit || 0;
 
     var base = (unit === 1) ? 1024 : 1000
@@ -327,7 +369,7 @@ function altitudeUnit(unit) {
  * distanceToString()
  */
 function distanceToString(value, precision, unit) {
-    var text = '';
+    var text = "";
     unit = unit || 0;
 
     if (unit === 0) {
@@ -350,7 +392,8 @@ function speedToString(value, precision, unit) {
  * speedUnit()
  */
 function speedUnit(unit) {
-    var text = '';
+    var text = "";
+    unit = unit || 0;
 
     if (unit === 0) {
         text = qsTr("km/h");

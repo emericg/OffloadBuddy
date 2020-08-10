@@ -35,8 +35,8 @@ ShotModel::ShotModel(QObject *parent)
     //
 }
 
-ShotModel::ShotModel(const ShotModel &other)
-    : QAbstractListModel()
+ShotModel::ShotModel(const ShotModel &other, QObject *parent)
+    : QAbstractListModel(parent)
 {
     m_shots = other.m_shots;
 }

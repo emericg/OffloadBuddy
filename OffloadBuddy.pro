@@ -26,6 +26,13 @@ DEFINES += QAPPLICATION_CLASS=QApplication
 
 win32 { DEFINES += _USE_MATH_DEFINES }
 
+osx {
+    # macOS dock click handler
+    SOURCES += src/utils/utils_macosdock.mm
+    HEADERS += src/utils/utils_macosdock.h
+    LIBS    += -framework AppKit
+}
+
 unix { DEFINES += ENABLE_LIBMTP }
 DEFINES += ENABLE_FFMPEG
 DEFINES += ENABLE_MINIVIDEO
@@ -57,11 +64,11 @@ SOURCES  += src/main.cpp \
             src/GpmfBuffer.cpp \
             src/GpmfKLV.cpp \
             src/GpmfTags.cpp \
-            src/utils_app.cpp \
-            src/utils_screen.cpp \
-            src/utils_language.cpp \
-            src/utils_ffmpeg.cpp \
-            src/utils_maths.cpp
+            src/utils/utils_app.cpp \
+            src/utils/utils_screen.cpp \
+            src/utils/utils_language.cpp \
+            src/utils/utils_ffmpeg.cpp \
+            src/utils/utils_maths.cpp
 
 HEADERS  += src/SettingsManager.h \
             src/JobManager.h \
@@ -84,12 +91,12 @@ HEADERS  += src/SettingsManager.h \
             src/GpmfBuffer.h \
             src/GpmfKLV.h \
             src/GpmfTags.h \
-            src/utils_app.h \
-            src/utils_screen.h \
-            src/utils_language.h \
-            src/utils_ffmpeg.h \
-            src/utils_maths.h \
-            src/utils_enums.h
+            src/utils/utils_app.h \
+            src/utils/utils_screen.h \
+            src/utils/utils_language.h \
+            src/utils/utils_ffmpeg.h \
+            src/utils/utils_maths.h \
+            src/utils/utils_enums.h
 
 RESOURCES   += qml/qml.qrc \
                i18n/i18n.qrc \
@@ -217,11 +224,6 @@ macx {
 
     # OS infos
     #QMAKE_INFO_PLIST = $${PWD}/assets/desktop/Info.plist
-
-    # macOS dock click handler
-    SOURCES += src/utils_macosdock.mm
-    HEADERS += src/utils_macosdock.h
-    LIBS    += -framework AppKit
 
     # OS entitlement (sandbox and stuff)
     ENTITLEMENTS.name = CODE_SIGN_ENTITLEMENTS

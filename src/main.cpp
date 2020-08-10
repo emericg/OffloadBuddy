@@ -19,16 +19,17 @@
  * \date      2018
  */
 
-#include "utils_app.h"
-#include "utils_screen.h"
-#include "utils_language.h"
-#include "utils_macosdock.h"
 #include "SettingsManager.h"
 #include "DeviceManager.h"
 #include "JobManager.h"
 #include "MediaLibrary.h"
 #include "GridThumbnailer.h"
 #include "ItemImage.h"
+
+#include "utils/utils_app.h"
+#include "utils/utils_screen.h"
+#include "utils/utils_language.h"
+#include "utils/utils_macosdock.h"
 
 #include <singleapplication.h>
 

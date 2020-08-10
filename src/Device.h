@@ -24,7 +24,7 @@
 /* ************************************************************************** */
 
 #include "ShotProvider.h"
-#include "utils_enums.h"
+#include "utils/utils_enums.h"
 
 #ifdef ENABLE_LIBMTP
 #include <libmtp.h>

@@ -59,7 +59,7 @@ public:
     };
 
     ShotModel(QObject *parent = nullptr);
-    ShotModel(const ShotModel &other);
+    ShotModel(const ShotModel &other, QObject *parent = nullptr);
     ~ShotModel();
 
     int rowCount(const QModelIndex & parent = QModelIndex()) const;

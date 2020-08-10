@@ -77,7 +77,7 @@ SingleApplicationPrivate::~SingleApplicationPrivate()
             delete server;
             inst->primary = false;
             inst->primaryPid = -1;
-            inst->primaryUser[0] =  '\0';
+            inst->primaryUser[0] = '\0';
             inst->checksum = blockChecksum();
         }
         memory->unlock();
@@ -153,7 +153,7 @@ void SingleApplicationPrivate::initializeMemoryBlock()
     inst->primary = false;
     inst->secondary = 0;
     inst->primaryPid = -1;
-    inst->primaryUser[0] =  '\0';
+    inst->primaryUser[0] = '\0';
     inst->checksum = blockChecksum();
 }
 
@@ -187,8 +187,7 @@ void SingleApplicationPrivate::startPrimary()
 
     inst->primary = true;
     inst->primaryPid = q->applicationPid();
-    strncpy( inst->primaryUser, getUsername().toUtf8().data(), 127 );
-    inst->primaryUser[127] = '\0';
+    qstrncpy( inst->primaryUser, getUsername().toUtf8().data(), sizeof(inst->primaryUser) );
     inst->checksum = blockChecksum();
 
     instanceNumber = 0;

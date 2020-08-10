@@ -1,5 +1,5 @@
 // UtilsMedia.js
-// Version 0.1
+// Version 1
 .pragma library
 
 /* ************************************************************************** */
@@ -41,7 +41,7 @@ function darToString(width, height) {
     } else if (ar_float > 3.5 && ar_float < 3.6) { // 3.555
         ar_string = "32:9";
     }
-    // mobile display // add more as we go...
+    // mobile displays // add more as we go...
     else if (ar_float === 2) { // 2
         ar_string = "18:9";
     } else if (ar_float > 2 && ar_float < 2.1) { // 2,0555
@@ -160,7 +160,7 @@ function varToDescString(width, height) {
         ar_string = qsTr("70 mm film");
     } else if (ar_float > 2.34 && ar_float < 2.36) {
         ar_string = qsTr("35 mm anamorphic");
-    } else if (ar_float > 2.38 && ar_float < 2.40) {
+    } else if (ar_float > 2.38 && ar_float < 2.41) {
         ar_string = qsTr("35 mm modern anamorphic");
     } else if (ar_float > 2.54 && ar_float < 2.56) {
         ar_string = "Cinemascope";
@@ -256,6 +256,30 @@ function orientationToString(orientation) {
             text = qsTr("Rotate 270°");
     } else {
         text = qsTr("No transformation");
+    }
+
+    return text;
+}
+
+/*!
+ * rotationToString()
+ *
+ * Convert MP4 enumeration to a readable string
+ */
+function rotationToString(rotation) {
+    var text = '';
+
+    if (rotation > 0) {
+        if (rotation === 1)
+            text = qsTr("Rotate 90°");
+        else if (rotation === 2)
+            text = qsTr("Rotate 180°");
+        else if (rotation === 3)
+            text = qsTr("Rotate 270°");
+        else
+            text = qsTr("Unknown rotation");
+    } else {
+        text = qsTr("No rotation");
     }
 
     return text;

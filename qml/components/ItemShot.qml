@@ -167,8 +167,8 @@ Rectangle {
         actionMenu.setMenuButtons(folder, copy, merge, encode, telemetry_gpmf, telemetry_gps, remove)
 
         actionMenu.visible = true
-        actionMenu.x = mouseAreaOutsideView.mouseX + 8
-        actionMenu.y = mouseAreaOutsideView.mouseY + 8
+        actionMenu.x = mouseAreaOutsideView.mouseX + 4
+        actionMenu.y = mouseAreaOutsideView.mouseY + 4
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -332,7 +332,7 @@ Rectangle {
 
         visible: shot.selected
         color: Theme.colorPrimary
-        opacity: 0.5
+        opacity: 0.33
     }
     Rectangle {
         id: rectangleOverlay
@@ -352,12 +352,17 @@ Rectangle {
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+
     MouseArea {
         id: mouseAreaItem
         anchors.fill: parent
+
         hoverEnabled: true
         propagateComposedEvents: true
         acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
+
+        ////////
 
         property int thumbId: 1
         Timer {
@@ -404,7 +409,10 @@ Rectangle {
             }
         }
 
+        ////////
+
         onClicked: {
+            //console.log("ItemShot::onClicked")
             var lastIndex = shotsView.currentIndex
             shotsView.currentIndex = index
 

@@ -157,9 +157,9 @@ Rectangle {
 
         visible: directory.available && !itemMediaDirectory.confirmation && deviceSpaceText.width > 400
         color: Theme.colorText
-        text: UtilsString.bytesToString_short(directory.spaceUsed) + " used / " +
-              UtilsString.bytesToString_short(directory.spaceAvailable) + " available / " +
-              UtilsString.bytesToString_short(directory.spaceTotal) + " total"
+        text: UtilsString.bytesToString_short(directory.spaceUsed) + qsTr(" used / ") +
+              UtilsString.bytesToString_short(directory.spaceAvailable) + qsTr(" available / ") +
+              UtilsString.bytesToString_short(directory.spaceTotal) + qsTr(" total")
     }
     Text {
         id: textError
