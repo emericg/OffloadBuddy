@@ -6,55 +6,57 @@ import ThemeEngine 1.0
 import "qrc:/js/UtilsString.js" as UtilsString
 import "qrc:/js/UtilsPath.js" as UtilsPath
 
-Rectangle {
+Item {
     id: itemMediaDirectory
-    width: parent.width
     implicitWidth: 800
+    implicitHeight: 48
+    width: parent.width
     height: 48
-    radius: Theme.componentRadius
-    color: (directory.available) ? "transparent" : Theme.colorWarning
 
     property var directory: null
     property bool confirmation: false
 
     Connections {
         target: directory
-        function onAvailableChanged() { updateInfos() }
-    }
+        onAvailableChanged: {
+            deviceSpaceText.text = UtilsString.bytesToString_short(directory.spaceUsed) + " " + qsTr("used") + " / " +
+                                   UtilsString.bytesToString_short(directory.spaceAvailable) + " " + qsTr("available") + " / " +
+                                   UtilsString.bytesToString_short(directory.spaceTotal) + " " + qsTr("total")
 
-    function updateInfos() {
-        deviceSpaceText.text = UtilsString.bytesToString_short(directory.spaceUsed) + " used / " +
-                               UtilsString.bytesToString_short(directory.spaceAvailable) + " available / " +
-                               UtilsString.bytesToString_short(directory.spaceTotal) + " total"
-
-        progressBar.value = directory.storageLevel
+            progressBar.value = directory.storageLevel
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////
 
     TextFieldThemed {
         id: textField_path
-        width: 512
+        width: (itemMediaDirectory.width < 720) ? 512 : 640
         height: 40
         anchors.left: parent.left
-        anchors.leftMargin: 4 // directory.available ? 0 : 4
+        anchors.leftMargin: 4
         anchors.verticalCenter: parent.verticalCenter
 
-        readOnly: !directory.available
+        //readOnly: !directory.available
+        colorBorder: directory.available ? Theme.colorComponentBorder : Theme.colorWarning
         text: directory.directoryPath
 
-        FileDialog {
-            id: fileDialogChange
-            title: qsTr("Please choose a destination directory!")
-            sidebarVisible: true
-            selectExisting: true
-            selectMultiple: false
-            selectFolder: true
+        onEditingFinished: {
+            directory.directoryPath = textField_path.text
+            settingsManager.directoryModified()
+            focus = false
+        }
 
-            onAccepted: {
-                directory.directoryPath = UtilsPath.cleanUrl(fileDialogChange.fileUrl);
-                settingsManager.directoryModified();
-            }
+        ImageSvg {
+            width: 24
+            height: 24
+            anchors.right: button_change.left
+            anchors.rightMargin: 8
+            anchors.verticalCenter: parent.verticalCenter
+
+            visible: !directory.available
+            source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
+            color: Theme.colorWarning
         }
 
         ItemImageButton {
@@ -65,28 +67,41 @@ Rectangle {
             anchors.rightMargin: 4
             anchors.verticalCenter: parent.verticalCenter
 
+            highlightMode: "color"
             visible: directory.available
             enabled: directory.available
             source: "qrc:/assets/icons_material/baseline-refresh-24px.svg"
-            onClicked: mediaLibrary.searchMediaDirectory(directory.directoryPath)
+            onClicked: {
+                mediaLibrary.searchMediaDirectory(directory.directoryPath)
+                refreshAnimation.start()
+            }
 
             NumberAnimation on rotation {
                 id: refreshAnimation
-                duration: 2000
+                duration: 1000
                 from: 0
                 to: 360
-                loops: Animation.Infinite
-                running: directory.scanning
-                onStopped: refreshAnimationStop.start()
-            }
-            NumberAnimation on rotation {
-                id: refreshAnimationStop
-                duration: 1000
-                to: 360
+                //running: directory.scanning
+                //loops: Animation.Infinite
+                alwaysRunToEnd: true
                 easing.type: Easing.Linear
-                running: false
             }
         }
+
+        FileDialog {
+            id: fileDialogChange
+            title: qsTr("Please choose a destination directory!")
+            sidebarVisible: true
+            selectExisting: true
+            selectMultiple: false
+            selectFolder: true
+
+            onAccepted: {
+                directory.directoryPath = UtilsPath.cleanUrl(fileDialogChange.fileUrl)
+                settingsManager.directoryModified()
+            }
+        }
+
         ButtonThemed {
             id: button_change
             width: 72
@@ -98,7 +113,7 @@ Rectangle {
             embedded: true
             text: qsTr("change")
             onClicked: {
-                fileDialogChange.folder =  "file:///" + textField_path.text
+                fileDialogChange.folder = UtilsPath.makeUrl(textField_path.text)
                 fileDialogChange.open()
             }
         }
@@ -106,11 +121,13 @@ Rectangle {
 
     ComboBoxThemed {
         id: comboBox_content
-        width: 160
+        width: 180
         height: 40
         anchors.left: textField_path.right
         anchors.leftMargin: 16
         anchors.verticalCenter: parent.verticalCenter
+
+        font.pixelSize: 14
 
         model: ListModel {
             id: cbItemsContent
@@ -133,51 +150,70 @@ Rectangle {
         }
     }
 
-    ProgressBarThemed {
-        id: progressBar
-        height: 8
-        anchors.right: rectangleDelete.left
-        anchors.rightMargin: 16
+    Item {
+        height: parent.height
         anchors.left: comboBox_content.right
         anchors.leftMargin: 16
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: 10
-
-        visible: directory.available && !itemMediaDirectory.confirmation
-        value: directory.storageLevel
-    }
-    Text {
-        id: deviceSpaceText
         anchors.right: rectangleDelete.left
-        anchors.rightMargin: 16
-        anchors.left: comboBox_content.right
-        anchors.leftMargin: 16
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: -6
-
-        visible: directory.available && !itemMediaDirectory.confirmation && deviceSpaceText.width > 400
-        color: Theme.colorText
-        text: UtilsString.bytesToString_short(directory.spaceUsed) + qsTr(" used / ") +
-              UtilsString.bytesToString_short(directory.spaceAvailable) + qsTr(" available / ") +
-              UtilsString.bytesToString_short(directory.spaceTotal) + qsTr(" total")
-    }
-    Text {
-        id: textError
-        height: 20
-        visible: !directory.available && !itemMediaDirectory.confirmation
-        anchors.right: rectangleDelete.left
-        anchors.rightMargin: 16
-        anchors.left: comboBox_content.right
-        anchors.leftMargin: 16
-        anchors.verticalCenter: parent.verticalCenter
-
-        text: qsTr("Directory is not available right now :/")
+        anchors.rightMargin: 12
         clip: true
-        color: "white"
-        font.bold: true
-        font.pixelSize: 18
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
+
+        // this
+        Column {
+            anchors.verticalCenter: parent.verticalCenter
+            width: parent.width
+            spacing: 8
+            visible: directory.available && !itemMediaDirectory.confirmation
+
+            Text {
+                id: deviceSpaceText
+                width: parent.width
+
+                visible: (deviceSpaceText.width > 400)
+                color: Theme.colorText
+                text: UtilsString.bytesToString_short(directory.spaceUsed) + qsTr(" used / ") +
+                      UtilsString.bytesToString_short(directory.spaceAvailable) + qsTr(" available / ") +
+                      UtilsString.bytesToString_short(directory.spaceTotal) + qsTr(" total")
+            }
+            ProgressBarThemed {
+                id: progressBar
+                height: 8
+                width: parent.width
+
+                value: directory.storageLevel
+            }
+        }
+
+        // or that
+        Row {
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: 8
+            visible: !directory.available && !itemMediaDirectory.confirmation
+
+            ImageSvg {
+                id: imageError
+                width: 28
+                height: 28
+
+                color: Theme.colorWarning
+                source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
+                anchors.verticalCenter: parent.verticalCenter
+            }
+            Text {
+                id: textError
+                height: parent.height
+                anchors.verticalCenter: parent.verticalCenter
+                visible: (deviceSpaceText.width > 400)
+
+                text: qsTr("Directory is not available right now :/")
+                color: Theme.colorWarning
+                font.bold: true
+                font.pixelSize: 18
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
+        }
     }
 
     ItemImageButton {
@@ -186,8 +222,7 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
 
         visible: !itemMediaDirectory.confirmation
-
-        iconColor: directory.available ? Theme.colorIcon : "white"
+        iconColor: Theme.colorSubText
         highlightMode: "color"
         highlightColor: Theme.colorError
         source: "qrc:/assets/icons_material/baseline-delete-24px.svg"
@@ -196,46 +231,46 @@ Rectangle {
 
     ////////
 
-    Rectangle {
-        anchors.fill: rowConfirmation
-        visible: itemMediaDirectory.confirmation
-        color: itemMediaDirectory.color
-    }
     Row {
         id: rowConfirmation
+        anchors.left: comboBox_content.right
+        anchors.leftMargin: 16
         anchors.right: parent.right
         anchors.rightMargin: 16
         anchors.verticalCenter: parent.verticalCenter
 
         spacing: 16
+        layoutDirection: Qt.RightToLeft
         visible: (itemMediaDirectory.confirmation)
+        clip: true
 
-        Text {
-            id: textConfirmation
-            height: 32
-            anchors.verticalCenter: parent.verticalCenter
-
-            text: qsTr("Are you sure ?")
-            font.bold: true
-            font.pixelSize: 16
-            color: directory.available ? Theme.colorText : "white"
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-        }
         ButtonWireframe {
             height: 32
             anchors.verticalCenter: parent.verticalCenter
-            text: qsTr("Cancel")
-            primaryColor: Theme.colorPrimary
-            onClicked: itemMediaDirectory.confirmation = false
-        }
-        ButtonWireframe {
-            height: 32
-            anchors.verticalCenter: parent.verticalCenter
-            text: qsTr("Yes")
+            text: qsTr("YES")
             fullColor: true
             primaryColor: Theme.colorPrimary
             onClicked: settingsManager.removeDirectory(textField_path.text)
+        }
+        ButtonWireframe {
+            height: 32
+            anchors.verticalCenter: parent.verticalCenter
+            text: qsTr("NO")
+            fullColor: true
+            primaryColor: Theme.colorSubText
+            onClicked: itemMediaDirectory.confirmation = false
+        }
+        Text {
+            id: textConfirmation
+            height: 48
+            anchors.verticalCenter: parent.verticalCenter
+
+            text: qsTr("Are you sure?")
+            font.bold: true
+            font.pixelSize: 18
+            color: Theme.colorSubText
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
         }
     }
 }
