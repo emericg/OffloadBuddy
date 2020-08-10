@@ -1,5 +1,5 @@
-import QtQuick 2.9
-import QtQuick.Controls 2.2
+import QtQuick 2.12
+import QtQuick.Controls 2.12
 import QtMultimedia 5.9
 
 import ThemeEngine 1.0
@@ -139,8 +139,8 @@ Item {
 
     PopupDate {
         id: popupDate
-        x: (applicationWindow.width / 2) - (popupDate.width / 2) - (applicationSidebar.width)
-        y: (applicationWindow.height / 2) - (popupDate.height / 2) - (rectangleHeader.height)
+        x: (appWindow.width / 2) - (popupDate.width / 2) - (appSidebar.width)
+        y: (appWindow.height / 2) - (popupDate.height / 2) - (rectangleHeader.height)
 
         onConfirmed: {
             //
@@ -149,8 +149,8 @@ Item {
 
     PopupExtractTelemetry {
         id: popupTelemetry
-        x: (applicationWindow.width / 2) - (popupDate.width / 2) - (applicationSidebar.width)
-        y: (applicationWindow.height / 2) - (popupDate.height / 2) - (rectangleHeader.height)
+        x: (appWindow.width / 2) - (popupDate.width / 2) - (appSidebar.width)
+        y: (appWindow.height / 2) - (popupDate.height / 2) - (rectangleHeader.height)
 
         onConfirmed: {
             //
@@ -159,16 +159,16 @@ Item {
 
     PopupDelete {
         id: popupDelete
-        x: (applicationWindow.width / 2) - (popupDelete.width / 2) - (applicationSidebar.width)
-        y: (applicationWindow.height / 2) - (popupDelete.height / 2) - (rectangleHeader.height)
+        x: (appWindow.width / 2) - (popupDelete.width / 2) - (appSidebar.width)
+        y: (appWindow.height / 2) - (popupDelete.height / 2) - (rectangleHeader.height)
 
         message: qsTr("Are you sure you want to delete the current shot?")
         onConfirmed: {
-            if (applicationContent.state === "library") {
+            if (appContent.state === "library") {
                 mediaLibrary.deleteSelected(screenMedia.shot.uuid)
                 // then back to media grid
                 screenLibrary.state = "stateMediaGrid"
-            } else if (applicationContent.state === "device") {
+            } else if (appContent.state === "device") {
                 // delete shot
                 screenDevice.currentDevice.deleteSelected(screenMedia.shot.uuid)
                 // then back to media grid
@@ -179,8 +179,8 @@ Item {
 
     PopupEncodeVideo {
         id: popupEncodeVideo
-        x: (applicationWindow.width / 2) - (popupEncodeVideo.width / 2) - (applicationSidebar.width)
-        y: (applicationWindow.height / 2) - (popupEncodeVideo.height / 2) - (rectangleHeader.height)
+        x: (appWindow.width / 2) - (popupEncodeVideo.width / 2) - (appSidebar.width)
+        y: (appWindow.height / 2) - (popupEncodeVideo.height / 2) - (rectangleHeader.height)
 
         onConfirmed: {
             //

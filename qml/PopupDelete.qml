@@ -1,12 +1,12 @@
-import QtQuick 2.9
-import QtQuick.Controls 2.2
+import QtQuick 2.12
+import QtQuick.Controls 2.12
 
 import ThemeEngine 1.0
 
 Popup {
     id: popupDelete
-    x: (applicationWindow.width / 2) - (width / 2) - (applicationSidebar.width / 2)
-    y: (applicationWindow.height / 2) - (height / 2)
+    x: (appWindow.width / 2) - (width / 2) - (appSidebar.width / 2)
+    y: (appWindow.height / 2) - (height / 2)
     width: 720
     height: (files.length) ? 320 : 180
     padding: 24

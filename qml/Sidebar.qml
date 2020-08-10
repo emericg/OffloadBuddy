@@ -1,7 +1,6 @@
-import QtQuick 2.9
-import QtQuick.Controls 2.2
-import QtQuick.Layouts 1.1
-import QtQuick.Window 2.2
+import QtQuick 2.12
+import QtQuick.Controls 2.12
+import QtQuick.Window 2.12
 
 import ThemeEngine 1.0
 
@@ -18,8 +17,8 @@ Rectangle {
     onMyDeviceClicked: {
         if (typeof devicePtr !== "undefined") {
             //console.log(devicePtr + ' component was triggered')
-            if (!(applicationContent.state === "device" && screenDevice.currentDevice === devicePtr)) {
-                applicationContent.state = "device"
+            if (!(appContent.state === "device" && screenDevice.currentDevice === devicePtr)) {
+                appContent.state = "device"
                 screenDevice.currentDevice = devicePtr
                 currentDevicePtr = devicePtr // save current device
             }
@@ -33,7 +32,7 @@ Rectangle {
             //console.log("deviceRemoved(" + devicePtr + ") and currentDevice(" + currentDevicePtr + ")")
             if (typeof devicePtr !== "undefined")
                 if (devicePtr === currentDevicePtr)
-                    applicationContent.state = "library"
+                    appContent.state = "library"
         }
     }
 
@@ -50,9 +49,9 @@ Rectangle {
         anchors.top: parent.top
         anchors.topMargin: 24
 
-        selected: applicationContent.state === "library"
+        selected: appContent.state === "library"
         animated: mediaLibrary.libraryState
-        onClicked: applicationContent.state = "library"
+        onClicked: appContent.state = "library"
         source: "qrc:/menus/media.svg"
     }
 
@@ -74,12 +73,12 @@ Rectangle {
         delegate: ItemSidebarButton {
             height: 80
             myDevice: modelData
-            selected: (applicationContent.state === "device" && modelData === currentDevicePtr)
+            selected: (appContent.state === "device" && modelData === currentDevicePtr)
             animated: currentDevicePtr.deviceState
         }
     }
 
-    ColumnLayout {
+    Column {
         id: column
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 16
@@ -98,8 +97,8 @@ Rectangle {
             visible: jobManager.trackedJobCount
             animated: jobManager.workingJobCount
 
-            selected: applicationContent.state === "jobs"
-            onClicked: applicationContent.state = "jobs"
+            selected: appContent.state === "jobs"
+            onClicked: appContent.state = "jobs"
             source: "qrc:/menus/jobs.svg"
         }
         ItemSidebarButton {
@@ -107,8 +106,8 @@ Rectangle {
             width: sideBar.width
             imgSize: 48
 
-            selected: applicationContent.state === "settings"
-            onClicked: applicationContent.state = "settings"
+            selected: appContent.state === "settings"
+            onClicked: appContent.state = "settings"
             source: "qrc:/menus/settings.svg"
         }
         ItemSidebarButton {
@@ -116,8 +115,8 @@ Rectangle {
             width: sideBar.width
             imgSize: 48
 
-            selected: applicationContent.state === "about"
-            onClicked: applicationContent.state = "about"
+            selected: appContent.state === "about"
+            onClicked: appContent.state = "about"
             source: "qrc:/menus/about.svg"
         }
         ItemSidebarButton {
@@ -126,7 +125,7 @@ Rectangle {
             imgSize: 48
 
             source: "qrc:/menus/exit.svg"
-            onClicked: applicationWindow.close()
+            onClicked: appWindow.close()
         }
     }
 }

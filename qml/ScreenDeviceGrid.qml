@@ -1,5 +1,5 @@
-import QtQuick 2.9
-import QtQuick.Controls 2.2
+import QtQuick 2.12
+import QtQuick.Controls 2.12
 
 import ThemeEngine 1.0
 import com.offloadbuddy.shared 1.0
@@ -814,7 +814,7 @@ Item {
             //snapMode: GridView.SnapToRow
             interactive: true
             keyNavigationEnabled: true
-            focus: (applicationContent.state === "device" && screenLibrary.state === "stateMediaGrid")
+            focus: (appContent.state === "device" && screenLibrary.state === "stateMediaGrid")
 
             onCountChanged: updateGridViewSettings()
             onWidthChanged: computeCellSize()

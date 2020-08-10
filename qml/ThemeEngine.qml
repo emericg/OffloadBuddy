@@ -1,5 +1,7 @@
 pragma Singleton
-import QtQuick 2.9
+
+import QtQuick 2.12
+import QtQuick.Controls.Material 2.12
 
 Item {
     enum ThemeNames {
@@ -26,6 +28,7 @@ Item {
     // Sidebar
     property string colorSidebar
     property string colorSidebarContent
+    property string colorSidebarHighlight
 
     // Action bar
     property string colorActionbar
@@ -43,6 +46,7 @@ Item {
 
     property string colorPrimary
     property string colorSecondary
+    property string colorSuccess
     property string colorWarning
     property string colorError
 
@@ -61,8 +65,9 @@ Item {
     property string colorComponentBorder
     property string colorComponentDown
     property string colorComponentBackground
-    property int componentRadius: 3
+
     property int componentHeight: 40
+    property int componentRadius: 4
 
     ////////////////
 
@@ -99,7 +104,7 @@ Item {
     Component.onCompleted: loadTheme(settingsManager.appTheme)
     Connections {
         target: settingsManager
-        function onAppThemeChanged() { loadTheme(settingsManager.appTheme) }
+        onAppThemeChanged: { loadTheme(settingsManager.appTheme) }
     }
 
     function loadTheme(themeIndex) {
@@ -115,9 +120,11 @@ Item {
 
             colorHeader =           "#CBCBCB"
             colorHeaderContent =    "#353637"
+            colorHeaderHighlight =  ""
 
             colorSidebar =          "#2e2e2e"
             colorSidebarContent =   "white"
+            colorSidebarHighlight = ""
 
             colorActionbar =        "#8cd200"
             colorActionbarContent = "white"
@@ -130,10 +137,12 @@ Item {
             colorSubText =          "#555555"
             colorIcon =             "#333333"
             colorSeparator =        "#E4E4E4"
+            colorLowContrast =      "white"
             colorHighContrast =     "black"
 
             colorPrimary =          "#ffca28"
             colorSecondary =        "#ffdd28"
+            colorSuccess =          colorMaterialLightGreen
             colorWarning =          "#ffac00"
             colorError =            "#dc322f"
 
@@ -143,8 +152,8 @@ Item {
             colorComponentBorder =  "#c1c1c1"
             colorComponentDown =    "#E4E4E4"
             colorComponentBackground = "#FAFAFA"
-            componentRadius = 3
 
+            componentRadius = 3
             sidebarSelector = ""
 
         } else if (themeIndex === ThemeEngine.DARK_AND_SPOOKY) {
@@ -153,9 +162,11 @@ Item {
 
             colorHeader =           "#282828"
             colorHeaderContent =    "#c0c0c0"
+            colorHeaderHighlight =  ""
 
             colorSidebar =          "#2e2e2e"
             colorSidebarContent =   "white"
+            colorSidebarHighlight = ""
 
             colorActionbar =        "#FED259"
             colorActionbarContent = "white"
@@ -168,6 +179,7 @@ Item {
             colorSubText =          "#EEEEEE"
             colorIcon =             "white"
             colorSeparator =        "#E4E4E4"
+            colorLowContrast =      "black"
             colorHighContrast =     "white"
 
             colorPrimary =          "#ff9f1a" // indigo: "#6C5ECD"
@@ -181,8 +193,8 @@ Item {
             colorComponentBorder =  "#666666"
             colorComponentDown =    "#333333"
             colorComponentBackground = "#505050"
-            componentRadius = 3
 
+            componentRadius = 3
             sidebarSelector = ""
 
         } else if (themeIndex === ThemeEngine.PLAIN_AND_BORING) {
@@ -191,9 +203,11 @@ Item {
 
             colorHeader =           "#E9E9E9"
             colorHeaderContent =    "#353637"
+            colorHeaderHighlight =  ""
 
             colorSidebar =          "#607D8B"
             colorSidebarContent =   "white"
+            colorSidebarHighlight = ""
 
             colorActionbar =        "#fed859"
             colorActionbarContent = "white"
@@ -206,6 +220,7 @@ Item {
             colorSubText =          "#606060"
             colorIcon =             "black"
             colorSeparator =        "#E0E0E0"
+            colorLowContrast =      "white"
             colorHighContrast =     "black"
 
             colorPrimary =          "#03A9F4"
@@ -219,8 +234,8 @@ Item {
             colorComponentBorder =  "#E0E0E0"
             colorComponentDown =    "#c1c1c1"
             colorComponentBackground = "#FEFEFE"
-            componentRadius = 4
 
+            componentRadius = 4
             sidebarSelector = "arrow"
 
         } else if (themeIndex === ThemeEngine.BLOOD_AND_TEARS) {
@@ -229,9 +244,11 @@ Item {
 
             colorHeader =           "#141414"
             colorHeaderContent =    "white"
+            colorHeaderHighlight =  ""
 
             colorSidebar =          "#181818"
             colorSidebarContent =   "#DDDDDD"
+            colorSidebarHighlight = ""
 
             colorActionbar =        "#009ee2"
             colorActionbarContent = "white"
@@ -244,6 +261,7 @@ Item {
             colorSubText =          "#a3a3a3"
             colorIcon =             "#d2d2d2"
             colorSeparator =        "#666666"
+            colorLowContrast =      "black"
             colorHighContrast =     "white"
 
             colorPrimary =          "#009ee2"
@@ -257,8 +275,8 @@ Item {
             colorComponentBorder =  "#E4E4E4"
             colorComponentDown =    "#CCCCCC"
             colorComponentBackground = "white"
-            componentRadius = 1
 
+            componentRadius = 1
             sidebarSelector = "bar"
 
         } else if (themeIndex === ThemeEngine.MIGHTY_KITTENS) {
@@ -275,9 +293,11 @@ Item {
 
             colorHeader =           "#FFB4DC"
             colorHeaderContent =    "#944197"
+            colorHeaderHighlight =  ""
 
             colorSidebar =          "#E31D8D"
             colorSidebarContent =   "#FFF06D"
+            colorSidebarHighlight = ""
 
             colorActionbar =        "#FFE400"
             colorActionbarContent = "white"
@@ -295,6 +315,7 @@ Item {
             colorWarning =          "#944197"
             colorError =            "#fa6871"
             colorSeparator =        "#E4E4E4"
+            colorLowContrast =      "white"
             colorHighContrast =     "red"
 
             colorComponent =        "#FF87D0"
@@ -303,8 +324,8 @@ Item {
             colorComponentBorder =  "#F592C1"
             colorComponentDown =    "#F592C1"
             colorComponentBackground = "#fff4f9"
-            componentRadius = 6
 
+            componentRadius = 6
             sidebarSelector = ""
         }
 

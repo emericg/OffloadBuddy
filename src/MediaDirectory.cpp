@@ -191,11 +191,12 @@ void MediaDirectory::refreshMediaDirectory()
         if (m_storage->bytesAvailable() > 16*1024*1024 && !m_storage->isReadOnly())
         {
 #ifdef __linux
-            // advanced permission checks
+            // Advanced permission checks
             QFileInfo fi(m_path);
-            QFile::Permissions  e = fi.permissions();
+            QFile::Permissions e = fi.permissions();
             if (!e.testFlag(QFileDevice::WriteUser))
             {
+                qDebug() << "QFile::Permissions error:" << e << (unsigned)e;
                 m_available = false;
                 emit availableUpdated();
             }
@@ -209,6 +210,8 @@ void MediaDirectory::refreshMediaDirectory()
         else
         {
             qDebug() << "MediaDirectory(" << m_path << ") is not available: read only or full";
+            m_available = false;
+            emit availableUpdated();
         }
 */
     }

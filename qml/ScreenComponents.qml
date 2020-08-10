@@ -1,5 +1,5 @@
-import QtQuick 2.9
-import QtQuick.Controls 2.2
+import QtQuick 2.12
+import QtQuick.Controls 2.12
 import QtQuick.Dialogs 1.3
 
 import ThemeEngine 1.0
@@ -16,13 +16,14 @@ Item {
     Rectangle {
         id: rectangleHeader
         height: 64
+        color: Theme.colorHeader
+
+        anchors.topMargin: 0
+        anchors.top: parent.top
         anchors.rightMargin: 0
         anchors.right: parent.right
         anchors.leftMargin: 0
         anchors.left: parent.left
-        anchors.topMargin: 0
-        anchors.top: parent.top
-        color: Theme.colorHeader
 
         ItemImageButton {
             id: buttonBack
@@ -36,7 +37,7 @@ Item {
             backgroundColor: Theme.colorForeground
 
             source: "qrc:/others/navigate_before_big.svg"
-            onClicked: applicationContent.state = "library"
+            onClicked: appContent.state = "library"
         }
 
         Text {
@@ -116,16 +117,16 @@ Item {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    // CONTENT /////////////////////////////////////////////////////////////////
 
     Item {
         id: rectangleContent
 
         anchors.top: rectangleHeader.bottom
+        anchors.topMargin: 0
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.left: parent.left
-        anchors.topMargin: 0
 
         ////////
 
@@ -141,8 +142,9 @@ Item {
             height: 56
             color: Theme.colorActionbar
 
+            // left
+
             Text {
-                id: element1
                 anchors.left: parent.left
                 anchors.leftMargin: 32
                 anchors.verticalCenter: parent.verticalCenter
@@ -153,6 +155,8 @@ Item {
                 font.bold: true
                 color: Theme.colorActionbarContent
             }
+
+            // right
 
             ButtonWireframe {
                 id: button_a1

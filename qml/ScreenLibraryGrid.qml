@@ -1,5 +1,5 @@
-import QtQuick 2.9
-import QtQuick.Controls 2.2
+import QtQuick 2.12
+import QtQuick.Controls 2.12
 
 import ThemeEngine 1.0
 import com.offloadbuddy.shared 1.0
@@ -142,10 +142,7 @@ Item {
         anchors.right: parent.right
         anchors.rightMargin: 0
 
-        MouseArea {
-            id: mouseArea
-            anchors.fill: parent
-        }
+        MouseArea { anchors.fill: parent } // prevent clicks into this area
 
         Text {
             id: textHeader
@@ -543,6 +540,8 @@ Item {
             actionMenu.visible = false
         }
 
+        ////////////////////////
+
         GridView {
             id: shotsView
             anchors.fill: parent
@@ -553,7 +552,7 @@ Item {
             //snapMode: GridView.SnapToRow
             interactive: true
             keyNavigationEnabled: true
-            focus: (applicationContent.state === "library" && screenLibrary.state === "stateMediaGrid")
+            focus: (appContent.state === "library" && screenLibrary.state === "stateMediaGrid")
 
             onCountChanged: updateGridViewSettings()
             onWidthChanged: computeCellSize()
@@ -563,6 +562,8 @@ Item {
                 shotsView.currentIndex = -1
                 actionMenu.visible = false
             }
+
+            ////////
 
             Connections {
                 target: settingsManager
@@ -654,7 +655,7 @@ Item {
                 if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                     actionMenu.visible = false
                     screenLibrary.state = "stateMediaDetails"
-                }  else if (event.key === Qt.Key_PageUp) {
+                } else if (event.key === Qt.Key_PageUp) {
                     shotsView.currentIndex = 0;
                 } else if (event.key === Qt.Key_PageDown) {
                     shotsView.currentIndex = shotsView.count - 1;
@@ -665,7 +666,7 @@ Item {
                 } else if (event.key === Qt.Key_Menu) {
                     //console.log("shotsView::Key_Menu")
                 } else if (event.key === Qt.Key_Delete) {
-                    if (selectionMode) {
+                    if (mediaGrid.selectionMode) {
                         confirmDeleteSingleFilePopup.files = mediaLibrary.getSelectedPaths(selectionList);
                         confirmDeleteSingleFilePopup.open()
                     } else {

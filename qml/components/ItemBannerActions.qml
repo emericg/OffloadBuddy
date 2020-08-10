@@ -1,5 +1,5 @@
-import QtQuick 2.9
-import QtQuick.Controls 2.2
+import QtQuick 2.12
+import QtQuick.Controls 2.12
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsString.js" as UtilsString
@@ -28,12 +28,12 @@ Rectangle {
             fullColor: true
             primaryColor: "#5483EF"
 
-            text: (applicationContent.state === "device") ? qsTr("Offload") : qsTr("Move")
+            text: (appContent.state === "device") ? qsTr("Offload") : qsTr("Move")
             source: "qrc:/icons_material/baseline-save_alt-24px.svg"
             onClicked: {
-                if (applicationContent.state === "library") {
+                if (appContent.state === "library") {
                     //
-                } else if (applicationContent.state === "device") {
+                } else if (appContent.state === "device") {
                     //
                 }
             }
@@ -42,7 +42,7 @@ Rectangle {
         ButtonWireframeImage {
             id: buttonMergeShots
             anchors.verticalCenter: parent.verticalCenter
-            visible: (applicationContent.state !== "device" && mediaGrid.selectionCount >= 2)
+            visible: (appContent.state !== "device" && mediaGrid.selectionCount >= 2)
 
             fullColor: true
             primaryColor: "#5483EF"
@@ -63,9 +63,9 @@ Rectangle {
             text: qsTr("Extract telemetry")
             source: "qrc:/icons_material/baseline-insert_chart_outlined-24px.svg"
             onClicked: {
-                if (applicationContent.state === "library") {
+                if (appContent.state === "library") {
                     //
-                } else if (applicationContent.state === "device") {
+                } else if (appContent.state === "device") {
                     //
                 }
             }
@@ -80,10 +80,10 @@ Rectangle {
             text: qsTr("Delete")
             source: "qrc:/icons_material/baseline-delete-24px.svg"
             onClicked: {
-                if (applicationContent.state === "library") {
+                if (appContent.state === "library") {
                     confirmDeleteMultipleFilesPopup.files = mediaLibrary.getSelectedPaths(mediaGrid.selectionList);
                     confirmDeleteMultipleFilesPopup.open();
-                } else if (applicationContent.state === "device") {
+                } else if (appContent.state === "device") {
                     confirmDeleteMultipleFilesPopup.files = currentDevice.getSelectedPaths(mediaGrid.selectionList);
                     confirmDeleteMultipleFilesPopup.open();
                 }

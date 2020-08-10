@@ -42,11 +42,11 @@ Works on Linux, macOS and Windows!
 
 ### Dependencies
 
-You will need a C++14 capable compiler and Qt 5.9+ (with QtMultimedia, QtLocation and QtCharts)
+You will need a C++14 capable compiler and Qt 5.12+ (with QtMultimedia, QtLocation and QtCharts)
 On Windows, the contribs builds fine with MSVC 2017.
 
 Build dependencies:
-- Qt (5.9+)  
+- Qt (5.12+)  
 - CMake  
 - pkg-config (linux / macOS without contribs)  
 

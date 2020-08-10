@@ -1,6 +1,6 @@
-import QtQuick 2.9
-import QtQuick.Controls 2.2
-import QtQuick.Dialogs 1.2
+import QtQuick 2.12
+import QtQuick.Controls 2.12
+import QtQuick.Dialogs 1.3
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsString.js" as UtilsString
@@ -8,8 +8,8 @@ import "qrc:/js/UtilsPath.js" as UtilsPath
 
 Popup {
     id: popupOffload
-    x: (applicationWindow.width / 2) - (width / 2) - (applicationSidebar.width / 2)
-    y: (applicationWindow.height / 2) - (height / 2)
+    x: (appWindow.width / 2) - (width / 2) - (appSidebar.width / 2)
+    y: (appWindow.height / 2) - (height / 2)
     width: 640
     height: 520
     padding: 24

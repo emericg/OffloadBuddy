@@ -19,31 +19,48 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-import QtQuick 2.9
-import QtQuick.Controls 2.2
-import QtQuick.Window 2.2
+import QtQuick 2.12
+import QtQuick.Controls 2.12
+import QtQuick.Window 2.12
 
 import ThemeEngine 1.0
 
 ApplicationWindow {
-    id: applicationWindow
+    id: appWindow
     flags: Qt.Window //| Qt.FramelessWindowHint
+    color: Theme.colorBackground
+
+    // Desktop stuff ///////////////////////////////////////////////////////////
 
     minimumWidth: 1280
     minimumHeight: 720
 
+    width: {
+        if (settingsManager.initialSize.width > 0)
+            return settingsManager.initialSize.width
+        else
+            return isHdpi ? 800 : 1280
+    }
+    height: {
+        if (settingsManager.initialSize.height > 0)
+            return settingsManager.initialSize.height
+        else
+            return isHdpi ? 480 : 720
+    }
     x: settingsManager.initialPosition.width
     y: settingsManager.initialPosition.height
-    width: settingsManager.initialSize.width
-    height: settingsManager.initialSize.height
-    visibility: settingsManager.initialVisibility
-
-    title: "OffloadBuddy"
-    color: Theme.colorBackground
 
     WindowGeometrySaver {
-        windowInstance: applicationWindow
+        windowInstance: appWindow
     }
+
+    // Mobile stuff ////////////////////////////////////////////////////////////
+
+    property bool isHdpi: (utilsScreen.screenDpi > 128)
+    property bool isDesktop: true
+    property bool isMobile: false
+    property bool isPhone: false
+    property bool isTablet: false
 
     // Events handling /////////////////////////////////////////////////////////
 
@@ -53,11 +70,11 @@ ApplicationWindow {
     }
     Shortcut {
         sequence: StandardKey.Preferences
-        onActivated: applicationContent.state = "settings"
+        onActivated: appContent.state = "settings"
     }
     Shortcut {
         sequence: StandardKey.Close
-        onActivated: applicationWindow.close()
+        onActivated: appWindow.close()
     }
     Shortcut {
         sequence: StandardKey.Quit
@@ -67,6 +84,7 @@ ApplicationWindow {
     // Menubar /////////////////////////////////////////////////////////////////
 /*
     menuBar: MenuBar {
+        id: appMenubar
         Menu {
             title: qsTr("File")
             MenuItem {
@@ -83,7 +101,7 @@ ApplicationWindow {
     // Sidebar /////////////////////////////////////////////////////////////////
 
     Sidebar {
-        id: applicationSidebar
+        id: appSidebar
     }
 
     // Content /////////////////////////////////////////////////////////////////
@@ -91,11 +109,11 @@ ApplicationWindow {
     property var currentDevicePtr: null
 
     Item {
-        id: applicationContent
+        id: appContent
 
         anchors.right: parent.right
         anchors.rightMargin: 0
-        anchors.left: applicationSidebar.right
+        anchors.left: appSidebar.right
         anchors.leftMargin: 0
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0

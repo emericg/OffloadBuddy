@@ -3,13 +3,13 @@ TARGET  = OffloadBuddy
 VERSION = 0.3
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
-CONFIG += c++11
+CONFIG += c++14
 QT     += core qml quickcontrols2 svg
 QT     += multimedia location charts
 
 # Validate Qt version
-if (lessThan(QT_MAJOR_VERSION, 5) | lessThan(QT_MINOR_VERSION, 9)) {
-    error("You need AT LEAST Qt 5.9 to build $${TARGET}")
+if (lessThan(QT_MAJOR_VERSION, 5) | lessThan(QT_MINOR_VERSION, 12)) {
+    error("You need AT LEAST Qt 5.12 to build $${TARGET}")
 }
 
 # Project features #############################################################

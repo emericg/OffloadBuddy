@@ -201,6 +201,8 @@ QDateTime Shot::getDate() const
     if (m_camera_source.contains("HERO5")) firstpossibledate = QDateTime(QDate(2016, 1, 1), QTime(0, 0));
     if (m_camera_source.contains("HERO6")) firstpossibledate = QDateTime(QDate(2017, 1, 1), QTime(0, 0));
     if (m_camera_source.contains("HERO7")) firstpossibledate = QDateTime(QDate(2018, 1, 1), QTime(0, 0));
+    if (m_camera_source.contains("HERO8")) firstpossibledate = QDateTime(QDate(2019, 1, 1), QTime(0, 0));
+    if (m_camera_source.contains("HERO9")) firstpossibledate = QDateTime(QDate(2020, 1, 1), QTime(0, 0));
 
     if (m_date_gps.isValid())
         return m_date_gps;

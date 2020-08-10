@@ -1,5 +1,5 @@
-import QtQuick 2.9
-import QtQuick.Controls 2.2
+import QtQuick 2.12
+import QtQuick.Controls 2.12
 
 import ThemeEngine 1.0
 import com.offloadbuddy.shared 1.0
@@ -35,8 +35,8 @@ Item {
     }
 
     function updateFocus() {
-        focus = (startedFrom === "device" && applicationContent.state === "device" && screenDevice.state === "stateMediaDetails") ||
-                (startedFrom === "library" && applicationContent.state === "library" && screenLibrary.state === "stateMediaDetails")
+        focus = (startedFrom === "device" && appContent.state === "device" && screenDevice.state === "stateMediaDetails") ||
+                (startedFrom === "library" && appContent.state === "library" && screenLibrary.state === "stateMediaDetails")
 
         if (focus === false) contentOverview.setPause()
     }
@@ -80,9 +80,9 @@ Item {
             }
         } else if (event.key === Qt.Key_Backspace) {
             event.accepted = true;
-            if (applicationContent.state === "library")
+            if (appContent.state === "library")
                 screenLibrary.state = "stateMediaGrid";
-            else if (applicationContent.state === "device")
+            else if (appContent.state === "device")
                 screenDevice.state = "stateMediaGrid";
         } else if (event.key === Qt.Key_Delete) {
             event.accepted = true;
@@ -116,9 +116,9 @@ Item {
 
             source: "qrc:/others/navigate_before_big.svg"
             onClicked: {
-                if (applicationContent.state == "library")
+                if (appContent.state == "library")
                     screenLibrary.state = "stateMediaGrid"
-                else if (applicationContent.state == "device")
+                else if (appContent.state == "device")
                     screenDevice.state = "stateMediaGrid"
             }
         }
