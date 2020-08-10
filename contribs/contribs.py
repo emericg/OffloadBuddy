@@ -376,7 +376,7 @@ for TARGET in TARGETS:
     ############################################################################
 
     ## ffmpeg binaries download & install
-    FFMPEG_version = "4.3"
+    FFMPEG_version = "4.3.1"
     FFMPEG_key = ""
 
     if OS_TARGET == "windows":
