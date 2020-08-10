@@ -17,7 +17,7 @@ Item {
 
     Connections {
         target: settingsManager
-        function onAppUnitsChanged() { updateUnits() }
+        onAppUnitsChanged: updateUnits()
     }
 
     function updateUnits() {

@@ -4,7 +4,7 @@ import QtQuick.Controls 2.12
 import ThemeEngine 1.0
 
 Rectangle {
-    id: actionMenuItem
+    id: actionMenu
     width: 180
     height: menuHolder.height + 12
     visible: isOpen

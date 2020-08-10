@@ -773,8 +773,8 @@ Item {
         }
         Connections {
             target: actionMenu
-            function onMenuSelected() { rectangleDeviceShots.actionMenuTriggered(index) }
-            function onVisibleChanged() { shotsView.interactive = !shotsView.interactive }
+            onMenuSelected: rectangleDeviceShots.actionMenuTriggered(index)
+            onVisibleChanged: shotsView.interactive = !shotsView.interactive
         }
         function actionMenuTriggered(index) {
             //console.log("actionMenuTriggered(" + index + ") selected shot: '" + shotsView.currentItem.shot.name + "'")
@@ -863,13 +863,13 @@ Item {
 
             Connections {
                 target: settingsManager
-                function onThumbFormatChanged() {
+                onThumbFormatChanged: {
                     if (deviceSavedState) {
                         deviceSavedState.thumbFormat = settingsManager.thumbFormat
                         shotsView.computeCellSize()
                     }
                 }
-                function onThumbSizeChanged() {
+                onThumbSizeChanged: {
                     if (deviceSavedState) {
                         deviceSavedState.thumbSize = settingsManager.thumbSize
                         shotsView.computeCellSize()

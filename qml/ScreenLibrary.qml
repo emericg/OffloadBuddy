@@ -11,7 +11,7 @@ Item {
 
     Connections {
         target: mediaLibrary
-        function onStateUpdated() { screenLibraryGrid.updateGridViewSettings() }
+        onStateUpdated: screenLibraryGrid.updateGridViewSettings()
     }
 
     function updateFocus() {

@@ -208,7 +208,7 @@ Item {
             Component.onCompleted: comboBox_directories.updateDirectories()
             Connections {
                 target: settingsManager
-                function onDirectoriesUpdated() { comboBox_directories.updateDirectories() }
+                onDirectoriesUpdated: comboBox_directories.updateDirectories()
             }
 
             function updateDirectories() {
@@ -514,11 +514,8 @@ Item {
         ActionMenu {
             id: actionMenu
             z: 7
-        }
-        Connections {
-            target: actionMenu
-            function onMenuSelected() { rectangleLibraryGrid.actionMenuTriggered(index) }
-            function onVisibleChanged() { shotsView.interactive = !shotsView.interactive }
+
+            onMenuSelected: { rectangleLibraryGrid.actionMenuTriggered(index) }
         }
         function actionMenuTriggered(index) {
             //console.log("actionMenuTriggered(" + index + ") selected shot: '" + shotsView.currentItem.shot.name + "'")
@@ -550,7 +547,7 @@ Item {
 
             //clip: true
             //snapMode: GridView.SnapToRow
-            interactive: true
+            interactive: !actionMenu.visible
             keyNavigationEnabled: true
             focus: (appContent.state === "library" && screenLibrary.state === "stateMediaGrid")
 
@@ -567,7 +564,7 @@ Item {
 
             Connections {
                 target: settingsManager
-                function onThumbFormatChanged() {
+                onThumbFormatChanged: {
                     if (settingsManager.thumbFormat === 1)
                         shotsView.cellFormat = 1.0
                     else if (settingsManager.thumbFormat === 2)
@@ -577,7 +574,7 @@ Item {
 
                     shotsView.computeCellSize()
                 }
-                function onThumbSizeChanged() {
+                onThumbSizeChanged: {
                     if (settingsManager.thumbSize === 1)
                         shotsView.cellSizeTarget = 221
                     else if (settingsManager.thumbSize === 2)
