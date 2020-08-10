@@ -256,6 +256,7 @@ Rectangle {
                 notifyInterval: 33
 
                 property bool isRunning: false
+
                 onError: {
                     if (Qt.platform.os === "windows")
                         mediaBanner.openMessage(qsTr("Codec pack installed?"))
@@ -317,7 +318,20 @@ Rectangle {
 
             property bool hovered: false
 
-            onDoubleClicked: toggleFullScreen()
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+            onPressed: {
+                // play/pause
+                if (pressedButtons & Qt.RightButton) {
+                    setPlayPause();
+                    return;
+                }
+            }
+            onDoubleClicked: {
+                if (pressedButtons & Qt.LeftButton) {
+                    toggleFullScreen()
+                }
+            }
             onEntered: { hovered = true; }
             onExited: { hovered = false; }
         }
