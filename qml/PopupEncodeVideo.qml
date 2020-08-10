@@ -869,7 +869,7 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Encode")
-                source: "qrc:/icons_material/baseline-memory-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-memory-24px.svg"
                 fullColor: true
                 primaryColor: Theme.colorPrimary
                 onClicked: {

@@ -45,7 +45,7 @@ Rectangle {
         anchors.rightMargin: 8
         anchors.verticalCenter: parent.verticalCenter
 
-        source: "qrc:/icons_material/baseline-close-24px.svg"
+        source: "qrc:/assets/icons_material/baseline-close-24px.svg"
         iconColor: "white"
         backgroundColor: Theme.colorActionbarHighlight
         onClicked: banner.close()

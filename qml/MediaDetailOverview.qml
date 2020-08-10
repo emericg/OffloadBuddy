@@ -212,7 +212,7 @@ Item {
             width: 28
             height: 28
 
-            source: "qrc:/icons_material/baseline-date_range-24px.svg"
+            source: "qrc:/assets/icons_material/baseline-date_range-24px.svg"
             color: Theme.colorText
 
             Text {
@@ -234,7 +234,7 @@ Item {
             width: 28
             height: 28
 
-            source: "qrc:/icons_material/baseline-camera-24px.svg"
+            source: "qrc:/assets/icons_material/baseline-camera-24px.svg"
             color: Theme.colorText
 
             Text {
@@ -256,7 +256,7 @@ Item {
             width: 28
             height: 28
 
-            source: "qrc:/icons_material/baseline-timer-24px.svg"
+            source: "qrc:/assets/icons_material/baseline-timer-24px.svg"
             color: Theme.colorText
 
             Text {
@@ -278,7 +278,7 @@ Item {
             width: 28
             height: 28
 
-            source: "qrc:/icons_material/baseline-aspect_ratio-24px.svg"
+            source: "qrc:/assets/icons_material/baseline-aspect_ratio-24px.svg"
             color: Theme.colorText
 
             Text {
@@ -300,7 +300,7 @@ Item {
             width: 28
             height: 28
 
-            source: "qrc:/icons_material/baseline-screen_rotation-24px.svg"
+            source: "qrc:/assets/icons_material/baseline-screen_rotation-24px.svg"
             color: Theme.colorText
 
             Text {
@@ -322,7 +322,7 @@ Item {
             width: 28
             height: 28
 
-            source: "qrc:/icons_material/baseline-folder-24px.svg"
+            source: "qrc:/assets/icons_material/baseline-folder-24px.svg"
             color: Theme.colorText
 
             Text {
@@ -357,7 +357,7 @@ Item {
                 width: 28
                 height: 28
 
-                source: "qrc:/icons_material/baseline-iso-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-iso-24px.svg"
                 color: Theme.colorText
 
                 Text {
@@ -379,7 +379,7 @@ Item {
                 width: 28
                 height: 28
 
-                source: "qrc:/icons_material/baseline-center_focus_weak-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-center_focus_weak-24px.svg"
                 color: Theme.colorText
 
                 Text {
@@ -401,7 +401,7 @@ Item {
                 width: 28
                 height: 28
 
-                source: "qrc:/icons_material/baseline-shutter_speed-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-shutter_speed-24px.svg"
                 color: Theme.colorText
 
                 Text {
@@ -423,7 +423,7 @@ Item {
                 width: 28
                 height: 28
 
-                source: "qrc:/icons_material/baseline-flash_on-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-flash_on-24px.svg"
                 color: Theme.colorText
 
                 Text {
@@ -459,7 +459,7 @@ Item {
                 width: 28
                 height: 28
 
-                source: "qrc:/icons_material/baseline-video_library-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-video_library-24px.svg"
                 color: Theme.colorText
 
                 Text {
@@ -481,7 +481,7 @@ Item {
                 width: 28
                 height: 28
 
-                source: "qrc:/icons_material/baseline-memory-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-memory-24px.svg"
                 color: Theme.colorText
 
                 Text {
@@ -503,7 +503,7 @@ Item {
                 width: 28
                 height: 28
 
-                source: "qrc:/icons_material/baseline-camera_roll-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-camera_roll-24px.svg"
                 color: Theme.colorText
 
                 Text {
@@ -525,7 +525,7 @@ Item {
                 width: 28
                 height: 28
 
-                source: "qrc:/icons_material/baseline-insert_chart_outlined-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-insert_chart_outlined-24px.svg"
                 color: Theme.colorText
 
                 Text {
@@ -547,7 +547,7 @@ Item {
                 width: 28
                 height: 28
 
-                source: "qrc:/icons_material/baseline-speaker-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-speaker-24px.svg"
                 color: Theme.colorText
 
                 Text {
@@ -569,7 +569,7 @@ Item {
                 width: 28
                 height: 28
 
-                source: "qrc:/icons_material/baseline-av_timer-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-av_timer-24px.svg"
                 color: Theme.colorText
 
                 Text {

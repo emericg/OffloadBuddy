@@ -106,7 +106,7 @@ Item {
 
                     text: qsTr("Website")
                     imgSize: 32
-                    source: "qrc:/icons_material/baseline-link-24px.svg"
+                    source: "qrc:/assets/icons_material/baseline-link-24px.svg"
                     onClicked: Qt.openUrlExternally("https://emeric.io/OffloadBuddy")
                 }
 
@@ -121,7 +121,7 @@ Item {
 
                     text: qsTr("Issue tracker")
                     imgSize: 24
-                    source: "qrc:/logos/github.svg"
+                    source: "qrc:/assets/logos/github.svg"
                     onClicked: Qt.openUrlExternally("https://www.github.com/emericg/OffloadBuddy")
                 }
             }
@@ -173,7 +173,7 @@ Item {
                     }
                     ItemImageButton {
                         anchors.verticalCenter: parent.verticalCenter
-                        source: "qrc:/icons_material/baseline-link-24px.svg"
+                        source: "qrc:/assets/icons_material/baseline-link-24px.svg"
                         onClicked: Qt.openUrlExternally("https://www.qt.io")
                     }
                     ItemBadge {
@@ -195,7 +195,7 @@ Item {
                     }
                     ItemImageButton {
                         anchors.verticalCenter: parent.verticalCenter
-                        source: "qrc:/icons_material/baseline-link-24px.svg"
+                        source: "qrc:/assets/icons_material/baseline-link-24px.svg"
                         onClicked: Qt.openUrlExternally("https://www.ffmpeg.org")
                     }
                     ItemBadge {
@@ -217,7 +217,7 @@ Item {
                     }
                     ItemImageButton {
                         anchors.verticalCenter: parent.verticalCenter
-                        source: "qrc:/icons_material/baseline-link-24px.svg"
+                        source: "qrc:/assets/icons_material/baseline-link-24px.svg"
                         onClicked: Qt.openUrlExternally("https://github.com/emericg/MiniVideo")
                     }
                     ItemBadge {
@@ -239,7 +239,7 @@ Item {
                     }
                     ItemImageButton {
                         anchors.verticalCenter: parent.verticalCenter
-                        source: "qrc:/icons_material/baseline-link-24px.svg"
+                        source: "qrc:/assets/icons_material/baseline-link-24px.svg"
                         onClicked: Qt.openUrlExternally("https://libexif.github.io")
                     }
                     ItemBadge {
@@ -261,7 +261,7 @@ Item {
                     }
                     ItemImageButton {
                         anchors.verticalCenter: parent.verticalCenter
-                        source: "qrc:/icons_material/baseline-link-24px.svg"
+                        source: "qrc:/assets/icons_material/baseline-link-24px.svg"
                         onClicked: Qt.openUrlExternally("https://material.io/tools/icons")
                     }
                     ItemBadge {
@@ -284,7 +284,7 @@ Item {
                     }
                     ItemImageButton {
                         anchors.verticalCenter: parent.verticalCenter
-                        source: "qrc:/icons_material/baseline-link-24px.svg"
+                        source: "qrc:/assets/icons_material/baseline-link-24px.svg"
                         onClicked: Qt.openUrlExternally("https://github.com/itay-grudev/SingleApplication/")
                     }
                     ItemBadge {
@@ -314,7 +314,7 @@ Item {
             anchors.left: parent.left
             anchors.verticalCenter: parent.verticalCenter
 
-            source: "qrc:/logos/github.svg"
+            source: "qrc:/assets/logos/github.svg"
             color: Theme.colorIcon
         }
         Text {
@@ -343,7 +343,7 @@ Item {
             anchors.leftMargin: 32
             anchors.verticalCenter: parent.verticalCenter
 
-            source: "qrc:/icons_material/baseline-bug_report-24px.svg"
+            source: "qrc:/assets/icons_material/baseline-bug_report-24px.svg"
             color: Theme.colorIcon
         }
         Text {

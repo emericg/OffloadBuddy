@@ -67,7 +67,7 @@ Popup {
 
                 text: qsTr("Exit")
                 width: 128
-                source: "qrc:/icons_material/baseline-exit_to_app-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-exit_to_app-24px.svg"
                 fullColor: true
                 primaryColor: Theme.colorWarning
                 onClicked: {

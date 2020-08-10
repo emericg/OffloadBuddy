@@ -130,7 +130,7 @@ Popup {
                     anchors.verticalCenter: parent.verticalCenter
 
                     visible: (qdateFile < qdateFirst || qdateFile > qdateToday)
-                    source: "qrc:/icons_material/baseline-warning-24px.svg"
+                    source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
                     color: Theme.colorWarning
                     fillMode: Image.PreserveAspectFit
                 }
@@ -143,7 +143,7 @@ Popup {
                     anchors.verticalCenter: parent.verticalCenter
 
                     fillMode: Image.PreserveAspectFit
-                    source: "qrc:/icons_material/baseline-done-24px.svg"
+                    source: "qrc:/assets/icons_material/baseline-done-24px.svg"
 
                     MouseArea {
                         anchors.fill: parent
@@ -192,7 +192,7 @@ Popup {
                     anchors.verticalCenter: parent.verticalCenter
 
                     visible: (qdateMetadata < qdateFirst || qdateMetadata > qdateToday)
-                    source: "qrc:/icons_material/baseline-warning-24px.svg"
+                    source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
                     color: Theme.colorWarning
                     fillMode: Image.PreserveAspectFit
                 }
@@ -205,7 +205,7 @@ Popup {
                     anchors.verticalCenter: parent.verticalCenter
 
                     fillMode: Image.PreserveAspectFit
-                    source: "qrc:/icons_material/baseline-done-24px.svg"
+                    source: "qrc:/assets/icons_material/baseline-done-24px.svg"
 
                     MouseArea {
                         anchors.fill: parent
@@ -252,7 +252,7 @@ Popup {
                     anchors.verticalCenter: parent.verticalCenter
 
                     visible: (qdateGps < qdateFirst || qdateGps > qdateToday)
-                    source: "qrc:/icons_material/baseline-warning-24px.svg"
+                    source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
                     color: Theme.colorWarning
                     fillMode: Image.PreserveAspectFit
                 }
@@ -265,7 +265,7 @@ Popup {
                     anchors.verticalCenter: parent.verticalCenter
 
                     fillMode: Image.PreserveAspectFit
-                    source: "qrc:/icons_material/baseline-done-24px.svg"
+                    source: "qrc:/assets/icons_material/baseline-done-24px.svg"
 
                     MouseArea {
                         anchors.fill: parent
@@ -429,7 +429,7 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Change")
-                source: "qrc:/icons_material/baseline-schedule-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-schedule-24px.svg"
                 fullColor: true
                 primaryColor: Theme.colorPrimary
                 onClicked: {

@@ -1,5 +1,9 @@
 <RCC>
-    <qresource prefix="/">
+    <qresource prefix="/assets">
+        <file>logos/github.svg</file>
+        <file>others/gps_marker.svg</file>
+        <file>others/navigate_before_big.svg</file>
+
         <file>icons_material/baseline-accessibility-24px.svg</file>
         <file>icons_material/baseline-archive-24px.svg</file>
         <file>icons_material/baseline-aspect_ratio-24px.svg</file>
@@ -72,9 +76,6 @@
         <file>icons_material/outline-local_movies-24px.svg</file>
         <file>icons_material/outline-power-24px.svg</file>
         <file>icons_material/outline-sd_card-24px.svg</file>
-        <file>logos/github.svg</file>
-        <file>others/gps_marker.svg</file>
-        <file>others/navigate_before_big.svg</file>
     </qresource>
     <qresource prefix="/menus">
         <file alias="selector_arrow.svg">menus/selector_arrow.svg</file>

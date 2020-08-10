@@ -36,7 +36,7 @@ Item {
             iconColor: Theme.colorHeaderContent
             backgroundColor: Theme.colorForeground
 
-            source: "qrc:/others/navigate_before_big.svg"
+            source: "qrc:/assets/others/navigate_before_big.svg"
             onClicked: appContent.state = "library"
         }
 
@@ -82,7 +82,7 @@ Item {
                 height: parent.height
 
                 menuText: "First"
-                source: "qrc:/icons_material/baseline-aspect_ratio-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-aspect_ratio-24px.svg"
                 selected: true
                 onClicked: {
                     menuFirst.selected = true
@@ -95,7 +95,7 @@ Item {
                 height: parent.height
 
                 menuText: "Second"
-                source: "qrc:/icons_material/baseline-insert_chart-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-insert_chart-24px.svg"
                 onClicked: {
                     menuFirst.selected = false
                     menuSecond.selected = true
@@ -107,7 +107,7 @@ Item {
                 height: parent.height
 
                 menuText: "Third"
-                source: "qrc:/icons_material/baseline-map-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-map-24px.svg"
                 onClicked: {
                     menuFirst.selected = false
                     menuSecond.selected = false
@@ -178,7 +178,7 @@ Item {
                 fullColor: true
                 primaryColor: Theme.colorActionbarHighlight
                 text: "Action 2"
-                source: "qrc:/icons_material/baseline-accessibility-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
             }
 
             ItemImageButton {
@@ -189,7 +189,7 @@ Item {
                 anchors.rightMargin: 32
                 anchors.verticalCenter: parent.verticalCenter
 
-                source: "qrc:/icons_material/baseline-close-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-close-24px.svg"
                 iconColor: "white"
                 backgroundColor: Theme.colorActionbarHighlight
             }
@@ -294,7 +294,7 @@ Item {
                 anchors.left: parent.left
                 anchors.leftMargin: 32
 
-                source: "qrc:/icons_material/baseline-accessibility-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
                 background: true
                 highlightMode: "circle"
             }
@@ -306,7 +306,7 @@ Item {
                 anchors.left: itemImageButton1.right
                 anchors.verticalCenter: itemImageButton1.verticalCenter
 
-                source: "qrc:/icons_material/baseline-accessibility-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
                 background: true
                 highlightMode: "color"
             }
@@ -318,7 +318,7 @@ Item {
                 anchors.left: itemImageButton2.right
                 anchors.verticalCenter: itemImageButton1.verticalCenter
 
-                source: "qrc:/icons_material/baseline-accessibility-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
                 background: true
                 highlightMode: "both"
                 highlightColor: Theme.colorError
@@ -331,7 +331,7 @@ Item {
                 anchors.left: itemImageButton3.right
                 anchors.verticalCenter: itemImageButton1.verticalCenter
 
-                source: "qrc:/icons_material/baseline-accessibility-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
                 background: false
                 highlightMode: "circle"
             }
@@ -341,7 +341,7 @@ Item {
                 anchors.left: itemImageButton11.right
                 anchors.verticalCenter: itemImageButton1.verticalCenter
 
-                source: "qrc:/icons_material/baseline-accessibility-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
                 background: false
                 highlightMode: "color"
             }
@@ -351,7 +351,7 @@ Item {
                 anchors.left: itemImageButton22.right
                 anchors.verticalCenter: itemImageButton1.verticalCenter
 
-                source: "qrc:/icons_material/baseline-accessibility-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
                 background: false
                 highlightMode: "both"
                 highlightColor: Theme.colorError
@@ -368,7 +368,7 @@ Item {
                 anchors.leftMargin: 32
 
                 text: "ButtonImageThemed"
-                source: "qrc:/icons_material/baseline-accessibility-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
             }
             ButtonImage {
                 id: buttonImage2
@@ -377,7 +377,7 @@ Item {
                 anchors.verticalCenter: buttonImage1.verticalCenter
 
                 text: "ButtonImage"
-                source: "qrc:/icons_material/baseline-accessibility-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
             }
 
             ButtonWireframeImage {
@@ -388,7 +388,7 @@ Item {
                 anchors.leftMargin: 32
 
                 text: "ButtonWireframeImage"
-                source: "qrc:/icons_material/baseline-accessibility-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
             }
             ButtonWireframe {
                 id: buttonImage22
@@ -408,7 +408,7 @@ Item {
 
                 fullColor: true
                 text: "ButtonWireframeImage"
-                source: "qrc:/icons_material/baseline-accessibility-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
             }
             ButtonWireframe {
                 id: buttonImage222
@@ -512,7 +512,7 @@ Item {
                     id: lilmenu11
                     height: parent.height
 
-                    source: "qrc:/icons_material/baseline-date_range-24px.svg"
+                    source: "qrc:/assets/icons_material/baseline-date_range-24px.svg"
                     sourceSize: 18
                     selected: true
                     onClicked: {
@@ -525,7 +525,7 @@ Item {
                     id: lilmenu22
                     height: parent.height
 
-                    source: "qrc:/icons_material/baseline-date_range-24px.svg"
+                    source: "qrc:/assets/icons_material/baseline-date_range-24px.svg"
                     sourceSize: 22
                     onClicked: {
                         lilmenu11.selected = false
@@ -537,7 +537,7 @@ Item {
                     id: lilmenu33
                     height: parent.height
 
-                    source: "qrc:/icons_material/baseline-date_range-24px.svg"
+                    source: "qrc:/assets/icons_material/baseline-date_range-24px.svg"
                     sourceSize: 26
                     onClicked: {
                         lilmenu11.selected = false

@@ -54,7 +54,7 @@ Popup {
 
             visible: files.length
             color: Theme.colorText
-            source: "qrc:/icons_material/baseline-list-24px.svg"
+            source: "qrc:/assets/icons_material/baseline-list-24px.svg"
         }
 
         ListView {
@@ -102,7 +102,7 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Delete")
-                source: "qrc:/icons_material/baseline-delete-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-delete-24px.svg"
                 fullColor: true
                 primaryColor: Theme.colorError
                 onClicked: {

@@ -382,7 +382,7 @@ Item {
 
             ItemLilMenuButton {
                 height: parent.height
-                source: "qrc:/icons_material/baseline-photo-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
                 sourceSize: 18
                 selected: (shotsView.cellSizeTarget === 221)
                 onClicked: {
@@ -392,7 +392,7 @@ Item {
             }
             ItemLilMenuButton {
                 height: parent.height
-                source: "qrc:/icons_material/baseline-photo-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
                 sourceSize: 22
                 selected: (shotsView.cellSizeTarget === 279)
                 onClicked: {
@@ -402,7 +402,7 @@ Item {
             }
             ItemLilMenuButton {
                 height: parent.height
-                source: "qrc:/icons_material/baseline-photo-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
                 sourceSize: 26
                 selected: (shotsView.cellSizeTarget === 376)
                 onClicked: {
@@ -412,7 +412,7 @@ Item {
             }
             ItemLilMenuButton {
                 height: parent.height
-                source: "qrc:/icons_material/baseline-photo-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
                 sourceSize: 30
                 selected: (shotsView.cellSizeTarget === 512)
                 onClicked: {

@@ -27,11 +27,11 @@ Rectangle {
 
     function updateJobStatus() {
         if (job.state === 8) {
-            imageStatus.source = "qrc:/icons_material/baseline-done-24px.svg"
+            imageStatus.source = "qrc:/assets/icons_material/baseline-done-24px.svg"
             offloadAnimation.stop()
             encodeAnimation.stop()
         } else if (job.state === 9) {
-            imageStatus.source = "qrc:/icons_material/baseline-error-24px.svg"
+            imageStatus.source = "qrc:/assets/icons_material/baseline-error-24px.svg"
             offloadAnimation.stop()
             encodeAnimation.stop()
         } else if (job.state >= 1) {
@@ -52,14 +52,14 @@ Rectangle {
         anchors.leftMargin: 12
         anchors.verticalCenter: parent.verticalCenter
 
-        source: "qrc:/icons_material/baseline-schedule-24px.svg"
+        source: "qrc:/assets/icons_material/baseline-schedule-24px.svg"
         color: Theme.colorIcon
 
         NumberAnimation on rotation {
             id: encodeAnimation
             running: false
 
-            onStarted: imageStatus.source = "qrc:/icons_material/baseline-memory-24px.svg"
+            onStarted: imageStatus.source = "qrc:/assets/icons_material/baseline-memory-24px.svg"
             onStopped: imageStatus.rotation = 0
             duration: 2000;
             from: 0;
@@ -71,7 +71,7 @@ Rectangle {
             id: offloadAnimation
             running: false
 
-            onStarted: imageStatus.source = "qrc:/icons_material/baseline-save_alt-24px.svg"
+            onStarted: imageStatus.source = "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
             onStopped: imageStatus.y = 0
             NumberAnimation { target: imageStatus; property: "y"; from: -40; to: 40; duration: 1000; }
             loops: Animation.Infinite
@@ -131,7 +131,7 @@ Rectangle {
 
             visible: (job.state === 1 || job.state === 2) // running
             highlightMode: "color"
-            source: "qrc:/icons_material/baseline-pause_circle_outline-24px.svg"
+            source: "qrc:/assets/icons_material/baseline-pause_circle_outline-24px.svg"
             //onClicked:
         }
 
@@ -143,7 +143,7 @@ Rectangle {
 
             visible: (job.state === 1 || job.state === 2) // running
             highlightMode: "color"
-            source: "qrc:/icons_material/baseline-cancel-24px.svg"
+            source: "qrc:/assets/icons_material/baseline-cancel-24px.svg"
             //onClicked:
         }
 
@@ -155,7 +155,7 @@ Rectangle {
 
             visible: (job.type !== 3) // not a deletion
             highlightMode: "color"
-            source: "qrc:/icons_material/outline-folder-24px.svg"
+            source: "qrc:/assets/icons_material/outline-folder-24px.svg"
             onClicked: job.openDestination()
         }
     }

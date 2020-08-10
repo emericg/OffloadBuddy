@@ -67,7 +67,7 @@ Rectangle {
 
             visible: directory.available
             enabled: directory.available
-            source: "qrc:/icons_material/baseline-refresh-24px.svg"
+            source: "qrc:/assets/icons_material/baseline-refresh-24px.svg"
             onClicked: mediaLibrary.searchMediaDirectory(directory.directoryPath)
 
             NumberAnimation on rotation {
@@ -190,7 +190,7 @@ Rectangle {
         iconColor: directory.available ? Theme.colorIcon : "white"
         highlightMode: "color"
         highlightColor: Theme.colorError
-        source: "qrc:/icons_material/baseline-delete-24px.svg"
+        source: "qrc:/assets/icons_material/baseline-delete-24px.svg"
         onClicked: itemMediaDirectory.confirmation = true
     }
 

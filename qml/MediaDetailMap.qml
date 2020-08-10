@@ -50,7 +50,7 @@ Item {
             anchorPoint.y: mapMarkerImg.height/2
             sourceItem: Image {
                 id: mapMarkerImg
-                source: "qrc:/others/gps_marker.svg"
+                source: "qrc:/assets/others/gps_marker.svg"
             }
         }
 
@@ -77,7 +77,7 @@ Item {
                 height: 40
                 background: true
 
-                source: "qrc:/icons_material/baseline-zoom_out-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-zoom_out-24px.svg"
                 onClicked: parent.parent.zoomLevel--
             }
 
@@ -87,7 +87,7 @@ Item {
                 height: 40
                 background: true
 
-                source: "qrc:/icons_material/baseline-zoom_in-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-zoom_in-24px.svg"
                 onClicked: parent.parent.zoomLevel++
             }
         }

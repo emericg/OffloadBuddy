@@ -301,7 +301,7 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Extract telemetry")
-                source: "qrc:/icons_material/baseline-insert_chart-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-insert_chart-24px.svg"
                 fullColor: true
                 primaryColor: Theme.colorSecondary
                 onClicked: {
@@ -314,7 +314,7 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Extract GPS")
-                source: "qrc:/icons_material/baseline-map-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-map-24px.svg"
                 fullColor: true
                 primaryColor: Theme.colorPrimary
                 onClicked: {

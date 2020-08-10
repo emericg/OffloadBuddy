@@ -303,7 +303,7 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Offload")
-                source: "qrc:/icons_material/baseline-archive-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-archive-24px.svg"
                 fullColor: true
                 primaryColor: Theme.colorPrimary
                 onClicked: {

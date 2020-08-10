@@ -27,20 +27,20 @@ Rectangle {
         rectangleOverlay.visible = false
 
         if (shot.state === Shared.SHOT_STATE_QUEUED) {
-            icon_state.source = "qrc:/icons_material/baseline-schedule-24px.svg"
+            icon_state.source = "qrc:/assets/icons_material/baseline-schedule-24px.svg"
             offloadAnimation.stop()
             encodeAnimation.stop()
         } else if (shot.state === Shared.SHOT_STATE_OFFLOADING) {
-            //icon_state.source = "qrc:/icons_material/baseline-save_alt-24px.svg"
+            //icon_state.source = "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
             offloadAnimation.start()
         } else if (shot.state === Shared.SHOT_STATE_ENCODING) {
-            //icon_state.source = "qrc:/icons_material/baseline-memory-24px.svg"
+            //icon_state.source = "qrc:/assets/icons_material/baseline-memory-24px.svg"
             encodeAnimation.start()
         } else if (shot.state === Shared.SHOT_STATE_DONE ||
                    shot.state === Shared.SHOT_STATE_OFFLOADED ||
                    shot.state === Shared.SHOT_STATE_ENCODED) {
             icon_state.visible = false
-            image_overlay.source = "qrc:/icons_material/baseline-check_circle_outline-24px.svg"
+            image_overlay.source = "qrc:/assets/icons_material/baseline-check_circle_outline-24px.svg"
             rectangleOverlay.visible = true
             offloadAnimation.stop()
             encodeAnimation.stop()
@@ -78,29 +78,29 @@ Rectangle {
                 text_left.text = UtilsString.durationToString_ISO8601_compact_loose(duration)
             }
             if (shot.chapters > 1)
-                icon_left.source = "qrc:/icons_material/baseline-video_library-24px.svg"
+                icon_left.source = "qrc:/assets/icons_material/baseline-video_library-24px.svg"
             else
-                icon_left.source = "qrc:/icons_material/outline-local_movies-24px.svg"
+                icon_left.source = "qrc:/assets/icons_material/outline-local_movies-24px.svg"
         } else if (fileType === Shared.FILE_PICTURE) {
             if (shotType === Shared.SHOT_PICTURE_BURST) {
                 text_left.visible = true
                 text_left.text = duration
-                icon_left.source = "qrc:/icons_material/baseline-burst_mode-24px.svg"
+                icon_left.source = "qrc:/assets/icons_material/baseline-burst_mode-24px.svg"
             } else if (shotType >= Shared.SHOT_PICTURE_MULTI) {
                 text_left.visible = true
                 text_left.text = duration
-                icon_left.source = "qrc:/icons_material/baseline-photo_library-24px.svg"
+                icon_left.source = "qrc:/assets/icons_material/baseline-photo_library-24px.svg"
             } else {
-                icon_left.source = "qrc:/icons_material/baseline-photo-24px.svg"
+                icon_left.source = "qrc:/assets/icons_material/baseline-photo-24px.svg"
             }
         } else {
-            icon_left.source = "qrc:/icons_material/baseline-broken_image-24px.svg"
+            icon_left.source = "qrc:/assets/icons_material/baseline-broken_image-24px.svg"
         }
 
         if (shot.highlightCount > 0) {
             icon_right.visible = true
             icon_right.color = "yellow"
-            icon_right.source = "qrc:/icons_material/baseline-label_important-24px.svg"
+            icon_right.source = "qrc:/assets/icons_material/baseline-label_important-24px.svg"
             text_right.text = shot.highlightCount
         } else {
             icon_right.visible = false
@@ -181,7 +181,7 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
 
         color: Theme.colorIcon
-        source: "qrc:/icons_material/baseline-hourglass_empty-24px.svg"
+        source: "qrc:/assets/icons_material/baseline-hourglass_empty-24px.svg"
     }
 
     // TODO loader between imageFs and imageMtp
@@ -307,7 +307,7 @@ Rectangle {
                 id: encodeAnimation
                 running: false
 
-                onStarted: icon_state.source = "qrc:/icons_material/baseline-memory-24px.svg"
+                onStarted: icon_state.source = "qrc:/assets/icons_material/baseline-memory-24px.svg"
                 onStopped: icon_state.rotation = 0
                 duration: 2000;
                 from: 0;
@@ -318,7 +318,7 @@ Rectangle {
                 id: offloadAnimation
                 running: false
 
-                onStarted: icon_state.source = "qrc:/icons_material/baseline-save_alt-24px.svg"
+                onStarted: icon_state.source = "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
                 onStopped: icon_state.y = 0
                 NumberAnimation { target: icon_state; property: "y"; from: -40; to: 40; duration: 1000; }
                 loops: Animation.Infinite
@@ -347,7 +347,7 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
 
-            source: "qrc:/icons_material/baseline-check_circle_outline-24px.svg"
+            source: "qrc:/assets/icons_material/baseline-check_circle_outline-24px.svg"
             color: "white"
         }
     }

@@ -44,7 +44,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
 
             text: qsTr("Clear finished jobs")
-            source: "qrc:/icons_material/baseline-close-24px.svg"
+            source: "qrc:/assets/icons_material/baseline-close-24px.svg"
             onClicked: myJobs.clearFinishedJobs()
         }
     }

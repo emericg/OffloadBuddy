@@ -29,7 +29,7 @@ Rectangle {
             primaryColor: "#5483EF"
 
             text: (appContent.state === "device") ? qsTr("Offload") : qsTr("Move")
-            source: "qrc:/icons_material/baseline-save_alt-24px.svg"
+            source: "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
             onClicked: {
                 if (appContent.state === "library") {
                     //
@@ -48,7 +48,7 @@ Rectangle {
             primaryColor: "#5483EF"
 
             text: qsTr("Merge shots together")
-            source: "qrc:/icons_material/baseline-merge_type-24px.svg"
+            source: "qrc:/assets/icons_material/baseline-merge_type-24px.svg"
             onClicked: {
                 //
             }
@@ -61,7 +61,7 @@ Rectangle {
             primaryColor: "#5483EF"
 
             text: qsTr("Extract telemetry")
-            source: "qrc:/icons_material/baseline-insert_chart_outlined-24px.svg"
+            source: "qrc:/assets/icons_material/baseline-insert_chart_outlined-24px.svg"
             onClicked: {
                 if (appContent.state === "library") {
                     //
@@ -78,7 +78,7 @@ Rectangle {
             primaryColor: Theme.colorWarning
 
             text: qsTr("Delete")
-            source: "qrc:/icons_material/baseline-delete-24px.svg"
+            source: "qrc:/assets/icons_material/baseline-delete-24px.svg"
             onClicked: {
                 if (appContent.state === "library") {
                     confirmDeleteMultipleFilesPopup.files = mediaLibrary.getSelectedPaths(mediaGrid.selectionList);
@@ -110,7 +110,7 @@ Rectangle {
         anchors.rightMargin: 8
         anchors.verticalCenter: parent.verticalCenter
 
-        source: "qrc:/icons_material/baseline-close-24px.svg"
+        source: "qrc:/assets/icons_material/baseline-close-24px.svg"
         iconColor: "white"
         backgroundColor: Theme.colorWarning
         onClicked: mediaGrid.exitSelectionMode()

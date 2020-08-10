@@ -126,7 +126,7 @@ Rectangle {
         mediaArea.isFullScreen = !mediaArea.isFullScreen
 
         if (!mediaArea.isFullScreen) {
-            buttonFullscreen.source = "qrc:/icons_material/baseline-fullscreen-24px.svg"
+            buttonFullscreen.source = "qrc:/assets/icons_material/baseline-fullscreen-24px.svg"
             infosGeneric.visible = true
             //infosFiles.visible = true
             mediaArea.anchors.right = infosGeneric.left
@@ -137,7 +137,7 @@ Rectangle {
             mediaControls.anchors.topMargin = 0
 */
         } else {
-            buttonFullscreen.source = "qrc:/icons_material/baseline-fullscreen_exit-24px.svg"
+            buttonFullscreen.source = "qrc:/assets/icons_material/baseline-fullscreen_exit-24px.svg"
             infosGeneric.visible = false
             //infosFiles.visible = false
             mediaArea.anchors.right = contentOverview.right
@@ -263,10 +263,10 @@ Rectangle {
                         mediaBanner.openMessage(qsTr("Oooops..."))
                 }
                 onPlaying: {
-                    buttonPlay.source = "qrc:/icons_material/baseline-pause-24px.svg"
+                    buttonPlay.source = "qrc:/assets/icons_material/baseline-pause-24px.svg"
                 }
                 onPaused: {
-                    buttonPlay.source = "qrc:/icons_material/baseline-play_arrow-24px.svg"
+                    buttonPlay.source = "qrc:/assets/icons_material/baseline-play_arrow-24px.svg"
                 }
                 onStopped: {
                     if (videoPlayer.position >= videoPlayer.duration) { // EOF
@@ -371,7 +371,7 @@ Rectangle {
                 highlightColor: "green"
                 highlightMode: "color"
                 visible: (output.rotation != 0 || mediaArea.vflipped || mediaArea.hflipped)
-                source: "qrc:/icons_material/baseline-save-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-save-24px.svg"
                 //onClicked: shot.saveRotation(angle)
             }
             ItemImageButton {
@@ -380,7 +380,7 @@ Rectangle {
                 iconColor: (output.rotation >= 180) ? Theme.colorPrimary : "white"
                 backgroundColor: "#222222"
                 highlightMode: "color"
-                source: "qrc:/icons_material/baseline-rotate_left-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-rotate_left-24px.svg"
                 onClicked: mediaArea.setRotation(-90)
             }
             ItemImageButton {
@@ -389,7 +389,7 @@ Rectangle {
                 iconColor: (output.rotation > 0 && output.rotation <= 180) ? Theme.colorPrimary : "white"
                 backgroundColor: "#222222"
                 highlightMode: "color"
-                source: "qrc:/icons_material/baseline-rotate_right-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-rotate_right-24px.svg"
                 onClicked: mediaArea.setRotation(+90)
             }
             ItemImageButton {
@@ -398,7 +398,7 @@ Rectangle {
                 iconColor: (mediaArea.vflipped) ? Theme.colorPrimary : "white"
                 backgroundColor: "#222222"
                 highlightMode: "color"
-                source: "qrc:/icons_material/baseline-flip-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-flip-24px.svg"
                 onClicked: mediaArea.setFlip("vertical")
             }
             ItemImageButton {
@@ -408,7 +408,7 @@ Rectangle {
                 iconColor: (mediaArea.hflipped) ? Theme.colorPrimary : "white"
                 backgroundColor: "#222222"
                 highlightMode: "color"
-                source: "qrc:/icons_material/baseline-flip-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-flip-24px.svg"
                 onClicked: mediaArea.setFlip("horizontal")
             }
         }
@@ -513,7 +513,7 @@ Rectangle {
                 highlightColor: Theme.colorPrimary
                 highlightMode: "color"
 
-                source: "qrc:/icons_material/baseline-play_arrow-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-play_arrow-24px.svg"
                 onClicked: {
                     if (videoPlayer.isRunning) {
                         videoPlayer.pause()
@@ -536,7 +536,7 @@ Rectangle {
                 highlightColor: Theme.colorPrimary
                 highlightMode: "color"
 
-                source: (soundline.value === 0) ? "qrc:/icons_material/baseline-volume_off-24px.svg" : "qrc:/icons_material/baseline-volume_up-24px.svg"
+                source: (soundline.value === 0) ? "qrc:/assets/icons_material/baseline-volume_off-24px.svg" : "qrc:/assets/icons_material/baseline-volume_up-24px.svg"
                 property real savedVolume: videoPlayer.volume
                 onClicked: {
                     if (videoPlayer.volume) {
@@ -584,7 +584,7 @@ Rectangle {
                 highlightColor: Theme.colorPrimary
                 highlightMode: "color"
 
-                source: "qrc:/icons_material/baseline-rotate_90_degrees_ccw-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-rotate_90_degrees_ccw-24px.svg"
                 onClicked: {
                     timeline.visible = true
                     cutline.visible = false
@@ -605,7 +605,7 @@ Rectangle {
                 highlightColor: Theme.colorPrimary
                 highlightMode: "color"
 
-                source: "qrc:/icons_material/baseline-timer-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-timer-24px.svg"
                 onClicked: {
                     overlayRotations.visible = false
 
@@ -630,7 +630,7 @@ Rectangle {
                 highlightColor: Theme.colorPrimary
                 highlightMode: "color"
 
-                source: "qrc:/icons_material/baseline-straighten-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-straighten-24px.svg"
                 onClicked: {
                     //
                 }
@@ -647,7 +647,7 @@ Rectangle {
                 highlightColor: Theme.colorPrimary
                 highlightMode: "color"
 
-                source: "qrc:/icons_material/outline-camera_alt-24px.svg"
+                source: "qrc:/assets/icons_material/outline-camera_alt-24px.svg"
                 onClicked: {
                     //
                 }
@@ -664,7 +664,7 @@ Rectangle {
                 highlightColor: Theme.colorPrimary
                 highlightMode: "color"
 
-                source: "qrc:/icons_material/baseline-fullscreen-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-fullscreen-24px.svg"
                 onClicked: mediaArea.toggleFullScreen()
             }
         }

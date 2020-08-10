@@ -114,7 +114,7 @@ Item {
             iconColor: Theme.colorHeaderContent
             backgroundColor: Theme.colorForeground
 
-            source: "qrc:/others/navigate_before_big.svg"
+            source: "qrc:/assets/others/navigate_before_big.svg"
             onClicked: {
                 if (appContent.state == "library")
                     screenLibrary.state = "stateMediaGrid"
@@ -167,7 +167,7 @@ Item {
                 id: buttonRotate
                 width: 40
                 height: 40
-                source: "qrc:/icons_material/baseline-rotate_90_degrees_ccw-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-rotate_90_degrees_ccw-24px.svg"
                 backgroundColor: Theme.colorForeground
                 onClicked: contentOverview.toggleRotate()
             }
@@ -176,7 +176,7 @@ Item {
                 id: buttonTimestamp
                 width: 40
                 height: 40
-                source: "qrc:/icons_material/baseline-date_range-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-date_range-24px.svg"
                 backgroundColor: Theme.colorForeground
                 onClicked: contentOverview.openDatePopup()
             }
@@ -185,7 +185,7 @@ Item {
                 id: buttonEncode
                 width: 40
                 height: 40
-                source: "qrc:/icons_material/baseline-settings_applications-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-settings_applications-24px.svg"
                 backgroundColor: Theme.colorForeground
                 onClicked: contentOverview.openEncodePopup()
             }
@@ -194,7 +194,7 @@ Item {
                 id: buttonTelemetry
                 width: 40
                 height: 40
-                source: "qrc:/icons_material/baseline-insert_chart-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-insert_chart-24px.svg"
                 visible: (shot && shot.hasGPMF && shot.hasGPS)
                 backgroundColor: Theme.colorForeground
                 onClicked: contentOverview.openTelemetryPopup()
@@ -204,7 +204,7 @@ Item {
                 id: buttonShowFolder
                 width: 40
                 height: 40
-                source: "qrc:/icons_material/outline-folder-24px.svg"
+                source: "qrc:/assets/icons_material/outline-folder-24px.svg"
                 backgroundColor: Theme.colorForeground
                 onClicked: shot.openFolder()
             }
@@ -213,7 +213,7 @@ Item {
                 id: buttonDelete
                 width: 40
                 height: 40
-                source: "qrc:/icons_material/baseline-delete-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-delete-24px.svg"
                 backgroundColor: Theme.colorForeground
                 onClicked: contentOverview.openDeletePopup()
             }
@@ -233,7 +233,7 @@ Item {
                 height: parent.height
 
                 menuText: qsTr("Overview")
-                source: "qrc:/icons_material/baseline-aspect_ratio-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-aspect_ratio-24px.svg"
                 onClicked: screenMedia.state = "overview"
                 selected: (screenMedia.state === "overview")
             }
@@ -242,7 +242,7 @@ Item {
                 height: parent.height
 
                 menuText: qsTr("Telemetry")
-                source: "qrc:/icons_material/baseline-insert_chart-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-insert_chart-24px.svg"
                 onClicked: screenMedia.state = "metadata"
                 selected: (screenMedia.state === "metadata")
                 visible: (shot && shot.hasGPMF && shot.hasGPS)
@@ -252,7 +252,7 @@ Item {
                 height: parent.height
 
                 menuText: qsTr("Map")
-                source: "qrc:/icons_material/baseline-map-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-map-24px.svg"
                 onClicked: screenMedia.state = "map"
                 selected: (screenMedia.state === "map")
                 visible: (shot && shot.fileType === Shared.FILE_PICTURE && shot.latitude !== 0.0)
