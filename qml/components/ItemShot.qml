@@ -193,8 +193,11 @@ Rectangle {
         autoTransform: true
         asynchronous: true
         antialiasing: false
-        visible: (imageFs.progress === 1.0)
         fillMode: Image.PreserveAspectCrop
+
+        //visible: (imageFs.progress === 1.0)
+        opacity: (imageFs.progress === 1.0) ? 1 : 0
+        Behavior on opacity { NumberAnimation { duration: 333 } }
 
         // extra filtering?
         smooth: (settingsManager.thumbQuality === 2)

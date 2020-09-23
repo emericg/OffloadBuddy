@@ -216,7 +216,7 @@ Item {
                     id: titleAR
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: qsTr("Aspet ratio")
+                    text: qsTr("Aspect ratio")
                     font.pixelSize: 16
                     color: Theme.colorText
                     verticalAlignment: Text.AlignVCenter
