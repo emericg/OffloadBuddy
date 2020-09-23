@@ -36,7 +36,9 @@ Rectangle {
         }
     }
 
-    // MENUS
+    ////////////////////////////////////////////////////////////////////////////
+
+    // MENUS up
 
     ItemSidebarButton {
         id: button_library
@@ -77,6 +79,8 @@ Rectangle {
             animated: currentDevicePtr.deviceState
         }
     }
+
+    // MENUS down
 
     Column {
         id: column

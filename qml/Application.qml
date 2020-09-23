@@ -102,7 +102,12 @@ ApplicationWindow {
 
     Sidebar {
         id: appSidebar
+        DragHandler { // Drag on the sidebar to drag the whole window // Qt 5.15+
+            id: windowHandler1
+            target: null
+            onActiveChanged: if (active) appWindow.startSystemMove();
     }
+        }
 
     // Content /////////////////////////////////////////////////////////////////
 
