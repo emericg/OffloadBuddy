@@ -35,7 +35,7 @@ class GpmfBuffer;
  *
  * From https://github.com/gopro/gpmf-parser.
  */
-typedef struct
+typedef struct GpmfKLV
 {
     uint64_t offset_begin = 0;
     uint64_t offset_end = 0;

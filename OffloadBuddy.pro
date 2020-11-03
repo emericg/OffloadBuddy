@@ -15,26 +15,24 @@ if (lessThan(QT_MAJOR_VERSION, 5) | lessThan(QT_MINOR_VERSION, 12)) {
 # Project features #############################################################
 
 # Use Qt Quick compiler
-# CONFIG += qtquickcompiler
+ios | android { CONFIG += qtquickcompiler }
 
 # Use contribs (otherwise use system libs)
-# DEFINES += USE_CONTRIBS
+win32 | ios | android { DEFINES += USE_CONTRIBS }
+
+win32 { DEFINES += _USE_MATH_DEFINES }
 
 # SingleApplication for desktop OS
 include(src/thirdparty/SingleApplication/singleapplication.pri)
 DEFINES += QAPPLICATION_CLASS=QApplication
 
-win32 { DEFINES += _USE_MATH_DEFINES }
-
 osx {
-    # macOS dock click handler
-    SOURCES += src/utils/utils_macosdock.mm
-    HEADERS += src/utils/utils_macosdock.h
-    LIBS    += -framework AppKit
 }
 
 unix { DEFINES += ENABLE_LIBMTP }
 DEFINES += ENABLE_FFMPEG
+
+# Metadata backends
 DEFINES += ENABLE_MINIVIDEO
 DEFINES += ENABLE_LIBEXIF
 #DEFINES += ENABLE_EXIV2
@@ -216,6 +214,11 @@ macx {
     QMAKE_TARGET_BUNDLE_PREFIX = com.emeric
     QMAKE_BUNDLE = offloadbuddy
     CONFIG += app_bundle
+
+    # macOS dock click handler
+    SOURCES += src/utils/utils_macosdock.mm
+    HEADERS += src/utils/utils_macosdock.h
+    LIBS    += -framework AppKit
 
     # OS icons
     ICON = $${PWD}/assets/desktop/$$lower($${TARGET}).icns
