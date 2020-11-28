@@ -35,6 +35,8 @@ Item {
     clip: tooltipText
     Behavior on width { NumberAnimation { duration: 133 } }
 
+    ////////////////////////////////////////////////////////////////////////////
+
     MouseArea {
         anchors.fill: bgRect
         onClicked: itemImageButton.clicked()
@@ -91,11 +93,11 @@ Item {
     Text {
         id: tooltip
         anchors.left: contentImage.right
-        anchors.leftMargin: (btnSize / 3)
+        anchors.leftMargin: (btnSize / 2)
         anchors.verticalCenter: contentImage.verticalCenter
 
         text: tooltipText
-        color: Theme.colorText
+        color: iconColor
         font.pixelSize: Theme.fontSizeComponent
     }
 }

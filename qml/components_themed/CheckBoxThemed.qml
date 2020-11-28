@@ -6,16 +6,18 @@ import ThemeEngine 1.0
 CheckBox {
     id: control
     implicitHeight: Theme.componentHeight
-    font.pixelSize: Theme.fontSizeComponent
+    leftPadding: 0
+    rightPadding: 0
 
     checked: false
     text: "Check Box"
+    font.pixelSize: Theme.fontSizeComponent
 
     indicator: Rectangle {
         x: control.leftPadding
         y: (parent.height / 2) - (height / 2)
-        width: 26
-        height: 26
+        width: 24
+        height: 24
         radius: Theme.componentRadius
 
         color: Theme.colorComponentBackground
@@ -25,8 +27,8 @@ CheckBox {
         Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
-            width: 13
-            height: 13
+            width: 12
+            height: 12
 
             color: Theme.colorSecondary
             opacity: control.checked ? 1 : 0
@@ -40,7 +42,7 @@ CheckBox {
         leftPadding: control.indicator.width + control.spacing
         verticalAlignment: Text.AlignVCenter
 
-        color: control.down ? Theme.colorSubText : Theme.colorText
+        color: control.down ? Theme.colorText : Theme.colorSubText
         opacity: enabled ? 1.0 : 0.33
     }
 }

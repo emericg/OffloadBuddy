@@ -295,13 +295,13 @@ function projectionToString(proj) {
         proj_string = qsTr("spherical")
 
         if (proj === 1) // PROJECTION_EQUIRECTANGULAR
-            proj_string += "  ("+ qsTr("equirectangular") + ")";
+            proj_string += "  (" + qsTr("equirectangular") + ")";
         else if (proj === 2) // PROJECTION_EAC
-            proj_string += "  ("+ qsTr("EAC") + ")";
+            proj_string += "  (" + qsTr("EAC") + ")";
         else if (proj === 3) // PROJECTION_CUBEMAP_A
-            proj_string += "  ("+ qsTr("cubemap") + ")";
+            proj_string += "  (" + qsTr("cubemap") + ")";
         else if (proj === 4) // PROJECTION_MESH
-            proj_string += "  ("+ qsTr("mesh") + ")";
+            proj_string += "  (" + qsTr("mesh") + ")";
 
     } else {
         proj_string = qsTr("rectangular");

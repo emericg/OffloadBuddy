@@ -30,8 +30,8 @@ Button {
         color: fullColor ? control.primaryColor : control.secondaryColor
         border.width: 1
         border.color: fullColor ? control.primaryColor : Theme.colorComponentBorder
-
         clip: hoverAnimation
+
         MouseArea {
             id: mmmm
             anchors.fill: parent
@@ -68,7 +68,7 @@ Button {
             id: contentRow
             height: parent.height
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.horizontalCenterOffset: -4
+            anchors.horizontalCenterOffset: 0
             spacing: 8
 
             ImageSvg {

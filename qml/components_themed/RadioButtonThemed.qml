@@ -5,6 +5,9 @@ import ThemeEngine 1.0
 
 RadioButton {
     id: control
+    implicitHeight: Theme.componentHeight
+    leftPadding: 0
+    rightPadding: 0
 
     checked: false
     text: "Radio Button"
@@ -40,7 +43,7 @@ RadioButton {
         leftPadding: control.indicator.width + control.spacing
         verticalAlignment: Text.AlignVCenter
 
-        color: control.down ? Theme.colorSubText : Theme.colorText
+        color: control.down ? Theme.colorText : Theme.colorSubText
         opacity: enabled ? 1.0 : 0.33
     }
 }

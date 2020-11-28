@@ -12,6 +12,8 @@ TextField {
     property string colorBorder: Theme.colorComponentBorder
     property string colorBackground: Theme.colorComponentBackground
 
+    // placeholderText // TODO
+
     text: "Text Field"
     color: colorText
     font.pixelSize: Theme.fontSizeComponent
