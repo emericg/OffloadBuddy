@@ -1,38 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Copyright 2020 Emeric Grange <emeric.grange@gmail.com> -->
-<component type="desktop">
- <id>offloadbuddy.desktop</id>
- <metadata_license>CC0-1.0</metadata_license>
- <project_license>GPL-3.0+</project_license>
- <name>OffloadBuddy</name>
- <summary>OffloadBuddy is a multimedia offloading software with a few tricks up its sleeve!</summary>
- <description>
-  <p>
-  OffloadBuddy is a multimedia offloading software with a few tricks up his sleeve! It's designed to remove the hassle of handling and transferring the many videos and pictures file from your devices like action cameras, regular cameras and smartphones...
-  </p>
- </description>
- <screenshots>
-  <screenshot type="default">
-   <image>https://i.imgur.com/tqCeaEC.png</image>
-   <caption>Device screen</caption>
-  </screenshot>
-  <screenshot>
-   <image>https://i.imgur.com/96E5Y29.png</image>
-   <caption>Detail screen</caption>
-  </screenshot>
-  <screenshot>
-   <image>https://i.imgur.com/wnG32fh.png</image>
-   <caption>GPS screen</caption>
-  </screenshot>
- </screenshots>
- <url type="homepage">https://github.com/emericg/OffloadBuddy</url>
- <updatecontact>emeric.grange@gmail.com</updatecontact>
- <keywords>
-   <keyword>media</keyword>
-   <keyword>media transfer</keyword>
-   <keyword>mass storage</keyword>
-   <keyword>MTP</keyword>
-   <keyword>offloading</keyword>
-   <keyword>GoPro</keyword>
- </keywords>
+
+<component type="desktop-application">
+  <id>offloadbuddy.desktop</id>
+  <name>OffloadBuddy</name>
+  <summary>OffloadBuddy is a multimedia offloading software with a few tricks up its sleeve!</summary>
+  <description>
+    <p>OffloadBuddy is a multimedia offloading software with a few tricks up his sleeve! It's designed to remove the hassle of handling and transferring the many videos and pictures file from your devices like action cameras, regular cameras and smartphones...</p>
+  </description>
+
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0+</project_license>
+  <content_rating type="oars-1.0" />
+
+  <developer_name>Emeric Grange</developer_name>
+  <updatecontact>emeric.grange@gmail.com</updatecontact>
+  <url type="homepage">https://emeric.io/OffloadBuddy</url>
+  <url type="bugtracker">https://github.com/emericg/OffloadBuddy/issues</url>
+
+  <screenshots>
+    <screenshot type="default">
+      <image>https://i.imgur.com/tqCeaEC.png</image>
+      <caption>Device screen</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://i.imgur.com/96E5Y29.png</image>
+      <caption>Detail screen</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://i.imgur.com/wnG32fh.png</image>
+      <caption>GPS screen</caption>
+    </screenshot>
+  </screenshots>
+
+  <categories>
+    <category>AudioVideo</category>
+    <category>AudioVideoEditing</category>
+    <category>Video</category>
+    <category>Utility</category>
+  </categories>
+
+  <keywords>
+    <keyword>media</keyword>
+    <keyword>media transfer</keyword>
+    <keyword>mass storage</keyword>
+    <keyword>MTP</keyword>
+    <keyword>offloading</keyword>
+    <keyword>GoPro</keyword>
+  </keywords>
 </component>

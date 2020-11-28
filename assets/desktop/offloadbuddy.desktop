@@ -4,4 +4,4 @@ Name=OffloadBuddy
 Comment=OffloadBuddy is a multimedia offloading software with a few tricks up its sleeve!
 Exec=offloadbuddy
 Icon=offloadbuddy
-Categories=Qt;Utility;
+Categories=AudioVideo;AudioVideoEditing;Video;Utility;Qt;
