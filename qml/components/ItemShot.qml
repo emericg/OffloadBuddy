@@ -1,5 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
+import QtGraphicalEffects 1.12
 
 import ThemeEngine 1.0
 import com.offloadbuddy.shared 1.0
@@ -172,6 +173,17 @@ Rectangle {
     }
 
     ////////////////////////////////////////////////////////////////////////////
+
+    layer.enabled: true
+    layer.effect: OpacityMask {
+        maskSource: Rectangle {
+            x: itemShot.x
+            y: itemShot.y
+            width: itemShot.width
+            height: itemShot.height
+            radius: Theme.componentRadius
+        }
+    }
 
     ImageSvg {
         id: imageLoading
