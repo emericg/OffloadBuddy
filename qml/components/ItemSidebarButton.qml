@@ -7,7 +7,7 @@ import "qrc:/js/UtilsDevice.js" as UtilsDevice
 
 Item {
     id: itemSidebarButton
-    width: 96
+    width: parent.width
     height: (title) ? 80 : 60
 
     property var myDevice: null
@@ -102,13 +102,13 @@ Item {
         width: imgSize
         height: imgSize
         anchors.verticalCenter: itemSidebarButton.verticalCenter
+        anchors.verticalCenterOffset: (title) ? -8 : 0
+        anchors.horizontalCenter: parent.horizontalCenter
 
         opacity: itemSidebarButton.enabled ? 1.0 : 0.3
         source: itemSidebarButton.source
         color: Theme.colorSidebarContent
 
-        anchors.verticalCenterOffset: (title) ? -8 : 0
-        anchors.horizontalCenter: parent.horizontalCenter
 
         NumberAnimation on opacity {
             id: image_fadein
@@ -124,6 +124,34 @@ Item {
             onStopped: { contentImage.opacity = 1 }
             OpacityAnimator { from: 0; to: 1; duration: 1000 }
             OpacityAnimator { from: 1; to: 0; duration: 1000 }
+        }
+
+        Item {
+            width: 32; height: 32;
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            visible: animated
+
+            Rectangle {
+                width: 32; height: 32; radius: 16;
+                color: "black"
+            }
+
+            ImageSvg {
+                width: 24; height: 24;
+                anchors.centerIn: parent
+                source: "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
+                color: "white"
+
+                NumberAnimation on rotation {
+                    running: itemSidebarButton.animated
+                    loops: Animation.Infinite
+                    alwaysRunToEnd: true
+                    duration: 1000;
+                    from: 0
+                    to: 360
+                }
+            }
         }
     }
 

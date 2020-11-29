@@ -50,7 +50,7 @@ Item {
             text: "Components"
             color: Theme.colorHeaderContent
             font.bold: true
-            font.pixelSize: Theme.fontSizeHeaderTitle
+            font.pixelSize: Theme.fontSizeHeader
             verticalAlignment: Text.AlignVCenter
         }
 

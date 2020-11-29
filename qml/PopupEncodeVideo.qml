@@ -12,8 +12,7 @@ Popup {
     x: (appWindow.width / 2) - (width / 2) - (appSidebar.width / 2)
     y: (appWindow.height / 2) - (height / 2)
     width: 640
-    height: 500
-    padding: 24
+    padding: 0
 
     signal confirmed()
 
@@ -168,7 +167,7 @@ Popup {
     ////////
 
     function setImageMode() {
-        titleArea.text = qsTr("Encoding panel (image)")
+        titleText.text = qsTr("Encoding panel (image)")
         rectangleCodec.visible = false
         rectangleFormat.visible = true
         rectangleSpeed.visible = false
@@ -176,7 +175,7 @@ Popup {
     }
 
     function setVideoMode() {
-        titleArea.text = qsTr("Encoding panel (video)")
+        titleText.text = qsTr("Encoding panel (video)")
         rectangleCodec.visible = true
         rectangleFormat.visible = false
         rectangleSpeed.visible = true
@@ -210,31 +209,45 @@ Popup {
         radius: Theme.componentRadius
     }
 
-    /*contentItem: */Item {
-        anchors.fill: parent
+    contentItem: Column {
+        spacing: 16
 
-        Text {
+        Rectangle {
             id: titleArea
-            anchors.top: parent.top
+            height: 64
             anchors.left: parent.left
             anchors.right: parent.right
+            radius: Theme.componentRadius
+            color: ThemeEngine.colorPrimary
 
-            text: qsTr("(Re)Encode video")
-            font.pixelSize: 24
-            color: Theme.colorText
+            Rectangle {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                height: parent.radius
+                color: parent.color
+            }
+
+            Text {
+                id: titleText
+                anchors.left: parent.left
+                anchors.leftMargin: 24
+                anchors.verticalCenter: parent.verticalCenter
+
+                text: qsTr("(Re)Encode video")
+                font.pixelSize: Theme.fontSizeTitle
+                font.bold: true
+                color: "white"
+            }
         }
 
-        /////////
+        //////////////////
 
         Column {
-            anchors.top: titleArea.bottom
-            anchors.topMargin: 16
-            anchors.bottom: rowButtons.top
-            anchors.bottomMargin: 0
-            anchors.right: parent.right
-            anchors.rightMargin: 0
             anchors.left: parent.left
-            anchors.leftMargin: 0
+            anchors.leftMargin: 24
+            anchors.right: parent.right
+            anchors.rightMargin: 24
 
             Item {
                 id: rectangleCodec
@@ -845,12 +858,10 @@ Popup {
 
         Row {
             id: rowButtons
-            height: 40
-            spacing: 24
+            height: Theme.componentHeight*2 + parent.spacing
             anchors.right: parent.right
-            anchors.rightMargin: 0
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 0
+            anchors.rightMargin: 24
+            spacing: 24
 
             ButtonWireframe {
                 id: buttonCancel
@@ -858,10 +869,9 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Cancel")
-                primaryColor: Theme.colorPrimary
-                onClicked: {
-                    popupEncodeVideo.close();
-                }
+                fullColor: true
+                primaryColor: Theme.colorMaterialDarkGrey
+                onClicked: popupEncodeVideo.close()
             }
             ButtonWireframeImage {
                 id: buttonEncode

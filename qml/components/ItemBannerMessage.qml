@@ -37,7 +37,7 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         text: "banner text"
         color: Theme.colorActionbarContent
-        font.pixelSize: Theme.fontSizeBannerText
+        font.pixelSize: Theme.fontSizeContentBig
     }
     ItemImageButton {
         id: rectangleClose

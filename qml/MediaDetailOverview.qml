@@ -225,7 +225,7 @@ Item {
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignLeft
                 anchors.verticalCenter: parent.verticalCenter
-                font.pixelSize: Theme.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentSmall
             }
         }
 
@@ -246,7 +246,7 @@ Item {
 
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignLeft
-                font.pixelSize: Theme.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentSmall
                 color: Theme.colorText
             }
         }
@@ -269,7 +269,7 @@ Item {
 
                 verticalAlignment: Text.AlignVCenter
                 color: Theme.colorText
-                font.pixelSize: Theme.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentSmall
             }
         }
 
@@ -290,7 +290,7 @@ Item {
 
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignRight
-                font.pixelSize: Theme.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentSmall
                 color: Theme.colorText
             }
         }
@@ -313,7 +313,7 @@ Item {
                 color: Theme.colorText
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignRight
-                font.pixelSize: Theme.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentSmall
             }
         }
 
@@ -335,7 +335,7 @@ Item {
                 color: Theme.colorText
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignRight
-                font.pixelSize: Theme.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentSmall
             }
         }
 
@@ -369,7 +369,7 @@ Item {
 
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
-                    font.pixelSize: Theme.fontSizeContentText
+                    font.pixelSize: Theme.fontSizeContentSmall
                     color: Theme.colorText
                 }
             }
@@ -391,7 +391,7 @@ Item {
 
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
-                    font.pixelSize: Theme.fontSizeContentText
+                    font.pixelSize: Theme.fontSizeContentSmall
                     color: Theme.colorText
                 }
             }
@@ -413,7 +413,7 @@ Item {
 
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
-                    font.pixelSize: Theme.fontSizeContentText
+                    font.pixelSize: Theme.fontSizeContentSmall
                     color: Theme.colorText
                 }
             }
@@ -435,7 +435,7 @@ Item {
 
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
-                    font.pixelSize: Theme.fontSizeContentText
+                    font.pixelSize: Theme.fontSizeContentSmall
                     color: Theme.colorText
                 }
             }
@@ -471,7 +471,7 @@ Item {
 
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
-                    font.pixelSize: Theme.fontSizeContentText
+                    font.pixelSize: Theme.fontSizeContentSmall
                     color: Theme.colorText
                 }
             }
@@ -493,7 +493,7 @@ Item {
 
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
-                    font.pixelSize: Theme.fontSizeContentText
+                    font.pixelSize: Theme.fontSizeContentSmall
                     color: Theme.colorText
                 }
             }
@@ -515,7 +515,7 @@ Item {
 
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
-                    font.pixelSize: Theme.fontSizeContentText
+                    font.pixelSize: Theme.fontSizeContentSmall
                     color: Theme.colorText
                 }
             }
@@ -537,7 +537,7 @@ Item {
 
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
-                    font.pixelSize: Theme.fontSizeContentText
+                    font.pixelSize: Theme.fontSizeContentSmall
                     color: Theme.colorText
                 }
             }
@@ -559,7 +559,7 @@ Item {
 
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
-                    font.pixelSize: Theme.fontSizeContentText
+                    font.pixelSize: Theme.fontSizeContentSmall
                     color: Theme.colorText
                 }
             }
@@ -581,7 +581,7 @@ Item {
 
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
-                    font.pixelSize: Theme.fontSizeContentText
+                    font.pixelSize: Theme.fontSizeContentSmall
                     color: Theme.colorText
                 }
             }
@@ -616,7 +616,7 @@ Item {
             verticalAlignment: Text.AlignVCenter
             color: Theme.colorText
             font.bold: true
-            font.pixelSize: Theme.fontSizeContentText
+            font.pixelSize: Theme.fontSizeContentSmall
         }
 
         Text {
@@ -633,7 +633,7 @@ Item {
             clip: true
             horizontalAlignment: Text.AlignRight
             color: Theme.colorText
-            font.pixelSize: Theme.fontSizeContentText
+            font.pixelSize: Theme.fontSizeContentSmall
         }
     }
 */

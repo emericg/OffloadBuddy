@@ -6,7 +6,7 @@ import ThemeEngine 1.0
 
 Rectangle {
     id: sideBar
-    width: isHdpi ? 80 : 96
+    width: isHdpi ? 80 : 92
     anchors.top: parent.top
     anchors.left: parent.left
     anchors.bottom: parent.bottom
@@ -38,13 +38,20 @@ Rectangle {
 
     ////////////////////////////////////////////////////////////////////////////
 
+    DragHandler { // Drag on the sidebar to drag the whole window // Qt 5.15+
+        // also, prevent clicks below this area
+        onActiveChanged: if (active) appWindow.startSystemMove();
+        target: null
+    }
+
     Item {
+        id: macosWindowButtons
         height: 48
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
 
-        visible: false
+        visible: (appWindow.clientSideDecoration && Qt.platform.os === "osx")
 
         MouseArea {
             id: buttonsArea
@@ -90,7 +97,7 @@ Rectangle {
                 }
                 MouseArea {
                     anchors.fill: parent
-                    //onClicked:
+                    onClicked: appWindow.showMinimized()
                 }
             }
             Rectangle {
@@ -99,7 +106,12 @@ Rectangle {
                 border.color: "#10A923"
                 MouseArea {
                     anchors.fill: parent
-                    //onClicked:
+                    onClicked: {
+                        if (appWindow.visibility === ApplicationWindow.Maximized)
+                            appWindow.showNormal()
+                        else
+                            appWindow.showMaximized()
+                    }
                 }
             }
         }
@@ -113,8 +125,8 @@ Rectangle {
         id: button_library
         height: 80
 
-        anchors.top: parent.top
-        anchors.topMargin: 48
+        anchors.top: macosWindowButtons.visible ? macosWindowButtons.bottom : parent.top
+        anchors.topMargin: 16
         anchors.left: parent.left
         anchors.leftMargin: 0
         anchors.right: parent.right

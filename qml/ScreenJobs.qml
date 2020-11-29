@@ -32,7 +32,7 @@ Item {
             text: qsTr("RUNNING JOBS")
             verticalAlignment: Text.AlignVCenter
             font.bold: true
-            font.pixelSize: Theme.fontSizeHeaderTitle
+            font.pixelSize: Theme.fontSizeHeader
             color: Theme.colorHeaderContent
         }
 

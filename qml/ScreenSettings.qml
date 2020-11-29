@@ -33,7 +33,7 @@ Item {
             text: qsTr("SETTINGS")
             verticalAlignment: Text.AlignVCenter
             font.bold: true
-            font.pixelSize: Theme.fontSizeHeaderTitle
+            font.pixelSize: Theme.fontSizeHeader
             color: Theme.colorHeaderContent
         }
     }

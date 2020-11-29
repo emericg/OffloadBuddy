@@ -92,12 +92,12 @@ Item {
     ////////////////
 
     // Fonts (sizes in pixel) (WIP)
-    readonly property int fontSizeHeaderTitle: 30
-    readonly property int fontSizeHeaderText: 17
-    readonly property int fontSizeBannerText: 20
-    readonly property int fontSizeContentTitle: 24
-    readonly property int fontSizeContentText: 15
-    readonly property int fontSizeComponent: 16
+    readonly property int fontSizeHeader: 30
+    readonly property int fontSizeTitle: 24
+    readonly property int fontSizeContentSmall: 14
+    readonly property int fontSizeContent: 16
+    readonly property int fontSizeContentBig: 18
+    readonly property int fontSizeComponent: 15
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -144,7 +144,7 @@ Item {
             colorSecondary =        "#ffdd28"
             colorSuccess =          colorMaterialLightGreen
             colorWarning =          "#ffac00"
-            colorError =            "#dc322f"
+            colorError =            "#dc4543"
 
             colorComponent =        "#DBDBDB"
             colorComponentText =    "black"
@@ -201,11 +201,11 @@ Item {
 
             // "PLAIN AND BORING"
 
-            colorHeader =           "#E9E9E9"
+            colorHeader =           "#e8e8e8"
             colorHeaderContent =    "#353637"
             colorHeaderHighlight =  ""
 
-            colorSidebar =          "#607D8B"
+            colorSidebar =          "#0f3c9d"
             colorSidebarContent =   "white"
             colorSidebarHighlight = ""
 
@@ -223,17 +223,17 @@ Item {
             colorLowContrast =      "white"
             colorHighContrast =     "black"
 
-            colorPrimary =          "#03A9F4"
-            colorSecondary =        "#03c1f4"
+            colorPrimary =          "#0079e3"
+            colorSecondary =        "#0092e3"
             colorWarning =          "#FFC107"
             colorError =            "#FF5722"
 
-            colorComponent =        "#D9D9D9"
+            colorComponent =        "#f3f3f3"
             colorComponentText =    "black"
             colorComponentContent = "black"
             colorComponentBorder =  "#E0E0E0"
             colorComponentDown =    "#c1c1c1"
-            colorComponentBackground = "#FEFEFE"
+            colorComponentBackground = "#f3f3f3"
 
             componentRadius = 4
             sidebarSelector = "arrow"

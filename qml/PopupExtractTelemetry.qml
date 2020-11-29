@@ -11,8 +11,7 @@ Popup {
     x: (appWindow.width / 2) - (width / 2) - (appSidebar.width / 2)
     y: (appWindow.height / 2) - (height / 2)
     width: 640
-    height: 400
-    padding: 24
+    padding: 0
 
     signal confirmed()
 
@@ -38,66 +37,44 @@ Popup {
         radius: Theme.componentRadius
     }
 
-    /*contentItem:*/ Item {
-        anchors.fill: parent
+    contentItem: Column {
+        spacing: 16
 
-        Text {
+        Rectangle {
             id: titleArea
-            anchors.top: parent.top
+            height: 64
             anchors.left: parent.left
             anchors.right: parent.right
+            radius: Theme.componentRadius
+            color: ThemeEngine.colorPrimary
 
-            text: qsTr("Extract telemetry")
-            font.pixelSize: 24
-            color: Theme.colorText
+            Rectangle {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                height: parent.radius
+                color: parent.color
+            }
+
+            Text {
+                anchors.left: parent.left
+                anchors.leftMargin: 24
+                anchors.verticalCenter: parent.verticalCenter
+
+                text: qsTr("Extract telemetry")
+                font.pixelSize: Theme.fontSizeTitle
+                font.bold: true
+                color: "white"
+            }
         }
 
-        /////////
+        //////////////////
 
         Column {
-            anchors.top: titleArea.bottom
-            anchors.topMargin: 16
-            anchors.bottom: rowButtons.top
-            anchors.bottomMargin: 0
             anchors.right: parent.right
-            anchors.rightMargin: 0
+            anchors.rightMargin: 24
             anchors.left: parent.left
-            anchors.leftMargin: 0
-
-            Item {
-                id: elementTelemetry
-                height: 48
-                anchors.right: parent.right
-                anchors.rightMargin: 0
-                anchors.left: parent.left
-                anchors.leftMargin: 0
-
-                Text {
-                    id: titleTelemetry
-                    width: 128
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    text: qsTr("Telemetry")
-                    font.pixelSize: 16
-                    color: Theme.colorSubText
-                }
-
-                Row {
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: titleTelemetry.right
-                    anchors.leftMargin: 16
-                    anchors.right: parent.right
-                    anchors.rightMargin: 0
-                    spacing: 16
-
-                    RadioButtonThemed {
-                        id: rbJSON
-                        anchors.verticalCenter: parent.verticalCenter
-                        text: "JSON"
-                        checked: true
-                    }
-                }
-            }
+            anchors.leftMargin: 24
 
             Item {
                 id: elementGPS
@@ -170,6 +147,41 @@ Popup {
 
                     checked: true
                     text: qsTr("EGM96 correction")
+                }
+            }
+
+            Item {
+                id: elementTelemetry
+                height: 48
+                anchors.right: parent.right
+                anchors.rightMargin: 0
+                anchors.left: parent.left
+                anchors.leftMargin: 0
+
+                Text {
+                    id: titleTelemetry
+                    width: 128
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: qsTr("Telemetry")
+                    font.pixelSize: 16
+                    color: Theme.colorSubText
+                }
+
+                Row {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: titleTelemetry.right
+                    anchors.leftMargin: 16
+                    anchors.right: parent.right
+                    anchors.rightMargin: 0
+                    spacing: 16
+
+                    RadioButtonThemed {
+                        id: rbJSON
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "JSON"
+                        checked: true
+                    }
                 }
             }
 /*
@@ -274,16 +286,14 @@ Popup {
             }
         }
 
-        /////////
+        ////////////////
 
         Row {
             id: rowButtons
-            height: 40
-            spacing: 12
+            height: Theme.componentHeight*2 + parent.spacing
             anchors.right: parent.right
-            anchors.rightMargin: 0
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 0
+            anchors.rightMargin: 24
+            spacing: 16
 
             ButtonWireframe {
                 id: buttonCancel
@@ -291,10 +301,9 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Cancel")
-                primaryColor: Theme.colorPrimary
-                onClicked: {
-                    popupExtractTelemetry.close();
-                }
+                fullColor: true
+                primaryColor: Theme.colorMaterialDarkGrey
+                onClicked: popupExtractTelemetry.close()
             }
             ButtonWireframeImage {
                 id: buttonExtractTelemetry
@@ -305,8 +314,8 @@ Popup {
                 fullColor: true
                 primaryColor: Theme.colorSecondary
                 onClicked: {
-                    popupExtractTelemetry.confirmed();
-                    popupExtractTelemetry.close();
+                    popupExtractTelemetry.confirmed()
+                    popupExtractTelemetry.close()
                 }
             }
             ButtonWireframeImage {
@@ -318,8 +327,8 @@ Popup {
                 fullColor: true
                 primaryColor: Theme.colorPrimary
                 onClicked: {
-                    popupExtractTelemetry.confirmed();
-                    popupExtractTelemetry.close();
+                    popupExtractTelemetry.confirmed()
+                    popupExtractTelemetry.close()
                 }
             }
         }

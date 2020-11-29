@@ -7,8 +7,7 @@ Popup {
     id: popupDate
     x: (appWindow.width / 2) - (width / 2) - (appSidebar.width / 2)
     y: (appWindow.height / 2) - (height / 2)
-    width: 540
-    //height: 480 // columnContent.height
+    width: 640
     padding: 0
 
     signal confirmed()
@@ -67,8 +66,6 @@ Popup {
     }
 
     contentItem: Column {
-        id: columnContent
-        height: titleArea.height + columnCurrent.height + rowTime
         spacing: 16
 
         Rectangle {
@@ -91,10 +88,11 @@ Popup {
                 anchors.left: parent.left
                 anchors.leftMargin: 24
                 anchors.verticalCenter: parent.verticalCenter
-                font.pixelSize: Theme.fontSizeContentTitle
+
+                text: qsTr("Change date and time")
+                font.pixelSize: Theme.fontSizeTitle
                 font.bold: true
                 color: "white"
-                text: qsTr("Change date and time")
             }
         }
 
@@ -422,10 +420,9 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Cancel")
-                primaryColor: Theme.colorPrimary
-                onClicked: {
-                    popupDate.close();
-                }
+                fullColor: true
+                primaryColor: Theme.colorMaterialDarkGrey
+                onClicked: popupDate.close()
             }
             ButtonWireframeImage {
                 id: buttonExit
@@ -437,8 +434,8 @@ Popup {
                 fullColor: true
                 primaryColor: Theme.colorPrimary
                 onClicked: {
-                    popupDate.confirmed();
-                    popupDate.close();
+                    popupDate.confirmed()
+                    popupDate.close()
                 }
             }
         }

@@ -22,13 +22,14 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Window 2.12
+import QtGraphicalEffects 1.12
 
 import ThemeEngine 1.0
 
 ApplicationWindow {
     id: appWindow
-    flags: Qt.Window //| Qt.FramelessWindowHint
-    color: Theme.colorBackground
+    flags: clientSideDecoration ? Qt.Window | Qt.FramelessWindowHint : Qt.Window
+    color: clientSideDecoration ? "transparent" : Theme.colorBackground
 
     // Desktop stuff ///////////////////////////////////////////////////////////
 
@@ -53,6 +54,8 @@ ApplicationWindow {
     WindowGeometrySaver {
         windowInstance: appWindow
     }
+
+    property bool clientSideDecoration: false
 
     // Mobile stuff ////////////////////////////////////////////////////////////
 
@@ -98,122 +101,151 @@ ApplicationWindow {
         }
     }
 */
-    // Sidebar /////////////////////////////////////////////////////////////////
-
-    Sidebar {
-        id: appSidebar
-        DragHandler { // Drag on the sidebar to drag the whole window // Qt 5.15+
-            id: windowHandler1
-            target: null
-            onActiveChanged: if (active) appWindow.startSystemMove();
-    }
-        }
-
     // Content /////////////////////////////////////////////////////////////////
 
     property var currentDevicePtr: null
 
-    Item {
-        id: appContent
+    Rectangle {
+        id: appBg
+        anchors.fill: parent
+        color: Theme.colorBackground
 
-        anchors.right: parent.right
-        anchors.rightMargin: 0
-        anchors.left: appSidebar.right
-        anchors.leftMargin: 0
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
-        anchors.top: parent.top
-        anchors.topMargin: 0
-
-        ScreenLibrary {
-            anchors.fill: parent
-            id: screenLibrary
-        }
-        ScreenDevice {
-            anchors.fill: parent
-            id: screenDevice
-        }
-        ScreenJobs {
-            anchors.fill: parent
-            id: screenJobs
-            myJobs: jobManager
-        }
-        ScreenSettings {
-            anchors.fill: parent
-            id: screenSettings
-        }
-        ScreenAbout {
-            anchors.fill: parent
-            id: screenAbout
+        Sidebar {
+            id: appSidebar
         }
 
-        ScreenComponents {
-            anchors.fill: parent
-            id: screenComponents
-        }
+        Item {
+            id: appContent
+            anchors.top: parent.top
+            anchors.left: appSidebar.right
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
 
-        onStateChanged: {
-            screenLibrary.updateFocus()
-            screenDevice.updateFocus()
-        }
-
-        state: "library"
-        states: [
-            State {
-                name: "library"
-                PropertyChanges { target: screenLibrary; visible: true; }
-                PropertyChanges { target: screenDevice; visible: false; }
-                PropertyChanges { target: screenJobs; visible: false; }
-                PropertyChanges { target: screenSettings; visible: false; }
-                PropertyChanges { target: screenAbout; visible: false; }
-                PropertyChanges { target: screenComponents; visible: false; }
-            },
-            State {
-                name: "device"
-                PropertyChanges { target: screenLibrary; visible: false; }
-                PropertyChanges { target: screenDevice; visible: true; }
-                PropertyChanges { target: screenJobs; visible: false; }
-                PropertyChanges { target: screenSettings; visible: false; }
-                PropertyChanges { target: screenAbout; visible: false; }
-                PropertyChanges { target: screenComponents; visible: false; }
-            },
-            State {
-                name: "jobs"
-                PropertyChanges { target: screenLibrary; visible: false; }
-                PropertyChanges { target: screenDevice; visible: false; }
-                PropertyChanges { target: screenJobs; visible: true; }
-                PropertyChanges { target: screenSettings; visible: false; }
-                PropertyChanges { target: screenAbout; visible: false; }
-                PropertyChanges { target: screenComponents; visible: false; }
-            },
-            State {
-                name: "settings"
-                PropertyChanges { target: screenLibrary; visible: false; }
-                PropertyChanges { target: screenDevice; visible: false; }
-                PropertyChanges { target: screenJobs; visible: false; }
-                PropertyChanges { target: screenSettings; visible: true; }
-                PropertyChanges { target: screenAbout; visible: false; }
-                PropertyChanges { target: screenComponents; visible: false; }
-            },
-            State {
-                name: "about"
-                PropertyChanges { target: screenLibrary; visible: false; }
-                PropertyChanges { target: screenDevice; visible: false; }
-                PropertyChanges { target: screenJobs; visible: false; }
-                PropertyChanges { target: screenSettings; visible: false; }
-                PropertyChanges { target: screenAbout; visible: true; }
-                PropertyChanges { target: screenComponents; visible: false; }
-            },
-            State {
-                name: "components"
-                PropertyChanges { target: screenLibrary; visible: false; }
-                PropertyChanges { target: screenDevice; visible: false; }
-                PropertyChanges { target: screenJobs; visible: false; }
-                PropertyChanges { target: screenSettings; visible: false; }
-                PropertyChanges { target: screenAbout; visible: false; }
-                PropertyChanges { target: screenComponents; visible: true; }
+            ScreenLibrary {
+                anchors.fill: parent
+                id: screenLibrary
             }
-        ]
+            ScreenDevice {
+                anchors.fill: parent
+                id: screenDevice
+            }
+            ScreenJobs {
+                anchors.fill: parent
+                id: screenJobs
+                myJobs: jobManager
+            }
+            ScreenSettings {
+                anchors.fill: parent
+                id: screenSettings
+            }
+            ScreenAbout {
+                anchors.fill: parent
+                id: screenAbout
+            }
+
+            ScreenComponents {
+                anchors.fill: parent
+                id: screenComponents
+            }
+
+            onStateChanged: {
+                screenLibrary.updateFocus()
+                screenDevice.updateFocus()
+            }
+
+            state: "library"
+            states: [
+                State {
+                    name: "library"
+                    PropertyChanges { target: screenLibrary; visible: true; }
+                    PropertyChanges { target: screenDevice; visible: false; }
+                    PropertyChanges { target: screenJobs; visible: false; }
+                    PropertyChanges { target: screenSettings; visible: false; }
+                    PropertyChanges { target: screenAbout; visible: false; }
+                    PropertyChanges { target: screenComponents; visible: false; }
+                },
+                State {
+                    name: "device"
+                    PropertyChanges { target: screenLibrary; visible: false; }
+                    PropertyChanges { target: screenDevice; visible: true; }
+                    PropertyChanges { target: screenJobs; visible: false; }
+                    PropertyChanges { target: screenSettings; visible: false; }
+                    PropertyChanges { target: screenAbout; visible: false; }
+                    PropertyChanges { target: screenComponents; visible: false; }
+                },
+                State {
+                    name: "jobs"
+                    PropertyChanges { target: screenLibrary; visible: false; }
+                    PropertyChanges { target: screenDevice; visible: false; }
+                    PropertyChanges { target: screenJobs; visible: true; }
+                    PropertyChanges { target: screenSettings; visible: false; }
+                    PropertyChanges { target: screenAbout; visible: false; }
+                    PropertyChanges { target: screenComponents; visible: false; }
+                },
+                State {
+                    name: "settings"
+                    PropertyChanges { target: screenLibrary; visible: false; }
+                    PropertyChanges { target: screenDevice; visible: false; }
+                    PropertyChanges { target: screenJobs; visible: false; }
+                    PropertyChanges { target: screenSettings; visible: true; }
+                    PropertyChanges { target: screenAbout; visible: false; }
+                    PropertyChanges { target: screenComponents; visible: false; }
+                },
+                State {
+                    name: "about"
+                    PropertyChanges { target: screenLibrary; visible: false; }
+                    PropertyChanges { target: screenDevice; visible: false; }
+                    PropertyChanges { target: screenJobs; visible: false; }
+                    PropertyChanges { target: screenSettings; visible: false; }
+                    PropertyChanges { target: screenAbout; visible: true; }
+                    PropertyChanges { target: screenComponents; visible: false; }
+                },
+                State {
+                    name: "components"
+                    PropertyChanges { target: screenLibrary; visible: false; }
+                    PropertyChanges { target: screenDevice; visible: false; }
+                    PropertyChanges { target: screenJobs; visible: false; }
+                    PropertyChanges { target: screenSettings; visible: false; }
+                    PropertyChanges { target: screenAbout; visible: false; }
+                    PropertyChanges { target: screenComponents; visible: true; }
+                }
+            ]
+        }
+
+        layer.enabled: appWindow.clientSideDecoration
+        layer.effect: OpacityMask {
+            maskSource: Rectangle {
+                x: appBg.x
+                y: appBg.y
+                width: appBg.width
+                height: appBg.height
+                radius: 10
+
+                DragHandler { // Resize the window without a compositor bar // Qt 5.15+
+                    id: windowHandler2
+                    grabPermissions: TapHandler.TakeOverForbidden
+                    target: null
+                    onActiveChanged: if (active) {
+                        var grabSize = 32
+
+                        const p = windowHandler2.centroid.position;
+                        let e = 0;
+                        if (p.x < grabSize) e |= Qt.LeftEdge;
+                        if (p.x >= width - grabSize) e |= Qt.RightEdge;
+                        if (p.y < grabSize) e |= Qt.TopEdge;
+                        if (p.y >= height - grabSize) e |= Qt.BottomEdge;
+
+                        if (e) {
+                            if (!appWindow.startSystemResize(e)) {
+                                // your fallback code for setting window.width/height manually
+                            }
+                        } else {
+                            appWindow.startSystemMove();
+                        }
+                    }
+                }
+            }
+        }
     }
 
     // Exit ////////////////////////////////////////////////////////////////////

@@ -39,7 +39,7 @@ Item {
             width: parent.width
             anchors { verticalCenter: parent.verticalCenter; left: parent.left; leftMargin: 10 }
             font.bold: true
-            font.pixelSize: Theme.fontSizeContentText
+            font.pixelSize: Theme.fontSizeComponent
             color: "#3d3d3d"
         }
         MouseArea {

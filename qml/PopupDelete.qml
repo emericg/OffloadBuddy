@@ -7,9 +7,8 @@ Popup {
     id: popupDelete
     x: (appWindow.width / 2) - (width / 2) - (appSidebar.width / 2)
     y: (appWindow.height / 2) - (height / 2)
-    width: 720
-    height: (files.length) ? 320 : 180
-    padding: 24
+    width: 640
+    padding: 0
 
     signal confirmed()
     property string message
@@ -26,63 +25,93 @@ Popup {
         radius: Theme.componentRadius
     }
 
-    contentItem: Item {
-        //anchors.fill: parent
+    contentItem: Column {
+        spacing: 24
+
+        Rectangle {
+            id: titleArea
+            height: 64
+            anchors.left: parent.left
+            anchors.right: parent.right
+            radius: Theme.componentRadius
+            color: ThemeEngine.colorPrimary
+
+            Rectangle {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                height: parent.radius
+                color: parent.color
+            }
+
+            Text {
+                anchors.left: parent.left
+                anchors.leftMargin: 24
+                anchors.verticalCenter: parent.verticalCenter
+
+                text: qsTr("Confirmation")
+                font.pixelSize: Theme.fontSizeTitle
+                font.bold: true
+                color: "white"
+            }
+        }
+
+        ////////////////
 
         Text {
             id: textArea
-            anchors.top: parent.top
             anchors.left: parent.left
+            anchors.leftMargin: 24
             anchors.right: parent.right
+            anchors.rightMargin: 24
 
             text: message
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignLeft
             wrapMode: Text.WordWrap
-            font.pixelSize: 24
+            font.pixelSize: Theme.fontSizeContent
             color: Theme.colorText
         }
 
         ////////////////
 
-        ImageSvg {
-            id: listIcon
-            anchors.top: textArea.bottom
-            anchors.topMargin: 12
+        Item {
+            height: 48
             anchors.left: parent.left
-            anchors.leftMargin: -2
-
-            visible: files.length
-            color: Theme.colorText
-            source: "qrc:/assets/icons_material/baseline-list-24px.svg"
-        }
-
-        ListView {
-            id: listArea
-            anchors.bottom: rowButtons.top
-            anchors.bottomMargin: 12
-            anchors.top: listIcon.top
-            anchors.topMargin: 6
+            anchors.leftMargin: 24
             anchors.right: parent.right
-            anchors.left: listIcon.right
-            anchors.leftMargin: 12
+            anchors.rightMargin: 24
 
             visible: files.length
-            flickableDirection: Flickable.HorizontalAndVerticalFlick
-            clip: true
-            model: files
-            delegate: Text { text: modelData; font.pixelSize: 14; color: Theme.colorSubText; }
+
+            ImageSvg {
+                id: listIcon
+                color: Theme.colorText
+                source: "qrc:/assets/icons_material/baseline-list-24px.svg"
+            }
+
+            ListView {
+                id: listArea
+                height: 48
+                anchors.left: listIcon.right
+                anchors.leftMargin: 24
+                anchors.right: parent.right
+                anchors.rightMargin: 0
+
+                flickableDirection: Flickable.HorizontalAndVerticalFlick
+                clip: true
+                model: files
+                delegate: Text { text: modelData; font.pixelSize: 14; color: Theme.colorSubText; }
+            }
         }
 
         ////////////////
 
         Row {
             id: rowButtons
-            height: 40
+            height: Theme.componentHeight*2 + parent.spacing
             anchors.right: parent.right
-            anchors.rightMargin: 0
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 0
+            anchors.rightMargin: 24
             spacing: 24
 
             ButtonWireframe {
@@ -92,9 +121,7 @@ Popup {
 
                 text: qsTr("Cancel")
                 primaryColor: Theme.colorPrimary
-                onClicked: {
-                    popupDelete.close();
-                }
+                onClicked: popupDelete.close()
             }
             ButtonWireframeImage {
                 id: buttonConfirm
@@ -106,8 +133,8 @@ Popup {
                 fullColor: true
                 primaryColor: Theme.colorError
                 onClicked: {
-                    popupDelete.confirmed();
-                    popupDelete.close();
+                    popupDelete.confirmed()
+                    popupDelete.close()
                 }
             }
         }

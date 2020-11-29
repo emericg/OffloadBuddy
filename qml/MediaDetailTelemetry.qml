@@ -257,7 +257,7 @@ Item {
                 anchors.left: speedMIN.right
                 anchors.leftMargin: 32
                 anchors.verticalCenter: labelAvgSpeed.verticalCenter
-                font.pixelSize: Theme.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentSmall
                 color: Theme.colorText
             }
 
@@ -268,7 +268,7 @@ Item {
                 anchors.topMargin: 8
                 anchors.left: parent.left
                 anchors.leftMargin: 8
-                font.pixelSize: Theme.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentSmall
                 color: Theme.colorText
             }
 
@@ -279,7 +279,7 @@ Item {
                 anchors.left: altiMIN.right
                 anchors.leftMargin: 32
                 anchors.verticalCenter: labelAvgAltitude.verticalCenter
-                font.pixelSize: Theme.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentSmall
                 color: Theme.colorText
             }
 
@@ -290,7 +290,7 @@ Item {
                 anchors.topMargin: 8
                 anchors.left: parent.left
                 anchors.leftMargin: 8
-                font.pixelSize: Theme.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentSmall
                 color: Theme.colorText
             }
 
@@ -300,7 +300,7 @@ Item {
                 anchors.left: speedAVG.right
                 anchors.leftMargin: 32
                 anchors.verticalCenter: labelAvgSpeed.verticalCenter
-                font.pixelSize: Theme.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentSmall
                 color: Theme.colorText
             }
 
@@ -310,7 +310,7 @@ Item {
                 anchors.left: altiAVG.right
                 anchors.leftMargin: 32
                 anchors.verticalCenter: labelAvgAltitude.verticalCenter
-                font.pixelSize: Theme.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentSmall
                 color: Theme.colorText
             }
 
@@ -321,7 +321,7 @@ Item {
                 anchors.topMargin: 8
                 anchors.left: parent.left
                 anchors.leftMargin: 8
-                font.pixelSize: Theme.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentSmall
                 color: Theme.colorText
             }
 
@@ -332,7 +332,7 @@ Item {
                 anchors.verticalCenter: labelAvgSpeed.verticalCenter
                 anchors.left: labelAvgSpeed.right
                 anchors.leftMargin: 12
-                font.pixelSize: Theme.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentSmall
                 color: Theme.colorText
             }
 
@@ -343,7 +343,7 @@ Item {
                 anchors.left: labelMaxSpeed.right
                 anchors.leftMargin: 12
                 anchors.verticalCenter: labelMaxSpeed.verticalCenter
-                font.pixelSize: Theme.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentSmall
                 color: Theme.colorText
             }
 
@@ -354,7 +354,7 @@ Item {
                 anchors.left: labelMinSpeed.right
                 anchors.leftMargin: 12
                 anchors.verticalCenter: labelMinSpeed.verticalCenter
-                font.pixelSize: Theme.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentSmall
                 color: Theme.colorText
             }
 
@@ -365,7 +365,7 @@ Item {
                 anchors.left: labelAvgAltitude.right
                 anchors.leftMargin: 12
                 anchors.verticalCenter: labelAvgAltitude.verticalCenter
-                font.pixelSize: Theme.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentSmall
                 color: Theme.colorText
             }
 
@@ -376,7 +376,7 @@ Item {
                 anchors.left: labelMaxAltitude.right
                 anchors.leftMargin: 12
                 anchors.verticalCenter: labelMaxAltitude.verticalCenter
-                font.pixelSize: Theme.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentSmall
                 color: Theme.colorText
             }
 
@@ -387,7 +387,7 @@ Item {
                 anchors.left: labelMinAltitude.right
                 anchors.leftMargin: 12
                 anchors.verticalCenter: labelMinAltitude.verticalCenter
-                font.pixelSize: Theme.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentSmall
                 color: Theme.colorText
             }
 
@@ -398,7 +398,7 @@ Item {
                 anchors.left: labelGforce.right
                 anchors.leftMargin: 12
                 anchors.verticalCenter: labelGforce.verticalCenter
-                font.pixelSize: Theme.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentSmall
                 color: Theme.colorText
             }
 
@@ -409,7 +409,7 @@ Item {
                 anchors.topMargin: 8
                 anchors.left: parent.left
                 anchors.leftMargin: 8
-                font.pixelSize: Theme.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentSmall
                 color: Theme.colorText
             }
 
@@ -420,7 +420,7 @@ Item {
                 anchors.left: labelDuration.right
                 anchors.leftMargin: 12
                 anchors.verticalCenter: labelDuration.verticalCenter
-                font.pixelSize: Theme.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentSmall
                 color: Theme.colorText
             }
 
@@ -430,7 +430,7 @@ Item {
                 anchors.verticalCenter: labelDuration.verticalCenter
                 anchors.left: trackDuration.right
                 anchors.leftMargin: 32
-                font.pixelSize: Theme.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentSmall
                 color: Theme.colorText
             }
 
@@ -441,7 +441,7 @@ Item {
                 anchors.left: labelDistance.right
                 anchors.leftMargin: 12
                 anchors.verticalCenter: labelDistance.verticalCenter
-                font.pixelSize: Theme.fontSizeContentText
+                font.pixelSize: Theme.fontSizeContentSmall
                 color: Theme.colorText
             }
         }

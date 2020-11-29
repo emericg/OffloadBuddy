@@ -71,21 +71,9 @@ Item {
     function updateGridViewSettings() {
         if (typeof mediaLibrary === "undefined" || !mediaLibrary) return
 
-        // Grid State
-        if (mediaLibrary.libraryState === 1) { // scanning
-            circleEmpty.visible = true
-            loadingFader.start()
-        } else if (mediaLibrary.libraryState === 0) { // idle
-            loadingFader.stop()
-            if (shotsView.count > 0) {
-                circleEmpty.visible = false
-            }
-        }
-
         if (shotsView.count <= 0) {
             shotsView.currentIndex = -1
             mediaGrid.exitSelectionMode()
-            circleEmpty.visible = true
         }
 
         // Header texts
@@ -133,14 +121,11 @@ Item {
     Rectangle {
         id: rectangleHeader
         height: 128
-        color: Theme.colorHeader
         z: 1
+        color: Theme.colorHeader
         anchors.top: parent.top
-        anchors.topMargin: 0
         anchors.left: parent.left
-        anchors.leftMargin: 0
         anchors.right: parent.right
-        anchors.rightMargin: 0
 
         MouseArea { anchors.fill: parent } // prevent clicks into this area
 
@@ -157,7 +142,7 @@ Item {
             horizontalAlignment: Text.AlignRight
             color: Theme.colorHeaderContent
             font.bold: true
-            font.pixelSize: Theme.fontSizeHeaderTitle
+            font.pixelSize: Theme.fontSizeHeader
         }
 
         Text {
@@ -171,7 +156,7 @@ Item {
             text: "%42 shots  /  128 files"
             verticalAlignment: Text.AlignVCenter
             color: Theme.colorHeaderContent
-            font.pixelSize: Theme.fontSizeHeaderText
+            font.pixelSize: Theme.fontSizeContentBig
         }
 
         Text {
@@ -185,7 +170,7 @@ Item {
             text: "236 GB of space used"
             verticalAlignment: Text.AlignVCenter
             color: Theme.colorHeaderContent
-            font.pixelSize: Theme.fontSizeHeaderText
+            font.pixelSize: Theme.fontSizeContentBig
         }
 
         ComboBoxThemed {
@@ -447,42 +432,32 @@ Item {
         id: rectangleLibraryGrid
 
         anchors.top: menusArea.bottom
-        anchors.topMargin: 0
-        anchors.right: parent.right
-        anchors.rightMargin: 0
         anchors.left: parent.left
-        anchors.leftMargin: 0
+        anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
+
+        ////////////////////////
 
         Rectangle {
             id: circleEmpty
-            width: 350
-            height: 350
-            radius: width*0.5
-            color: Theme.colorHeader
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
+            width: 350
+            height: width
+            radius: width
+            color: Theme.colorHeader
+            visible: shotsView.count <= 0
 
-            Image {
+            ImageSvg {
                 id: imageEmpty
                 width: 256
                 height: 256
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-                fillMode: Image.PreserveAspectFit
+                anchors.centerIn: parent
                 source: "qrc:/devices/disk.svg"
             }
-
-            NumberAnimation on opacity {
-                id: loadingFader;
-                from: 1;
-                to: 0;
-                duration: 2000;
-                loops: Animation.Infinite;
-                onStopped: imageEmpty.opacity = 1;
-            }
         }
+
+        ////////////////////////
 
         Component {
             id: highlight
@@ -510,6 +485,8 @@ Item {
                 z: 6
             }
         }
+
+        ////////////////////////
 
         ActionMenu {
             id: actionMenu
@@ -542,8 +519,10 @@ Item {
         GridView {
             id: shotsView
             anchors.fill: parent
-            anchors.leftMargin: 16
-            anchors.topMargin: 16
+            topMargin: 16
+            leftMargin: 16
+            rightMargin: 0
+            bottomMargin: 0
 
             //clip: true
             //snapMode: GridView.SnapToRow
@@ -615,7 +594,7 @@ Item {
             cellHeight: Math.round(cellSize / cellFormat) + cellMargin
 
             function computeCellSize() {
-                var availableWidth = shotsView.width - cellMarginTarget
+                var availableWidth = shotsView.width - shotsView.leftMargin - shotsView.rightMargin
                 var cellColumnsTarget = Math.trunc(availableWidth / cellSizeTarget)
                 // 1 // Adjust only cellSize
                 cellSize = (availableWidth - cellMarginTarget * cellColumnsTarget) / cellColumnsTarget

@@ -372,7 +372,7 @@ Item {
             horizontalAlignment: Text.AlignRight
             color: Theme.colorHeaderContent
             font.bold: true
-            font.pixelSize: Theme.fontSizeHeaderTitle - 2
+            font.pixelSize: Theme.fontSizeHeader
         }
 
         ImageSvg {
@@ -423,7 +423,7 @@ Item {
 
             text: "64GB available of 128GB"
             color: Theme.colorHeaderContent
-            font.pixelSize: Theme.fontSizeHeaderText
+            font.pixelSize: Theme.fontSizeContentBig
             horizontalAlignment: Text.AlignRight
             verticalAlignment: Text.AlignBottom
         }
