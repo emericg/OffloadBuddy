@@ -167,8 +167,8 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Quality")
-                    font.pixelSize: 16
-                    color: Theme.colorText
+                    font.pixelSize: Theme.fontSizeComponent
+                    color: Theme.colorSubText
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignLeft
                 }
@@ -217,8 +217,8 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Aspect ratio")
-                    font.pixelSize: 16
-                    color: Theme.colorText
+                    font.pixelSize: Theme.fontSizeComponent
+                    color: Theme.colorSubText
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignLeft
                 }
@@ -262,8 +262,8 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Default size")
-                    font.pixelSize: 16
-                    color: Theme.colorText
+                    font.pixelSize: Theme.fontSizeComponent
+                    color: Theme.colorSubText
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignLeft
                 }

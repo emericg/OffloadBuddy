@@ -8,8 +8,8 @@ Popup {
     x: (appWindow.width / 2) - (width / 2) - (appSidebar.width / 2)
     y: (appWindow.height / 2) - (height / 2)
     width: 540
-    height: 480
-    padding: 24
+    //height: 480 // columnContent.height
+    padding: 0
 
     signal confirmed()
 
@@ -66,36 +66,46 @@ Popup {
         radius: Theme.componentRadius
     }
 
-    /*contentItem: */Item {
-        anchors.fill: parent
+    contentItem: Column {
+        id: columnContent
+        height: titleArea.height + columnCurrent.height + rowTime
+        spacing: 16
 
-        Text {
-            id: textArea
+        Rectangle {
+            id: titleArea
+            height: 64
             anchors.left: parent.left
-            anchors.leftMargin: 0
             anchors.right: parent.right
-            anchors.rightMargin: 0
-            anchors.top: parent.top
-            anchors.topMargin: 0
+            radius: Theme.componentRadius
+            color: ThemeEngine.colorPrimary
 
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignLeft
-            wrapMode: Text.WordWrap
-            font.pixelSize: 24
-            color: Theme.colorText
-            text: qsTr("Change date and time")
+            Rectangle {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                height: parent.radius
+                color: parent.color
+            }
+
+            Text {
+                anchors.left: parent.left
+                anchors.leftMargin: 24
+                anchors.verticalCenter: parent.verticalCenter
+                font.pixelSize: Theme.fontSizeContentTitle
+                font.bold: true
+                color: "white"
+                text: qsTr("Change date and time")
+            }
         }
 
         ////////////////
 
         Column {
             id: columnCurrent
-            anchors.right: parent.right
-            anchors.rightMargin: 0
-            anchors.top: textArea.bottom
-            anchors.topMargin: 16
             anchors.left: parent.left
-            anchors.leftMargin: 0
+            anchors.leftMargin: 24
+            anchors.right: parent.right
+            anchors.rightMargin: 24
 
             Text {
                 id: dateFileL
@@ -284,13 +294,11 @@ Popup {
 
         Row {
             id: rowDate
-            spacing: 24
-            anchors.top: columnCurrent.bottom
-            anchors.topMargin: 24
             anchors.left: parent.left
-            anchors.leftMargin: 0
+            anchors.leftMargin: 24
             anchors.right: parent.right
-            anchors.rightMargin: 0
+            anchors.rightMargin: 24
+            spacing: 24
 
             Column {
                 id: columnYear
@@ -354,13 +362,11 @@ Popup {
 
         Row {
             id: rowTime
-            spacing: 24
-            anchors.top: rowDate.bottom
-            anchors.topMargin: 24
-            anchors.right: parent.right
-            anchors.rightMargin: 0
             anchors.left: parent.left
-            anchors.leftMargin: 0
+            anchors.leftMargin: 24
+            anchors.right: parent.right
+            anchors.rightMargin: 24
+            spacing: 24
 
             Column {
                 id: columnHours
@@ -405,11 +411,9 @@ Popup {
 
         Row {
             id: rowButtons
-            height: 40
+            height: Theme.componentHeight*2 + parent.spacing
             anchors.right: parent.right
-            anchors.rightMargin: 0
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 0
+            anchors.rightMargin: 24
             spacing: 24
 
             ButtonWireframe {

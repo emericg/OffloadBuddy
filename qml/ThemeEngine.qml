@@ -176,7 +176,7 @@ Item {
             colorForeground =       "#555555"
 
             colorText =             "white"
-            colorSubText =          "#EEEEEE"
+            colorSubText =          "#ddd"
             colorIcon =             "white"
             colorSeparator =        "#E4E4E4"
             colorLowContrast =      "black"
