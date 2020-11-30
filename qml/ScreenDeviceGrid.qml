@@ -227,15 +227,10 @@ Item {
         if (typeof currentDevice === "undefined" || !currentDevice) return
 
         if (currentDevice.deviceState === 0) { // idle
-            loadingFader.stop()
-
             if (shotsView.count <= 0) {
-                circleEmpty.visible = true
-
                 rectangleTransfer.visible = false
                 rectangleDelete.visible = false
             } else {
-                circleEmpty.visible = false
                 rectangleTransfer.visible = true
 
                 if (currentDevice.readOnly === true)
@@ -262,7 +257,6 @@ Item {
         if (shotsView.count <= 0) {
             shotsView.currentIndex = -1
             mediaGrid.exitSelectionMode()
-            circleEmpty.visible = true
         } else {
             // Restore grid index
             if (deviceSavedState)
@@ -330,19 +324,15 @@ Item {
     Rectangle {
         id: rectangleHeader
         height: 128
-        color: Theme.colorHeader
-        z: 1
         anchors.top: parent.top
-        anchors.topMargin: 0
         anchors.left: parent.left
-        anchors.leftMargin: 0
         anchors.right: parent.right
-        anchors.rightMargin: 0
 
-        MouseArea {
-            id: mouseArea
-            anchors.fill: parent
-        }
+        z: 1
+        color: Theme.colorHeader
+
+        // prevent clicks below this area
+        MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
 
         ImageSvg {
             id: deviceImage
@@ -384,6 +374,7 @@ Item {
             anchors.right: deviceModelText.right
             anchors.rightMargin: -3
 
+            visible: currentDevice.readOnly
             source: "qrc:/assets/icons_material/outline-https-24px.svg"
             color: Theme.colorHeaderContent
         }
@@ -436,7 +427,9 @@ Item {
             anchors.verticalCenter: deviceStorageImage.verticalCenter
             anchors.rightMargin: 2
             anchors.right: deviceStorageImage.left
-            value: 0.5
+
+            //visible: currentDevice.getStorageCount() > 1
+            value: currentDevice.getStorageLevel(1)
         }
         ProgressBarThemed {
             id: deviceSpaceBar2
@@ -446,196 +439,190 @@ Item {
             anchors.verticalCenter: deviceStorageImage.verticalCenter
             anchors.right: deviceStorageImage.left
             anchors.rightMargin: 2
-            value: 0.5
+
+            visible: currentDevice.getStorageCount() > 1
+            value: currentDevice.getStorageLevel(2)
         }
 
         ProgressBarThemed {
             id: deviceBatteryBar
             width: 256
             height: 6
-            anchors.verticalCenterOffset: 0
-            anchors.verticalCenter: deviceBatteryIcon.verticalCenter
             anchors.right: deviceBatteryIcon.left
             anchors.rightMargin: 2
-            value: 0.5
+            anchors.verticalCenter: deviceBatteryIcon.verticalCenter
+
+            visible: currentDevice.batteryLevel
+            value: currentDevice.batteryLevel
         }
 
-        ////////
+        ////////////////
 
-        ComboBoxThemed {
-            id: comboBox_orderby
-            width: 220
-            height: 40
-            anchors.top: parent.top
-            anchors.topMargin: 16
+        Row {
+            id: rowFilter
             anchors.left: parent.left
             anchors.leftMargin: 16
-
-            model: ListModel {
-                id: cbShotsOrderby
-                ListElement { text: qsTr("Date"); }
-                ListElement { text: qsTr("Duration"); }
-                ListElement { text: qsTr("Shot type"); }
-                //ListElement { text: qsTr("GPS location"); }
-                ListElement { text: qsTr("Name"); }
-            }
-
-            property bool cbinit: false
-            onCurrentIndexChanged: {
-                if (cbinit) {
-                    mediaGrid.exitSelectionMode()
-                    shotsView.currentIndex = -1
-                    actionMenu.visible = false
-
-                    if (currentIndex == 0)
-                        currentDevice.orderByDate()
-                    else if (currentIndex == 1)
-                        currentDevice.orderByDuration()
-                    else if (currentIndex == 2)
-                        currentDevice.orderByShotType()
-                    else if (currentIndex == 3)
-                        currentDevice.orderByName()
-                } else {
-                    cbinit = true;
-                }
-
-                displayText = qsTr("Order by:") + " " + cbShotsOrderby.get(currentIndex).text
-
-                // save state
-                if (deviceSavedState) deviceSavedState.orderBy = currentIndex
-            }
-        }
-
-        ComboBoxThemed {
-            id: comboBox_filterby
-            width: 240
-            height: 40
             anchors.top: parent.top
             anchors.topMargin: 16
-            anchors.left: comboBox_orderby.right
-            anchors.leftMargin: 16
+            spacing: 16
 
-            model: ListModel {
-                id: cbMediaFilters
-                ListElement { text: qsTr("No filter"); }
-                ListElement { text: qsTr("Videos"); }
-                ListElement { text: qsTr("Photos"); }
-                ListElement { text: qsTr("Timelapses"); }
-            }
+            ComboBoxThemed {
+                id: comboBox_orderby
+                width: 220
 
-            property bool cbinit: false
-            onCurrentIndexChanged: {
-                if (cbinit) {
-                    mediaGrid.exitSelectionMode()
-                    shotsView.currentIndex = -1
-                    actionMenu.visible = false
-
-                    currentDevice.filterByType(cbMediaFilters.get(currentIndex).text)
-
-                    if (currentIndex === 0)
-                        displayText = cbMediaFilters.get(currentIndex).text // "No filter"
-                    else
-                        displayText = qsTr("Filter by:") + " " + cbMediaFilters.get(currentIndex).text
-                } else {
-                    cbinit = true;
+                model: ListModel {
+                    id: cbShotsOrderby
+                    ListElement { text: qsTr("Date"); }
+                    ListElement { text: qsTr("Duration"); }
+                    ListElement { text: qsTr("Shot type"); }
+                    //ListElement { text: qsTr("GPS location"); }
+                    ListElement { text: qsTr("Name"); }
                 }
 
-                // save state
-                if (deviceSavedState) deviceSavedState.filterBy = currentIndex
+                property bool cbinit: false
+                onCurrentIndexChanged: {
+                    if (cbinit) {
+                        mediaGrid.exitSelectionMode()
+                        shotsView.currentIndex = -1
+                        actionMenu.visible = false
+
+                        if (currentIndex == 0)
+                            currentDevice.orderByDate()
+                        else if (currentIndex == 1)
+                            currentDevice.orderByDuration()
+                        else if (currentIndex == 2)
+                            currentDevice.orderByShotType()
+                        else if (currentIndex == 3)
+                            currentDevice.orderByName()
+                    } else {
+                        cbinit = true;
+                    }
+
+                    displayText = qsTr("Order by:") + " " + cbShotsOrderby.get(currentIndex).text
+
+                    // save state
+                    if (deviceSavedState) deviceSavedState.orderBy = currentIndex
+                }
+            }
+
+            ComboBoxThemed {
+                id: comboBox_filterby
+                width: 240
+
+                model: ListModel {
+                    id: cbMediaFilters
+                    ListElement { text: qsTr("No filter"); }
+                    ListElement { text: qsTr("Videos"); }
+                    ListElement { text: qsTr("Photos"); }
+                    ListElement { text: qsTr("Timelapses"); }
+                }
+
+                property bool cbinit: false
+                onCurrentIndexChanged: {
+                    if (cbinit) {
+                        mediaGrid.exitSelectionMode()
+                        shotsView.currentIndex = -1
+                        actionMenu.visible = false
+
+                        currentDevice.filterByType(cbMediaFilters.get(currentIndex).text)
+
+                        if (currentIndex === 0)
+                            displayText = cbMediaFilters.get(currentIndex).text // "No filter"
+                        else
+                            displayText = qsTr("Filter by:") + " " + cbMediaFilters.get(currentIndex).text
+                    } else {
+                        cbinit = true;
+                    }
+
+                    // save state
+                    if (deviceSavedState) deviceSavedState.filterBy = currentIndex
+                }
             }
         }
 
-        Rectangle {
-            anchors.fill: rowLilMenuFormat
-            color: Theme.colorComponent
-            radius: Theme.componentRadius
-        }
         Row {
-            id: rowLilMenuFormat
-            height: 36
-            anchors.left: comboBox_filterby.right
+            anchors.left: rowFilter.right
             anchors.leftMargin: 16
-            anchors.verticalCenter: comboBox_filterby.verticalCenter
+            anchors.verticalCenter: rowFilter.verticalCenter
+            spacing: 12
 
-            ItemLilMenuButton {
-                height: parent.height
-                text: "1:1"
-                selected: (shotsView.cellFormat === 1.0)
-                onClicked: {
-                    deviceSavedState.thumbFormat = 1
-                    shotsView.setThumFormat()
-                }
-            }
-            ItemLilMenuButton {
-                height: parent.height
-                text: "4:3"
-                selected: (shotsView.cellFormat === 4/3)
-                onClicked: {
-                    deviceSavedState.thumbFormat = 2
-                    shotsView.setThumFormat()
-                }
-            }
-            ItemLilMenuButton {
-                height: parent.height
-                text: "16:9"
-                selected: (shotsView.cellFormat === 16/9)
-                onClicked: {
-                    deviceSavedState.thumbFormat = 3
-                    shotsView.setThumFormat()
-                }
-            }
-        }
+            ItemLilMenu {
+                width: rowLilMenuFormat.width
 
-        Rectangle {
-            anchors.fill: rowLilMenuZoom
-            color: Theme.colorComponent
-            radius: Theme.componentRadius
-        }
-        Row {
-            id: rowLilMenuZoom
-            height: 36
-            anchors.left: rowLilMenuFormat.right
-            anchors.leftMargin: 16
-            anchors.verticalCenter: rowLilMenuFormat.verticalCenter
+                Row {
+                    id: rowLilMenuFormat
+                    height: parent.height
 
-            ItemLilMenuButton {
-                height: parent.height
-                source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
-                sourceSize: 18
-                selected: (shotsView.cellSizeTarget === 221)
-                onClicked: {
-                    deviceSavedState.thumbSize = 1
-                    shotsView.setThumFormat()
+                    ItemLilMenuButton {
+                        text: "1:1"
+                        selected: (shotsView.cellFormat === 1.0)
+                        onClicked: {
+                            deviceSavedState.thumbFormat = 1
+                            shotsView.setThumFormat()
+                        }
+                    }
+                    ItemLilMenuButton {
+                        text: "4:3"
+                        selected: (shotsView.cellFormat === 4/3)
+                        onClicked: {
+                            deviceSavedState.thumbFormat = 2
+                            shotsView.setThumFormat()
+                        }
+                    }
+                    ItemLilMenuButton {
+                        text: "16:9"
+                        selected: (shotsView.cellFormat === 16/9)
+                        onClicked: {
+                            deviceSavedState.thumbFormat = 3
+                            shotsView.setThumFormat()
+                        }
+                    }
                 }
             }
-            ItemLilMenuButton {
-                height: parent.height
-                source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
-                sourceSize: 22
-                selected: (shotsView.cellSizeTarget === 279)
-                onClicked: {
-                    deviceSavedState.thumbSize = 2
-                    shotsView.setThumFormat()
-                }
-            }
-            ItemLilMenuButton {
-                height: parent.height
-                source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
-                sourceSize: 26
-                selected: (shotsView.cellSizeTarget === 376)
-                onClicked: {
-                    deviceSavedState.thumbSize = 3
-                    shotsView.setThumFormat()
-                }
-            }
-            ItemLilMenuButton {
-                height: parent.height
-                source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
-                sourceSize: 30
-                selected: (shotsView.cellSizeTarget === 512)
-                onClicked: {
-                    deviceSavedState.thumbSize = 4
-                    shotsView.setThumFormat()
+
+            ItemLilMenu {
+                width: rowLilMenuZoom.width
+
+                Row {
+                    id: rowLilMenuZoom
+                    height: parent.height
+
+                    ItemLilMenuButton {
+                        source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
+                        sourceSize: 18
+                        selected: (shotsView.cellSizeTarget === 221)
+                        onClicked: {
+                            deviceSavedState.thumbSize = 1
+                            shotsView.setThumFormat()
+                        }
+                    }
+                    ItemLilMenuButton {
+                        source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
+                        sourceSize: 22
+                        selected: (shotsView.cellSizeTarget === 279)
+                        onClicked: {
+                            deviceSavedState.thumbSize = 2
+                            shotsView.setThumFormat()
+                        }
+                    }
+                    ItemLilMenuButton {
+                        source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
+                        sourceSize: 26
+                        selected: (shotsView.cellSizeTarget === 376)
+                        onClicked: {
+                            deviceSavedState.thumbSize = 3
+                            shotsView.setThumFormat()
+                        }
+                    }
+                    ItemLilMenuButton {
+                        source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
+                        sourceSize: 30
+                        selected: (shotsView.cellSizeTarget === 512)
+                        onClicked: {
+                            deviceSavedState.thumbSize = 4
+                            shotsView.setThumFormat()
+                        }
+                    }
                 }
             }
         }
@@ -645,7 +632,6 @@ Item {
         ButtonWireframe {
             id: rectangleTransfer
             width: 220
-            height: 40
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 16
             anchors.left: parent.left
@@ -661,7 +647,6 @@ Item {
         ButtonWireframe {
             id: rectangleDelete
             width: 240
-            height: 40
             anchors.left: rectangleTransfer.right
             anchors.leftMargin: 16
             anchors.bottom: parent.bottom
@@ -679,11 +664,8 @@ Item {
     Column {
         id: menusArea
         anchors.top: rectangleHeader.bottom
-        anchors.topMargin: 0
         anchors.left: parent.left
-        anchors.leftMargin: 0
         anchors.right: parent.right
-        anchors.rightMargin: 0
         z: 1
 
         ItemBannerActions {
@@ -699,25 +681,21 @@ Item {
     // CONTENT /////////////////////////////////////////////////////////////////
 
     Item {
-        id: rectangleDeviceShots
+        id: rectangleDeviceGrid
 
         anchors.top: menusArea.bottom
-        anchors.topMargin: 0
-        anchors.right: parent.right
-        anchors.rightMargin: 0
         anchors.left: parent.left
-        anchors.leftMargin: 0
+        anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
+
+        ////////
 
         Rectangle {
             id: circleEmpty
-            width: 350
-            height: 350
-            radius: width*0.5
+            width: 350; height: 350; radius: 350;
+            anchors.centerIn: parent
+            visible: (shotsView.count <= 0)
             color: Theme.colorHeader
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.horizontalCenter: parent.horizontalCenter
 
             Image {
                 id: imageEmpty
@@ -725,55 +703,34 @@ Item {
                 height: 256
                 sourceSize.width: width
                 sourceSize.height: height
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-                fillMode: Image.PreserveAspectFit
-            }
-
-            NumberAnimation on opacity {
-                id: loadingFader;
-                from: 1;
-                to: 0;
-                duration: 2000;
-                loops: Animation.Infinite;
-                onStopped: imageEmpty.opacity = 1;
+                anchors.centerIn: parent
             }
         }
+
+        ////////
 
         Component {
-            id: highlight
+            id: itemHighlight
+
             Rectangle {
-                width: shotsView.cellSize;
+                width: shotsView.cellSize
                 height: shotsView.cellSize
+                x: 0; y: 0; z: 2;
+
                 visible: !mediaGrid.selectionMode
                 color: "transparent"
-                border.width : 4
+                radius: 2
+                border.width: 4
                 border.color: Theme.colorPrimary
-                x: {
-                    if (shotsView.currentItem.x) {
-                        x = shotsView.currentItem.x
-                    } else {
-                        x = 0
-                    }
-                }
-                y: {
-                    if (shotsView.currentItem.y) {
-                        y = shotsView.currentItem.y
-                    } else {
-                        y = 0
-                    }
-                }
-                z: 6
             }
         }
+
+        ////////
 
         ActionMenu {
             id: actionMenu
             z: 7
-        }
-        Connections {
-            target: actionMenu
-            onMenuSelected: rectangleDeviceShots.actionMenuTriggered(index)
+            onMenuSelected: rectangleDeviceGrid.actionMenuTriggered(index)
             onVisibleChanged: shotsView.interactive = !shotsView.interactive
         }
         function actionMenuTriggered(index) {
@@ -807,17 +764,42 @@ Item {
         GridView {
             id: shotsView
             anchors.fill: parent
-            anchors.leftMargin: 16
-            anchors.topMargin: 16
+
+            topMargin: 16
+            leftMargin: 16
+            rightMargin: 4
+            bottomMargin: 4
 
             //clip: true
             //snapMode: GridView.SnapToRow
-            interactive: true
+            interactive: !actionMenu.visible
             keyNavigationEnabled: true
             focus: (appContent.state === "device" && screenLibrary.state === "stateMediaGrid")
 
             onCountChanged: updateGridViewSettings()
             onWidthChanged: computeCellSize()
+
+            Component.onCompleted: {
+                mediaGrid.exitSelectionMode()
+                shotsView.currentIndex = -1
+                actionMenu.visible = false
+            }
+
+            Connections {
+                target: settingsManager
+                onThumbFormatChanged: {
+                    if (deviceSavedState) {
+                        deviceSavedState.thumbFormat = settingsManager.thumbFormat
+                        shotsView.computeCellSize()
+                    }
+                }
+                onThumbSizeChanged: {
+                    if (deviceSavedState) {
+                        deviceSavedState.thumbSize = settingsManager.thumbSize
+                        shotsView.computeCellSize()
+                    }
+                }
+            }
 
             ////////
 
@@ -852,7 +834,7 @@ Item {
             }
 
             function computeCellSize() {
-                var availableWidth = shotsView.width - cellMarginTarget
+                var availableWidth = shotsView.width - shotsView.leftMargin - shotsView.rightMargin
                 var cellColumnsTarget = Math.trunc(availableWidth / cellSizeTarget)
                 // 1 // Adjust only cellSize
                 cellSize = (availableWidth - cellMarginTarget * cellColumnsTarget) / cellColumnsTarget
@@ -861,21 +843,6 @@ Item {
                 cellHeight = Math.round(cellSize / cellFormat) + cellMarginTarget
             }
 
-            Connections {
-                target: settingsManager
-                onThumbFormatChanged: {
-                    if (deviceSavedState) {
-                        deviceSavedState.thumbFormat = settingsManager.thumbFormat
-                        shotsView.computeCellSize()
-                    }
-                }
-                onThumbSizeChanged: {
-                    if (deviceSavedState) {
-                        deviceSavedState.thumbSize = settingsManager.thumbSize
-                        shotsView.computeCellSize()
-                    }
-                }
-            }
 
             ////////
 
@@ -900,12 +867,11 @@ Item {
             ////////
 
             model: currentDevice ? currentDevice.shotFilter : null
-            delegate: ItemShot { width: shotsView.cellSize; cellFormat: shotsView.cellFormat }
+            delegate: ItemShot { width: shotsView.cellSize; cellFormat: shotsView.cellFormat; }
 
             ScrollBar.vertical: ScrollBar { z: 1 }
 
-            highlight: highlight
-            highlightFollowsCurrentItem: true
+            highlight: itemHighlight
             highlightMoveDuration: 0
 
             flickableChildren: MouseArea {
@@ -948,6 +914,8 @@ Item {
                 }
             }
         }
+
+        ////////
 
         MouseArea {
             id: mouseAreaOutsideView

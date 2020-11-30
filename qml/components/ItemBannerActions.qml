@@ -5,21 +5,26 @@ import ThemeEngine 1.0
 import "qrc:/js/UtilsString.js" as UtilsString
 
 Rectangle {
-    id: itemBannerActions
+    id: bannerActions
     height: 56
     anchors.right: parent.right
     anchors.rightMargin: 0
     anchors.left: parent.left
     anchors.leftMargin: 0
 
+    z: 1
     color: Theme.colorPrimary
 
+    // prevent clicks below this area
+    MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
+
+    ////////////////////////////////////////////////////////////////////////////
+
     Row {
-        spacing: 16
-        anchors.top: parent.top
         anchors.left: parent.left
         anchors.leftMargin: 16
-        anchors.bottom: parent.bottom
+        anchors.verticalCenter: parent.verticalCenter
+        spacing: 16
 
         ButtonWireframeImage {
             id: buttonOffload
@@ -53,6 +58,7 @@ Rectangle {
                 //
             }
         }
+
         ButtonWireframeImage {
             id: buttonTelemetry
             anchors.verticalCenter: parent.verticalCenter
@@ -70,6 +76,7 @@ Rectangle {
                 }
             }
         }
+
         ButtonWireframeImage {
             id: buttonDelete
             anchors.verticalCenter: parent.verticalCenter
@@ -91,7 +98,7 @@ Rectangle {
         }
     }
 
-    ////////
+    ////////////////
 
     Text {
         id: elementCounter
@@ -104,6 +111,7 @@ Rectangle {
         font.pixelSize: 16
         font.bold: true
     }
+
     ItemImageButton {
         id: rectangleClear
         anchors.right: parent.right

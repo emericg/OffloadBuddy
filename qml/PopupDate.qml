@@ -421,7 +421,7 @@ Popup {
 
                 text: qsTr("Cancel")
                 fullColor: true
-                primaryColor: Theme.colorMaterialDarkGrey
+                primaryColor: Theme.colorGrey
                 onClicked: popupDate.close()
             }
             ButtonWireframeImage {

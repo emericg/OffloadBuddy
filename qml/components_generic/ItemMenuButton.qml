@@ -1,6 +1,5 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
-import QtGraphicalEffects 1.12
 
 import ThemeEngine 1.0
 
@@ -33,14 +32,8 @@ Item {
         onClicked: itemMenuButton.clicked()
 
         hoverEnabled: true
-        onEntered: {
-            bgFocus.opacity = 0.5
-            itemMenuButton.highlighted = true
-        }
-        onExited: {
-            bgFocus.opacity = 0
-            itemMenuButton.highlighted = false
-        }
+        onEntered: itemMenuButton.highlighted = true
+        onExited: itemMenuButton.highlighted = false
     }
 
     Rectangle {
@@ -55,8 +48,8 @@ Item {
         anchors.fill: parent
 
         visible: (highlightMode === "background")
-        color: itemMenuButton.colorHighlight
-        opacity: 0
+        color: colorHighlight
+        opacity: highlighted ? 0.5 : 0
         Behavior on opacity { OpacityAnimator { duration: 333 } }
     }
 

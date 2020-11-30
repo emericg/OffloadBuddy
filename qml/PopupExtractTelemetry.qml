@@ -247,11 +247,8 @@ Popup {
 
             TextFieldThemed {
                 id: textField_path
-                height: 40
                 anchors.left: parent.left
-                anchors.leftMargin: 0
                 anchors.right: parent.right
-                anchors.rightMargin: 0
 
                 visible: (comboBoxDestination.currentIndex === (cbDestinations.count - 1))
 
@@ -302,7 +299,7 @@ Popup {
 
                 text: qsTr("Cancel")
                 fullColor: true
-                primaryColor: Theme.colorMaterialDarkGrey
+                primaryColor: Theme.colorGrey
                 onClicked: popupExtractTelemetry.close()
             }
             ButtonWireframeImage {

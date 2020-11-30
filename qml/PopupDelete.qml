@@ -26,7 +26,7 @@ Popup {
     }
 
     contentItem: Column {
-        spacing: 24
+        spacing: 16
 
         Rectangle {
             id: titleArea
@@ -60,48 +60,51 @@ Popup {
 
         Text {
             id: textArea
+            height: Theme.componentHeight
             anchors.left: parent.left
             anchors.leftMargin: 24
             anchors.right: parent.right
             anchors.rightMargin: 24
 
             text: message
+            font.pixelSize: Theme.fontSizeContent
+            color: Theme.colorText
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignLeft
             wrapMode: Text.WordWrap
-            font.pixelSize: Theme.fontSizeContent
-            color: Theme.colorText
         }
 
         ////////////////
 
         Item {
-            height: 48
             anchors.left: parent.left
             anchors.leftMargin: 24
             anchors.right: parent.right
             anchors.rightMargin: 24
 
             visible: files.length
+            height: listArea.height > 400 ? 400 : listArea.height
 
             ImageSvg {
                 id: listIcon
+                anchors.top: parent.top
+                anchors.left: parent.left
                 color: Theme.colorText
                 source: "qrc:/assets/icons_material/baseline-list-24px.svg"
             }
 
             ListView {
                 id: listArea
-                height: 48
+                height: files.length * 16
                 anchors.left: listIcon.right
-                anchors.leftMargin: 24
+                anchors.leftMargin: 12
                 anchors.right: parent.right
                 anchors.rightMargin: 0
 
                 flickableDirection: Flickable.HorizontalAndVerticalFlick
                 clip: true
                 model: files
-                delegate: Text { text: modelData; font.pixelSize: 14; color: Theme.colorSubText; }
+                delegate: Text { height: 16; text: modelData; font.pixelSize: 14; color: Theme.colorSubText; }
             }
         }
 
@@ -120,7 +123,8 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Cancel")
-                primaryColor: Theme.colorPrimary
+                fullColor: true
+                primaryColor: Theme.colorGrey
                 onClicked: popupDelete.close()
             }
             ButtonWireframeImage {

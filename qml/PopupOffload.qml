@@ -11,8 +11,7 @@ Popup {
     x: (appWindow.width / 2) - (width / 2) - (appSidebar.width / 2)
     y: (appWindow.height / 2) - (height / 2)
     width: 640
-    height: 520
-    padding: 24
+    padding: 0
 
     signal confirmed()
 
@@ -32,39 +31,49 @@ Popup {
         radius: Theme.componentRadius
     }
 
-    /*contentItem:*/ Item {
-        anchors.fill: parent
+    contentItem: Column {
+        spacing: 16
 
-        Text {
-            id: textArea
-            anchors.top: parent.top
+        Rectangle {
+            id: titleArea
+            height: 64
             anchors.left: parent.left
             anchors.right: parent.right
+            radius: Theme.componentRadius
+            color: ThemeEngine.colorPrimary
 
-            text: qsTr("Offloading")
-            font.pixelSize: 24
-            color: Theme.colorText
+            Rectangle {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                height: parent.radius
+                color: parent.color
+            }
+
+            Text {
+                anchors.left: parent.left
+                anchors.leftMargin: 24
+                anchors.verticalCenter: parent.verticalCenter
+
+                text: qsTr("Offloading")
+                font.pixelSize: Theme.fontSizeTitle
+                font.bold: true
+                color: "white"
+            }
         }
 
-        /////////
+        ////////////////
 
         Column {
-            id: column
-            anchors.top: textArea.bottom
-            anchors.topMargin: 16
-            anchors.bottom: rowButtons.top
-            anchors.bottomMargin: 0
-            anchors.right: parent.right
-            anchors.rightMargin: 0
             anchors.left: parent.left
-            anchors.leftMargin: 0
+            anchors.leftMargin: 24
+            anchors.right: parent.right
+            anchors.rightMargin: 24
 
             Item {
                 height: 48
-                anchors.right: parent.right
-                anchors.rightMargin: 0
                 anchors.left: parent.left
-                anchors.leftMargin: 0
+                anchors.right: parent.right
 
                 visible: isGoPro
 
@@ -138,8 +147,6 @@ Popup {
                 height: 48
                 anchors.left: parent.left
                 anchors.right: parent.right
-                anchors.rightMargin: 0
-                anchors.leftMargin: 0
 
                 visible: !isReadOnly
 
@@ -154,18 +161,11 @@ Popup {
                 }
             }
 /*
-            Rectangle { // separator
-                height: 1
-                anchors.right: parent.right
-                anchors.left: parent.left
-                color: Theme.colorSeparator
-            }
+            Rectangle { height: 1; color: Theme.colorSeparator;
+                        anchors.right: parent.right; anchors.left: parent.left; } // separator
 */
-            Item { // spacer
-                height: 16
-                anchors.right: parent.right
-                anchors.left: parent.left
-            }
+            Item { height: 16; } // spacer
+
             Item {
                 id: rectangleDestination
                 height: 48
@@ -237,17 +237,14 @@ Popup {
 
             TextFieldThemed {
                 id: textField_path
-                height: 40
                 anchors.left: parent.left
-                anchors.leftMargin: 0
                 anchors.right: parent.right
-                anchors.rightMargin: 0
 
                 visible: (comboBoxDestination.currentIndex === (cbDestinations.count - 1))
 
                 FileDialog {
                     id: fileDialogChange
-                    title: qsTr("Please choose a destination!")
+                    title: qsTr("Please choose a destination directory!")
                     sidebarVisible: true
                     selectExisting: true
                     selectMultiple: false
@@ -276,16 +273,14 @@ Popup {
             }
         }
 
-        /////////
+        //////////////////
 
         Row {
             id: rowButtons
-            height: 40
-            spacing: 24
+            height: Theme.componentHeight*2 + parent.spacing
             anchors.right: parent.right
-            anchors.rightMargin: 0
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 0
+            anchors.rightMargin: 24
+            spacing: 24
 
             ButtonWireframe {
                 id: buttonCancel
@@ -293,10 +288,9 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Cancel")
-                primaryColor: Theme.colorPrimary
-                onClicked: {
-                    popupOffload.close();
-                }
+                fullColor: true
+                primaryColor: Theme.colorGrey
+                onClicked: popupOffload.close()
             }
             ButtonWireframeImage {
                 id: buttonOffload
@@ -308,8 +302,8 @@ Popup {
                 primaryColor: Theme.colorPrimary
                 onClicked: {
                     popupOffload.selectedPath = textField_path.text
-                    popupOffload.confirmed();
-                    popupOffload.close();
+                    popupOffload.confirmed()
+                    popupOffload.close()
                 }
             }
         }

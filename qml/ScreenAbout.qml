@@ -1,6 +1,5 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
-import QtGraphicalEffects 1.12
 
 import ThemeEngine 1.0
 
@@ -29,7 +28,7 @@ Item {
             anchors.leftMargin: 24
             anchors.verticalCenter: parent.verticalCenter
 
-            text: qsTr("ABOUT") + "  /  OffloadBuddy"
+            text: qsTr("ABOUT") + "  OffloadBuddy"
             verticalAlignment: Text.AlignVCenter
             font.bold: true
             font.pixelSize: Theme.fontSizeHeader
@@ -64,8 +63,8 @@ Item {
         anchors.bottomMargin: 0
 
         Column {
-            anchors.topMargin: 32
-            anchors.leftMargin: 32
+            anchors.topMargin: 24
+            anchors.leftMargin: 24
             anchors.rightMargin: 24
             anchors.fill: parent
             spacing: 16
@@ -92,7 +91,6 @@ Item {
                 id: buttonArea
                 height: 40
                 anchors.left: parent.left
-                anchors.leftMargin: 8
                 anchors.right: parent.right
 
                 ButtonWireframeImage {

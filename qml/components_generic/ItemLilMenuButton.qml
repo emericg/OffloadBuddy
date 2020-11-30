@@ -1,12 +1,11 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
-import QtGraphicalEffects 1.12
 
 import ThemeEngine 1.0
 
 Item {
     id: itemLilMenuButton
-    implicitWidth: 64
+    implicitWidth: 96
     implicitHeight: 32
 
     width: 16 + contentText.width + sourceSize + 16
@@ -14,7 +13,7 @@ Item {
 
     signal clicked()
     property bool selected: false
-    property bool highlighted: false
+    property bool highlighted: mouseArea.isHovered
 
     property string colorBackground: Theme.colorComponent
     property string colorBackgroundHighlight: Theme.colorHighContrast
@@ -23,23 +22,19 @@ Item {
 
     property string text: ""
     property string source: ""
-    property int sourceSize: (source === "") ? 0 : 32
+    property int sourceSize: (source.length) ? 32 : 0
 
     ////////////////////////////////////////////////////////////////////////////
 
     MouseArea {
+        id: mouseArea
         anchors.fill: parent
         onClicked: parent.clicked()
 
+        property var isHovered: false
         hoverEnabled: true
-        onEntered: {
-            bgFocus.opacity = 0.1
-            parent.highlighted = true
-        }
-        onExited: {
-            bgFocus.opacity = 0
-            parent.highlighted = false
-        }
+        onEntered: isHovered = true
+        onExited: isHovered = false
     }
 
     Rectangle {
@@ -49,16 +44,14 @@ Item {
         visible: parent.selected
         opacity: 0.1
         color: parent.colorContent
-        radius: Theme.componentRadius
     }
 
     Rectangle {
         id: bgFocus
         anchors.fill: parent
 
-        opacity: 0
+        opacity: mouseArea.isHovered ? 0.1 : 0
         color: parent.colorBackgroundHighlight
-        radius: Theme.componentRadius
         Behavior on opacity { OpacityAnimator { duration: 233 } }
     }
 

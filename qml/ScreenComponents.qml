@@ -1,12 +1,12 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
-import QtQuick.Dialogs 1.3
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsString.js" as UtilsString
 
 Item {
     id: screenComponent
+
     width: 1280
     height: 720
     anchors.fill: parent
@@ -16,14 +16,15 @@ Item {
     Rectangle {
         id: rectangleHeader
         height: 64
+        z: 5
         color: Theme.colorHeader
 
-        anchors.topMargin: 0
         anchors.top: parent.top
-        anchors.rightMargin: 0
-        anchors.right: parent.right
-        anchors.leftMargin: 0
         anchors.left: parent.left
+        anchors.right: parent.right
+
+        // prevent clicks below this area
+        MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
 
         ItemImageButton {
             id: buttonBack
@@ -37,7 +38,7 @@ Item {
             backgroundColor: Theme.colorForeground
 
             source: "qrc:/assets/others/navigate_before_big.svg"
-            onClicked: appContent.state = "library"
+            onClicked: { appContent.state = "library" }
         }
 
         Text {
@@ -56,26 +57,28 @@ Item {
 
         Row {
             id: rowCodecs
-            height: 28
             spacing: 16
-            anchors.verticalCenter: parent.verticalCenter
             anchors.left: textShotName.right
             anchors.leftMargin: 32
+            anchors.verticalCenter: parent.verticalCenter
 
             ItemCodec {
-                id: codecVideo
+                id: codecVideo1
                 text: "H.264"
+            }
+
+            ItemCodec {
+                id: codecVideo2
+                text: "16:9"
             }
         }
 
         Row {
             id: rowMenus
+            anchors.top: parent.top
             anchors.right: parent.right
             anchors.rightMargin: 48
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 0
-            anchors.top: parent.top
-            anchors.topMargin: 0
 
             ItemMenuButton {
                 id: menuFirst
@@ -123,21 +126,17 @@ Item {
         id: rectangleContent
 
         anchors.top: rectangleHeader.bottom
-        anchors.topMargin: 0
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.left: parent.left
 
-        ////////
+        ////////////////
 
         Rectangle {
             id: rectangleAction
             anchors.top: parent.top
-            anchors.topMargin: 0
             anchors.left: parent.left
-            anchors.leftMargin: 0
             anchors.right: parent.right
-            anchors.rightMargin: 0
 
             height: 56
             color: Theme.colorActionbar
@@ -150,35 +149,36 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: "Action bar"
-                verticalAlignment: Text.AlignVCenter
-                font.pixelSize: 18
                 font.bold: true
+                font.pixelSize: Theme.fontSizeContentBig
                 color: Theme.colorActionbarContent
+                verticalAlignment: Text.AlignVCenter
             }
 
             // right
 
-            ButtonWireframe {
-                id: button_a1
-                anchors.right: button_a2.left
-                anchors.rightMargin: 16
-                anchors.verticalCenter: parent.verticalCenter
-
-                fullColor: true
-                primaryColor: Theme.colorActionbarHighlight
-                text: "Action 1"
-            }
-
-            ButtonWireframeImage {
-                id: button_a2
+            Row {
                 anchors.right: itemImageButtonX.left
                 anchors.rightMargin: 32
                 anchors.verticalCenter: parent.verticalCenter
+                spacing: 16
 
-                fullColor: true
-                primaryColor: Theme.colorActionbarHighlight
-                text: "Action 2"
-                source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
+                ButtonWireframeImage {
+                    fullColor: true
+                    primaryColor: Theme.colorActionbarHighlight
+                    source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
+                }
+                ButtonWireframeImage {
+                    fullColor: true
+                    primaryColor: Theme.colorActionbarHighlight
+                    text: "Action 1"
+                    source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
+                }
+                ButtonWireframeImage {
+                    fullColor: true
+                    primaryColor: Theme.colorActionbarHighlight
+                    text: "Action 2"
+                }
             }
 
             ItemImageButton {
@@ -195,634 +195,24 @@ Item {
             }
         }
 
-        ////////
-
-        Item {
-            id: rectangleTheme
-            height: 64
-            anchors.top: rectangleAction.bottom
-            anchors.topMargin: 0
-            anchors.left: parent.left
-            anchors.leftMargin: 0
-            anchors.right: parent.right
-            anchors.rightMargin: 0
-
-            ComboBoxThemed {
-                id: comboBoxAppTheme
-                width: 256
-                height: 40
-                anchors.left: element.right
-                anchors.leftMargin: 24
-                anchors.verticalCenter: element.verticalCenter
-
-                model: ListModel {
-                    id: cbAppTheme
-                    ListElement { text: "LIGHT AND WARM"; }
-                    ListElement { text: "DARK AND SPOOKY"; }
-                    ListElement { text: "PLAIN AND BORING"; }
-                    ListElement { text: "BLOOD AND TEARS"; }
-                    ListElement { text: "MIGHTY KITTENS"; }
-                }
-
-                Component.onCompleted: {
-                    currentIndex = settingsManager.appTheme;
-                    if (currentIndex === -1) { currentIndex = 0 }
-                }
-                property bool cbinit: false
-                onCurrentIndexChanged: {
-                    if (cbinit)
-                        settingsManager.appTheme = currentIndex;
-                    else
-                        cbinit = true;
-                }
-            }
-
-            RadioButtonThemed {
-                id: radioButtonLight
-                anchors.left: comboBoxAppTheme.right
-                anchors.leftMargin: 24
-                anchors.verticalCenter: element.verticalCenter
-
-                text: "light"
-                checked: true
-                //onCheckedChanged:
-            }
-            RadioButtonThemed {
-                id: radioButtonDark
-                anchors.left: radioButtonLight.right
-                anchors.leftMargin: 24
-                anchors.verticalCenter: element.verticalCenter
-
-                text: "dark"
-                checked: false
-                //onCheckedChanged:
-            }
-
-            Text {
-                id: element
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.left: parent.left
-                anchors.leftMargin: 32
-
-                text: "Application theme"
-                font.pixelSize: 16
-                font.bold: true
-                color: Theme.colorText
-            }
-        }
-
-        ////////
-
-        Item {
-            id: content
-
-            anchors.top: rectangleTheme.bottom
-            anchors.topMargin: 0
-            anchors.bottom: rectangleQtQuickThemed.top
-            anchors.bottomMargin: 0
-            anchors.left: parent.left
-            anchors.leftMargin: 0
-            anchors.right: parent.right
-            anchors.rightMargin: 0
-
-            ItemImageButton {
-                id: itemImageButton1
-                width: 48
-                height: 48
-                anchors.top: parent.top
-                anchors.topMargin: 32
-                anchors.left: parent.left
-                anchors.leftMargin: 32
-
-                source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
-                background: true
-                highlightMode: "circle"
-            }
-            ItemImageButton {
-                id: itemImageButton2
-                width: 48
-                height: 48
-                anchors.leftMargin: 16
-                anchors.left: itemImageButton1.right
-                anchors.verticalCenter: itemImageButton1.verticalCenter
-
-                source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
-                background: true
-                highlightMode: "color"
-            }
-            ItemImageButton {
-                id: itemImageButton3
-                width: 48
-                height: 48
-                anchors.leftMargin: 16
-                anchors.left: itemImageButton2.right
-                anchors.verticalCenter: itemImageButton1.verticalCenter
-
-                source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
-                background: true
-                highlightMode: "both"
-                highlightColor: Theme.colorError
-                tooltipText: "this one has a tooltip!"
-            }
-
-            ItemImageButton {
-                id: itemImageButton11
-                anchors.leftMargin: 160
-                anchors.left: itemImageButton3.right
-                anchors.verticalCenter: itemImageButton1.verticalCenter
-
-                source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
-                background: false
-                highlightMode: "circle"
-            }
-            ItemImageButton {
-                id: itemImageButton22
-                anchors.leftMargin: 16
-                anchors.left: itemImageButton11.right
-                anchors.verticalCenter: itemImageButton1.verticalCenter
-
-                source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
-                background: false
-                highlightMode: "color"
-            }
-            ItemImageButton {
-                id: itemImageButton33
-                anchors.leftMargin: 16
-                anchors.left: itemImageButton22.right
-                anchors.verticalCenter: itemImageButton1.verticalCenter
-
-                source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
-                background: false
-                highlightMode: "both"
-                highlightColor: Theme.colorError
-                tooltipText: "another tooltip!"
-            }
-
-            ////////
-
-            ButtonImageThemed {
-                id: buttonImage1
-                anchors.top: itemImageButton1.bottom
-                anchors.topMargin: 16
-                anchors.left: parent.left
-                anchors.leftMargin: 32
-
-                text: "ButtonImageThemed"
-                source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
-            }
-            ButtonImage {
-                id: buttonImage2
-                anchors.left: buttonImage1.right
-                anchors.leftMargin: 32
-                anchors.verticalCenter: buttonImage1.verticalCenter
-
-                text: "ButtonImage"
-                source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
-            }
-
-            ButtonWireframeImage {
-                id: buttonImage11
-                anchors.top: buttonImage1.bottom
-                anchors.topMargin: 16
-                anchors.left: parent.left
-                anchors.leftMargin: 32
-
-                text: "ButtonWireframeImage"
-                source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
-            }
-            ButtonWireframe {
-                id: buttonImage22
-                anchors.left: buttonImage11.right
-                anchors.leftMargin: 32
-                anchors.verticalCenter: buttonImage11.verticalCenter
-
-                text: "ButtonWireframe"
-            }
-
-            ButtonWireframeImage {
-                id: buttonImage111
-                anchors.top: buttonImage11.bottom
-                anchors.topMargin: 16
-                anchors.left: parent.left
-                anchors.leftMargin: 32
-
-                fullColor: true
-                text: "ButtonWireframeImage"
-                source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
-            }
-            ButtonWireframe {
-                id: buttonImage222
-                anchors.left: buttonImage111.right
-                anchors.leftMargin: 32
-                anchors.verticalCenter: buttonImage111.verticalCenter
-
-                fullColor: true
-                text: "ButtonWireframe"
-            }
-
-            ////////
-
-            ItemBadge {
-                id: badge1
-                width: 128
-                anchors.top: buttonImage111.bottom
-                anchors.topMargin: 32
-                anchors.left: parent.left
-                anchors.leftMargin: 32
-
-                legend: "license"
-                text: "LGPL 3"
-                onClicked: Qt.openUrlExternally("https://www.gnu.org/licenses/lgpl-3.0.html")
-            }
-            ItemCodec {
-                id: codec1
-                anchors.left: badge1.right
-                anchors.leftMargin: 32
-                anchors.verticalCenter: badge1.verticalCenter
-
-                text: "H.264"
-                color: Theme.colorForeground
-            }
-
-            ////////
-
-            Rectangle {
-                anchors.fill: rowLilMenuTxt
-                color: Theme.colorComponent
-                radius: Theme.componentRadius
-            }
-            Row {
-                id: rowLilMenuTxt
-                height: 40
-                anchors.top: badge1.bottom
-                anchors.topMargin: 32
-                anchors.left: parent.left
-                anchors.leftMargin: 32
-
-                ItemLilMenuButton {
-                    id: lilmenu1
-                    height: parent.height
-
-                    text: "4/3"
-                    selected: true
-                    onClicked: {
-                        lilmenu1.selected = true
-                        lilmenu2.selected = false
-                        lilmenu3.selected = false
-                    }
-                }
-                ItemLilMenuButton {
-                    id: lilmenu2
-                    height: parent.height
-
-                    text: "16/9"
-                    onClicked: {
-                        lilmenu1.selected = false
-                        lilmenu2.selected = true
-                        lilmenu3.selected = false
-                    }
-                }
-                ItemLilMenuButton {
-                    id: lilmenu3
-                    height: parent.height
-
-                    text: "21/9"
-                    onClicked: {
-                        lilmenu1.selected = false
-                        lilmenu2.selected = false
-                        lilmenu3.selected = true
-                    }
-                }
-            }
-
-            Rectangle {
-                anchors.fill: rowLilMenuImg
-                color: Theme.colorComponent
-                radius: Theme.componentRadius
-            }
-            Row {
-                id: rowLilMenuImg
-                height: 40
-                anchors.top: badge1.bottom
-                anchors.topMargin: 32
-                anchors.left: rowLilMenuTxt.right
-                anchors.leftMargin: 32
-
-                ItemLilMenuButton {
-                    id: lilmenu11
-                    height: parent.height
-
-                    source: "qrc:/assets/icons_material/baseline-date_range-24px.svg"
-                    sourceSize: 18
-                    selected: true
-                    onClicked: {
-                        lilmenu11.selected = true
-                        lilmenu22.selected = false
-                        lilmenu33.selected = false
-                    }
-                }
-                ItemLilMenuButton {
-                    id: lilmenu22
-                    height: parent.height
-
-                    source: "qrc:/assets/icons_material/baseline-date_range-24px.svg"
-                    sourceSize: 22
-                    onClicked: {
-                        lilmenu11.selected = false
-                        lilmenu22.selected = true
-                        lilmenu33.selected = false
-                    }
-                }
-                ItemLilMenuButton {
-                    id: lilmenu33
-                    height: parent.height
-
-                    source: "qrc:/assets/icons_material/baseline-date_range-24px.svg"
-                    sourceSize: 26
-                    onClicked: {
-                        lilmenu11.selected = false
-                        lilmenu22.selected = false
-                        lilmenu33.selected = true
-                    }
-                }
-            }
-        }
-
-        ////////
-
-        Item {
-            id: rectangleQtQuickThemed
-            height: 160
-            anchors.right: parent.right
-            anchors.rightMargin: 0
-            anchors.left: parent.left
-            anchors.leftMargin: 0
-            anchors.bottom: rectangleQtQuick.top
-            anchors.bottomMargin: 0
-
-            Rectangle {
-                id: rectangle
-                height: 1
-                color: Theme.colorSeparator
-                anchors.top: parent.top
-                anchors.topMargin: 1
-                anchors.right: parent.right
-                anchors.rightMargin: 0
-                anchors.left: parent.left
-                anchors.leftMargin: 0
-            }
-
-            RangeSliderThemed {
-                id: rangeSliderThemed
-                anchors.left: sliderThemed.right
-                anchors.leftMargin: 32
-                anchors.verticalCenter: progressBarThemed.verticalCenter
-
-                second.value: 0.75
-                first.value: 0.25
-            }
-
-            SliderThemed {
-                id: sliderThemed
-                y: 73
-                anchors.verticalCenter: progressBarThemed.verticalCenter
-                value: 0.5
-                anchors.leftMargin: 32
-                anchors.left: progressBarThemed.right
-            }
-
-            ProgressBarThemed {
-                id: progressBarThemed
-                x: 32
-                y: 90
-                anchors.bottom: buttonThemed.top
-                anchors.bottomMargin: 32
-                value: 0.5
-                anchors.leftMargin: 32
-                anchors.left: parent.left
-            }
-
-            TextFieldThemed {
-                id: textFieldThemed
-                x: 32
-                y: 276
-                anchors.verticalCenter: buttonThemed.verticalCenter
-                anchors.left: roundButton1.right
-                anchors.leftMargin: 32
-            }
-
-            ButtonThemed {
-                id: buttonThemed
-                x: 32
-                y: 128
-                text: "Button"
-                anchors.left: parent.left
-                anchors.leftMargin: 32
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 32
-            }
-
-            SwitchThemedDesktop {
-                id: switchThemedDesktop
-                anchors.verticalCenter: rangeSliderThemed.verticalCenter
-                anchors.left: rangeSliderThemed.right
-                anchors.leftMargin: 16
-
-                text: "Switch"
-                checked: true
-            }
-
-            SwitchThemedMobile {
-                id: switchThemedMobile
-                anchors.verticalCenterOffset: 0
-                anchors.left: switchThemedDesktop.right
-                anchors.leftMargin: 16
-                anchors.verticalCenter: progressBarThemed.verticalCenter
-
-                text: "Switch"
-                checked: true
-            }
-
-            RoundButton {
-                id: roundButton1
-                y: 88
-                text: "+"
-                anchors.left: buttonThemed.right
-                anchors.leftMargin: 32
-                anchors.verticalCenter: buttonThemed.verticalCenter
-            }
-
-            CheckBoxThemed {
-                id: checkBox
-                y: 88
-                text: "Check Box"
-                anchors.left: spinBox.right
-                anchors.leftMargin: 32
-                anchors.verticalCenter: buttonThemed.verticalCenter
-            }
-
-            ComboBoxThemed {
-                id: comboBox1
-                y: 88
-                width: 256
-                anchors.left: textFieldThemed.right
-                anchors.leftMargin: 32
-                anchors.verticalCenter: buttonThemed.verticalCenter
-
-                model: ListModel {
-                    ListElement { text: "combobox item1"; }
-                    ListElement { text: "combobox item2"; }
-                }
-            }
-
-            SpinBoxThemed {
-                id: spinBox
-                y: 88
-                anchors.left: comboBox1.right
-                anchors.leftMargin: 32
-                anchors.verticalCenter: buttonThemed.verticalCenter
-            }
-        }
-
-        ////////
-
-        Item {
-            id: rectangleQtQuick
-            height: 160
-            anchors.right: parent.right
-            anchors.rightMargin: 0
-            anchors.left: parent.left
-            anchors.leftMargin: 0
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 0
-
-            Rectangle {
-                height: 1
-                color: Theme.colorSeparator
-                anchors.top: parent.top
-                anchors.topMargin: 1
-                anchors.right: parent.right
-                anchors.rightMargin: 0
-                anchors.left: parent.left
-                anchors.leftMargin: 0
-            }
-
-            RangeSlider {
-                id: rangeSlider
-                x: 496
-                y: 73
-                anchors.verticalCenter: progressBar.verticalCenter
-                second.value: 0.75
-                anchors.leftMargin: 32
-                first.value: 0.25
-                anchors.left: slider.right
-            }
-
-            Slider {
-                id: slider
-                anchors.verticalCenter: progressBar.verticalCenter
-                anchors.leftMargin: 32
-                anchors.left: progressBar.right
-                value: 0.5
-            }
-
-            ProgressBar {
-                id: progressBar
-                anchors.bottom: button.top
-                anchors.bottomMargin: 32
-                value: 0.5
-                anchors.leftMargin: 32
-                anchors.left: parent.left
-            }
-
-            Switch {
-                anchors.verticalCenter: progressBar.verticalCenter
-                anchors.left: rangeSlider.right
-                anchors.leftMargin: 16
-
-                text: "Switch"
-                checked: true
-            }
-
-            Button {
-                id: button
-                width: 128
-                text: "Button"
-                anchors.left: parent.left
-                anchors.leftMargin: 32
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 32
-            }
-
-            RoundButton {
-                id: roundButton
-                text: "+"
-                anchors.verticalCenter: button.verticalCenter
-                anchors.left: button.right
-                anchors.leftMargin: 32
-            }
-
-            TextField {
-                id: textField
-                y: 88
-                width: 128
-                text: "Text Field"
-                anchors.left: roundButton.right
-                anchors.leftMargin: 32
-                anchors.verticalCenter: roundButton.verticalCenter
-            }
-
-            CheckBox {
-                id: checkBox1
-                y: 88
-                text: "Check Box"
-                anchors.left: spinBox1.right
-                anchors.leftMargin: 32
-                anchors.verticalCenter: button.verticalCenter
-            }
-
-            ComboBox {
-                id: comboBox
-                y: 88
-                width: 256
-                anchors.left: textField.right
-                anchors.leftMargin: 32
-                anchors.verticalCenter: button.verticalCenter
-
-                model: ListModel {
-                    ListElement { text: "combobox item1"; }
-                    ListElement { text: "combobox item2"; }
-                }
-            }
-
-            SpinBox {
-                id: spinBox1
-                y: 88
-                anchors.left: comboBox.right
-                anchors.leftMargin: 32
-                anchors.verticalCenter: button.verticalCenter
-            }
-        }
-
-        ////////
+        ////////////////
 
         Rectangle {
             id: rectangleColors
-            width: 68
-            height: 388
-            anchors.top: parent.top
-            anchors.topMargin: 90
+            width: 64 + 4
+            height: 6*64 + 4
+            anchors.top: rectangleAction.bottom
+            anchors.topMargin: 32
             anchors.right: parent.right
             anchors.rightMargin: 32
 
+            z: 10
             color: "white"
 
             Column {
                 id: palette
                 width: 64
-                height: 384
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.centerIn: parent
 
                 Rectangle {
                     id: header
@@ -852,10 +242,8 @@ Item {
                         id: secondary
                         width: 24
                         height: 24
-                        anchors.bottom: parent.bottom
-                        anchors.bottomMargin: 0
                         anchors.right: parent.right
-                        anchors.rightMargin: 0
+                        anchors.bottom: parent.bottom
                         color: Theme.colorSecondary
                     }
                 }
@@ -870,6 +258,575 @@ Item {
                     width: 64
                     height: 64
                     color: Theme.colorError
+                }
+            }
+        }
+
+        ////////
+
+        Column {
+            id: columnComponents
+
+            anchors.top: rectangleAction.bottom
+            anchors.topMargin: 24
+            anchors.left: parent.left
+            anchors.leftMargin: 24
+            anchors.right: parent.right
+            anchors.rightMargin: 24
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 24
+
+            spacing: 24
+
+            ////
+
+            Row {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                spacing: 24
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: "Application theme"
+                    font.pixelSize: 16
+                    font.bold: true
+                    color: Theme.colorText
+                }
+                ComboBoxThemed {
+                    id: comboBoxAppTheme
+                    width: 256
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    model: ListModel {
+                        id: cbAppTheme
+                        ListElement { text: "LIGHT AND WARM"; }
+                        ListElement { text: "DARK AND SPOOKY"; }
+                        ListElement { text: "PLAIN AND BORING"; }
+                        ListElement { text: "BLOOD AND TEARS"; }
+                        ListElement { text: "MIGHTY KITTENS"; }
+                    }
+
+                    Component.onCompleted: {
+                        currentIndex = settingsManager.appTheme;
+                        if (currentIndex === -1) { currentIndex = 0 }
+                    }
+                    property bool cbinit: false
+                    onCurrentIndexChanged: {
+                        if (cbinit)
+                            settingsManager.appTheme = currentIndex;
+                        else
+                            cbinit = true;
+                    }
+                }
+
+                RadioButtonThemed {
+                    id: radioButtonLight
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: "light"
+                    checked: true
+                }
+                RadioButtonThemed {
+                    id: radioButtonDark
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: "dark"
+                    checked: false
+                }
+            }
+
+            ////
+
+            Row {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                spacing: 24
+
+                ItemBadge {
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: 128
+                    legend: "license"
+                    text: "LGPL 3"
+                    onClicked: Qt.openUrlExternally("https://www.gnu.org/licenses/lgpl-3.0.html")
+                }
+
+                ItemCodec {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: "H.264"
+                    color: Theme.colorForeground
+                }
+            }
+
+            ////
+
+            Row {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                spacing: 24
+
+                Row {
+                    width: 400
+                    height: 48
+                    spacing: 16
+
+                    ItemImageButton {
+                        width: 48
+                        height: 48
+                        source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
+                        background: true
+                        highlightMode: "color"
+                    }
+                    ItemImageButton {
+                        width: 48
+                        height: 48
+                        source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
+                        background: false
+                        highlightMode: "circle"
+                    }
+                    ItemImageButton {
+                        width: 48
+                        height: 48
+                        source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
+                        highlightMode: "color"
+                        highlightColor: Theme.colorError
+                        tooltipText: "this one has a tooltip!"
+                    }
+                }
+
+                Row {
+                    width: 400
+                    height: 48
+                    spacing: 16
+
+                    ItemImageButton {
+                        source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
+                        highlightMode: "color"
+                    }
+                    ItemImageButton {
+                        source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
+                        background: true
+                        highlightMode: "circle"
+                    }
+                    ItemImageButton {
+                        source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
+                        highlightMode: "color"
+                        highlightColor: Theme.colorError
+                        tooltipText: "another tooltip!"
+                    }
+                }
+            }
+
+            ////
+
+            Row {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                spacing: 24
+
+                ButtonImage {
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: "ButtonImage"
+                    source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
+                }
+
+                ButtonImageThemed {
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: "ButtonImageThemed"
+                    source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
+                }
+            }
+
+            ////
+
+            Row {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                spacing: 24
+
+                ButtonWireframe {
+                    anchors.verticalCenter: parent.verticalCenter
+                    fullColor: true
+                    text: "ButtonWireframe"
+                }
+
+                ButtonWireframeImage {
+                    anchors.verticalCenter: parent.verticalCenter
+                    fullColor: true
+                    text: "ButtonWireframeImage"
+                    source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
+                }
+
+                ButtonWireframe {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: "ButtonWireframe"
+                }
+
+                ButtonWireframeImage {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: "ButtonWireframeImage"
+                    source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
+                }
+            }
+
+            ////
+
+            Rectangle {
+                id: menu
+                width: 400
+                height: 40
+                color: Theme.colorHeader
+
+                Row {
+                    anchors.fill: parent
+                    anchors.leftMargin: 24
+                    anchors.rightMargin: 24
+
+                    ItemMenuButton {
+                        id: itemMenuButton1
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        menuText: "menu1"
+                        source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
+
+                        onClicked: {
+                            itemMenuButton1.selected = true
+                            itemMenuButton2.selected = false
+                        }
+                    }
+
+                    ItemMenuButton {
+                        id: itemMenuButton2
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        menuText: "menu2"
+                        source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
+
+                        onClicked: {
+                            itemMenuButton1.selected = false
+                            itemMenuButton2.selected = true
+                        }
+                    }
+                }
+            }
+
+            ////
+
+            Row {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                spacing: 24
+
+                ItemLilMenu {
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: rowLilMenuImg.width
+                    height: 40
+
+                    Row {
+                        id: rowLilMenuImg
+                        height: parent.height
+
+                        ItemLilMenuButton {
+                            id: lilmenu11
+                            height: parent.height
+
+                            source: "qrc:/assets/icons_material/baseline-date_range-24px.svg"
+                            sourceSize: 18
+                            selected: true
+                            onClicked: {
+                                lilmenu11.selected = true
+                                lilmenu22.selected = false
+                                lilmenu33.selected = false
+                            }
+                        }
+                        ItemLilMenuButton {
+                            id: lilmenu22
+                            height: parent.height
+
+                            source: "qrc:/assets/icons_material/baseline-date_range-24px.svg"
+                            sourceSize: 22
+                            onClicked: {
+                                lilmenu11.selected = false
+                                lilmenu22.selected = true
+                                lilmenu33.selected = false
+                            }
+                        }
+                        ItemLilMenuButton {
+                            id: lilmenu33
+                            height: parent.height
+
+                            source: "qrc:/assets/icons_material/baseline-date_range-24px.svg"
+                            sourceSize: 26
+                            onClicked: {
+                                lilmenu11.selected = false
+                                lilmenu22.selected = false
+                                lilmenu33.selected = true
+                            }
+                        }
+                    }
+                }
+
+                ItemLilMenu {
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: rowLilMenuTxt.width
+
+                    Row {
+                        id: rowLilMenuTxt
+                        height: parent.height
+
+                        ItemLilMenuButton {
+                            id: lilmenu1
+
+                            text: "4/3"
+                            selected: true
+                            onClicked: {
+                                lilmenu1.selected = true
+                                lilmenu2.selected = false
+                                lilmenu3.selected = false
+                            }
+                        }
+                        ItemLilMenuButton {
+                            id: lilmenu2
+
+                            text: "16/9"
+                            onClicked: {
+                                lilmenu1.selected = false
+                                lilmenu2.selected = true
+                                lilmenu3.selected = false
+                            }
+                        }
+                        ItemLilMenuButton {
+                            id: lilmenu3
+
+                            text: "21/9"
+                            onClicked: {
+                                lilmenu1.selected = false
+                                lilmenu2.selected = false
+                                lilmenu3.selected = true
+                            }
+                        }
+                    }
+                }
+            }
+
+            ////
+
+            Row {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                spacing: 24
+                /*
+                SliderArrow {
+                    anchors.verticalCenter: parent.verticalCenter
+                    value: 0.75
+                    stepSize: 0.1
+                }*/
+                RangeSliderArrow {
+                    anchors.verticalCenter: parent.verticalCenter
+                    second.value: 0.75
+                    first.value: 0.25
+                    stepSize: 0.1
+                }
+            }
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+
+        Column {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 24
+            spacing: 24
+
+            Rectangle {
+                height: 1
+                color: Theme.colorSeparator
+                anchors.right: parent.right
+                anchors.left: parent.left
+            }
+
+            Column {
+                id: rectangleQtQuickThemed
+                anchors.left: parent.left
+                anchors.leftMargin: 24
+                anchors.right: parent.right
+                anchors.rightMargin: 24
+                spacing: 16
+
+                Row {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    spacing: 24
+
+                    ProgressBarThemed {
+                        anchors.verticalCenter: parent.verticalCenter
+                        value: 0.5
+                    }
+
+                    SliderThemed {
+                        anchors.verticalCenter: parent.verticalCenter
+                        value: 0.5
+                    }
+
+                    RangeSliderThemed {
+                        anchors.verticalCenter: parent.verticalCenter
+                        second.value: 0.75
+                        first.value: 0.25
+                    }
+
+                    CheckBoxThemed {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "Check Box"
+                    }
+
+                    RadioButtonThemed {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "RadioButton"
+                    }
+
+                    SwitchThemedMobile {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "Switch"
+                        checked: true
+                    }
+
+                    SwitchThemedDesktop {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "Switch"
+                        checked: true
+                    }
+                }
+
+                Row {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    spacing: 24
+
+                    TextFieldThemed {
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 256
+                    }
+
+                    ComboBoxThemed {
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 256
+
+                        model: ListModel {
+                            ListElement { text: "combobox item1"; }
+                            ListElement { text: "combobox item2"; }
+                        }
+                    }
+
+                    ButtonThemed {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "Button"
+                    }
+
+                    RoundButton {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "+"
+                    }
+
+                    SpinBoxThemed {
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                }
+            }
+
+            ////////////////////////
+
+            Rectangle {
+                height: 1
+                color: Theme.colorSeparator
+                anchors.left: parent.left
+                anchors.right: parent.right
+            }
+
+            ////////////////////////
+
+            Column {
+                id: rectangleQtQuick
+                anchors.left: parent.left
+                anchors.leftMargin: 24
+                anchors.right: parent.right
+                anchors.rightMargin: 24
+                spacing: 16
+
+                Row {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    spacing: 24
+
+                    ProgressBar {
+                        anchors.verticalCenter: parent.verticalCenter
+                        value: 0.5
+                    }
+
+                    Slider {
+                        anchors.verticalCenter: parent.verticalCenter
+                        value: 0.5
+                    }
+
+                    RangeSlider {
+                        anchors.verticalCenter: parent.verticalCenter
+                        first.value: 0.25
+                        second.value: 0.75
+                    }
+
+                    CheckBox {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "Check Box"
+                    }
+
+                    RadioButton {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "RadioButton"
+                    }
+
+                    Switch {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "Switch"
+                        checked: true
+                    }
+                }
+
+                Row {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    spacing: 24
+
+                    TextField {
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 256
+                        text: "Text Field"
+                    }
+
+                    ComboBox {
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 256
+
+                        model: ListModel {
+                            ListElement { text: "combobox item1"; }
+                            ListElement { text: "combobox item2"; }
+                        }
+                    }
+
+                    Button {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "Button"
+                    }
+
+                    RoundButton {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "+"
+                    }
+
+                    SpinBox {
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
                 }
             }
         }

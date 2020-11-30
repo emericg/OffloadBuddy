@@ -35,8 +35,8 @@ RangeSlider {
         width: 18
         height: width
         radius: (width / 2)
-        color: first.pressed ? Theme.colorPrimary : Theme.colorPrimary
-        border.color: Theme.colorPrimary
+        color: first.pressed ? Theme.colorSecondary : Theme.colorPrimary
+        border.color: first.pressed ? Theme.colorSecondary : Theme.colorPrimary
     }
 
     second.handle: Rectangle {
@@ -45,7 +45,7 @@ RangeSlider {
         width: 18
         height: width
         radius: (width / 2)
-        color: second.pressed ? Theme.colorPrimary : Theme.colorPrimary
-        border.color: Theme.colorPrimary
+        color: second.pressed ? Theme.colorSecondary : Theme.colorPrimary
+        border.color: first.pressed ? Theme.colorSecondary : Theme.colorPrimary
     }
 }

@@ -23,9 +23,8 @@ Item {
             button_gps_export.visible = false
             button_gps_export.enabled = false
 
-            rectangleCoordinates.visible = true
-            coordinates.text = shot.latitudeString + "    " + shot.longitudeString
-            altitude.text = UtilsString.altitudeToString(shot.altitude, 0, settingsManager.appUnits)
+            //coordinates.text = shot.latitudeString + "    " + shot.longitudeString
+            //altitude.text = UtilsString.altitudeToString(shot.altitude, 0, settingsManager.appUnits)
         }
     }
 
@@ -96,13 +95,14 @@ Item {
     Rectangle {
         id: rectangleCoordinates
         height: 32
-        color: Theme.colorForeground
-        anchors.right: parent.right
-        anchors.rightMargin: 16
-        anchors.left: parent.left
-        anchors.leftMargin: 16
         anchors.top: parent.top
         anchors.topMargin: 16
+        anchors.left: parent.left
+        anchors.leftMargin: 16
+        anchors.right: parent.right
+        anchors.rightMargin: 16
+
+        color: Theme.colorForeground
 
         Text {
             id: labelCoordinates
@@ -112,7 +112,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
 
             text: qsTr("GPS coordinates:")
-            font.pixelSize: 16
+            font.pixelSize: Theme.fontSizeContent
             font.bold: true
             color: Theme.colorText
             verticalAlignment: Text.AlignVCenter
@@ -121,13 +121,12 @@ Item {
         Text {
             id: labelAltitude
             height: parent.height
-            anchors.verticalCenterOffset: 0
             anchors.left: coordinates.right
-            anchors.verticalCenter: parent.verticalCenter
             anchors.leftMargin: 64
+            anchors.verticalCenter: parent.verticalCenter
 
             text: qsTr("Altitude:")
-            font.pixelSize: 16
+            font.pixelSize: Theme.fontSizeContent
             font.bold: true
             color: Theme.colorText
             verticalAlignment: Text.AlignVCenter
@@ -140,8 +139,8 @@ Item {
             anchors.leftMargin: 16
             anchors.verticalCenter: parent.verticalCenter
 
-            text: "text"
-            font.pixelSize: 16
+            text: shot.latitudeString + "    " + shot.longitudeString
+            font.pixelSize: Theme.fontSizeContent
             color: Theme.colorText
             verticalAlignment: Text.AlignVCenter
         }
@@ -153,8 +152,8 @@ Item {
             anchors.leftMargin: 16
             anchors.verticalCenter: parent.verticalCenter
 
-            text: "text"
-            font.pixelSize: 16
+            text: UtilsString.altitudeToString(shot.altitude, 0, settingsManager.appUnits)
+            font.pixelSize: Theme.fontSizeContent
             color: Theme.colorText
             verticalAlignment: Text.AlignVCenter
         }
@@ -162,7 +161,6 @@ Item {
         ButtonThemed {
             id: button_gps_export
             anchors.right: parent.right
-            anchors.rightMargin: 0
             anchors.verticalCenter: parent.verticalCenter
             text: qsTr("Export GPS trace")
         }

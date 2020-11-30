@@ -8,8 +8,7 @@ Popup {
     x: (appWindow.width / 2) - (width / 2) - (appSidebar.width / 2)
     y: (appWindow.height / 2) - (height / 2)
     width: 640
-    height: 160
-    padding: 24
+    padding: 0
 
     signal confirmed()
 
@@ -24,31 +23,62 @@ Popup {
         radius: Theme.componentRadius
     }
 
-    contentItem: Item {
-        //anchors.fill: parent
+    contentItem: Column {
+        spacing: 16
 
-        Text {
-            id: textArea
+        Rectangle {
+            id: titleArea
+            height: 64
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.top: parent.top
+            radius: Theme.componentRadius
+            color: ThemeEngine.colorPrimary
 
+            Rectangle {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                height: parent.radius
+                color: parent.color
+            }
+
+            Text {
+                anchors.left: parent.left
+                anchors.leftMargin: 24
+                anchors.verticalCenter: parent.verticalCenter
+
+                text: qsTr("Confirmation")
+                font.pixelSize: Theme.fontSizeTitle
+                font.bold: true
+                color: "white"
+            }
+        }
+
+        ////////////////
+
+        Text {
+            height: Theme.componentHeight
+            anchors.left: parent.left
+            anchors.leftMargin: 24
+            anchors.right: parent.right
+            anchors.rightMargin: 24
+
+            text: qsTr("A job is still running. Do you want to exit anyway?")
+            font.pixelSize: Theme.fontSizeContent
+            color: Theme.colorText
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignLeft
             wrapMode: Text.WordWrap
-            font.pixelSize: 20
-            color: Theme.colorText
-            text: qsTr("A job is still running. Do you want to exit anyway?")
         }
+
+        ////////////////
 
         Row {
             id: rowButtons
-            height: 40
-            spacing: 24
+            height: Theme.componentHeight*2 + parent.spacing
             anchors.right: parent.right
-            anchors.rightMargin: 0
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 0
+            anchors.rightMargin: 24
+            spacing: 24
 
             ButtonWireframe {
                 id: buttonCancel
@@ -56,10 +86,9 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Cancel")
-                primaryColor: Theme.colorPrimary
-                onClicked: {
-                    popupExit.close();
-                }
+                fullColor: true
+                primaryColor: Theme.colorGrey
+                onClicked: popupExit.close()
             }
             ButtonWireframeImage {
                 id: buttonExit
@@ -71,8 +100,8 @@ Popup {
                 fullColor: true
                 primaryColor: Theme.colorWarning
                 onClicked: {
-                    popupExit.confirmed();
-                    popupExit.close();
+                    popupExit.confirmed()
+                    popupExit.close()
                 }
             }
         }

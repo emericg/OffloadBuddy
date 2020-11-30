@@ -33,6 +33,8 @@ ApplicationWindow {
 
     // Desktop stuff ///////////////////////////////////////////////////////////
 
+    property bool clientSideDecoration: false
+
     minimumWidth: isHdpi ? 800 : 1280
     minimumHeight: isHdpi ? 540 : 720
 
@@ -54,8 +56,6 @@ ApplicationWindow {
     WindowGeometrySaver {
         windowInstance: appWindow
     }
-
-    property bool clientSideDecoration: false
 
     // Mobile stuff ////////////////////////////////////////////////////////////
 
@@ -108,14 +108,20 @@ ApplicationWindow {
     Rectangle {
         id: appBg
         anchors.fill: parent
+
         color: Theme.colorBackground
 
         Sidebar {
             id: appSidebar
+
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.bottom: parent.bottom
         }
 
         Item {
             id: appContent
+
             anchors.top: parent.top
             anchors.left: appSidebar.right
             anchors.right: parent.right
@@ -143,10 +149,10 @@ ApplicationWindow {
                 id: screenAbout
             }
 
-            ScreenComponents {
-                anchors.fill: parent
-                id: screenComponents
-            }
+            //ScreenComponents {
+            //    anchors.fill: parent
+            //    id: screenComponents
+            //}
 
             onStateChanged: {
                 screenLibrary.updateFocus()
@@ -162,7 +168,7 @@ ApplicationWindow {
                     PropertyChanges { target: screenJobs; visible: false; }
                     PropertyChanges { target: screenSettings; visible: false; }
                     PropertyChanges { target: screenAbout; visible: false; }
-                    PropertyChanges { target: screenComponents; visible: false; }
+                    //PropertyChanges { target: screenComponents; visible: false; }
                 },
                 State {
                     name: "device"
@@ -171,7 +177,7 @@ ApplicationWindow {
                     PropertyChanges { target: screenJobs; visible: false; }
                     PropertyChanges { target: screenSettings; visible: false; }
                     PropertyChanges { target: screenAbout; visible: false; }
-                    PropertyChanges { target: screenComponents; visible: false; }
+                    //PropertyChanges { target: screenComponents; visible: false; }
                 },
                 State {
                     name: "jobs"
@@ -180,7 +186,7 @@ ApplicationWindow {
                     PropertyChanges { target: screenJobs; visible: true; }
                     PropertyChanges { target: screenSettings; visible: false; }
                     PropertyChanges { target: screenAbout; visible: false; }
-                    PropertyChanges { target: screenComponents; visible: false; }
+                    //PropertyChanges { target: screenComponents; visible: false; }
                 },
                 State {
                     name: "settings"
@@ -189,7 +195,7 @@ ApplicationWindow {
                     PropertyChanges { target: screenJobs; visible: false; }
                     PropertyChanges { target: screenSettings; visible: true; }
                     PropertyChanges { target: screenAbout; visible: false; }
-                    PropertyChanges { target: screenComponents; visible: false; }
+                    //PropertyChanges { target: screenComponents; visible: false; }
                 },
                 State {
                     name: "about"
@@ -198,7 +204,7 @@ ApplicationWindow {
                     PropertyChanges { target: screenJobs; visible: false; }
                     PropertyChanges { target: screenSettings; visible: false; }
                     PropertyChanges { target: screenAbout; visible: true; }
-                    PropertyChanges { target: screenComponents; visible: false; }
+                    //PropertyChanges { target: screenComponents; visible: false; }
                 },
                 State {
                     name: "components"
@@ -207,7 +213,7 @@ ApplicationWindow {
                     PropertyChanges { target: screenJobs; visible: false; }
                     PropertyChanges { target: screenSettings; visible: false; }
                     PropertyChanges { target: screenAbout; visible: false; }
-                    PropertyChanges { target: screenComponents; visible: true; }
+                    //PropertyChanges { target: screenComponents; visible: true; }
                 }
             ]
         }

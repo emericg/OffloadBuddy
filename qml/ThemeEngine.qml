@@ -89,6 +89,8 @@ Item {
     readonly property string colorMaterialLightGrey: "#fafafa"
     readonly property string colorMaterialThisblue: "#448aff"
 
+    readonly property string colorGrey: "#888"
+
     ////////////////
 
     // Fonts (sizes in pixel) (WIP)
@@ -178,7 +180,7 @@ Item {
             colorText =             "white"
             colorSubText =          "#ddd"
             colorIcon =             "white"
-            colorSeparator =        "#E4E4E4"
+            colorSeparator =        "#666666"
             colorLowContrast =      "black"
             colorHighContrast =     "white"
 
@@ -209,7 +211,7 @@ Item {
             colorSidebarContent =   "white"
             colorSidebarHighlight = ""
 
-            colorActionbar =        "#fed859"
+            colorActionbar =        "#ffd54a"
             colorActionbarContent = "white"
             colorActionbarHighlight = "#FFC831"
 
@@ -224,7 +226,7 @@ Item {
             colorHighContrast =     "black"
 
             colorPrimary =          "#0079e3"
-            colorSecondary =        "#0092e3"
+            colorSecondary =        "#00a0e3"
             colorWarning =          "#FFC107"
             colorError =            "#FF5722"
 

@@ -42,7 +42,7 @@ CheckBox {
         leftPadding: control.indicator.width + control.spacing
         verticalAlignment: Text.AlignVCenter
 
-        color: control.down ? Theme.colorText : Theme.colorSubText
+        color: Theme.colorText
         opacity: enabled ? 1.0 : 0.33
     }
 }

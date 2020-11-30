@@ -9,14 +9,15 @@ import "qrc:/js/UtilsString.js" as UtilsString
 
 Rectangle {
     id: itemShot
-    width: 279
+    width: 280
     height: Math.round(width / cellFormat)
     color: Theme.colorForeground
 
     property var shot: pointer
     property var shotDevice: null
-
     property real cellFormat: 4/3
+    //property bool singleSelection: (mediaGridView.currentIndex === index)
+    //property bool multiSelection: (shot && shot.selected)
 
     Connections {
         target: shot
@@ -25,7 +26,7 @@ Rectangle {
 
     function handleState() {
         icon_state.visible = true
-        rectangleOverlay.visible = false
+        overlayWorkDone.visible = false
 
         if (shot.state === Shared.SHOT_STATE_QUEUED) {
             icon_state.source = "qrc:/assets/icons_material/baseline-schedule-24px.svg"
@@ -42,12 +43,12 @@ Rectangle {
                    shot.state === Shared.SHOT_STATE_ENCODED) {
             icon_state.visible = false
             image_overlay.source = "qrc:/assets/icons_material/baseline-check_circle_outline-24px.svg"
-            rectangleOverlay.visible = true
+            overlayWorkDone.visible = true
             offloadAnimation.stop()
             encodeAnimation.stop()
         } else {
             icon_state.visible = false
-            rectangleOverlay.visible = false
+            overlayWorkDone.visible = false
             offloadAnimation.stop()
             encodeAnimation.stop()
         }
@@ -187,8 +188,8 @@ Rectangle {
 
     ImageSvg {
         id: imageLoading
-        width: 64
-        height: 64
+        width: itemShot.width > 320 ? 72 : 40
+        height: width
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
 
@@ -209,7 +210,7 @@ Rectangle {
 
         //visible: (imageFs.progress === 1.0)
         opacity: (imageFs.progress === 1.0) ? 1 : 0
-        Behavior on opacity { NumberAnimation { duration: 333 } }
+        Behavior on opacity { NumberAnimation { duration: 250 } }
 
         // extra filtering?
         smooth: (settingsManager.thumbQuality === 2)
@@ -296,6 +297,7 @@ Rectangle {
             anchors.top: parent.top
             anchors.topMargin: 8
 
+            visible: mouseAreaItem.isHovered
             color: "white"
             clip: true
             text: name
@@ -342,15 +344,16 @@ Rectangle {
     }
 
     Rectangle {
-        id: rectangleSelection
+        id: overlaySelection
         anchors.fill: parent
 
         visible: shot.selected
         color: Theme.colorPrimary
         opacity: 0.33
     }
+
     Rectangle {
-        id: rectangleOverlay
+        id: overlayWorkDone
         anchors.fill: parent
 
         color: "#80ffffff"
@@ -374,8 +377,10 @@ Rectangle {
         anchors.fill: parent
 
         hoverEnabled: true
-        propagateComposedEvents: true
+        propagateComposedEvents: false
         acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
+
+        property bool isHovered: false
 
         ////////
 
@@ -400,8 +405,8 @@ Rectangle {
             }
         }
         onEntered: {
+            isHovered = true
             shotsView.focus = true
-            text_top.visible = true
 
             if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== Shared.STORAGE_MTP)) {
                 if (shot.fileType === Shared.FILE_VIDEO) {
@@ -410,7 +415,7 @@ Rectangle {
             }
         }
         onExited: {
-            text_top.visible = false
+            isHovered = false
 
             if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== Shared.STORAGE_MTP)) {
                 if (shot.fileType === Shared.FILE_VIDEO) {
@@ -467,7 +472,10 @@ Rectangle {
         }
         onDoubleClicked: {
             //console.log("ItemShot::onDoubleClicked")
-            openShot(mouse)
+
+            if (mouse.button === Qt.LeftButton) {
+                openShot(mouse)
+            }
         }
         onPressAndHold: {
             //console.log("ItemShot::onPressAndHold")

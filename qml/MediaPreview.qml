@@ -7,16 +7,16 @@ import com.offloadbuddy.shared 1.0
 import "qrc:/js/UtilsNumber.js" as UtilsNumber
 import "qrc:/js/UtilsString.js" as UtilsString
 
-Rectangle {
+Item {
     id: mediaArea
     anchors.top: parent.top
-    anchors.bottom: parent.bottom
     anchors.left: parent.left
     anchors.right: infosGeneric.left
+    anchors.bottom: parent.bottom
     anchors.margins: 16
 
     property bool isFullScreen: false
-    color: (isFullScreen || (shot && shot.fileType === Shared.FILE_PICTURE)) ? "transparent" : "black"
+    //color: (isFullScreen || (shot && shot.fileType === Shared.FILE_PICTURE)) ? "transparent" : "black"
     clip: true
 
     ////////

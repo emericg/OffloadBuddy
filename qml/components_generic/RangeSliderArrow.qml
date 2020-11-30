@@ -41,8 +41,8 @@ RangeSlider {
         width: 14
         height: 10
 
-        color: first.pressed ? Theme.colorPrimary : Theme.colorPrimary
-        border.color: Theme.colorPrimary
+        color: first.pressed ? Theme.colorSecondary : Theme.colorPrimary
+        border.color: first.pressed ? Theme.colorSecondary : Theme.colorPrimary
 
         Rectangle {
             width: 10
@@ -51,8 +51,8 @@ RangeSlider {
             anchors.verticalCenter: parent.bottom
 
             rotation: 45
-            color: control.pressed ? Theme.colorPrimary : Theme.colorPrimary
-            border.color: Theme.colorPrimary
+            color: parent.color
+            border.color: parent.border.color
         }
     }
 
@@ -62,8 +62,8 @@ RangeSlider {
         width: 14
         height: 10
 
-        color: second.pressed ? Theme.colorPrimary : Theme.colorPrimary
-        border.color: Theme.colorPrimary
+        color: second.pressed ? Theme.colorSecondary : Theme.colorPrimary
+        border.color: second.pressed ? Theme.colorSecondary : Theme.colorPrimary
 
         Rectangle {
             width: 10
@@ -72,8 +72,8 @@ RangeSlider {
             anchors.verticalCenter: parent.bottom
 
             rotation: 45
-            color: control.pressed ? Theme.colorPrimary : Theme.colorPrimary
-            border.color: Theme.colorPrimary
+            color: parent.color
+            border.color: parent.border.color
         }
     }
 }

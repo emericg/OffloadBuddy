@@ -19,11 +19,9 @@ Item {
     Connections {
         target: directory
         onAvailableChanged: {
-            deviceSpaceText.text = UtilsString.bytesToString_short(directory.spaceUsed) + " " + qsTr("used") + " / " +
-                                   UtilsString.bytesToString_short(directory.spaceAvailable) + " " + qsTr("available") + " / " +
-                                   UtilsString.bytesToString_short(directory.spaceTotal) + " " + qsTr("total")
+            //console.log("onAvailableChanged: " + directory.directoryPath)
 
-            progressBar.value = directory.storageLevel
+            //
         }
     }
 
@@ -32,7 +30,6 @@ Item {
     TextFieldThemed {
         id: textField_path
         width: (itemMediaDirectory.width < 720) ? 512 : 640
-        height: 40
         anchors.left: parent.left
         anchors.leftMargin: 4
         anchors.verticalCenter: parent.verticalCenter
@@ -47,44 +44,60 @@ Item {
             focus = false
         }
 
-        ImageSvg {
-            width: 24
-            height: 24
+        Row {
             anchors.right: button_change.left
             anchors.rightMargin: 8
             anchors.verticalCenter: parent.verticalCenter
+            spacing: 0
 
-            visible: !directory.available
-            source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
-            color: Theme.colorWarning
-        }
+            ItemImageButton {
+                id: button_open
+                width: 32
+                height: 32
+                anchors.verticalCenter: parent.verticalCenter
 
-        ItemImageButton {
-            id: button_refresh
-            width: 32
-            height: 32
-            anchors.right: button_change.left
-            anchors.rightMargin: 4
-            anchors.verticalCenter: parent.verticalCenter
-
-            highlightMode: "color"
-            visible: directory.available
-            enabled: directory.available
-            source: "qrc:/assets/icons_material/baseline-refresh-24px.svg"
-            onClicked: {
-                mediaLibrary.searchMediaDirectory(directory.directoryPath)
-                refreshAnimation.start()
+                highlightMode: "color"
+                visible: directory.available
+                source: "qrc:/assets/icons_material/outline-folder-24px.svg"
+                onClicked: {
+                    utilsApp.openWith(directory.directoryPath)
+                }
             }
 
-            NumberAnimation on rotation {
-                id: refreshAnimation
-                duration: 1000
-                from: 0
-                to: 360
-                //running: directory.scanning
-                //loops: Animation.Infinite
-                alwaysRunToEnd: true
-                easing.type: Easing.Linear
+            ItemImageButton {
+                id: button_refresh
+                width: 32
+                height: 32
+                anchors.verticalCenter: parent.verticalCenter
+
+                highlightMode: "color"
+                visible: directory.available
+                source: "qrc:/assets/icons_material/baseline-refresh-24px.svg"
+                onClicked: {
+                    mediaLibrary.searchMediaDirectory(directory.directoryPath)
+                    refreshAnimation.start()
+                }
+
+                NumberAnimation on rotation {
+                    id: refreshAnimation
+                    duration: 1000
+                    from: 0
+                    to: 360
+                    //running: directory.scanning
+                    //loops: Animation.Infinite
+                    alwaysRunToEnd: true
+                    easing.type: Easing.Linear
+                }
+            }
+
+            ImageSvg {
+                width: 24
+                height: 24
+                anchors.verticalCenter: parent.verticalCenter
+
+                visible: !directory.available
+                source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
+                color: Theme.colorWarning
             }
         }
 
@@ -122,12 +135,11 @@ Item {
     ComboBoxThemed {
         id: comboBox_content
         width: 180
-        height: 40
         anchors.left: textField_path.right
         anchors.leftMargin: 16
         anchors.verticalCenter: parent.verticalCenter
 
-        font.pixelSize: 14
+        font.pixelSize: Theme.fontSizeContentSmall
 
         model: ListModel {
             id: cbItemsContent
@@ -209,7 +221,7 @@ Item {
                 text: qsTr("Directory is not available right now :/")
                 color: Theme.colorWarning
                 font.bold: true
-                font.pixelSize: 18
+                font.pixelSize: Theme.fontSizeContent
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
             }
@@ -234,24 +246,16 @@ Item {
     Row {
         id: rowConfirmation
         anchors.left: comboBox_content.right
-        anchors.leftMargin: 16
+        anchors.leftMargin: 12
         anchors.right: parent.right
-        anchors.rightMargin: 16
+        anchors.rightMargin: 12
         anchors.verticalCenter: parent.verticalCenter
 
-        spacing: 16
+        spacing: 12
         layoutDirection: Qt.RightToLeft
         visible: (itemMediaDirectory.confirmation)
         clip: true
 
-        ButtonWireframe {
-            height: 32
-            anchors.verticalCenter: parent.verticalCenter
-            text: qsTr("YES")
-            fullColor: true
-            primaryColor: Theme.colorPrimary
-            onClicked: settingsManager.removeDirectory(textField_path.text)
-        }
         ButtonWireframe {
             height: 32
             anchors.verticalCenter: parent.verticalCenter
@@ -260,6 +264,14 @@ Item {
             primaryColor: Theme.colorSubText
             onClicked: itemMediaDirectory.confirmation = false
         }
+        ButtonWireframe {
+            height: 32
+            anchors.verticalCenter: parent.verticalCenter
+            text: qsTr("YES")
+            fullColor: true
+            primaryColor: Theme.colorPrimary
+            onClicked: settingsManager.removeDirectory(textField_path.text)
+        }
         Text {
             id: textConfirmation
             height: 48
@@ -267,7 +279,7 @@ Item {
 
             text: qsTr("Are you sure?")
             font.bold: true
-            font.pixelSize: 18
+            font.pixelSize: Theme.fontSizeContent
             color: Theme.colorSubText
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter

@@ -1,6 +1,5 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
-import QtGraphicalEffects 1.12
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsDevice.js" as UtilsDevice
@@ -109,7 +108,6 @@ Item {
         source: itemSidebarButton.source
         color: Theme.colorSidebarContent
 
-
         NumberAnimation on opacity {
             id: image_fadein
             from: 0
@@ -127,27 +125,29 @@ Item {
         }
 
         Item {
-            width: 32; height: 32;
+            width: 24; height: 24;
             anchors.right: parent.right
+            anchors.rightMargin: -4
             anchors.bottom: parent.bottom
             visible: animated
 
             Rectangle {
-                width: 32; height: 32; radius: 16;
-                color: "black"
+                width: 24; height: 24; radius: 12;
+                opacity: 0.66
+                color: Theme.colorHighContrast
             }
 
             ImageSvg {
-                width: 24; height: 24;
+                width: 20; height: 20;
                 anchors.centerIn: parent
                 source: "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
-                color: "white"
+                color: Theme.colorLowContrast
 
                 NumberAnimation on rotation {
                     running: itemSidebarButton.animated
                     loops: Animation.Infinite
                     alwaysRunToEnd: true
-                    duration: 1000;
+                    duration: 1000
                     from: 0
                     to: 360
                 }
@@ -162,7 +162,7 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
 
         text: title
-        font.pixelSize: 12
+        font.pixelSize: 11
         font.bold: true
         color: Theme.colorSidebarContent
         verticalAlignment: Text.AlignVCenter

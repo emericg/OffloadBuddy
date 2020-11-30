@@ -9,6 +9,7 @@ Item {
     id: mediaGrid
     width: 1280
     height: 720
+    anchors.fill: parent
 
     property var selectedItem: shotsView.currentItem
     property int selectedItemIndex: shotsView.currentIndex
@@ -121,13 +122,15 @@ Item {
     Rectangle {
         id: rectangleHeader
         height: 128
-        z: 1
-        color: Theme.colorHeader
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
 
-        MouseArea { anchors.fill: parent } // prevent clicks into this area
+        z: 1
+        color: Theme.colorHeader
+
+        // prevent clicks below this area
+        MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
 
         Text {
             id: textHeader
@@ -175,7 +178,6 @@ Item {
 
         ComboBoxThemed {
             id: comboBox_directories
-            height: 40
             anchors.left: parent.left
             anchors.leftMargin: 16
             anchors.bottom: parent.bottom
@@ -231,18 +233,15 @@ Item {
 
         Row {
             id: rowFilter
-            height: 40
-            spacing: 16
             anchors.left: parent.left
             anchors.leftMargin: 16
             anchors.top: parent.top
             anchors.topMargin: 16
+            spacing: 16
 
             ComboBoxThemed {
                 id: comboBox_orderby
                 width: 220
-                height: 40
-                anchors.verticalCenter: parent.verticalCenter
                 displayText: qsTr("Order by: Date")
 
                 model: ListModel {
@@ -280,8 +279,7 @@ Item {
             ComboBoxThemed {
                 id: comboBox_filterby
                 width: 240
-                height: 40
-                anchors.verticalCenter: parent.verticalCenter
+
                 displayText: qsTr("No filter")
 
                 model: ListModel {
@@ -312,97 +310,89 @@ Item {
             }
         }
 
-        Rectangle {
-            anchors.fill: rowLilMenuFormat
-            color: Theme.colorComponent
-            radius: Theme.componentRadius
-        }
         Row {
-            id: rowLilMenuFormat
-            height: 36
             anchors.left: rowFilter.right
             anchors.leftMargin: 16
             anchors.verticalCenter: rowFilter.verticalCenter
+            spacing: 12
 
-            ItemLilMenuButton {
-                height: parent.height
-                text: "1:1"
-                selected: (shotsView.cellFormat === 1.0)
-                onClicked: {
-                    shotsView.cellFormat = 1.0
-                    shotsView.computeCellSize()
-                }
-            }
-            ItemLilMenuButton {
-                height: parent.height
-                text: "4:3"
-                selected: (shotsView.cellFormat === 4/3)
-                onClicked:  {
-                    shotsView.cellFormat = 4/3
-                    shotsView.computeCellSize()
-                }
-            }
-            ItemLilMenuButton {
-                height: parent.height
-                text: "16:9"
-                selected: (shotsView.cellFormat === 16/9)
-                onClicked:  {
-                    shotsView.cellFormat = 16/9
-                    shotsView.computeCellSize()
-                }
-            }
-        }
+            ItemLilMenu {
+                width: rowLilMenuFormat.width
 
-        Rectangle {
-            anchors.fill: rowLilMenuZoom
-            color: Theme.colorComponent
-            radius: Theme.componentRadius
-        }
-        Row {
-            id: rowLilMenuZoom
-            height: 36
-            anchors.left: rowLilMenuFormat.right
-            anchors.leftMargin: 16
-            anchors.verticalCenter: rowLilMenuFormat.verticalCenter
+                Row {
+                    id: rowLilMenuFormat
+                    height: parent.height
 
-            ItemLilMenuButton {
-                height: parent.height
-                source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
-                sourceSize: 18
-                selected: (shotsView.cellSizeTarget === 221)
-                onClicked: {
-                    shotsView.cellSizeTarget = 221;
-                    shotsView.computeCellSize();
+                    ItemLilMenuButton {
+                        text: "1:1"
+                        selected: (shotsView.cellFormat === 1.0)
+                        onClicked: {
+                            shotsView.cellFormat = 1.0
+                            shotsView.computeCellSize()
+                        }
+                    }
+                    ItemLilMenuButton {
+                        text: "4:3"
+                        selected: (shotsView.cellFormat === 4/3)
+                        onClicked: {
+                            shotsView.cellFormat = 4/3
+                            shotsView.computeCellSize()
+                        }
+                    }
+                    ItemLilMenuButton {
+                        text: "16:9"
+                        selected: (shotsView.cellFormat === 16/9)
+                        onClicked: {
+                            shotsView.cellFormat = 16/9
+                            shotsView.computeCellSize()
+                        }
+                    }
                 }
             }
-            ItemLilMenuButton {
-                height: parent.height
-                source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
-                sourceSize: 22
-                selected: (shotsView.cellSizeTarget === 279)
-                onClicked: {
-                    shotsView.cellSizeTarget = 279;
-                    shotsView.computeCellSize();
-                }
-            }
-            ItemLilMenuButton {
-                height: parent.height
-                source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
-                sourceSize: 26
-                selected: (shotsView.cellSizeTarget === 376)
-                onClicked: {
-                    shotsView.cellSizeTarget = 376;
-                    shotsView.computeCellSize();
-                }
-            }
-            ItemLilMenuButton {
-                height: parent.height
-                source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
-                sourceSize: 30
-                selected: (shotsView.cellSizeTarget === 512)
-                onClicked: {
-                    shotsView.cellSizeTarget = 512;
-                    shotsView.computeCellSize();
+
+            ItemLilMenu {
+                width: rowLilMenuZoom.width
+
+                Row {
+                    id: rowLilMenuZoom
+                    height: parent.height
+
+                    ItemLilMenuButton {
+                        source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
+                        sourceSize: 18
+                        selected: (shotsView.cellSizeTarget === 221)
+                        onClicked: {
+                            shotsView.cellSizeTarget = 221;
+                            shotsView.computeCellSize();
+                        }
+                    }
+                    ItemLilMenuButton {
+                        source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
+                        sourceSize: 22
+                        selected: (shotsView.cellSizeTarget === 279)
+                        onClicked: {
+                            shotsView.cellSizeTarget = 279;
+                            shotsView.computeCellSize();
+                        }
+                    }
+                    ItemLilMenuButton {
+                        source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
+                        sourceSize: 26
+                        selected: (shotsView.cellSizeTarget === 376)
+                        onClicked: {
+                            shotsView.cellSizeTarget = 376;
+                            shotsView.computeCellSize();
+                        }
+                    }
+                    ItemLilMenuButton {
+                        source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
+                        sourceSize: 30
+                        selected: (shotsView.cellSizeTarget === 512)
+                        onClicked: {
+                            shotsView.cellSizeTarget = 512;
+                            shotsView.computeCellSize();
+                        }
+                    }
                 }
             }
         }
@@ -412,13 +402,10 @@ Item {
 
     Column {
         id: menusArea
-        z: 1
         anchors.top: rectangleHeader.bottom
-        anchors.topMargin: 0
         anchors.left: parent.left
-        anchors.leftMargin: 0
         anchors.right: parent.right
-        anchors.rightMargin: 0
+        z: 1
 
         ItemBannerActions {
             id: bannerSelection
@@ -436,57 +423,45 @@ Item {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
 
-        ////////////////////////
+        ////////
 
         Rectangle {
             id: circleEmpty
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: 350
-            height: width
-            radius: width
+            width: 350; height: 350; radius: 350;
+            anchors.centerIn: parent
+            visible: (shotsView.count <= 0)
             color: Theme.colorHeader
-            visible: shotsView.count <= 0
 
-            ImageSvg {
+            Image {
                 id: imageEmpty
                 width: 256
                 height: 256
+                sourceSize.width: width
+                sourceSize.height: height
                 anchors.centerIn: parent
                 source: "qrc:/devices/disk.svg"
             }
         }
 
-        ////////////////////////
+        ////////
 
         Component {
-            id: highlight
+            id: itemHighlight
+
             Rectangle {
-                width: shotsView.cellSize;
+                width: shotsView.cellSize
                 height: shotsView.cellSize
+                x: 0; y: 0; z: 2;
+
                 visible: !mediaGrid.selectionMode
                 color: "transparent"
-                border.width : 4
+                radius: 2
+                border.width: 4
                 border.color: Theme.colorPrimary
-                x: {
-                    if (shotsView.currentItem.x) {
-                        x = shotsView.currentItem.x
-                    } else {
-                        x = 0
-                    }
-                }
-                y: {
-                    if (shotsView.currentItem.y) {
-                        y = shotsView.currentItem.y
-                    } else {
-                        y = 0
-                    }
-                }
-                z: 6
             }
         }
 
-        ////////////////////////
+        ////////
 
         ActionMenu {
             id: actionMenu
@@ -514,15 +489,16 @@ Item {
             actionMenu.visible = false
         }
 
-        ////////////////////////
+        // GridView ////////////////////////////////////////////////////////////
 
         GridView {
             id: shotsView
             anchors.fill: parent
+
             topMargin: 16
             leftMargin: 16
-            rightMargin: 0
-            bottomMargin: 0
+            rightMargin: 4
+            bottomMargin: 4
 
             //clip: true
             //snapMode: GridView.SnapToRow
@@ -538,8 +514,6 @@ Item {
                 shotsView.currentIndex = -1
                 actionMenu.visible = false
             }
-
-            ////////
 
             Connections {
                 target: settingsManager
@@ -566,6 +540,8 @@ Item {
                     shotsView.computeCellSize()
                 }
             }
+
+            ////////
 
             property real cellFormat: {
                 if (settingsManager.thumbFormat === 1)
@@ -610,6 +586,9 @@ Item {
 
             ScrollBar.vertical: ScrollBar { z: 1 }
 
+            highlight: itemHighlight
+            highlightMoveDuration: 0
+
             flickableChildren: MouseArea {
                 id: mouseAreaInsideView
                 anchors.fill: parent
@@ -622,10 +601,6 @@ Item {
                     actionMenu.visible = false
                 }
             }
-
-            highlight: highlight
-            highlightFollowsCurrentItem: true
-            highlightMoveDuration: 0
 
             Keys.onPressed: {
                 if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
@@ -654,6 +629,8 @@ Item {
                 }
             }
         }
+
+        ////////
 
         MouseArea {
             id: mouseAreaOutsideView

@@ -39,12 +39,13 @@
         <file alias="ItemCodec.qml">components_generic/ItemCodec.qml</file>
         <file alias="ItemImageButton.qml">components_generic/ItemImageButton.qml</file>
         <file alias="ItemMenuButton.qml">components_generic/ItemMenuButton.qml</file>
+        <file alias="ItemLilMenu.qml">components_generic/ItemLilMenu.qml</file>
         <file alias="ItemLilMenuButton.qml">components_generic/ItemLilMenuButton.qml</file>
         <file alias="ButtonImage.qml">components_generic/ButtonImage.qml</file>
         <file alias="ButtonImageThemed.qml">components_generic/ButtonImageThemed.qml</file>
         <file alias="ButtonWireframe.qml">components_generic/ButtonWireframe.qml</file>
         <file alias="ButtonWireframeImage.qml">components_generic/ButtonWireframeImage.qml</file>
-        <file alias="RangeSliderValue.qml">components_generic/RangeSliderValue.qml</file>
+        <file alias="RangeSliderArrow.qml">components_generic/RangeSliderArrow.qml</file>
         <file alias="WindowGeometrySaver.qml">components_generic/WindowGeometrySaver.qml</file>
 
         <file alias="ButtonThemed.qml">components_themed/ButtonThemed.qml</file>

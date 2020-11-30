@@ -54,8 +54,8 @@ Item {
         anchors.bottomMargin: 0
 
         Column {
-            anchors.topMargin: 32
-            anchors.leftMargin: 32
+            anchors.topMargin: 24
+            anchors.leftMargin: 24
             anchors.rightMargin: 24
             anchors.fill: parent
             spacing: 8
@@ -63,15 +63,15 @@ Item {
             ////////
 
             Row {
-                height: 48
-                spacing: 32
+                height: 40
+                spacing: 24
 
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Application theme")
                     font.bold: true
-                    font.pixelSize: 16
+                    font.pixelSize: Theme.fontSizeComponent
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignLeft
                     color: Theme.colorText
@@ -80,7 +80,6 @@ Item {
                 ComboBoxThemed {
                     id: comboBoxAppTheme
                     width: 256
-                    height: 40
                     anchors.verticalCenter: parent.verticalCenter
 
                     model: ListModel {
@@ -117,10 +116,8 @@ Item {
 
                     text: qsTr("Unit system")
                     font.bold: true
-                    font.pixelSize: 16
+                    font.pixelSize: Theme.fontSizeComponent
                     color: Theme.colorText
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignLeft
                 }
 
                 RadioButtonThemed {
@@ -128,7 +125,6 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Metric")
-                    font.pixelSize: 16
 
                     Component.onCompleted: { checked =  (settingsManager.appUnits === 0); }
                     onCheckedChanged: { if (checked === true) { settingsManager.appUnits = 0 }; }
@@ -139,7 +135,6 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Imperial")
-                    font.pixelSize: 16
 
                     Component.onCompleted: { checked =  (settingsManager.appUnits === 1); }
                     onCheckedChanged: { if (checked === true) { settingsManager.appUnits = 1 }; }
@@ -155,12 +150,12 @@ Item {
                 verticalAlignment: Text.AlignVCenter
                 color: Theme.colorText
                 font.bold: true
-                font.pixelSize: 16
+                font.pixelSize: Theme.fontSizeComponent
             }
 
-            Item {
-                width: 1
+            Row {
                 height: 40
+                spacing: 32
 
                 Text {
                     id: titleQuality
@@ -168,49 +163,42 @@ Item {
 
                     text: qsTr("Quality")
                     font.pixelSize: Theme.fontSizeComponent
-                    color: Theme.colorSubText
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignLeft
+                    color: Theme.colorText
                 }
 
-                Rectangle {
-                    anchors.fill: rowLilMenuQuality
-                    color: Theme.colorComponent
-                    radius: Theme.componentRadius
-                }
-                Row {
-                    id: rowLilMenuQuality
+                ItemLilMenu {
+                    width: rowLilMenuQuality.width
                     height: 32
-                    anchors.left: titleQuality.right
-                    anchors.leftMargin: 32
                     anchors.verticalCenter: parent.verticalCenter
 
-                    ItemLilMenuButton {
+                    Row {
+                        id: rowLilMenuQuality
                         height: parent.height
-                        text: qsTr("Low")
-                        selected: (settingsManager.thumbQuality === 0)
-                        onClicked: settingsManager.thumbQuality = 0
-                    }
-                    ItemLilMenuButton {
-                        height: parent.height
-                        text: qsTr("Balanced")
-                        selected: (settingsManager.thumbQuality === 1)
-                        onClicked: settingsManager.thumbQuality = 1
-                    }
-                    ItemLilMenuButton {
-                        height: parent.height
-                        text: qsTr("High")
-                        selected: (settingsManager.thumbQuality === 2)
-                        onClicked: settingsManager.thumbQuality = 2
+
+                        ItemLilMenuButton {
+                            text: qsTr("Low")
+                            selected: (settingsManager.thumbQuality === 0)
+                            onClicked: settingsManager.thumbQuality = 0
+                        }
+                        ItemLilMenuButton {
+                            text: qsTr("Balanced")
+                            selected: (settingsManager.thumbQuality === 1)
+                            onClicked: settingsManager.thumbQuality = 1
+                        }
+                        ItemLilMenuButton {
+                            text: qsTr("High")
+                            selected: (settingsManager.thumbQuality === 2)
+                            onClicked: settingsManager.thumbQuality = 2
+                        }
                     }
                 }
             }
 
             ////////
 
-            Item {
-                width: 1
+            Row {
                 height: 40
+                spacing: 32
 
                 Text {
                     id: titleAR
@@ -218,91 +206,74 @@ Item {
 
                     text: qsTr("Aspect ratio")
                     font.pixelSize: Theme.fontSizeComponent
-                    color: Theme.colorSubText
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignLeft
+                    color: Theme.colorText
                 }
 
-                Rectangle {
-                    anchors.fill: rowLilMenuAR
-                    color: Theme.colorComponent
-                    radius: Theme.componentRadius
-                }
-                Row {
-                    id: rowLilMenuAR
-                    height: 32
-                    anchors.left: titleAR.right
-                    anchors.leftMargin: 32
+                ItemLilMenu {
                     anchors.verticalCenter: parent.verticalCenter
+                    width: rowLilMenuAR.width
+                    height: 32
 
-                    ItemLilMenuButton {
+                    Row {
+                        id: rowLilMenuAR
                         height: parent.height
-                        text: "1:1"
-                        selected: (settingsManager.thumbFormat === 1)
-                        onClicked: settingsManager.thumbFormat = 1
-                    }
-                    ItemLilMenuButton {
-                        height: parent.height
-                        text: "4:3"
-                        selected: (settingsManager.thumbFormat === 2)
-                        onClicked: settingsManager.thumbFormat = 2
-                    }
-                    ItemLilMenuButton {
-                        height: parent.height
-                        text: "16:9"
-                        selected: (settingsManager.thumbFormat === 3)
-                        onClicked: settingsManager.thumbFormat = 3
+
+                        ItemLilMenuButton {
+                            text: "1:1"
+                            selected: (settingsManager.thumbFormat === 1)
+                            onClicked: settingsManager.thumbFormat = 1
+                        }
+                        ItemLilMenuButton {
+                            text: "4:3"
+                            selected: (settingsManager.thumbFormat === 2)
+                            onClicked: settingsManager.thumbFormat = 2
+                        }
+                        ItemLilMenuButton {
+                            text: "16:9"
+                            selected: (settingsManager.thumbFormat === 3)
+                            onClicked: settingsManager.thumbFormat = 3
+                        }
                     }
                 }
 
                 Text {
                     id: titleSize
-                    anchors.left: rowLilMenuAR.right
-                    anchors.leftMargin: 64
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Default size")
                     font.pixelSize: Theme.fontSizeComponent
-                    color: Theme.colorSubText
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignLeft
+                    color: Theme.colorText
                 }
 
-                Rectangle {
-                    anchors.fill: rowLilMenuSize
-                    color: Theme.colorComponent
-                    radius: Theme.componentRadius
-                }
-                Row {
-                    id: rowLilMenuSize
-                    height: 32
-                    anchors.left: titleSize.right
-                    anchors.leftMargin: 32
+                ItemLilMenu {
                     anchors.verticalCenter: parent.verticalCenter
+                    width: rowLilMenuSize.width
+                    height: 32
 
-                    ItemLilMenuButton {
+                    Row {
+                        id: rowLilMenuSize
                         height: parent.height
-                        text: qsTr("Small")
-                        selected: (settingsManager.thumbSize === 1)
-                        onClicked: settingsManager.thumbSize = 1
-                    }
-                    ItemLilMenuButton {
-                        height: parent.height
-                        text: qsTr("Medium")
-                        selected: (settingsManager.thumbSize === 2)
-                        onClicked: settingsManager.thumbSize = 2
-                    }
-                    ItemLilMenuButton {
-                        height: parent.height
-                        text: qsTr("Big")
-                        selected: (settingsManager.thumbSize === 3)
-                        onClicked: settingsManager.thumbSize = 3
-                    }
-                    ItemLilMenuButton {
-                        height: parent.height
-                        text: qsTr("Huge")
-                        selected: (settingsManager.thumbSize === 4)
-                        onClicked: settingsManager.thumbSize = 4
+
+                        ItemLilMenuButton {
+                            text: qsTr("Small")
+                            selected: (settingsManager.thumbSize === 1)
+                            onClicked: settingsManager.thumbSize = 1
+                        }
+                        ItemLilMenuButton {
+                            text: qsTr("Medium")
+                            selected: (settingsManager.thumbSize === 2)
+                            onClicked: settingsManager.thumbSize = 2
+                        }
+                        ItemLilMenuButton {
+                            text: qsTr("Big")
+                            selected: (settingsManager.thumbSize === 3)
+                            onClicked: settingsManager.thumbSize = 3
+                        }
+                        ItemLilMenuButton {
+                            text: qsTr("Huge")
+                            selected: (settingsManager.thumbSize === 4)
+                            onClicked: settingsManager.thumbSize = 4
+                        }
                     }
                 }
             }
@@ -316,7 +287,7 @@ Item {
                 verticalAlignment: Text.AlignVCenter
                 color: Theme.colorText
                 font.bold: true
-                font.pixelSize: 16
+                font.pixelSize: Theme.fontSizeComponent
             }
 
             Row {
@@ -326,12 +297,9 @@ Item {
                 CheckBoxThemed {
                     id: checkIgnoreJunk
                     width: 350
-                    height: 40
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Ignore LRVs and THM files")
-                    font.bold: false
-                    font.pixelSize: 16
 
                     checked: settingsManager.ignorejunk
                     onCheckStateChanged: settingsManager.ignorejunk = checked
@@ -340,12 +308,9 @@ Item {
                 CheckBoxThemed {
                     id: checkIgnoreAudio
                     width: 350
-                    height: 40
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Ignore HD audio files")
-                    font.bold: false
-                    font.pixelSize: 16
 
                     checked: settingsManager.ignorehdaudio
                     onCheckStateChanged: settingsManager.ignorehdaudio = checked
@@ -359,12 +324,9 @@ Item {
                 CheckBoxThemed {
                     id: checkAutoDelete
                     width: 350
-                    height: 40
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Automatically delete offloaded media")
-                    font.bold: false
-                    font.pixelSize: 16
 
                     checked: settingsManager.autodelete
                     onCheckStateChanged: settingsManager.autodelete = checked
@@ -373,12 +335,9 @@ Item {
                 CheckBoxThemed {
                     id: checkAutoMerge
                     width: 350
-                    height: 40
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Automatically merge video chapters")
-                    font.bold: false
-                    font.pixelSize: 16
                     enabled: false
 
                     checked: settingsManager.automerge
@@ -388,11 +347,9 @@ Item {
                 CheckBoxThemed {
                     id: checkAutoMetadata
                     width: 350
-                    height: 40
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Automatically extract telemetry")
-                    font.pixelSize: 16
                     enabled: false
 
                     checked: settingsManager.autometadata
@@ -412,16 +369,13 @@ Item {
 
                     text: qsTr("Media hierarchy")
 
-                    verticalAlignment: Text.AlignVCenter
-                    font.bold: true
-                    font.pixelSize: 16
+                    font.pixelSize: Theme.fontSizeComponent
                     color: Theme.colorText
                 }
 
                 ComboBoxThemed {
                     id: comboBoxContentHierarchy
                     width: 256
-                    height: 40
                     anchors.verticalCenter: parent.verticalCenter
 
                     model: ListModel {
@@ -464,8 +418,7 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("Media directories")
-                        font.pixelSize: 16
-                        verticalAlignment: Text.AlignVCenter
+                        font.pixelSize: Theme.fontSizeComponent
                         font.bold: true
                         color: Theme.colorText
                     }

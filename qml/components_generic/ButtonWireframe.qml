@@ -14,7 +14,7 @@ Button {
     focusPolicy: Qt.NoFocus
 
     property bool fullColor: false
-    property string fullfextColor: "white"
+    property string fulltextColor: "white"
     property string primaryColor: Theme.colorPrimary
     property string secondaryColor: Theme.colorComponentBackground
     property bool hoverAnimation: isDesktop
@@ -71,7 +71,7 @@ Button {
             text: control.text
             font: control.font
             opacity: enabled ? (control.down ? 0.8 : 1.0) : 0.33
-            color: fullColor ? fullfextColor : control.primaryColor
+            color: fullColor ? fulltextColor : control.primaryColor
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight
