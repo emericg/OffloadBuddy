@@ -40,7 +40,6 @@
 #include <QtGlobal>
 #include <QTranslator>
 #include <QLibraryInfo>
-#include <QApplication>
 #include <QIcon>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
@@ -114,12 +113,8 @@ int main(int argc, char *argv[])
     }
 #endif
 
-#ifdef QT_NO_DEBUG
-    SingleApplication app(argc, argv);
-#else
     print_build_infos();
-    QApplication app(argc, argv);
-#endif
+    SingleApplication app(argc, argv, false);
 
     app.setWindowIcon(QIcon(":/appicons/offloadbuddy.svg"));
     app.setApplicationName("OffloadBuddy");
