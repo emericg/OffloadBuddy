@@ -82,8 +82,8 @@ typedef struct JobEncodeSettings
     int speed = 2; // [1:3]
     float fps = -1;
 
-    int startMs = -1;
-    int durationMs = -1;
+    int64_t startMs = -1;
+    int64_t durationMs = -1;
 
 } JobEncodeSettings;
 

@@ -627,9 +627,12 @@ Item {
                     cutline.visible = !cutline.visible
                     overlayClip.visible = !overlayClip.visible
 
-                    if (mediaArea.startLimit < 0 && mediaArea.stopLimit < 0) {
-                       overlayClipText.text = UtilsString.durationToString_ISO8601_full(0) + qsTr(" to ") + UtilsString.durationToString_ISO8601_full(videoPlayer.duration)
-                    }
+                    mediaArea.startLimit = 0
+                    mediaArea.stopLimit = videoPlayer.duration
+
+                    //if (mediaArea.startLimit < 0 && mediaArea.stopLimit < 0) {
+                    //   overlayClipText.text = UtilsString.durationToString_ISO8601_full(0) + qsTr(" to ") + UtilsString.durationToString_ISO8601_full(videoPlayer.duration)
+                    //}
                 }
             }
             ItemImageButton {

@@ -36,16 +36,16 @@
 
 /* ************************************************************************** */
 
-QString getFFmpegDurationString(const uint32_t duration_ms)
+QString getFFmpegDurationString(const int64_t duration_ms)
 {
     QString duration_qstr;
 
     if (duration_ms > 0)
     {
-        unsigned hours = duration_ms / 3600000;
-        unsigned minutes = (duration_ms - (hours * 3600000)) / 60000;
-        unsigned seconds = (duration_ms - (hours * 3600000) - (minutes * 60000)) / 1000;
-        unsigned ms = (duration_ms - (hours * 3600000) - (minutes * 60000)) - (seconds * 1000);
+        int64_t hours = duration_ms / 3600000;
+        int64_t minutes = (duration_ms - (hours * 3600000)) / 60000;
+        int64_t seconds = (duration_ms - (hours * 3600000) - (minutes * 60000)) / 1000;
+        int64_t ms = (duration_ms - (hours * 3600000) - (minutes * 60000)) - (seconds * 1000);
 
         duration_qstr += QString::number(hours).rightJustified(2, '0');
         duration_qstr += ":";
@@ -99,6 +99,8 @@ void JobWorkerAsync::jobPlayPause()
 
 void JobWorkerAsync::jobAbort()
 {
+    qDebug() << ">> JobWorkerAsync::jobAbort()";
+
     if (m_childProcess)
     {
         //m_childProcess->write("q\n");
@@ -117,7 +119,7 @@ void JobWorkerAsync::jobAbort()
 
 void JobWorkerAsync::queueWork(Job *job)
 {
-    qDebug() << ">> JobWorkerSync::queueWork()";
+    qDebug() << ">> JobWorkerAsync::queueWork()";
 
     if (job)
     {
@@ -242,6 +244,7 @@ void JobWorkerAsync::queueWork(Job *job)
             {
                 file_extension = "gif";
                 ptiwrap->arguments << "-vf" << "scale=480:-1";
+                ptiwrap->arguments << "-r" << QString::number(15);
             }
 
             if (job->settings.codec == "PNG")
@@ -322,12 +325,12 @@ void JobWorkerAsync::queueWork(Job *job)
 */
     }
 
-    qDebug() << ">> JobWorkerSync::queueWork()";
+    qDebug() << ">> JobWorkerAsync::queueWork()";
 }
 
 void JobWorkerAsync::work()
 {
-    qDebug() << ">> JobWorkerSync::work()";
+    qDebug() << ">> JobWorkerAsync::work()";
 
     if (m_childProcess == nullptr)
     {
@@ -347,7 +350,7 @@ void JobWorkerAsync::work()
         }
     }
 
-    qDebug() << "<< JobWorkerSync::work()";
+    qDebug() << "<< JobWorkerAsync::work()";
 }
 
 /* ************************************************************************** */
@@ -382,7 +385,9 @@ void JobWorkerAsync::processFinished()
             emit jobFinished(m_ffmpegcurrent->job->id, js);
         }
 
-        delete m_childProcess;
+        m_childProcess->waitForFinished();
+        m_childProcess->deleteLater();
+        //delete m_childProcess;
         m_childProcess = nullptr;
         m_duration = QTime();
         m_progress = QTime();

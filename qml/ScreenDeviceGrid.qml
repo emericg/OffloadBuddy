@@ -731,7 +731,6 @@ Item {
             id: actionMenu
             z: 7
             onMenuSelected: rectangleDeviceGrid.actionMenuTriggered(index)
-            onVisibleChanged: shotsView.interactive = !shotsView.interactive
         }
         function actionMenuTriggered(index) {
             //console.log("actionMenuTriggered(" + index + ") selected shot: '" + shotsView.currentItem.shot.name + "'")

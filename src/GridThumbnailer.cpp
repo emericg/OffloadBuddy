@@ -423,6 +423,11 @@ bool GridThumbnailer::getImage_withFfmpeg(const QString &path, QImage &img,
 
     /// CONTEXES ALLOCATIONS ///////////////////////////////////////////////////
 
+    if (!videoCodec)
+    {
+        qDebug() << "ERROR failed to allocate videoCodec, no video track?";
+        goto abort_stage2;
+    }
     videoCodecContext = avcodec_alloc_context3(videoCodec);
     if (!videoCodecContext)
     {
