@@ -102,6 +102,16 @@ void ShotProvider::orderByName()
     }
 }
 
+void ShotProvider::orderByPath()
+{
+    if (m_shotFilter)
+    {
+        m_shotFilter->setSortRole(ShotModel::PathRole);
+        m_shotFilter->sort(0, Qt::AscendingOrder);
+        m_shotFilter->invalidate();
+    }
+}
+
 /* ************************************************************************** */
 
 void ShotProvider::filterByType(const QString &type)

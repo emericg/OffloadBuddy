@@ -65,6 +65,7 @@ public slots:
     void orderByDuration();
     void orderByShotType();
     void orderByName();
+    void orderByPath();
 
     void filterByType(const QString &type);
     void filterByFolder(const QString &path);

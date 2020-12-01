@@ -477,6 +477,7 @@ Item {
                     ListElement { text: qsTr("Shot type"); }
                     //ListElement { text: qsTr("GPS location"); }
                     ListElement { text: qsTr("Name"); }
+                    ListElement { text: qsTr("Folder"); }
                 }
 
                 property bool cbinit: false
@@ -494,8 +495,10 @@ Item {
                             currentDevice.orderByShotType()
                         else if (currentIndex == 3)
                             currentDevice.orderByName()
+                        else if (currentIndex == 4)
+                            currentDevice.orderByPath()
                     } else {
-                        cbinit = true;
+                        cbinit = true
                     }
 
                     displayText = qsTr("Order by:") + " " + cbShotsOrderby.get(currentIndex).text
