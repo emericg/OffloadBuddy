@@ -121,7 +121,7 @@ Rectangle {
 
     // MENUS up
 
-    ItemSidebarButton {
+    SidebarWidget {
         id: button_library
         height: 80
 
@@ -153,7 +153,7 @@ Rectangle {
         spacing: 16
 
         model: deviceManager.devicesList
-        delegate: ItemSidebarButton {
+        delegate: SidebarWidget {
             height: 80
             myDevice: modelData
             selected: (appContent.state === "device" && modelData === currentDevicePtr)
@@ -174,7 +174,7 @@ Rectangle {
 
         spacing: 0
 
-        ItemSidebarButton {
+        SidebarWidget {
             id: button_jobs
             width: sideBar.width
             imgSize: 48
@@ -186,7 +186,7 @@ Rectangle {
             onClicked: appContent.state = "jobs"
             source: "qrc:/menus/jobs.svg"
         }
-        ItemSidebarButton {
+        SidebarWidget {
             id: button_settings
             width: sideBar.width
             imgSize: 48
@@ -195,7 +195,7 @@ Rectangle {
             onClicked: appContent.state = "settings"
             source: "qrc:/menus/settings.svg"
         }
-        ItemSidebarButton {
+        SidebarWidget {
             id: button_about
             width: sideBar.width
             imgSize: 48
@@ -204,7 +204,7 @@ Rectangle {
             onClicked: appContent.state = "about"
             source: "qrc:/menus/about.svg"
         }
-        ItemSidebarButton {
+        SidebarWidget {
             id: button_exit
             width: sideBar.width
             imgSize: 48

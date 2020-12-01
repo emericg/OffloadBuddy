@@ -24,15 +24,14 @@
 
         <file>ThemeEngine.qml</file>
 
-        <file alias="ItemBannerActions.qml">components/ItemBannerActions.qml</file>
-        <file alias="ItemBannerMessage.qml">components/ItemBannerMessage.qml</file>
-        <file alias="ItemDeviceMenu.qml">components/ItemDeviceMenu.qml</file>
-        <file alias="ItemMediaDirectory.qml">components/ItemMediaDirectory.qml</file>
-        <file alias="ItemJob.qml">components/ItemJob.qml</file>
-        <file alias="ItemShot.qml">components/ItemShot.qml</file>
         <file alias="ActionMenu.qml">components/ActionMenu.qml</file>
         <file alias="ActionButton.qml">components/ActionButton.qml</file>
-        <file alias="ItemSidebarButton.qml">components/ItemSidebarButton.qml</file>
+        <file alias="ItemBannerActions.qml">components/ItemBannerActions.qml</file>
+        <file alias="ItemBannerMessage.qml">components/ItemBannerMessage.qml</file>
+        <file alias="ItemJob.qml">components/ItemJob.qml</file>
+        <file alias="ItemShot.qml">components/ItemShot.qml</file>
+        <file alias="ItemMediaDirectory.qml">components/ItemMediaDirectory.qml</file>
+        <file alias="SidebarWidget.qml">components/SidebarWidget.qml</file>
 
         <file alias="ImageSvg.qml">components_generic/ImageSvg.qml</file>
         <file alias="ItemBadge.qml">components_generic/ItemBadge.qml</file>

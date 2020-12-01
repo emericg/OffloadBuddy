@@ -5,7 +5,7 @@ import ThemeEngine 1.0
 import "qrc:/js/UtilsDevice.js" as UtilsDevice
 
 Item {
-    id: itemSidebarButton
+    id: sidebarWidget
     width: parent.width
     height: (title) ? 80 : 60
 
@@ -70,18 +70,18 @@ Item {
 
         onClicked: {
             if (myDevice) {
-                itemSidebarButton.myDeviceClicked(myDevice)
+                sidebarWidget.myDeviceClicked(myDevice)
             } else {
-                itemSidebarButton.clicked()
+                sidebarWidget.clicked()
             }
         }
         onEntered: {
             bgFocus.opacity = 0.1
-            itemSidebarButton.highlighted = true
+            sidebarWidget.highlighted = true
         }
         onExited: {
             bgFocus.opacity = 0
-            itemSidebarButton.highlighted = false
+            sidebarWidget.highlighted = false
         }
 
         Rectangle {
@@ -100,12 +100,12 @@ Item {
         id: contentImage
         width: imgSize
         height: imgSize
-        anchors.verticalCenter: itemSidebarButton.verticalCenter
+        anchors.verticalCenter: sidebarWidget.verticalCenter
         anchors.verticalCenterOffset: (title) ? -8 : 0
         anchors.horizontalCenter: parent.horizontalCenter
 
-        opacity: itemSidebarButton.enabled ? 1.0 : 0.3
-        source: itemSidebarButton.source
+        opacity: sidebarWidget.enabled ? 1.0 : 0.3
+        source: sidebarWidget.source
         color: Theme.colorSidebarContent
 
         NumberAnimation on opacity {
@@ -117,7 +117,7 @@ Item {
 
         SequentialAnimation on opacity {
             id: image_fadeinout
-            running: itemSidebarButton.animated
+            running: sidebarWidget.animated
             loops: Animation.Infinite
             onStopped: { contentImage.opacity = 1 }
             OpacityAnimator { from: 0; to: 1; duration: 1000 }
@@ -129,7 +129,10 @@ Item {
             anchors.right: parent.right
             anchors.rightMargin: -4
             anchors.bottom: parent.bottom
-            visible: animated
+
+            //visible: animated
+            opacity: animated ? 1 : 0
+            Behavior on opacity { OpacityAnimator { duration: 250 } }
 
             Rectangle {
                 width: 24; height: 24; radius: 12;
@@ -144,7 +147,7 @@ Item {
                 color: Theme.colorLowContrast
 
                 NumberAnimation on rotation {
-                    running: itemSidebarButton.animated
+                    running: sidebarWidget.animated
                     loops: Animation.Infinite
                     alwaysRunToEnd: true
                     duration: 1000
