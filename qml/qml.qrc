@@ -31,7 +31,9 @@
         <file alias="ItemJob.qml">components/ItemJob.qml</file>
         <file alias="ItemShot.qml">components/ItemShot.qml</file>
         <file alias="ItemMediaDirectory.qml">components/ItemMediaDirectory.qml</file>
+        <file alias="SliderPlayer.qml">components/SliderPlayer.qml</file>
         <file alias="SidebarWidget.qml">components/SidebarWidget.qml</file>
+        <file alias="ResizeWidget.qml">components/ResizeWidget.qml</file>
 
         <file alias="ImageSvg.qml">components_generic/ImageSvg.qml</file>
         <file alias="ItemBadge.qml">components_generic/ItemBadge.qml</file>

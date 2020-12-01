@@ -14,10 +14,10 @@ Item {
     anchors.right: infosGeneric.left
     anchors.bottom: parent.bottom
     anchors.margins: 16
+    clip: false
 
     property bool isFullScreen: false
     //color: (isFullScreen || (shot && shot.fileType === Shared.FILE_PICTURE)) ? "transparent" : "black"
-    clip: true
 
     ////////
 
@@ -28,10 +28,10 @@ Item {
     property bool vflipped: false
     property int rotation: 0
 
-    property int panscan_x: 0
-    property int panscan_y: 0
-    property int panscan_width: 0
-    property int panscan_height: 0
+    property real cropX: 0.0
+    property real cropY: 0.0
+    property real cropW: 1.0
+    property real cropH: 1.0
 
     ////////
 
@@ -172,12 +172,12 @@ Item {
 
         if (media_ar > area_ar) {
             //console.log(">1")
-            overlays.width = Math.ceil(mediaWidth * ratio)
-            overlays.height = Math.ceil(mediaHeight * ratio) + 2
+            overlays.width = Math.round(mediaWidth * ratio)
+            overlays.height = Math.round(mediaHeight * ratio)
         } else {
             //console.log(">2")
-            overlays.width = Math.ceil(mediaWidth * (mediaArea.height / mediaHeight)) + 2
-            overlays.height = Math.ceil(mediaHeight * (mediaArea.height / mediaHeight)) + 2
+            overlays.width = Math.round(mediaWidth * (mediaArea.height / mediaHeight))
+            overlays.height = Math.round(mediaHeight * (mediaArea.height / mediaHeight))
         }
 
         //console.log("> media size    : " + mediaWidth + "x" + mediaHeight)
@@ -278,9 +278,18 @@ Item {
                 }
                 onSourceChanged: {
                     isRunning = false
+                    mediaBanner.close()
                     mediaArea.startLimit = -1
                     mediaArea.stopLimit = -1
-                    mediaBanner.close()
+
+                    //mediaArea.hflipped = false
+                    //mediaArea.vflipped = false
+                    //mediaArea.rotation = 0
+
+                    mediaArea.cropX = 0.0
+                    mediaArea.cropY = 0.0
+                    mediaArea.cropW = 1.0
+                    mediaArea.cropH = 1.0
                 }
                 onVolumeChanged: {
                     //
@@ -301,11 +310,12 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
 /*
         Rectangle {
-            id: poc
+            anchors.fill: parent
             z: 2
-            color: "transparent"
+            opacity: 0.33
+            color: "red"
             border.color: "red"
-            border.width: 4
+            border.width: 2
         }
 */
         ////////////////
@@ -454,16 +464,16 @@ Item {
                 color: "#222222"
             }
 
-            RangeSliderThemed {
+            RangeSliderArrow {
                 id: cutline
-                height: 12
+                height: 40
                 width: mediaControls.width
                 anchors.top: parent.top
                 anchors.topMargin: -(height/2 + 2)
                 anchors.left: parent.left
-                anchors.leftMargin: -6
+                //anchors.leftMargin: -6
                 anchors.right: parent.right
-                anchors.rightMargin: -6
+                //anchors.rightMargin: -6
 
                 from: 0
                 to: 1
@@ -479,7 +489,7 @@ Item {
                     mediaControls.sseekk(second.value)
                 }
             }
-            SliderThemed {
+            SliderPlayer {
                 id: timeline
                 height: 12
                 width: mediaControls.width
@@ -515,174 +525,186 @@ Item {
                 }
             }
 
-            ItemImageButton {
-                id: buttonPlay
-                width: 40
-                height: 40
+            Row {
                 anchors.left: parent.left
                 anchors.leftMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
+                spacing: 16
 
-                iconColor: "white"
-                highlightColor: Theme.colorPrimary
-                highlightMode: "color"
+                ItemImageButton {
+                    id: buttonPlay
+                    width: 40
+                    height: 40
 
-                source: "qrc:/assets/icons_material/baseline-play_arrow-24px.svg"
-                onClicked: {
-                    if (videoPlayer.isRunning) {
-                        videoPlayer.pause()
-                        videoPlayer.isRunning = false
-                    } else {
-                        videoPlayer.play()
-                        videoPlayer.isRunning = true
+                    iconColor: "white"
+                    highlightColor: Theme.colorPrimary
+                    highlightMode: "color"
+
+                    source: "qrc:/assets/icons_material/baseline-play_arrow-24px.svg"
+                    onClicked: {
+                        if (videoPlayer.isRunning) {
+                            videoPlayer.pause()
+                            videoPlayer.isRunning = false
+                        } else {
+                            videoPlayer.play()
+                            videoPlayer.isRunning = true
+                        }
                     }
                 }
-            }
-            ItemImageButton {
-                id: buttonSound
-                width: 36
-                height: 36
-                anchors.left: buttonPlay.right
-                anchors.leftMargin: 16
-                anchors.verticalCenter: parent.verticalCenter
 
-                iconColor: "white"
-                highlightColor: Theme.colorPrimary
-                highlightMode: "color"
+                MouseArea {
+                    width: isHovered ? (40+128+4) : (40)
+                    height: 40
+                    clip: true
+                    Behavior on width { NumberAnimation { duration: 133 } }
 
-                source: (soundline.value === 0) ? "qrc:/assets/icons_material/baseline-volume_off-24px.svg" : "qrc:/assets/icons_material/baseline-volume_up-24px.svg"
-                property real savedVolume: videoPlayer.volume
-                onClicked: {
-                    if (videoPlayer.volume) {
-                        savedVolume = videoPlayer.volume
-                        videoPlayer.volume = 0
-                    } else {
-                        videoPlayer.volume = savedVolume
+                    property bool isHovered: false
+                    hoverEnabled: true
+                    onEntered: isHovered = true
+                    onExited: isHovered = false
+                    propagateComposedEvents: true
+
+                    ItemImageButton {
+                        id: buttonSound
+                        width: 36
+                        height: 36
+                        anchors.left: parent.left
+                        anchors.leftMargin: 0
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        iconColor: "white"
+                        highlightColor: Theme.colorPrimary
+                        highlightMode: "color"
+
+                        source: (soundline.value === 0) ? "qrc:/assets/icons_material/baseline-volume_off-24px.svg" : "qrc:/assets/icons_material/baseline-volume_up-24px.svg"
+                        property real savedVolume: videoPlayer.volume
+                        onClicked: {
+                            if (videoPlayer.volume) {
+                                savedVolume = videoPlayer.volume
+                                videoPlayer.volume = 0
+                            } else {
+                                videoPlayer.volume = savedVolume
+                            }
+                        }
+                    }
+
+                    SliderThemed {
+                        id: soundline
+                        width: 128
+                        anchors.left: buttonSound.right
+                        anchors.leftMargin: 4
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        from: 0
+                        to: 1
+                        value: videoPlayer.volume
+                        onValueChanged: videoPlayer.volume = value
                     }
                 }
-            }
-            SliderThemed {
-                id: soundline
-                width: 128
-                anchors.left: buttonSound.right
-                anchors.leftMargin: 0
-                anchors.verticalCenter: parent.verticalCenter
 
-                from: 0
-                to: 1
-                value: videoPlayer.volume
-                onValueChanged: videoPlayer.volume = value
-            }
+                Text {
+                    id: timecode
+                    anchors.verticalCenter: parent.verticalCenter
 
-            Text {
-                id: timecode
-                anchors.left: soundline.right
-                anchors.leftMargin: 24
-                anchors.verticalCenter: parent.verticalCenter
-
-                text: "0:12 / 0:24"
-                color: "white"
-                font.bold: true
-                font.pixelSize: 15
-            }
-
-            ItemImageButton {
-                id: buttonToggleRotate
-                width: 36
-                height: 36
-                anchors.right: buttonToggleCut.left
-                anchors.rightMargin: 8
-                anchors.verticalCenter: parent.verticalCenter
-
-                iconColor: overlayRotations.visible ? Theme.colorPrimary : "white"
-                highlightColor: Theme.colorPrimary
-                highlightMode: "color"
-
-                source: "qrc:/assets/icons_material/baseline-rotate_90_degrees_ccw-24px.svg"
-                onClicked: {
-                    timeline.visible = true
-                    cutline.visible = false
-                    overlayClip.visible = false
-
-                    overlayRotations.visible = !overlayRotations.visible
+                    text: "0:12 / 0:24"
+                    color: "white"
+                    font.bold: true
+                    font.pixelSize: 15
                 }
             }
-            ItemImageButton {
-                id: buttonToggleCut
-                width: 36
-                height: 36
-                anchors.right: buttonTogglePanscan.left
-                anchors.rightMargin: 8
-                anchors.verticalCenter: parent.verticalCenter
 
-                iconColor: cutline.visible ? Theme.colorPrimary : "white"
-                highlightColor: Theme.colorPrimary
-                highlightMode: "color"
-
-                source: "qrc:/assets/icons_material/baseline-timer-24px.svg"
-                onClicked: {
-                    overlayRotations.visible = false
-
-                    timeline.visible = !timeline.visible
-                    cutline.visible = !cutline.visible
-                    overlayClip.visible = !overlayClip.visible
-
-                    mediaArea.startLimit = 0
-                    mediaArea.stopLimit = videoPlayer.duration
-
-                    //if (mediaArea.startLimit < 0 && mediaArea.stopLimit < 0) {
-                    //   overlayClipText.text = UtilsString.durationToString_ISO8601_full(0) + qsTr(" to ") + UtilsString.durationToString_ISO8601_full(videoPlayer.duration)
-                    //}
-                }
-            }
-            ItemImageButton {
-                id: buttonTogglePanscan
-                width: 36
-                height: 36
-                anchors.right: buttonScreenshot.left
-                anchors.rightMargin: 8
-                anchors.verticalCenter: parent.verticalCenter
-
-                iconColor: cutline.visible ? Theme.colorPrimary : "white"
-                highlightColor: Theme.colorPrimary
-                highlightMode: "color"
-
-                source: "qrc:/assets/icons_material/baseline-straighten-24px.svg"
-                onClicked: {
-                    //
-                }
-            }
-            ItemImageButton {
-                id: buttonScreenshot
-                width: 36
-                height: 36
-                anchors.right: buttonFullscreen.left
-                anchors.rightMargin: 8
-                anchors.verticalCenter: parent.verticalCenter
-
-                iconColor: "white"
-                highlightColor: Theme.colorPrimary
-                highlightMode: "color"
-
-                source: "qrc:/assets/icons_material/outline-camera_alt-24px.svg"
-                onClicked: {
-                    //
-                }
-            }
-            ItemImageButton {
-                id: buttonFullscreen
-                width: 40
-                height: 40
+            Row {
                 anchors.right: parent.right
-                anchors.rightMargin: 16
+                anchors.rightMargin: 8
                 anchors.verticalCenter: parent.verticalCenter
+                spacing: 8
 
-                iconColor: "white"
-                highlightColor: Theme.colorPrimary
-                highlightMode: "color"
+                ItemImageButton {
+                    id: buttonToggleRotate
+                    width: 36
+                    height: 36
+                    anchors.verticalCenter: parent.verticalCenter
 
-                source: "qrc:/assets/icons_material/baseline-fullscreen-24px.svg"
-                onClicked: mediaArea.toggleFullScreen()
+                    iconColor: overlayRotations.visible ? Theme.colorPrimary : "white"
+                    highlightColor: Theme.colorPrimary
+                    highlightMode: "color"
+
+                    source: "qrc:/assets/icons_material/baseline-rotate_90_degrees_ccw-24px.svg"
+                    onClicked: {
+                        timeline.visible = true
+                        cutline.visible = false
+                        overlayClip.visible = false
+
+                        overlayRotations.visible = !overlayRotations.visible
+                    }
+                }
+                ItemImageButton {
+                    id: buttonToggleCut
+                    width: 36
+                    height: 36
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    iconColor: cutline.visible ? Theme.colorPrimary : "white"
+                    highlightColor: Theme.colorPrimary
+                    highlightMode: "color"
+
+                    source: "qrc:/assets/icons_material/baseline-timer-24px.svg"
+                    onClicked: {
+                        overlayRotations.visible = false
+
+                        timeline.visible = !timeline.visible
+                        cutline.visible = !cutline.visible
+                        overlayClip.visible = !overlayClip.visible
+
+                        mediaArea.startLimit = 0
+                        mediaArea.stopLimit = videoPlayer.duration
+
+                        //if (mediaArea.startLimit < 0 && mediaArea.stopLimit < 0) {
+                        //   overlayClipText.text = UtilsString.durationToString_ISO8601_full(0) + qsTr(" to ") + UtilsString.durationToString_ISO8601_full(videoPlayer.duration)
+                        //}
+                    }
+                }
+                ItemImageButton {
+                    id: buttonTogglePanscan
+                    width: 36
+                    height: 36
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    iconColor: resizeWidget.editing ? Theme.colorPrimary : "white"
+                    highlightColor: Theme.colorPrimary
+                    highlightMode: "color"
+
+                    source: "qrc:/assets/icons_material/baseline-straighten-24px.svg"
+                    onClicked: resizeWidget.editing = !resizeWidget.editing
+                }
+                ItemImageButton {
+                    id: buttonScreenshot
+                    width: 36
+                    height: 36
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    iconColor: "white"
+                    highlightColor: Theme.colorPrimary
+                    highlightMode: "color"
+
+                    source: "qrc:/assets/icons_material/outline-camera_alt-24px.svg"
+                    onClicked: {
+                        //
+                    }
+                }
+                ItemImageButton {
+                    id: buttonFullscreen
+                    width: 48
+                    height: 48
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    iconColor: "white"
+                    highlightColor: Theme.colorPrimary
+                    highlightMode: "color"
+
+                    source: "qrc:/assets/icons_material/baseline-fullscreen-24px.svg"
+                    onClicked: mediaArea.toggleFullScreen()
+                }
             }
         }
     }

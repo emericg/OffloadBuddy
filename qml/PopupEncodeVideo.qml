@@ -30,6 +30,10 @@ Popup {
     property int clipRotation: 0
     property bool clipVFlip: false
     property bool clipHFlip: false
+    property real clipCropX: 0
+    property real clipCropY: 0
+    property real clipCropW: 0
+    property real clipCropH: 0
 
     function updateEncodePanel(shot) {
         currentShot = shot
