@@ -119,8 +119,8 @@ Item {
         popupEncodeVideo.setClip(mediaPreview.startLimit, mediaPreview.stopLimit)
         popupEncodeVideo.setOrientation(mediaPreview.rotation,
                                         mediaPreview.hflipped, mediaPreview.vflipped)
-        popupEncodeVideo.setPanScan(mediaPreview.cropX, mediaPreview.cropY,
-                                    mediaPreview.cropW, mediaPreview.cropH)
+        popupEncodeVideo.setCrop(mediaPreview.cropX, mediaPreview.cropY,
+                                 mediaPreview.cropW, mediaPreview.cropH)
         popupEncodeVideo.open()
     }
     function openTelemetryPopup() {

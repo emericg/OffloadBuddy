@@ -282,9 +282,9 @@ Item {
                     mediaArea.startLimit = -1
                     mediaArea.stopLimit = -1
 
-                    //mediaArea.hflipped = false
-                    //mediaArea.vflipped = false
-                    //mediaArea.rotation = 0
+                    mediaArea.hflipped = false
+                    mediaArea.vflipped = false
+                    mediaArea.rotation = 0
 
                     mediaArea.cropX = 0.0
                     mediaArea.cropY = 0.0
@@ -683,6 +683,7 @@ Item {
                     height: 36
                     anchors.verticalCenter: parent.verticalCenter
 
+                    visible: false
                     iconColor: "white"
                     highlightColor: Theme.colorPrimary
                     highlightMode: "color"

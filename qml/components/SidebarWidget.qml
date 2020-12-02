@@ -114,7 +114,7 @@ Item {
             to: 1
             duration: (myDevice) ? 333 : 0
         }
-
+/*
         SequentialAnimation on opacity {
             id: image_fadeinout
             running: sidebarWidget.animated
@@ -123,7 +123,7 @@ Item {
             OpacityAnimator { from: 0; to: 1; duration: 1000 }
             OpacityAnimator { from: 1; to: 0; duration: 1000 }
         }
-
+*/
         Item {
             width: 24; height: 24;
             anchors.right: parent.right
@@ -132,7 +132,7 @@ Item {
 
             //visible: animated
             opacity: animated ? 1 : 0
-            Behavior on opacity { OpacityAnimator { duration: 250 } }
+            Behavior on opacity { OpacityAnimator { duration: 500 } }
 
             Rectangle {
                 width: 24; height: 24; radius: 12;

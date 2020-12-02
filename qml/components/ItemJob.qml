@@ -61,9 +61,9 @@ Rectangle {
 
             onStarted: imageStatus.source = "qrc:/assets/icons_material/baseline-memory-24px.svg"
             onStopped: imageStatus.rotation = 0
-            duration: 2000;
-            from: 0;
-            to: 360;
+            duration: 2000
+            from: 0
+            to: 360
             loops: Animation.Infinite
         }
 

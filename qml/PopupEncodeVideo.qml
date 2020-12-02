@@ -22,18 +22,21 @@ Popup {
 
     ////////////////////////////////////////////////////////////////////////////
 
+    property string mode: ""
     property var mediaProvider: null
     property var currentShot: null
 
     property int clipStartMs: -1
     property int clipDurationMs: -1
+
     property int clipRotation: 0
     property bool clipVFlip: false
     property bool clipHFlip: false
-    property real clipCropX: 0
-    property real clipCropY: 0
-    property real clipCropW: 0
-    property real clipCropH: 0
+
+    property int clipCropX: 0
+    property int clipCropY: 0
+    property int clipCropW: 0
+    property int clipCropH: 0
 
     function updateEncodePanel(shot) {
         currentShot = shot
@@ -83,11 +86,10 @@ Popup {
             }
         }
 
-        // Resolution
-        rectangleResolution.visible = false
-
         // Clip handler
         setClip(-1, -1)
+
+        // Resolution
 
         // Orientation
         setOrientation(0, false, false)
@@ -112,7 +114,18 @@ Popup {
     function setClip(clipStart, clipStop) {
         //console.log("setClip() " + clipStart + "/" + clipStop)
 
-        if (clipStart > 0 || clipStop > 0) {
+        if (shot.shotType >= Shared.SHOT_PICTURE) {
+            clipStartMs = -1
+            clipDurationMs = -1
+
+            cbCOPY.visible = false
+            cbCOPY.checked = false
+            rectangleClip.visible = false
+
+            return
+        }
+
+        if (clipStart > 0 || (clipStop > 0 && clipStop < currentShot.duration)) {
             if (clipStart < 0) clipStart = 0
             if (clipStop < 0) clipStop = currentShot.duration
             clipStartMs = clipStart
@@ -157,12 +170,17 @@ Popup {
         }
     }
 
-    function setPanScan(x, y, width, height) {
-        //console.log("setPanScan() " + x + ":" + y + " " + width + "x" + height)
+    function setCrop(x, y, width, height) {
+        //console.log("setCrop() " + x + ":" + y + " " + width + "x" + height)
 
-        if (x || y || width || height) {
+        if (x > 0.0 || y > 0.0 || width < 1.0 || height < 1.0) {
             rectangleCrop.visible = true
-            // TODO
+            clipCropX = Math.round(currentShot.width * x)
+            clipCropY = Math.round(currentShot.height * y)
+            clipCropW = Math.round(currentShot.width * width)
+            clipCropH = Math.round(currentShot.height * height)
+            textField_cropCoord.text = clipCropX + ":" + clipCropY
+            textField_cropSize.text = clipCropW + "x" + clipCropH
         } else {
             rectangleCrop.visible = false
         }
@@ -171,19 +189,23 @@ Popup {
     ////////
 
     function setImageMode() {
-        titleText.text = qsTr("Encoding panel (image)")
-        rectangleCodec.visible = false
-        rectangleFormat.visible = true
-        rectangleSpeed.visible = false
+        titleText.text = qsTr("Image encoding")
+        mode = "image"
+        rectangleVideoCodec.visible = false
+        rectangleImageCodec.visible = true
+        rectangleEncodingSpeed.visible = false
         rectangleFramerate.visible = false
+        rectangleFramerate2.visible = false
     }
 
     function setVideoMode() {
-        titleText.text = qsTr("Encoding panel (video)")
-        rectangleCodec.visible = true
-        rectangleFormat.visible = false
-        rectangleSpeed.visible = true
-        rectangleFramerate.visible = true
+        titleText.text = qsTr("Video encoding")
+        mode = "video"
+        rectangleVideoCodec.visible = true
+        rectangleImageCodec.visible = false
+        rectangleEncodingSpeed.visible = true
+        rectangleFramerate.visible = false
+        rectangleFramerate2.visible = true
     }
 
     function toggleCopy() {
@@ -192,17 +214,19 @@ Popup {
             rbH265.enabled = false
             rbVP9.enabled = false
             rbGIF.enabled = false
-            rectangleQuality.visible = false
-            rectangleSpeed.visible = false
+            rectangleEncodingQuality.visible = false
+            rectangleEncodingSpeed.visible = false
             rectangleFramerate.visible = false
+            rectangleFramerate2.visible = false
         } else {
             rbH264.enabled = true
             rbH265.enabled = true
             rbVP9.enabled = true
             rbGIF.enabled = true
-            rectangleQuality.visible = true
-            rectangleSpeed.visible = true
-            rectangleFramerate.visible = true
+            rectangleEncodingQuality.visible = true
+            rectangleEncodingSpeed.visible = true
+            rectangleFramerate.visible = false
+            rectangleFramerate2.visible = true
         }
     }
 
@@ -245,16 +269,16 @@ Popup {
             }
         }
 
-        //////////////////
-
         Column {
             anchors.left: parent.left
             anchors.leftMargin: 24
             anchors.right: parent.right
             anchors.rightMargin: 24
 
+            //////////////////
+
             Item {
-                id: rectangleCodec
+                id: rectangleVideoCodec
                 height: 48
                 anchors.left: parent.left
                 anchors.leftMargin: 0
@@ -321,7 +345,7 @@ Popup {
             }
 
             Item {
-                id: rectangleFormat
+                id: rectangleImageCodec
                 height: 48
                 anchors.left: parent.left
                 anchors.leftMargin: 0
@@ -376,8 +400,10 @@ Popup {
                 }
             }
 
+            ////////////////
+
             Item {
-                id: rectangleQuality
+                id: rectangleEncodingQuality
                 height: 48
                 anchors.left: parent.left
                 anchors.leftMargin: 0
@@ -411,7 +437,7 @@ Popup {
             }
 
             Item {
-                id: rectangleSpeed
+                id: rectangleEncodingSpeed
                 height: 48
                 anchors.left: parent.left
                 anchors.leftMargin: 0
@@ -444,52 +470,137 @@ Popup {
                 }
             }
 
-            Item {
-                id: rectangleResolution
-                height: 48
+            //////////////////
+
+            Row {
+                id: rectangleDefinition
                 anchors.left: parent.left
-                anchors.leftMargin: 0
                 anchors.right: parent.right
-                anchors.rightMargin: 0
+                height: 48
+                spacing: 16
 
                 Text {
-                    id: textResolution
                     width: 128
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: qsTr("Resolution")
+                    text: qsTr("Definition")
                     font.pixelSize: 16
                     color: Theme.colorSubText
                 }
 
-                ComboBoxThemed {
-                    id: comboBoxResolution
-                    anchors.left: textResolution.right
-                    anchors.leftMargin: 16
+                ItemLilMenu {
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: selectorRes.width
+
+                    Row {
+                        id: selectorRes
+                        height: parent.height
+
+                        property int res: 1080
+
+                        ItemLilMenuButton {
+                            text: "480p"
+                            visible: shot.height >= 480
+                            selected: selectorRes.res === 480
+                            onClicked: selectorRes.res = 480
+                        }
+                        ItemLilMenuButton {
+                            text: "720p"
+                            visible: shot.height >= 720
+                            selected: selectorRes.res === 720
+                            onClicked: selectorRes.res = 720
+                        }
+                        ItemLilMenuButton {
+                            text: "1080p"
+                            visible: shot.height >= 1080
+                            selected: selectorRes.res === 1080
+                            onClicked: selectorRes.res = 1080
+                        }
+                        ItemLilMenuButton {
+                            text: "1440p"
+                            visible: shot.height >= 1440
+                            selected: selectorRes.res === 1440
+                            onClicked: selectorRes.res = 1440
+                        }
+                        ItemLilMenuButton {
+                            text: "2160p"
+                            visible: shot.height >= 2160
+                            selected: selectorRes.res === 2160
+                            onClicked: selectorRes.res = 2160
+                        }
+                        ItemLilMenuButton {
+                            text: "2880p"
+                            visible: shot.height >= 2880
+                            selected: selectorRes.res === 2880
+                            onClicked: selectorRes.res = 2880
+                        }
+                        ItemLilMenuButton {
+                            text: "4320p"
+                            visible: shot.height >= 4320
+                            selected: selectorRes.res === 4320
+                            onClicked: selectorRes.res = 4320
+                        }
+                    }
+                }
+            }
+
+            //////////////////
+
+            Row {
+                id: rectangleFramerate2
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: 48
+                spacing: 16
+
+                Text {
+                    width: 128
                     anchors.verticalCenter: parent.verticalCenter
 
-                    ListModel {
-                        id: cbResolutions
-                        ListElement { text: "720p"; }
-                        ListElement { text: "1080p"; }
-                        ListElement { text: "1440p"; }
-                        ListElement { text: "2160p"; }
-                    }
+                    text: qsTr("Framerate")
+                    font.pixelSize: 16
+                    color: Theme.colorSubText
+                }
 
-                    model: cbResolutions
+                ItemLilMenu {
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: selectorFps.width
 
-                    function updateResolutions() {
-                        //
-                    }
+                    Row {
+                        id: selectorFps
+                        height: parent.height
 
-                    property bool cbinit: false
-                    onCurrentIndexChanged: {
-                        if (cbinit) {
-                            if (comboBoxResolution.currentIndex === cbResolutions.count) {
-                                //
-                            }
-                        } else {
-                            cbinit = true;
+                        property var fps: Math.round(currentShot.framerate)
+
+                        ItemLilMenuButton {
+                            text: "24" + (selected ? " " + qsTr("fps") : "")
+                            visible: false // shot.framerate >= 23
+                            selected: selectorFps.fps === 24
+                            onClicked: selectorFps.fps = 24
+                        }
+                        ItemLilMenuButton {
+                            text: "30" + (selected ? " " + qsTr("fps") : "")
+                            visible: shot.framerate >= 29
+                            selected: selectorFps.fps === 30
+                            onClicked: selectorFps.fps = 30
+                        }
+                        ItemLilMenuButton {
+                            text: "60" + (selected ? " " + qsTr("fps") : "")
+                            visible: shot.framerate >= 59
+                            selected: selectorFps.fps === 60
+                            onClicked: selectorFps.fps = 60
+                        }
+                        ItemLilMenuButton {
+                            text: "120" + (selected ? " " + qsTr("fps") : "")
+                            visible: shot.framerate >= 119
+                            selected: selectorFps.fps === 120
+                            onClicked: selectorFps.fps = 120
+                        }
+                        ItemLilMenuButton {
+                            text: "240" + (selected ? " " + qsTr("fps") : "")
+                            visible: shot.framerate >= 239
+                            selected: selectorFps.fps === 240
+                            onClicked: selectorFps.fps = 240
                         }
                     }
                 }
@@ -497,11 +608,9 @@ Popup {
 
             Item {
                 id: rectangleFramerate
-                height: 48
                 anchors.left: parent.left
-                anchors.leftMargin: 0
                 anchors.right: parent.right
-                anchors.rightMargin: 0
+                height: 48
 
                 Text {
                     id: textFramerate
@@ -537,13 +646,13 @@ Popup {
                 }
             }
 
+            //////////////////
+
             Item {
                 id: rectangleOrientation
                 height: 48
-                anchors.right: parent.right
-                anchors.rightMargin: 0
                 anchors.left: parent.left
-                anchors.leftMargin: 0
+                anchors.right: parent.right
 
                 Text {
                     id: titleOrientation
@@ -566,15 +675,18 @@ Popup {
                     spacing: 8
 
                     Text {
-                        text: qsTr("Rotation")
-                        color: Theme.colorSubTest
                         anchors.verticalCenter: parent.verticalCenter
+                        visible: clipRotation != 0
+                        text: qsTr("rotation")
+                        color: Theme.colorSubText
                     }
                     TextFieldThemed {
                         width: 56
-                        height: 28
+                        height: 32
                         anchors.verticalCenter: parent.verticalCenter
 
+                        enabled: false
+                        visible: clipRotation != 0
                         text: clipRotation + "°"
                     }
 
@@ -582,26 +694,28 @@ Popup {
                         id: checkBox_hflip
                         anchors.verticalCenter: parent.verticalCenter
 
-                        text: qsTr("Horizontal flip")
+                        text: qsTr("horizontal flip")
                         checked: clipHFlip
+                        enabled: false
                     }
                     CheckBoxThemed {
                         id: checkBox_vflip
                         anchors.verticalCenter: parent.verticalCenter
 
-                        text: qsTr("Vertical flip")
+                        text: qsTr("vertical flip")
                         checked: clipVFlip
+                        enabled: false
                     }
                 }
             }
 
+            //////////////////
+
             Item {
                 id: rectangleClip
                 height: 48
-                anchors.right: parent.right
-                anchors.rightMargin: 0
                 anchors.left: parent.left
-                anchors.leftMargin: 0
+                anchors.right: parent.right
 
                 Text {
                     id: titleClip
@@ -621,11 +735,11 @@ Popup {
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
-                    spacing: 8
+                    spacing: 16
 
                     Text {
-                        text: qsTr("From")
-                        color: Theme.colorSubTest
+                        text: qsTr("from")
+                        color: Theme.colorSubText
                         anchors.verticalCenter: parent.verticalCenter
                     }
                     TextFieldThemed {
@@ -635,12 +749,13 @@ Popup {
                         anchors.verticalCenter: parent.verticalCenter
                         horizontalAlignment: Text.AlignHCenter
 
+                        enabled: false
                         placeholderText: "00:00:00"
                         validator: RegExpValidator { regExp: /^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$/ }
                     }
                     Text {
                         text: qsTr("to")
-                        color: Theme.colorSubTest
+                        color: Theme.colorSubText
                         anchors.verticalCenter: parent.verticalCenter
                     }
                     TextFieldThemed {
@@ -650,19 +765,20 @@ Popup {
                         anchors.verticalCenter: textField_clipstart.verticalCenter
                         horizontalAlignment: Text.AlignHCenter
 
+                        enabled: false
                         placeholderText: "00:00:00"
                         validator: RegExpValidator { regExp: /^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$/ }
                     }
                 }
             }
 
+            //////////////////
+
             Item {
                 id: rectangleCrop
                 height: 48
                 anchors.left: parent.left
-                anchors.leftMargin: 0
                 anchors.right: parent.right
-                anchors.rightMargin: 0
 
                 Text {
                     id: titleCrop
@@ -680,35 +796,50 @@ Popup {
                     anchors.left: titleCrop.right
                     anchors.leftMargin: 16
                     anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: 16
 
-                    TextFieldThemed {
-                        id: textField_crop
-                        width: 128
-                        height: 32
+                    Text {
                         anchors.verticalCenter: parent.verticalCenter
-
-                        horizontalAlignment: Text.AlignHCenter
-                        placeholderText: "0x0"
+                        text: qsTr("position")
+                        color: Theme.colorSubText
                     }
                     TextFieldThemed {
-                        id: textField_cropcoord
+                        id: textField_cropCoord
                         width: 128
                         height: 32
                         anchors.verticalCenter: parent.verticalCenter
 
+                        enabled: false
                         horizontalAlignment: Text.AlignHCenter
                         placeholderText: "0:0"
+                    }
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: qsTr("size")
+                        color: Theme.colorSubText
+                    }
+                    TextFieldThemed {
+                        id: textField_cropSize
+                        width: 128
+                        height: 32
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        enabled: false
+                        horizontalAlignment: Text.AlignHCenter
+                        placeholderText: "0x0"
                     }
                 }
             }
 
+            //////////////////
+
             Item {
                 id: rectangleFilter
                 height: 48
-                anchors.right: parent.right
-                anchors.rightMargin: 0
                 anchors.left: parent.left
-                anchors.leftMargin: 0
+                anchors.right: parent.right
 
                 Text {
                     id: titleFilter
@@ -738,6 +869,8 @@ Popup {
                     anchors.leftMargin: 16
                 }
             }
+
+            //////////////////
 /*
             Rectangle { // separator
                 height: 1
@@ -746,16 +879,13 @@ Popup {
                 color: Theme.colorSeparator
             }
 */
-            Item { // spacer
-                height: 16
-                anchors.right: parent.right
-                anchors.left: parent.left
-            }
+            Item { height: 16; anchors.right: parent.right; anchors.left: parent.left; } // spacer
+
             Item {
                 id: rectangleDestination
                 height: 48
-                anchors.right: parent.right
                 anchors.left: parent.left
+                anchors.right: parent.right
 
                 Text {
                     id: textDestinationTitle
@@ -855,7 +985,7 @@ Popup {
             }
         }
 
-        /////////
+        ////////////////////////////////////////////////////////////////////////
 
         Row {
             id: rowButtons
@@ -874,6 +1004,7 @@ Popup {
                 primaryColor: Theme.colorGrey
                 onClicked: popupEncodeVideo.close()
             }
+
             ButtonWireframeImage {
                 id: buttonEncode
                 width: 128
@@ -888,7 +1019,7 @@ Popup {
 
                     var encodingParams = {}
 
-                    if (rectangleCodec.visible) {
+                    if (rectangleVideoCodec.visible) {
                         if (rbH264.checked)
                             encodingParams["codec"] = "H.264";
                         else if (rbH265.checked)
@@ -902,22 +1033,26 @@ Popup {
                         else if (rbGIF.checked)
                             encodingParams["codec"] = "GIF";
 
-                        if (clipStartMs > 0 && clipDurationMs > 0)
+                        if (clipStartMs > 0 && clipDurationMs > 0) {
                             if (cbCOPY.checked)
                                 encodingParams["codec"] = "copy";
+                        }
 
                         encodingParams["speed"] = sliderSpeed.value;
 
-                        if (sliderFps.value.toFixed(3) !== currentShot.framerate.toFixed(3))
+                        if (selectorFps.visible && selectorFps.fps != Math.round(currentShot.framerate))
+                            encodingParams["fps"] = selectorFps.fps;
+
+                        if (sliderFps.visible && sliderFps.value.toFixed(3) !== currentShot.framerate.toFixed(3))
                             encodingParams["fps"] = sliderFps.value;
 
                         if (clipStartMs > 0)
                             encodingParams["clipStartMs"] = clipStartMs;
-                        if (clipDurationMs > 0)
+                        if (clipDurationMs > 0) // && (clipStartMs + clipDurationMs) < currentShot.duration)
                             encodingParams["clipDurationMs"] = clipDurationMs;
                     }
 
-                    if (rectangleFormat.visible) {
+                    if (rectangleImageCodec.visible) {
                         if (rbPNG.checked)
                             encodingParams["codec"] = "PNG";
                         if (rbJPEG.checked)
@@ -928,6 +1063,23 @@ Popup {
                             encodingParams["codec"] = "AVIF";
                         if (rbHEIF.checked)
                             encodingParams["codec"] = "HEIF";
+                    }
+
+                    if (selectorRes.visible && selectorRes.res !== currentShot.height) {
+                        encodingParams["resolution"] = selectorRes.res;
+                        encodingParams["scale"] = "-2:" + selectorRes.res;
+                    }
+
+                    if (clipCropX > 0 || clipCropY > 0 ||
+                        (clipCropW > 0 && clipCropW < currentShot.width) ||
+                        (clipCropH > 0 && clipCropH < currentShot.height)) {
+                        encodingParams["crop"] = clipCropW + ":" + clipCropH + ":" + clipCropX + ":" + clipCropY
+
+                        var cropAR = 1.0
+                        if (clipCropW > clipCropH) cropAR = clipCropW / clipCropH
+                        else if (clipCropW < clipCropH) cropAR = clipCropH / clipCropW
+
+                        encodingParams["scale"] = (selectorRes.res * cropAR).toFixed(0) + ":" + selectorRes.res
                     }
 
                     encodingParams["quality"] = sliderQuality.value;
