@@ -72,7 +72,6 @@ Rectangle {
             imageMtp.image = shot.getPreviewMtp()
         }
 
-        text_right.visible = false
         text_left.visible = false
         if (fileType === Shared.FILE_VIDEO) {
             if (duration > 0) {
@@ -82,7 +81,7 @@ Rectangle {
             if (shot.chapters > 1)
                 icon_left.source = "qrc:/assets/icons_material/baseline-video_library-24px.svg"
             else
-                icon_left.source = "qrc:/assets/icons_material/outline-local_movies-24px.svg"
+                icon_left.source = "qrc:/assets/icons_material/baseline-video-24px.svg"
         } else if (fileType === Shared.FILE_PICTURE) {
             if (shotType === Shared.SHOT_PICTURE_BURST) {
                 text_left.visible = true
@@ -97,15 +96,6 @@ Rectangle {
             }
         } else {
             icon_left.source = "qrc:/assets/icons_material/baseline-broken_image-24px.svg"
-        }
-
-        if (shot.highlightCount > 0) {
-            icon_right.visible = true
-            icon_right.color = "yellow"
-            icon_right.source = "qrc:/assets/icons_material/baseline-label_important-24px.svg"
-            text_right.text = shot.highlightCount
-        } else {
-            icon_right.visible = false
         }
     }
 
@@ -233,58 +223,6 @@ Rectangle {
 
         visible: (imageFs.visible || imageMtp.visible)
 
-        ImageSvg {
-            id: icon_left
-            width: 24
-            height: 24
-            anchors.left: parent.left
-            anchors.leftMargin: 8
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 8
-
-            color: "white"
-        }
-        Text {
-            id: text_left
-            color: "white"
-            text: qsTr("left")
-            anchors.verticalCenter: icon_left.verticalCenter
-            anchors.left: icon_left.right
-            anchors.leftMargin: 4
-            lineHeight: 1
-            style: Text.Raised
-            styleColor: "black"
-            font.bold: true
-            horizontalAlignment: Text.AlignLeft
-            verticalAlignment: Text.AlignVCenter
-            font.pixelSize: 13
-        }
-
-        ImageSvg {
-            id: icon_right
-            width: 24
-            height: 24
-            anchors.right: parent.right
-            anchors.rightMargin: 8
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 8
-
-            color: "white"
-        }
-        Text {
-            id: text_right
-            color: "white"
-            text: qsTr("right")
-            anchors.verticalCenter: icon_right.verticalCenter
-            style: Text.Raised
-            font.bold: true
-            anchors.right: icon_right.left
-            anchors.rightMargin: 4
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignRight
-            font.pixelSize: 13
-        }
-
         Text {
             id: text_top
             x: 8
@@ -307,6 +245,8 @@ Rectangle {
             font.bold: true
             font.pixelSize: 13
         }
+
+        ////
 
         ImageSvg {
             id: icon_state
@@ -339,6 +279,88 @@ Rectangle {
                 onStopped: icon_state.y = 0
                 NumberAnimation { target: icon_state; property: "y"; from: -40; to: 40; duration: 1000; }
                 loops: Animation.Infinite
+            }
+        }
+
+        ////
+
+        Row {
+            anchors.left: parent.left
+            anchors.leftMargin: 8
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 8
+            spacing: 4
+
+            ImageSvg {
+                id: icon_left
+                width: 24
+                height: 24
+                anchors.verticalCenter: parent.verticalCenter
+                color: "white"
+            }
+
+            Text {
+                id: text_left
+                anchors.verticalCenter: parent.verticalCenter
+
+                color: "white"
+                text: "left"
+                lineHeight: 1
+                style: Text.Raised
+                styleColor: "black"
+                font.bold: true
+                font.pixelSize: 13
+            }
+        }
+
+        ////
+
+        Row {
+            anchors.right: parent.right
+            anchors.rightMargin: 8
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 8
+            spacing: 4
+
+            Text {
+                id: text_hmmt
+                anchors.verticalCenter: parent.verticalCenter
+                color: "white"
+                visible: shot.highlightCount
+                text: shot.highlightCount
+                style: Text.Raised
+                font.bold: true
+                font.pixelSize: 13
+            }
+            ImageSvg {
+                id: icon_hmmt
+                width: 20
+                height: 20
+                anchors.verticalCenter: parent.verticalCenter
+                visible: shot.highlightCount
+                rotation: 90
+                color: "orange"
+                source: "qrc:/assets/icons_material/baseline-label_important-24px.svg"
+            }
+
+            ImageSvg {
+                id: icon_tlm
+                width: 20
+                height: 20
+                anchors.verticalCenter: parent.verticalCenter
+                visible: (shot.fileType === Shared.FILE_VIDEO && shot.hasGPS)
+                color: "white"
+                source: "qrc:/assets/icons_material/baseline-insert_chart-24px.svg"
+            }
+
+            ImageSvg {
+                id: icon_gps
+                width: 20
+                height: 20
+                anchors.verticalCenter: parent.verticalCenter
+                visible: shot.hasGPS
+                color: "white"
+                source: "qrc:/assets/icons_material/baseline-map-24px.svg"
             }
         }
     }
@@ -376,7 +398,7 @@ Rectangle {
         id: mouseAreaItem
         anchors.fill: parent
 
-        hoverEnabled: true
+        hoverEnabled: (settingsManager.thumbQuality > 1)
         propagateComposedEvents: false
         acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
 

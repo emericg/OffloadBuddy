@@ -389,8 +389,8 @@ Item {
 
             ItemImageButton {
                 //id: buttonRotateSave
-                background: true
                 iconColor: "white"
+                background: true
                 backgroundColor: "#222222"
                 highlightColor: "green"
                 highlightMode: "color"
@@ -400,8 +400,8 @@ Item {
             }
             ItemImageButton {
                 //id: buttonRotateLeft
-                background: true
                 iconColor: (output.rotation >= 180) ? Theme.colorPrimary : "white"
+                background: true
                 backgroundColor: "#222222"
                 highlightMode: "color"
                 source: "qrc:/assets/icons_material/baseline-rotate_left-24px.svg"
@@ -409,8 +409,8 @@ Item {
             }
             ItemImageButton {
                 //id: buttonRotateRight
-                background: true
                 iconColor: (output.rotation > 0 && output.rotation <= 180) ? Theme.colorPrimary : "white"
+                background: true
                 backgroundColor: "#222222"
                 highlightMode: "color"
                 source: "qrc:/assets/icons_material/baseline-rotate_right-24px.svg"
@@ -418,8 +418,8 @@ Item {
             }
             ItemImageButton {
                 //id: buttonFlipV
-                background: true
                 iconColor: (mediaArea.vflipped) ? Theme.colorPrimary : "white"
+                background: true
                 backgroundColor: "#222222"
                 highlightMode: "color"
                 source: "qrc:/assets/icons_material/baseline-flip-24px.svg"
@@ -428,8 +428,8 @@ Item {
             ItemImageButton {
                 //id: buttonFlipH
                 rotation: 90
-                background: true
                 iconColor: (mediaArea.hflipped) ? Theme.colorPrimary : "white"
+                background: true
                 backgroundColor: "#222222"
                 highlightMode: "color"
                 source: "qrc:/assets/icons_material/baseline-flip-24px.svg"

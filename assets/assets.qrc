@@ -13,7 +13,6 @@
         <file>icons_material/baseline-bug_report-24px.svg</file>
         <file>icons_material/baseline-burst_mode-24px.svg</file>
         <file>icons_material/baseline-camera-24px.svg</file>
-        <file>icons_material/baseline-camera_roll-24px.svg</file>
         <file>icons_material/baseline-cancel-24px.svg</file>
         <file>icons_material/baseline-center_focus_weak-24px.svg</file>
         <file>icons_material/baseline-check_circle_outline-24px.svg</file>
@@ -63,6 +62,7 @@
         <file>icons_material/baseline-stop-24px.svg</file>
         <file>icons_material/baseline-straighten-24px.svg</file>
         <file>icons_material/baseline-timer-24px.svg</file>
+        <file>icons_material/baseline-video-24px.svg</file>
         <file>icons_material/baseline-video_library-24px.svg</file>
         <file>icons_material/baseline-volume_off-24px.svg</file>
         <file>icons_material/baseline-volume_up-24px.svg</file>

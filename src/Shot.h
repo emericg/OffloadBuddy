@@ -39,9 +39,9 @@
 
 #ifdef ENABLE_MINIVIDEO
 #include <minivideo.h>
-#endif
 #include "GpmfKLV.h"
 #include "GpmfBuffer.h"
+#endif
 
 #include <QObject>
 #include <QDateTime>

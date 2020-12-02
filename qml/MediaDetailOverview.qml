@@ -503,7 +503,7 @@ Item {
                 width: 28
                 height: 28
 
-                source: "qrc:/assets/icons_material/baseline-camera_roll-24px.svg"
+                source: "qrc:/assets/icons_material/outline-local_movies-24px.svg"
                 color: Theme.colorText
 
                 Text {
