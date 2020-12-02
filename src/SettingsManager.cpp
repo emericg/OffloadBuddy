@@ -211,8 +211,24 @@ void SettingsManager::addDirectory(const QString &path)
 {
     if (!path.isEmpty())
     {
+        QString checkpath = path;
+        if (!checkpath.endsWith('/'))
+            checkpath += '/';
+
+        // Check if already in the list?
+        for (auto d: m_mediaDirectories)
+        {
+            MediaDirectory *dd = qobject_cast<MediaDirectory*>(d);
+            if (dd && dd->getPath() == checkpath)
+            {
+                qDebug() << "addDirectory(" << path << ") is already in the list";
+                return;
+            }
+        }
+
+        // Add
         MediaDirectory *dd = new MediaDirectory(path, 0);
-        if (dd->isAvailable())
+        //if (dd->isAvailable())
         {
             m_mediaDirectories.push_back(dd);
             emit directoryAdded(dd->getPath());
