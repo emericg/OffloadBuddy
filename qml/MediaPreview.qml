@@ -112,6 +112,10 @@ Item {
         overlayRotations.visible = !overlayRotations.visible
     }
 
+    function toggleCrop() {
+        resizeWidget.editing = !resizeWidget.editing
+    }
+
     function toggleFullScreen() {
         if (typeof shot === "undefined" || !shot) return
 
@@ -183,6 +187,8 @@ Item {
         //console.log("> media size    : " + mediaWidth + "x" + mediaHeight)
         //console.log("> mediaArea size: " + mediaArea.width + "x" + mediaArea.height)
         //console.log("> poc size      : " + overlays.width + "x" + overlays.height)
+
+        resizeWidget.load()
     }
 
     Matrix4x4 { id: noflip; matrix: Qt.matrix4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1) }
@@ -290,6 +296,7 @@ Item {
                     mediaArea.cropY = 0.0
                     mediaArea.cropW = 1.0
                     mediaArea.cropH = 1.0
+                    resizeWidget.load()
                 }
                 onVolumeChanged: {
                     //
@@ -441,6 +448,15 @@ Item {
 
         ItemBannerMessage {
             id: mediaBanner
+        }
+
+        ////////////////
+
+        ResizeWidget {
+            id: resizeWidget
+            anchors.fill: parent
+
+            editing: false
         }
 
         ////////////////

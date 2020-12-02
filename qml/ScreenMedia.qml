@@ -173,6 +173,15 @@ Item {
             }
 
             ItemImageButton {
+                id: buttonCrop
+                width: 40
+                height: 40
+                source: "qrc:/assets/icons_material/baseline-straighten-24px.svg"
+                backgroundColor: Theme.colorForeground
+                onClicked: contentOverview.toggleCrop()
+            }
+
+            ItemImageButton {
                 id: buttonTimestamp
                 width: 40
                 height: 40
