@@ -468,7 +468,7 @@ Item {
 
             ComboBoxThemed {
                 id: comboBox_orderby
-                width: 220
+                width: 240
 
                 model: ListModel {
                     id: cbShotsOrderby
@@ -505,6 +505,29 @@ Item {
 
                     // save state
                     if (deviceSavedState) deviceSavedState.orderBy = currentIndex
+                }
+
+                ItemImageButton {
+                    anchors.right: parent.right
+                    anchors.rightMargin: 32
+                    width: parent.height
+                    height: parent.height
+
+                    rotation: ascDesc ? 180 : 0
+                    iconColor: Theme.colorComponentContent
+                    source: "qrc:/assets/icons_material/baseline-filter_list-24px.svg"
+
+                    property bool ascDesc: false
+
+                    onClicked: {
+                        if (ascDesc) {
+                            ascDesc = false
+                            currentDevice.orderByDesc()
+                        } else {
+                            ascDesc = true
+                            currentDevice.orderByAsc()
+                        }
+                    }
                 }
             }
 
@@ -634,14 +657,14 @@ Item {
 
         ButtonWireframe {
             id: rectangleTransfer
-            width: 220
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 16
+            width: 240
             anchors.left: parent.left
             anchors.leftMargin: 16
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 16
 
             fullColor: true
-            primaryColor: "#5483EF"
+            primaryColor: Theme.colorPrimary
 
             text: qsTr("Offload content")
             onClicked: popupOffloadAll.open()

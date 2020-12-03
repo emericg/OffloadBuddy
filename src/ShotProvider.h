@@ -61,6 +61,9 @@ public:
     void deleteShot(Shot *shot);
 
 public slots:
+    void orderByAsc();
+    void orderByDesc();
+
     void orderByDate();
     void orderByDuration();
     void orderByShotType();

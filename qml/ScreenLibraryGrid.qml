@@ -209,7 +209,7 @@ Item {
             }
 
             property bool cbinit: false
-            width: 476
+            width: 240 + 16 + 240
             onCurrentIndexChanged: {
                 if (cbinit) {
                     mediaGrid.exitSelectionMode()
@@ -241,7 +241,7 @@ Item {
 
             ComboBoxThemed {
                 id: comboBox_orderby
-                width: 220
+                width: 240
                 displayText: qsTr("Order by: Date")
 
                 model: ListModel {
@@ -276,6 +276,29 @@ Item {
                     }
 
                     displayText = qsTr("Order by:") + " " + cbShotsOrderby.get(currentIndex).text
+                }
+
+                ItemImageButton {
+                    anchors.right: parent.right
+                    anchors.rightMargin: 32
+                    width: parent.height
+                    height: parent.height
+
+                    rotation: ascDesc ? 180 : 0
+                    iconColor: Theme.colorComponentContent
+                    source: "qrc:/assets/icons_material/baseline-filter_list-24px.svg"
+
+                    property bool ascDesc: false
+
+                    onClicked: {
+                        if (ascDesc) {
+                            ascDesc = false
+                            mediaLibrary.orderByDesc()
+                        } else {
+                            ascDesc = true
+                            mediaLibrary.orderByAsc()
+                        }
+                    }
                 }
             }
 

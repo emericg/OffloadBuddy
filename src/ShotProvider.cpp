@@ -62,12 +62,32 @@ void ShotProvider::deleteShot(Shot *shot)
 
 /* ************************************************************************** */
 
+void ShotProvider::orderByAsc()
+{
+    if (m_shotFilter)
+    {
+        m_shotFilter->sort(0, Qt::AscendingOrder);
+        m_shotFilter->invalidate();
+    }
+}
+
+void ShotProvider::orderByDesc()
+{
+    if (m_shotFilter)
+    {
+        m_shotFilter->sort(0, Qt::DescendingOrder);
+        m_shotFilter->invalidate();
+    }
+}
+
+/* ************************************************************************** */
+
 void ShotProvider::orderByDate()
 {
     if (m_shotFilter)
     {
         m_shotFilter->setSortRole(ShotModel::DateRole);
-        m_shotFilter->sort(0, Qt::AscendingOrder);
+        //m_shotFilter->sort(0, Qt::AscendingOrder);
         m_shotFilter->invalidate();
     }
 }
@@ -77,7 +97,7 @@ void ShotProvider::orderByDuration()
     if (m_shotFilter)
     {
         m_shotFilter->setSortRole(ShotModel::DurationRole);
-        m_shotFilter->sort(0, Qt::DescendingOrder);
+        //m_shotFilter->sort(0, Qt::DescendingOrder);
         m_shotFilter->invalidate();
     }
 }
@@ -87,7 +107,7 @@ void ShotProvider::orderByShotType()
     if (m_shotFilter)
     {
         m_shotFilter->setSortRole(ShotModel::ShotTypeRole);
-        m_shotFilter->sort(0, Qt::AscendingOrder);
+        //m_shotFilter->sort(0, Qt::AscendingOrder);
         m_shotFilter->invalidate();
     }
 }
@@ -97,7 +117,7 @@ void ShotProvider::orderByName()
     if (m_shotFilter)
     {
         m_shotFilter->setSortRole(ShotModel::NameRole);
-        m_shotFilter->sort(0, Qt::AscendingOrder);
+        //m_shotFilter->sort(0, Qt::AscendingOrder);
         m_shotFilter->invalidate();
     }
 }
@@ -107,7 +127,7 @@ void ShotProvider::orderByPath()
     if (m_shotFilter)
     {
         m_shotFilter->setSortRole(ShotModel::PathRole);
-        m_shotFilter->sort(0, Qt::AscendingOrder);
+        //m_shotFilter->sort(0, Qt::AscendingOrder);
         m_shotFilter->invalidate();
     }
 }
