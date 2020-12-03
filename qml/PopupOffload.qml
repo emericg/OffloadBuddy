@@ -24,6 +24,23 @@ Popup {
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
+    Component.onCompleted: {
+        switchIgnoreJunk.checked = settingsManager.ignorejunk
+        switchIgnoreAudio.checked = settingsManager.ignorehdaudio
+        switchMerge.checked = settingsManager.automerge
+        switchMetadata.checked = settingsManager.autometadata
+        switchDelete.checked = settingsManager.autodelete
+    }
+
+    Connections {
+        target: settingsManager
+        onIgnoreJunkChanged: switchIgnoreJunk.checked = settingsManager.ignorejunk
+        onIgnoreHdAudioChanged: switchIgnoreAudio.checked = settingsManager.ignorehdaudio
+        onAutoMergeChanged: switchMerge.checked = settingsManager.automerge
+        onAutoMetadataChanged: switchMetadata.checked = settingsManager.autometadata
+        onAutoDeleteChanged: switchDelete.checked = settingsManager.autodelete
+    }
+
     ////////////////////////////////////////////////////////////////////////////
 
     background: Rectangle {
@@ -83,7 +100,7 @@ Popup {
                     anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
 
-                    enabled: false
+                    enabled: true
                     checked: settingsManager.ignorejunk
                     text: qsTr("Ignore LRVs and THM files")
                 }
@@ -101,7 +118,7 @@ Popup {
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
 
-                    enabled: false
+                    enabled: true
                     checked: settingsManager.ignorehdaudio
                     text: qsTr("Ignore HD Audio files")
                 }
@@ -155,16 +172,20 @@ Popup {
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
 
-                    enabled: false
+                    enabled: true
                     checked: settingsManager.autodelete
                     text: qsTr("Delete offloaded files")
                 }
             }
+
+            //////////////////
 /*
-            Rectangle { height: 1; color: Theme.colorSeparator;
-                        anchors.right: parent.right; anchors.left: parent.left; } // separator
+            Rectangle {
+                height: 1; color: Theme.colorSeparator;
+                anchors.right: parent.right; anchors.left: parent.left;
+            } // separator
 */
-            Item { height: 16; } // spacer
+            Item { height: 16; anchors.right: parent.right; anchors.left: parent.left; } // spacer
 
             Item {
                 id: rectangleDestination
