@@ -75,6 +75,8 @@ bool SettingsManager::readSettings()
             m_appSize.setHeight(settings.value("ApplicationWindow/height").toInt());
         if (settings.contains("ApplicationWindow/visibility"))
             m_appVisibility = settings.value("ApplicationWindow/visibility").toUInt();
+        if (settings.contains("ApplicationWindow/clientSideDecoration"))
+            m_appClientSideDecoration = settings.value("ApplicationWindow/clientSideDecoration").toBool();
 
         if (settings.contains("global/appTheme"))
             m_appTheme = settings.value("global/appTheme").toUInt();
@@ -152,6 +154,8 @@ bool SettingsManager::writeSettings()
 
     if (settings.isWritable())
     {
+        settings.setValue("ApplicationWindow/clientSideDecoration", m_appClientSideDecoration);
+
         settings.setValue("global/appTheme", m_appTheme);
         settings.setValue("global/appUnits", m_appUnits);
         settings.setValue("global/appLanguage", m_appLanguage);
@@ -291,6 +295,16 @@ void SettingsManager::createDefaultDirectory()
 
 /* ************************************************************************** */
 /* ************************************************************************** */
+
+void SettingsManager::setClientSideDecoration(bool value)
+{
+    if (m_appClientSideDecoration != value)
+    {
+        m_appClientSideDecoration = value;
+        writeSettings();
+        Q_EMIT csdChanged();
+    }
+}
 
 void SettingsManager::setAppTheme(unsigned value)
 {

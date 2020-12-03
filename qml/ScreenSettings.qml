@@ -12,16 +12,19 @@ Item {
 
     Rectangle {
         id: rectangleHeader
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+
         height: 64
         z: 5
-
         color: Theme.colorHeader
-        anchors.right: parent.right
-        anchors.rightMargin: 0
-        anchors.left: parent.left
-        anchors.leftMargin: 0
-        anchors.top: parent.top
-        anchors.topMargin: 0
+
+        DragHandler { // Drag on the sidebar to drag the whole window // Qt 5.15+
+            // also, prevent clicks below this area
+            onActiveChanged: if (active) appWindow.startSystemMove();
+            target: null
+        }
 
         Text {
             id: textHeader
@@ -35,6 +38,11 @@ Item {
             font.bold: true
             font.pixelSize: Theme.fontSizeHeader
             color: Theme.colorHeaderContent
+        }
+
+        CsdWindows {
+            anchors.top: parent.top
+            anchors.right: parent.right
         }
     }
 
@@ -385,13 +393,13 @@ Item {
                     }
 
                     Component.onCompleted: {
-                        currentIndex = settingsManager.contenthierarchy;
+                        currentIndex = settingsManager.contentHierarchy;
                         if (currentIndex === -1) { currentIndex = 0 }
                     }
                     property bool cbinit: false
                     onCurrentIndexChanged: {
                         if (cbinit)
-                            settingsManager.contenthierarchy = currentIndex;
+                            settingsManager.contentHierarchy = currentIndex;
                         else
                             cbinit = true;
                     }

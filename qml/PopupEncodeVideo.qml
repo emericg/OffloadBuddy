@@ -872,12 +872,10 @@ Popup {
 
             //////////////////
 /*
-            Rectangle { // separator
-                height: 1
-                anchors.right: parent.right
-                anchors.left: parent.left
-                color: Theme.colorSeparator
-            }
+            Rectangle {
+                height: 1; color: Theme.colorSeparator;
+                anchors.right: parent.right; anchors.left: parent.left;
+            } // separator
 */
             Item { height: 16; anchors.right: parent.right; anchors.left: parent.left; } // spacer
 

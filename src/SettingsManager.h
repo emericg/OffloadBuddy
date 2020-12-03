@@ -42,10 +42,12 @@ class SettingsManager: public QObject
     Q_PROPERTY(QSize initialSize READ getInitialSize NOTIFY initialSizeChanged)
     Q_PROPERTY(QSize initialPosition READ getInitialPosition NOTIFY initialSizeChanged)
     Q_PROPERTY(uint initialVisibility READ getInitialVisibility NOTIFY initialSizeChanged)
+    Q_PROPERTY(bool clientSideDecoration READ getClientSideDecoration WRITE setClientSideDecoration NOTIFY csdChanged)
 
     Q_PROPERTY(uint appTheme READ getAppTheme WRITE setAppTheme NOTIFY appThemeChanged)
     Q_PROPERTY(uint appUnits READ getAppUnits WRITE setAppUnits NOTIFY appUnitsChanged)
     Q_PROPERTY(QString appLanguage READ getAppLanguage WRITE setAppLanguage NOTIFY appLanguageChanged)
+
     Q_PROPERTY(uint thumbQuality READ getThumbQuality WRITE setThumbQuality NOTIFY thumbQualityChanged)
     Q_PROPERTY(uint thumbFormat READ getThumbFormat WRITE setThumbFormat NOTIFY thumbFormatChanged)
     Q_PROPERTY(uint thumbSize READ getThumbSize WRITE setThumbSize NOTIFY thumbSizeChanged)
@@ -56,12 +58,13 @@ class SettingsManager: public QObject
     Q_PROPERTY(bool ignorehdaudio READ getIgnoreHdAudio WRITE setIgnoreHdAudio NOTIFY ignoreHdAudioChanged)
     Q_PROPERTY(bool mtpfullscan READ getMtpFullScan WRITE setMtpFullScan NOTIFY mtpFullScanChanged)
 
-    Q_PROPERTY(uint contenthierarchy READ getContentHierarchy WRITE setContentHierarchy NOTIFY contentHierarchyChanged)
+    Q_PROPERTY(uint contentHierarchy READ getContentHierarchy WRITE setContentHierarchy NOTIFY contentHierarchyChanged)
     Q_PROPERTY(QVariant directoriesList READ getDirectories NOTIFY directoriesUpdated)
 
     QSize m_appSize;
     QSize m_appPosition;
     unsigned m_appVisibility;
+    bool m_appClientSideDecoration = false;
 
     // Global
     unsigned m_appTheme = 0;
@@ -69,8 +72,8 @@ class SettingsManager: public QObject
     QString m_appLanguage = "auto";
     bool m_ignoreJunk = true;
     bool m_ignoreHdAudio = true;
-    bool m_autoMerge = true;
-    bool m_autoTelemetry = true;
+    bool m_autoMerge = false;
+    bool m_autoTelemetry = false;
     bool m_autoDelete = false;
     unsigned m_thumbQuality = 1;
     unsigned m_thumbFormat = 2;
@@ -92,6 +95,7 @@ class SettingsManager: public QObject
 
 Q_SIGNALS:
     void initialSizeChanged();
+    void csdChanged();
     void appThemeChanged();
     void appUnitsChanged();
     void appLanguageChanged();
@@ -115,6 +119,9 @@ public:
     QSize getInitialSize() { return m_appSize; }
     QSize getInitialPosition() { return m_appPosition; }
     unsigned getInitialVisibility() { return m_appVisibility; }
+
+    bool getClientSideDecoration() const { return m_appClientSideDecoration; }
+    void setClientSideDecoration(bool value);
 
     unsigned getAppTheme() const { return m_appTheme; }
     void setAppTheme(unsigned value);

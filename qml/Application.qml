@@ -28,15 +28,13 @@ import ThemeEngine 1.0
 
 ApplicationWindow {
     id: appWindow
-    flags: clientSideDecoration ? Qt.Window | Qt.FramelessWindowHint : Qt.Window
-    color: clientSideDecoration ? "transparent" : Theme.colorBackground
+    flags: settingsManager.clientSideDecoration ? Qt.Window | Qt.FramelessWindowHint : Qt.Window
+    color: settingsManager.clientSideDecoration ? "transparent" : Theme.colorBackground
 
     // Desktop stuff ///////////////////////////////////////////////////////////
 
-    property bool clientSideDecoration: false
-
     minimumWidth: isHdpi ? 800 : 1280
-    minimumHeight: isHdpi ? 540 : 720
+    minimumHeight: isHdpi ? 480 : 720
 
     width: {
         if (settingsManager.initialSize.width > 0)
@@ -218,7 +216,7 @@ ApplicationWindow {
             ]
         }
 
-        layer.enabled: appWindow.clientSideDecoration
+        layer.enabled: settingsManager.appClientSideDecoration
         layer.effect: OpacityMask {
             maskSource: Rectangle {
                 x: appBg.x
