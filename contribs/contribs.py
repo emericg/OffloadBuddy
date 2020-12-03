@@ -378,6 +378,7 @@ for TARGET in TARGETS:
     ## ffmpeg binaries download & install
     FFMPEG_version = "4.3.1"
     FFMPEG_key = ""
+    FFMPEG_lgpl = "" # can be "-lgpl" or empty
 
     if OS_TARGET == "windows":
         FFMPEG_key = "win64"
@@ -392,9 +393,9 @@ for TARGET in TARGETS:
 
     ## HEADERS
 
-    FFMPEG_FOLDER = build_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-dev-lgpl"
-    FFMPEG_FILE = src_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-dev-lgpl.zip"
-    FFMPEG_URL = "https://ffmpeg.zeranoe.com/builds/" + FFMPEG_key + "/dev/" + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-dev-lgpl.zip"
+    FFMPEG_FOLDER = build_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-dev" + FFMPEG_lgpl
+    FFMPEG_FILE = src_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-dev" + FFMPEG_lgpl + ".zip"
+    FFMPEG_URL = "https://emeric.io/assets/ffmpeg-zeranoe/" + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-dev" + FFMPEG_lgpl + ".zip"
 
     if not os.path.exists(FFMPEG_FILE):
         print("> Downloading " + FFMPEG_URL)
@@ -413,9 +414,9 @@ for TARGET in TARGETS:
 
     ## LIBS
 
-    FFMPEG_FOLDER = build_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-shared-lgpl"
-    FFMPEG_FILE = src_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-shared-lgpl.zip"
-    FFMPEG_URL = "https://ffmpeg.zeranoe.com/builds/" + FFMPEG_key + "/shared/" + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-shared-lgpl.zip"
+    FFMPEG_FOLDER = build_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-shared" + FFMPEG_lgpl
+    FFMPEG_FILE = src_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-shared" + FFMPEG_lgpl + ".zip"
+    FFMPEG_URL = "https://emeric.io/assets/ffmpeg-zeranoe/" + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-shared" + FFMPEG_lgpl + ".zip"
 
     if not os.path.exists(FFMPEG_FILE):
         print("> Downloading " + FFMPEG_URL)
