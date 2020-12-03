@@ -55,9 +55,6 @@ Rectangle {
     }
 
     Component.onCompleted: {
-        text_top.text = name
-        text_top.visible = false
-
         if (typeof currentDevice !== "undefined")
             shotDevice = currentDevice
 
@@ -218,32 +215,32 @@ Rectangle {
     ////////////////////////////////////////////////////////////////////////////
 
     Item {
-        id: legends
+        id: overlayInfos
         anchors.fill: parent
 
-        visible: (imageFs.visible || imageMtp.visible)
+        visible: (imageFs.progress === 1.0 || imageMtp.visible)
 
         Text {
             id: text_top
-            x: 8
-            y: 8
             height: 20
-            anchors.right: parent.right
-            anchors.rightMargin: 8
-            anchors.left: parent.left
-            anchors.leftMargin: 8
             anchors.top: parent.top
             anchors.topMargin: 8
+            anchors.left: parent.left
+            anchors.leftMargin: 8
+            anchors.right: parent.right
+            anchors.rightMargin: 8
 
-            visible: mouseAreaItem.isHovered
-            color: "white"
             clip: true
-            text: name
+            opacity: mouseAreaItem.isHovered ? 1 : 0
+            Behavior on opacity { NumberAnimation { duration: 133 } }
+
+            color: "white"
+            text: shot.name
             style: Text.Raised
-            horizontalAlignment: Text.AlignLeft
-            verticalAlignment: Text.AlignVCenter
             font.bold: true
             font.pixelSize: 13
+            horizontalAlignment: Text.AlignLeft
+            verticalAlignment: Text.AlignVCenter
         }
 
         ////
@@ -398,7 +395,7 @@ Rectangle {
         id: mouseAreaItem
         anchors.fill: parent
 
-        hoverEnabled: (settingsManager.thumbQuality > 1)
+        hoverEnabled: true
         propagateComposedEvents: false
         acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
 
@@ -409,8 +406,8 @@ Rectangle {
         property int thumbId: 1
         Timer {
             id: thumbTimer
-            interval: 1500;
-            running: false;
+            interval: 2000
+            running: false
             repeat: true
             onTriggered: {
                 if (shot.fileType === Shared.FILE_VIDEO) {
@@ -427,20 +424,20 @@ Rectangle {
             }
         }
         onEntered: {
-            isHovered = true
+            mouseAreaItem.isHovered = true
             shotsView.focus = true
 
             if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== Shared.STORAGE_MTP)) {
-                if (shot.fileType === Shared.FILE_VIDEO) {
+                if (shot.fileType === Shared.FILE_VIDEO && settingsManager.thumbQuality > 1) {
                     thumbTimer.start()
                 }
             }
         }
         onExited: {
-            isHovered = false
+            mouseAreaItem.isHovered = false
 
             if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== Shared.STORAGE_MTP)) {
-                if (shot.fileType === Shared.FILE_VIDEO) {
+                if (shot.fileType === Shared.FILE_VIDEO && settingsManager.thumbQuality > 1) {
                     thumbId = 1
                     thumbTimer.stop()
                     if (shot.previewVideo)
