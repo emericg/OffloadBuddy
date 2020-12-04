@@ -24,7 +24,14 @@ Item {
         anchors.right: parent.right
 
         // prevent clicks below this area
-        MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
+        //MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
+
+        DragHandler {
+            // Drag on the sidebar to drag the whole window // Qt 5.15+
+            // Also, prevent clicks below this area
+            onActiveChanged: if (active) appWindow.startSystemMove();
+            target: null
+        }
 
         ItemImageButton {
             id: buttonBack
@@ -117,6 +124,10 @@ Item {
                     menuThird.selected = true
                 }
             }
+        }
+        CsdWindows {
+            anchors.top: parent.top
+            anchors.right: parent.right
         }
     }
 

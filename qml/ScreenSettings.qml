@@ -20,8 +20,9 @@ Item {
         z: 5
         color: Theme.colorHeader
 
-        DragHandler { // Drag on the sidebar to drag the whole window // Qt 5.15+
-            // also, prevent clicks below this area
+        DragHandler {
+            // Drag on the sidebar to drag the whole window // Qt 5.15+
+            // Also, prevent clicks below this area
             onActiveChanged: if (active) appWindow.startSystemMove();
             target: null
         }
