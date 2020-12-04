@@ -232,11 +232,11 @@ function framerateToString(framerate) {
 /* ************************************************************************** */
 
 /*!
- * orientationToString()
+ * orientationExifToString()
  *
- * Convert EXIF enumeration to a readable string
+ * Convert EXIF orientation enumeration to a readable string
  */
-function orientationToString(orientation) {
+function orientationExifToString(orientation) {
     var text = '';
 
     if (orientation > 0) {
@@ -262,11 +262,11 @@ function orientationToString(orientation) {
 }
 
 /*!
- * rotationToString()
+ * orientationMp4ToString()
  *
- * Convert MP4 enumeration to a readable string
+ * Convert MP4 rotation enumeration to a readable string
  */
-function rotationToString(rotation) {
+function orientationMp4ToString(rotation) {
     var text = '';
 
     if (rotation > 0) {

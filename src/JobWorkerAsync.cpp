@@ -283,12 +283,37 @@ void JobWorkerAsync::queueWork(Job *job)
 
             // Filters
             {
-                // http://ffmpeg.org/ffmpeg-all.html#transpose-1
-                //0 = 90CounterCLockwise and Vertical Flip (default)
-                //1 = 90Clockwise
-                //2 = 90CounterClockwise
-                //3 = 90Clockwise and Vertical Flip
-                //-vf "transpose=2,transpose=2" for 180 degrees.
+                if (job->settings.transform > 1)
+                {
+                    // http://ffmpeg.org/ffmpeg-all.html#transpose-1
+                    //0 = 90CounterCLockwise and Vertical Flip (default)
+                    //1 = 90Clockwise
+                    //2 = 90CounterClockwise
+                    //3 = 90Clockwise and Vertical Flip
+                    //-vf "transpose=2,transpose=2" for 180 degrees.
+                    //-metadata:s:v rotate=""
+
+                    // job->settings.transform
+                    //1 = Horizontal (normal)
+                    //2 = Mirror horizontal
+                    //3 = Rotate 180
+                    //4 = Mirror vertical
+                    //5 = Mirror horizontal and rotate 270 CW
+                    //6 = Rotate 90 CW
+                    //7 = Mirror horizontal and rotate 90 CW
+                    //8 = Rotate 270 CW
+
+                    QString rf = "";
+                    if (job->settings.transform == 3)
+                        rf = "transpose=2,transpose=2"; // 180°
+                    else if (job->settings.transform == 6)
+                        rf = "transpose=1"; // 90°
+                    else if (job->settings.transform == 8)
+                        rf = "transpose=1,transpose=1,transpose=1"; // 270°
+
+                    if (!video_filters.isEmpty()) video_filters += ",";
+                    video_filters += rf;
+                }
 
                 // Crop // -filter:v "crop=out_w:out_h:x:y"
                 if (!job->settings.crop.isEmpty())

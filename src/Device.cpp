@@ -733,6 +733,18 @@ void Device::reencodeSelected(const QString &shot_uuid, const QVariant &values)
     if (variantMap.contains("speed"))
         sett.speed = variantMap.value("speed").toInt();
 
+    if (variantMap.contains("resolution"))
+        sett.resolution = variantMap.value("resolution").toInt();
+
+    if (variantMap.contains("scale"))
+        sett.scale = variantMap.value("scale").toString();
+
+    if (variantMap.contains("transform"))
+        sett.transform = variantMap.value("transform").toInt();
+
+    if (variantMap.contains("crop"))
+        sett.crop = variantMap.value("crop").toString();
+
     if (variantMap.contains("fps"))
         sett.fps = variantMap.value("fps").toFloat();
 

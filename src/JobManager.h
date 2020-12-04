@@ -82,6 +82,7 @@ typedef struct JobEncodeSettings
     int speed = 2; // [1:3]
     float fps = -1;
     int resolution = -1;
+    int transform = 0;
     QString scale;
     QString crop;
 

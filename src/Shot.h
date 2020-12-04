@@ -121,7 +121,8 @@ class Shot: public QObject
 
     Q_PROPERTY(unsigned width READ getWidth NOTIFY shotUpdated)
     Q_PROPERTY(unsigned height READ getHeight NOTIFY shotUpdated)
-    Q_PROPERTY(unsigned orientation READ getOrientation NOTIFY shotUpdated)
+    Q_PROPERTY(unsigned transformation READ getTransformation NOTIFY shotUpdated)
+    Q_PROPERTY(int rotation READ getRotation NOTIFY shotUpdated)
 
     Q_PROPERTY(QString iso READ getIso NOTIFY shotUpdated)
     Q_PROPERTY(QString focal READ getFocal NOTIFY shotUpdated)
@@ -182,9 +183,10 @@ class Shot: public QObject
     qint64 m_duration = 0;
 
     // GLOBAL metadata
-    unsigned orientation = 0;
+    unsigned transformation = 0; // QImageIOHandler::Transformation
     unsigned width = 0;
     unsigned height = 0;
+    int rotation = 0;
 
     QList <QTime> m_highlights;
 
@@ -350,9 +352,10 @@ public slots:
     QImage getPreviewMtp();
     QString getCameraSource() const { return m_camera_source; }
 
-    unsigned getOrientation() const { return orientation; }
     unsigned getWidth() const { return width; }
     unsigned getHeight() const { return height; }
+    unsigned getTransformation() const { return transformation; }
+    int getRotation() const { return rotation; }
 
     QString getIso() const { return iso; }
     QString getFocal() const { return focal; }

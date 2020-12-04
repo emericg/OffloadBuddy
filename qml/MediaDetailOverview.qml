@@ -29,8 +29,8 @@ Item {
         size.text = UtilsString.bytesToString_short(shot.datasize)
         definition.text = shot.width + "x" + shot.height + "   (" + UtilsMedia.varToString(shot.width, shot.height) + ")"
 
-        labelOrientation.visible = (shot.orientation)
-        orientation.text = UtilsMedia.orientationToString(shot.orientation)
+        labelOrientation.visible = (shot.transformation)
+        orientation.text = UtilsMedia.orientationExifToString(shot.transformation)
 
         // FILE_PICTURE
         if (shot.fileType === Shared.FILE_PICTURE) {
@@ -196,173 +196,97 @@ Item {
 
     ////////////////
 
-    Column {
+    Item {
         id: infosGeneric
-        width: 320
-        anchors.top: parent.top
-        anchors.topMargin: 24
         anchors.right: parent.right
-        anchors.rightMargin: 0
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
+        anchors.verticalCenter: parent.verticalCenter
 
-        spacing: 8
-
-        ImageSvg {
-            id: labelDate
-            width: 28
-            height: 28
-
-            source: "qrc:/assets/icons_material/baseline-date_range-24px.svg"
-            color: Theme.colorText
-
-            Text {
-                id: date
-                height: 28
-                anchors.left: parent.right
-                anchors.leftMargin: 16
-
-                color: Theme.colorText
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignLeft
-                anchors.verticalCenter: parent.verticalCenter
-                font.pixelSize: Theme.fontSizeContentSmall
-            }
-        }
-
-        ImageSvg {
-            id: labelCamera
-            width: 28
-            height: 28
-
-            source: "qrc:/assets/icons_material/baseline-camera-24px.svg"
-            color: Theme.colorText
-
-            Text {
-                id: camera
-                height: 28
-                anchors.left: parent.right
-                anchors.leftMargin: 16
-                anchors.verticalCenter: parent.verticalCenter
-
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignLeft
-                font.pixelSize: Theme.fontSizeContentSmall
-                color: Theme.colorText
-            }
-        }
-
-        ImageSvg {
-            id: labelDuration
-            width: 28
-            height: 28
-
-            source: "qrc:/assets/icons_material/baseline-timer-24px.svg"
-            color: Theme.colorText
-
-            Text {
-                id: duration
-                height: 28
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.left: parent.right
-                anchors.leftMargin: 16
-                horizontalAlignment: Text.AlignRight
-
-                verticalAlignment: Text.AlignVCenter
-                color: Theme.colorText
-                font.pixelSize: Theme.fontSizeContentSmall
-            }
-        }
-
-        ImageSvg {
-            id: labelDefinition
-            width: 28
-            height: 28
-
-            source: "qrc:/assets/icons_material/baseline-aspect_ratio-24px.svg"
-            color: Theme.colorText
-
-            Text {
-                id: definition
-                height: 28
-                anchors.left: parent.right
-                anchors.leftMargin: 16
-                anchors.verticalCenter: parent.verticalCenter
-
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignRight
-                font.pixelSize: Theme.fontSizeContentSmall
-                color: Theme.colorText
-            }
-        }
-
-        ImageSvg {
-            id: labelOrientation
-            width: 28
-            height: 28
-
-            source: "qrc:/assets/icons_material/baseline-screen_rotation-24px.svg"
-            color: Theme.colorText
-
-            Text {
-                id: orientation
-                height: 28
-                anchors.left: parent.right
-                anchors.leftMargin: 16
-                anchors.verticalCenter: parent.verticalCenter
-
-                color: Theme.colorText
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignRight
-                font.pixelSize: Theme.fontSizeContentSmall
-            }
-        }
-
-        ImageSvg {
-            id: labelSize
-            width: 28
-            height: 28
-
-            source: "qrc:/assets/icons_material/baseline-folder-24px.svg"
-            color: Theme.colorText
-
-            Text {
-                id: size
-                height: 28
-                anchors.left: parent.right
-                anchors.leftMargin: 16
-                anchors.verticalCenter: parent.verticalCenter
-
-                color: Theme.colorText
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignRight
-                font.pixelSize: Theme.fontSizeContentSmall
-            }
-        }
-
-        ////////////////
+        width: 320
+        height: mediaPreview.overlayHeight
+        visible: !mediaPreview.isFullScreen
 
         Column {
-            id: infosPicture
-            anchors.left: parent.left
-            anchors.leftMargin: 0
-            anchors.right: parent.right
-            anchors.rightMargin: 0
+            id: infosGenericCol
+            width: 320
 
             spacing: 8
 
-            Item { width: 16; height: 16; } // spacer
-
             ImageSvg {
-                id: labelISO
+                id: labelDate
                 width: 28
                 height: 28
 
-                source: "qrc:/assets/icons_material/baseline-iso-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-date_range-24px.svg"
                 color: Theme.colorText
 
                 Text {
-                    id: iso
+                    id: date
+                    height: 28
+                    anchors.left: parent.right
+                    anchors.leftMargin: 16
+
+                    color: Theme.colorText
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignLeft
+                    anchors.verticalCenter: parent.verticalCenter
+                    font.pixelSize: Theme.fontSizeContentSmall
+                }
+            }
+
+            ImageSvg {
+                id: labelCamera
+                width: 28
+                height: 28
+
+                source: "qrc:/assets/icons_material/baseline-camera-24px.svg"
+                color: Theme.colorText
+
+                Text {
+                    id: camera
+                    height: 28
+                    anchors.left: parent.right
+                    anchors.leftMargin: 16
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignLeft
+                    font.pixelSize: Theme.fontSizeContentSmall
+                    color: Theme.colorText
+                }
+            }
+
+            ImageSvg {
+                id: labelDuration
+                width: 28
+                height: 28
+
+                source: "qrc:/assets/icons_material/baseline-timer-24px.svg"
+                color: Theme.colorText
+
+                Text {
+                    id: duration
+                    height: 28
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: parent.right
+                    anchors.leftMargin: 16
+                    horizontalAlignment: Text.AlignRight
+
+                    verticalAlignment: Text.AlignVCenter
+                    color: Theme.colorText
+                    font.pixelSize: Theme.fontSizeContentSmall
+                }
+            }
+
+            ImageSvg {
+                id: labelDefinition
+                width: 28
+                height: 28
+
+                source: "qrc:/assets/icons_material/baseline-aspect_ratio-24px.svg"
+                color: Theme.colorText
+
+                Text {
+                    id: definition
                     height: 28
                     anchors.left: parent.right
                     anchors.leftMargin: 16
@@ -376,214 +300,294 @@ Item {
             }
 
             ImageSvg {
-                id: labelFocal
+                id: labelOrientation
                 width: 28
                 height: 28
 
-                source: "qrc:/assets/icons_material/baseline-center_focus_weak-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-screen_rotation-24px.svg"
                 color: Theme.colorText
 
                 Text {
-                    id: focal
+                    id: orientation
                     height: 28
                     anchors.left: parent.right
                     anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
 
+                    color: Theme.colorText
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
                     font.pixelSize: Theme.fontSizeContentSmall
-                    color: Theme.colorText
                 }
             }
 
             ImageSvg {
-                id: labelExposure
+                id: labelSize
                 width: 28
                 height: 28
 
-                source: "qrc:/assets/icons_material/baseline-shutter_speed-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-folder-24px.svg"
                 color: Theme.colorText
 
                 Text {
-                    id: exposure
+                    id: size
                     height: 28
                     anchors.left: parent.right
                     anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
 
+                    color: Theme.colorText
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
                     font.pixelSize: Theme.fontSizeContentSmall
-                    color: Theme.colorText
                 }
             }
 
-            ImageSvg {
-                id: labelFlash
-                width: 28
-                height: 28
+            ////////////////
 
-                source: "qrc:/assets/icons_material/baseline-flash_on-24px.svg"
-                color: Theme.colorText
+            Column {
+                id: infosPicture
+                anchors.left: parent.left
+                anchors.leftMargin: 0
+                anchors.right: parent.right
+                anchors.rightMargin: 0
 
-                Text {
-                    id: flash
+                spacing: 8
+
+                Item { width: 16; height: 16; } // spacer
+
+                ImageSvg {
+                    id: labelISO
+                    width: 28
                     height: 28
-                    anchors.left: parent.right
-                    anchors.leftMargin: 16
-                    anchors.verticalCenter: parent.verticalCenter
 
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignRight
-                    font.pixelSize: Theme.fontSizeContentSmall
+                    source: "qrc:/assets/icons_material/baseline-iso-24px.svg"
                     color: Theme.colorText
+
+                    Text {
+                        id: iso
+                        height: 28
+                        anchors.left: parent.right
+                        anchors.leftMargin: 16
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignRight
+                        font.pixelSize: Theme.fontSizeContentSmall
+                        color: Theme.colorText
+                    }
                 }
-            }
-        }
 
-        ////////////////
-
-        Column {
-            id: infosVideo
-            anchors.right: parent.right
-            anchors.rightMargin: 0
-            anchors.left: parent.left
-            anchors.leftMargin: 0
-
-            spacing: 8
-
-            Item { width: 16; height: 16; } // spacer
-
-            ImageSvg {
-                id: labelChapters
-                width: 28
-                height: 28
-
-                source: "qrc:/assets/icons_material/baseline-video_library-24px.svg"
-                color: Theme.colorText
-
-                Text {
-                    id: chapters
+                ImageSvg {
+                    id: labelFocal
+                    width: 28
                     height: 28
-                    anchors.left: parent.right
-                    anchors.leftMargin: 16
-                    anchors.verticalCenter: parent.verticalCenter
 
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignRight
-                    font.pixelSize: Theme.fontSizeContentSmall
+                    source: "qrc:/assets/icons_material/baseline-center_focus_weak-24px.svg"
                     color: Theme.colorText
+
+                    Text {
+                        id: focal
+                        height: 28
+                        anchors.left: parent.right
+                        anchors.leftMargin: 16
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignRight
+                        font.pixelSize: Theme.fontSizeContentSmall
+                        color: Theme.colorText
+                    }
                 }
-            }
 
-            ImageSvg {
-                id: labelCodec
-                width: 28
-                height: 28
-
-                source: "qrc:/assets/icons_material/baseline-memory-24px.svg"
-                color: Theme.colorText
-
-                Text {
-                    id: codec
+                ImageSvg {
+                    id: labelExposure
+                    width: 28
                     height: 28
-                    anchors.left: parent.right
-                    anchors.leftMargin: 16
-                    anchors.verticalCenter: parent.verticalCenter
 
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignRight
-                    font.pixelSize: Theme.fontSizeContentSmall
+                    source: "qrc:/assets/icons_material/baseline-shutter_speed-24px.svg"
                     color: Theme.colorText
+
+                    Text {
+                        id: exposure
+                        height: 28
+                        anchors.left: parent.right
+                        anchors.leftMargin: 16
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignRight
+                        font.pixelSize: Theme.fontSizeContentSmall
+                        color: Theme.colorText
+                    }
                 }
-            }
 
-            ImageSvg {
-                id: labelFramerate
-                width: 28
-                height: 28
-
-                source: "qrc:/assets/icons_material/outline-local_movies-24px.svg"
-                color: Theme.colorText
-
-                Text {
-                    id: framerate
+                ImageSvg {
+                    id: labelFlash
+                    width: 28
                     height: 28
-                    anchors.left: parent.right
-                    anchors.leftMargin: 16
-                    anchors.verticalCenter: parent.verticalCenter
 
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignRight
-                    font.pixelSize: Theme.fontSizeContentSmall
+                    source: "qrc:/assets/icons_material/baseline-flash_on-24px.svg"
                     color: Theme.colorText
-                }
-            }
 
-            ImageSvg {
-                id: labelBitrate
-                width: 28
-                height: 28
+                    Text {
+                        id: flash
+                        height: 28
+                        anchors.left: parent.right
+                        anchors.leftMargin: 16
+                        anchors.verticalCenter: parent.verticalCenter
 
-                source: "qrc:/assets/icons_material/baseline-insert_chart_outlined-24px.svg"
-                color: Theme.colorText
-
-                Text {
-                    id: bitrate
-                    height: 28
-                    anchors.left: parent.right
-                    anchors.leftMargin: 16
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignRight
-                    font.pixelSize: Theme.fontSizeContentSmall
-                    color: Theme.colorText
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignRight
+                        font.pixelSize: Theme.fontSizeContentSmall
+                        color: Theme.colorText
+                    }
                 }
             }
 
-            ImageSvg {
-                id: labelAudioChannels
-                width: 28
-                height: 28
+            ////////////////
 
-                source: "qrc:/assets/icons_material/baseline-speaker-24px.svg"
-                color: Theme.colorText
+            Column {
+                id: infosVideo
+                anchors.right: parent.right
+                anchors.rightMargin: 0
+                anchors.left: parent.left
+                anchors.leftMargin: 0
 
-                Text {
-                    id: audioChannels
+                spacing: 8
+
+                Item { width: 16; height: 16; } // spacer
+
+                ImageSvg {
+                    id: labelChapters
+                    width: 28
                     height: 28
-                    anchors.left: parent.right
-                    anchors.leftMargin: 16
-                    anchors.verticalCenter: parent.verticalCenter
 
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignRight
-                    font.pixelSize: Theme.fontSizeContentSmall
+                    source: "qrc:/assets/icons_material/baseline-video_library-24px.svg"
                     color: Theme.colorText
+
+                    Text {
+                        id: chapters
+                        height: 28
+                        anchors.left: parent.right
+                        anchors.leftMargin: 16
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignRight
+                        font.pixelSize: Theme.fontSizeContentSmall
+                        color: Theme.colorText
+                    }
                 }
-            }
 
-            ImageSvg {
-                id: labelTimecode
-                width: 28
-                height: 28
-
-                source: "qrc:/assets/icons_material/baseline-av_timer-24px.svg"
-                color: Theme.colorText
-
-                Text {
-                    id: timecode
+                ImageSvg {
+                    id: labelCodec
+                    width: 28
                     height: 28
-                    anchors.left: parent.right
-                    anchors.leftMargin: 16
-                    anchors.verticalCenter: parent.verticalCenter
 
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignRight
-                    font.pixelSize: Theme.fontSizeContentSmall
+                    source: "qrc:/assets/icons_material/baseline-memory-24px.svg"
                     color: Theme.colorText
+
+                    Text {
+                        id: codec
+                        height: 28
+                        anchors.left: parent.right
+                        anchors.leftMargin: 16
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignRight
+                        font.pixelSize: Theme.fontSizeContentSmall
+                        color: Theme.colorText
+                    }
+                }
+
+                ImageSvg {
+                    id: labelFramerate
+                    width: 28
+                    height: 28
+
+                    source: "qrc:/assets/icons_material/outline-local_movies-24px.svg"
+                    color: Theme.colorText
+
+                    Text {
+                        id: framerate
+                        height: 28
+                        anchors.left: parent.right
+                        anchors.leftMargin: 16
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignRight
+                        font.pixelSize: Theme.fontSizeContentSmall
+                        color: Theme.colorText
+                    }
+                }
+
+                ImageSvg {
+                    id: labelBitrate
+                    width: 28
+                    height: 28
+
+                    source: "qrc:/assets/icons_material/baseline-insert_chart_outlined-24px.svg"
+                    color: Theme.colorText
+
+                    Text {
+                        id: bitrate
+                        height: 28
+                        anchors.left: parent.right
+                        anchors.leftMargin: 16
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignRight
+                        font.pixelSize: Theme.fontSizeContentSmall
+                        color: Theme.colorText
+                    }
+                }
+
+                ImageSvg {
+                    id: labelAudioChannels
+                    width: 28
+                    height: 28
+
+                    source: "qrc:/assets/icons_material/baseline-speaker-24px.svg"
+                    color: Theme.colorText
+
+                    Text {
+                        id: audioChannels
+                        height: 28
+                        anchors.left: parent.right
+                        anchors.leftMargin: 16
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignRight
+                        font.pixelSize: Theme.fontSizeContentSmall
+                        color: Theme.colorText
+                    }
+                }
+
+                ImageSvg {
+                    id: labelTimecode
+                    width: 28
+                    height: 28
+
+                    source: "qrc:/assets/icons_material/baseline-av_timer-24px.svg"
+                    color: Theme.colorText
+
+                    Text {
+                        id: timecode
+                        height: 28
+                        anchors.left: parent.right
+                        anchors.leftMargin: 16
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignRight
+                        font.pixelSize: Theme.fontSizeContentSmall
+                        color: Theme.colorText
+                    }
                 }
             }
         }

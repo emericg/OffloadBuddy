@@ -832,7 +832,7 @@ bool Shot::getMetadataFromPicture(int index)
         vcodec = img_infos.format();
         width = static_cast<unsigned>(img_infos.size().rwidth());
         height = static_cast<unsigned>(img_infos.size().rheight());
-        orientation = img_infos.transformation();
+        transformation = img_infos.transformation();
 
         status = true;
     }
@@ -890,6 +890,13 @@ bool Shot::getMetadataFromVideo(int index)
             width = media->tracks_video[0]->width;
             height = media->tracks_video[0]->height;
             m_duration += media->tracks_video[0]->stream_duration_ms;
+            rotation = media->tracks_video[0]->video_rotation * 90;
+            if (media->tracks_video[0]->video_rotation == 1)
+                transformation = QImageIOHandler::TransformationRotate90;
+            else if (media->tracks_video[0]->video_rotation == 2)
+                transformation = QImageIOHandler::TransformationRotate180;
+            else if (media->tracks_video[0]->video_rotation == 3)
+                transformation = QImageIOHandler::TransformationRotate270;
 
             vcodec = QString::fromLocal8Bit(getCodecString(stream_VIDEO, media->tracks_video[0]->stream_codec, false));
             framerate = media->tracks_video[0]->framerate;
