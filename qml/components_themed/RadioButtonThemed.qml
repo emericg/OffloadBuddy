@@ -25,8 +25,7 @@ RadioButton {
         border.color: control.down ? Theme.colorSecondary : Theme.colorComponentBorder
 
         Rectangle {
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.centerIn: parent
             width: 12
             height: 12
             radius: (width / 2)

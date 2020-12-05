@@ -325,69 +325,123 @@ Item {
         Row {
             anchors.top: parent.top
             anchors.topMargin: 8
-            anchors.right: parent.right
+            anchors.right: buttonLock.left
             anchors.rightMargin: 8
             spacing: 8
 
-            visible: resizeWidget.editing
+            visible: resizeWidget.editing && resizeWidget.projectARlock
 
-            ItemImageButton {
+            ItemTextButton {
                 id: button43
                 width: 32; height: 32;
 
-                visible: resizeWidget.projectARlock
                 background: true
                 backgroundColor: "#222222"
                 highlightMode: "color"
-                iconColor: (resizeWidget.projectAR == 4/3) ? Theme.colorPrimary : "white"
+                textColor: (resizeWidget.projectAR == 4/3) ? Theme.colorPrimary : "white"
 
-                source: "qrc:/assets/icons_material/baseline-straighten-24px.svg"
+                text: "4:3"
                 onClicked: {
                     resizeWidget.projectAR = 4/3
                 }
             }
-            ItemImageButton {
+            ItemTextButton {
                 id: button169
                 width: 32; height: 32;
 
-                visible: resizeWidget.projectARlock
                 background: true
                 backgroundColor: "#222222"
                 highlightMode: "color"
-                iconColor: (resizeWidget.projectAR == 16/9) ? Theme.colorPrimary : "white"
+                textColor: (resizeWidget.projectAR == 16/9) ? Theme.colorPrimary : "white"
 
-                source: "qrc:/assets/icons_material/baseline-straighten-24px.svg"
+                text: "16:9"
                 onClicked: {
                     resizeWidget.projectAR = 16/9
                 }
             }
-            ItemImageButton {
+            ItemTextButton {
                 id: button219
                 width: 32; height: 32;
 
-                visible: resizeWidget.projectARlock
                 background: true
                 backgroundColor: "#222222"
                 highlightMode: "color"
-                iconColor: (resizeWidget.projectAR == 21/9) ? Theme.colorPrimary : "white"
+                textColor: (resizeWidget.projectAR == 21/9) ? Theme.colorPrimary : "white"
 
-                source: "qrc:/assets/icons_material/baseline-straighten-24px.svg"
+                text: "21:9"
                 onClicked: {
                     resizeWidget.projectAR = 21/9
                 }
             }
-            ItemImageButton {
-                id: buttonLock
+        }
+        ItemImageButton {
+            id: buttonLock
+            width: 32; height: 32;
+            anchors.right: parent.right
+            anchors.rightMargin: 8
+            anchors.top: parent.top
+            anchors.topMargin: 8
+
+            visible: resizeWidget.editing
+            background: true
+            backgroundColor: "#222222"
+            highlightMode: "color"
+            iconColor: (resizeWidget.projectARlock) ? Theme.colorPrimary : "white"
+
+            source: "qrc:/assets/icons_material/outline-https-24px.svg"
+            onClicked: {
+                resizeWidget.projectARlock = !resizeWidget.projectARlock
+            }
+        }
+        Column {
+            anchors.top: buttonLock.bottom
+            anchors.topMargin: 8
+            anchors.right: parent.right
+            anchors.rightMargin: 8
+            spacing: 8
+
+            visible: resizeWidget.editing && resizeWidget.projectARlock
+
+            ItemTextButton {
+                id: button34
                 width: 32; height: 32;
 
                 background: true
                 backgroundColor: "#222222"
                 highlightMode: "color"
-                iconColor: (resizeWidget.projectARlock) ? Theme.colorPrimary : "white"
+                textColor: (resizeWidget.projectAR == 3/4) ? Theme.colorPrimary : "white"
 
-                source: "qrc:/assets/icons_material/outline-https-24px.svg"
+                text: "3:4"
                 onClicked: {
-                    resizeWidget.projectARlock = !resizeWidget.projectARlock
+                    resizeWidget.projectAR = 3/4
+                }
+            }
+            ItemTextButton {
+                id: button916
+                width: 32; height: 32;
+
+                background: true
+                backgroundColor: "#222222"
+                highlightMode: "color"
+                textColor: (resizeWidget.projectAR == 9/16) ? Theme.colorPrimary : "white"
+
+                text: "9:16"
+                onClicked: {
+                    resizeWidget.projectAR = 9/16
+                }
+            }
+            ItemTextButton {
+                id: button921
+                width: 32; height: 32;
+
+                background: true
+                backgroundColor: "#222222"
+                highlightMode: "color"
+                textColor: (resizeWidget.projectAR == 9/21) ? Theme.colorPrimary : "white"
+
+                text: "9:21"
+                onClicked: {
+                    resizeWidget.projectAR = 9/21
                 }
             }
         }
