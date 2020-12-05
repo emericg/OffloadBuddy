@@ -773,7 +773,7 @@ Item {
                     highlightColor: Theme.colorPrimary
                     highlightMode: "color"
 
-                    source: "qrc:/assets/icons_material/baseline-straighten-24px.svg"
+                    source: "qrc:/assets/icons_material/baseline-crop-24px.svg"
                     onClicked: resizeWidget.editing = !resizeWidget.editing
                 }
                 ItemImageButton {
