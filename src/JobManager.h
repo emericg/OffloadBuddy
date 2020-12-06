@@ -78,13 +78,16 @@ typedef enum JobState
 typedef struct JobEncodeSettings
 {
     QString codec = "H.264";
-    int quality = 3; // [1:5]
-    int speed = 2; // [1:3]
+    int encoding_quality = 3;   // [1:5]
+    int encoding_speed = 2;     // [1:3]
+
     float fps = -1;
-    int resolution = -1;
+    int resolution = -1;        // height
     int transform = 0;
     QString scale;
     QString crop;
+    QString gif_effect;
+    int timelapse_fps = 0;
 
     int64_t startMs = -1;
     int64_t durationMs = -1;

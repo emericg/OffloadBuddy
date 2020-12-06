@@ -4,11 +4,12 @@ import QtQuick.Dialogs 1.3
 
 import ThemeEngine 1.0
 import com.offloadbuddy.shared 1.0
+import "qrc:/js/UtilsNumber.js" as UtilsNumber
 import "qrc:/js/UtilsString.js" as UtilsString
 import "qrc:/js/UtilsPath.js" as UtilsPath
 
 Popup {
-    id: popupEncodeVideo
+    id: popupEncoding
     x: (appWindow.width / 2) - (width / 2) - (appSidebar.width / 2)
     y: (appWindow.height / 2) - (height / 2)
     width: 640
@@ -29,6 +30,7 @@ Popup {
     property int clipStartMs: -1
     property int clipDurationMs: -1
 
+    property int clipTransformation: 0
     property int clipRotation: 0
     property bool clipVFlip: false
     property bool clipHFlip: false
@@ -41,16 +43,14 @@ Popup {
     function updateEncodePanel(shot) {
         currentShot = shot
 
-        // Framerate handler
-        if (shot.shotType === Shared.SHOT_PICTURE_MULTI ||
-            shot.shotType === Shared.SHOT_PICTURE_BURST ||
-            shot.shotType === Shared.SHOT_PICTURE_TIMELAPSE ||
-            shot.shotType === Shared.SHOT_PICTURE_NIGHTLAPSE) {
-            // timelapses
-            sliderFps.value = 30
-            sliderFps.from = 5
-            sliderFps.to = 120
-            sliderFps.stepSize = 1
+        // Set mode
+        if (shot.shotType === Shared.SHOT_PICTURE) {
+            // image
+            setImageMode()
+        } else if (shot.shotType === Shared.SHOT_PICTURE_MULTI || shot.shotType === Shared.SHOT_PICTURE_BURST ||
+                   shot.shotType === Shared.SHOT_PICTURE_TIMELAPSE || shot.shotType === Shared.SHOT_PICTURE_NIGHTLAPSE) {
+            // timelapse
+           setTimelapseMode()
 
             // GIF only appear for short timelapse
             if (shot.duration < 1000) { // check value
@@ -59,27 +59,11 @@ Popup {
                 rbGIF.visible = false
             }
         } else {
-            // videos
-            var divider = 1
-            if (shot.framerate >= 220)
-                divider = 8
-            else if (shot.framerate >= 110)
-                divider = 4
-            else if (shot.framerate >= 48)
-                divider = 2
+            // video
+            setVideoMode()
 
-            if (divider > 1) {
-                sliderFps.visible = true
-                sliderFps.value = (shot.framerate).toFixed(3)
-                sliderFps.from = (shot.framerate/divider).toFixed(3)
-                sliderFps.to = (shot.framerate).toFixed(3)
-                sliderFps.stepSize = (shot.framerate/divider).toFixed(3)
-            } else {
-                sliderFps.visible = false
-            }
-
-            // GIF only appear for short videos
-            if (shot.duration < 10000) {
+            // GIF only appear for short videos (7s)
+            if (shot.duration < 7500) {
                 rbGIF.visible = true
             } else {
                 rbGIF.visible = false
@@ -99,13 +83,6 @@ Popup {
 
         // Filters
         rectangleFilter.visible = false
-
-        // Set mode
-        if (shot.fileType === Shared.FILE_VIDEO || shot.shotType > Shared.SHOT_PICTURE) {
-            setVideoMode()
-        } else if (shot.fileType === Shared.FILE_PICTURE) {
-            setImageMode()
-        }
 
         // Handle destination(s)
         comboBoxDestination.updateDestinations()
@@ -162,8 +139,33 @@ Popup {
             clipRotation = rotation
             clipVFlip = vflip
             clipHFlip = hflip
+
+            if (vflip && hflip) {
+                clipRotation += 180
+                clipRotation %= 360
+                clipVFlip = false
+                clipHFlip = false
+            }
+
+            if (clipRotation === 0 && !clipHFlip && !clipVFlip)
+                clipTransformation = 1
+            if (clipRotation === 0 && clipHFlip && !clipVFlip)
+                clipTransformation = 2
+            if (clipRotation === 180 && !clipHFlip && !clipVFlip)
+                clipTransformation = 3
+            if (clipRotation === 0 && !clipHFlip && clipVFlip)
+                clipTransformation = 4
+            if (clipRotation === 270 && clipHFlip && !clipVFlip)
+                clipTransformation = 5
+            if (clipRotation === 90 && !clipHFlip && !clipVFlip)
+                clipTransformation = 6
+            if (clipRotation === 90 && clipHFlip && !clipVFlip)
+                clipTransformation = 7
+            if (clipRotation === 270 && !clipHFlip && !clipVFlip)
+                clipTransformation = 8
         } else {
             rectangleOrientation.visible = false
+            clipTransformation = 1
             clipRotation = 0
             clipVFlip = false
             clipHFlip = false
@@ -191,21 +193,40 @@ Popup {
     function setImageMode() {
         titleText.text = qsTr("Image encoding")
         mode = "image"
-        rectangleVideoCodec.visible = false
-        rectangleImageCodec.visible = true
-        rectangleEncodingSpeed.visible = false
-        rectangleFramerate.visible = false
-        rectangleFramerate2.visible = false
     }
 
     function setVideoMode() {
         titleText.text = qsTr("Video encoding")
         mode = "video"
-        rectangleVideoCodec.visible = true
-        rectangleImageCodec.visible = false
-        rectangleEncodingSpeed.visible = true
-        rectangleFramerate.visible = false
-        rectangleFramerate2.visible = true
+
+        cbTimelapse.checked = false
+        cbTimelapse.visible = true
+
+        timelapseFramerate.from = 1
+        timelapseFramerate.to = 15
+        timelapseFramerate.value = 10
+
+        if (!rbGIF.visible && rbGIF.checked) rbH264.checked = true
+    }
+
+    function setTimelapseMode() {
+        titleText.text = qsTr("Timelapse encoding")
+        mode = "timelapse"
+
+        cbTimelapse.checked = false
+        cbTimelapse.visible = false
+
+        timelapseFramerate.from = 1
+        timelapseFramerate.to = 60
+        timelapseFramerate.value = 15
+
+        if (!rbGIF.visible && rbGIF.checked) rbH264.checked = true
+    }
+
+    ////////
+
+    function toggleTimelapse() {
+        //
     }
 
     function toggleCopy() {
@@ -214,19 +235,11 @@ Popup {
             rbH265.enabled = false
             rbVP9.enabled = false
             rbGIF.enabled = false
-            rectangleEncodingQuality.visible = false
-            rectangleEncodingSpeed.visible = false
-            rectangleFramerate.visible = false
-            rectangleFramerate2.visible = false
         } else {
             rbH264.enabled = true
             rbH265.enabled = true
             rbVP9.enabled = true
             rbGIF.enabled = true
-            rectangleEncodingQuality.visible = true
-            rectangleEncodingSpeed.visible = true
-            rectangleFramerate.visible = false
-            rectangleFramerate2.visible = true
         }
     }
 
@@ -238,7 +251,10 @@ Popup {
     }
 
     contentItem: Column {
+        id: contentColumn
         spacing: 16
+
+        property int legendWidth: 128
 
         Rectangle {
             id: titleArea
@@ -281,13 +297,13 @@ Popup {
                 id: rectangleVideoCodec
                 height: 48
                 anchors.left: parent.left
-                anchors.leftMargin: 0
                 anchors.right: parent.right
-                anchors.rightMargin: 0
+
+                visible: (mode === "video" || mode === "timelapse")
 
                 Text {
                     id: textCodec
-                    width: 128
+                    width: contentColumn.legendWidth
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Codec")
@@ -348,13 +364,13 @@ Popup {
                 id: rectangleImageCodec
                 height: 48
                 anchors.left: parent.left
-                anchors.leftMargin: 0
                 anchors.right: parent.right
-                anchors.rightMargin: 0
+
+                visible: (mode === "image")
 
                 Text {
                     id: textFormat
-                    width: 128
+                    width: contentColumn.legendWidth
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Format")
@@ -406,13 +422,13 @@ Popup {
                 id: rectangleEncodingQuality
                 height: 48
                 anchors.left: parent.left
-                anchors.leftMargin: 0
                 anchors.right: parent.right
-                anchors.rightMargin: 0
+
+                visible: !cbCOPY.checked && !rbGIF.checked && !rbPNG.checked
 
                 Text {
                     id: textQuality
-                    width: 128
+                    width: contentColumn.legendWidth
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Quality index")
@@ -440,13 +456,13 @@ Popup {
                 id: rectangleEncodingSpeed
                 height: 48
                 anchors.left: parent.left
-                anchors.leftMargin: 0
                 anchors.right: parent.right
-                anchors.rightMargin: 0
+
+                visible: (mode === "video" || mode === "timelapse") && !cbCOPY.checked && !rbGIF.checked
 
                 Text {
                     id: textSpeed
-                    width: 128
+                    width: contentColumn.legendWidth
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Speed index")
@@ -480,7 +496,7 @@ Popup {
                 spacing: 16
 
                 Text {
-                    width: 128
+                    width: contentColumn.legendWidth
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Definition")
@@ -490,10 +506,47 @@ Popup {
 
                 ItemLilMenu {
                     anchors.verticalCenter: parent.verticalCenter
-                    width: selectorRes.width
+                    width: selectorGifRes.width
+
+                    visible: rbGIF.checked
 
                     Row {
-                        id: selectorRes
+                        id: selectorGifRes
+                        height: parent.height
+
+                        property int res: 400
+
+                        ItemLilMenuButton {
+                            text: "240p"
+                            selected: selectorGifRes.res === 240
+                            onClicked: selectorGifRes.res = 240
+                        }
+                        ItemLilMenuButton {
+                            text: "320p"
+                            selected: selectorGifRes.res === 320
+                            onClicked: selectorGifRes.res = 320
+                        }
+                        ItemLilMenuButton {
+                            text: "400p"
+                            selected: selectorGifRes.res === 400
+                            onClicked: selectorGifRes.res = 400
+                        }
+                        ItemLilMenuButton {
+                            text: "480p"
+                            selected: selectorGifRes.res === 480
+                            onClicked: selectorGifRes.res = 480
+                        }
+                    }
+                }
+
+                ItemLilMenu {
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: selectorVideoRes.width
+
+                    visible: !rbGIF.checked
+
+                    Row {
+                        id: selectorVideoRes
                         height: parent.height
 
                         property int res: 1080
@@ -501,44 +554,44 @@ Popup {
                         ItemLilMenuButton {
                             text: "480p"
                             visible: shot.height >= 480
-                            selected: selectorRes.res === 480
-                            onClicked: selectorRes.res = 480
+                            selected: selectorVideoRes.res === 480
+                            onClicked: selectorVideoRes.res = 480
                         }
                         ItemLilMenuButton {
                             text: "720p"
                             visible: shot.height >= 720
-                            selected: selectorRes.res === 720
-                            onClicked: selectorRes.res = 720
+                            selected: selectorVideoRes.res === 720
+                            onClicked: selectorVideoRes.res = 720
                         }
                         ItemLilMenuButton {
                             text: "1080p"
                             visible: shot.height >= 1080
-                            selected: selectorRes.res === 1080
-                            onClicked: selectorRes.res = 1080
+                            selected: selectorVideoRes.res === 1080
+                            onClicked: selectorVideoRes.res = 1080
                         }
                         ItemLilMenuButton {
                             text: "1440p"
                             visible: shot.height >= 1440
-                            selected: selectorRes.res === 1440
-                            onClicked: selectorRes.res = 1440
+                            selected: selectorVideoRes.res === 1440
+                            onClicked: selectorVideoRes.res = 1440
                         }
                         ItemLilMenuButton {
                             text: "2160p"
                             visible: shot.height >= 2160
-                            selected: selectorRes.res === 2160
-                            onClicked: selectorRes.res = 2160
+                            selected: selectorVideoRes.res === 2160
+                            onClicked: selectorVideoRes.res = 2160
                         }
                         ItemLilMenuButton {
                             text: "2880p"
                             visible: shot.height >= 2880
-                            selected: selectorRes.res === 2880
-                            onClicked: selectorRes.res = 2880
+                            selected: selectorVideoRes.res === 2880
+                            onClicked: selectorVideoRes.res = 2880
                         }
                         ItemLilMenuButton {
                             text: "4320p"
                             visible: shot.height >= 4320
-                            selected: selectorRes.res === 4320
-                            onClicked: selectorRes.res = 4320
+                            selected: selectorVideoRes.res === 4320
+                            onClicked: selectorVideoRes.res = 4320
                         }
                     }
                 }
@@ -547,14 +600,16 @@ Popup {
             //////////////////
 
             Row {
-                id: rectangleFramerate2
+                id: rectangleFramerate
                 anchors.left: parent.left
                 anchors.right: parent.right
                 height: 48
                 spacing: 16
 
+                visible: (mode === "video" && !cbCOPY.checked)
+
                 Text {
-                    width: 128
+                    width: contentColumn.legendWidth
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Framerate")
@@ -564,85 +619,111 @@ Popup {
 
                 ItemLilMenu {
                     anchors.verticalCenter: parent.verticalCenter
-                    width: selectorFps.width
+                    width: selectorGifFps.width
+
+                    visible: rbGIF.checked || cbTimelapse.checked
 
                     Row {
-                        id: selectorFps
+                        id: selectorGifFps
+                        height: parent.height
+
+                        property var fps: 15
+
+                        ItemLilMenuButton {
+                            text: "10" + (selected ? " " + qsTr("fps") : "")
+                            selected: selectorGifFps.fps === 10
+                            onClicked: selectorGifFps.fps = 10
+                        }
+                        ItemLilMenuButton {
+                            text: "15" + (selected ? " " + qsTr("fps") : "")
+                            selected: selectorGifFps.fps === 15
+                            onClicked: selectorGifFps.fps = 15
+                        }
+                        ItemLilMenuButton {
+                            text: "20" + (selected ? " " + qsTr("fps") : "")
+                            selected: selectorGifFps.fps === 20
+                            onClicked: selectorGifFps.fps = 20
+                        }
+                        ItemLilMenuButton {
+                            text: "24" + (selected ? " " + qsTr("fps") : "")
+                            selected: selectorGifFps.fps === 24
+                            onClicked: selectorGifFps.fps = 24
+                        }
+                    }
+                }
+
+                ItemLilMenu {
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: selectorVideoFps.width
+
+                    visible: !rbGIF.checked && !cbTimelapse.checked
+
+                    Row {
+                        id: selectorVideoFps
                         height: parent.height
 
                         property var fps: Math.round(currentShot.framerate)
 
                         ItemLilMenuButton {
-                            text: "24" + (selected ? " " + qsTr("fps") : "")
-                            visible: false // shot.framerate >= 23
-                            selected: selectorFps.fps === 24
-                            onClicked: selectorFps.fps = 24
-                        }
-                        ItemLilMenuButton {
                             text: "30" + (selected ? " " + qsTr("fps") : "")
                             visible: shot.framerate >= 29
-                            selected: selectorFps.fps === 30
-                            onClicked: selectorFps.fps = 30
+                            selected: selectorVideoFps.fps === 30
+                            onClicked: selectorVideoFps.fps = 30
                         }
                         ItemLilMenuButton {
                             text: "60" + (selected ? " " + qsTr("fps") : "")
                             visible: shot.framerate >= 59
-                            selected: selectorFps.fps === 60
-                            onClicked: selectorFps.fps = 60
+                            selected: selectorVideoFps.fps === 60
+                            onClicked: selectorVideoFps.fps = 60
                         }
                         ItemLilMenuButton {
                             text: "120" + (selected ? " " + qsTr("fps") : "")
                             visible: shot.framerate >= 119
-                            selected: selectorFps.fps === 120
-                            onClicked: selectorFps.fps = 120
+                            selected: selectorVideoFps.fps === 120
+                            onClicked: selectorVideoFps.fps = 120
                         }
                         ItemLilMenuButton {
                             text: "240" + (selected ? " " + qsTr("fps") : "")
                             visible: shot.framerate >= 239
-                            selected: selectorFps.fps === 240
-                            onClicked: selectorFps.fps = 240
+                            selected: selectorVideoFps.fps === 240
+                            onClicked: selectorVideoFps.fps = 240
                         }
                     }
                 }
             }
 
-            Item {
-                id: rectangleFramerate
+            Row {
+                id: rectangleTimelapse
                 anchors.left: parent.left
                 anchors.right: parent.right
                 height: 48
+                spacing: 16
 
                 Text {
-                    id: textFramerate
-                    width: 128
+                    width: contentColumn.legendWidth
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: qsTr("Framerate")
+                    text: qsTr("Timelapse")
                     font.pixelSize: 16
                     color: Theme.colorSubText
                 }
 
-                Text {
-                    id: textFps
-                    text: sliderFps.value + " " + qsTr("fps")
-                    anchors.left: textFramerate.right
-                    anchors.leftMargin: 16
+                CheckBoxThemed {
+                    id: cbTimelapse
                     anchors.verticalCenter: parent.verticalCenter
-                    font.pixelSize: 16
-                    color: Theme.colorText
+                    checked: false
+                    text: qsTr("Enable")
                 }
 
-                SliderThemed {
-                    id: sliderFps
-                    anchors.right: parent.right
-                    anchors.rightMargin: 0
-                    to: 60
-                    from: 5
-                    stepSize: 1
-                    anchors.left: textFps.right
-                    anchors.leftMargin: 16
+                SliderValueFilled {
+                    id: timelapseFramerate
+                    width: parent.width - contentColumn.legendWidth - cbTimelapse.width - 32
                     anchors.verticalCenter: parent.verticalCenter
-                    value: 30
+
+                    visible: cbTimelapse.checked || mode === "timelapse"
+                    from: 1
+                    to: 15
+                    value: 10
                 }
             }
 
@@ -656,7 +737,7 @@ Popup {
 
                 Text {
                     id: titleOrientation
-                    width: 128
+                    width: contentColumn.legendWidth
                     anchors.left: parent.left
                     anchors.leftMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
@@ -719,7 +800,7 @@ Popup {
 
                 Text {
                     id: titleClip
-                    width: 128
+                    width: contentColumn.legendWidth
                     anchors.left: parent.left
                     anchors.leftMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
@@ -782,12 +863,12 @@ Popup {
 
                 Text {
                     id: titleCrop
-                    width: 128
+                    width: contentColumn.legendWidth
                     anchors.left: parent.left
                     anchors.leftMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: qsTr("Crop video")
+                    text: qsTr("Crop area")
                     font.pixelSize: 16
                     color: Theme.colorSubText
                 }
@@ -836,6 +917,49 @@ Popup {
             //////////////////
 
             Item {
+                id: rectangleGifEffects
+                height: 48
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                visible: rbGIF.checked
+
+                Text {
+                    id: titleGifEffects
+                    width: contentColumn.legendWidth
+                    anchors.left: parent.left
+                    anchors.leftMargin: 0
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: qsTr("GIF effect")
+                    font.pixelSize: 16
+                    color: Theme.colorSubText
+                }
+
+                Row {
+                    anchors.left: titleGifEffects.right
+                    anchors.leftMargin: 16
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: 16
+
+                    RadioButtonThemed {
+                        id: rbGifEffectForward
+                        text: qsTr("Forward")
+                        checked: true
+                    }
+                    RadioButtonThemed {
+                        id: rbGifEffectBackward
+                        text: qsTr("Backward")
+                    }
+                    RadioButtonThemed {
+                        id: rbGifEffectBackandForth
+                        text: qsTr("Back and Forth")
+                    }
+                }
+            }
+
+            Item {
                 id: rectangleFilter
                 height: 48
                 anchors.left: parent.left
@@ -843,7 +967,7 @@ Popup {
 
                 Text {
                     id: titleFilter
-                    width: 128
+                    width: contentColumn.legendWidth
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
                     anchors.leftMargin: 0
@@ -872,10 +996,9 @@ Popup {
 
             //////////////////
 /*
-            Rectangle {
+            Rectangle { // separator
                 height: 1; color: Theme.colorSeparator;
-                anchors.right: parent.right; anchors.left: parent.left;
-            } // separator
+                anchors.right: parent.right; anchors.left: parent.left; }
 */
             Item { height: 16; anchors.right: parent.right; anchors.left: parent.left; } // spacer
 
@@ -887,7 +1010,7 @@ Popup {
 
                 Text {
                     id: textDestinationTitle
-                    width: 128
+                    width: contentColumn.legendWidth
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
 
@@ -1000,7 +1123,7 @@ Popup {
                 text: qsTr("Cancel")
                 fullColor: true
                 primaryColor: Theme.colorGrey
-                onClicked: popupEncodeVideo.close()
+                onClicked: popupEncoding.close()
             }
 
             ButtonWireframeImage {
@@ -1016,6 +1139,19 @@ Popup {
                     if (typeof currentShot === "undefined" || !currentShot) return
 
                     var encodingParams = {}
+
+                    if (rectangleImageCodec.visible) {
+                        if (rbPNG.checked)
+                            encodingParams["codec"] = "PNG";
+                        else if (rbJPEG.checked)
+                            encodingParams["codec"] = "JPEG";
+                        else if (rbWEBP.checked)
+                            encodingParams["codec"] = "WEBP";
+                        else if (rbAVIF.checked)
+                            encodingParams["codec"] = "AVIF";
+                        else if (rbHEIF.checked)
+                            encodingParams["codec"] = "HEIF";
+                    }
 
                     if (rectangleVideoCodec.visible) {
                         if (rbH264.checked)
@@ -1038,11 +1174,11 @@ Popup {
 
                         encodingParams["speed"] = sliderSpeed.value;
 
-                        if (selectorFps.visible && selectorFps.fps != Math.round(currentShot.framerate))
-                            encodingParams["fps"] = selectorFps.fps;
+                        if (selectorVideoFps.visible && selectorVideoFps.fps != Math.round(currentShot.framerate))
+                            encodingParams["fps"] = selectorVideoFps.fps;
 
-                        if (sliderFps.visible && sliderFps.value.toFixed(3) !== currentShot.framerate.toFixed(3))
-                            encodingParams["fps"] = sliderFps.value;
+                        if (selectorGifFps.visible)
+                            encodingParams["fps"] = selectorGifFps.fps;
 
                         if (clipStartMs > 0)
                             encodingParams["clipStartMs"] = clipStartMs;
@@ -1050,22 +1186,13 @@ Popup {
                             encodingParams["clipDurationMs"] = clipDurationMs;
                     }
 
-                    if (rectangleImageCodec.visible) {
-                        if (rbPNG.checked)
-                            encodingParams["codec"] = "PNG";
-                        if (rbJPEG.checked)
-                            encodingParams["codec"] = "JPEG";
-                        if (rbWEBP.checked)
-                            encodingParams["codec"] = "WEBP";
-                        if (rbAVIF.checked)
-                            encodingParams["codec"] = "AVIF";
-                        if (rbHEIF.checked)
-                            encodingParams["codec"] = "HEIF";
+                    if (selectorGifRes.visible && selectorGifRes.res !== currentShot.height) {
+                        encodingParams["resolution"] = selectorGifRes.res;
+                        encodingParams["scale"] = "-2:" + selectorGifRes.res;
                     }
-
-                    if (selectorRes.visible && selectorRes.res !== currentShot.height) {
-                        encodingParams["resolution"] = selectorRes.res;
-                        encodingParams["scale"] = "-2:" + selectorRes.res;
+                    if (selectorVideoRes.visible && selectorVideoRes.res !== currentShot.height) {
+                        encodingParams["resolution"] = selectorVideoRes.res;
+                        encodingParams["scale"] = "-2:" + selectorVideoRes.res;
                     }
 
                     if (clipCropX > 0 || clipCropY > 0 ||
@@ -1077,12 +1204,32 @@ Popup {
                         if (clipCropW > clipCropH) cropAR = clipCropW / clipCropH
                         else if (clipCropW < clipCropH) cropAR = clipCropH / clipCropW
 
-                        encodingParams["scale"] = (selectorRes.res * cropAR).toFixed(0) + ":" + selectorRes.res
+                        encodingParams["scale"] = UtilsNumber.round2((encodingParams["resolution"] * cropAR)) + ":" + encodingParams["resolution"]
                     }
 
-                    encodingParams["quality"] = sliderQuality.value;
+                    if (rbGIF.checked) {
+                        // Make sure we feed the complex graph
+                        encodingParams["fps"] = selectorGifFps.fps;
+                        encodingParams["resolution"] = selectorGifRes.res;
+                        encodingParams["scale"] = "-2:" + selectorGifRes.res;
+                        if (clipStartMs <= 0) encodingParams["clipStartMs"] = 0;
+                        if (clipDurationMs <= 0) encodingParams["clipDurationMs"] = currentShot.duration;
+                        if (clipCropX <= 0 && clipCropY <= 0 && clipCropW <= 0 && clipCropH <= 0)
+                            encodingParams["crop"] = currentShot.width + ":" + currentShot.height + ":" + 0 + ":" + 0
 
-                    encodingParams["path"] = textField_path.text;
+                        // Effect
+                        if (rbGifEffectBackward.checked) encodingParams["gif_effect"] = "backward"
+                        else if (rbGifEffectBackandForth.checked) encodingParams["gif_effect"] = "forwardbackward"
+                    }
+
+                    if (timelapseFramerate.visible)
+                        encodingParams["timelapse_fps"] = timelapseFramerate.value.toFixed(0)
+
+                    encodingParams["transform"] = clipTransformation
+
+                    encodingParams["quality"] = sliderQuality.value
+
+                    encodingParams["path"] = textField_path.text
 
                     ////
 
@@ -1094,7 +1241,7 @@ Popup {
                         return
 
                     mediaProvider.reencodeSelected(currentShot.uuid, encodingParams)
-                    popupEncodeVideo.close()
+                    popupEncoding.close()
                 }
             }
         }

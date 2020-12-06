@@ -266,9 +266,9 @@ void MediaLibrary::reencodeSelected(const QString &shot_uuid, const QVariant &va
         sett.codec = variantMap.value("codec").toString();
 
     if (variantMap.contains("quality"))
-        sett.quality = variantMap.value("quality").toInt();
+        sett.encoding_quality = variantMap.value("quality").toInt();
     if (variantMap.contains("speed"))
-        sett.speed = variantMap.value("speed").toInt();
+        sett.encoding_speed = variantMap.value("speed").toInt();
 
     if (variantMap.contains("resolution"))
         sett.resolution = variantMap.value("resolution").toInt();
@@ -284,6 +284,12 @@ void MediaLibrary::reencodeSelected(const QString &shot_uuid, const QVariant &va
 
     if (variantMap.contains("fps"))
         sett.fps = variantMap.value("fps").toFloat();
+
+    if (variantMap.contains("gif_effect"))
+        sett.gif_effect = variantMap.value("gif_effect").toString();
+
+    if (variantMap.contains("timelapse_fps"))
+        sett.timelapse_fps = variantMap.value("timelapse_fps").toInt();
 
     if (variantMap.contains("clipStartMs"))
         sett.startMs = variantMap.value("clipStartMs").toInt();
