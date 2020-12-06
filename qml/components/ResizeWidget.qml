@@ -27,28 +27,10 @@ Item {
 
     visible: editing || gismo.fx > 0.0 || gismo.fy > 0.0 || gismo.fwidth < 1.0 || gismo.fheight < 1.0
 
-    function reset() {
-        gismo.fx = 0.0
-        gismo.fy = 0.0
-        gismo.fcx = 0.5
-        gismo.fcy = 0.5
-        gismo.fwidth = 1.0
-        gismo.fheight = 1.0
-        editing = false
-    }
-
     function load() {
         editing = false
-/*
-        // Load values from project file
-        gismo.fx = project.cropX
-        gismo.fy = project.cropY
-        gismo.fcx = project.cropX + (project.cropW / 2)
-        gismo.fcy = project.cropY + (project.cropH / 2)
-        gismo.fwidth = project.cropW
-        gismo.fheight = project.cropH
-*/
-        //
+
+        // Load values from project
         gismo.fx = mediaArea.cropX
         gismo.fy = mediaArea.cropY
         gismo.fcx = mediaArea.cropX + (mediaArea.cropW / 2)
@@ -63,18 +45,11 @@ Item {
         // Save on screen coordinates
         gismo.saveCoord()
 
-        //
+        // Save values to project
         mediaArea.cropX = gismo.fx
         mediaArea.cropY = gismo.fy
         mediaArea.cropW = gismo.fwidth
         mediaArea.cropH = gismo.fheight
-/*
-        // Save values to project file
-        project.cropX = gismo.fx
-        project.cropY = gismo.fy
-        project.cropW = gismo.fwidth
-        project.cropH = gismo.fheight
-*/
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -144,13 +119,13 @@ Item {
             fwidth =  gismo.width / resizeWidget.width
             fheight =  gismo.height / resizeWidget.height
 
-            //console.log("> fx : " + fx.toFixed(2) + " > fy "+ fy.toFixed(2) +
+            //console.log("saveCoord() > fx : " + fx.toFixed(2) + " > fy "+ fy.toFixed(2) +
             //            " > fwidth "+ fwidth.toFixed(2) + " > fheight "+ fheight.toFixed(2))
         }
 
         function restoreCoord() {
-            restoreCoordFromFx() // DEPRECATED
-            //restoreCoordFromCenter()
+            restoreCoordFromFx()        // for regular content
+            //restoreCoordFromCenter()  // for 360 sizeless content
         }
 
         function restoreCoordFromFx() {
@@ -211,7 +186,7 @@ Item {
             anchors.fill: parent
 
             enabled: editing
-            acceptedButtons: Qt.AllButtons
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
 
             property bool isDragging: false
             property var globalMouseOffset

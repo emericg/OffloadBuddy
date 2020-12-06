@@ -1,6 +1,5 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
-import QtMultimedia 5.9
 
 import ThemeEngine 1.0
 import com.offloadbuddy.shared 1.0
@@ -15,15 +14,11 @@ Item {
 
     function setPause() { mediaPreview.setPause() }
     function setPlayPause() { mediaPreview.setPlayPause() }
-    function toggleRotate() { mediaPreview.toggleRotate() }
+    function toggleTrim() { mediaPreview.toggleTrim() }
+    function toggleTransform() { mediaPreview.toggleTransform() }
     function toggleCrop() { mediaPreview.toggleCrop() }
 
     function updateOverview() {
-
-        //textFileList.text = shot.fileList
-
-        labelCamera.visible = (shot.camera)
-        camera.text = shot.camera
 
         date.text = shot.date.toUTCString()
         size.text = UtilsString.bytesToString_short(shot.datasize)
@@ -118,8 +113,7 @@ Item {
     function openEncodePopup() {
         popupEncodeVideo.updateEncodePanel(shot)
         popupEncodeVideo.setClip(mediaPreview.startLimit, mediaPreview.stopLimit)
-        popupEncodeVideo.setOrientation(mediaPreview.rotation,
-                                        mediaPreview.hflipped, mediaPreview.vflipped)
+        popupEncodeVideo.setOrientation(mediaPreview.rotation, mediaPreview.hflipped, mediaPreview.vflipped)
         popupEncodeVideo.setCrop(mediaPreview.cropX, mediaPreview.cropY,
                                  mediaPreview.cropW, mediaPreview.cropH)
         popupEncodeVideo.open()
@@ -238,6 +232,7 @@ Item {
                 width: 28
                 height: 28
 
+                visible: shot && shot.camera
                 source: "qrc:/assets/icons_material/baseline-camera-24px.svg"
                 color: Theme.colorText
 
@@ -248,6 +243,7 @@ Item {
                     anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
 
+                    text: shot.camera
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignLeft
                     font.pixelSize: Theme.fontSizeContentSmall
@@ -274,28 +270,6 @@ Item {
                     verticalAlignment: Text.AlignVCenter
                     color: Theme.colorText
                     font.pixelSize: Theme.fontSizeContentSmall
-                }
-            }
-
-            ImageSvg {
-                id: labelDefinition
-                width: 28
-                height: 28
-
-                source: "qrc:/assets/icons_material/baseline-aspect_ratio-24px.svg"
-                color: Theme.colorText
-
-                Text {
-                    id: definition
-                    height: 28
-                    anchors.left: parent.right
-                    anchors.leftMargin: 16
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignRight
-                    font.pixelSize: Theme.fontSizeContentSmall
-                    color: Theme.colorText
                 }
             }
 
@@ -355,6 +329,29 @@ Item {
                 spacing: 8
 
                 Item { width: 16; height: 16; } // spacer
+
+                ImageSvg {
+                    id: labelDefinition
+                    width: 28
+                    height: 28
+
+                    source: "qrc:/assets/icons_material/baseline-aspect_ratio-24px.svg"
+                    color: Theme.colorText
+
+                    Text {
+                        id: definition
+                        height: 28
+                        anchors.left: parent.right
+                        anchors.leftMargin: 16
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        text: shot.width + "x" + shot.height + "   (" + UtilsMedia.varToString(shot.width, shot.height) + ")"
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignRight
+                        font.pixelSize: Theme.fontSizeContentSmall
+                        color: Theme.colorText
+                    }
+                }
 
                 ImageSvg {
                     id: labelISO
@@ -459,6 +456,29 @@ Item {
                 Item { width: 16; height: 16; } // spacer
 
                 ImageSvg {
+                    id: labelDefinition2
+                    width: 28
+                    height: 28
+
+                    source: "qrc:/assets/icons_material/baseline-aspect_ratio-24px.svg"
+                    color: Theme.colorText
+
+                    Text {
+                        id: definition2
+                        height: 28
+                        anchors.left: parent.right
+                        anchors.leftMargin: 16
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        text: shot.width + "x" + shot.height + "   (" + UtilsMedia.varToString(shot.width, shot.height) + ")"
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignRight
+                        font.pixelSize: Theme.fontSizeContentSmall
+                        color: Theme.colorText
+                    }
+                }
+
+                ImageSvg {
                     id: labelChapters
                     width: 28
                     height: 28
@@ -481,15 +501,15 @@ Item {
                 }
 
                 ImageSvg {
-                    id: labelCodec
+                    id: labelFramerate
                     width: 28
                     height: 28
 
-                    source: "qrc:/assets/icons_material/baseline-memory-24px.svg"
+                    source: "qrc:/assets/icons_material/outline-local_movies-24px.svg"
                     color: Theme.colorText
 
                     Text {
-                        id: codec
+                        id: framerate
                         height: 28
                         anchors.left: parent.right
                         anchors.leftMargin: 16
@@ -503,15 +523,15 @@ Item {
                 }
 
                 ImageSvg {
-                    id: labelFramerate
+                    id: labelCodec
                     width: 28
                     height: 28
 
-                    source: "qrc:/assets/icons_material/outline-local_movies-24px.svg"
+                    source: "qrc:/assets/icons_material/baseline-memory-24px.svg"
                     color: Theme.colorText
 
                     Text {
-                        id: framerate
+                        id: codec
                         height: 28
                         anchors.left: parent.right
                         anchors.leftMargin: 16
@@ -635,6 +655,7 @@ Item {
             anchors.left: parent.left
             anchors.topMargin: 0
 
+            text: shot.fileList
             clip: true
             horizontalAlignment: Text.AlignRight
             color: Theme.colorText

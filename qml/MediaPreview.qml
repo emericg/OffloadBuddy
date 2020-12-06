@@ -1,6 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
-import QtMultimedia 5.9
+import QtMultimedia 5.12
 
 import ThemeEngine 1.0
 import com.offloadbuddy.shared 1.0
@@ -14,8 +14,6 @@ Item {
     anchors.right: isFullScreen ? parent.right : infosGeneric.left
     anchors.bottom: parent.bottom
     anchors.margins: 16
-
-    clip: true
 
     property bool isFullScreen: false
     //color: (isFullScreen || (shot && shot.fileType === Shared.FILE_PICTURE)) ? "transparent" : "black"
@@ -44,15 +42,15 @@ Item {
         console.log("MediaPreview::setImageMode()  >  '" + shot.previewPhoto + "'")
         mode = "image"
 
-        overlayRotations.visible = false
-        overlayRotations.anchors.bottom = undefined
-        overlayRotations.anchors.bottomMargin = 0
-        overlayRotations.anchors.top = overlays.top
-        overlayRotations.anchors.topMargin = 16
+        overlayTransform.visible = false
+        overlayTransform.anchors.bottom = undefined
+        overlayTransform.anchors.bottomMargin = 0
+        overlayTransform.anchors.top = overlays.top
+        overlayTransform.anchors.topMargin = 16
 
-        overlayClip.visible = false
+        overlayTrim.visible = false
 
-        resizeWidget.editing = false
+        overlayCrop.editing = false
 
         imageOutput.visible = true
         videoOutput.visible = false
@@ -72,15 +70,15 @@ Item {
         console.log("MediaPreview::setVideoMode()  >  '" + shot.previewVideo + "'")
         mode = "video"
 
-        overlayRotations.visible = false
-        overlayRotations.anchors.top = undefined
-        overlayRotations.anchors.topMargin = 0
-        overlayRotations.anchors.bottom = overlays.bottom
-        overlayRotations.anchors.bottomMargin = 56
+        overlayTransform.visible = false
+        overlayTransform.anchors.top = undefined
+        overlayTransform.anchors.topMargin = 0
+        overlayTransform.anchors.bottom = overlays.bottom
+        overlayTransform.anchors.bottomMargin = 56
 
-        overlayClip.visible = false
+        overlayTrim.visible = false
 
-        resizeWidget.editing = false
+        overlayCrop.editing = false
 
         imageOutput.visible = false
         videoOutput.visible = true
@@ -123,12 +121,34 @@ Item {
         }
     }
 
-    function toggleRotate() {
-        overlayRotations.visible = !overlayRotations.visible
+    function toggleTrim() {
+        timeline.visible = !timeline.visible
+        cutline.visible = !cutline.visible
+        overlayTrim.visible = !overlayTrim.visible
+
+        overlayTransform.visible = false
+        overlayCrop.editing = false
+
+        if (mediaArea.startLimit < 0) mediaArea.startLimit = 0
+        if (mediaArea.stopLimit < 0) mediaArea.stopLimit = videoPlayer.duration
+    }
+
+    function toggleTransform() {
+        timeline.visible = true
+        cutline.visible = false
+        overlayTrim.visible = false
+
+        overlayTransform.visible = !overlayTransform.visible
+        overlayCrop.editing = false
     }
 
     function toggleCrop() {
-        resizeWidget.editing = !resizeWidget.editing
+        timeline.visible = true
+        cutline.visible = false
+        overlayTrim.visible = false
+
+        overlayTransform.visible = false
+        overlayCrop.editing = !overlayCrop.editing
     }
 
     function toggleFullScreen() {
@@ -161,31 +181,31 @@ Item {
             //1 = Horizontal (normal)
             setFlip("")
             setRotation(0)
-        } else if (shot.transformation == 2) {
+        } else if (shot.transformation === 2) {
             //2 = Mirror horizontal
             setFlip("horizontal")
             setRotation(0)
-        } else if (shot.transformation == 3) {
+        } else if (shot.transformation === 3) {
             //3 = Rotate 180
             setFlip("")
             setRotation(180)
-        } else if (shot.transformation == 4) {
+        } else if (shot.transformation === 4) {
             //4 = Mirror vertical
             setFlip("vertical")
             setRotation(0)
-        } else if (shot.transformation == 5) {
+        } else if (shot.transformation === 5) {
             //5 = Mirror horizontal and rotate 270 CW
             setFlip("horizontal")
             setRotation(270)
-        } else if (shot.transformation == 6) {
+        } else if (shot.transformation === 6) {
             //6 = Rotate 90 CW
             setFlip("")
             setRotation(90)
-        } else if (shot.transformation == 7) {
+        } else if (shot.transformation === 7) {
             //7 = Mirror horizontal and rotate 90 CW
             setFlip("horizontal")
             setRotation(90)
-        } else if (shot.transformation == 8) {
+        } else if (shot.transformation === 8) {
             //8 = Rotate 270 CW
             setFlip("")
             setRotation(270)
@@ -236,7 +256,7 @@ Item {
         console.log("> mediaArea size: " + mediaArea.width + "x" + mediaArea.height)
         console.log("> overlays size      : " + overlays.width + "x" + overlays.height)
 */
-        resizeWidget.load()
+        overlayCrop.load()
     }
 
     Matrix4x4 { id: noflip; matrix: Qt.matrix4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1) }
@@ -260,6 +280,8 @@ Item {
             output.transform = hflip
         else
             output.transform = noflip
+
+        // TODO // flip overlayCrop?
     }
 
     function addRotation(value) {
@@ -275,6 +297,12 @@ Item {
         } else {
             output.scale = 1
         }
+
+        // TODO // rotate overlayCrop instead?
+        mediaArea.cropX = 0.0
+        mediaArea.cropY = 0.0
+        mediaArea.cropW = 1.0
+        mediaArea.cropH = 1.0
 
         computeOverlaySize()
     }
@@ -301,6 +329,19 @@ Item {
     onHeightChanged: computeOverlaySize()
 
     ////////////////////////////////////////////////////////////////////////////
+
+    Rectangle {
+        anchors.fill: overlays
+        color: "black"
+
+        ImageSvg {
+            width: 48; height: 48;
+            anchors.centerIn: parent
+
+            color: Theme.colorIcon
+            source: "qrc:/assets/icons_material/baseline-hourglass_empty-24px.svg"
+        }
+    }
 
     Item {
         id: output
@@ -373,9 +414,7 @@ Item {
             mediaArea.cropY = 0.0
             mediaArea.cropW = 1.0
             mediaArea.cropH = 1.0
-
-            resizeWidget.reset()
-            resizeWidget.load()
+            overlayCrop.load()
         }
         onVolumeChanged: {
             //
@@ -392,6 +431,8 @@ Item {
         id: overlays
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
+
+        clip: true
 /*
         Rectangle {
             anchors.fill: parent
@@ -430,14 +471,24 @@ Item {
             onExited: { hovered = false; }
         }
 
+
+        ////////////////
+
+        ResizeWidget {
+            id: overlayCrop
+            anchors.fill: parent
+        }
+
+        ////////////////
+
         Item {
-            id: overlayClip
+            id: overlayTrim
             anchors.right: parent.right
             anchors.rightMargin: 16
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 56
 
-            width: overlayClipText.width + 16
+            width: overlayTrimText.width + 16
             height: 32
             visible: false
 
@@ -449,7 +500,7 @@ Item {
             }
 
             Text {
-                id: overlayClipText
+                id: overlayTrimText
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter
 
@@ -461,7 +512,7 @@ Item {
         }
 
         Row {
-            id: overlayRotations
+            id: overlayTransform
             anchors.right: parent.right
             anchors.rightMargin: 16
             anchors.top: parent.top
@@ -535,13 +586,6 @@ Item {
 
         ItemBannerMessage {
             id: mediaBanner
-        }
-
-        ////////////////
-
-        ResizeWidget {
-            id: resizeWidget
-            anchors.fill: parent
         }
 
         ////////////////
@@ -719,26 +763,7 @@ Item {
                 spacing: 8
 
                 ItemImageButton {
-                    id: buttonToggleRotate
-                    width: 36
-                    height: 36
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    iconColor: overlayRotations.visible ? Theme.colorPrimary : "white"
-                    highlightColor: Theme.colorPrimary
-                    highlightMode: "color"
-
-                    source: "qrc:/assets/icons_material/baseline-rotate_90_degrees_ccw-24px.svg"
-                    onClicked: {
-                        timeline.visible = true
-                        cutline.visible = false
-                        overlayClip.visible = false
-
-                        overlayRotations.visible = !overlayRotations.visible
-                    }
-                }
-                ItemImageButton {
-                    id: buttonToggleCut
+                    id: buttonToggleTrim
                     width: 36
                     height: 36
                     anchors.verticalCenter: parent.verticalCenter
@@ -748,33 +773,33 @@ Item {
                     highlightMode: "color"
 
                     source: "qrc:/assets/icons_material/baseline-timer-24px.svg"
-                    onClicked: {
-                        overlayRotations.visible = false
-
-                        timeline.visible = !timeline.visible
-                        cutline.visible = !cutline.visible
-                        overlayClip.visible = !overlayClip.visible
-
-                        mediaArea.startLimit = 0
-                        mediaArea.stopLimit = videoPlayer.duration
-
-                        //if (mediaArea.startLimit < 0 && mediaArea.stopLimit < 0) {
-                        //   overlayClipText.text = UtilsString.durationToString_ISO8601_full(0) + qsTr(" to ") + UtilsString.durationToString_ISO8601_full(videoPlayer.duration)
-                        //}
-                    }
+                    onClicked: toggleTrim()
                 }
                 ItemImageButton {
-                    id: buttonTogglePanscan
+                    id: buttonToggleTransform
                     width: 36
                     height: 36
                     anchors.verticalCenter: parent.verticalCenter
 
-                    iconColor: resizeWidget.editing ? Theme.colorPrimary : "white"
+                    iconColor: overlayTransform.visible ? Theme.colorPrimary : "white"
+                    highlightColor: Theme.colorPrimary
+                    highlightMode: "color"
+
+                    source: "qrc:/assets/icons_material/baseline-rotate_90_degrees_ccw-24px.svg"
+                    onClicked: toggleTransform()
+                }
+                ItemImageButton {
+                    id: buttonToggleCrop
+                    width: 36
+                    height: 36
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    iconColor: overlayCrop.editing ? Theme.colorPrimary : "white"
                     highlightColor: Theme.colorPrimary
                     highlightMode: "color"
 
                     source: "qrc:/assets/icons_material/baseline-crop-24px.svg"
-                    onClicked: resizeWidget.editing = !resizeWidget.editing
+                    onClicked: toggleCrop()
                 }
                 ItemImageButton {
                     id: buttonScreenshot
@@ -802,9 +827,9 @@ Item {
                     highlightColor: Theme.colorPrimary
                     highlightMode: "color"
 
-                    source: mediaArea.isFullScreen ? "qrc:/assets/icons_material/baseline-fullscreen_exit-24px.svg"
-                                                   : "qrc:/assets/icons_material/baseline-fullscreen-24px.svg"
-                    onClicked: mediaArea.toggleFullScreen()
+                    source: isFullScreen ? "qrc:/assets/icons_material/baseline-fullscreen_exit-24px.svg"
+                                         : "qrc:/assets/icons_material/baseline-fullscreen-24px.svg"
+                    onClicked: toggleFullScreen()
                 }
             }
         }

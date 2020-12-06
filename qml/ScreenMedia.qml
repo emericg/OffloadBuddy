@@ -157,11 +157,20 @@ Item {
         }
 
         Row {
-            id: rowActions
-            anchors.right: rowMenus.left
-            anchors.rightMargin: 32
+            id: rowActions1
+            anchors.right: rowActions2.left
+            anchors.rightMargin: 24
             anchors.verticalCenter: parent.verticalCenter
             spacing: 4
+
+            ItemImageButton {
+                id: buttonTrim
+                width: 40
+                height: 40
+                source: "qrc:/assets/icons_material/baseline-timer-24px.svg"
+                backgroundColor: Theme.colorForeground
+                onClicked: contentOverview.toggleTrim()
+            }
 
             ItemImageButton {
                 id: buttonRotate
@@ -169,7 +178,7 @@ Item {
                 height: 40
                 source: "qrc:/assets/icons_material/baseline-rotate_90_degrees_ccw-24px.svg"
                 backgroundColor: Theme.colorForeground
-                onClicked: contentOverview.toggleRotate()
+                onClicked: contentOverview.toggleTransform()
             }
 
             ItemImageButton {
@@ -180,6 +189,14 @@ Item {
                 backgroundColor: Theme.colorForeground
                 onClicked: contentOverview.toggleCrop()
             }
+        }
+
+        Row {
+            id: rowActions2
+            anchors.right: rowActions3.left
+            anchors.rightMargin: 24
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: 4
 
             ItemImageButton {
                 id: buttonTimestamp
@@ -208,6 +225,14 @@ Item {
                 backgroundColor: Theme.colorForeground
                 onClicked: contentOverview.openTelemetryPopup()
             }
+        }
+
+        Row {
+            id: rowActions3
+            anchors.right: rowMenus.left
+            anchors.rightMargin: 24
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: 4
 
             ItemImageButton {
                 id: buttonShowFolder

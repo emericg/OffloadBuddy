@@ -12,7 +12,7 @@ Popup {
     id: popupEncoding
     x: (appWindow.width / 2) - (width / 2) - (appSidebar.width / 2)
     y: (appWindow.height / 2) - (height / 2)
-    width: 640
+    width: 720
     padding: 0
 
     signal confirmed()
@@ -323,39 +323,46 @@ Popup {
                         anchors.verticalCenter: parent.verticalCenter
                         text: qsTr("COPY")
                         onClicked: toggleCopy()
+                        onCheckedChanged: textCodecHelp.setText()
                     }
                     RadioButtonThemed {
                         id: rbH264
                         anchors.verticalCenter: parent.verticalCenter
                         text: "H.264"
                         checked: true
+                        onCheckedChanged: textCodecHelp.setText()
                     }
                     RadioButtonThemed {
                         id: rbH265
                         anchors.verticalCenter: parent.verticalCenter
                         text: "H.265"
+                        onCheckedChanged: textCodecHelp.setText()
                     }
                     RadioButtonThemed {
                         id: rbVP9
                         anchors.verticalCenter: parent.verticalCenter
                         text: "VP9"
+                        onCheckedChanged: textCodecHelp.setText()
                     }
                     RadioButtonThemed {
                         id: rbAV1
                         anchors.verticalCenter: parent.verticalCenter
                         text: "AV1"
                         visible: false
+                        onCheckedChanged: textCodecHelp.setText()
                     }
                     RadioButtonThemed {
                         id: rbProRes
                         anchors.verticalCenter: parent.verticalCenter
                         text: "ProRes"
                         visible: false
+                        onCheckedChanged: textCodecHelp.setText()
                     }
                     RadioButtonThemed {
                         id: rbGIF
                         anchors.verticalCenter: parent.verticalCenter
                         text: "GIF"
+                        onCheckedChanged: textCodecHelp.setText()
                     }
                 }
             }
@@ -389,30 +396,88 @@ Popup {
                         id: rbPNG
                         anchors.verticalCenter: parent.verticalCenter
                         text: "PNG"
+                        onCheckedChanged: textCodecHelp.setText()
                     }
                     RadioButtonThemed {
                         id: rbJPEG
                         anchors.verticalCenter: parent.verticalCenter
                         text: "JPEG"
                         checked: true
+                        onCheckedChanged: textCodecHelp.setText()
                     }
                     RadioButtonThemed {
                         id: rbWEBP
                         anchors.verticalCenter: parent.verticalCenter
                         text: "WebP"
+                        onCheckedChanged: textCodecHelp.setText()
                     }
                     RadioButtonThemed {
                         id: rbAVIF
                         anchors.verticalCenter: parent.verticalCenter
                         text: "AVIF"
                         visible: false
+                        onCheckedChanged: textCodecHelp.setText()
                     }
                     RadioButtonThemed {
                         id: rbHEIF
                         anchors.verticalCenter: parent.verticalCenter
                         text: "HEIF"
                         visible: false
+                        onCheckedChanged: textCodecHelp.setText()
                     }
+                }
+            }
+
+            Item {
+                id: rectangleCodecHelp
+                height: textCodecHelp.contentHeight + 8
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                visible: textCodecHelp.text
+
+                Text {
+                    id: textCodecHelp
+                    anchors.left: parent.left
+                    anchors.leftMargin: contentColumn.legendWidth + 16
+                    anchors.right: parent.right
+
+                    function setText() {
+                        if (cbCOPY.checked) {
+                            text = qsTr("With this mode you can trim the duration without reencoding the video, so no quality will be lost. But you cannot apply any other transformation.")
+                        } else {
+                            if (rbH264.checked) {
+                                text = qsTr("H.264 is the most widely used codec today. It provides the best balance of compression, speed, and excellent support for every kind of software and devices.")
+                            } else if (rbH265.checked) {
+                                text = qsTr("The successor of H.264. It provides excellent compression, slower encoding speed, and good support with most kind of devices.")
+                            } else if (rbVP9.checked) {
+                                text = qsTr("Good balance of next gen compression, speed, and software support. Use it if you know what you are doing.")
+                            } else if (rbAV1.checked) {
+                                text = qsTr("AV1 has the best compression for video, but is VERY slow to encode, and while software support is good, device support is still poor as of today.")
+                            } else if (rbProRes.checked) {
+                                text = qsTr("Almost lossless compression, so HUGE file size but very good quality and speed.")
+                            } else if (rbGIF.checked) {
+                                text = qsTr("The meme maker. Go nuts...")
+                            } else if (rbPNG.checked) {
+                                text = qsTr("Lossless compression for your picture. Big files, but NO quality lost.")
+                            } else if (rbJPEG.checked) {
+                                text = qsTr("You know...")
+                            } else if (rbWEBP.checked) {
+                                text = qsTr("Better compression and quality than JPEG, good software support, but hardware support lacking.")
+                            } else if (rbAVIF.checked) {
+                                text = qsTr("AVIF is an AV1 based image format. It has excellent compression but very poor support from various devices, web browser and other.")
+                            } else if (rbHEIF.checked) {
+                                text = qsTr("HEIF is an H.265 based image format. It has excellent compression but very poor support from various devices, web browser and other.")
+                            } else {
+                                text = ""
+                            }
+                        }
+                    }
+                    Component.onCompleted: setText()
+
+                    font.pixelSize: 14
+                    wrapMode: Text.WordWrap
+                    color: Theme.colorSubText
                 }
             }
 
@@ -494,6 +559,8 @@ Popup {
                 anchors.right: parent.right
                 height: 48
                 spacing: 16
+
+                visible: !cbCOPY.checked
 
                 Text {
                     width: contentColumn.legendWidth
@@ -699,6 +766,8 @@ Popup {
                 height: 48
                 spacing: 16
 
+                visible: (mode === "timelapse") || (mode === "video" && !cbCOPY.checked && shot.duration > 60000)
+
                 Text {
                     width: contentColumn.legendWidth
                     anchors.verticalCenter: parent.verticalCenter
@@ -734,6 +803,8 @@ Popup {
                 height: 48
                 anchors.left: parent.left
                 anchors.right: parent.right
+
+                visible: !cbCOPY.checked
 
                 Text {
                     id: titleOrientation
@@ -805,7 +876,7 @@ Popup {
                     anchors.leftMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: qsTr("Clip video")
+                    text: qsTr("Trim duration")
                     font.pixelSize: 16
                     color: Theme.colorSubText
                 }
@@ -991,6 +1062,39 @@ Popup {
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: checkBox_defish.right
                     anchors.leftMargin: 16
+                }
+            }
+
+            Item {
+                id: rectangleWarning
+                height: 48
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                visible: (shot.fileType === Shared.FILE_VIDEO && shot.hasGPS)
+
+                Text {
+                    id: titleWarning
+                    width: contentColumn.legendWidth
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: parent.left
+                    anchors.leftMargin: 0
+
+                    text: qsTr("Be aware")
+                    font.pixelSize: 16
+                    color: Theme.colorSubText
+                }
+
+                Text {
+                    anchors.left: parent.left
+                    anchors.leftMargin: contentColumn.legendWidth + 16
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: qsTr("GPS and telemetry tracks will not be caried to the reencoded file. You can export them separately if you want.")
+                    font.pixelSize: 16
+                    wrapMode: Text.WordWrap
+                    color: Theme.colorText
                 }
             }
 

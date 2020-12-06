@@ -69,6 +69,7 @@ Item {
         anchors.centerIn: bgRect
 
         text: itemImageButton.text
+        font.bold: true
         font.pixelSize: 10
         font.capitalization: Font.AllUppercase
 
