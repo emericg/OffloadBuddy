@@ -40,40 +40,49 @@ Popup {
     property int clipCropW: 0
     property int clipCropH: 0
 
+    property bool clipIsShort: false
+    property bool clipCanBeCopied: false
+
     function updateEncodePanel(shot) {
         currentShot = shot
 
         // Set mode
         if (shot.shotType === Shared.SHOT_PICTURE) {
-            // image
-            setImageMode()
+            titleText.text = qsTr("Image encoding")
+            mode = "image"
         } else if (shot.shotType === Shared.SHOT_PICTURE_MULTI || shot.shotType === Shared.SHOT_PICTURE_BURST ||
                    shot.shotType === Shared.SHOT_PICTURE_TIMELAPSE || shot.shotType === Shared.SHOT_PICTURE_NIGHTLAPSE) {
-            // timelapse
-           setTimelapseMode()
+            titleText.text = qsTr("Timelapse encoding")
+            mode = "timelapse"
 
-            // GIF only appear for short timelapse
-            if (shot.duration < 1000) { // check value
-                rbGIF.visible = true
-            } else {
-                rbGIF.visible = false
-            }
+            cbTimelapse.checked = false
+            cbTimelapse.visible = false
+
+            timelapseFramerate.from = 1
+            timelapseFramerate.to = 60
+            timelapseFramerate.value = 15
+
         } else {
-            // video
-            setVideoMode()
+            titleText.text = qsTr("Video encoding")
+            mode = "video"
 
-            // GIF only appear for short videos (7s)
-            if (shot.duration < 7500) {
-                rbGIF.visible = true
-            } else {
-                rbGIF.visible = false
-            }
+            cbTimelapse.checked = false
+            cbTimelapse.visible = true
+
+            timelapseFramerate.from = 1
+            timelapseFramerate.to = 15
+            timelapseFramerate.value = 10
         }
+
+        if (!rbGIF.enabled && rbGIF.checked) { rbH264.checked = true; }
+        if (!cbCOPY.enabled && cbCOPY.checked) { cbCOPY.checked = false; bH264.checked = true; }
+
+        textCodecHelp.setText()
 
         // Clip handler
         setClip(-1, -1)
 
-        // Resolution
+        // Resolution?
 
         // Orientation
         setOrientation(0, false, false)
@@ -88,16 +97,23 @@ Popup {
         comboBoxDestination.updateDestinations()
     }
 
+    ////////////////
+
     function setClip(clipStart, clipStop) {
         //console.log("setClip() " + clipStart + "/" + clipStop)
 
         if (shot.shotType >= Shared.SHOT_PICTURE) {
             clipStartMs = -1
             clipDurationMs = -1
-
-            cbCOPY.visible = false
-            cbCOPY.checked = false
+            clipCanBeCopied = false
             rectangleClip.visible = false
+
+            // GIF only appear for short timelapse
+            if (shot.duration < 1000) { // check value
+                clipIsShort = true
+            } else {
+                clipIsShort = false
+            }
 
             return
         }
@@ -107,28 +123,23 @@ Popup {
             if (clipStop < 0) clipStop = currentShot.duration
             clipStartMs = clipStart
             clipDurationMs = clipStop - clipStart
-            textField_clipstart.text = UtilsString.durationToString_ISO8601_full(clipStart)
-            textField_clipstop.text = UtilsString.durationToString_ISO8601_full(clipStop)
-
-            cbCOPY.visible = true
-            cbCOPY.checked = true
-            toggleCopy()
+            clipCanBeCopied = true
             rectangleClip.visible = true
 
-            if (clipDurationMs < 10000) {
-                rbGIF.visible = true
-            } else {
-                rbGIF.visible = false
-            }
+            textField_clipstart.text = UtilsString.durationToString_ISO8601_full(clipStart)
+            textField_clipstop.text = UtilsString.durationToString_ISO8601_full(clipStop)
         } else {
             clipStartMs = -1
             clipDurationMs = -1
-
-            cbCOPY.visible = false
-            cbCOPY.checked = false
-            toggleCopy()
+            clipCanBeCopied = false
             rectangleClip.visible = false
         }
+
+        // GIF only appear for short videos (7.5s)
+        if ((clipDurationMs > 0 && clipDurationMs < 7500) || currentShot.duration < 7500)
+            clipIsShort = true
+        else
+            clipIsShort = false
     }
 
     function setOrientation(rotation, vflip, hflip) {
@@ -185,61 +196,6 @@ Popup {
             textField_cropSize.text = clipCropW + "x" + clipCropH
         } else {
             rectangleCrop.visible = false
-        }
-    }
-
-    ////////
-
-    function setImageMode() {
-        titleText.text = qsTr("Image encoding")
-        mode = "image"
-    }
-
-    function setVideoMode() {
-        titleText.text = qsTr("Video encoding")
-        mode = "video"
-
-        cbTimelapse.checked = false
-        cbTimelapse.visible = true
-
-        timelapseFramerate.from = 1
-        timelapseFramerate.to = 15
-        timelapseFramerate.value = 10
-
-        if (!rbGIF.visible && rbGIF.checked) rbH264.checked = true
-    }
-
-    function setTimelapseMode() {
-        titleText.text = qsTr("Timelapse encoding")
-        mode = "timelapse"
-
-        cbTimelapse.checked = false
-        cbTimelapse.visible = false
-
-        timelapseFramerate.from = 1
-        timelapseFramerate.to = 60
-        timelapseFramerate.value = 15
-
-        if (!rbGIF.visible && rbGIF.checked) rbH264.checked = true
-    }
-
-    ////////
-
-    function toggleTimelapse() {
-        //
-    }
-
-    function toggleCopy() {
-        if (cbCOPY.checked === true) {
-            rbH264.enabled = false
-            rbH265.enabled = false
-            rbVP9.enabled = false
-            rbGIF.enabled = false
-        } else {
-            rbH264.enabled = true
-            rbH265.enabled = true
-            rbVP9.enabled = true
-            rbGIF.enabled = true
         }
     }
 
@@ -322,13 +278,15 @@ Popup {
                         id: cbCOPY
                         anchors.verticalCenter: parent.verticalCenter
                         text: qsTr("COPY")
-                        onClicked: toggleCopy()
+                        visible: clipCanBeCopied
+                        onVisibleChanged: if (!visible) checked = false
                         onCheckedChanged: textCodecHelp.setText()
                     }
                     RadioButtonThemed {
                         id: rbH264
                         anchors.verticalCenter: parent.verticalCenter
                         text: "H.264"
+                        enabled: !cbCOPY.checked
                         checked: true
                         onCheckedChanged: textCodecHelp.setText()
                     }
@@ -336,18 +294,21 @@ Popup {
                         id: rbH265
                         anchors.verticalCenter: parent.verticalCenter
                         text: "H.265"
+                        enabled: !cbCOPY.checked
                         onCheckedChanged: textCodecHelp.setText()
                     }
                     RadioButtonThemed {
                         id: rbVP9
                         anchors.verticalCenter: parent.verticalCenter
                         text: "VP9"
+                        enabled: !cbCOPY.checked
                         onCheckedChanged: textCodecHelp.setText()
                     }
                     RadioButtonThemed {
                         id: rbAV1
                         anchors.verticalCenter: parent.verticalCenter
                         text: "AV1"
+                        enabled: !cbCOPY.checked
                         visible: false
                         onCheckedChanged: textCodecHelp.setText()
                     }
@@ -355,13 +316,15 @@ Popup {
                         id: rbProRes
                         anchors.verticalCenter: parent.verticalCenter
                         text: "ProRes"
+                        enabled: !cbCOPY.checked
                         visible: false
                         onCheckedChanged: textCodecHelp.setText()
                     }
                     RadioButtonThemed {
                         id: rbGIF
                         anchors.verticalCenter: parent.verticalCenter
-                        text: "GIF"
+                        enabled: !cbCOPY.checked && clipIsShort
+                        text: clipIsShort ? "GIF" : "GIF (video too long)"
                         onCheckedChanged: textCodecHelp.setText()
                     }
                 }
@@ -443,25 +406,29 @@ Popup {
                     anchors.right: parent.right
 
                     function setText() {
-                        if (cbCOPY.checked) {
-                            text = qsTr("With this mode you can trim the duration without reencoding the video, so no quality will be lost. But you cannot apply any other transformation.")
+                        if (mode === "video" || mode === "timelapse") {
+                            if (cbCOPY.checked) {
+                                text = qsTr("With this mode you can trim the duration without reencoding the video, so no quality will be lost. But you cannot apply any other transformation.")
+                            } else {
+                                if (rbH264.checked) {
+                                    text = qsTr("H.264 is the most widely used codec today. It provides the best balance of compression, speed, and excellent support for every kind of software and devices.")
+                                } else if (rbH265.checked) {
+                                    text = qsTr("The successor of H.264. It provides excellent compression, slower encoding speed, and good support with most kind of devices.")
+                                } else if (rbVP9.checked) {
+                                    text = qsTr("Good balance of next gen compression, speed, and software support. Use it if you know what you are doing though.")
+                                } else if (rbAV1.checked) {
+                                    text = qsTr("AV1 has the best compression for video, but is VERY slow to encode, and while software support is good, device support is still poor as of today.")
+                                } else if (rbProRes.checked) {
+                                    text = qsTr("Almost lossless compression, so HUGE file size but very good quality and speed.")
+                                } else if (rbGIF.checked) {
+                                    text = qsTr("The meme maker. Go nuts with this oO")
+                                }
+                            }
                         } else {
-                            if (rbH264.checked) {
-                                text = qsTr("H.264 is the most widely used codec today. It provides the best balance of compression, speed, and excellent support for every kind of software and devices.")
-                            } else if (rbH265.checked) {
-                                text = qsTr("The successor of H.264. It provides excellent compression, slower encoding speed, and good support with most kind of devices.")
-                            } else if (rbVP9.checked) {
-                                text = qsTr("Good balance of next gen compression, speed, and software support. Use it if you know what you are doing.")
-                            } else if (rbAV1.checked) {
-                                text = qsTr("AV1 has the best compression for video, but is VERY slow to encode, and while software support is good, device support is still poor as of today.")
-                            } else if (rbProRes.checked) {
-                                text = qsTr("Almost lossless compression, so HUGE file size but very good quality and speed.")
-                            } else if (rbGIF.checked) {
-                                text = qsTr("The meme maker. Go nuts...")
-                            } else if (rbPNG.checked) {
+                            if (rbPNG.checked) {
                                 text = qsTr("Lossless compression for your picture. Big files, but NO quality lost.")
                             } else if (rbJPEG.checked) {
-                                text = qsTr("You know...")
+                                text = qsTr("JPEG is the most widely used image format.")
                             } else if (rbWEBP.checked) {
                                 text = qsTr("Better compression and quality than JPEG, good software support, but hardware support lacking.")
                             } else if (rbAVIF.checked) {
@@ -1244,7 +1211,7 @@ Popup {
 
                     var encodingParams = {}
 
-                    if (rectangleImageCodec.visible) {
+                    if (mode === "image") {
                         if (rbPNG.checked)
                             encodingParams["codec"] = "PNG";
                         else if (rbJPEG.checked)
@@ -1257,7 +1224,7 @@ Popup {
                             encodingParams["codec"] = "HEIF";
                     }
 
-                    if (rectangleVideoCodec.visible) {
+                    if (mode === "video" || mode === "timelapse") {
                         if (rbH264.checked)
                             encodingParams["codec"] = "H.264";
                         else if (rbH265.checked)
@@ -1320,6 +1287,7 @@ Popup {
                         if (clipDurationMs <= 0) encodingParams["clipDurationMs"] = currentShot.duration;
                         if (clipCropX <= 0 && clipCropY <= 0 && clipCropW <= 0 && clipCropH <= 0)
                             encodingParams["crop"] = currentShot.width + ":" + currentShot.height + ":" + 0 + ":" + 0
+                        // TODO // transform
 
                         // Effect
                         if (rbGifEffectBackward.checked) encodingParams["gif_effect"] = "backward"
