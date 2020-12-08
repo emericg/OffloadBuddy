@@ -21,7 +21,7 @@ Works on Linux, macOS and Windows!
 - [x] Create short video clips (and GIFs) from your videos!
 - [x] Assemble photo timelapses into videos
 - [ ] Extract photos/screenshots from videos
-- [ ] Create timelapse from videos (WIP)
+- [x] Create timelapse from videos
 - [x] Apply filters to media
   - [x] Reframe media
   - [x] Rotate media (WIP)

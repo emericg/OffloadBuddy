@@ -1,6 +1,6 @@
 TARGET  = OffloadBuddy
 
-VERSION = 0.3
+VERSION = 0.4
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 CONFIG += c++14
@@ -25,9 +25,6 @@ win32 { DEFINES += _USE_MATH_DEFINES }
 # SingleApplication for desktop OS
 include(src/thirdparty/SingleApplication/singleapplication.pri)
 DEFINES += QAPPLICATION_CLASS=QApplication
-
-osx {
-}
 
 unix { DEFINES += ENABLE_LIBMTP }
 DEFINES += ENABLE_FFMPEG
