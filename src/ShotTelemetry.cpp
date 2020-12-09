@@ -124,16 +124,16 @@ bool Shot::parseGpmfSample(GpmfBuffer &buf, int &devc_count)
                             parseData_triplet(buf, strm, scales, m_gyro);
                             break;
                         case GPMF_TAG_ACCL:
-                            parseData_triplet(buf, strm, scales, m_accelero);
+                            parseData_triplet(buf, strm, scales, m_accl);
                             break;
                         case GPMF_TAG_MAGN:
                         {
-                            parseData_triplet(buf, strm, scales, m_magneto);
+                            parseData_triplet(buf, strm, scales, m_magn);
 
-                            // Generate compass data from magnetometer
+                            // Generate compass data from magnetometer:
                             {
                                 // Calculate the angle of the vector y,x
-                                float heading = (std::atan2(m_magneto.back().y, m_magneto.back().x) * 180.f) / M_PI;
+                                float heading = (std::atan2(m_magn.back().y, m_magn.back().x) * 180.f) / M_PI;
                                 // Normalize to 0-360
                                 if (heading < 0) heading += 360.f;
                                 m_compass.push_back(heading);
@@ -549,14 +549,14 @@ void Shot::updateAcclSeries(QLineSeries *x, QLineSeries *y, QLineSeries *z)
     QVector<QPointF> pointsZ;
 
     int id = 0;
-    for (unsigned i = 0; i < m_accelero.size(); i+=200)
+    for (unsigned i = 0; i < m_accl.size(); i+=200)
     {
-        pointsX.insert(id, QPointF(id, m_accelero.at(i).x));
-        pointsY.insert(id, QPointF(id, m_accelero.at(i).y));
-        pointsZ.insert(id, QPointF(id, m_accelero.at(i).z));
+        pointsX.insert(id, QPointF(id, m_accl.at(i).x));
+        pointsY.insert(id, QPointF(id, m_accl.at(i).y));
+        pointsZ.insert(id, QPointF(id, m_accl.at(i).z));
         id++;
 
-        currentG = sqrt(pow(m_accelero.at(i).x, 2) + pow(m_accelero.at(i).y, 2) + pow(m_accelero.at(i).z, 2));
+        currentG = sqrt(pow(m_accl.at(i).x, 2) + pow(m_accl.at(i).y, 2) + pow(m_accl.at(i).z, 2));
         if (currentG > maxG)
             maxG = currentG;
     }
@@ -612,4 +612,190 @@ QGeoCoordinate Shot::getGpsCoordinates(unsigned index)
     }*/
 
     return c;
+}
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+bool Shot::exportTelemetry(const QString &path, int accl_frequency, int gps_frequency)
+{
+    //qDebug() << "Shot::exportTelemetry('" << path << "', " << accl_frequency << "," << gps_frequency << ")";
+    bool status = false;
+
+    if (hasGPMF && gpmf_parsed)
+    {
+        QString dirpath = path;
+        if (path.isEmpty()) dirpath = getFolderString();
+        if (!dirpath.endsWith("/")) dirpath += "/";
+
+        if (accl_frequency < 1) accl_frequency = 1;
+        int accl_rate = std::round((m_accl.size() / (m_duration/1000.f)) / accl_frequency);
+        if (accl_rate < 1) accl_rate = 1;
+        if (accl_rate > 400) accl_rate = 400;
+
+        if (gps_frequency < 1) gps_frequency = 1;
+        int gps_rate = std::round((m_gps.size() / (m_duration/1000.f)) / gps_frequency);
+        if (gps_rate < 1) gps_rate = 1;
+        if (gps_rate > 30) gps_rate = 30;
+
+        // File
+        QString exportFilename = dirpath + m_shot_name + ".json";
+
+        QFile::remove(exportFilename);
+        QFile exportFile(exportFilename);
+
+        if (exportFile.open(QIODevice::WriteOnly))
+        {
+            QTextStream exportStream(&exportFile);
+
+            exportStream << "{\n";
+
+            // Timestamp
+            exportStream << "\n  \"timestamp\": " << m_date_gps.toString();
+
+            // Accelerometer
+            exportStream << "\n  \"accelerometer\": { \"frequency\": " << QString::number(accl_frequency) << QString::fromUtf8(", \"unit\": [\"m/s²\", \"m/s²\", \"m/s²\"], \"data\": [\n  ");
+            for (unsigned i = 0; i < m_accl.size(); i += accl_rate) {
+                exportStream << "[" << m_accl.at(i).x << "," << m_accl.at(i).y << "," << m_accl.at(i).z << "],";
+            } exportStream << "\n  ]},";
+
+            // Gyroscope
+            exportStream << "\n  \"gyroscope\": { \"frequency\": " << QString::number(accl_frequency) << ", \"unit\": [\"rad/s\", \"rad/s\", \"rad/s\"], \"data\": [\n  ";
+            for (unsigned i = 0; i < m_gyro.size(); i += accl_rate) {
+                exportStream << "[" << m_gyro.at(i).x << "," << m_gyro.at(i).y << "," << m_gyro.at(i).z << "],";
+            } exportStream << "\n  ]},";
+
+            if (m_magn.size() > 0)
+            {
+                // Magnetometer
+                exportStream << "\n  \"magnetometer\": { \"frequency\": " << QString::number(gps_frequency) << ", \"unit\": [\"μT\", \"μT\", \"μT\"], \"data\": [\n  ";
+                for (unsigned i = 0; i < m_magn.size(); i += gps_rate) {
+                    exportStream << "[" << m_magn.at(i).x << "," << m_magn.at(i).y << "," << m_magn.at(i).z << "],";
+                } exportStream << "\n  ]},";
+
+                // Compass
+                exportStream << "\n  \"compass\": { \"frequency\": " << QString::number(gps_frequency) << ", \"unit\": \"degree\", \"data\": [\n  ";
+                for (unsigned i = 0; i < m_compass.size(); i += gps_rate) {
+                    exportStream << m_compass.at(i) << ",";
+                } exportStream << "\n  ]},";
+            }
+
+            if (m_gps.size() > 0)
+            {
+                // GPS
+                exportStream << "\n  \"GPS\": { \"frequency\": " << QString::number(gps_frequency) << ", \"unit\": [\"DD, DD\"], \"data\": [\n  ";
+                for (unsigned i = 0; i < m_gps.size(); i += gps_rate) {
+                    exportStream << "[" << m_gps.at(i).first << "," << m_gps.at(i).second << "],";
+                } exportStream << "\n  ]},";
+
+                // Altimeter
+                exportStream << "\n  \"altimeter\": { \"frequency\": " << QString::number(gps_frequency) << ", \"unit\": \"m\", \"data\": [\n  ";
+                for (unsigned i = 0; i < m_alti.size(); i += gps_rate) {
+                    exportStream << m_alti.at(i) << ",";
+                } exportStream << "\n  ]},";
+
+                // Speedometer
+                exportStream << "\n  \"speedometer\": { \"frequency\": " << QString::number(gps_frequency) << ", \"unit\": \"m/s\", \"data\": [\n  ";
+                for (unsigned i = 0; i < m_speed.size(); i += gps_rate) {
+                    exportStream << m_speed.at(i) << ",";
+                } exportStream << "\n  ]},";
+            }
+
+            if (m_hilight.size() > 0)
+            {
+                // HiLight tags
+                exportStream << "\n  \"HiLight tags\": { \"unit\": \"ms\", \"data\": [\n  ";
+                for (unsigned i = 0; i < m_hilight.size(); i++) {
+                    exportStream << m_hilight.at(i) << ",";
+                } exportStream << "\n  ]},";
+            }
+
+            exportStream << "\n}\n";
+
+            exportFile.close();
+            status = true;
+        }
+        else
+        {
+            qWarning() << "Could not create telemetry export file for: '" << exportFilename << "'";
+        }
+    }
+
+    return status;
+}
+
+bool Shot::exportGps(const QString &path, int gps_frequency)
+{
+    //qDebug() << "Shot::exportGps('" << path << "', " << gps_frequency << ")";
+    bool status = false;
+
+    if (hasGPS && gpmf_parsed)
+    {
+        QString dirpath = path;
+        if (path.isEmpty()) dirpath = getFolderString();
+        if (!dirpath.endsWith("/")) dirpath += "/";
+
+        if (gps_frequency < 1) gps_frequency = 1;
+        int gps_rate = std::round((m_gps.size() / (m_duration/1000.f)) / gps_frequency);
+        if (gps_rate < 1) gps_rate = 1;
+        if (gps_rate > 30) gps_rate = 30;
+
+        // File
+        QString exportFilename = dirpath + m_shot_name + ".gpx";
+
+        QFile::remove(exportFilename);
+        QFile exportFile(exportFilename);
+
+        if (exportFile.open(QIODevice::WriteOnly))
+        {
+            QTextStream exportStream(&exportFile);
+
+            // GPX header
+            exportStream << "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>";
+
+            exportStream << "\n<gpx version=\"1.1\" creator=\"OffloadBuddy - https://github.com/emericg/OffloadBuddy\"";
+            exportStream << "\n    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"";
+            exportStream << "\n    xmlns=\"http://www.topografix.com/GPX/1/1\"";
+            exportStream << "\n    xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd\">";
+
+            exportStream << "\n  <metadata>";
+            exportStream << "\n    <name>GPS track extracted from video</name>";
+            exportStream << "\n    <link href=\"https://github.com/emericg/OffloadBuddy\"><text>OffloadBuddy</text></link>";
+            exportStream << "\n  </metadata>";
+
+            exportStream << "\n<trk>";
+            exportStream << "\n  <name>GPS track from video '" << m_shot_name << "'</name>";
+            exportStream << "\n  <trkseg>";
+
+            // GPX datas
+            for (unsigned i = 0; i < m_gps.size(); i += gps_rate)
+            {
+                exportStream << "\n  <trkpt lat=\"" + QString::number(m_gps.at(i).first, 'f', 12) +"\" lon=\"" + QString::number(m_gps.at(i).second, 'f', 12) + "\">";
+
+                exportStream << "<ele>" + QString::number(m_alti.at(i), 'f', 1) + "</ele>";
+                exportStream << "<time>" + QString::fromStdString(m_gps_params.at(i).first) + "</time>";
+
+                if (m_gps_params.at(i).second == 3) exportStream << "<fix>3d</fix>";
+                else if (m_gps_params.at(i).second == 2) exportStream << "<fix>2d</fix>";
+                else exportStream << "<fix>none</fix>";
+
+                exportStream << "</trkpt>";
+            }
+
+            // GPX footer
+            exportStream << "\n  </trkseg>";
+            exportStream << "\n</trk>";
+            exportStream << "\n</gpx>";
+            exportStream << "\n";
+
+            exportFile.close();
+            status = true;
+        }
+        else
+        {
+            qWarning() << "Could not create GPS export file for: '" << exportFilename << "'";
+        }
+    }
+
+    return status;
 }

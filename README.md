@@ -17,7 +17,7 @@ Works on Linux, macOS and Windows!
   - [x] Organize and sort your media library
   - [x] Copy, merge or reencode media
   - [ ] Change wrong dates (WIP)
-  - [x] Show and export GoPro telemetry & GPS traces (WIP)
+  - [x] Show and export GoPro telemetry & GPS traces
 - [x] Create short video clips (and GIFs) from your videos!
 - [x] Assemble photo timelapses into videos
 - [ ] Extract photos/screenshots from videos

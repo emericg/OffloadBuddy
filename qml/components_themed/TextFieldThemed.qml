@@ -14,7 +14,7 @@ TextField {
 
     // placeholderText // TODO
 
-    text: "Text Field"
+    text: ""
     color: colorText
     font.pixelSize: Theme.fontSizeComponent
 

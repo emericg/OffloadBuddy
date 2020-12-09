@@ -274,7 +274,7 @@ Item {
                 height: parent.height
 
                 menuText: qsTr("Telemetry")
-                source: "qrc:/assets/icons_material/baseline-insert_chart-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-insert_chart_outlined-24px.svg"
                 onClicked: screenMedia.state = "metadata"
                 selected: (screenMedia.state === "metadata")
                 visible: (shot && shot.hasGPMF && shot.hasGPS)

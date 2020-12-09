@@ -146,9 +146,6 @@ class Shot: public QObject
     Q_PROPERTY(double longitude READ getLongitude NOTIFY metadataUpdated)
     Q_PROPERTY(double altitude READ getAltitude NOTIFY metadataUpdated)
 
-    Shared::ShotType m_type = Shared::SHOT_UNKNOWN;
-    Shared::ShotState m_state = Shared::SHOT_STATE_DEFAULT;
-
     Q_PROPERTY(bool selected READ isSelected WRITE setSelected NOTIFY selectionUpdated)
     bool selected = false;
     bool isSelected() const { return selected; }
@@ -156,10 +153,20 @@ class Shot: public QObject
 
     QString m_uuid;                 //!< Shot unique identifier, generated at object creation
 
+    Shared::ShotType m_type = Shared::SHOT_UNKNOWN;
+    Shared::ShotState m_state = Shared::SHOT_STATE_DEFAULT;
+
     QString m_shot_name;
     int m_shot_id = -1;             //!< Shot ID (if we have a shot, not a single file)
     int m_camera_id = 0;            //!< Camera ID (if the shot is part of a multi camera system)
 
+    //
+    QString m_camera_source;        //!< Model of the camera that produced the shot
+    QString m_camera_firmware;      //!< Firmware of the camera that produced the shot
+
+    qint64 m_duration = 0;          //!< Duration (in ms for video, in pictures for pic or timelpase)
+
+    // Root folder containing all of the shot files
     QString m_folder;
 
     // PICTURES files
@@ -171,26 +178,21 @@ class Shot: public QObject
     QList <ofb_file *> m_videos_thumbnails;
     QList <ofb_file *> m_videos_hdAudio;
 
-
-
-    //
-    QString m_camera_source;        //!< Model of the camera that produced the shot
-    QString m_camera_firmware;      //!< Firmware of the camera that produced the shot
-
+    // Dates
     QDateTime m_date_file;
     QDateTime m_date_metadata;
     QDateTime m_date_gps;
-    qint64 m_duration = 0;
+    QDateTime m_date_user;          //!< Set by the user
 
     // GLOBAL metadata
-    unsigned transformation = 0; // QImageIOHandler::Transformation
+    unsigned transformation = 0;    // QImageIOHandler::Transformation
     unsigned width = 0;
     unsigned height = 0;
     int rotation = 0;
 
-    QList <QTime> m_highlights;
+    QList <int64_t> m_hilight;
 
-    // GPS metadata
+    // GPS "quick" metadata (from EXIF or first GPMF sample)
     QString gps_lat_str;
     QString gps_long_str;
     QString gps_alt_str;
@@ -210,6 +212,7 @@ class Shot: public QObject
     double framerate = 0.0;
     unsigned bitrate = 0;
 
+    // AUDIO metadata
     QString acodec;
     unsigned achannels = 0;
     unsigned abitrate = 0;
@@ -223,13 +226,14 @@ class Shot: public QObject
 
     /// > GPMF WIP /////////////////////////
 
-    bool gpmf_parsed = false;
-
     typedef struct TriFloat {
         float x;
         float y;
         float z;
     } TriFloat;
+
+    bool gpmf_parsed = false;
+
     uint32_t global_offset_ms = 0;
 
     std::vector <std::pair<float, float>> m_gps;
@@ -237,14 +241,10 @@ class Shot: public QObject
     float m_gps_altitude_offset = 0;
     std::vector <float> m_alti;
     std::vector <float> m_speed;
-/*
-    QVector<QPointF> m_alti_points;
-    QVector<QPointF> m_speed_points;
-    QVector<QPointF> m_gps_points;
-*/
+
     std::vector <TriFloat> m_gyro;
-    std::vector <TriFloat> m_accelero;
-    std::vector <TriFloat> m_magneto;
+    std::vector <TriFloat> m_accl;
+    std::vector <TriFloat> m_magn;
     std::vector <float> m_compass;
 
     bool parseGpmfSample(GpmfBuffer &buf, int &devc_count);
@@ -259,8 +259,8 @@ class Shot: public QObject
     Q_PROPERTY(bool hasEXIF READ hasExif NOTIFY metadataUpdated)
 
     bool hasGPS = false;
-    bool hasGpsSync() { return hasGPS; }
-    Q_PROPERTY(bool hasGPS READ hasGpsSync NOTIFY metadataUpdated)
+    bool hasGps() { return hasGPS; }
+    Q_PROPERTY(bool hasGPS READ hasGps NOTIFY metadataUpdated)
 
     bool hasGPMF = false;
     bool hasGpmf() { return hasGPMF; }
@@ -301,6 +301,9 @@ public slots:
     Q_INVOKABLE void updateAcclSeries(QLineSeries *x, QLineSeries *y, QLineSeries *z);
     Q_INVOKABLE void updateGyroSeries(QLineSeries *x, QLineSeries *y, QLineSeries *z);
     Q_INVOKABLE QGeoCoordinate getGpsCoordinates(unsigned index);
+
+    Q_INVOKABLE bool exportTelemetry(const QString &path, int accl_frequency, int gps_frequency);
+    Q_INVOKABLE bool exportGps(const QString &path, int gps_frequency);
 
     /// < GPMF WIP /////////////////////////
 
@@ -379,7 +382,7 @@ public slots:
     double getLongitude() const { return gps_long; }
     double getAltitude() const { return gps_alt; }
 
-    unsigned getHighlightCount() const { return m_highlights.size(); }
+    unsigned getHighlightCount() const { return m_hilight.size(); }
     unsigned getGpsPointCount() const { return m_gps.size(); }
 
     int getFileId() const { return m_shot_id; }

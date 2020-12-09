@@ -26,8 +26,6 @@ Popup {
 
     function updateTelemetryPanel(shot) {
         currentShot = shot
-
-        // TODO
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -77,6 +75,36 @@ Popup {
             anchors.leftMargin: 24
 
             Item {
+                id: elementAltitude
+                height: 48
+                anchors.right: parent.right
+                anchors.rightMargin: 0
+                anchors.left: parent.left
+                anchors.leftMargin: 0
+
+                Text {
+                    id: titleAltitude
+                    width: 128
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: qsTr("Altitude")
+                    font.pixelSize: 16
+                    color: Theme.colorSubText
+                }
+
+                SwitchThemedDesktop {
+                    id: switchEGM96
+                    anchors.left: titleAltitude.right
+                    anchors.leftMargin: 16
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    checked: false
+                    enabled: false
+                    text: qsTr("EGM96 correction")
+                }
+            }
+
+            Item {
                 id: elementGPS
                 height: 48
                 anchors.right: parent.right
@@ -104,49 +132,19 @@ Popup {
 
                     RadioButtonThemed {
                         id: rbGPX
-                        anchors.verticalCenter: parent.verticalCenter
                         text: "GPX"
                         checked: true
                     }
                     RadioButtonThemed {
                         id: rbIGC
-                        anchors.verticalCenter: parent.verticalCenter
                         text: "IGC"
+                        enabled: false
                     }
                     RadioButtonThemed {
                         id: rbKML
-                        anchors.verticalCenter: parent.verticalCenter
                         text: "KML"
+                        enabled: false
                     }
-                }
-            }
-
-            Item {
-                id: elementAltitude
-                height: 48
-                anchors.right: parent.right
-                anchors.rightMargin: 0
-                anchors.left: parent.left
-                anchors.leftMargin: 0
-
-                Text {
-                    id: titleAltitude
-                    width: 128
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    text: qsTr("Altitude")
-                    font.pixelSize: 16
-                    color: Theme.colorSubText
-                }
-
-                SwitchThemedDesktop {
-                    id: switchEGM96
-                    anchors.left: titleAltitude.right
-                    anchors.leftMargin: 16
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    checked: true
-                    text: qsTr("EGM96 correction")
                 }
             }
 
@@ -169,34 +167,34 @@ Popup {
                 }
 
                 Row {
-                    anchors.verticalCenter: parent.verticalCenter
                     anchors.left: titleTelemetry.right
                     anchors.leftMargin: 16
                     anchors.right: parent.right
                     anchors.rightMargin: 0
+                    anchors.verticalCenter: parent.verticalCenter
                     spacing: 16
 
                     RadioButtonThemed {
                         id: rbJSON
-                        anchors.verticalCenter: parent.verticalCenter
                         text: "JSON"
                         checked: true
                     }
+                    RadioButtonThemed {
+                        id: rbCSV
+                        text: "CSV"
+                        enabled: false
+                    }
                 }
             }
+
+            //////////////////
 /*
             Rectangle { // separator
-                height: 1
-                anchors.right: parent.right
-                anchors.left: parent.left
-                color: Theme.colorSeparator
-            }
+                height: 1; color: Theme.colorSeparator;
+                anchors.right: parent.right; anchors.left: parent.left; }
 */
-            Item { // spacer
-                height: 16
-                anchors.right: parent.right
-                anchors.left: parent.left
-            }
+            Item { height: 16; anchors.right: parent.right; anchors.left: parent.left; } // spacer
+
             Item {
                 id: rectangleDestination
                 height: 48
@@ -311,6 +309,7 @@ Popup {
                 fullColor: true
                 primaryColor: Theme.colorSecondary
                 onClicked: {
+                    currentShot.exportTelemetry(textField_path.text, 30, 2)
                     popupExtractTelemetry.confirmed()
                     popupExtractTelemetry.close()
                 }
@@ -324,6 +323,7 @@ Popup {
                 fullColor: true
                 primaryColor: Theme.colorPrimary
                 onClicked: {
+                    currentShot.exportGps(textField_path.text, 2)
                     popupExtractTelemetry.confirmed()
                     popupExtractTelemetry.close()
                 }
