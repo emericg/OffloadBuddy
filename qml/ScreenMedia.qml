@@ -266,28 +266,41 @@ Item {
 
                 menuText: qsTr("Overview")
                 source: "qrc:/assets/icons_material/baseline-aspect_ratio-24px.svg"
-                onClicked: screenMedia.state = "overview"
                 selected: (screenMedia.state === "overview")
+                onClicked: screenMedia.state = "overview"
+            }
+            ItemMenuButton {
+                id: menuDetails
+                height: parent.height
+
+                visible: false
+
+                menuText: qsTr("Details")
+                source: "qrc:/assets/icons_material/baseline-list-24px.svg"
+                selected: (screenMedia.state === "details")
+                onClicked: screenMedia.state = "details"
             }
             ItemMenuButton {
                 id: menuTelemetry
                 height: parent.height
 
+                visible: (shot && shot.hasGPMF && shot.hasGPS)
+
                 menuText: qsTr("Telemetry")
                 source: "qrc:/assets/icons_material/baseline-insert_chart_outlined-24px.svg"
-                onClicked: screenMedia.state = "metadata"
                 selected: (screenMedia.state === "metadata")
-                visible: (shot && shot.hasGPMF && shot.hasGPS)
+                onClicked: screenMedia.state = "metadata"
             }
             ItemMenuButton {
                 id: menuMap
                 height: parent.height
 
+                visible: (shot && shot.fileType === Shared.FILE_PICTURE && shot.latitude !== 0.0)
+
                 menuText: qsTr("Map")
                 source: "qrc:/assets/icons_material/baseline-map-24px.svg"
-                onClicked: screenMedia.state = "map"
                 selected: (screenMedia.state === "map")
-                visible: (shot && shot.fileType === Shared.FILE_PICTURE && shot.latitude !== 0.0)
+                onClicked: screenMedia.state = "map"
             }
         }
     }
