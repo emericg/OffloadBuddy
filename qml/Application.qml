@@ -216,7 +216,7 @@ ApplicationWindow {
             ]
         }
 
-        layer.enabled: settingsManager.appClientSideDecoration
+        layer.enabled: settingsManager.clientSideDecoration
         layer.effect: OpacityMask {
             maskSource: Rectangle {
                 x: appBg.x

@@ -208,15 +208,6 @@ Item {
             }
 
             ItemImageButton {
-                id: buttonEncode
-                width: 40
-                height: 40
-                source: "qrc:/assets/icons_material/baseline-settings_applications-24px.svg"
-                backgroundColor: Theme.colorForeground
-                onClicked: contentOverview.openEncodePopup()
-            }
-
-            ItemImageButton {
                 id: buttonTelemetry
                 width: 40
                 height: 40
@@ -224,6 +215,15 @@ Item {
                 visible: (shot && shot.hasGPMF && shot.hasGPS)
                 backgroundColor: Theme.colorForeground
                 onClicked: contentOverview.openTelemetryPopup()
+            }
+
+            ItemImageButton {
+                id: buttonEncode
+                width: 40
+                height: 40
+                source: "qrc:/assets/icons_material/baseline-settings_applications-24px.svg"
+                backgroundColor: Theme.colorForeground
+                onClicked: contentOverview.openEncodePopup()
             }
         }
 

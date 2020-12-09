@@ -207,17 +207,17 @@ Item {
                 id: imageError
                 width: 28
                 height: 28
+                anchors.verticalCenter: parent.verticalCenter
 
                 color: Theme.colorWarning
                 source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
-                anchors.verticalCenter: parent.verticalCenter
             }
             Text {
                 id: textError
                 height: parent.height
                 anchors.verticalCenter: parent.verticalCenter
-                visible: (deviceSpaceText.width > 400)
 
+                visible: (deviceSpaceText.width > 400)
                 text: qsTr("Directory is not available right now :/")
                 color: Theme.colorWarning
                 font.bold: true

@@ -24,25 +24,21 @@ Popup {
     property var qdateFile
     property var qdateMetadata
     property var qdateGps
+    property var qdateUser
 
     property var qdate
-    onQdateChanged: qqdateChanged()
-
-    function qqdateChanged() {
-        dateFileSelector.color = (Qt.formatDateTime(qdate) == Qt.formatDateTime(qdateFile)) ? Theme.colorPrimary : Theme.colorIcon
-        dateMetadataSelector.color = (Qt.formatDateTime(qdate) == Qt.formatDateTime(qdateMetadata)) ? Theme.colorPrimary : Theme.colorIcon
-        dateGpsSelector.color = (Qt.formatDateTime(qdate) == Qt.formatDateTime(qdateGps)) ? Theme.colorPrimary : Theme.colorIcon
-    }
 
     function loadDates() {
         qdateToday = new Date();
         qdateFile = shot.dateFile
         qdateMetadata = shot.dateMetadata
         qdateGps = shot.dateGPS
+        //qdateUser = shot.dateUser
 
         dateFile.text = Qt.formatDateTime(shot.dateFile, Qt.SystemLocaleDate)
         dateMetadata.text = Qt.formatDateTime(shot.dateMetadata, Qt.SystemLocaleDate)
         dateGps.text = Qt.formatDateTime(shot.dateGPS, Qt.SystemLocaleDate)
+        //qdateUser.text = Qt.formatDateTime(shot.dateUser, Qt.SystemLocaleDate)
 
         loadDate(shot.date)
     }
@@ -99,24 +95,20 @@ Popup {
         ////////////////
 
         Column {
-            id: columnCurrent
             anchors.left: parent.left
             anchors.leftMargin: 24
             anchors.right: parent.right
             anchors.rightMargin: 24
 
             Text {
-                id: dateFileL
                 height: 32
-                anchors.right: parent.right
-                anchors.rightMargin: 0
                 anchors.left: parent.left
-                anchors.leftMargin: 0
+                anchors.right: parent.right
 
                 text: qsTr("File date")
-                font.pixelSize: 16
+                color: Theme.colorText
+                font.pixelSize: Theme.fontSizeContent
                 verticalAlignment: Text.AlignVCenter
-                color: Theme.colorSubText
 
                 Text {
                     id: dateFile
@@ -124,9 +116,9 @@ Popup {
                     anchors.leftMargin: 140
                     anchors.verticalCenter: parent.verticalCenter
 
-                    verticalAlignment: Text.AlignVCenter
-                    font.pixelSize: 16
                     color: Theme.colorText
+                    font.pixelSize: Theme.fontSizeContent
+                    verticalAlignment: Text.AlignVCenter
                 }
 
                 ImageSvg {
@@ -142,53 +134,44 @@ Popup {
                     color: Theme.colorWarning
                     fillMode: Image.PreserveAspectFit
                 }
-                ImageSvg {
+                ItemImageButton {
                     id: dateFileSelector
-                    width: 24
-                    height: 24
+                    width: 36
+                    height: 36
                     anchors.right: parent.right
-                    anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
 
-                    fillMode: Image.PreserveAspectFit
+                    highlightMode: "color"
                     source: "qrc:/assets/icons_material/baseline-done-24px.svg"
 
-                    MouseArea {
-                        anchors.fill: parent
-                        enabled: (qdateFile > qdateFirst && qdateFile < qdateToday)
-                        hoverEnabled: enabled
-
-                        onEntered: parent.color = Theme.colorPrimary
-                        onExited: parent.color = (qdate === qdateFile) ? Theme.colorPrimary : Theme.colorIcon
-                        onClicked: loadDate(qdateFile)
-                    }
+                    enabled: (qdateFile > qdateFirst && qdateFile < qdateToday)
+                    selected: (Qt.formatDateTime(qdate) == Qt.formatDateTime(qdateFile))
+                    background: selected
+                    onClicked: loadDate(qdateFile)
                 }
             }
 
             Text {
-                id: dateMetadataL
                 height: 32
-                anchors.right: parent.right
-                anchors.leftMargin: 0
-                anchors.rightMargin: 0
                 anchors.left: parent.left
+                anchors.right: parent.right
 
                 visible: dateMetadata.text
 
                 text: qsTr("Metadata date")
-                font.pixelSize: 16
-                verticalAlignment: Text.AlignVCenter
                 color: Theme.colorSubText
+                font.pixelSize: Theme.fontSizeContent
+                verticalAlignment: Text.AlignVCenter
 
                 Text {
                     id: dateMetadata
-                    anchors.leftMargin: 140
                     anchors.left: parent.left
+                    anchors.leftMargin: 140
                     anchors.verticalCenter: parent.verticalCenter
 
-                    font.pixelSize: 16
-                    verticalAlignment: Text.AlignVCenter
                     color: Theme.colorText
+                    font.pixelSize: Theme.fontSizeContent
+                    verticalAlignment: Text.AlignVCenter
                 }
 
                 ImageSvg {
@@ -204,41 +187,34 @@ Popup {
                     color: Theme.colorWarning
                     fillMode: Image.PreserveAspectFit
                 }
-                ImageSvg {
+                ItemImageButton {
                     id: dateMetadataSelector
-                    width: 24
-                    height: 24
+                    width: 36
+                    height: 36
                     anchors.right: parent.right
-                    anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
 
-                    fillMode: Image.PreserveAspectFit
+                    highlightMode: "color"
                     source: "qrc:/assets/icons_material/baseline-done-24px.svg"
 
-                    MouseArea {
-                        anchors.fill: parent
-                        enabled: (qdateMetadata > qdateFirst && qdateMetadata < qdateToday)
-                        hoverEnabled: enabled
-
-                        onEntered: parent.color = Theme.colorPrimary
-                        onExited: parent.color = (qdate === qdateMetadata) ? Theme.colorPrimary : Theme.colorIcon
-                        onClicked: loadDate(qdateMetadata)
-                    }
+                    enabled: (qdateMetadata > qdateFirst && qdateMetadata < qdateToday)
+                    selected: (Qt.formatDateTime(qdate) == Qt.formatDateTime(qdateMetadata))
+                    background: selected
+                    onClicked: loadDate(qdateMetadata)
                 }
             }
 
             Text {
-                id: dateGpsL
                 height: 32
-                anchors.right: parent.right
                 anchors.left: parent.left
+                anchors.right: parent.right
 
                 visible: dateGps.text
 
                 text: qsTr("GPS date")
-                font.pixelSize: 16
+                color: Theme.colorText
+                font.pixelSize: Theme.fontSizeContent
                 verticalAlignment: Text.AlignVCenter
-                color: Theme.colorSubText
 
                 Text {
                     id: dateGps
@@ -246,9 +222,9 @@ Popup {
                     anchors.leftMargin: 140
                     anchors.left: parent.left
 
-                    font.pixelSize: 16
-                    verticalAlignment: Text.AlignVCenter
                     color: Theme.colorText
+                    font.pixelSize: Theme.fontSizeContent
+                    verticalAlignment: Text.AlignVCenter
                 }
 
                 ImageSvg {
@@ -264,26 +240,20 @@ Popup {
                     color: Theme.colorWarning
                     fillMode: Image.PreserveAspectFit
                 }
-                ImageSvg {
+                ItemImageButton {
                     id: dateGpsSelector
-                    width: 24
-                    height: 24
+                    width: 36
+                    height: 36
                     anchors.right: parent.right
-                    anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
 
-                    fillMode: Image.PreserveAspectFit
+                    highlightMode: "color"
                     source: "qrc:/assets/icons_material/baseline-done-24px.svg"
 
-                    MouseArea {
-                        anchors.fill: parent
-                        enabled: (qdateGps > qdateFirst && qdateGps < qdateToday)
-                        hoverEnabled: enabled
-
-                        onEntered: parent.color = Theme.colorPrimary
-                        onExited: parent.color = (qdate === qdateGps) ? Theme.colorPrimary : Theme.colorIcon
-                        onClicked: loadDate(qdateGps)
-                    }
+                    enabled: (qdateGps > qdateFirst && qdateGps < qdateToday)
+                    selected: (Qt.formatDateTime(qdate) == Qt.formatDateTime(qdateGps))
+                    background: selected
+                    onClicked: loadDate(qdateGps)
                 }
             }
         }

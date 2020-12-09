@@ -496,7 +496,7 @@ Item {
                 anchors.fill: parent
                 radius: Theme.componentRadius
                 color: "#222222"
-                opacity: 0.9
+                opacity: 0.8
             }
 
             Text {
@@ -504,7 +504,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter
 
-                text: UtilsString.durationToString_ISO8601_full(mediaArea.startLimit) + qsTr(" to ") + UtilsString.durationToString_ISO8601_full(mediaArea.stopLimit)
+                text: qsTr("trim from ") + UtilsString.durationToString_ISO8601_full(mediaArea.startLimit) + qsTr(" to ") + UtilsString.durationToString_ISO8601_full(mediaArea.stopLimit)
                 color: "white"
                 font.bold: true
                 font.pixelSize: 15

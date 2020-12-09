@@ -55,6 +55,8 @@
         <file alias="SliderValueFilled.qml">components_generic/SliderValueFilled.qml</file>
 
         <file alias="ButtonThemed.qml">components_themed/ButtonThemed.qml</file>
+        <file alias="CheckBoxThemed.qml">components_themed/CheckBoxThemed.qml</file>
+        <file alias="ComboBoxThemed.qml">components_themed/ComboBoxThemed.qml</file>
         <file alias="MiddleSliderThemed.qml">components_themed/MiddleSliderThemed.qml</file>
         <file alias="ProgressBarThemed.qml">components_themed/ProgressBarThemed.qml</file>
         <file alias="RadioButtonThemed.qml">components_themed/RadioButtonThemed.qml</file>
@@ -64,8 +66,6 @@
         <file alias="SwitchThemedDesktop.qml">components_themed/SwitchThemed_desktop.qml</file>
         <file alias="SwitchThemedMobile.qml">components_themed/SwitchThemed_mobile.qml</file>
         <file alias="TextFieldThemed.qml">components_themed/TextFieldThemed.qml</file>
-        <file alias="CheckBoxThemed.qml">components_themed/CheckBoxThemed.qml</file>
-        <file alias="ComboBoxThemed.qml">components_themed/ComboBoxThemed.qml</file>
     </qresource>
     <qresource prefix="/js">
         <file alias="UtilsDevice.js">components_js/UtilsDevice.js</file>
