@@ -7,7 +7,7 @@ import "qrc:/js/UtilsString.js" as UtilsString
 import "qrc:/js/UtilsPath.js" as UtilsPath
 
 Popup {
-    id: popupExtractTelemetry
+    id: popupTelemetry
     x: (appWindow.width / 2) - (width / 2) - (appSidebar.width / 2)
     y: (appWindow.height / 2) - (height / 2)
     width: 640
@@ -243,39 +243,46 @@ Popup {
                 }
             }
 
-            TextFieldThemed {
-                id: textField_path
-                anchors.left: parent.left
+            Item {
+                height: 48
                 anchors.right: parent.right
+                anchors.left: parent.left
 
                 visible: (comboBoxDestination.currentIndex === (cbDestinations.count - 1))
 
-                FileDialog {
-                    id: fileDialogChange
-                    title: qsTr("Please choose a destination!")
-                    sidebarVisible: true
-                    selectExisting: true
-                    selectMultiple: false
-                    selectFolder: true
-
-                    onAccepted: {
-                        textField_path.text = UtilsPath.cleanUrl(fileDialogChange.fileUrl);
-                    }
-                }
-
-                ButtonThemed {
-                    id: button_change
-                    width: 72
-                    height: 36
+                TextFieldThemed {
+                    id: textField_path
+                    anchors.left: parent.left
                     anchors.right: parent.right
-                    anchors.rightMargin: 2
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: qsTr("change")
-                    embedded: true
-                    onClicked: {
-                        fileDialogChange.folder =  "file:///" + textField_path.text
-                        fileDialogChange.open()
+                    FileDialog {
+                        id: fileDialogChange
+                        title: qsTr("Please choose a destination!")
+                        sidebarVisible: true
+                        selectExisting: true
+                        selectMultiple: false
+                        selectFolder: true
+
+                        onAccepted: {
+                            textField_path.text = UtilsPath.cleanUrl(fileDialogChange.fileUrl);
+                        }
+                    }
+
+                    ButtonThemed {
+                        id: button_change
+                        width: 72
+                        height: 36
+                        anchors.right: parent.right
+                        anchors.rightMargin: 2
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        text: qsTr("change")
+                        embedded: true
+                        onClicked: {
+                            fileDialogChange.folder =  "file:///" + textField_path.text
+                            fileDialogChange.open()
+                        }
                     }
                 }
             }
@@ -298,7 +305,7 @@ Popup {
                 text: qsTr("Cancel")
                 fullColor: true
                 primaryColor: Theme.colorGrey
-                onClicked: popupExtractTelemetry.close()
+                onClicked: popupTelemetry.close()
             }
             ButtonWireframeImage {
                 id: buttonExtractTelemetry
@@ -310,8 +317,8 @@ Popup {
                 primaryColor: Theme.colorSecondary
                 onClicked: {
                     currentShot.exportTelemetry(textField_path.text, 30, 2)
-                    popupExtractTelemetry.confirmed()
-                    popupExtractTelemetry.close()
+                    popupTelemetry.confirmed()
+                    popupTelemetry.close()
                 }
             }
             ButtonWireframeImage {
@@ -324,8 +331,8 @@ Popup {
                 primaryColor: Theme.colorPrimary
                 onClicked: {
                     currentShot.exportGps(textField_path.text, 2)
-                    popupExtractTelemetry.confirmed()
-                    popupExtractTelemetry.close()
+                    popupTelemetry.confirmed()
+                    popupTelemetry.close()
                 }
             }
         }

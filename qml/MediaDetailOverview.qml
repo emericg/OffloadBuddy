@@ -110,13 +110,13 @@ Item {
         }
     }
 
-    function openEncodePopup() {
-        popupEncodeVideo.updateEncodePanel(shot)
-        popupEncodeVideo.setClip(mediaPreview.startLimit, mediaPreview.stopLimit)
-        popupEncodeVideo.setOrientation(mediaPreview.rotation, mediaPreview.hflipped, mediaPreview.vflipped)
-        popupEncodeVideo.setCrop(mediaPreview.cropX, mediaPreview.cropY,
+    function openEncodingPopup() {
+        popupEncoding.updateEncodePanel(shot)
+        popupEncoding.setClip(mediaPreview.startLimit, mediaPreview.stopLimit)
+        popupEncoding.setOrientation(mediaPreview.rotation, mediaPreview.hflipped, mediaPreview.vflipped)
+        popupEncoding.setCrop(mediaPreview.cropX, mediaPreview.cropY,
                                  mediaPreview.cropW, mediaPreview.cropH)
-        popupEncodeVideo.open()
+        popupEncoding.open()
     }
     function openTelemetryPopup() {
         popupTelemetry.updateTelemetryPanel(shot)
@@ -142,7 +142,7 @@ Item {
         }
     }
 
-    PopupExtractTelemetry {
+    PopupTelemetry {
         id: popupTelemetry
         x: (appWindow.width / 2) - (popupDate.width / 2) - (appSidebar.width)
         y: (appWindow.height / 2) - (popupDate.height / 2) - (rectangleHeader.height)
@@ -172,10 +172,10 @@ Item {
         }
     }
 
-    PopupEncodeVideo {
-        id: popupEncodeVideo
-        x: (appWindow.width / 2) - (popupEncodeVideo.width / 2) - (appSidebar.width)
-        y: (appWindow.height / 2) - (popupEncodeVideo.height / 2) - (rectangleHeader.height)
+    PopupEncoding {
+        id: popupEncoding
+        x: (appWindow.width / 2) - (popupEncoding.width / 2) - (appSidebar.width)
+        y: (appWindow.height / 2) - (popupEncoding.height / 2) - (rectangleHeader.height)
 
         onConfirmed: {
             //

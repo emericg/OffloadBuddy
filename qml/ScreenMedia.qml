@@ -223,7 +223,7 @@ Item {
                 height: 40
                 source: "qrc:/assets/icons_material/baseline-settings_applications-24px.svg"
                 backgroundColor: Theme.colorForeground
-                onClicked: contentOverview.openEncodePopup()
+                onClicked: contentOverview.openEncodingPopup()
             }
         }
 

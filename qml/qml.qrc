@@ -15,8 +15,8 @@
         <file>PopupDelete.qml</file>
         <file>PopupExit.qml</file>
         <file>PopupOffload.qml</file>
-        <file>PopupEncodeVideo.qml</file>
-        <file>PopupExtractTelemetry.qml</file>
+        <file>PopupEncoding.qml</file>
+        <file>PopupTelemetry.qml</file>
         <file>MediaDetailMap.qml</file>
         <file>MediaDetailTelemetry.qml</file>
         <file>MediaDetailOverview.qml</file>

@@ -84,8 +84,8 @@ Item {
 
     // POPUPS //////////////////////////////////////////////////////////////////
 
-    PopupEncodeVideo {
-        id: popupEncodeVideo
+    PopupEncoding {
+        id: popupEncoding
     }
 
     PopupDelete {
@@ -502,8 +502,8 @@ Item {
                 selectedItem.shot.openFolder()
             }
             if (index === 3) {
-                popupEncodeVideo.updateEncodePanel(selectedItem.shot)
-                popupEncodeVideo.open()
+                popupEncoding.updateEncodePanel(selectedItem.shot)
+                popupEncoding.open()
             }
             if (index === 16) {
                 var indexes = []

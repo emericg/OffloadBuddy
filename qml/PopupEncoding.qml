@@ -1033,7 +1033,7 @@ Popup {
             }
 
             Item {
-                id: rectangleWarning
+                id: rectangleMetadataWarning
                 height: 48
                 anchors.left: parent.left
                 anchors.right: parent.right
@@ -1135,43 +1135,52 @@ Popup {
                 }
             }
 
-            TextFieldThemed {
-                id: textField_path
-                anchors.left: parent.left
+            Item {
+                height: 48
                 anchors.right: parent.right
+                anchors.left: parent.left
 
                 visible: (comboBoxDestination.currentIndex === (cbDestinations.count - 1))
 
-                onVisibleChanged: {
-                    //
-                }
-
-                FileDialog {
-                    id: fileDialogChange
-                    title: qsTr("Please choose a destination!")
-                    sidebarVisible: true
-                    selectExisting: true
-                    selectMultiple: false
-                    selectFolder: true
-
-                    onAccepted: {
-                        textField_path.text = UtilsPath.cleanUrl(fileDialogChange.fileUrl);
-                    }
-                }
-
-                ButtonThemed {
-                    id: button_change
-                    width: 72
-                    height: 36
+                TextField {
+                    id: textField_path
+                    anchors.left: parent.left
                     anchors.right: parent.right
-                    anchors.rightMargin: 2
                     anchors.verticalCenter: parent.verticalCenter
 
-                    embedded: true
-                    text: qsTr("change")
-                    onClicked: {
-                        fileDialogChange.folder =  "file:///" + textField_path.text
-                        fileDialogChange.open()
+                    visible: (comboBoxDestination.currentIndex === (cbDestinations.count - 1))
+
+                    onVisibleChanged: {
+                        //
+                    }
+
+                    FileDialog {
+                        id: fileDialogChange
+                        title: qsTr("Please choose a destination!")
+                        sidebarVisible: true
+                        selectExisting: true
+                        selectMultiple: false
+                        selectFolder: true
+
+                        onAccepted: {
+                            textField_path.text = UtilsPath.cleanUrl(fileDialogChange.fileUrl);
+                        }
+                    }
+
+                    ButtonThemed {
+                        id: button_change
+                        width: 72
+                        height: 36
+                        anchors.right: parent.right
+                        anchors.rightMargin: 2
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        embedded: true
+                        text: qsTr("change")
+                        onClicked: {
+                            fileDialogChange.folder =  "file:///" + textField_path.text
+                            fileDialogChange.open()
+                        }
                     }
                 }
             }
