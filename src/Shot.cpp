@@ -952,6 +952,14 @@ bool Shot::getMetadataFromVideo(int index)
                 }
             }
         }
+        if (media->chapters_count > 0 && media->chapters)
+        {
+            // GoPro HiLights
+            for (unsigned i = 0; i < media->chapters_count; i++)
+            {
+                m_hilight.push_back(media->chapters[i].pts);
+            }
+        }
 
         return true;
     }
