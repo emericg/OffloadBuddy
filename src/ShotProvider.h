@@ -46,6 +46,8 @@ protected:
     ShotModel *m_shotModel = nullptr;
     ShotFilter *m_shotFilter = nullptr;
 
+    Qt::SortOrder m_sortOrder = Qt::AscendingOrder;
+
 Q_SIGNALS:
     void shotModelUpdated();
     void shotsUpdated();
