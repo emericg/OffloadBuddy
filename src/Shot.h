@@ -105,13 +105,17 @@ class Shot: public QObject
     Q_PROPERTY(QString camera READ getCameraSource NOTIFY shotUpdated)
     Q_PROPERTY(qint64 size READ getSize NOTIFY shotUpdated)
     Q_PROPERTY(qint64 datasize READ getDataSize NOTIFY shotUpdated)
-    Q_PROPERTY(unsigned chapters READ getChapterCount NOTIFY shotUpdated)
+    Q_PROPERTY(unsigned chapterCount READ getChapterCount NOTIFY shotUpdated)
     Q_PROPERTY(unsigned highlightCount READ getHighlightCount NOTIFY shotUpdated)
 
     Q_PROPERTY(QString previewPhoto READ getPreviewPhoto NOTIFY shotUpdated)
     Q_PROPERTY(QString previewVideo READ getPreviewVideo NOTIFY shotUpdated)
     Q_PROPERTY(QImage previewMtp READ getPreviewMtp NOTIFY shotUpdated)
-    Q_PROPERTY(QString fileList READ getFilesString NOTIFY shotUpdated)
+
+    Q_PROPERTY(unsigned fileCount READ getFileCount NOTIFY shotUpdated)
+    Q_PROPERTY(QString filesString READ getFilesString NOTIFY shotUpdated)
+    Q_PROPERTY(QStringList filesList READ getFilesStringList NOTIFY shotUpdated)
+    //Q_PROPERTY(QVariant files READ getShotFiles NOTIFY shotUpdated)
 
     Q_PROPERTY(qint64 duration READ getDuration NOTIFY shotUpdated)
     Q_PROPERTY(QDateTime date READ getDate NOTIFY shotUpdated)
@@ -138,6 +142,12 @@ class Shot: public QObject
     Q_PROPERTY(unsigned audioChannels READ getAudioChannels NOTIFY shotUpdated)
     Q_PROPERTY(unsigned audioBitrate READ getAudioBitrate NOTIFY shotUpdated)
     Q_PROPERTY(unsigned audioSamplerate READ getAudioSamplerate NOTIFY shotUpdated)
+
+    Q_PROPERTY(unsigned protune READ getProtune NOTIFY shotUpdated)
+    Q_PROPERTY(unsigned lowlight READ getLowlight NOTIFY shotUpdated)
+    Q_PROPERTY(unsigned superview READ getSuperview NOTIFY shotUpdated)
+    Q_PROPERTY(bool eis READ getEIS NOTIFY shotUpdated)
+    Q_PROPERTY(unsigned media_type READ getMediaType NOTIFY shotUpdated)
 
     Q_PROPERTY(QString latitudeString READ getLatitudeStr NOTIFY metadataUpdated)
     Q_PROPERTY(QString longitudeString READ getLongitudeStr NOTIFY metadataUpdated)
@@ -185,12 +195,10 @@ class Shot: public QObject
     QDateTime m_date_user;          //!< Set by the user
 
     // GLOBAL metadata
-    unsigned transformation = 0;    // QImageIOHandler::Transformation
     unsigned width = 0;
     unsigned height = 0;
+    unsigned transformation = 0;    // QImageIOHandler::Transformation
     int rotation = 0;
-
-    QList <int64_t> m_hilight;
 
     // GPS "quick" metadata (from EXIF or first GPMF sample)
     QString gps_lat_str;
@@ -217,6 +225,14 @@ class Shot: public QObject
     unsigned achannels = 0;
     unsigned abitrate = 0;
     unsigned asamplerate = 0;
+
+    // GoPro shot metadata
+    unsigned protune = 0;
+    unsigned lowlight = 0;
+    unsigned superview = 0;
+    bool eis = 0;
+    unsigned media_type = 0;
+    QList <int64_t> m_hilight;
 
     bool getMetadataFromPicture(int index = 0);
     bool getMetadataFromVideo(int index = 0);
@@ -253,6 +269,10 @@ class Shot: public QObject
                         std::string &gps_tmcd, unsigned gps_fix, unsigned gps_dop);
     void parseData_triplet(GpmfBuffer &buf, GpmfKLV &klv, const float scales[16],
                            std::vector <TriFloat> &datalist);
+
+    bool hasGoProMetadata = false;
+    bool hasGPMetadata() { return hasGoProMetadata; }
+    Q_PROPERTY(bool hasGoProMetadata READ hasGPMetadata NOTIFY metadataUpdated)
 
     bool hasEXIF = false;
     bool hasExif() { return hasEXIF; }
@@ -336,6 +356,7 @@ public slots:
     QString getFolderString();
     QString getFilesString() const;
     QStringList getFilesStringList() const;
+    //QVariant getShotFiles() const { if (m_mediaDirectories.size() > 0) { return QVariant::fromValue(m_mediaDirectories); } return QVariant(); }
 
     QString getUuid() const { return m_uuid; }
 
@@ -375,6 +396,12 @@ public slots:
     unsigned getAudioBitrate() const { return abitrate; }
     unsigned getAudioSamplerate() const { return asamplerate; }
 
+    unsigned getProtune() const { return protune; }
+    unsigned getLowlight() const { return lowlight; }
+    unsigned getSuperview() const { return superview; }
+    bool getEIS() const { return eis; }
+    unsigned getMediaType() const { return media_type; }
+
     QString getLatitudeStr() const { return gps_lat_str; }
     QString getLongitudeStr() const { return gps_long_str; }
     QString getAltitudeStr() const { return gps_alt_str; }
@@ -399,8 +426,6 @@ Q_SIGNALS:
     void metadataUpdated();
     void dataUpdated();
 };
-
-//Q_DECLARE_METATYPE(Shot*);
 
 /* ************************************************************************** */
 #endif // SHOT_H

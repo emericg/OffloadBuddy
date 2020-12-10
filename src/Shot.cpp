@@ -529,7 +529,7 @@ void Shot::openFolder() const
 
 /* ************************************************************************** */
 /* ************************************************************************** */
-
+/*
 #ifdef ENABLE_LIBEXIF
 static void show_tag(ExifData *d, ExifIfd ifd, ExifTag tag)
 {
@@ -543,7 +543,7 @@ static void show_tag(ExifData *d, ExifIfd ifd, ExifTag tag)
     }
 }
 #endif // ENABLE_LIBEXIF
-
+*/
 bool Shot::getMetadataFromPicture(int index)
 {
     bool status = false;
@@ -959,6 +959,27 @@ bool Shot::getMetadataFromVideo(int index)
             {
                 m_hilight.push_back(media->chapters[i].pts);
             }
+        }
+        if (media->metadata_gopro)
+        {
+            hasGoProMetadata = true;
+
+            // GoPro shot metadata (from MP4)
+            m_camera_firmware = media->metadata_gopro->camera_firmware;
+            if (m_camera_firmware.startsWith("HD9")) m_camera_source = "GoPro HERO9";
+            if (m_camera_firmware.startsWith("HD8")) m_camera_source = "GoPro HERO8";
+            if (m_camera_firmware.startsWith("HD7")) m_camera_source = "GoPro HERO7";
+            if (m_camera_firmware.startsWith("HD6")) m_camera_source = "GoPro HERO6";
+            if (m_camera_firmware.startsWith("HD5")) m_camera_source = "GoPro HERO5";
+            if (m_camera_firmware.startsWith("HX")) m_camera_source = "GoPro HERO4 Session";
+            if (m_camera_firmware.startsWith("HD4")) m_camera_source = "GoPro HERO4";
+            if (m_camera_firmware.startsWith("HD3")) m_camera_source = "GoPro HERO3";
+
+            protune = media->metadata_gopro->protune;
+            lowlight = media->metadata_gopro->lowlight;
+            superview = media->metadata_gopro->superview;
+            eis = media->metadata_gopro->eis;
+            media_type = media->metadata_gopro->media_type;
         }
 
         return true;

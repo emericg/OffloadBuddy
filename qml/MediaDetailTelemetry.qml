@@ -19,7 +19,6 @@ Item {
         target: settingsManager
         onAppUnitsChanged: updateUnits()
     }
-
     function updateUnits() {
         speedsGraph.title = "Speed (" + UtilsString.speedUnit(settingsManager.appUnits) + ")"
         altiGraph.title = "Altitude (" + UtilsString.altitudeUnit(settingsManager.appUnits) + ")"
@@ -87,8 +86,8 @@ Item {
                 while (mapTrace.pathLength() > 0)
                     mapTrace.removeCoordinate(mapTrace.coordinateAt(0))
 
-                // add new GPS points // one per seconde (at 18Hz)
-                for (var i = 0; i < shot.getGpsPointCount(); i+=18)
+                // add new GPS points // one per seconde (was 18Hz)
+                for (var i = 0; i < shot.getGpsPointCount(); i += 18)
                     mapTrace.addCoordinate(shot.getGpsCoordinates(i))
 
                 if (shot.distanceKm < 0.5)
@@ -134,14 +133,11 @@ Item {
 
     Item {
         id: rectangleMap
-        width: 500
+        width: 512
 
         anchors.top: parent.top
-        anchors.topMargin: 0
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
         anchors.right: parent.right
-        anchors.rightMargin: 0
+        anchors.bottom: parent.bottom
 
         Map {
             id: mapTraceGPS

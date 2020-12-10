@@ -103,6 +103,13 @@ Item {
         anchors.top: parent.top
         color: Theme.colorHeader
 
+        DragHandler {
+            // Drag on the sidebar to drag the whole window // Qt 5.15+
+            // Also, prevent clicks below this area
+            onActiveChanged: if (active) appWindow.startSystemMove();
+            target: null
+        }
+
         ItemImageButton {
             id: buttonBack
             width: 48
@@ -145,15 +152,9 @@ Item {
             anchors.left: textShotName.right
             anchors.leftMargin: 32
 
-            ItemCodec {
-                id: codecVideo
-                text: qsTr("CODEC")
-            }
+            ItemCodec { id: codecVideo }
 
-            ItemCodec {
-                id: codecAudio
-                text: qsTr("CODEC")
-            }
+            ItemCodec { id: codecAudio }
         }
 
         Row {
@@ -273,7 +274,7 @@ Item {
                 id: menuDetails
                 height: parent.height
 
-                visible: false
+                visible: (shot && (shot.hasGoProMetadata || shot.fileCount > 1))
 
                 menuText: qsTr("Details")
                 source: "qrc:/assets/icons_material/baseline-list-24px.svg"
@@ -303,6 +304,11 @@ Item {
                 onClicked: screenMedia.state = "map"
             }
         }
+
+        CsdWindows {
+            anchors.top: parent.top
+            anchors.right: parent.right
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -317,51 +323,32 @@ Item {
     states: [
         State {
             name: "overview"
+            PropertyChanges { target: contentOverview; visible: true; }
+            PropertyChanges { target: contentDetails; visible: false; }
+            PropertyChanges { target: contentTelemetry; visible: false; }
+            PropertyChanges { target: contentMap; visible: false; }
+        },
 
-            PropertyChanges {
-                target: contentOverview
-                visible: true
-            }
-            PropertyChanges {
-                target: contentTelemetry
-                visible: false
-            }
-            PropertyChanges {
-                target: contentMap
-                visible: false
-            }
+        State {
+            name: "details"
+            PropertyChanges { target: contentOverview; visible: false; }
+            PropertyChanges { target: contentDetails; visible: true; }
+            PropertyChanges { target: contentTelemetry; visible: false; }
+            PropertyChanges { target: contentMap; visible: false; }
         },
         State {
             name: "metadata"
-
-            PropertyChanges {
-                target: contentOverview
-                visible: false
-            }
-            PropertyChanges {
-                target: contentTelemetry
-                visible: true
-            }
-            PropertyChanges {
-                target: contentMap
-                visible: false
-            }
+            PropertyChanges { target: contentOverview; visible: false; }
+            PropertyChanges { target: contentDetails; visible: false; }
+            PropertyChanges { target: contentTelemetry; visible: true; }
+            PropertyChanges { target: contentMap; visible: false; }
         },
         State {
             name: "map"
-
-            PropertyChanges {
-                target: contentOverview
-                visible: false
-            }
-            PropertyChanges {
-                target: contentTelemetry
-                visible: false
-            }
-            PropertyChanges {
-                target: contentMap
-                visible: true
-            }
+            PropertyChanges { target: contentOverview; visible: false; }
+            PropertyChanges { target: contentDetails; visible: false; }
+            PropertyChanges { target: contentTelemetry; visible: false; }
+            PropertyChanges { target: contentMap; visible: true; }
         }
     ]
 
@@ -376,6 +363,11 @@ Item {
         MediaDetailOverview {
             id: contentOverview
             visible: true
+        }
+
+        MediaDetailDetails {
+            id: contentDetails
+            visible: false
         }
 
         MediaDetailTelemetry {

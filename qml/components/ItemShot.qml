@@ -75,7 +75,7 @@ Rectangle {
                 text_left.visible = true
                 text_left.text = UtilsString.durationToString_ISO8601_compact_loose(duration)
             }
-            if (shot.chapters > 1)
+            if (shot.chapterCount > 1)
                 icon_left.source = "qrc:/assets/icons_material/baseline-video_library-24px.svg"
             else
                 icon_left.source = "qrc:/assets/icons_material/baseline-video-24px.svg"
@@ -127,7 +127,7 @@ Rectangle {
         var remove = true
 
         if (shot.fileType === Shared.FILE_VIDEO) { // all kind of videos
-            if (shot.chapters > 1)
+            if (shot.chapterCount > 1)
                 merge = true
 
             if (shot.hasGPMF)

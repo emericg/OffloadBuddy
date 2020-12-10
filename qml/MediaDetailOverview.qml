@@ -63,8 +63,8 @@ Item {
             infosPicture.visible = false
             infosVideo.visible = true
 
-            labelChapters.visible = (shot.chapters > 1)
-            chapters.text = shot.chapters + qsTr(" chapters")
+            labelChapters.visible = (shot.chapterCount > 1)
+            chapters.text = shot.chapterCount + qsTr(" chapters")
 
             labelDuration.visible = true
             duration.text = UtilsString.durationToString_short(shot.duration)
