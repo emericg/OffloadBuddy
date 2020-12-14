@@ -20,7 +20,6 @@
         <file>MediaDetailOverview.qml</file>
         <file>MediaDetailDetails.qml</file>
         <file>MediaDetailTelemetry.qml</file>
-        <file>MediaDetailMap.qml</file>
         <file>MediaPreview.qml</file>
 
         <file>ThemeEngine.qml</file>

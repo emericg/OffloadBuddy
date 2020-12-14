@@ -58,7 +58,7 @@ Item {
                 //}
             } else {
                 if (shot.latitude !== 0.0) {
-                    contentMap.updateMap()
+                    contentTelemetry.updateMap()
                 } else {
                     //
                 }
@@ -169,6 +169,7 @@ Item {
                 width: 40
                 height: 40
                 source: "qrc:/assets/icons_material/baseline-timer-24px.svg"
+                visible: (shot && shot.fileType === Shared.FILE_VIDEO)
                 backgroundColor: Theme.colorForeground
                 onClicked: contentOverview.toggleTrim()
             }
@@ -300,8 +301,8 @@ Item {
 
                 menuText: qsTr("Map")
                 source: "qrc:/assets/icons_material/baseline-map-24px.svg"
-                selected: (screenMedia.state === "map")
-                onClicked: screenMedia.state = "map"
+                selected: (screenMedia.state === "metadata")
+                onClicked: screenMedia.state = "metadata"
             }
         }
 
@@ -326,7 +327,6 @@ Item {
             PropertyChanges { target: contentOverview; visible: true; }
             PropertyChanges { target: contentDetails; visible: false; }
             PropertyChanges { target: contentTelemetry; visible: false; }
-            PropertyChanges { target: contentMap; visible: false; }
         },
 
         State {
@@ -334,21 +334,12 @@ Item {
             PropertyChanges { target: contentOverview; visible: false; }
             PropertyChanges { target: contentDetails; visible: true; }
             PropertyChanges { target: contentTelemetry; visible: false; }
-            PropertyChanges { target: contentMap; visible: false; }
         },
         State {
             name: "metadata"
             PropertyChanges { target: contentOverview; visible: false; }
             PropertyChanges { target: contentDetails; visible: false; }
             PropertyChanges { target: contentTelemetry; visible: true; }
-            PropertyChanges { target: contentMap; visible: false; }
-        },
-        State {
-            name: "map"
-            PropertyChanges { target: contentOverview; visible: false; }
-            PropertyChanges { target: contentDetails; visible: false; }
-            PropertyChanges { target: contentTelemetry; visible: false; }
-            PropertyChanges { target: contentMap; visible: true; }
         }
     ]
 
@@ -372,11 +363,6 @@ Item {
 
         MediaDetailTelemetry {
             id: contentTelemetry
-            visible: false
-        }
-
-        MediaDetailMap {
-            id: contentMap
             visible: false
         }
     }

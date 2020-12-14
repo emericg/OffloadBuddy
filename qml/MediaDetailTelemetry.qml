@@ -1,7 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 
-import QtCharts 2.2
+import QtCharts 2.3
 import QtLocation 5.12
 import QtPositioning 5.12
 
@@ -25,15 +25,32 @@ Item {
         updateMetadata()
     }
 
-    function updateMetadata() {
+    function updateMap() { // "image" mode
+        map.fullscreen = true
+        button_map_fullscreen.visible = false
+
+        if (shot.latitude !== 0.0) {
+            map.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
+            map.zoomLevel = 12
+            mapTrace.visible = false
+            mapMarker.visible = true
+            mapMarker.coordinate = QtPositioning.coordinate(shot.latitude, shot.longitude)
+            button_map_dezoom.enabled = true
+            button_map_zoom.enabled = true
+            calculateScale()
+        }
+    }
+
+    function updateMetadata() { // "video" mode
+        map.fullscreen = false
+        mapMarker.visible = false
+        button_map_fullscreen.visible = true
 
         // Graphs sizes
         altiGraph.legend.visible = false
         speedsGraph.legend.visible = false
         acclGraph.legend.visible = false
         gyroGraph.legend.visible = false
-        onWidthChanged()
-        onHeightChanged()
 
         if (shot) {
             // Graphs data
@@ -69,9 +86,9 @@ Item {
             //axisGyroY0.applyNiceNumbers()
 
             axisSpeedX0.min = 0;
-            axisSpeedX0.max = speedsSeries.count;
+            axisSpeedX0.max = speedsSeries.count
             axisAltiX0.min = 0;
-            axisAltiX0.max = altiSeries.count;
+            axisAltiX0.max = altiSeries.count
             axisAcclX0.min = 0;
             axisAcclX0.max = acclX.count
             axisGyroX0.min = 0;
@@ -91,17 +108,18 @@ Item {
                     mapTrace.addCoordinate(shot.getGpsCoordinates(i))
 
                 if (shot.distanceKm < 0.5)
-                    mapTraceGPS.zoomLevel = 18
+                    map.zoomLevel = 18
                 else if (shot.distanceKm < 2)
-                    mapTraceGPS.zoomLevel = 15
+                    map.zoomLevel = 15
                 else if (shot.distanceKm < 10)
-                    mapTraceGPS.zoomLevel = 12
+                    map.zoomLevel = 12
                 else if (shot.distanceKm < 50)
-                    mapTraceGPS.zoomLevel = 10
+                    map.zoomLevel = 10
                 else if (shot.distanceKm < 100)
-                    mapTraceGPS.zoomLevel = 8
+                    map.zoomLevel = 8
 
-                mapTraceGPS.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
+                map.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
+                calculateScale()
 
                 if (mapTrace.pathLength() > 1) {
                     mapTrace.visible = true
@@ -115,109 +133,265 @@ Item {
         }
     }
 
-    onWidthChanged: {
-        rectangleMap.width = width * 0.40;
-        altiGraph.width = grid.width / 2
-        speedsGraph.width = grid.width / 2
-        acclGraph.width = grid.width / 2
-        gyroGraph.width = grid.width / 2
-    }
-    onHeightChanged: {
-        altiGraph.height = grid.height / 2
-        speedsGraph.height = grid.height / 2
-        acclGraph.height = grid.height / 2
-        gyroGraph.height = grid.height / 2
+    property variant scaleLengths: [5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000]
+
+    function calculateScale() {
+        var coord1, coord2, dist, f
+        f = 0
+        coord1 = map.toCoordinate(Qt.point(0, mapScale.y))
+        coord2 = map.toCoordinate(Qt.point(100, mapScale.y))
+        dist = Math.round(coord1.distanceTo(coord2))
+
+        if (dist === 0) {
+            // not visible
+        } else {
+            for (var i = 0; i < scaleLengths.length-1; i++) {
+                if (dist < (scaleLengths[i] + scaleLengths[i+1]) / 2 ) {
+                    f = scaleLengths[i] / dist
+                    dist = scaleLengths[i]
+                    break;
+                }
+            }
+            if (f === 0) {
+                f = dist / scaleLengths[i]
+                dist = scaleLengths[i]
+            }
+        }
+
+        mapScale.width = 100 * f
+        mapScaleText.text = dist + "m"
     }
 
     ////////////////////////////////////////////////////////////////////////////
 
-    Item {
-        id: rectangleMap
-        width: 512
+    Map {
+        id: map
+        width: fullscreen ? parent.width - 32 : parent.width * 0.40
 
         anchors.top: parent.top
+        anchors.topMargin: 16
         anchors.right: parent.right
+        anchors.rightMargin: 16
         anchors.bottom: parent.bottom
+        anchors.bottomMargin: 16
 
-        Map {
-            id: mapTraceGPS
+        //z: parent.z + 1
+        copyrightsVisible: false
+        gesture.enabled: moove
+        plugin: Plugin { name: "mapboxgl" } // "osm", "mapboxgl", "esri"
+
+        property bool fullscreen: false
+        property bool moove: false
+
+        //zoomLevel: 2
+        //center: QtPositioning.coordinate(45.5, 6)
+
+        MouseArea {
             anchors.fill: parent
-            anchors.margins: 16
-            z: parent.z + 1
+            onWheel: {
+                if (wheel.angleDelta.y < 0)
+                    map.zoomLevel--
+                else
+                    map.zoomLevel++
 
-            copyrightsVisible: false
-            gesture.enabled: false
-            plugin: Plugin { name: "mapboxgl" } // "osm", "mapboxgl", "esri"
+                if (!map.moove) map.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
+                calculateScale()
+            }
+        }
 
-            //zoomLevel: 2
-            //center: QtPositioning.coordinate(45.5, 6)
+        ////////
 
-            MouseArea {
-                anchors.fill: parent
-                onWheel: {
-                    if (wheel.angleDelta.y < 0)
-                        mapTraceGPS.zoomLevel--
-                    else
-                        mapTraceGPS.zoomLevel++
+        MapQuickItem {
+            id: mapMarker
+            visible: false
+            anchorPoint.x: mapMarkerImg.width/2
+            anchorPoint.y: mapMarkerImg.height/2
+            sourceItem: Image {
+                id: mapMarkerImg
+                width: 64
+                height: 64
+                source: "qrc:/assets/others/gps_marker.svg"
+            }
+        }
 
-                    mapTraceGPS.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
+        MapPolyline {
+            id: mapTrace
+            visible: false
+            line.width: 3
+            line.color: Theme.colorPrimary
+        }
+
+        ////////
+
+        Row {
+            anchors.top: parent.top
+            anchors.topMargin: 16
+            anchors.left: parent.left
+            anchors.leftMargin: 16
+            spacing: 16
+
+            ItemImageButton {
+                id: button_map_fullscreen
+                width: map.fullscreen ? 48 : 40
+                height: map.fullscreen ? 48 : 40
+                background: true
+                backgroundColor: "#555"
+                iconColor: "white"
+                highlightMode: "color"
+
+                source: map.fullscreen ? "qrc:/assets/icons_material/baseline-fullscreen_exit-24px.svg"
+                                       : "qrc:/assets/icons_material/baseline-fullscreen-24px.svg"
+                onClicked: map.fullscreen = !map.fullscreen
+            }
+
+            ItemImageButton {
+                id: button_map_moove
+                width: map.fullscreen ? 48 : 40
+                height: map.fullscreen ? 48 : 40
+                background: true
+                backgroundColor: "#555"
+                iconColor: "white"
+                highlightMode: "color"
+                selected: map.moove
+
+                source: "qrc:/assets/icons_material/baseline-open_with-24px.svg"
+                onClicked: map.moove = !map.moove
+            }
+        }
+
+        Row {
+            anchors.top: parent.top
+            anchors.topMargin: 16
+            anchors.right: parent.right
+            anchors.rightMargin: 16
+            spacing: 16
+
+            ItemImageButton {
+                id: button_map_dezoom
+                width: map.fullscreen ? 48 : 40
+                height: map.fullscreen ? 48 : 40
+                background: true
+                backgroundColor: "#555"
+                iconColor: "white"
+                highlightMode: "color"
+
+                source: "qrc:/assets/icons_material/baseline-zoom_out-24px.svg"
+                onClicked: {
+                    map.zoomLevel--
+                    if (!map.moove) map.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
+                    calculateScale()
                 }
             }
 
-            Row {
-                anchors.top: parent.top
-                anchors.topMargin: 16
+            ItemImageButton {
+                id: button_map_zoom
+                width: map.fullscreen ? 48 : 40
+                height: map.fullscreen ? 48 : 40
+                background: true
+                backgroundColor: "#555"
+                iconColor: "white"
+                highlightMode: "color"
+
+                source: "qrc:/assets/icons_material/baseline-zoom_in-24px.svg"
+                onClicked: {
+                    map.zoomLevel++
+                    if (!map.moove) map.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
+                    calculateScale()
+                }
+            }
+        }
+
+        ////////
+
+        Item {
+            id: mapScale
+            width: 100
+            height: 16
+            anchors.left: parent.left
+            anchors.leftMargin: 16
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: map.fullscreen ? 64 : 16
+
+            Text {
+                id: mapScaleText
+                anchors.centerIn: parent
+                text: "100m"
+                color:"#555"
+                font.pixelSize: 12
+            }
+
+            Rectangle {
+                width: 2; height: 6;
+                anchors.left: parent.left
+                anchors.bottom: parent.bottom
+                color:"#555"
+            }
+            Rectangle {
+                width: parent.width; height: 2;
+                anchors.bottom: parent.bottom
+                color:"#555"
+            }
+            Rectangle {
+                width: 2; height: 6;
                 anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                color:"#555"
+            }
+        }
+
+        ////////
+
+        Rectangle {
+            height: map.fullscreen ? 48 : 40
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+
+            color: "#555"
+            opacity: 0.8
+            visible: mapMarker.visible
+
+            Row {
+                anchors.fill: parent
+                anchors.leftMargin: 16
                 anchors.rightMargin: 16
                 spacing: 16
 
-                ItemImageButton {
-                    id: button_map_dezoom
-                    width: 40
-                    height: 40
-                    background: true
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
 
-                    source: "qrc:/assets/icons_material/baseline-zoom_out-24px.svg"
-                    onClicked: {
-                        mapTraceGPS.zoomLevel--
-                        mapTraceGPS.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
-                    }
+                    text: qsTr("GPS coordinates:")
+                    font.pixelSize: Theme.fontSizeContent
+                    font.bold: true
+                    color: "white"
                 }
 
-                ItemImageButton {
-                    id: button_map_zoom
-                    width: 40
-                    height: 40
-                    background: true
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
 
-                    source: "qrc:/assets/icons_material/baseline-zoom_in-24px.svg"
-                    onClicked: {
-                        mapTraceGPS.zoomLevel++
-                        mapTraceGPS.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
-                    }
+                    text: shot.latitudeString + "    " + shot.longitudeString
+                    font.pixelSize: Theme.fontSizeContent
+                    color: "white"
                 }
-            }
 
-            MapQuickItem {
-                id: mapMarker
-                visible: false
-                anchorPoint.x: mapMarkerImg.width/2
-                anchorPoint.y: mapMarkerImg.height/2
-                sourceItem: Image {
-                    id: mapMarkerImg
-                    source: "qrc:/assets/others/gps_marker.svg"
+                Item { width: 1; height: 1; } // spacer
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: qsTr("Altitude:")
+                    font.pixelSize: Theme.fontSizeContent
+                    font.bold: true
+                    color: "white"
                 }
-            }
 
-            MapPolyline {
-                id: mapTrace
-                visible: true
-                line.width: 3
-                line.color: Theme.colorPrimary
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
 
-                path: [
-                    { latitude: 45.5, longitude: 6 },
-                ]
+                    text: UtilsString.altitudeToString(shot.altitude - shot.altitudeOffset, 0, settingsManager.appUnits)
+                    font.pixelSize: Theme.fontSizeContent
+                    color: "white"
+                }
             }
         }
     }
@@ -227,237 +401,190 @@ Item {
     Item {
         id: rectangleGraphs
 
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
-        anchors.right: rectangleMap.left
-        anchors.rightMargin: 0
-        anchors.left: parent.left
-        anchors.leftMargin: 0
         anchors.top: parent.top
-        anchors.topMargin: 0
+        anchors.left: parent.left
+        anchors.right: map.left
+        anchors.bottom: parent.bottom
 
-        Item {
+        visible: !map.fullscreen
+
+        Column {
             id: rectangleText
-            height: 138
 
             anchors.top: parent.top
-            anchors.topMargin: 16
+            anchors.topMargin: 24
             anchors.right: parent.right
-            anchors.rightMargin: 16
+            anchors.rightMargin: 24
             anchors.left: parent.left
-            anchors.leftMargin: 16
+            anchors.leftMargin: 24
+            spacing: 12
 
-            Text {
-                id: labelMaxSpeed
-                text: qsTr("max:")
-                anchors.left: speedMIN.right
-                anchors.leftMargin: 32
-                anchors.verticalCenter: labelAvgSpeed.verticalCenter
-                font.pixelSize: Theme.fontSizeContentSmall
-                color: Theme.colorText
+            Row {
+                spacing: 12
+
+                Text {
+                    id: labelDuration
+                    text: qsTr("Track duration:")
+                    font.pixelSize: Theme.fontSizeContentSmall
+                    color: Theme.colorText
+                }
+                Text {
+                    id: trackDuration
+                    font.bold: true
+                    font.pixelSize: Theme.fontSizeContentSmall
+                    color: Theme.colorText
+                }
+
+                Item { width: 1; height: 1; } // spacer
+
+                Text {
+                    id: labelDistance
+                    text: qsTr("Distance traveled:")
+                    font.pixelSize: Theme.fontSizeContentSmall
+                    color: Theme.colorText
+                }
+                Text {
+                    id: trackDistance
+                    font.bold: true
+                    font.pixelSize: Theme.fontSizeContentSmall
+                    color: Theme.colorText
+                }
             }
 
-            Text {
-                id: labelAvgSpeed
-                text: qsTr("Average speed:")
-                anchors.top: labelDistance.bottom
-                anchors.topMargin: 8
-                anchors.left: parent.left
-                anchors.leftMargin: 8
-                font.pixelSize: Theme.fontSizeContentSmall
-                color: Theme.colorText
+            Row {
+                spacing: 8
+
+                Text {
+                    id: labelAvgSpeed
+                    text: qsTr("Average speed:")
+                    color: Theme.colorText
+                    font.pixelSize: Theme.fontSizeContentSmall
+                }
+                Text {
+                    id: speedAVG
+                    font.bold: true
+                    font.pixelSize: Theme.fontSizeContentSmall
+                    color: Theme.colorText
+                }
+
+                Item { width: 1; height: 1; } // spacer
+
+                Text {
+                    id: labelMinSpeed
+                    text: qsTr("(min:")
+                    font.pixelSize: Theme.fontSizeContentSmall
+                    color: Theme.colorText
+                }
+                Text {
+                    id: speedMIN
+                    font.bold: true
+                    font.pixelSize: Theme.fontSizeContentSmall
+                    color: Theme.colorText
+                }
+
+                Text {
+                    id: labelMaxSpeed
+                    text: qsTr("/ max:")
+                    color: Theme.colorText
+                    font.pixelSize: Theme.fontSizeContentSmall
+                }
+                Text {
+                    id: speedMAX
+                    font.bold: true
+                    font.pixelSize: Theme.fontSizeContentSmall
+                    color: Theme.colorText
+                }
+                Text {
+                    text: qsTr(")")
+                    font.pixelSize: Theme.fontSizeContentSmall
+                    color: Theme.colorText
+                }
             }
 
-            Text {
-                id: labelMaxAltitude
-                y: 32
-                text: qsTr("max:")
-                anchors.left: altiMIN.right
-                anchors.leftMargin: 32
-                anchors.verticalCenter: labelAvgAltitude.verticalCenter
-                font.pixelSize: Theme.fontSizeContentSmall
-                color: Theme.colorText
+            Row {
+                spacing: 8
+
+                Text {
+                    id: labelAvgAltitude
+                    text: qsTr("Average altitude:")
+                    font.pixelSize: Theme.fontSizeContentSmall
+                    color: Theme.colorText
+                }
+                Text {
+                    id: altiAVG
+                    font.bold: true
+                    font.pixelSize: Theme.fontSizeContentSmall
+                    color: Theme.colorText
+                }
+
+                Item { width: 1; height: 1; } // spacer
+
+                Text {
+                    id: labelMinAltitude
+                    text: qsTr("(min:")
+                    font.pixelSize: Theme.fontSizeContentSmall
+                    color: Theme.colorText
+                }
+                Text {
+                    id: altiMIN
+                    font.bold: true
+                    font.pixelSize: Theme.fontSizeContentSmall
+                    color: Theme.colorText
+                }
+
+                Text {
+                    id: labelMaxAltitude
+                    text: qsTr("/ max:")
+                    color: Theme.colorText
+                    font.pixelSize: Theme.fontSizeContentSmall
+                }
+                Text {
+                    id: altiMAX
+                    font.bold: true
+                    font.pixelSize: Theme.fontSizeContentSmall
+                    color: Theme.colorText
+                }
+                Text {
+                    text: qsTr(")")
+                    font.pixelSize: Theme.fontSizeContentSmall
+                    color: Theme.colorText
+                }
             }
 
-            Text {
-                id: labelAvgAltitude
-                text: qsTr("Average altitude:")
-                anchors.top: labelAvgSpeed.bottom
-                anchors.topMargin: 8
-                anchors.left: parent.left
-                anchors.leftMargin: 8
-                font.pixelSize: Theme.fontSizeContentSmall
-                color: Theme.colorText
-            }
+            Row {
+                spacing: 8
 
-            Text {
-                id: labelMinSpeed
-                text: qsTr("min:")
-                anchors.left: speedAVG.right
-                anchors.leftMargin: 32
-                anchors.verticalCenter: labelAvgSpeed.verticalCenter
-                font.pixelSize: Theme.fontSizeContentSmall
-                color: Theme.colorText
-            }
-
-            Text {
-                id: labelMinAltitude
-                text: qsTr("min:")
-                anchors.left: altiAVG.right
-                anchors.leftMargin: 32
-                anchors.verticalCenter: labelAvgAltitude.verticalCenter
-                font.pixelSize: Theme.fontSizeContentSmall
-                color: Theme.colorText
-            }
-
-            Text {
-                id: labelGforce
-                text: qsTr("Max G force:")
-                anchors.top: labelAvgAltitude.bottom
-                anchors.topMargin: 8
-                anchors.left: parent.left
-                anchors.leftMargin: 8
-                font.pixelSize: Theme.fontSizeContentSmall
-                color: Theme.colorText
-            }
-
-            Text {
-                id: speedAVG
-                text: qsTr("AVG")
-                font.bold: true
-                anchors.verticalCenter: labelAvgSpeed.verticalCenter
-                anchors.left: labelAvgSpeed.right
-                anchors.leftMargin: 12
-                font.pixelSize: Theme.fontSizeContentSmall
-                color: Theme.colorText
-            }
-
-            Text {
-                id: speedMAX
-                text: qsTr("MAX")
-                font.bold: true
-                anchors.left: labelMaxSpeed.right
-                anchors.leftMargin: 12
-                anchors.verticalCenter: labelMaxSpeed.verticalCenter
-                font.pixelSize: Theme.fontSizeContentSmall
-                color: Theme.colorText
-            }
-
-            Text {
-                id: speedMIN
-                text: qsTr("MIN")
-                font.bold: true
-                anchors.left: labelMinSpeed.right
-                anchors.leftMargin: 12
-                anchors.verticalCenter: labelMinSpeed.verticalCenter
-                font.pixelSize: Theme.fontSizeContentSmall
-                color: Theme.colorText
-            }
-
-            Text {
-                id: altiAVG
-                text: qsTr("AVG")
-                font.bold: true
-                anchors.left: labelAvgAltitude.right
-                anchors.leftMargin: 12
-                anchors.verticalCenter: labelAvgAltitude.verticalCenter
-                font.pixelSize: Theme.fontSizeContentSmall
-                color: Theme.colorText
-            }
-
-            Text {
-                id: altiMAX
-                text: qsTr("MAX")
-                font.bold: true
-                anchors.left: labelMaxAltitude.right
-                anchors.leftMargin: 12
-                anchors.verticalCenter: labelMaxAltitude.verticalCenter
-                font.pixelSize: Theme.fontSizeContentSmall
-                color: Theme.colorText
-            }
-
-            Text {
-                id: altiMIN
-                text: qsTr("MIN")
-                font.bold: true
-                anchors.left: labelMinAltitude.right
-                anchors.leftMargin: 12
-                anchors.verticalCenter: labelMinAltitude.verticalCenter
-                font.pixelSize: Theme.fontSizeContentSmall
-                color: Theme.colorText
-            }
-
-            Text {
-                id: acclMAX
-                text: qsTr("MAX")
-                font.bold: true
-                anchors.left: labelGforce.right
-                anchors.leftMargin: 12
-                anchors.verticalCenter: labelGforce.verticalCenter
-                font.pixelSize: Theme.fontSizeContentSmall
-                color: Theme.colorText
-            }
-
-            Text {
-                id: labelDuration
-                text: qsTr("Track duration:")
-                anchors.top: parent.top
-                anchors.topMargin: 8
-                anchors.left: parent.left
-                anchors.leftMargin: 8
-                font.pixelSize: Theme.fontSizeContentSmall
-                color: Theme.colorText
-            }
-
-            Text {
-                id: trackDuration
-                text: "text"
-                font.bold: true
-                anchors.left: labelDuration.right
-                anchors.leftMargin: 12
-                anchors.verticalCenter: labelDuration.verticalCenter
-                font.pixelSize: Theme.fontSizeContentSmall
-                color: Theme.colorText
-            }
-
-            Text {
-                id: labelDistance
-                text: qsTr("Distance traveled:")
-                anchors.verticalCenter: labelDuration.verticalCenter
-                anchors.left: trackDuration.right
-                anchors.leftMargin: 32
-                font.pixelSize: Theme.fontSizeContentSmall
-                color: Theme.colorText
-            }
-
-            Text {
-                id: trackDistance
-                text: "text"
-                font.bold: true
-                anchors.left: labelDistance.right
-                anchors.leftMargin: 12
-                anchors.verticalCenter: labelDistance.verticalCenter
-                font.pixelSize: Theme.fontSizeContentSmall
-                color: Theme.colorText
+                Text {
+                    id: labelGforce
+                    text: qsTr("Max G force:")
+                    font.pixelSize: Theme.fontSizeContentSmall
+                    color: Theme.colorText
+                }
+                Text {
+                    id: acclMAX
+                    font.bold: true
+                    font.pixelSize: Theme.fontSizeContentSmall
+                    color: Theme.colorText
+                }
             }
         }
+
+        ////////////////
 
         Grid {
             id: grid
             columns: 2
+
             anchors.top: rectangleText.bottom
-            anchors.topMargin: 0
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 0
+            anchors.topMargin: -8
             anchors.left: parent.left
-            anchors.leftMargin: 0
             anchors.right: parent.right
-            anchors.rightMargin: 0
+            anchors.bottom: parent.bottom
 
             ChartView {
                 id: speedsGraph
-                width: 480
-                height: 240
+                width: grid.width / 2
+                height: grid.height / 2
 
                 title: "Speed (" + UtilsString.speedUnit(settingsManager.appUnits) + ")"
                 titleColor: Theme.colorText
@@ -480,8 +607,8 @@ Item {
 
             ChartView {
                 id: altiGraph
-                width: 480
-                height: 240
+                width: grid.width / 2
+                height: grid.height / 2
 
                 title: "Altitude (" + UtilsString.altitudeUnit(settingsManager.appUnits) + ")"
                 titleColor: Theme.colorText
@@ -501,8 +628,8 @@ Item {
 
             ChartView {
                 id: acclGraph
-                width: 480
-                height: 240
+                width: grid.width / 2
+                height: grid.height / 2
 
                 title: "Acceleration"
                 titleColor: Theme.colorText
@@ -523,8 +650,8 @@ Item {
 
             ChartView {
                 id: gyroGraph
-                width: 480
-                height: 240
+                width: grid.width / 2
+                height: grid.height / 2
 
                 title: "Gyroscope"
                 titleColor: Theme.colorText
