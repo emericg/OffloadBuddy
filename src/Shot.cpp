@@ -22,6 +22,7 @@
 #include <cmath>
 
 #include "Shot.h"
+#include "EGM96.h"
 #include "GpmfTags.h"
 #include "utils/utils_maths.h"
 
@@ -780,6 +781,8 @@ bool Shot::getMetadataFromPicture(int index)
                         gps_alt = -gps_alt;
                 }
             }
+
+            m_gps_altitude_offset = egm96_compute_altitude_offset(gps_lat, gps_long);
 /*
             qDebug() << "gps_lat_str:" << gps_lat_str;
             qDebug() << "gps_long_str:" << gps_long_str;
@@ -787,6 +790,7 @@ bool Shot::getMetadataFromPicture(int index)
             qDebug() << "gps_lat:" << gps_lat;
             qDebug() << "gps_long:" << gps_long;
             qDebug() << "gps_alt:" << gps_alt;
+            qDebug() << "gps_alt_offset:" << m_gps_altitude_offset;
             qDebug() << "gps_timestamp:" << m_date_gps;
 */
         }

@@ -98,7 +98,7 @@ Popup {
                     anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
 
-                    checked: false
+                    checked: true
                     enabled: false
                     text: qsTr("EGM96 correction")
                 }
@@ -316,7 +316,7 @@ Popup {
                 fullColor: true
                 primaryColor: Theme.colorSecondary
                 onClicked: {
-                    currentShot.exportTelemetry(textField_path.text, 30, 2)
+                    currentShot.exportTelemetry(textField_path.text, 30, 2, switchEGM96.checked)
                     popupTelemetry.confirmed()
                     popupTelemetry.close()
                 }
@@ -330,7 +330,7 @@ Popup {
                 fullColor: true
                 primaryColor: Theme.colorPrimary
                 onClicked: {
-                    currentShot.exportGps(textField_path.text, 2)
+                    currentShot.exportGps(textField_path.text, 2, switchEGM96.checked)
                     popupTelemetry.confirmed()
                     popupTelemetry.close()
                 }

@@ -155,6 +155,7 @@ class Shot: public QObject
     Q_PROPERTY(double latitude READ getLatitude NOTIFY metadataUpdated)
     Q_PROPERTY(double longitude READ getLongitude NOTIFY metadataUpdated)
     Q_PROPERTY(double altitude READ getAltitude NOTIFY metadataUpdated)
+    Q_PROPERTY(double altitudeOffset READ getAltitudeOffset NOTIFY metadataUpdated)
 
     Q_PROPERTY(bool selected READ isSelected WRITE setSelected NOTIFY selectionUpdated)
     bool selected = false;
@@ -322,8 +323,8 @@ public slots:
     Q_INVOKABLE void updateGyroSeries(QLineSeries *x, QLineSeries *y, QLineSeries *z);
     Q_INVOKABLE QGeoCoordinate getGpsCoordinates(unsigned index);
 
-    Q_INVOKABLE bool exportTelemetry(const QString &path, int accl_frequency, int gps_frequency);
-    Q_INVOKABLE bool exportGps(const QString &path, int gps_frequency);
+    Q_INVOKABLE bool exportTelemetry(const QString &path, int accl_frequency, int gps_frequency, bool egm96_correction);
+    Q_INVOKABLE bool exportGps(const QString &path, int gps_frequency, bool egm96_correction);
 
     /// < GPMF WIP /////////////////////////
 
@@ -408,6 +409,7 @@ public slots:
     double getLatitude() const { return gps_lat; }
     double getLongitude() const { return gps_long; }
     double getAltitude() const { return gps_alt; }
+    double getAltitudeOffset() const { return m_gps_altitude_offset; }
 
     unsigned getHighlightCount() const { return m_hilight.size(); }
     unsigned getGpsPointCount() const { return m_gps.size(); }

@@ -33,6 +33,7 @@ DEFINES += ENABLE_FFMPEG
 DEFINES += ENABLE_MINIVIDEO
 DEFINES += ENABLE_LIBEXIF
 #DEFINES += ENABLE_EXIV2
+include(src/thirdparty/EGM96/EGM96.pri)
 
 # Project files ################################################################
 

@@ -22,6 +22,7 @@
 #include <cmath>
 
 #include "Shot.h"
+#include "EGM96.h"
 #include "GpmfTags.h"
 #include "utils/utils_maths.h"
 
@@ -318,12 +319,6 @@ void Shot::parseData_gps5(GpmfBuffer &buf, GpmfKLV &klv,
         emit shotUpdated();
     }
 
-    // Update altitude offset?
-    if (m_gps.size() == 1)
-    {
-        m_gps_altitude_offset = 0; // TODO
-    }
-
     //qDebug() << "GPS   FIX: " << gps_fix << "  DOP: " << gps_dop;
 
     std::pair<std::string, float> gps_params;
@@ -361,10 +356,16 @@ void Shot::parseData_gps5(GpmfBuffer &buf, GpmfKLV &klv,
             }
         }
 
+        // Update altitude offset?
+        if (m_gps.size() < 1/* && gps_fix == 3*/)
+        {
+            m_gps_altitude_offset = egm96_compute_altitude_offset(gps_coord.first, gps_coord.second);
+        }
+
         m_gps.push_back(gps_coord);
         m_gps_params.emplace_back(gps_params);
 
-        m_alti.push_back(alti + m_gps_altitude_offset);
+        m_alti.push_back(alti - m_gps_altitude_offset);
         m_speed.push_back(speed);
 
         // Compute distance between this point and the previous one
@@ -617,7 +618,7 @@ QGeoCoordinate Shot::getGpsCoordinates(unsigned index)
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-bool Shot::exportTelemetry(const QString &path, int accl_frequency, int gps_frequency)
+bool Shot::exportTelemetry(const QString &path, int accl_frequency, int gps_frequency, bool egm96_correction)
 {
     //qDebug() << "Shot::exportTelemetry('" << path << "', " << accl_frequency << "," << gps_frequency << ")";
     bool status = false;
@@ -724,7 +725,7 @@ bool Shot::exportTelemetry(const QString &path, int accl_frequency, int gps_freq
     return status;
 }
 
-bool Shot::exportGps(const QString &path, int gps_frequency)
+bool Shot::exportGps(const QString &path, int gps_frequency, bool egm96_correction)
 {
     //qDebug() << "Shot::exportGps('" << path << "', " << gps_frequency << ")";
     bool status = false;
