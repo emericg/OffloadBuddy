@@ -1015,8 +1015,13 @@ bool Shot::getMetadataFromVideo(int index)
             if (m_camera_firmware.startsWith("HD3")) m_camera_source = "GoPro HERO3";
 
             protune = media->metadata_gopro->protune;
+            cam_raw = media->metadata_gopro->cam_raw;
+            broadcast_range = media->metadata_gopro->broadcast_range;
+            video_mode_fov = media->metadata_gopro->video_mode_fov;
+            lens_type = media->metadata_gopro->lens_type;
             lowlight = media->metadata_gopro->lowlight;
             superview = media->metadata_gopro->superview;
+            sharpening = media->metadata_gopro->sharpening;
             eis = media->metadata_gopro->eis;
             media_type = media->metadata_gopro->media_type;
         }

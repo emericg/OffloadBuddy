@@ -144,10 +144,16 @@ class Shot: public QObject
     Q_PROPERTY(unsigned audioSamplerate READ getAudioSamplerate NOTIFY shotUpdated)
 
     Q_PROPERTY(unsigned protune READ getProtune NOTIFY shotUpdated)
+    Q_PROPERTY(unsigned cam_raw READ getCamRaw NOTIFY shotUpdated)
+    Q_PROPERTY(unsigned broadcast_range READ getLowlight NOTIFY shotUpdated)
+    Q_PROPERTY(unsigned lens_type READ getLensType NOTIFY shotUpdated)
+    Q_PROPERTY(unsigned video_mode_fov READ getVideoModeFov NOTIFY shotUpdated)
     Q_PROPERTY(unsigned lowlight READ getLowlight NOTIFY shotUpdated)
     Q_PROPERTY(unsigned superview READ getSuperview NOTIFY shotUpdated)
+    Q_PROPERTY(unsigned sharpening READ getSharpening NOTIFY shotUpdated)
     Q_PROPERTY(bool eis READ getEIS NOTIFY shotUpdated)
     Q_PROPERTY(unsigned media_type READ getMediaType NOTIFY shotUpdated)
+    Q_PROPERTY(QString media_type_str READ getMediaTypeString NOTIFY shotUpdated)
 
     Q_PROPERTY(QString latitudeString READ getLatitudeStr NOTIFY metadataUpdated)
     Q_PROPERTY(QString longitudeString READ getLongitudeStr NOTIFY metadataUpdated)
@@ -232,8 +238,13 @@ class Shot: public QObject
 
     // GoPro shot metadata
     unsigned protune = 0;
+    unsigned cam_raw = 0;
+    unsigned broadcast_range;
+    unsigned video_mode_fov;
+    unsigned lens_type;
     unsigned lowlight = 0;
     unsigned superview = 0;
+    unsigned sharpening;
     bool eis = 0;
     unsigned media_type = 0;
     QList <int64_t> m_hilight;
@@ -403,10 +414,19 @@ public slots:
     unsigned getAudioSamplerate() const { return asamplerate; }
 
     unsigned getProtune() const { return protune; }
+    unsigned getCamRaw() const { return cam_raw; }
+    unsigned getBroadcastRange() const { return broadcast_range; }
+    unsigned getVideoModeFov() const { return video_mode_fov; }
+    unsigned getLensType() const { return lens_type; }
     unsigned getLowlight() const { return lowlight; }
     unsigned getSuperview() const { return superview; }
+    unsigned getSharpening() const { return sharpening; }
     bool getEIS() const { return eis; }
     unsigned getMediaType() const { return media_type; }
+    QString getMediaTypeString() const {
+        if (media_type == 12) return "video";
+        else return QString::number(media_type);
+    }
 
     QString getLatitudeStr() const { return gps_lat_str; }
     QString getLongitudeStr() const { return gps_long_str; }

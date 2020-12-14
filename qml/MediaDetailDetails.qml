@@ -18,94 +18,191 @@ Item {
         anchors.right: infosFiles.left
         anchors.bottom: parent.bottom
 
+        property int legendWidth: 240
+
         Column {
             anchors.top: parent.top
             anchors.topMargin: 24
             anchors.left: parent.left
-            anchors.leftMargin: 24
+            anchors.leftMargin: 32
             anchors.right: parent.right
-            anchors.rightMargin: 24
+            anchors.rightMargin: 32
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 24
 
             visible: shot.hasGoProMetadata
+            spacing: 16
 
             Row {
-                height: 40
+                height: 32
+                spacing: 16
 
+                visible: shot.camera
+
+                ImageSvg {
+                    width: 32
+                    height: 32
+                    color: Theme.colorText
+                    source: "qrc:/assets/icons_material/baseline-camera-24px.svg"
+                }
                 Text {
-                    width: 128
+                    height: 32
+                    text: shot.camera
+                    color: Theme.colorText
+                    font.bold: true
+                    font.pixelSize: Theme.fontSizeContentBig
+                    verticalAlignment: Text.AlignVCenter
+                }
+            }
+
+            Row {
+                Text {
+                    width: infosDetails.legendWidth
                     text: qsTr("Protune")
+                    color: Theme.colorText
                     font.bold: true
-                    font.pixelSize: Theme.fontSizeContent
+                    font.pixelSize: Theme.fontSizeContentSmall
                 }
                 Text {
-                    width: 128
                     text: shot.protune
+                    color: Theme.colorText
                     font.pixelSize: Theme.fontSizeContent
                 }
             }
 
             Row {
-                height: 40
-
                 Text {
-                    width: 128
-                    text: qsTr("lowlight")
+                    width: infosDetails.legendWidth
+                    text: qsTr("Cam RAW")
+                    color: Theme.colorText
                     font.bold: true
-                    font.pixelSize: Theme.fontSizeContent
+                    font.pixelSize: Theme.fontSizeContentSmall
                 }
                 Text {
-                    width: 128
+                    text: shot.cam_raw
+                    color: Theme.colorText
+                    font.pixelSize: Theme.fontSizeContent
+                }
+            }
+
+            Row {
+                Text {
+                    width: infosDetails.legendWidth
+                    text: qsTr("Broadcast range")
+                    color: Theme.colorText
+                    font.bold: true
+                    font.pixelSize: Theme.fontSizeContentSmall
+                }
+                Text {
+                    text: shot.broadcast_range
+                    color: Theme.colorText
+                    font.pixelSize: Theme.fontSizeContent
+                }
+            }
+
+            Row {
+                Text {
+                    width: infosDetails.legendWidth
+                    text: qsTr("Lens type")
+                    color: Theme.colorText
+                    font.bold: true
+                    font.pixelSize: Theme.fontSizeContentSmall
+                }
+                Text {
+                    text: shot.lens_type
+                    color: Theme.colorText
+                    font.pixelSize: Theme.fontSizeContent
+                }
+            }
+
+            Row {
+                Text {
+                    width: infosDetails.legendWidth
+                    text: qsTr("video_mode_fov")
+                    color: Theme.colorText
+                    font.bold: true
+                    font.pixelSize: Theme.fontSizeContentSmall
+                }
+                Text {
+                    text: shot.video_mode_fov
+                    color: Theme.colorText
+                    font.pixelSize: Theme.fontSizeContent
+                }
+            }
+
+            Row {
+                Text {
+                    width: infosDetails.legendWidth
+                    text: qsTr("Low light")
+                    color: Theme.colorText
+                    font.bold: true
+                    font.pixelSize: Theme.fontSizeContentSmall
+                }
+                Text {
                     text: shot.lowlight
+                    color: Theme.colorText
                     font.pixelSize: Theme.fontSizeContent
                 }
             }
 
             Row {
-                height: 40
-
                 Text {
-                    width: 128
-                    text: qsTr("superview")
+                    width: infosDetails.legendWidth
+                    text: qsTr("Superview")
+                    color: Theme.colorText
                     font.bold: true
-                    font.pixelSize: Theme.fontSizeContent
+                    font.pixelSize: Theme.fontSizeContentSmall
                 }
                 Text {
-                    width: 128
                     text: shot.superview
+                    color: Theme.colorText
                     font.pixelSize: Theme.fontSizeContent
                 }
             }
 
             Row {
-                height: 40
-
                 Text {
-                    width: 128
-                    text: qsTr("media_type")
+                    width: infosDetails.legendWidth
+                    text: qsTr("Sharpening")
+                    color: Theme.colorText
                     font.bold: true
-                    font.pixelSize: Theme.fontSizeContent
+                    font.pixelSize: Theme.fontSizeContentSmall
                 }
                 Text {
-                    width: 128
-                    text: shot.media_type
+                    text: shot.sharpening
+                    color: Theme.colorText
                     font.pixelSize: Theme.fontSizeContent
                 }
             }
 
             Row {
-                height: 40
+                Text {
+                    width: infosDetails.legendWidth
+                    text: qsTr("Media type")
+                    color: Theme.colorText
+                    font.bold: true
+                    font.pixelSize: Theme.fontSizeContentSmall
+                }
+                Text {
+                    text: shot.media_type_str
+                    color: Theme.colorText
+                    font.pixelSize: Theme.fontSizeContent
+                }
+            }
+
+            Row {
+                height: 32
 
                 Text {
-                    width: 128
+                    width: infosDetails.legendWidth
                     text: qsTr("EIS")
+                    color: Theme.colorText
                     font.bold: true
-                    font.pixelSize: Theme.fontSizeContent
+                    font.pixelSize: Theme.fontSizeContentSmall
                 }
                 Text {
-                    width: 128
                     text: shot.eis
+                    color: Theme.colorText
                     font.pixelSize: Theme.fontSizeContent
                 }
             }
@@ -116,7 +213,7 @@ Item {
 
     Rectangle {
         id: infosFiles
-        width: 640
+        width: parent.width * 0.40
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.bottom: parent.bottom
@@ -133,30 +230,44 @@ Item {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 24
 
-            Text {
-                height: 32
+            Item {
+                height: 64
                 anchors.left: parent.left
                 anchors.right: parent.right
 
-                text: qsTr("Folder:")
-                color: Theme.colorText
-                font.bold: true
-                font.pixelSize: Theme.fontSizeContent
-                verticalAlignment: Text.AlignVCenter
-            }
-            Text {
-                height: 32
-                anchors.left: parent.left
-                anchors.right: parent.right
+                Text {
+                    height: 32
+                    anchors.top: parent.top
 
-                text: shot.folder
-                color: Theme.colorText
-                font.pixelSize: Theme.fontSizeContent
-                verticalAlignment: Text.AlignVCenter
+                    text: qsTr("Folder:")
+                    color: Theme.colorText
+                    font.bold: true
+                    font.pixelSize: Theme.fontSizeContent
+                    verticalAlignment: Text.AlignVCenter
+                }
+                Text {
+                    height: 32
+                    anchors.bottom: parent.bottom
+
+                    text: shot.folder
+                    color: Theme.colorText
+                    font.pixelSize: Theme.fontSizeContent
+                    verticalAlignment: Text.AlignVCenter
+                }
+
+                ItemImageButton {
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    backgroundColor: Theme.colorBackground
+                    width: 40; height: 40;
+                    source: "qrc:/assets/icons_material/outline-folder-24px.svg"
+                    onClicked: utilsApp.openWith(shot.folder)
+                }
             }
 
             Text {
-                height: 32
+                height: 40
                 anchors.left: parent.left
                 anchors.right: parent.right
 
@@ -168,7 +279,7 @@ Item {
             }
 
             ListView {
-                height: shot.filesList.length * 32
+                height: shot.filesList.length * 24
                 anchors.left: parent.left
                 anchors.right: parent.right
 
@@ -180,7 +291,7 @@ Item {
                     anchors.right: parent.right
 
                     Row { // row left
-                        height: 32
+                        height: 24
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: 8
@@ -217,11 +328,13 @@ Item {
                         // controls
                         ItemImageButton {
                             width: 32; height: 32;
-                            source: "qrc:/assets/icons_material/outline-folder-24px.svg"
+                            backgroundColor: Theme.colorBackground
+                            source: "qrc:/assets/icons_material/baseline-launch-24px.svg"
                             onClicked: utilsApp.openWith(modelData)
                         }
                         ItemImageButton {
                             width: 32; height: 32;
+                            backgroundColor: Theme.colorBackground
                             source: "qrc:/assets/icons_material/baseline-delete-24px.svg"
                         }
                     }
