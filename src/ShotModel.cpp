@@ -74,7 +74,7 @@ void ShotModel::sanetize()
 
 void ShotModel::addFile(ofb_file *f, ofb_shot *s)
 {
-    //qDebug() << "ShotModel::addFile()";
+    //qDebug() << "ShotModel::addFile()" << f->filesystemPath;
 
     Shot *shot = nullptr;
 

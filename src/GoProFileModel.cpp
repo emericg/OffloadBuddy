@@ -208,7 +208,7 @@ bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot)
 /*
     qDebug() << "* FILE:" << file.name;
     qDebug() << "- " << file.extension;
-    qDebug() << "- " << shot.file_type;
+    //qDebug() << "- " << shot.file_type;
     qDebug() << "- " << shot.shot_type;
     qDebug() << "- " << shot.group_number;
     qDebug() << "- " << shot.file_number;

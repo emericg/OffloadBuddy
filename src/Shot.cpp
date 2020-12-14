@@ -75,6 +75,9 @@ Shot::~Shot()
 
     qDeleteAll(m_videos_hdAudio);
     m_videos_hdAudio.clear();
+
+    qDeleteAll(m_others);
+    m_others.clear();
 }
 
 /* ************************************************************************** */
@@ -265,6 +268,10 @@ qint64 Shot::getFullSize() const
     {
         size += f->size;
     }
+    for (auto f: m_others)
+    {
+        size += f->size;
+    }
 
     return size;
 }
@@ -384,6 +391,22 @@ QImage Shot::getPreviewMtp()
 
 /* ************************************************************************** */
 
+bool Shot::isValid() const
+{
+    if (m_type >= Shared::SHOT_VIDEO && m_type <= Shared::SHOT_VIDEO_3D)
+    {
+        if (m_videos.size() > 0) return true;
+    }
+    else if (m_type >= Shared::SHOT_PICTURE && m_type <= Shared::SHOT_PICTURE_NIGHTLAPSE)
+    {
+        if (m_pictures.size() > 0) return true;
+    }
+
+    return false;
+}
+
+/* ************************************************************************** */
+
 QList <ofb_file *> Shot::getFiles(bool withPreviews, bool withHdAudio) const
 {
     QList <ofb_file *> list;
@@ -405,6 +428,11 @@ QList <ofb_file *> Shot::getFiles(bool withPreviews, bool withHdAudio) const
         for (auto f: m_videos_hdAudio)
         list += f;
     }
+    //if (withOthers)
+    //{
+    //    for (auto f: m_others)
+    //    list += f;
+    //}
 
     return list;
 }
@@ -422,6 +450,8 @@ QStringList Shot::getFilesStringList() const
     for (auto f: m_videos_thumbnails)
         list += f->filesystemPath;
     for (auto f: m_videos_hdAudio)
+        list += f->filesystemPath;
+    for (auto f: m_others)
         list += f->filesystemPath;
 
     return list;
@@ -465,6 +495,7 @@ int Shot::getFileCount()
     count += m_videos_previews.size();
     count += m_videos_thumbnails.size();
     count += m_videos_hdAudio.size();
+    count += m_others.size();
 
     return count;
 }
@@ -483,6 +514,8 @@ QString Shot::getFilesString() const
         list += "- " + f->filesystemPath + "\n";
     for (auto f: m_videos_hdAudio)
         list += "- " + f->filesystemPath + "\n";
+    for (auto f: m_others)
+        list += "- " + f->filesystemPath + "\n";
 
 #ifdef ENABLE_LIBMTP
     if (list.isEmpty())
@@ -496,6 +529,8 @@ QString Shot::getFilesString() const
         for (auto f: m_videos_thumbnails)
             list += "- " + f->name + "." + f->extension + "\n";
         for (auto f: m_videos_hdAudio)
+            list += "- " + f->name + "." + f->extension + "\n";
+        for (auto f: m_others)
             list += "- " + f->name + "." + f->extension + "\n";
     }
 #endif // ENABLE_LIBMTP

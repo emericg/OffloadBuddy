@@ -189,6 +189,9 @@ class Shot: public QObject
     QList <ofb_file *> m_videos_thumbnails;
     QList <ofb_file *> m_videos_hdAudio;
 
+    // OTHER files?
+    QList <ofb_file *> m_others;
+
     // Dates
     QDateTime m_date_file;
     QDateTime m_date_metadata;
@@ -352,6 +355,8 @@ public slots:
     }
     unsigned getState() const { return m_state; }
     void setState(Shared::ShotState state) { m_state = state; emit stateUpdated(); }
+
+    bool isValid() const;
 
     QString &getFolderRefString();
     QString getFolderString();

@@ -103,12 +103,14 @@ Rectangle {
                 actionMenu.visible = false
                 shotsView.currentIndex = index
 
-                shot.getMetadataFromVideoGPMF();
+                if (shot.isValid()) {
+                    shot.getMetadataFromVideoGPMF();
 
-                if (shotDevice)
-                    screenDevice.state = "stateMediaDetails"
-                else
-                    screenLibrary.state = "stateMediaDetails"
+                    if (shotDevice)
+                        screenDevice.state = "stateMediaDetails"
+                    else
+                        screenLibrary.state = "stateMediaDetails"
+                }
             }
         }
     }
