@@ -78,6 +78,9 @@ Shot::~Shot()
 
     qDeleteAll(m_others);
     m_others.clear();
+
+    qDeleteAll(m_shotfiles);
+    m_shotfiles.clear();
 }
 
 /* ************************************************************************** */
@@ -202,6 +205,7 @@ int Shot::getChapterCount() const
 QDateTime Shot::getDate() const
 {
     QDateTime firstpossibledate(QDate(2001, 1, 1), QTime(0, 0));
+    if (m_camera_source.contains("HERO4")) firstpossibledate = QDateTime(QDate(2014, 1, 1), QTime(0, 0));
     if (m_camera_source.contains("HERO5")) firstpossibledate = QDateTime(QDate(2016, 1, 1), QTime(0, 0));
     if (m_camera_source.contains("HERO6")) firstpossibledate = QDateTime(QDate(2017, 1, 1), QTime(0, 0));
     if (m_camera_source.contains("HERO7")) firstpossibledate = QDateTime(QDate(2018, 1, 1), QTime(0, 0));
@@ -406,6 +410,50 @@ bool Shot::isValid() const
 }
 
 /* ************************************************************************** */
+
+QVariant Shot::getShotFiles()
+{
+    if (m_shotfiles.size() <= 0)
+    {
+        for (auto f: m_pictures)
+        {
+            ShotFile *sf = new ShotFile(f);
+            if (sf) m_shotfiles.push_back(sf);
+        }
+        for (auto f: m_videos)
+        {
+            ShotFile *sf = new ShotFile(f);
+            if (sf) m_shotfiles.push_back(sf);
+        }
+        for (auto f: m_videos_previews)
+        {
+            ShotFile *sf = new ShotFile(f);
+            if (sf) m_shotfiles.push_back(sf);
+        }
+        for (auto f: m_videos_thumbnails)
+        {
+            ShotFile *sf = new ShotFile(f);
+            if (sf) m_shotfiles.push_back(sf);
+        }
+        for (auto f: m_videos_hdAudio)
+        {
+            ShotFile *sf = new ShotFile(f);
+            if (sf) m_shotfiles.push_back(sf);
+        }
+        for (auto f: m_others)
+        {
+            ShotFile *sf = new ShotFile(f);
+            if (sf) m_shotfiles.push_back(sf);
+        }
+    }
+
+    if (m_shotfiles.size() > 0)
+    {
+        return QVariant::fromValue(m_shotfiles);
+    }
+
+    return QVariant();
+}
 
 QList <ofb_file *> Shot::getFiles(bool withPreviews, bool withHdAudio) const
 {

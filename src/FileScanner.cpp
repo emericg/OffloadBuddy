@@ -105,11 +105,7 @@ void FileScanner::scanFilesystemDirectory(const QString &dir_path)
                     f->name = fi.baseName();
                     f->extension = fi.suffix().toLower();
                     f->size = static_cast<uint64_t>(fi.size());
-#if (QT_VERSION_MINOR >= 10)
                     f->creation_date = fi.birthTime();
-#else
-                    f->creation_date = fi.created();
-#endif
                     f->modification_date = fi.lastModified();
 
                     // Try to get shot infos, if applicable
@@ -121,11 +117,8 @@ void FileScanner::scanFilesystemDirectory(const QString &dir_path)
                     // Pre-parse metadata on scanning thread
                     if (shotStatus)
                     {
-                        if (f->extension == "mp4" ||
-                            f->extension == "m4v" ||
-                            f->extension == "mov" ||
-                            f->extension == "mkv" ||
-                            f->extension == "webm")
+                        if (f->extension == "mp4" || f->extension == "m4v" || f->extension == "mov" ||
+                            f->extension == "mkv" || f->extension == "webm")
                         {
                             int minivideo_retcode = minivideo_open(f->filesystemPath.toLocal8Bit(), &f->media);
                             if (minivideo_retcode == 1)

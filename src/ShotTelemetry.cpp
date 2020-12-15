@@ -620,7 +620,7 @@ QGeoCoordinate Shot::getGpsCoordinates(unsigned index)
 
 bool Shot::exportTelemetry(const QString &path, int accl_frequency, int gps_frequency, bool egm96_correction)
 {
-    //qDebug() << "Shot::exportTelemetry('" << path << "', " << accl_frequency << "," << gps_frequency << ")";
+    //qDebug() << "Shot::exportTelemetry('" << path << "', " << accl_frequency << ", " << gps_frequency << ", " << egm96_correction << ")";
     bool status = false;
 
     if (hasGPMF && gpmf_parsed)

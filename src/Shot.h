@@ -86,6 +86,79 @@ struct ofb_shot
     int group_number = -1;
 };
 
+/* ************************************************************************** */
+
+class ShotFile: public QObject
+{
+    Q_OBJECT
+
+    Q_PROPERTY(QString path READ getPath NOTIFY fileUpdated)
+    Q_PROPERTY(QString folder READ getFolder NOTIFY fileUpdated)
+    Q_PROPERTY(QString name READ getName NOTIFY fileUpdated)
+    Q_PROPERTY(QString ext READ getExt NOTIFY fileUpdated)
+    Q_PROPERTY(unsigned type READ getType NOTIFY fileUpdated)
+    Q_PROPERTY(qint64 size READ getSize NOTIFY fileUpdated)
+    Q_PROPERTY(qint64 width READ getWidth NOTIFY fileUpdated)
+    Q_PROPERTY(qint64 height READ getHeight NOTIFY fileUpdated)
+
+    QString path;                   //!< Full path
+    QString folder;                 //!< Folder
+    QString name;                   //!< File base name only, no extension
+    QString extension;              //!< Extension only, lowercase, no dot or anything
+
+    unsigned type = 0;              //!<
+    qint64 size = 0;                //!< Size in bytes
+    unsigned width = 0;
+    unsigned height = 0;
+
+Q_SIGNALS:
+    void fileUpdated();
+
+public:
+    ShotFile(ofb_file *f)
+    {
+        if (f)
+        {
+            path = f->filesystemPath;
+            //folder = ;
+            name = f->name;
+            extension = f->extension;
+
+            type = 0;
+            size = f->size;
+            if (f->media && f->media->tracks_video[0])
+            {
+                type = 1;
+                width = f->media->tracks_video[0]->width;
+                height = f->media->tracks_video[0]->height;
+            }
+            else
+            {
+                if (f->ed)
+                    type = 2;
+                else if (extension == "jpg" || extension == "jpeg" ||
+                         extension == "png" || extension == "gpr")
+                    type = 2;
+                else if (extension == "gpx" || extension == "json")
+                    type = 3;
+            }
+        }
+    }
+    ~ShotFile() = default;
+
+public slots:
+    QString getPath() const { return path; }
+    QString getFolder() const { return folder; }
+    QString getName() const { return name; }
+    QString getExt() const { return extension; }
+    unsigned getType() const { return type; }
+    qint64 getSize() const { return size; }
+    unsigned getWidth() const { return width; }
+    unsigned getHeight() const { return height; }
+};
+
+/* ************************************************************************** */
+
 /*!
  * \brief The Shot class
  */
@@ -115,7 +188,7 @@ class Shot: public QObject
     Q_PROPERTY(unsigned fileCount READ getFileCount NOTIFY shotUpdated)
     Q_PROPERTY(QString filesString READ getFilesString NOTIFY shotUpdated)
     Q_PROPERTY(QStringList filesList READ getFilesStringList NOTIFY shotUpdated)
-    //Q_PROPERTY(QVariant files READ getShotFiles NOTIFY shotUpdated)
+    Q_PROPERTY(QVariant filesShot READ getShotFiles NOTIFY shotUpdated)
 
     Q_PROPERTY(qint64 duration READ getDuration NOTIFY shotUpdated)
     Q_PROPERTY(QDateTime date READ getDate NOTIFY shotUpdated)
@@ -197,6 +270,9 @@ class Shot: public QObject
 
     // OTHER files?
     QList <ofb_file *> m_others;
+
+    // QML facing structure
+    QList <ShotFile *> m_shotfiles;
 
     // Dates
     QDateTime m_date_file;
@@ -373,7 +449,7 @@ public slots:
     QString getFolderString();
     QString getFilesString() const;
     QStringList getFilesStringList() const;
-    //QVariant getShotFiles() const { if (m_mediaDirectories.size() > 0) { return QVariant::fromValue(m_mediaDirectories); } return QVariant(); }
+    QVariant getShotFiles();
 
     QString getUuid() const { return m_uuid; }
 

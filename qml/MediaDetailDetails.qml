@@ -284,7 +284,7 @@ Item {
                 anchors.right: parent.right
 
                 interactive: false
-                model: shot.filesList
+                model: shot.filesShot
                 delegate: Item {
                     height: 32
                     anchors.left: parent.left
@@ -294,27 +294,46 @@ Item {
                         height: 24
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
-                        spacing: 8
+                        spacing: 12
 
                         // icon
                         ImageSvg {
-                            width: 24; height: 24;
+                            width: 20; height: 20;
                             anchors.verticalCenter: parent.verticalCenter
-                            source: "qrc:/assets/icons_material/baseline-aspect_ratio-24px.svg"
-                        }
+                            anchors.verticalCenterOffset: -1
 
+                            source: {
+                                if (modelData.type === 1)
+                                    return "qrc:/assets/icons_material/baseline-aspect_ratio-24px.svg"
+                                else if (modelData.type === 2)
+                                    return "qrc:/assets/icons_material/baseline-photo-24px.svg"
+                                else if (modelData.type === 3)
+                                    return "qrc:/assets/icons_material/baseline-list-24px.svg"
+                                else
+                                    return "qrc:/assets/icons_material/baseline-broken_image-24px.svg"
+                            }
+                        }
+/*
+                        // geometry
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: modelData.width + "x" + modelData.height
+                            color: Theme.colorText
+                            font.pixelSize: Theme.fontSizeContentSmall
+                        }
+*/
                         // filesize
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
-                            text: "1 MB"
-                            color: Theme.colorText
+                            text: UtilsString.bytesToString(modelData.size)
+                            color: Theme.colorSubText
                             font.pixelSize: Theme.fontSizeContentSmall
                         }
 
                         // filepath
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
-                            text: modelData
+                            text: modelData.name + "." + modelData.ext
                             color: Theme.colorText
                             font.pixelSize: Theme.fontSizeContentSmall
                         }
@@ -330,10 +349,11 @@ Item {
                             width: 32; height: 32;
                             backgroundColor: Theme.colorBackground
                             source: "qrc:/assets/icons_material/baseline-launch-24px.svg"
-                            onClicked: utilsApp.openWith(modelData)
+                            onClicked: utilsApp.openWith(modelData.path)
                         }
                         ItemImageButton {
                             width: 32; height: 32;
+                            visible: false
                             backgroundColor: Theme.colorBackground
                             source: "qrc:/assets/icons_material/baseline-delete-24px.svg"
                         }

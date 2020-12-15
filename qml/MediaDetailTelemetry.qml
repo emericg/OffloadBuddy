@@ -576,7 +576,6 @@ Item {
             columns: 2
 
             anchors.top: rectangleText.bottom
-            anchors.topMargin: -8
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
@@ -585,6 +584,7 @@ Item {
                 id: speedsGraph
                 width: grid.width / 2
                 height: grid.height / 2
+                anchors.margins: -24
 
                 title: "Speed (" + UtilsString.speedUnit(settingsManager.appUnits) + ")"
                 titleColor: Theme.colorText
@@ -592,12 +592,13 @@ Item {
                 titleFont.bold: true
 
                 antialiasing: true
-                //legend.visible: false // Needs Qt 5.10+ / Qt Charts 2.3
-                //backgroundRoundness: 0
                 backgroundColor: "transparent"
+                backgroundRoundness: 0
+                legend.visible: false
 
                 LineSeries {
                     id: speedsSeries
+                    color: Theme.colorPrimary;  width: 1;
                     axisX: ValueAxis { id: axisSpeedX0; visible: false; gridVisible: false; }
                     axisY: ValueAxis { id: axisSpeedY0; visible: true; gridVisible: true;
                                        labelsFont.pixelSize: 12; labelsColor: Theme.colorSubText; labelFormat: "%0.1f";
@@ -609,16 +610,19 @@ Item {
                 id: altiGraph
                 width: grid.width / 2
                 height: grid.height / 2
+                anchors.margins: -24
 
                 title: "Altitude (" + UtilsString.altitudeUnit(settingsManager.appUnits) + ")"
                 titleColor: Theme.colorText
                 titleFont.pixelSize: 14
                 titleFont.bold: true
+
                 backgroundColor: "transparent"
                 antialiasing: true
 
                 LineSeries {
                     id: altiSeries
+                    color: Theme.colorWarning;  width: 1;
                     axisX: ValueAxis { id: axisAltiX0; visible: false; gridVisible: false; }
                     axisY: ValueAxis { id: axisAltiY0; visible: true; gridVisible: true;
                                        labelsFont.pixelSize: 12; labelsColor: Theme.colorSubText; labelFormat: "%i";
@@ -630,6 +634,7 @@ Item {
                 id: acclGraph
                 width: grid.width / 2
                 height: grid.height / 2
+                anchors.margins: -24
 
                 title: "Acceleration"
                 titleColor: Theme.colorText
@@ -652,6 +657,7 @@ Item {
                 id: gyroGraph
                 width: grid.width / 2
                 height: grid.height / 2
+                anchors.margins: -24
 
                 title: "Gyroscope"
                 titleColor: Theme.colorText
