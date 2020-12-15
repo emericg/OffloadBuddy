@@ -224,16 +224,16 @@ Item {
             anchors.top: parent.top
             anchors.topMargin: 24
             anchors.left: parent.left
-            anchors.leftMargin: 24
             anchors.right: parent.right
-            anchors.rightMargin: 24
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 24
 
             Item {
                 height: 64
                 anchors.left: parent.left
+                anchors.leftMargin: 24
                 anchors.right: parent.right
+                anchors.rightMargin: 20
 
                 Text {
                     height: 32
@@ -269,7 +269,9 @@ Item {
             Text {
                 height: 40
                 anchors.left: parent.left
+                anchors.leftMargin: 24
                 anchors.right: parent.right
+                anchors.rightMargin: 24
 
                 text: qsTr("File(s):")
                 color: Theme.colorText
@@ -279,11 +281,17 @@ Item {
             }
 
             ListView {
-                height: shot.filesList.length * 24
+                //height: shot.filesList.length * 32
+                height: infosFiles.height - 40 - 64 - 24
                 anchors.left: parent.left
+                anchors.leftMargin: 24
                 anchors.right: parent.right
+                anchors.rightMargin: 0
 
-                interactive: false
+                clip: true
+                interactive: true
+                ScrollBar.vertical: ScrollBar { z: 1 }
+
                 model: shot.filesShot
                 delegate: Item {
                     height: 32
@@ -341,6 +349,7 @@ Item {
 
                     Row { // row right
                         anchors.right: parent.right
+                        anchors.rightMargin: 20
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: 8
 
