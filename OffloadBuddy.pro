@@ -1,6 +1,6 @@
 TARGET  = OffloadBuddy
 
-VERSION = 0.4
+VERSION = 0.5
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 CONFIG += c++14
