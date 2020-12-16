@@ -32,6 +32,7 @@
         <file alias="ItemShot.qml">components/ItemShot.qml</file>
         <file alias="ItemMediaDirectory.qml">components/ItemMediaDirectory.qml</file>
         <file alias="SliderPlayer.qml">components/SliderPlayer.qml</file>
+        <file alias="RangeSliderPlayer.qml">components/RangeSliderPlayer.qml</file>
         <file alias="SidebarWidget.qml">components/SidebarWidget.qml</file>
         <file alias="ResizeWidget.qml">components/ResizeWidget.qml</file>
 

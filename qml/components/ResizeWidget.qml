@@ -236,6 +236,7 @@ Item {
         Item {
             id: grid_rulesofthree
             anchors.fill: parent
+            clip: true
             visible: editing && grid === "rulesofthree"
 
             Repeater {

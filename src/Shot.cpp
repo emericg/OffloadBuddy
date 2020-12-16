@@ -322,6 +322,30 @@ QString Shot::getPreviewVideo() const
     return QString();
 }
 
+QStringList Shot::getChapterPaths() const
+{
+    QStringList vids;
+
+    if (m_videos.size() > 1)
+    {
+        for (auto f: m_videos) vids.push_back(f->filesystemPath);
+    }
+
+    return vids;
+}
+
+QVariant Shot::getChapterDurations() const
+{
+    QList <qint64> vids;
+
+    if (m_videos.size() > 1)
+    {
+        for (auto f: m_videos) vids.push_back(f->media->duration);
+    }
+
+    return QVariant::fromValue(vids);
+}
+
 QImage Shot::getPreviewMtp()
 {
     QImage img;
@@ -1041,10 +1065,17 @@ bool Shot::getMetadataFromVideo(int index)
         }
         if (media->chapters_count > 0 && media->chapters)
         {
-            // GoPro HiLights
+            // Time offset (if chaptered video)
+            int64_t timeoffset = 0;
+            for (int i = 0; i < index; i++)
+            {
+                if (m_videos.at(i) && m_videos.at(i)->media)
+                    timeoffset += m_videos.at(i)->media->duration;
+            }
+            // GoPro HiLight tags
             for (unsigned i = 0; i < media->chapters_count; i++)
             {
-                m_hilight.push_back(media->chapters[i].pts);
+                m_hilight.push_back(timeoffset + media->chapters[i].pts);
             }
         }
         if (media->metadata_gopro)

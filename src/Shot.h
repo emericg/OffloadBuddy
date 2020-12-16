@@ -178,8 +178,13 @@ class Shot: public QObject
     Q_PROPERTY(QString camera READ getCameraSource NOTIFY shotUpdated)
     Q_PROPERTY(qint64 size READ getSize NOTIFY shotUpdated)
     Q_PROPERTY(qint64 datasize READ getDataSize NOTIFY shotUpdated)
+
     Q_PROPERTY(unsigned chapterCount READ getChapterCount NOTIFY shotUpdated)
-    Q_PROPERTY(unsigned highlightCount READ getHighlightCount NOTIFY shotUpdated)
+    Q_PROPERTY(QStringList chapterPaths READ getChapterPaths NOTIFY shotUpdated)
+    Q_PROPERTY(QVariant chapterDurations READ getChapterDurations NOTIFY shotUpdated)
+
+    Q_PROPERTY(unsigned hilightCount READ getHiLightCount NOTIFY shotUpdated)
+    Q_PROPERTY(QVariant hilight READ getHiLights NOTIFY shotUpdated)
 
     Q_PROPERTY(QString previewPhoto READ getPreviewPhoto NOTIFY shotUpdated)
     Q_PROPERTY(QString previewVideo READ getPreviewVideo NOTIFY shotUpdated)
@@ -466,6 +471,8 @@ public slots:
     QDateTime getDateGPS() const;
     QString getPreviewPhoto() const;
     QString getPreviewVideo() const;
+    QStringList getChapterPaths() const;
+    QVariant getChapterDurations() const;
     QImage getPreviewMtp();
     QString getCameraSource() const { return m_camera_source; }
 
@@ -512,7 +519,9 @@ public slots:
     double getAltitude() const { return gps_alt; }
     double getAltitudeOffset() const { return m_gps_altitude_offset; }
 
-    unsigned getHighlightCount() const { return m_hilight.size(); }
+    unsigned getHiLightCount() const { return m_hilight.size(); }
+    QVariant getHiLights() const { if (m_hilight.size() > 0) { return QVariant::fromValue(m_hilight); } return QVariant(); }
+
     unsigned getGpsPointCount() const { return m_gps.size(); }
 
     int getFileId() const { return m_shot_id; }

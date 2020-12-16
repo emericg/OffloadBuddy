@@ -39,7 +39,7 @@ Item {
     ////////
 
     function setImageMode() {
-        console.log("MediaPreview::setImageMode()  >  '" + shot.previewPhoto + "'")
+        //console.log("MediaPreview::setImageMode()  >  '" + shot.previewPhoto + "'")
         mode = "image"
 
         overlayTransform.visible = false
@@ -67,7 +67,7 @@ Item {
     }
 
     function setVideoMode() {
-        console.log("MediaPreview::setVideoMode()  >  '" + shot.previewVideo + "'")
+        //console.log("MediaPreview::setVideoMode()  >  '" + shot.previewVideo + "'")
         mode = "video"
 
         overlayTransform.visible = false
@@ -84,7 +84,17 @@ Item {
         videoOutput.visible = true
 
         if (shot.previewVideo) {
-            videoPlayer.source = "file:///" + shot.previewVideo
+            if (shot.chapterCount > 1) { // playlist
+                //mode = "multivideo"
+                videoPlayer.playlist = Qt.createQmlObject('import QtMultimedia 5.12; Playlist { id: playlist; }',
+                                                          videoPlayer, "playlist")
+                videoPlayer.playlist.clear()
+                for (var i = 0; i < shot.chapterCount; i++)
+                    videoPlayer.playlist.insertItem(i, "file:///" + shot.chapterPaths[i])
+                videoPlayer.play()
+            } else if (shot.previewVideo) { // single video
+                videoPlayer.source = "file:///" + shot.previewVideo
+            }
             timeline.visible = true
             cutline.visible = false
             cutline.first.value = 0
@@ -122,7 +132,7 @@ Item {
     }
 
     function toggleTrim() {
-        timeline.visible = !timeline.visible
+        //timeline.visible = !timeline.visible
         cutline.visible = !cutline.visible
         overlayTrim.visible = !overlayTrim.visible
 
@@ -130,7 +140,7 @@ Item {
         overlayCrop.editing = false
 
         if (mediaArea.startLimit < 0) mediaArea.startLimit = 0
-        if (mediaArea.stopLimit < 0) mediaArea.stopLimit = videoPlayer.duration
+        if (mediaArea.stopLimit < 0) mediaArea.stopLimit = shot.duration
     }
 
     function toggleTransform() {
@@ -345,14 +355,14 @@ Item {
 
     Item {
         id: output
-        anchors.fill: parent
+        anchors.fill: overlays
 
         Image {
             id: imageOutput
             anchors.fill: parent
 
             autoTransform: true
-            fillMode: Image.PreserveAspectFit
+            fillMode: Image.Stretch
 
             sourceSize.width: output.width
             sourceSize.height: output.height
@@ -363,7 +373,7 @@ Item {
             anchors.fill: parent
 
             autoOrientation: false // doesn't work anyway
-            fillMode: Image.PreserveAspectFit
+            fillMode: Image.Stretch
 
             source: videoPlayer
             //flushMode: LastFrame // Qt 5.13
@@ -373,8 +383,10 @@ Item {
     MediaPlayer {
         id: videoPlayer
         volume: 0.5
+        autoLoad: true
         autoPlay: true // will be paused immediately
         notifyInterval: 33
+        //playlist: Playlist { id: playlist; }
 
         property bool isRunning: false
 
@@ -391,15 +403,40 @@ Item {
             buttonPlay.source = "qrc:/assets/icons_material/baseline-play_arrow-24px.svg"
         }
         onStopped: {
-            if (videoPlayer.position >= videoPlayer.duration) { // EOF
+            if (videoPlayer.position >= shot.duration) { // EOF
                 isRunning = false
                 videoPlayer.seek(0)
+                videoPlayer.play()
                 videoPlayer.pause()
+
+                // Note // on Qt 5.13+, same thing could be achieved with:
+                //videoOutput.flushMode: LastFrame
             }
         }
-        onSourceChanged: {
-            // reset player settings
+        onPlaylistChanged: {
+            //console.log("onPlaylistChanged()")
 
+            // reset player settings
+            videoPlayer.isRunning = false
+
+            mediaBanner.close()
+            mediaArea.startLimit = -1
+            mediaArea.stopLimit = -1
+
+            mediaArea.hflipped = false
+            mediaArea.vflipped = false
+            mediaArea.rotation = 0
+
+            mediaArea.cropX = 0.0
+            mediaArea.cropY = 0.0
+            mediaArea.cropW = 1.0
+            mediaArea.cropH = 1.0
+            overlayCrop.load()
+        }
+        onSourceChanged: {
+            //console.log("onSourceChanged()")
+
+            // reset player settings
             videoPlayer.isRunning = false
 
             mediaBanner.close()
@@ -420,8 +457,16 @@ Item {
             //
         }
         onPositionChanged: {
-            timeline.value = (videoPlayer.position / videoPlayer.duration)
-            timecode.text = UtilsString.durationToString_ISO8601_compact(videoPlayer.position) + " / " + UtilsString.durationToString_ISO8601_compact(videoPlayer.duration)
+            if (shot) {
+                var videoPlayerPosition = videoPlayer.position
+                if (shot.chapterCount > 1) {
+                    for (var i = 0; i < videoPlayer.playlist.currentIndex && i < videoPlayer.playlist.itemCount; i++) {
+                        videoPlayerPosition += shot.chapterDurations[i]
+                    }
+                }
+                timeline.value = (videoPlayerPosition / shot.duration)
+                timecode.text = UtilsString.durationToString_ISO8601_compact(videoPlayerPosition) + " / " + UtilsString.durationToString_ISO8601_compact(shot.duration)
+            }
         }
     }
 
@@ -431,8 +476,6 @@ Item {
         id: overlays
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
-
-        clip: true
 /*
         Rectangle {
             anchors.fill: parent
@@ -495,7 +538,7 @@ Item {
             Rectangle {
                 anchors.fill: parent
                 radius: Theme.componentRadius
-                color: "#222222"
+                color: "#222"
                 opacity: 0.8
             }
 
@@ -526,7 +569,7 @@ Item {
                 //id: buttonRotateSave
                 iconColor: "white"
                 background: true
-                backgroundColor: "#222222"
+                backgroundColor: "#222"
                 highlightColor: "green"
                 highlightMode: "color"
                 visible: (output.rotation != 0 || mediaArea.vflipped || mediaArea.hflipped)
@@ -537,7 +580,7 @@ Item {
                 //id: buttonRotateClear
                 iconColor: "white"
                 background: true
-                backgroundColor: "#222222"
+                backgroundColor: "#222"
                 highlightMode: "color"
                 visible: (output.rotation != 0 || mediaArea.vflipped || mediaArea.hflipped)
                 source: "qrc:/assets/icons_material/baseline-close-24px.svg"
@@ -547,7 +590,7 @@ Item {
                 //id: buttonRotateLeft
                 iconColor: (output.rotation >= 180) ? Theme.colorPrimary : "white"
                 background: true
-                backgroundColor: "#222222"
+                backgroundColor: "#222"
                 highlightMode: "color"
                 source: "qrc:/assets/icons_material/baseline-rotate_left-24px.svg"
                 onClicked: mediaArea.addRotation(-90)
@@ -556,7 +599,7 @@ Item {
                 //id: buttonRotateRight
                 iconColor: (output.rotation > 0 && output.rotation <= 180) ? Theme.colorPrimary : "white"
                 background: true
-                backgroundColor: "#222222"
+                backgroundColor: "#222"
                 highlightMode: "color"
                 source: "qrc:/assets/icons_material/baseline-rotate_right-24px.svg"
                 onClicked: mediaArea.addRotation(+90)
@@ -565,7 +608,7 @@ Item {
                 //id: buttonFlipV
                 iconColor: (mediaArea.vflipped) ? Theme.colorPrimary : "white"
                 background: true
-                backgroundColor: "#222222"
+                backgroundColor: "#222"
                 highlightMode: "color"
                 source: "qrc:/assets/icons_material/baseline-flip-24px.svg"
                 onClicked: mediaArea.setFlip("vertical")
@@ -575,7 +618,7 @@ Item {
                 rotation: 90
                 iconColor: (mediaArea.hflipped) ? Theme.colorPrimary : "white"
                 background: true
-                backgroundColor: "#222222"
+                backgroundColor: "#222"
                 highlightMode: "color"
                 source: "qrc:/assets/icons_material/baseline-flip-24px.svg"
                 onClicked: mediaArea.setFlip("horizontal")
@@ -606,10 +649,12 @@ Item {
                 id: mediaControlsBackground
                 anchors.fill: parent
                 opacity: 0.9
-                color: "#222222"
+                color: "#222"
             }
 
-            RangeSliderArrow {
+            ////
+
+            RangeSliderPlayer {
                 id: cutline
                 height: 40
                 width: mediaControls.width
@@ -624,12 +669,12 @@ Item {
                 second.value: 1
 
                 first.onMoved: {
-                    mediaArea.startLimit = videoPlayer.duration * first.value
-                    mediaControls.sseekk(first.value)
+                    mediaArea.startLimit = shot.duration * first.value
+                    mediaControls.sseeekk(first.value)
                 }
                 second.onMoved: {
-                    mediaArea.stopLimit = videoPlayer.duration * second.value
-                    mediaControls.sseekk(second.value)
+                    mediaArea.stopLimit = shot.duration * second.value
+                    mediaControls.sseeekk(second.value)
                 }
             }
             SliderPlayer {
@@ -643,13 +688,92 @@ Item {
                 anchors.right: parent.right
                 anchors.rightMargin: -6
 
+                z: 10
                 from: 0
                 to: 1
 
-                onMoved: mediaControls.sseekk(value)
+                onMoved: mediaControls.sseeekk(value)
             }
 
-            function sseekk(value) {
+            ////
+
+            Rectangle {
+                x: (parent.width * (mediaArea.startLimit / shot.duration))
+                width: (parent.width * ((mediaArea.stopLimit - mediaArea.startLimit) / shot.duration))
+                height: 4
+                visible: (mediaArea.startLimit >= 0 && mediaArea.stopLimit > 0 && mediaArea.stopLimit < shot.duration)
+                color: Theme.colorSecondary
+
+                Rectangle {
+                    anchors.left: parent.left
+                    width: 3
+                    height: 6
+                    color: "white"
+                }
+                Rectangle {
+                    anchors.right: parent.right
+                    width: 3
+                    height: 6
+                    color: "white"
+                }
+            }
+/*
+            Repeater {
+                id: markersDuration
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                model: 40
+                Rectangle {
+                    x: (parent.width / 40) * index
+                    width: 1
+                    height: (index % 2 == 0) ? 6 : 3
+                }
+            }
+*/
+            Repeater {
+                id: markersChapters
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                model: shot.chapterDurations
+                Rectangle {
+                    x: {
+                        var pos = modelData
+                        for (var i = 1; i <= index; i++) {
+                            pos += shot.chapterDurations[i-1]
+                        }
+                        return (parent.width / (shot.duration / pos))
+                    }
+                    visible: (index+1 < shot.chapterCount)
+                    width: 3
+                    height: 6
+                    color: "black"
+                }
+            }
+            Repeater {
+                id: markersHiLights
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                model: shot.hilight
+                Rectangle {
+                    x: (parent.width / (shot.duration / modelData))
+                    width: 3
+                    height: 6
+                    color: "orange"
+                }
+            }
+
+            ////
+
+            function sseeekk(value) {
+                var seekpoint = shot.duration * value
+                if (seekpoint === videoPlayer.position) return
+
                 var wasRunning = videoPlayer.isRunning
                 if (Qt.platform.os === "osx") {
                     if (wasRunning) {
@@ -658,7 +782,23 @@ Item {
                     }
                 }
 
-                videoPlayer.seek(videoPlayer.duration * value)
+                if (shot.chapterCount > 1) {
+                    var doff = 0;
+                    var seekindex = 0;
+                    for (var i = 0; i < videoPlayer.playlist.itemCount; i++) {
+                        if (seekpoint > doff && seekpoint < (doff + shot.chapterDurations[i])) {
+                            seekpoint -= doff
+                            seekindex = i
+                            break
+                        }
+                        doff += shot.chapterDurations[i]
+                    }
+
+                    if (videoPlayer.playlist.currentIndex !== seekindex)
+                        videoPlayer.playlist.currentIndex = seekindex
+                }
+
+                videoPlayer.seek(seekpoint)
 
                 if (Qt.platform.os === "osx") {
                     if (wasRunning) {

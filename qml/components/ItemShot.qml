@@ -325,8 +325,8 @@ Rectangle {
                 id: text_hmmt
                 anchors.verticalCenter: parent.verticalCenter
                 color: "white"
-                visible: shot.highlightCount
-                text: shot.highlightCount
+                visible: shot.hilightCount
+                text: shot.hilightCount
                 style: Text.Raised
                 font.bold: true
                 font.pixelSize: 13
@@ -336,7 +336,7 @@ Rectangle {
                 width: 20
                 height: 20
                 anchors.verticalCenter: parent.verticalCenter
-                visible: shot.highlightCount
+                visible: shot.hilightCount
                 rotation: 90
                 color: "orange"
                 source: "qrc:/assets/icons_material/baseline-label_important-24px.svg"
