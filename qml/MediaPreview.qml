@@ -22,6 +22,8 @@ Item {
 
     property string mode: ""
 
+    property int timelapseIndex: 0
+
     property int startLimit: -1
     property int stopLimit: -1
 
@@ -42,6 +44,8 @@ Item {
         //console.log("MediaPreview::setImageMode()  >  '" + shot.previewPhoto + "'")
         mode = "image"
 
+        timelapseIndex = 0
+
         overlayTransform.visible = false
         overlayTransform.anchors.bottom = undefined
         overlayTransform.anchors.bottomMargin = 0
@@ -54,6 +58,11 @@ Item {
 
         imageOutput.visible = true
         videoOutput.visible = false
+
+        if (shot.duration > 1) { // playlist
+            //mode = "timelapse"
+            //console.log("MediaPreview::setImageMode() > timelapse mode")
+        }
 
         if (shot.previewPhoto) {
             imageOutput.source = "file:///" + shot.previewPhoto
@@ -69,6 +78,8 @@ Item {
     function setVideoMode() {
         //console.log("MediaPreview::setVideoMode()  >  '" + shot.previewVideo + "'")
         mode = "video"
+
+        timelapseIndex = 0
 
         overlayTransform.visible = false
         overlayTransform.anchors.top = undefined
@@ -113,6 +124,9 @@ Item {
     ////////
 
     function setPause() {
+        if (mode === "image") {
+            timerTimelapse.stop()
+        }
         if (videoPlayer.isRunning) {
             videoPlayer.pause()
             videoPlayer.isRunning = false
@@ -128,6 +142,12 @@ Item {
                 videoPlayer.play()
                 videoPlayer.isRunning = true
             }
+        }
+        if (mode === "image") {
+            if (timerTimelapse.running)
+                timerTimelapse.stop()
+            else
+                timerTimelapse.start()
         }
     }
 
@@ -366,6 +386,76 @@ Item {
 
             sourceSize.width: output.width
             sourceSize.height: output.height
+
+            Timer {
+                id: timerTimelapse
+                interval: 100
+                running: false
+                repeat: true
+                onTriggered: {
+                    mediaArea.timelapseIndex++
+                    if (mediaArea.timelapseIndex >= shot.duration) mediaArea.timelapseIndex = 0
+
+                    imageOutput.source = "file:///" + shot.previewTimelapse[mediaArea.timelapseIndex]
+                }
+            }
+
+            Row {
+                id: rowTimelapse
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 32
+                spacing: 8
+
+                property var wide: maxrects > shot.duration
+                property var maxrects: (parent.width / (24+8))
+                property var maxpoints: (parent.width / (12+8))
+                property var points: (mediaArea.mode === "image") ? ((shot.duration > maxpoints) ? maxpoints-3 : shot.duration) : 0
+                property var divider: (shot.duration / points)
+
+                ImageSvg {
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: 28; height: 28;
+                    source: (timerTimelapse.running) ? "qrc:/assets/icons_material/baseline-pause-24px.svg"
+                                                     : "qrc:/assets/icons_material/baseline-play_arrow-24px.svg"
+                    color: "white"
+
+                    MouseArea {
+                        anchors.fill: parent
+                        anchors.margins: -4
+                        onClicked: {
+                            if (timerTimelapse.running)
+                                timerTimelapse.stop()
+                            else
+                                timerTimelapse.start()
+                        }
+                    }
+                }
+
+                Repeater {
+                    model: rowTimelapse.points
+                    Rectangle {
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: rowTimelapse.wide ? 24 : 12
+                        height: rowTimelapse.wide ? 8 : 12
+                        radius: rowTimelapse.wide ? 2 : 12
+
+                        color: "white"
+                        border.color: "#eee"
+                        opacity: (Math.round(mediaArea.timelapseIndex / rowTimelapse.divider) == index) ? 1 : 0.6
+                        Behavior on opacity { NumberAnimation { duration: 133 } }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            anchors.margins: -4
+                            onClicked: {
+                                mediaArea.timelapseIndex = Math.round(index * rowTimelapse.divider)
+                                imageOutput.source = "file:///" + shot.previewTimelapse[mediaArea.timelapseIndex]
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         VideoOutput {
@@ -491,12 +581,13 @@ Item {
         MouseArea {
             id: mouseArea
             anchors.fill: parent
+
+            enabled: (mediaArea.mode === "video")
             hoverEnabled: true
             //propagateComposedEvents: true
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
 
             property bool hovered: false
-
-            acceptedButtons: Qt.LeftButton | Qt.RightButton
 
             onPressed: {
                 // play/pause

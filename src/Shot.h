@@ -179,16 +179,14 @@ class Shot: public QObject
     Q_PROPERTY(qint64 size READ getSize NOTIFY shotUpdated)
     Q_PROPERTY(qint64 datasize READ getDataSize NOTIFY shotUpdated)
 
-    Q_PROPERTY(unsigned chapterCount READ getChapterCount NOTIFY shotUpdated)
-    Q_PROPERTY(QStringList chapterPaths READ getChapterPaths NOTIFY shotUpdated)
-    Q_PROPERTY(QVariant chapterDurations READ getChapterDurations NOTIFY shotUpdated)
-
-    Q_PROPERTY(unsigned hilightCount READ getHiLightCount NOTIFY shotUpdated)
-    Q_PROPERTY(QVariant hilight READ getHiLights NOTIFY shotUpdated)
-
     Q_PROPERTY(QString previewPhoto READ getPreviewPhoto NOTIFY shotUpdated)
     Q_PROPERTY(QString previewVideo READ getPreviewVideo NOTIFY shotUpdated)
     Q_PROPERTY(QImage previewMtp READ getPreviewMtp NOTIFY shotUpdated)
+    Q_PROPERTY(QStringList previewTimelapse READ getPreviewPhotos NOTIFY shotUpdated)
+
+    Q_PROPERTY(unsigned chapterCount READ getChapterCount NOTIFY shotUpdated)
+    Q_PROPERTY(QStringList chapterPaths READ getChapterPaths NOTIFY shotUpdated)
+    Q_PROPERTY(QVariant chapterDurations READ getChapterDurations NOTIFY shotUpdated)
 
     Q_PROPERTY(unsigned fileCount READ getFileCount NOTIFY shotUpdated)
     Q_PROPERTY(QString filesString READ getFilesString NOTIFY shotUpdated)
@@ -220,6 +218,9 @@ class Shot: public QObject
     Q_PROPERTY(unsigned audioChannels READ getAudioChannels NOTIFY shotUpdated)
     Q_PROPERTY(unsigned audioBitrate READ getAudioBitrate NOTIFY shotUpdated)
     Q_PROPERTY(unsigned audioSamplerate READ getAudioSamplerate NOTIFY shotUpdated)
+
+    Q_PROPERTY(unsigned hilightCount READ getHiLightCount NOTIFY shotUpdated)
+    Q_PROPERTY(QVariant hilight READ getHiLights NOTIFY shotUpdated)
 
     Q_PROPERTY(unsigned protune READ getProtune NOTIFY shotUpdated)
     Q_PROPERTY(unsigned cam_raw READ getCamRaw NOTIFY shotUpdated)
@@ -470,6 +471,7 @@ public slots:
     QDateTime getDateMetadata() const;
     QDateTime getDateGPS() const;
     QString getPreviewPhoto() const;
+    QStringList getPreviewPhotos() const;
     QString getPreviewVideo() const;
     QStringList getChapterPaths() const;
     QVariant getChapterDurations() const;

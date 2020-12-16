@@ -312,6 +312,18 @@ QString Shot::getPreviewPhoto() const
     return QString();
 }
 
+QStringList Shot::getPreviewPhotos() const
+{
+    QStringList photos;
+
+    if (m_pictures.size() > 1)
+    {
+        for (auto f: m_pictures) photos.push_back(f->filesystemPath);
+    }
+
+    return photos;
+}
+
 QString Shot::getPreviewVideo() const
 {
     if (!m_videos.empty() && !m_videos.at(0)->filesystemPath.isEmpty())
