@@ -386,75 +386,20 @@ Item {
 
             sourceSize.width: output.width
             sourceSize.height: output.height
+        }
 
-            Timer {
-                id: timerTimelapse
-                interval: 100
-                running: false
-                repeat: true
-                onTriggered: {
-                    mediaArea.timelapseIndex++
-                    if (mediaArea.timelapseIndex >= shot.duration) mediaArea.timelapseIndex = 0
+        ////////
 
-                    imageOutput.source = "file:///" + shot.previewTimelapse[mediaArea.timelapseIndex]
-                }
-            }
+        Timer {
+            id: timerTimelapse
+            interval: 100
+            running: false
+            repeat: true
+            onTriggered: {
+                mediaArea.timelapseIndex++
+                if (mediaArea.timelapseIndex >= shot.duration) mediaArea.timelapseIndex = 0
 
-            Row {
-                id: rowTimelapse
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 32
-                spacing: 8
-
-                property var wide: maxrects > shot.duration
-                property var maxrects: (parent.width / (24+8))
-                property var maxpoints: (parent.width / (12+8))
-                property var points: (mediaArea.mode === "image") ? ((shot.duration > maxpoints) ? maxpoints-3 : shot.duration) : 0
-                property var divider: (shot.duration / points)
-
-                ImageSvg {
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: 28; height: 28;
-                    source: (timerTimelapse.running) ? "qrc:/assets/icons_material/baseline-pause-24px.svg"
-                                                     : "qrc:/assets/icons_material/baseline-play_arrow-24px.svg"
-                    color: "white"
-
-                    MouseArea {
-                        anchors.fill: parent
-                        anchors.margins: -4
-                        onClicked: {
-                            if (timerTimelapse.running)
-                                timerTimelapse.stop()
-                            else
-                                timerTimelapse.start()
-                        }
-                    }
-                }
-
-                Repeater {
-                    model: rowTimelapse.points
-                    Rectangle {
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: rowTimelapse.wide ? 24 : 12
-                        height: rowTimelapse.wide ? 8 : 12
-                        radius: rowTimelapse.wide ? 2 : 12
-
-                        color: "white"
-                        border.color: "#eee"
-                        opacity: (Math.round(mediaArea.timelapseIndex / rowTimelapse.divider) == index) ? 1 : 0.6
-                        Behavior on opacity { NumberAnimation { duration: 133 } }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            anchors.margins: -4
-                            onClicked: {
-                                mediaArea.timelapseIndex = Math.round(index * rowTimelapse.divider)
-                                imageOutput.source = "file:///" + shot.previewTimelapse[mediaArea.timelapseIndex]
-                            }
-                        }
-                    }
-                }
+                imageOutput.source = "file:///" + shot.previewTimelapse[mediaArea.timelapseIndex]
             }
         }
 
@@ -605,6 +550,66 @@ Item {
             onExited: { hovered = false; }
         }
 
+        ////////////////
+
+        Row {
+            id: rowTimelapse
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 32
+            spacing: 8
+
+            visible: shot.duration > 1
+
+            property var wide: maxrects > shot.duration
+            property var maxrects: (parent.width / (24+8))
+            property var maxpoints: (parent.width / (12+8))
+            property var points: (mediaArea.mode === "image") ? ((shot.duration > maxpoints) ? maxpoints-3 : shot.duration) : 0
+            property var divider: (shot.duration / points)
+
+            ImageSvg {
+                anchors.verticalCenter: parent.verticalCenter
+                width: 28; height: 28;
+                source: (timerTimelapse.running) ? "qrc:/assets/icons_material/baseline-pause-24px.svg"
+                                                 : "qrc:/assets/icons_material/baseline-play_arrow-24px.svg"
+                color: "white"
+
+                MouseArea {
+                    anchors.fill: parent
+                    anchors.margins: -4
+                    onClicked: {
+                        if (timerTimelapse.running)
+                            timerTimelapse.stop()
+                        else
+                            timerTimelapse.start()
+                    }
+                }
+            }
+
+            Repeater {
+                model: rowTimelapse.points
+                Rectangle {
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: rowTimelapse.wide ? 24 : 12
+                    height: rowTimelapse.wide ? 8 : 12
+                    radius: rowTimelapse.wide ? 2 : 12
+
+                    color: "white"
+                    border.color: "#eee"
+                    opacity: (Math.round(mediaArea.timelapseIndex / rowTimelapse.divider) == index) ? 1 : 0.6
+                    Behavior on opacity { NumberAnimation { duration: 133 } }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        anchors.margins: -4
+                        onClicked: {
+                            mediaArea.timelapseIndex = Math.round(index * rowTimelapse.divider)
+                            imageOutput.source = "file:///" + shot.previewTimelapse[mediaArea.timelapseIndex]
+                        }
+                    }
+                }
+            }
+        }
 
         ////////////////
 
