@@ -760,6 +760,7 @@ Popup {
                     from: 1
                     to: 15
                     value: 10
+                    snapMode: Slider.SnapAlways
                 }
             }
 
@@ -1016,19 +1017,23 @@ Popup {
                 }
 
                 CheckBoxThemed {
-                    id: checkBox_defish
-                    text: qsTr("defisheye")
+                    id: checkBox_defisheye
                     anchors.left: titleFilter.right
                     anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
+
+                    // visible: isGoPro
+                    text: qsTr("defisheye")
                 }
 
                 CheckBoxThemed {
                     id: checkBox_stab
-                    text: qsTr("stabilization")
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: checkBox_defish.right
+                    anchors.left: checkBox_defisheye.right
                     anchors.leftMargin: 16
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    visible: (mode != "image")
+                    text: qsTr("stabilization")
                 }
             }
 
@@ -1311,6 +1316,10 @@ Popup {
                     encodingParams["quality"] = sliderQuality.value
 
                     encodingParams["path"] = textField_path.text
+
+                    // Filters
+                    if (checkBox_defisheye.checked) encodingParams["defisheye"] = checkBox_defisheye.checked
+                    if (checkBox_stab.checked) encodingParams["stab"] = checkBox_stab.checked
 
                     ////
 

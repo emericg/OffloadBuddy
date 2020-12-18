@@ -430,9 +430,34 @@ void JobWorkerAsync::queueWork(Job *job)
                     }
 
                     // Defisheye filter
-                    // HERO4? lenscorrection=k1=-0.6:k2=0.55
-                    // ? lenscorrection=k1=-0.56:k2=0.3
-                    //ptiwrap->arguments << "-vf" << "lenscorrection=k1=-0.6:k2=0.55";
+                    if (!job->settings.defisheye.isEmpty())
+                    {
+                        if (!video_filters.isEmpty()) video_filters += ",";
+
+                        // (using lenscorrection)
+                        // - https://gopro.com/help/articles/Question_Answer/HERO3-Black-Edition-Field-of-View-FOV-Information
+                        // - https://gopro.com/help/articles/Question_Answer/HERO4-Field-of-View-FOV-Information"
+                        // - https://gopro.com/help/articles/Question_Answer/HERO4-Field-of-View-FOV-Information
+                        // - https://gopro.com/help/articles/Question_Answer/HERO5-Black-Field-of-View-FOV-Information
+                        // - https://gopro.com/help/articles/Question_Answer/HERO6-Black-Field-of-View-FOV-Information
+                        // - https://gopro.com/help/articles/Question_Answer/HERO7-Field-of-View-FOV-Information
+                        // - https://community.gopro.com/t5/en/HERO8-Black-Digital-Lenses-formerly-known-as-FOV/ta-p/398868
+                        // - https://community.gopro.com/t5/en/HERO9-Black-Digital-Lenses-FOV-Information/ta-p/712624
+                        //video_filters += "lenscorrection=cx=0.5:cy=0.5:k1=-0.193:k2=-0.022";
+
+                        // (using lensfun)
+                        //video_filters += "lensfun=make=GoPro:model=HERO5 Black:lens_model=fixed lens:mode=geometry:target_geometry=rectilinear:interpolation=lanczos";
+
+                        // (using v360)
+                        //video_filters += "v360=input=sg:ih_fov=122.6:iv_fov=94.4:output=flat:d_fov=120:interp=spline16:w=4000:h=3000";
+                    }
+
+                    // Deshake filter
+                    if (job->settings.stab)
+                    {
+                        if (!video_filters.isEmpty()) video_filters += ",";
+                        video_filters += "deshake";
+                    }
 
                     // Apply filters
                     if (!video_filters.isEmpty()) ptiwrap->arguments << "-vf" << video_filters;
