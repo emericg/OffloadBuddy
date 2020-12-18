@@ -291,6 +291,14 @@ void MediaLibrary::reencodeSelected(const QString &shot_uuid, const QVariant &va
     if (variantMap.contains("timelapse_fps"))
         sett.timelapse_fps = variantMap.value("timelapse_fps").toInt();
 
+    if (variantMap.contains("defisheye"))
+        sett.defisheye = variantMap.value("defisheye").toString();
+    if (variantMap.contains("deshake"))
+        sett.deshake = variantMap.value("deshake").toBool();
+
+    if (variantMap.contains("screenshot"))
+        sett.screenshot = variantMap.value("screenshot").toBool();
+
     if (variantMap.contains("clipStartMs"))
         sett.startMs = variantMap.value("clipStartMs").toInt();
     if (variantMap.contains("clipDurationMs"))

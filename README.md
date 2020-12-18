@@ -20,12 +20,12 @@ Works on Linux, macOS and Windows!
   - [x] Show and export GoPro telemetry & GPS traces
 - [x] Create short video clips (and GIFs) from your videos!
 - [x] Assemble photo timelapses into videos
-- [ ] Extract photos/screenshots from videos
+- [x] Extract photos/screenshots from videos
 - [x] Create timelapse from videos
 - [x] Apply filters to media
   - [x] Reframe media
   - [x] Rotate media (WIP)
-  - [ ] Defisheye media
+  - [ ] Defisheye media (WIP)
   - [ ] Stabilize videos
 - [ ] GoPro firmware updates
 

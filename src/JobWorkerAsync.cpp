@@ -169,7 +169,7 @@ void JobWorkerAsync::queueWork(Job *job)
             ptiwrap->job = job;
             ptiwrap->job_element_index = i;
 
-            QString reencode_or_clipped = (job->settings.codec == "copy") ? "_clipped" : "_reencoded";
+            QString name_suffix = (job->settings.codec == "copy") ? "_clipped" : "_reencoded";
             QString file_extension = "mp4";
             QString video_filters;
             QString audio_filters;
@@ -343,6 +343,14 @@ void JobWorkerAsync::queueWork(Job *job)
                     ptiwrap->arguments << "-t" << getFFmpegDurationString(job->settings.durationMs);
                 }
 
+                // Screenshot?
+                if (job->settings.screenshot)
+                {
+                    ptiwrap->arguments << "-ss" << getFFmpegDurationString(job->settings.startMs);
+                    ptiwrap->arguments << "-frames:v" << "1";
+                    name_suffix = "_screen" + QString::number(job->settings.startMs / 1000);
+                }
+
                 // Filters
                 {
                     // Transformations
@@ -449,11 +457,11 @@ void JobWorkerAsync::queueWork(Job *job)
                         //video_filters += "lensfun=make=GoPro:model=HERO5 Black:lens_model=fixed lens:mode=geometry:target_geometry=rectilinear:interpolation=lanczos";
 
                         // (using v360)
-                        //video_filters += "v360=input=sg:ih_fov=122.6:iv_fov=94.4:output=flat:d_fov=120:interp=spline16:w=4000:h=3000";
+                        video_filters += "v360=input=sg:ih_fov=122.6:iv_fov=94.4:output=flat:d_fov=120:interp=spline16:w=4000:h=3000";
                     }
 
                     // Deshake filter
-                    if (job->settings.stab)
+                    if (job->settings.deshake)
                     {
                         if (!video_filters.isEmpty()) video_filters += ",";
                         video_filters += "deshake";
@@ -469,7 +477,7 @@ void JobWorkerAsync::queueWork(Job *job)
             ptiwrap->arguments << "-map_metadata" << "0";
 
             // Re-encoding
-            ptiwrap->destFile = element->destination_dir + element->files.front().name + reencode_or_clipped + "." + file_extension;
+            ptiwrap->destFile = element->destination_dir + element->files.front().name + name_suffix + "." + file_extension;
             ptiwrap->arguments << ptiwrap->destFile;
 
             m_ffmpegjobs.push_back(ptiwrap);

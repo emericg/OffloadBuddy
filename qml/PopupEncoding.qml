@@ -1027,7 +1027,7 @@ Popup {
                 }
 
                 CheckBoxThemed {
-                    id: checkBox_stab
+                    id: checkBox_deshake
                     anchors.left: checkBox_defisheye.right
                     anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
@@ -1319,7 +1319,7 @@ Popup {
 
                     // Filters
                     if (checkBox_defisheye.checked) encodingParams["defisheye"] = checkBox_defisheye.checked
-                    if (checkBox_stab.checked) encodingParams["stab"] = checkBox_stab.checked
+                    if (checkBox_deshake.checked) encodingParams["deshake"] = checkBox_deshake.checked
 
                     ////
 

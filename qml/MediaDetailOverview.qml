@@ -115,7 +115,7 @@ Item {
         popupEncoding.setClip(mediaPreview.startLimit, mediaPreview.stopLimit)
         popupEncoding.setOrientation(mediaPreview.rotation, mediaPreview.hflipped, mediaPreview.vflipped)
         popupEncoding.setCrop(mediaPreview.cropX, mediaPreview.cropY,
-                                 mediaPreview.cropW, mediaPreview.cropH)
+                              mediaPreview.cropW, mediaPreview.cropH)
         popupEncoding.open()
     }
     function openTelemetryPopup() {

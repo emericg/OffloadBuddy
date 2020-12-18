@@ -89,6 +89,11 @@ typedef struct JobEncodeSettings
     QString gif_effect;
     int timelapse_fps = 0;
 
+    QString defisheye;
+    bool deshake = false;
+
+    bool screenshot = false;
+
     int64_t startMs = -1;
     int64_t durationMs = -1;
 

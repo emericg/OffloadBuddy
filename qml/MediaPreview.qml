@@ -1035,14 +1035,40 @@ Item {
                     height: 36
                     anchors.verticalCenter: parent.verticalCenter
 
-                    visible: false
+                    visible: true
                     iconColor: "white"
                     highlightColor: Theme.colorPrimary
                     highlightMode: "color"
 
                     source: "qrc:/assets/icons_material/outline-camera_alt-24px.svg"
                     onClicked: {
-                        //
+                        if (typeof shot === "undefined" || !shot) return
+
+                        var encodingParams = {}
+                        var mediaProvider
+
+                        if (typeof currentDevice !== "undefined")
+                            mediaProvider = currentDevice;
+                        else if (typeof mediaLibrary !== "undefined")
+                            mediaProvider = mediaLibrary;
+                        else
+                            return
+
+                        encodingParams["screenshot"] = true;
+                        encodingParams["codec"] = "JPEG";
+                        encodingParams["quality"] = 1;
+                        encodingParams["clipStartMs"] = videoPlayer.position
+
+                        if (mediaPreview.cropX > 0.0 || mediaPreview.cropY > 0.0 ||
+                            mediaPreview.cropW < 1.0 || mediaPreview.cropH < 1.0) {
+                            var clipCropX = Math.round(shot.width * mediaPreview.cropX)
+                            var clipCropY = Math.round(shot.height * mediaPreview.cropY)
+                            var clipCropW = Math.round(shot.width * mediaPreview.cropW)
+                            var clipCropH = Math.round(shot.height * mediaPreview.cropH)
+                            encodingParams["crop"] = clipCropW + ":" + clipCropH + ":" + clipCropX + ":" + clipCropY
+                        }
+
+                        mediaProvider.reencodeSelected(shot.uuid, encodingParams)
                     }
                 }
                 ItemImageButton {
