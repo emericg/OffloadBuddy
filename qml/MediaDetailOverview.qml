@@ -25,7 +25,7 @@ Item {
         definition.text = shot.width + "x" + shot.height + "   (" + UtilsMedia.varToString(shot.width, shot.height) + ")"
 
         labelOrientation.visible = (shot.transformation)
-        orientation.text = UtilsMedia.orientationExifToString(shot.transformation)
+        orientation.text = UtilsMedia.orientationQtToString(shot.transformation)
 
         // FILE_PICTURE
         if (shot.fileType === Shared.FILE_PICTURE) {

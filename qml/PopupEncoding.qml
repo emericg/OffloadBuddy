@@ -30,7 +30,8 @@ Popup {
     property int clipStartMs: -1
     property int clipDurationMs: -1
 
-    property int clipTransformation: 0
+    property int clipTransformation_qt: 0
+    property int clipTransformation_exif: 1
     property int clipRotation: 0
     property bool clipVFlip: false
     property bool clipHFlip: false
@@ -142,7 +143,7 @@ Popup {
             clipIsShort = false
     }
 
-    function setOrientation(rotation, vflip, hflip) {
+    function setOrientation(rotation, hflip, vflip) {
         //console.log("setOrientation() " + rotation + " " + vflip + " " + hflip)
 
         if (rotation || vflip || hflip) {
@@ -151,32 +152,12 @@ Popup {
             clipVFlip = vflip
             clipHFlip = hflip
 
-            if (vflip && hflip) {
-                clipRotation += 180
-                clipRotation %= 360
-                clipVFlip = false
-                clipHFlip = false
-            }
-
-            if (clipRotation === 0 && !clipHFlip && !clipVFlip)
-                clipTransformation = 1
-            if (clipRotation === 0 && clipHFlip && !clipVFlip)
-                clipTransformation = 2
-            if (clipRotation === 180 && !clipHFlip && !clipVFlip)
-                clipTransformation = 3
-            if (clipRotation === 0 && !clipHFlip && clipVFlip)
-                clipTransformation = 4
-            if (clipRotation === 270 && clipHFlip && !clipVFlip)
-                clipTransformation = 5
-            if (clipRotation === 90 && !clipHFlip && !clipVFlip)
-                clipTransformation = 6
-            if (clipRotation === 90 && clipHFlip && !clipVFlip)
-                clipTransformation = 7
-            if (clipRotation === 270 && !clipHFlip && !clipVFlip)
-                clipTransformation = 8
+            clipTransformation_qt = mediaPreview.orientationToTransform_qt(rotation, hflip, vflip)
+            clipTransformation_exif = mediaPreview.orientationToTransform_exif(rotation, hflip, vflip)
         } else {
             rectangleOrientation.visible = false
-            clipTransformation = 1
+            clipTransformation_qt = 0
+            clipTransformation_exif = 1
             clipRotation = 0
             clipVFlip = false
             clipHFlip = false
@@ -1299,8 +1280,20 @@ Popup {
                         encodingParams["scale"] = "-2:" + selectorGifRes.res;
                         if (clipStartMs <= 0) encodingParams["clipStartMs"] = 0;
                         if (clipDurationMs <= 0) encodingParams["clipDurationMs"] = currentShot.duration;
-                        if (clipCropX <= 0 && clipCropY <= 0 && clipCropW <= 0 && clipCropH <= 0)
-                            encodingParams["crop"] = currentShot.width + ":" + currentShot.height + ":" + 0 + ":" + 0
+                        if (clipCropX > 0 || clipCropY > 0 ||
+                            (clipCropW > 0 && clipCropW < currentShot.width) ||
+                            (clipCropH > 0 && clipCropH < currentShot.height)) {
+                            if (clipRotation == 0 || clipRotation == 180)
+                                encodingParams["crop"] = clipCropW + ":" + clipCropH + ":" + clipCropX + ":" + clipCropY
+                            else
+                                encodingParams["crop"] = clipCropH + ":" + clipCropW + ":" + clipCropX + ":" + clipCropY
+                        }
+                        if (clipCropX <= 0 && clipCropY <= 0 && clipCropW <= 0 && clipCropH <= 0) {
+                            if (clipRotation == 0 || clipRotation == 180)
+                                encodingParams["crop"] = currentShot.width + ":" + currentShot.height + ":" + 0 + ":" + 0
+                            else
+                                encodingParams["crop"] = currentShot.height + ":" + currentShot.width + ":" + 0 + ":" + 0
+                        }
                         // TODO // transform
 
                         // Effect
@@ -1311,7 +1304,7 @@ Popup {
                     if (timelapseFramerate.visible)
                         encodingParams["timelapse_fps"] = timelapseFramerate.value.toFixed(0)
 
-                    encodingParams["transform"] = clipTransformation
+                    encodingParams["transform"] = clipTransformation_exif
 
                     encodingParams["quality"] = sliderQuality.value
 

@@ -289,7 +289,7 @@ class Shot: public QObject
     // GLOBAL metadata
     unsigned width = 0;
     unsigned height = 0;
-    unsigned transformation = 0;    // QImageIOHandler::Transformation
+    unsigned transformation = 0;    //!< QImageIOHandler::Transformation
     int rotation = 0;
 
     // GPS "quick" metadata (from EXIF or first GPMF sample)

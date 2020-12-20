@@ -734,21 +734,32 @@ bool Shot::getMetadataFromPicture(int index)
         if (entry)
         {
             exif_entry_get_value(entry, buf, sizeof(buf));
-            //orientation = buf;
 /*
-            1 = Horizontal (normal)
-            2 = Mirror horizontal
-            3 = Rotate 180
-            4 = Mirror vertical
-            5 = Mirror horizontal and rotate 270 CW
-            6 = Rotate 90 CW
-            7 = Mirror horizontal and rotate 90 CW
-            8 = Rotate 270 CW
+            1 = Horizontal (normal)     // "Top-left"
+            2 = Mirror horizontal       // "Top-right"
+            3 = Rotate 180              // "Bottom-right"
+            4 = Mirror vertical         // "Bottom-left"
+            5 = Mirror horizontal and rotate 270 CW // "Left-top"
+            6 = Rotate 90 CW                        // "Right-top"
+            7 = Mirror horizontal and rotate 90 CW  // "Right-bottom"
+            8 = Rotate 270 CW                       // "Left-bottom"
 */
             if (strncmp(buf, "Top-left", sizeof(buf)) == 0)
-            {
-                // TODO
-            }
+                transformation = QImageIOHandler::TransformationNone;
+            else if (strncmp(buf, "Top-right", sizeof(buf)) == 0)
+                transformation = QImageIOHandler::TransformationMirror;
+            else if (strncmp(buf, "Bottom-right", sizeof(buf)) == 0)
+                transformation = QImageIOHandler::TransformationRotate180;
+            else if (strncmp(buf, "Bottom-left", sizeof(buf)) == 0)
+                transformation = QImageIOHandler::TransformationFlip;
+            else if (strncmp(buf, "Left-top", sizeof(buf)) == 0)
+                transformation = QImageIOHandler::TransformationFlipAndRotate90;
+            else if (strncmp(buf, "Right-top", sizeof(buf)) == 0)
+                transformation = QImageIOHandler::TransformationRotate90;
+            else if (strncmp(buf, "Right-bottom", sizeof(buf)) == 0)
+                transformation = QImageIOHandler::TransformationMirrorAndRotate90;
+            else if (strncmp(buf, "Left-bottom", sizeof(buf)) == 0)
+                transformation = QImageIOHandler::TransformationRotate270;
         }
         entry = exif_content_get_entry(ed->ifd[EXIF_IFD_EXIF], EXIF_TAG_FNUMBER);
         if (entry)

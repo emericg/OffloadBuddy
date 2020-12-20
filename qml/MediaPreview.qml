@@ -16,7 +16,6 @@ Item {
     anchors.margins: 16
 
     property bool isFullScreen: false
-    //color: (isFullScreen || (shot && shot.fileType === Shared.FILE_PICTURE)) ? "transparent" : "black"
 
     ////////
 
@@ -27,9 +26,9 @@ Item {
     property int startLimit: -1
     property int stopLimit: -1
 
+    property int rotation: 0
     property bool hflipped: false
     property bool vflipped: false
-    property int rotation: 0
 
     property real cropX: 0.0
     property real cropY: 0.0
@@ -44,6 +43,11 @@ Item {
         //console.log("MediaPreview::setImageMode()  >  '" + shot.previewPhoto + "'")
         mode = "image"
 
+        imageOutput.visible = true
+        videoOutput.visible = false
+
+        mediaBanner.close()
+
         timelapseIndex = 0
 
         overlayTransform.visible = false
@@ -52,12 +56,20 @@ Item {
         overlayTransform.anchors.top = overlays.top
         overlayTransform.anchors.topMargin = 16
 
+        mediaArea.startLimit = -1
+        mediaArea.stopLimit = -1
         overlayTrim.visible = false
 
-        overlayCrop.editing = false
+        mediaArea.rotation = 0
+        mediaArea.hflipped = false
+        mediaArea.vflipped = false
 
-        imageOutput.visible = true
-        videoOutput.visible = false
+        mediaArea.cropX = 0.0
+        mediaArea.cropY = 0.0
+        mediaArea.cropW = 1.0
+        mediaArea.cropH = 1.0
+        overlayCrop.editing = false
+        overlayCrop.load()
 
         if (shot.duration > 1) { // playlist
             //mode = "timelapse"
@@ -79,6 +91,9 @@ Item {
         //console.log("MediaPreview::setVideoMode()  >  '" + shot.previewVideo + "'")
         mode = "video"
 
+        imageOutput.visible = false
+        videoOutput.visible = true
+
         timelapseIndex = 0
 
         overlayTransform.visible = false
@@ -90,9 +105,6 @@ Item {
         overlayTrim.visible = false
 
         overlayCrop.editing = false
-
-        imageOutput.visible = false
-        videoOutput.visible = true
 
         if (shot.previewVideo) {
             if (shot.chapterCount > 1) { // playlist
@@ -203,43 +215,12 @@ Item {
     function computeTransformation() {
         //console.log("computeTransformation(" + shot.transformation + ")")
 
-        hflipped = false
-        vflipped = false
-        rotation = 0
+        transformToOrientation_qt(shot.transformation)
 
-        if (shot.transformation <= 1) {
-            //1 = Horizontal (normal)
-            setFlip("")
-            setRotation(0)
-        } else if (shot.transformation === 2) {
-            //2 = Mirror horizontal
-            setFlip("horizontal")
-            setRotation(0)
-        } else if (shot.transformation === 3) {
-            //3 = Rotate 180
-            setFlip("")
-            setRotation(180)
-        } else if (shot.transformation === 4) {
-            //4 = Mirror vertical
-            setFlip("vertical")
-            setRotation(0)
-        } else if (shot.transformation === 5) {
-            //5 = Mirror horizontal and rotate 270 CW
-            setFlip("horizontal")
-            setRotation(270)
-        } else if (shot.transformation === 6) {
-            //6 = Rotate 90 CW
-            setFlip("")
-            setRotation(90)
-        } else if (shot.transformation === 7) {
-            //7 = Mirror horizontal and rotate 90 CW
-            setFlip("horizontal")
-            setRotation(90)
-        } else if (shot.transformation === 8) {
-            //8 = Rotate 270 CW
-            setFlip("")
-            setRotation(270)
-        }
+        if (hflipped) setFlip("horizontal")
+        else if (vflipped) setFlip("vertical")
+        else setFlip("")
+        setRotation(rotation)
     }
 
     function computeOverlaySize() {
@@ -310,8 +291,6 @@ Item {
             output.transform = hflip
         else
             output.transform = noflip
-
-        // TODO // flip overlayCrop?
     }
 
     function addRotation(value) {
@@ -321,6 +300,17 @@ Item {
         mediaArea.rotation = UtilsNumber.mod(mediaArea.rotation, 360)
 
         output.rotation = mediaArea.rotation
+
+        // flip overlayCrop
+        if (mediaArea.rotation === 90 || mediaArea.rotation === 270) {
+            if (overlayCrop.projectAR == 4/3) overlayCrop.projectAR = 3/4
+            else if (overlayCrop.projectAR == 16/9) overlayCrop.projectAR = 9/16
+            else if (overlayCrop.projectAR == 21/9) overlayCrop.projectAR = 9/21
+        } else {
+            if (overlayCrop.projectAR == 3/4) overlayCrop.projectAR = 4/3
+            else if (overlayCrop.projectAR == 9/16) overlayCrop.projectAR = 16/9
+            else if (overlayCrop.projectAR == 9/21) overlayCrop.projectAR = 21/9
+        }
 
         // TODO // rotate overlayCrop instead?
         mediaArea.cropX = 0.0
@@ -339,7 +329,171 @@ Item {
 
         output.rotation = mediaArea.rotation
 
+        // flip overlayCrop
+        if (mediaArea.rotation === 90 || mediaArea.rotation === 270) {
+            if (overlayCrop.projectAR == 4/3) overlayCrop.projectAR = 3/4
+            else if (overlayCrop.projectAR == 16/9) overlayCrop.projectAR = 9/16
+            else if (overlayCrop.projectAR == 21/9) overlayCrop.projectAR = 9/21
+        } else {
+            if (overlayCrop.projectAR == 3/4) overlayCrop.projectAR = 4/3
+            else if (overlayCrop.projectAR == 9/16) overlayCrop.projectAR = 16/9
+            else if (overlayCrop.projectAR == 9/21) overlayCrop.projectAR = 21/9
+        }
+
         computeOverlaySize()
+    }
+
+    function transformToOrientation_exif(transform) {
+        // EXIF transformation > rotation, horizontal flip, vertical flip
+
+        if (transform <= 1) {
+            hflipped = false
+            vflipped = false
+            rotation = 0
+        } else if (transform === 2) {
+            hflipped = true
+            vflipped = false
+            rotation = 0
+        } else if (transform === 3) {
+            hflipped = false
+            vflipped = false
+            rotation = 180
+        } else if (transform === 4) {
+            hflipped = false
+            vflipped = true
+            rotation = 0
+        } else if (transform === 5) {
+            hflipped = true
+            vflipped = false
+            rotation = 270
+        } else if (transform === 6) {
+            hflipped = false
+            vflipped = false
+            rotation = 90
+        } else if (transform === 7) {
+            hflipped = true
+            vflipped = false
+            rotation = 90
+        } else if (transform === 8) {
+            hflipped = false
+            vflipped = false
+            rotation = 270
+        } else {
+            console.log("transformToOrientation_exif() unknown transformation: " + transform)
+            hflipped = false
+            vflipped = false
+            rotation = 0
+        }
+    }
+    function orientationToTransform_exif(rot, hflip, vflip) {
+        // rotation, horizontal flip, vertical flip > EXIF transformation
+        var transform = 0
+
+        if (hflip && vflip) {
+            rot += 180
+            rot %= 360
+            hflip = false
+            vflip = false
+        }
+        if (rot === 270) {
+            //if (hflip && hflip) { rot = 90; hflip = false; vflip = false; }
+            if (hflip) { rot = 90; hflip = false; vflip = true; }
+            else if (vflip) { rot = 90; hflip = true; vflip = false; }
+        }
+
+        if (rot === 0 && !hflip && !vflip)
+            transform = 1
+        else if (rot === 0 && hflip && !vflip)
+            transform = 2
+        else if (rot === 180 && !hflip && !vflip)
+            transform = 3
+        else if (rot === 0 && !hflip && vflip)
+            transform = 4
+        else if (rot === 270 && hflip && !vflip)
+            transform = 5
+        else if (rot === 90 && !hflip && !vflip)
+            transform = 6
+        else if (rot === 90 && hflip && !vflip)
+            transform = 7
+        else if (rot === 270 && !hflip && !vflip)
+            transform = 8
+
+        return transform
+    }
+    function transformToOrientation_qt(transform) {
+        // QImageIOHandler::Transformation > rotation, horizontal flip, vertical flip
+
+        if (transform <= 0) {
+            hflipped = false
+            vflipped = false
+            rotation = 0
+        } else if (transform === 1) {
+            hflipped = true
+            vflipped = false
+            rotation = 0
+        } else if (transform === 2) {
+            hflipped = false
+            vflipped = true
+            rotation = 0
+        } else if (transform === 3) {
+            hflipped = false
+            vflipped = false
+            rotation = 180
+        } else if (transform === 4) {
+            hflipped = false
+            vflipped = false
+            rotation = 90
+        } else if (transform === 5) {
+            hflipped = true
+            vflipped = false
+            rotation = 90
+        } else if (transform === 6) {
+            hflipped = false
+            vflipped = true
+            rotation = 90
+        } else if (transform === 7) {
+            hflipped = false
+            vflipped = false
+            rotation = 270
+        } else {
+            console.log("transformToOrientation_qt() unknown transformation: " + transform)
+            hflipped = false
+            vflipped = false
+            rotation = 0
+        }
+    }
+    function orientationToTransform_qt(rot, hflip, vflip) {
+        // rotation, horizontal flip, vertical flip > QImageIOHandler::Transformation
+        var transform = 0
+
+        if (hflip && vflip) {
+            rot += 180
+            rot %= 360
+            hflip = false
+            vflip = false
+        }
+        if (rot === 270) {
+            //if (hflip && hflip) { rot = 90; hflip = false; vflip = false; }
+            if (hflip) { rot = 90; hflip = false; vflip = true; }
+            else if (vflip) { rot = 90; hflip = true; vflip = false; }
+        }
+
+        if (rot === 0 && hflip && !vflip)
+            transform = 1
+        else if (rot === 0 && !hflip && vflip)
+            transform = 2
+        else if (rot === 180 && !hflip && !vflip)
+            transform = 3
+        else if (rot === 90 && !hflip && !vflip)
+            transform = 4
+        else if (rot === 90 && hflip && !vflip)
+            transform = 5
+        else if (rot === 90 && !hflip && vflip)
+            transform = 6
+        else if (rot === 270 && !hflip && !vflip)
+            transform = 7
+
+        return transform
     }
 
     onWidthChanged: computeOverlaySize()
@@ -599,7 +753,7 @@ Item {
                 backgroundColor: "#222"
                 highlightColor: "green"
                 highlightMode: "color"
-                visible: (mediaArea.rotation != 0 || mediaArea.vflipped || mediaArea.hflipped)
+                visible: orientationToTransform_qt(mediaArea.rotation, mediaArea.hflipped, mediaArea.vflipped) !== shot.transformation
                 source: "qrc:/assets/icons_material/baseline-save-24px.svg"
                 //onClicked: shot.saveRotation(angle)
             }
@@ -609,7 +763,7 @@ Item {
                 background: true
                 backgroundColor: "#222"
                 highlightMode: "color"
-                visible: (mediaArea.rotation != 0 || mediaArea.vflipped || mediaArea.hflipped)
+                visible: orientationToTransform_qt(mediaArea.rotation, mediaArea.hflipped, mediaArea.vflipped) !== shot.transformation
                 source: "qrc:/assets/icons_material/baseline-close-24px.svg"
                 onClicked: computeTransformation()
             }
