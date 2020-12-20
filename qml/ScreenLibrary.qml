@@ -24,15 +24,14 @@ Item {
         sequence: StandardKey.Back
         onActivated: {
             if (screenLibrary.state === "stateMediaDetails")
-                screenLibrary.state = "stateMediaGrid"
+                screenMedia.back()
         }
     }
     Shortcut {
         sequence: StandardKey.Forward
         onActivated: {
             if (screenLibrary.state === "stateMediaGrid")
-                if (screenLibraryGrid.selectedItemIndex >= 0)
-                    screenLibrary.state = "stateMediaDetails"
+                screenMedia.restoreShot()
         }
     }
 /*
@@ -57,11 +56,10 @@ Item {
         onClicked: {
             if (mouse.button === Qt.BackButton) {
                 if (screenLibrary.state === "stateMediaDetails")
-                    screenLibrary.state = "stateMediaGrid"
+                    screenMedia.back()
             } else if (mouse.button === Qt.ForwardButton) {
                 if (screenLibrary.state === "stateMediaGrid")
-                    if (screenLibraryGrid.selectedItemIndex >= 0)
-                        screenLibrary.state = "stateMediaDetails"
+                    screenMedia.restoreShot()
             }
         }
     }
@@ -104,7 +102,6 @@ Item {
             PropertyChanges {
                 target: screenMedia
                 visible: true
-                shot: mediaLibrary.getShotByUuid(screenLibraryGrid.selectedItemUuid)
             }
         }
     ]

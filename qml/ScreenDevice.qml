@@ -44,7 +44,7 @@ Item {
         screenDeviceGrid.initDeviceHeader()
         screenDeviceGrid.initGridViewSettings()
         screenDeviceGrid.restoreState()
-        screenMedia.restoreState()
+        screenMedia.restoreShot()
     }
 
     // KEYS HANDLING ///////////////////////////////////////////////////////////
@@ -53,15 +53,14 @@ Item {
         sequence: StandardKey.Back
         onActivated: {
             if (screenDevice.state === "stateMediaDetails")
-                screenDevice.state = "stateMediaGrid"
+                screenMedia.back()
         }
     }
     Shortcut {
         sequence: StandardKey.Forward
         onActivated: {
             if (screenDevice.state === "stateMediaGrid")
-                if (screenDeviceGrid.selectedItemIndex >= 0)
-                    screenDevice.state = "stateMediaDetails"
+                screenMedia.restoreShot()
         }
     }
 
@@ -75,11 +74,10 @@ Item {
         onClicked: {
             if (mouse.button === Qt.BackButton) {
                 if (screenDevice.state === "stateMediaDetails")
-                    screenDevice.state = "stateMediaGrid"
+                    screenMedia.back()
             } else if (mouse.button === Qt.ForwardButton) {
                 if (screenDevice.state === "stateMediaGrid")
-                    if (screenDeviceGrid.selectedItemIndex >= 0)
-                        screenDevice.state = "stateMediaDetails"
+                    screenMedia.restoreShot()
             }
         }
     }
@@ -125,7 +123,6 @@ Item {
             PropertyChanges {
                 target: screenMedia
                 visible: true
-                shot: currentDevice.getShotByUuid(screenDeviceGrid.selectedItemUuid)
             }
         }
     ]

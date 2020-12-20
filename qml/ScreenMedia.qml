@@ -14,20 +14,62 @@ Item {
     property string startedFrom: ""
     property var shot: null
 
-    onShotChanged: {
-        //console.log("screenMedia - onShotChanged() Shot is now " + shot.name)
-        if (typeof shot === "undefined" || !shot) return
+    function loadShot(newshot) {
+        //console.log("screenMedia - loadShot(" + newshot.name + ")")
+        if (typeof newshot === "undefined" || !newshot) return
+        if (!newshot.isValid()) return
 
-        // if we 'just' changed shot, we reset the state // FIXME forward/backward reset it too
-        screenMedia.state = "overview"
-        updateShotDetails()
+        if (shot !== newshot) {
+            shot = newshot
+            updateShotDetails()
+            screenMedia.state = "overview"
+
+            // save state
+            if (typeof deviceSavedState !== "undefined" && deviceSavedState)
+                if (screenMedia.shot)
+                    deviceSavedState.detail_shot = screenMedia.shot
+        }
+
         updateFocus()
 
-        // save state
+        if (appContent.state === "library") screenLibrary.state = "stateMediaDetails"
+        else if (appContent.state === "device") screenDevice.state = "stateMediaDetails"
+    }
+
+    function restoreShot() {
+        //console.log("screenMedia - restoreShot()")
+
         if (typeof deviceSavedState !== "undefined" && deviceSavedState) {
-            console.log("SHOT " + screenMedia.shot.name + " FOR DEVICE" + currentDevice.uuid)
-            deviceSavedState.detail_shot = screenMedia.shot
+            if (typeof deviceSavedState.detail_shot === "undefined" || !deviceSavedState.detail_shot) return
+            if (!deviceSavedState.detail_shot.isValid()) return
+
+            if (screenMedia.shot !== deviceSavedState.detail_shot) {
+                screenMedia.shot = deviceSavedState.detail_shot
+                screenMedia.state = deviceSavedState.detail_state
+                updateShotDetails()
+            }
+        } else {
+            if (typeof screenMedia.shot === "undefined" || !screenMedia.shot) return
+            if (!screenMedia.shot.isValid()) return
         }
+
+        updateFocus()
+
+        if (appContent.state === "library") screenLibrary.state = "stateMediaDetails"
+        else if (appContent.state === "device") screenDevice.state = "stateMediaDetails"
+    }
+
+    function back() {
+        //console.log("screenMedia - back()")
+
+        // save state
+        //if (typeof deviceSavedState !== "undefined" && deviceSavedState)
+        //    if (screenMedia.shot)
+        //        deviceSavedState.detail_shot = screenMedia.shot
+
+        // go back
+        if (appContent.state === "library") screenLibrary.state = "stateMediaGrid"
+        else if (appContent.state === "device") screenDevice.state = "stateMediaGrid"
     }
 
     onVisibleChanged: {
@@ -39,11 +81,6 @@ Item {
                 (screenMedia.startedFrom === "library" && appContent.state === "library" && screenLibrary.state === "stateMediaDetails")
 
         if (focus === false) contentOverview.setPause()
-    }
-
-    function restoreState() {
-        screenMedia.shot = deviceSavedState.detail_shot
-        screenMedia.state = deviceSavedState.detail_state
     }
 
     function updateShotDetails() {
@@ -80,10 +117,7 @@ Item {
             }
         } else if (event.key === Qt.Key_Backspace) {
             event.accepted = true;
-            if (appContent.state === "library")
-                screenLibrary.state = "stateMediaGrid";
-            else if (appContent.state === "device")
-                screenDevice.state = "stateMediaGrid";
+            screenMedia.back();
         } else if (event.key === Qt.Key_Delete) {
             event.accepted = true;
             contentOverview.openDeletePopup();

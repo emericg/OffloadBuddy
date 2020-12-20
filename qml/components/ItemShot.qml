@@ -104,12 +104,8 @@ Rectangle {
                 shotsView.currentIndex = index
 
                 if (shot.isValid()) {
-                    shot.getMetadataFromVideoGPMF();
-
-                    if (shotDevice)
-                        screenDevice.state = "stateMediaDetails"
-                    else
-                        screenLibrary.state = "stateMediaDetails"
+                    shot.getMetadataFromVideoGPMF()
+                    screenMedia.loadShot(shot)
                 }
             }
         }

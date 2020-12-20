@@ -638,7 +638,7 @@ Item {
             Keys.onPressed: {
                 if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                     actionMenu.visible = false
-                    screenLibrary.state = "stateMediaDetails"
+                    screenMedia.loadShot(mediaLibrary.getShotByUuid(screenLibraryGrid.selectedItemUuid))
                 } else if (event.key === Qt.Key_PageUp) {
                     shotsView.currentIndex = 0;
                 } else if (event.key === Qt.Key_PageDown) {
