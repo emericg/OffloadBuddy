@@ -143,7 +143,7 @@ Item {
                 videoPlayer.isRunning = true
             }
         }
-        if (mode === "image") {
+        if (mode === "image" && shot.duration > 1) {
             if (timerTimelapse.running)
                 timerTimelapse.stop()
             else
@@ -400,10 +400,11 @@ Item {
         running: false
         repeat: true
         onTriggered: {
-            mediaArea.timelapseIndex++
-            if (mediaArea.timelapseIndex >= shot.duration) mediaArea.timelapseIndex = 0
-
-            imageOutput.source = "file:///" + shot.previewTimelapse[mediaArea.timelapseIndex]
+            if (shot.duration > 1) {
+                mediaArea.timelapseIndex++
+                if (mediaArea.timelapseIndex >= shot.duration) mediaArea.timelapseIndex = 0
+                imageOutput.source = "file:///" + shot.previewTimelapse[mediaArea.timelapseIndex]
+            }
         }
     }
 

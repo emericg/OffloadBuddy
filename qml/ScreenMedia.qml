@@ -35,8 +35,8 @@ Item {
     }
 
     function updateFocus() {
-        focus = (startedFrom === "device" && appContent.state === "device" && screenDevice.state === "stateMediaDetails") ||
-                (startedFrom === "library" && appContent.state === "library" && screenLibrary.state === "stateMediaDetails")
+        focus = (screenMedia.startedFrom === "device" && appContent.state === "device" && screenDevice.state === "stateMediaDetails") ||
+                (screenMedia.startedFrom === "library" && appContent.state === "library" && screenLibrary.state === "stateMediaDetails")
 
         if (focus === false) contentOverview.setPause()
     }
@@ -317,7 +317,7 @@ Item {
     onStateChanged: {
         // save state
         if (typeof deviceSavedState !== "undefined" && deviceSavedState)
-            deviceSavedState.detail_state = state
+            deviceSavedState.detail_state = screenMedia.state
     }
 
     state: "overview"

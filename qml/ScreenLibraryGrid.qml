@@ -129,8 +129,13 @@ Item {
         z: 1
         color: Theme.colorHeader
 
-        // prevent clicks below this area
-        MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
+        DragHandler {
+            // Drag on the sidebar to drag the whole window // Qt 5.15+
+            // Also, prevent clicks below this area
+            acceptedButtons: Qt.AllButtons
+            onActiveChanged: if (active) appWindow.startSystemMove()
+            target: null
+        }
 
         Text {
             id: textHeader
@@ -286,6 +291,8 @@ Item {
 
                     rotation: ascDesc ? 180 : 0
                     iconColor: Theme.colorComponentContent
+                    highlightMode: "color"
+                    highlightColor: Theme.colorSubText
                     source: "qrc:/assets/icons_material/baseline-filter_list-24px.svg"
 
                     property bool ascDesc: false

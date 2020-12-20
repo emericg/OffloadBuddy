@@ -23,11 +23,11 @@ Item {
 
         // No saved state? Initialize it!
         if (!(deviceSavedStateList[currentDevice.uuid])) {
-            deviceSavedStateList[currentDevice.uuid] = ({ orderBy: 0,
+            deviceSavedStateList[currentDevice.uuid] = ({ mainState: "stateMediaGrid",
+                                                          orderBy: 0,
                                                           filterBy: 0,
                                                           thumbSize: settingsManager.thumbSize,
                                                           thumbFormat: settingsManager.thumbFormat,
-                                                          mainState: "stateMediaGrid",
                                                           selectedIndex: -1,
                                                           selectionMode: false,
                                                           selectionList: [],
@@ -39,14 +39,12 @@ Item {
         // Select saved state
         deviceSavedState = deviceSavedStateList[currentDevice.uuid]
 
+        screenDevice.state = deviceSavedState.mainState
         screenDeviceGrid.updateGridState()
         screenDeviceGrid.initDeviceHeader()
         screenDeviceGrid.initGridViewSettings()
-
         screenDeviceGrid.restoreState()
         screenMedia.restoreState()
-
-        screenDevice.state = deviceSavedState.mainState
     }
 
     // KEYS HANDLING ///////////////////////////////////////////////////////////

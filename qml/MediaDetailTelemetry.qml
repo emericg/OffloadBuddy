@@ -167,6 +167,7 @@ Item {
     Map {
         id: map
         width: fullscreen ? parent.width - 32 : parent.width * 0.40
+        Behavior on width { NumberAnimation { duration: 250 } }
 
         anchors.top: parent.top
         anchors.topMargin: 16
@@ -176,9 +177,9 @@ Item {
         anchors.bottomMargin: 16
 
         //z: parent.z + 1
-        copyrightsVisible: false
         gesture.enabled: moove
         plugin: Plugin { name: "mapboxgl" } // "osm", "mapboxgl", "esri"
+        copyrightsVisible: false
 
         property bool fullscreen: false
         property bool moove: false
@@ -310,7 +311,7 @@ Item {
             anchors.left: parent.left
             anchors.leftMargin: 16
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: map.fullscreen ? 64 : 16
+            anchors.bottomMargin: mapMarker.visible ? 64 : 16
 
             Text {
                 id: mapScaleText
@@ -403,10 +404,12 @@ Item {
 
         anchors.top: parent.top
         anchors.left: parent.left
-        anchors.right: map.left
+        //anchors.right: map.left
         anchors.bottom: parent.bottom
 
-        visible: !map.fullscreen
+        //visible: !map.fullscreen
+        width: parent.width * 0.6
+        z: -1
 
         Column {
             id: rectangleText
@@ -588,7 +591,7 @@ Item {
 
                 title: "Speed (" + UtilsString.speedUnit(settingsManager.appUnits) + ")"
                 titleColor: Theme.colorText
-                titleFont.pixelSize: 14
+                titleFont.pixelSize: Theme.fontSizeContentSmall
                 titleFont.bold: true
 
                 antialiasing: true
@@ -614,7 +617,7 @@ Item {
 
                 title: "Altitude (" + UtilsString.altitudeUnit(settingsManager.appUnits) + ")"
                 titleColor: Theme.colorText
-                titleFont.pixelSize: 14
+                titleFont.pixelSize: Theme.fontSizeContentSmall
                 titleFont.bold: true
 
                 backgroundColor: "transparent"
@@ -638,7 +641,7 @@ Item {
 
                 title: "Acceleration"
                 titleColor: Theme.colorText
-                titleFont.pixelSize: 14
+                titleFont.pixelSize: Theme.fontSizeContentSmall
                 titleFont.bold: true
                 backgroundColor: "transparent"
                 antialiasing: true
@@ -661,7 +664,7 @@ Item {
 
                 title: "Gyroscope"
                 titleColor: Theme.colorText
-                titleFont.pixelSize: 14
+                titleFont.pixelSize: Theme.fontSizeContentSmall
                 titleFont.bold: true
                 backgroundColor: "transparent"
                 antialiasing: true

@@ -309,6 +309,7 @@ Item {
                             width: 20; height: 20;
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.verticalCenterOffset: -1
+                            color: Theme.colorText
 
                             source: {
                                 if (modelData.type === 1)
