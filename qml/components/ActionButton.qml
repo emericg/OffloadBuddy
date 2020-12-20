@@ -5,16 +5,16 @@ import ThemeEngine 1.0
 
 Item {
     id: actionButtonItem
-    height: 24
-    width: parent.width - 4
+    height: 32
+    width: parent.width
 
-    property string button_text;
-    property bool clicked;
-    property int index;
-    property string target;
-    property bool enable: true;
+    property string button_text
+    property string button_source
+    property int index
+    property bool enable: true
 
-    signal buttonClicked;
+    property bool clicked
+    signal buttonClicked
 
     function viewButtonHovered() {
         viewButton.state = "hovered"
@@ -28,40 +28,70 @@ Item {
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+
     Rectangle {
-        id: viewButton;
-        height: vButton.height + 4
+        id: viewButton
+        height: parent.height
         width: parent.width
+        color: "transparent"
+
+        ImageSvg {
+            id: iButton
+            width: 20
+            height: 20
+            anchors.left: parent.left
+            anchors.leftMargin: 8 // + 20
+            anchors.verticalCenter: parent.verticalCenter
+
+            source: button_source
+            color: Theme.colorSubText
+        }
 
         Text {
-            id: vButton
-            text: qsTr(button_text)
+            id: tButton
             width: parent.width
-            anchors { verticalCenter: parent.verticalCenter; left: parent.left; leftMargin: 10 }
-            font.bold: true
-            font.pixelSize: Theme.fontSizeComponent
-            color: "#3d3d3d"
+            anchors.left: iButton.right
+            anchors.leftMargin: 8
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.verticalCenterOffset: 1
+
+            text: qsTr(button_text)
+            font.bold: false
+            font.pixelSize: Theme.fontSizeContentSmall
+            color: Theme.colorText
         }
+
         MouseArea {
-            hoverEnabled: enable
             anchors.fill: parent
+
             enabled: enable
+            hoverEnabled: enable
             onClicked: buttonClicked()
             onEntered: viewButtonHovered()
             onExited: viewButtonExited()
         }
+
         states: [
             State {
                 name: "clicked";
-                PropertyChanges { target: vButton; color: "#286E1E"; }
+                PropertyChanges { target: viewButton; color: "transparent"; }
+                PropertyChanges { target: tButton; color: "#286E1E"; }
+                PropertyChanges { target: iButton; color: "#286E1E"; }
             },
             State {
                 name: "hovered";
-                PropertyChanges { target: vButton; color: { if (vButton.text === qsTr("DELETE")) Theme.colorError; else Theme.colorPrimary; } }
+                PropertyChanges { target: viewButton; color: Theme.colorForeground; }
+                //PropertyChanges { target: tButton; color: Theme.colorText; }
+                //PropertyChanges { target: iButton; color: Theme.colorText; }
+                PropertyChanges { target: tButton; color: { if (tButton.text === qsTr("DELETE")) Theme.colorError; else Theme.colorText; } }
+                PropertyChanges { target: iButton; color: { if (tButton.text === qsTr("DELETE")) Theme.colorError; else Theme.colorText; } }
             },
             State {
                 name: "normal";
-                PropertyChanges { target: vButton; color: "#3d3d3d"; }
+                PropertyChanges { target: viewButton; color: "transparent"; }
+                PropertyChanges { target: tButton; color: "#3d3d3d"; }
+                PropertyChanges { target: iButton; color: "#3d3d3d"; }
             }
         ]
     }
