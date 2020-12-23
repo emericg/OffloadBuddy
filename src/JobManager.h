@@ -101,7 +101,7 @@ typedef struct JobEncodeSettings
 
 typedef struct JobElement
 {
-    Shot *parent_shots;
+    Shot *parent_shots = nullptr;
     QString destination_dir;
 
     std::vector <ofb_file> files;
@@ -201,10 +201,10 @@ public:
     void setAutoDelete(bool d) { m_autoDelete = d; }
     bool getAutoDelete() const { return m_autoDelete; }
 
-    void setState(int state) { m_state = static_cast<JobState>(state); jobUpdated(); }
+    void setState(int state) { m_state = static_cast<JobState>(state); Q_EMIT jobUpdated(); }
     int getState() { return m_state; }
 
-    void setProgress(float p) { m_percent = p; jobUpdated(); }
+    void setProgress(float p) { m_percent = p; Q_EMIT jobUpdated(); }
     float getProgress() { return m_percent / 100.f; }
 
 public slots:

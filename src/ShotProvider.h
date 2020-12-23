@@ -62,6 +62,11 @@ public:
     void addShot(Shot *shot);
     void deleteShot(Shot *shot);
 
+    //Q_INVOKABLE QVariant getShotByModelIndex(const int index) const { return QVariant::fromValue(m_shotModel->getShotAtIndex(index)); }
+    Q_INVOKABLE QVariant getShotByProxyIndex(const int index) const { QModelIndex proxyIndex = m_shotFilter->index(index, 0); return QVariant::fromValue(m_shotFilter->data(proxyIndex, ShotModel::PointerRole)); }
+    //Q_INVOKABLE QVariant getShotByName(const QString &name) const { return QVariant::fromValue(m_shotModel->getShotWithName(name)); }
+    Q_INVOKABLE QVariant getShotByUuid(const QString &uuid) const { return QVariant::fromValue(m_shotModel->getShotWithUuid(uuid)); }
+
 public slots:
     void orderByAsc();
     void orderByDesc();
@@ -74,11 +79,6 @@ public slots:
 
     void filterByType(const QString &type);
     void filterByFolder(const QString &path);
-
-    //QVariant getShotByModelIndex(const int index) const { return QVariant::fromValue(m_shotModel->getShotAtIndex(index)); }
-    QVariant getShotByProxyIndex(const int index) const { QModelIndex proxyIndex = m_shotFilter->index(index, 0); return QVariant::fromValue(m_shotFilter->data(proxyIndex, ShotModel::PointerRole)); }
-    //QVariant getShotByName(const QString &name) const { return QVariant::fromValue(m_shotModel->getShotWithName(name)); }
-    QVariant getShotByUuid(const QString &uuid) const { return QVariant::fromValue(m_shotModel->getShotWithUuid(uuid)); }
 };
 
 /* ************************************************************************** */

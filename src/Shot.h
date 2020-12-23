@@ -146,7 +146,6 @@ public:
     }
     ~ShotFile() = default;
 
-public slots:
     QString getPath() const { return path; }
     QString getFolder() const { return folder; }
     QString getName() const { return name; }
@@ -413,10 +412,10 @@ class Shot: public QObject
 
 public slots:
     Q_INVOKABLE bool getMetadataFromVideoGPMF();
-    Q_INVOKABLE void updateSpeedsSerie(QLineSeries *serie, int appUnit);
-    Q_INVOKABLE void updateAltiSerie(QLineSeries *serie, int appUnit);
-    Q_INVOKABLE void updateAcclSeries(QLineSeries *x, QLineSeries *y, QLineSeries *z);
-    Q_INVOKABLE void updateGyroSeries(QLineSeries *x, QLineSeries *y, QLineSeries *z);
+    Q_INVOKABLE void updateSpeedsSerie(QtCharts::QLineSeries *serie, int appUnit);
+    Q_INVOKABLE void updateAltiSerie(QtCharts::QLineSeries *serie, int appUnit);
+    Q_INVOKABLE void updateAcclSeries(QtCharts::QLineSeries *x, QtCharts::QLineSeries *y, QtCharts::QLineSeries *z);
+    Q_INVOKABLE void updateGyroSeries(QtCharts::QLineSeries *x, QtCharts::QLineSeries *y, QtCharts::QLineSeries *z);
     Q_INVOKABLE QGeoCoordinate getGpsCoordinates(unsigned index);
 
     Q_INVOKABLE bool exportTelemetry(const QString &path, int accl_frequency, int gps_frequency, bool egm96_correction);
@@ -426,6 +425,12 @@ public slots:
 
 
 
+Q_SIGNALS:
+    void shotUpdated();
+    void stateUpdated();
+    void selectionUpdated();
+    void metadataUpdated();
+    void dataUpdated();
 
 public:
     Shot(QObject *parent = nullptr);
@@ -532,13 +537,6 @@ public slots:
     void setCameraId(int id) { m_camera_id = id; }
 
     void openFolder() const;
-
-Q_SIGNALS:
-    void shotUpdated();
-    void stateUpdated();
-    void selectionUpdated();
-    void metadataUpdated();
-    void dataUpdated();
 };
 
 /* ************************************************************************** */

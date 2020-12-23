@@ -351,7 +351,7 @@ void MediaLibrary::deleteSelection(const QVariant &indexes)
     QStringList selectedUuids = getSelectedUuids(indexes);
     QList<Shot *> list;
 
-    for (auto u: selectedUuids)
+    for (const auto &u: qAsConst(selectedUuids))
     {
         list.push_back(m_shotModel->getShotWithUuid(u));
     }

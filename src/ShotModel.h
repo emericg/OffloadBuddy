@@ -35,7 +35,6 @@
 class ShotModel : public QAbstractListModel
 {
     Q_OBJECT
-    Q_ENUMS(ShotRoles)
 
     QList<Shot *> m_shots;
 
@@ -57,6 +56,7 @@ public:
         PointerRole,
         PathRole,
     };
+    Q_ENUM(ShotRoles)
 
     ShotModel(QObject *parent = nullptr);
     ShotModel(const ShotModel &other, QObject *parent = nullptr);

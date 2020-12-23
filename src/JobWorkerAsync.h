@@ -37,7 +37,7 @@ struct Job;
 typedef struct commandWrapper
 {
     Job *job = nullptr;
-    int job_element_index = -1;
+    unsigned job_element_index = -1;
 
     QString destFile;
 

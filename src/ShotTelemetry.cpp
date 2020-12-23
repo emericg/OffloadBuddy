@@ -461,7 +461,7 @@ void Shot::parseData_triplet(GpmfBuffer &buf, GpmfKLV &klv,
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void Shot::updateSpeedsSerie(QLineSeries *serie, int appUnit)
+void Shot::updateSpeedsSerie(QtCharts::QLineSeries *serie, int appUnit)
 {
     Q_UNUSED(appUnit)
     if (!serie) return;
@@ -499,7 +499,7 @@ void Shot::updateSpeedsSerie(QLineSeries *serie, int appUnit)
     serie->replace(points);
 }
 
-void Shot::updateAltiSerie(QLineSeries *serie, int appUnit)
+void Shot::updateAltiSerie(QtCharts::QLineSeries *serie, int appUnit)
 {
     Q_UNUSED(appUnit)
     if (!serie) return;
@@ -537,7 +537,7 @@ void Shot::updateAltiSerie(QLineSeries *serie, int appUnit)
     serie->replace(points);
 }
 
-void Shot::updateAcclSeries(QLineSeries *x, QLineSeries *y, QLineSeries *z)
+void Shot::updateAcclSeries(QtCharts::QLineSeries *x, QtCharts::QLineSeries *y, QtCharts::QLineSeries *z)
 {
     if (x == nullptr || y == nullptr || z == nullptr)
         return;
@@ -567,7 +567,7 @@ void Shot::updateAcclSeries(QLineSeries *x, QLineSeries *y, QLineSeries *z)
     z->replace(pointsZ);
 }
 
-void Shot::updateGyroSeries(QLineSeries *x, QLineSeries *y, QLineSeries *z)
+void Shot::updateGyroSeries(QtCharts::QLineSeries *x, QtCharts::QLineSeries *y, QtCharts::QLineSeries *z)
 {
     if (x == nullptr || y == nullptr || z == nullptr)
         return;
@@ -706,7 +706,7 @@ bool Shot::exportTelemetry(const QString &path, int accl_frequency, int gps_freq
             {
                 // HiLight tags
                 exportStream << "\n  \"HiLight tags\": { \"unit\": \"ms\", \"data\": [\n  ";
-                for (unsigned i = 0; i < m_hilight.size(); i++) {
+                for (int i = 0; i < m_hilight.size(); i++) {
                     exportStream << m_hilight.at(i) << ",";
                 } exportStream << "\n  ]},";
             }

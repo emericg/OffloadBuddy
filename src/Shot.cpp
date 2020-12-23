@@ -51,7 +51,7 @@ Shot::Shot(Shared::ShotType type, QObject *parent) : QObject(parent)
 
 Shot::~Shot()
 {
-    for (auto picture: m_pictures)
+    for (auto picture: qAsConst(m_pictures))
     {
         if (picture->ed)
             exif_data_unref(picture->ed);
@@ -59,7 +59,7 @@ Shot::~Shot()
     qDeleteAll(m_pictures);
     m_pictures.clear();
 
-    for (auto video: m_videos)
+    for (auto video: qAsConst(m_videos))
     {
         if (video->media)
             minivideo_close(&video->media);
@@ -451,32 +451,32 @@ QVariant Shot::getShotFiles()
 {
     if (m_shotfiles.size() <= 0)
     {
-        for (auto f: m_pictures)
+        for (auto f: qAsConst(m_pictures))
         {
             ShotFile *sf = new ShotFile(f);
             if (sf) m_shotfiles.push_back(sf);
         }
-        for (auto f: m_videos)
+        for (auto f: qAsConst(m_videos))
         {
             ShotFile *sf = new ShotFile(f);
             if (sf) m_shotfiles.push_back(sf);
         }
-        for (auto f: m_videos_previews)
+        for (auto f: qAsConst(m_videos_previews))
         {
             ShotFile *sf = new ShotFile(f);
             if (sf) m_shotfiles.push_back(sf);
         }
-        for (auto f: m_videos_thumbnails)
+        for (auto f: qAsConst(m_videos_thumbnails))
         {
             ShotFile *sf = new ShotFile(f);
             if (sf) m_shotfiles.push_back(sf);
         }
-        for (auto f: m_videos_hdAudio)
+        for (auto f: qAsConst(m_videos_hdAudio))
         {
             ShotFile *sf = new ShotFile(f);
             if (sf) m_shotfiles.push_back(sf);
         }
-        for (auto f: m_others)
+        for (auto f: qAsConst(m_others))
         {
             ShotFile *sf = new ShotFile(f);
             if (sf) m_shotfiles.push_back(sf);
@@ -1148,7 +1148,7 @@ bool Shot::getMetadataFromVideoGPMF()
 
 #ifdef ENABLE_MINIVIDEO
 
-    for (auto video : m_videos)
+    for (auto video : qAsConst(m_videos))
     {
         gpmf_parsed = true;
 

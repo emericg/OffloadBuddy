@@ -171,7 +171,7 @@ bool SettingsManager::writeSettings()
         settings.sync();
 
         int i = 1;
-        for (auto d: m_mediaDirectories)
+        for (auto d: qAsConst(m_mediaDirectories))
         {
             MediaDirectory *dd = qobject_cast<MediaDirectory*>(d);
             if (dd)
@@ -220,7 +220,7 @@ void SettingsManager::addDirectory(const QString &path)
             checkpath += '/';
 
         // Check if already in the list?
-        for (auto d: m_mediaDirectories)
+        for (auto d: qAsConst(m_mediaDirectories))
         {
             MediaDirectory *dd = qobject_cast<MediaDirectory*>(d);
             if (dd && dd->getPath() == checkpath)
@@ -247,7 +247,7 @@ void SettingsManager::removeDirectory(const QString &path)
 {
     if (!path.isEmpty())
     {
-        for (auto d: m_mediaDirectories)
+        for (auto d: qAsConst(m_mediaDirectories))
         {
             MediaDirectory *dd = qobject_cast<MediaDirectory*>(d);
             if (dd && dd->getPath() == path)

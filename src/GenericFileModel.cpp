@@ -36,7 +36,7 @@ bool parseGenericDCIM(const QString &path, generic_device_infos &infos)
         status = true;
 
         // Try to guess brand
-        foreach (QString subdir_name, dcim.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
+        for (auto const &subdir_name : dcim.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
         {
             //qDebug() << "  * Scanning DCIM subdir:" << subdir_name;
 

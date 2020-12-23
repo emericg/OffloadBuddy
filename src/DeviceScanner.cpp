@@ -66,7 +66,7 @@ void DeviceScanner::scanFilesystems()
     QStringList connectedFilesystems;
 
     // Check if we have new device(s)
-    foreach (const QStorageInfo &storage, QStorageInfo::mountedVolumes())
+    for (auto const &storage : QStorageInfo::mountedVolumes())
     {
         //qDebug() << "> MOUNTPOINT(" << storage.fileSystemType() << ") > " << storage.rootPath();
 
@@ -106,45 +106,51 @@ void DeviceScanner::scanFilesystems()
             QString deviceRootpath = storage.rootPath();
             bool found = false;
 
-            auto *goproDeviceInfos = new gopro_device_infos;
-            if (goproDeviceInfos && !found)
+            if (!found)
             {
-                if (parseGoProVersionFile(deviceRootpath, *goproDeviceInfos))
+                auto *goproDeviceInfos = new gopro_device_infos;
+                if (goproDeviceInfos)
                 {
-                    found = true;
+                    if (parseGoProVersionFile(deviceRootpath, *goproDeviceInfos))
+                    {
+                        found = true;
 
-                    // Send device infos to the DeviceManager
-                    emit fsDeviceFound(deviceRootpath, goproDeviceInfos);
+                        // Send device infos to the DeviceManager
+                        emit fsDeviceFound(deviceRootpath, goproDeviceInfos);
 
-                    // Watch this path
-                    m_watchedFilesystems.push_back(deviceRootpath);
-                    if (!m_watcherFilesystem.addPath(deviceRootpath))
-                        qDebug() << "FILE WATCHER FAILZD for " << deviceRootpath;
-                }
-                else
-                {
-                    delete goproDeviceInfos;
+                        // Watch this path
+                        m_watchedFilesystems.push_back(deviceRootpath);
+                        if (!m_watcherFilesystem.addPath(deviceRootpath))
+                            qDebug() << "FILE WATCHER FAILZD for " << deviceRootpath;
+                    }
+                    else
+                    {
+                        delete goproDeviceInfos;
+                    }
                 }
             }
 
-            auto *genericDeviceInfos = new generic_device_infos;
-            if (genericDeviceInfos && !found)
+            if (!found)
             {
-                if (parseGenericDCIM(deviceRootpath, *genericDeviceInfos))
+                auto *genericDeviceInfos = new generic_device_infos;
+                if (genericDeviceInfos)
                 {
-                    found = true;
+                    if (parseGenericDCIM(deviceRootpath, *genericDeviceInfos))
+                    {
+                        found = true;
 
-                    // Send device infos to the DeviceManager
-                    emit fsDeviceFound(deviceRootpath, genericDeviceInfos);
+                        // Send device infos to the DeviceManager
+                        emit fsDeviceFound(deviceRootpath, genericDeviceInfos);
 
-                    // Watch this path
-                    m_watchedFilesystems.push_back(deviceRootpath);
-                    if (!m_watcherFilesystem.addPath(deviceRootpath))
-                        qDebug() << "FILE WATCHER FAILZD for " << deviceRootpath;
-                }
-                else
-                {
-                    delete genericDeviceInfos;
+                        // Watch this path
+                        m_watchedFilesystems.push_back(deviceRootpath);
+                        if (!m_watcherFilesystem.addPath(deviceRootpath))
+                            qDebug() << "FILE WATCHER FAILZD for " << deviceRootpath;
+                    }
+                    else
+                    {
+                        delete genericDeviceInfos;
+                    }
                 }
             }
         }
@@ -155,7 +161,7 @@ void DeviceScanner::scanFilesystems()
     }
 
     // Check if we lost some device(s) since last scan
-    for (auto const &storage: m_watchedFilesystems)
+    for (auto const &storage: qAsConst(m_watchedFilesystems))
     {
         if (!connectedFilesystems.contains(storage))
         {
@@ -173,7 +179,7 @@ void DeviceScanner::scanVirtualFilesystems()
     QStringList connectedVirtualFilesystems;
 
     // Check if we have new device(s)
-    foreach (const QStorageInfo &storage, QStorageInfo::mountedVolumes())
+    for (const auto &storage : QStorageInfo::mountedVolumes())
     {
         if (storage.fileSystemType() == "tmpfs" ||
             storage.fileSystemType() == "fuse.gvfsd-fuse")
@@ -198,7 +204,7 @@ void DeviceScanner::scanVirtualFilesystems()
             // 0x2C: ','   0x3A: ':'   0x5B: '['   0x5D: ']'
 
             QDir gvfsDirectory(storage.rootPath() + "/gvfs");
-            foreach (QString subdir_device, gvfsDirectory.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
+            for (const auto &subdir_device : gvfsDirectory.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
             {
                 QString virtual_mountpoint = storage.rootPath() + "/gvfs/" + subdir_device;
                 //qDebug() << "> VIRTUAL MOUNTPOINT(" << storage.fileSystemType() << ") > " << virtual_mountpoint;
@@ -213,17 +219,17 @@ void DeviceScanner::scanVirtualFilesystems()
                     if (subdir_device.startsWith("mtp"))
                     {
                         bool ok = false;
-                        bus = subdir_device.mid(18,3).toInt(&ok);
+                        bus = subdir_device.midRef(18,3).toInt(&ok);
                         if (!ok) bus = -1;
-                        dev = subdir_device.mid(24,3).toInt(&ok);
+                        dev = subdir_device.midRef(24,3).toInt(&ok);
                         if (!ok) dev = -1;
                     }
                     else if (subdir_device.startsWith("gphoto2"))
                     {
                         bool ok = false;
-                        bus = subdir_device.mid(22,3).toInt(&ok);
+                        bus = subdir_device.midRef(22,3).toInt(&ok);
                         if (!ok) bus = -1;
-                        dev = subdir_device.mid(28,3).toInt(&ok);
+                        dev = subdir_device.midRef(28,3).toInt(&ok);
                         if (!ok) dev = -1;
                     }
                     if (bus >= 0 && dev >= 0)
@@ -298,7 +304,7 @@ void DeviceScanner::scanVirtualFilesystems()
                     else if (!deviceInfos->stringId.isEmpty())
                     {
                         bool devicefound = false;
-                        for (auto s: m_watchedVirtualFilesystems)
+                        for (const auto &s: qAsConst(m_watchedVirtualFilesystems))
                         {
                             if (s.contains(virtual_mountpoint))
                             {
@@ -323,7 +329,7 @@ void DeviceScanner::scanVirtualFilesystems()
                     // Then we usually have a subdirectory per MTP 'volume'
                     // ex: one volume for the internal flash of a phone and one for its SD card
                     QDir gvfsSubDirectory(virtual_mountpoint);
-                    foreach (QString subdir_volume, gvfsSubDirectory.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
+                    for (const auto &subdir_volume : gvfsSubDirectory.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
                     {
                         QString devicePath = virtual_mountpoint + "/" + subdir_volume;
 
@@ -358,11 +364,11 @@ void DeviceScanner::scanVirtualFilesystems()
     }
 
     // Check if we lost some device(s) since last scan
-    for (auto watchedFs: m_watchedVirtualFilesystems)
+    for (const auto &watchedFs: qAsConst(m_watchedVirtualFilesystems))
     {
         bool connected = false;
 
-        for (auto connectedFs: connectedVirtualFilesystems)
+        for (const auto &connectedFs: connectedVirtualFilesystems)
         {
             if (connectedFs.startsWith(watchedFs))
             {
@@ -538,7 +544,7 @@ void DeviceScanner::scanMtpDevices()
     free(rawdevices);
 
     // Check if we lost some device(s) since last scan
-    for (auto watchedDevice: m_watchedMtpDevices)
+    for (auto watchedDevice: qAsConst(m_watchedMtpDevices))
     {
         if (!connectedMtpDevices.contains(watchedDevice))
         {

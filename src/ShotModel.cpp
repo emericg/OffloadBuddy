@@ -53,11 +53,11 @@ ShotModel::~ShotModel()
 void ShotModel::sanetize()
 {
     // Check if each files of the shot still exists
-    for (auto shot: m_shots)
+    for (auto shot: qAsConst(m_shots))
     {
         QList <ofb_file *> files = shot->getFiles();
 
-        for (auto file: files)
+        for (auto file: qAsConst(files))
         {
             QFile f(file->filesystemPath);
             if (!f.exists())
@@ -152,7 +152,7 @@ void ShotModel::removeShot(Shot *shot)
  */
 void ShotModel::getShots(QList<Shot *> &shots)
 {
-    for (auto shot: m_shots)
+    for (auto shot: qAsConst(m_shots))
     {
         shots.push_back(shot);
     }
@@ -184,7 +184,7 @@ Shot *ShotModel::getShotWithName(const QString &name)
 {
     if (!name.isEmpty())
     {
-        for (auto shot: m_shots)
+        for (auto shot: qAsConst(m_shots))
         {
             Shot *search = qobject_cast<Shot*>(shot);
             if (search->getName() == name)
@@ -208,7 +208,7 @@ Shot *ShotModel::getShotWithUuid(const QString &uuid)
 {
     if (!uuid.isEmpty())
     {
-        for (auto shot: m_shots)
+        for (auto shot: qAsConst(m_shots))
         {
             Shot *search = qobject_cast<Shot*>(shot);
             if (search->getUuid() == uuid)
@@ -232,14 +232,14 @@ Shot *ShotModel::getShotWithPath(const QString &path)
 {
     if (!path.isEmpty())
     {
-        for (auto shot: m_shots)
+        for (auto shot: qAsConst(m_shots))
         {
             Shot *search = qobject_cast<Shot*>(shot);
             if (search)
             {
                 QList <ofb_file *> files = search->getFiles();
 
-                for (auto file: files)
+                for (auto file: qAsConst(files))
                 {
                     if (file->filesystemPath == path)
                     {

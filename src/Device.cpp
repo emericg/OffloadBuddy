@@ -135,7 +135,7 @@ bool Device::addStorages_mtp(ofb_mtp_device *device)
     }
 
     // Storage
-    for (auto st: device->storages)
+    for (auto st: qAsConst(device->storages))
     {
         m_mtpStorages.push_back(st);
         emit storageUpdated();
@@ -394,7 +394,7 @@ void Device::refreshBatteryInfos()
     //qDebug() << "refreshBatteryInfos()";
 
 #ifdef ENABLE_LIBMTP
-    for (auto d: m_mtpDevices)
+    for (auto d: qAsConst(m_mtpDevices))
     {
         if (d && d->device)
         {
@@ -420,7 +420,7 @@ void Device::refreshStorageInfos()
 {
     //qDebug() << "refreshStorageInfos(" << m_storage->rootPath() << ")";
 
-    for (auto storage: m_filesystemStorages)
+    for (auto storage: qAsConst(m_filesystemStorages))
     {
         if (storage &&
             storage->m_storage.isValid() && storage->m_storage.isReady())
@@ -441,7 +441,7 @@ void Device::refreshStorageInfos()
     }
 
 #ifdef ENABLE_LIBMTP
-    for (auto storage: m_mtpStorages)
+    for (auto storage: qAsConst(m_mtpStorages))
     {
         if (storage)
         {
@@ -519,13 +519,13 @@ int64_t Device::getSpaceTotal()
 {
     int64_t s = 0;
 
-    for (auto st: m_filesystemStorages)
+    for (auto st: qAsConst(m_filesystemStorages))
     {
         if (st)
             s += st->m_storage.bytesTotal();
     }
 #ifdef ENABLE_LIBMTP
-    for (auto st: m_mtpStorages)
+    for (auto st: qAsConst(m_mtpStorages))
     {
         if (st)
             s += st->m_storage->MaxCapacity;
@@ -539,13 +539,13 @@ int64_t Device::getSpaceUsed()
 {
     int64_t s = 0;
 
-    for (auto st: m_filesystemStorages)
+    for (auto st: qAsConst(m_filesystemStorages))
     {
         if (st)
             s += (st->m_storage.bytesTotal() - st->m_storage.bytesAvailable());
     }
 #ifdef ENABLE_LIBMTP
-    for (auto st: m_mtpStorages)
+    for (auto st: qAsConst(m_mtpStorages))
     {
         if (st)
             s += st->m_storage->MaxCapacity - st->m_storage->FreeSpaceInBytes;
@@ -559,13 +559,13 @@ int64_t Device::getSpaceAvailable()
 {
     int64_t s = 0;
 
-    for (auto st: m_filesystemStorages)
+    for (auto st: qAsConst(m_filesystemStorages))
     {
         if (st)
             s += st->m_storage.bytesAvailable();
     }
 #ifdef ENABLE_LIBMTP
-    for (auto st: m_mtpStorages)
+    for (auto st: qAsConst(m_mtpStorages))
     {
         if (st)
             s += st->m_storage->FreeSpaceInBytes;
@@ -812,7 +812,7 @@ void Device::deleteSelection(const QVariant &indexes)
     QStringList selectedUuids = getSelectedUuids(indexes);
     QList<Shot *> list;
 
-    for (auto u: selectedUuids)
+    for (const auto &u: qAsConst(selectedUuids))
     {
         list.push_back(m_shotModel->getShotWithUuid(u));
     }
@@ -828,7 +828,7 @@ void Device::offloadCopySelection(const QVariant &indexes)
     QStringList selectedUuids = getSelectedUuids(indexes);
     QList<Shot *> list;
 
-    for (auto u: selectedUuids)
+    for (const auto &u: qAsConst(selectedUuids))
     {
         list.push_back(m_shotModel->getShotWithUuid(u));
     }
@@ -844,7 +844,7 @@ void Device::offloadMergeSelection(const QVariant &indexes)
     QStringList selectedUuids = getSelectedUuids(indexes);
     QList<Shot *> list;
 
-    for (auto u: selectedUuids)
+    for (const auto &u: qAsConst(selectedUuids))
     {
         list.push_back(m_shotModel->getShotWithUuid(u));
     }

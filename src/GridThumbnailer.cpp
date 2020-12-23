@@ -250,7 +250,7 @@ bool decode_packet(AVPacket *pPacket, AVCodecContext *pCodecContext, AVFrame *pF
             int src_h = pFrame->height;
             int srcRange = 0;
             double src_ar = static_cast<double>(src_w) / static_cast<double>(src_h);
-            enum AVPixelFormat src_pix_fmt = static_cast<AVPixelFormat>(pFrame->format);
+            AVPixelFormat src_pix_fmt = static_cast<AVPixelFormat>(pFrame->format);
 
             // Remove the 'J' in deprecated pixel formats, which denotes full range
             switch (pFrame->format)

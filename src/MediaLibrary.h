@@ -50,6 +50,8 @@ class MediaLibrary: public ShotProvider
 
     void scanMediaDirectory(MediaDirectory *md);
 
+    int getLibraryState() const { return m_libraryState; }
+
 Q_SIGNALS:
     void stateUpdated();
 
@@ -62,7 +64,6 @@ public slots:
     Q_INVOKABLE void searchMediaDirectory(const QString &path);
     Q_INVOKABLE void cleanMediaDirectory(const QString &path);
 
-    int getLibraryState() const { return m_libraryState; }
     void workerScanningStarted(const QString &path);
     void workerScanningFinished(const QString &path);
 

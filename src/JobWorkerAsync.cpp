@@ -503,7 +503,7 @@ void JobWorkerAsync::queueWork(Job *job)
 */
     }
 
-    qDebug() << ">> JobWorkerAsync::queueWork()";
+    qDebug() << "<< JobWorkerAsync::queueWork()";
 }
 
 void JobWorkerAsync::work()

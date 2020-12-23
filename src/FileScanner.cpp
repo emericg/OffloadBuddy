@@ -77,7 +77,7 @@ void FileScanner::scanFilesystemDirectory(const QString &dir_path)
     //qDebug() << "  * Scanning subdir:" << dir_path;
 
     QDir dir(dir_path);
-    foreach (QString subelement_name, dir.entryList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot))
+    for (const auto &subelement_name : dir.entryList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot))
     {
         //qDebug() << "  * Scanning subelement:" << subelement_name;
 

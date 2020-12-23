@@ -256,7 +256,7 @@ bool JobManager::addJobs(JobType type, Device *d, MediaLibrary *ml,  QList<Shot 
         je->destination_dir = getandmakeDestination(shot, d, md);
         je->parent_shots = shot;
         QList <ofb_file *> files = shot->getFiles(getPreviews, getHdAudio);
-        for (auto f: files)
+        for (auto f: qAsConst(files))
         {
             je->files.push_back(*f);
             job->totalSize += f->size;
@@ -370,7 +370,7 @@ bool JobManager::addJobs(JobType type, Device *d, MediaLibrary *ml,  QList<Shot 
 
 void JobManager::clearFinishedJobs()
 {
-    for (auto jj: m_trackedJobs)
+    for (auto jj: qAsConst(m_trackedJobs))
     {
         JobTracker *j = qobject_cast<JobTracker *>(jj);
         if (j && j->getState() >= JOB_STATE_DONE)
@@ -386,7 +386,7 @@ void JobManager::clearFinishedJobs()
 
 void JobManager::jobProgress(int jobId, float progress)
 {
-    for (auto jj: m_trackedJobs)
+    for (auto jj: qAsConst(m_trackedJobs))
     {
         JobTracker *j = qobject_cast<JobTracker *>(jj);
         if (j && j->getId() == jobId)
@@ -399,7 +399,7 @@ void JobManager::jobProgress(int jobId, float progress)
 
 void JobManager::jobStarted(int jobId)
 {
-    for (auto jj: m_trackedJobs)
+    for (auto jj: qAsConst(m_trackedJobs))
     {
         JobTracker *j = qobject_cast<JobTracker *>(jj);
         if (j && j->getId() == jobId)
@@ -414,7 +414,7 @@ void JobManager::jobStarted(int jobId)
 
 void JobManager::jobFinished(int jobId, int jobState)
 {
-    for (auto jj: m_trackedJobs)
+    for (auto jj: qAsConst(m_trackedJobs))
     {
         JobTracker *j = qobject_cast<JobTracker *>(jj);
         if (j && j->getId() == jobId)
@@ -438,7 +438,7 @@ void JobManager::shotStarted(int jobId, Shot *shot)
         return;
     }
 
-    for (auto jj: m_trackedJobs)
+    for (auto jj: qAsConst(m_trackedJobs))
     {
         JobTracker *j = qobject_cast<JobTracker *>(jj);
         if (j && j->getId() == jobId)
@@ -460,7 +460,7 @@ void JobManager::shotFinished(int jobId, Shot *shot)
         return;
     }
 
-    for (auto jj: m_trackedJobs)
+    for (auto jj: qAsConst(m_trackedJobs))
     {
         JobTracker *j = qobject_cast<JobTracker *>(jj);
         if (j && j->getId() == jobId)
