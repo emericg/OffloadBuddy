@@ -71,6 +71,15 @@ Rectangle {
 
         text_left.visible = false
         if (fileType === Shared.FILE_VIDEO) {
+            if (shot.transformation === 4) {
+                imageFs.rotation = 90
+                imageFs.scale = cellFormat
+            } else if (shot.transformation === 3) {
+                imageFs.rotation = 180
+            } else if (shot.transformation === 7) {
+                imageFs.rotation = 270
+                imageFs.scale = cellFormat
+            }
             if (duration > 0) {
                 text_left.visible = true
                 text_left.text = UtilsString.durationToString_ISO8601_compact_loose(duration)
