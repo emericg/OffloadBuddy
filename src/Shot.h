@@ -64,6 +64,7 @@ struct ofb_file
 
     // File
     QString filesystemPath;         //!< Absolute file path, if available
+    QString directory;              //!< Directory, if available
 
 #ifdef ENABLE_LIBMTP
     LIBMTP_mtpdevice_t *mtpDevice = nullptr;
@@ -93,7 +94,7 @@ class ShotFile: public QObject
     Q_OBJECT
 
     Q_PROPERTY(QString path READ getPath NOTIFY fileUpdated)
-    Q_PROPERTY(QString folder READ getFolder NOTIFY fileUpdated)
+    Q_PROPERTY(QString directory READ getDirectory NOTIFY fileUpdated)
     Q_PROPERTY(QString name READ getName NOTIFY fileUpdated)
     Q_PROPERTY(QString ext READ getExt NOTIFY fileUpdated)
     Q_PROPERTY(unsigned type READ getType NOTIFY fileUpdated)
@@ -102,7 +103,7 @@ class ShotFile: public QObject
     Q_PROPERTY(qint64 height READ getHeight NOTIFY fileUpdated)
 
     QString path;                   //!< Full path
-    QString folder;                 //!< Folder
+    QString directory;              //!< Directory, no name or extension or anything
     QString name;                   //!< File base name only, no extension
     QString extension;              //!< Extension only, lowercase, no dot or anything
 
@@ -120,7 +121,7 @@ public:
         if (f)
         {
             path = f->filesystemPath;
-            //folder = ;
+            directory = f->directory;
             name = f->name;
             extension = f->extension;
 
@@ -147,7 +148,7 @@ public:
     ~ShotFile() = default;
 
     QString getPath() const { return path; }
-    QString getFolder() const { return folder; }
+    QString getDirectory() const { return directory; }
     QString getName() const { return name; }
     QString getExt() const { return extension; }
     unsigned getType() const { return type; }

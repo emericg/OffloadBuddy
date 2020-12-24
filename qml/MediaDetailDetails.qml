@@ -233,7 +233,7 @@ Item {
                 anchors.left: parent.left
                 anchors.leftMargin: 24
                 anchors.right: parent.right
-                anchors.rightMargin: 20
+                anchors.rightMargin: 16
 
                 Text {
                     height: 32
@@ -271,7 +271,7 @@ Item {
                 anchors.left: parent.left
                 anchors.leftMargin: 24
                 anchors.right: parent.right
-                anchors.rightMargin: 24
+                anchors.rightMargin: 16
 
                 text: qsTr("File(s):")
                 color: Theme.colorText
@@ -286,7 +286,7 @@ Item {
                 anchors.left: parent.left
                 anchors.leftMargin: 24
                 anchors.right: parent.right
-                anchors.rightMargin: 0
+                anchors.rightMargin: 16
 
                 clip: true
                 interactive: true
@@ -294,13 +294,16 @@ Item {
 
                 model: shot.filesShot
                 delegate: Item {
+                    id: dlv
                     height: 32
                     anchors.left: parent.left
                     anchors.right: parent.right
 
                     Row { // row left
+                        id: rowLeft
                         height: 24
                         anchors.left: parent.left
+                        anchors.right: rowRight
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: 12
 
@@ -333,6 +336,7 @@ Item {
 */
                         // filesize
                         Text {
+                            id: fileSize
                             anchors.verticalCenter: parent.verticalCenter
                             text: UtilsString.bytesToString(modelData.size)
                             color: Theme.colorSubText
@@ -340,17 +344,28 @@ Item {
                         }
 
                         // filepath
-                        Text {
+                        Row {
                             anchors.verticalCenter: parent.verticalCenter
-                            text: modelData.name + "." + modelData.ext
-                            color: Theme.colorText
-                            font.pixelSize: Theme.fontSizeContentSmall
+
+                            Text {
+                                id: filePath
+                                text: modelData.directory
+                                color: Theme.colorText
+                                font.pixelSize: Theme.fontSizeContentSmall
+                                visible: ((filePath.contentWidth + fileName.contentWidth) < (dlv.width - 40 - fileSize.width - rowRight.width))
+                            }
+                            Text {
+                                id: fileName
+                                text: modelData.name + "." + modelData.ext
+                                color: Theme.colorText
+                                font.pixelSize: Theme.fontSizeContentSmall
+                            }
                         }
                     }
 
                     Row { // row right
+                        id: rowRight
                         anchors.right: parent.right
-                        anchors.rightMargin: 20
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: 8
 

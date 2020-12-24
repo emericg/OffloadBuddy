@@ -101,7 +101,9 @@ void FileScanner::scanFilesystemDirectory(const QString &dir_path)
                 ofb_file *f = new ofb_file;
                 if (f)
                 {
-                    f->filesystemPath = fi.filePath();
+                    f->filesystemPath = fi.absoluteFilePath();
+                    f->directory = fi.absolutePath();
+                    if (!f->directory.endsWith("/")) f->directory += "/";
                     f->name = fi.baseName();
                     f->extension = fi.suffix().toLower();
                     f->size = static_cast<uint64_t>(fi.size());

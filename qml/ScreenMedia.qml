@@ -198,6 +198,8 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             spacing: 4
 
+            visible: (shot && shot.fileType !== Shared.FILE_VIDEO)
+
             ItemImageButton {
                 id: buttonTrim
                 width: 40

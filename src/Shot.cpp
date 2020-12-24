@@ -19,12 +19,12 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#include <cmath>
-
 #include "Shot.h"
 #include "EGM96.h"
 #include "GpmfTags.h"
 #include "utils/utils_maths.h"
+
+#include <cmath>
 
 #include <QDir>
 #include <QUrl>
