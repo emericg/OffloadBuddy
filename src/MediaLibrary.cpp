@@ -24,6 +24,7 @@
 #include "FileScanner.h"
 #include "JobManager.h"
 #include "SettingsManager.h"
+#include "StorageManager.h"
 
 #include <QMap>
 #include <QJSValue>
@@ -37,7 +38,7 @@
 
 MediaLibrary::MediaLibrary()
 {
-    SettingsManager *sm = SettingsManager::getInstance();
+    StorageManager *sm = StorageManager::getInstance();
     if (sm)
     {
         connect(sm, SIGNAL(directoryAdded(QString)), this, SLOT(searchMediaDirectory(QString)));
@@ -91,7 +92,7 @@ void MediaLibrary::searchMediaDirectory(const QString &path)
 {
     //qDebug() << "searchMediaDirectory() with path:" << path;
 
-    SettingsManager *sm = SettingsManager::getInstance();
+    StorageManager *sm = StorageManager::getInstance();
     if (sm)
     {
         const QList <QObject *> *mediaDirectories = sm->getDirectoriesList();
@@ -112,7 +113,7 @@ void MediaLibrary::searchMediaDirectories()
 {
     //qDebug() << "searchMediaDirectories()";
 
-    SettingsManager *sm = SettingsManager::getInstance();
+    StorageManager *sm = StorageManager::getInstance();
     if (sm)
     {
         const QList <QObject *> *mediaDirectories = sm->getDirectoriesList();
@@ -149,7 +150,7 @@ void MediaLibrary::workerScanningStarted(const QString &path)
 {
     //qDebug() << "> MediaLibrary::workerScanningStarted(" << path << ")";
 
-    SettingsManager *sm = SettingsManager::getInstance();
+    StorageManager *sm = StorageManager::getInstance();
     if (sm)
     {
         const QList <QObject *> *mediaDirectories = sm->getDirectoriesList();
@@ -174,7 +175,7 @@ void MediaLibrary::workerScanningFinished(const QString &path)
 {
     //qDebug() << "> MediaLibrary::workerScanningFinished(" << path << ")";
 
-    SettingsManager *sm = SettingsManager::getInstance();
+    StorageManager *sm = StorageManager::getInstance();
     if (sm)
     {
         const QList <QObject *> *mediaDirectories = sm->getDirectoriesList();
@@ -309,7 +310,7 @@ void MediaLibrary::reencodeSelected(const QString &shot_uuid, const QVariant &va
     if (variantMap.contains("path"))
     {
         QString selectedPath = variantMap.value("path").toString();
-        SettingsManager *sm = SettingsManager::getInstance();
+        StorageManager *sm = StorageManager::getInstance();
         if (sm)
         {
             const QList <QObject *> *mediaDirectories = sm->getDirectoriesList();

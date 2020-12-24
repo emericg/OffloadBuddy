@@ -132,6 +132,8 @@ Item {
         }
     }
 
+    ////////////////
+
     ComboBoxThemed {
         id: comboBox_content
         width: 180
@@ -162,6 +164,8 @@ Item {
         }
     }
 
+    ////////////////
+
     Item {
         height: parent.height
         anchors.left: comboBox_content.right
@@ -174,7 +178,7 @@ Item {
         Column {
             anchors.verticalCenter: parent.verticalCenter
             width: parent.width
-            spacing: 8
+            spacing: 6
             visible: directory.available && !itemMediaDirectory.confirmation
 
             Text {
@@ -228,6 +232,8 @@ Item {
         }
     }
 
+    ////////////////
+
     ItemImageButton {
         id: rectangleDelete
         anchors.right: parent.right
@@ -240,8 +246,6 @@ Item {
         source: "qrc:/assets/icons_material/baseline-delete-24px.svg"
         onClicked: itemMediaDirectory.confirmation = true
     }
-
-    ////////
 
     Row {
         id: rowConfirmation
@@ -270,7 +274,7 @@ Item {
             text: qsTr("YES")
             fullColor: true
             primaryColor: Theme.colorPrimary
-            onClicked: settingsManager.removeDirectory(textField_path.text)
+            onClicked: storageManager.removeDirectory(textField_path.text)
         }
         Text {
             id: textConfirmation

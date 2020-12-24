@@ -20,6 +20,7 @@
  */
 
 #include "SettingsManager.h"
+#include "StorageManager.h"
 #include "DeviceManager.h"
 #include "JobManager.h"
 #include "MediaLibrary.h"
@@ -126,6 +127,7 @@ int main(int argc, char *argv[])
 
     // Init OffloadBuddy components
     SettingsManager *sm = SettingsManager::getInstance();
+    StorageManager *mdm = StorageManager::getInstance();
     MediaLibrary *ml = new MediaLibrary;
     DeviceManager *dm = new DeviceManager;
     JobManager *jm = JobManager::getInstance();
@@ -172,9 +174,10 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     QQmlContext *engine_context = engine.rootContext();
     engine_context->setContextProperty("settingsManager", sm);
-    engine_context->setContextProperty("mediaLibrary", ml);
+    engine_context->setContextProperty("storageManager", mdm);
     engine_context->setContextProperty("deviceManager", dm);
     engine_context->setContextProperty("jobManager", jm);
+    engine_context->setContextProperty("mediaLibrary", ml);
     engine_context->setContextProperty("utilsApp", utilsApp);
     engine.addImageProvider("GridThumbnailer", new GridThumbnailer);
 

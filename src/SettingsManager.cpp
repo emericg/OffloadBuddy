@@ -50,8 +50,7 @@ SettingsManager::SettingsManager()
 
 SettingsManager::~SettingsManager()
 {
-    qDeleteAll(m_mediaDirectories);
-    m_mediaDirectories.clear();
+    //
 }
 
 /* ************************************************************************** */
@@ -111,31 +110,6 @@ bool SettingsManager::readSettings()
         if (settings.contains("global/thumbSize"))
             m_thumbSize = settings.value("global/thumbSize").toUInt();
 
-        if (settings.contains("global/contentHierarchy"))
-            m_contentHierarchy = settings.value("global/contentHierarchy").toUInt();
-
-        for (int i = 1; i <= max_media_directories; i++)
-        {
-            QString p = "MediaDirectories/" + QString::number(i) + "/path";
-            QString t = "MediaDirectories/" + QString::number(i) + "/content";
-
-            if (settings.contains(p) && settings.contains(t))
-            {
-                QString pp = settings.value(p).toString();
-                int tt = settings.value(t).toInt();
-
-                MediaDirectory *d = new MediaDirectory(pp, tt);
-                m_mediaDirectories.push_back(d);
-            }
-        }
-
-        if (m_mediaDirectories.isEmpty())
-        {
-            //createDefaultDirectory();
-        }
-
-        emit directoriesUpdated();
-
         status = true;
     }
     else
@@ -167,29 +141,6 @@ bool SettingsManager::writeSettings()
         settings.setValue("global/thumbQuality", m_thumbQuality);
         settings.setValue("global/thumbFormat", m_thumbFormat);
         settings.setValue("global/thumbSize", m_thumbSize);
-        settings.setValue("global/contentHierarchy", m_contentHierarchy);
-        settings.sync();
-
-        int i = 1;
-        for (auto d: qAsConst(m_mediaDirectories))
-        {
-            MediaDirectory *dd = qobject_cast<MediaDirectory*>(d);
-            if (dd)
-            {
-                QString p = "MediaDirectories/" + QString::number(i) + "/path";
-                QString t = "MediaDirectories/" + QString::number(i) + "/content";
-                settings.setValue(p, dd->getPath());
-                settings.setValue(t, dd->getContent());
-                i++;
-            }
-        }
-        for (; i <= max_media_directories; i++)
-        {
-            QString p = "MediaDirectories/" + QString::number(i) + "/path";
-            QString t = "MediaDirectories/" + QString::number(i) + "/content";
-            settings.remove(p);
-            settings.remove(t);
-        }
 
         if (settings.status() == QSettings::NoError)
         {
@@ -206,91 +157,6 @@ bool SettingsManager::writeSettings()
     }
 
     return status;
-}
-
-/* ************************************************************************** */
-/* ************************************************************************** */
-
-void SettingsManager::addDirectory(const QString &path)
-{
-    if (!path.isEmpty())
-    {
-        QString checkpath = path;
-        if (!checkpath.endsWith('/'))
-            checkpath += '/';
-
-        // Check if already in the list?
-        for (auto d: qAsConst(m_mediaDirectories))
-        {
-            MediaDirectory *dd = qobject_cast<MediaDirectory*>(d);
-            if (dd && dd->getPath() == checkpath)
-            {
-                qDebug() << "addDirectory(" << path << ") is already in the list";
-                return;
-            }
-        }
-
-        // Add
-        MediaDirectory *dd = new MediaDirectory(path, 0);
-        //if (dd->isAvailable())
-        {
-            m_mediaDirectories.push_back(dd);
-            emit directoryAdded(dd->getPath());
-            emit directoriesUpdated();
-
-            directoryModified();
-        }
-    }
-}
-
-void SettingsManager::removeDirectory(const QString &path)
-{
-    if (!path.isEmpty())
-    {
-        for (auto d: qAsConst(m_mediaDirectories))
-        {
-            MediaDirectory *dd = qobject_cast<MediaDirectory*>(d);
-            if (dd && dd->getPath() == path)
-            {
-                m_mediaDirectories.removeOne(d);
-                emit directoryRemoved(dd->getPath());
-                emit directoriesUpdated();
-
-                directoryModified();
-                break;
-            }
-        }
-    }
-
-    if (m_mediaDirectories.isEmpty())
-    {
-        //createDefaultDirectory();
-    }
-}
-
-void SettingsManager::directoryModified()
-{
-    writeSettings();
-}
-
-void SettingsManager::createDefaultDirectory()
-{
-    // Create a default entry
-    MediaDirectory *d = new MediaDirectory();
-    if (d)
-    {
-        m_mediaDirectories.push_back(d);
-        writeSettings();
-    }
-/*
-    // Create a default entries
-    QString pathV = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + "/GoPro";
-    QString pathP = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/GoPro";
-    MediaDirectory *dv = new MediaDirectory(pathV, 1);
-    m_mediaDirectories.push_back(dv);
-    MediaDirectory *dp = new MediaDirectory(pathP, 2);
-    m_mediaDirectories.push_back(dp);
-*/
 }
 
 /* ************************************************************************** */
@@ -420,15 +286,5 @@ void SettingsManager::setMtpFullScan(bool value)
     if (m_mtpFullScan != value)
     {
         m_mtpFullScan = value;
-    }
-}
-
-void SettingsManager::setContentHierarchy(unsigned value)
-{
-    if (m_contentHierarchy != value)
-    {
-        m_contentHierarchy = value;
-        writeSettings();
-        Q_EMIT contentHierarchyChanged();
     }
 }

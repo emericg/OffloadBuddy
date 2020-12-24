@@ -23,7 +23,7 @@
 #include "DeviceScanner.h"
 #include "FileScanner.h"
 #include "JobManager.h"
-#include "SettingsManager.h"
+#include "StorageManager.h"
 
 #include <QMap>
 #include <QJSValue>
@@ -590,7 +590,7 @@ void Device::offloadAll(const QString &path)
     //qDebug() << "(a) shots count: " << m_shotModel->getShotCount();
 
     JobManager *jm = JobManager::getInstance();
-    SettingsManager *sm = SettingsManager::getInstance();
+    StorageManager *sm = StorageManager::getInstance();
 
     QList<Shot *> shots;
     m_shotModel->getShots(shots);
@@ -772,7 +772,7 @@ void Device::reencodeSelected(const QString &shot_uuid, const QVariant &values)
     if (variantMap.contains("path"))
     {
         QString selectedPath = variantMap.value("path").toString();
-        SettingsManager *sm = SettingsManager::getInstance();
+        StorageManager *sm = StorageManager::getInstance();
         if (sm)
         {
             const QList <QObject *> *mediaDirectories = sm->getDirectoriesList();

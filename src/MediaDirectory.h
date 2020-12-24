@@ -45,8 +45,10 @@ class MediaDirectory: public QObject
 
     Q_PROPERTY(QString directoryPath READ getPath WRITE setPath NOTIFY directoryUpdated)
     Q_PROPERTY(int directoryContent READ getContent WRITE setContent NOTIFY directoryUpdated)
+
     Q_PROPERTY(bool primary READ isPrimary NOTIFY directoryUpdated)
 
+    Q_PROPERTY(bool enabled READ isEnabled NOTIFY enabledUpdated)
     Q_PROPERTY(bool available READ isAvailable NOTIFY availableUpdated)
     Q_PROPERTY(bool scanning READ isScanning NOTIFY scanningUpdated)
 
@@ -61,6 +63,7 @@ class MediaDirectory: public QObject
     int m_storage_type = 0;
 
     bool m_primary = false;
+    bool m_enabled = false;
     bool m_available = false;
     bool m_scanning = false;
 
@@ -69,6 +72,7 @@ class MediaDirectory: public QObject
 
 Q_SIGNALS:
     void directoryUpdated();
+    void enabledUpdated();
     void availableUpdated();
     void scanningUpdated();
     void storageUpdated();
@@ -89,6 +93,9 @@ public slots:
     void setContent(int content);
 
     bool isPrimary() { return m_primary; }
+
+    bool isEnabled() { return m_enabled; }
+    void setEnabled(bool enabled);
 
     bool isAvailable() { return m_available; }
     bool isAvailableFor(unsigned shotType, int64_t shotSize);

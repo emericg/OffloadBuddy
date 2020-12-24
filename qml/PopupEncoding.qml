@@ -1093,10 +1093,10 @@ Popup {
                     function updateDestinations() {
                         cbDestinations.clear()
 
-                        for (var child in settingsManager.directoriesList) {
-                            if (settingsManager.directoriesList[child].available &&
-                                settingsManager.directoriesList[child].directoryContent !== 2)
-                                cbDestinations.append( { "text": settingsManager.directoriesList[child].directoryPath } )
+                        for (var child in storageManager.directoriesList) {
+                            if (storageManager.directoriesList[child].available &&
+                                storageManager.directoriesList[child].directoryContent !== 2)
+                                cbDestinations.append( { "text": storageManager.directoriesList[child].directoryPath } )
                         }
                         cbDestinations.append( { "text": qsTr("Select path manually") } )
 
@@ -1105,7 +1105,7 @@ Popup {
 
                     property bool cbinit: false
                     onCurrentIndexChanged: {
-                        if (settingsManager.directoriesList.length <= 0) return
+                        if (storageManager.directoriesList.length <= 0) return
 
                         if (comboBoxDestination.currentIndex < cbDestinations.count)
                             textField_path.text = comboBoxDestination.displayText

@@ -23,6 +23,7 @@
 #include "JobWorkerAsync.h"
 #include "JobWorkerSync.h"
 #include "SettingsManager.h"
+#include "StorageManager.h"
 #include "FileScanner.h"
 #include "MediaLibrary.h"
 #include "utils/utils_enums.h"
@@ -84,7 +85,7 @@ MediaDirectory * JobManager::getAutoDestination(Shot *s)
 {
     MediaDirectory *md_selected = nullptr;
 
-    SettingsManager *sm = SettingsManager::getInstance();
+    StorageManager *sm = StorageManager::getInstance();
     const QList <QObject *> *mdl = sm->getDirectoriesList();
 
     for (auto md: *mdl)
@@ -119,13 +120,13 @@ QString JobManager::getAutoDestinationString(Shot *s)
 
 QString JobManager::getandmakeDestination(Shot *s, Device *d, MediaDirectory *md)
 {
-    SettingsManager *sm = SettingsManager::getInstance();
+    StorageManager *st = StorageManager::getInstance();
 
     // HANDLE DESTINATION DIRECTORY ////////////////////////////////////////////
 
     QString destDir;
 
-    if (s && sm)
+    if (s && st)
     {
         if (md)
         {
@@ -138,12 +139,12 @@ QString JobManager::getandmakeDestination(Shot *s, Device *d, MediaDirectory *md
 
         // Destination directory and its subdirectories
 
-        if (sm->getContentHierarchy() >= HIERARCHY_DATE)
+        if (st->getContentHierarchy() >= HIERARCHY_DATE)
         {
             destDir += s->getDate().toString("yyyy-MM-dd");
             destDir += QDir::separator();
         }
-        if (sm->getContentHierarchy() >= HIERARCHY_DATE_DEVICE)
+        if (st->getContentHierarchy() >= HIERARCHY_DATE_DEVICE)
         {
             if (d)
             {

@@ -58,9 +58,6 @@ class SettingsManager: public QObject
     Q_PROPERTY(bool ignorehdaudio READ getIgnoreHdAudio WRITE setIgnoreHdAudio NOTIFY ignoreHdAudioChanged)
     Q_PROPERTY(bool mtpfullscan READ getMtpFullScan WRITE setMtpFullScan NOTIFY mtpFullScanChanged)
 
-    Q_PROPERTY(uint contentHierarchy READ getContentHierarchy WRITE setContentHierarchy NOTIFY contentHierarchyChanged)
-    Q_PROPERTY(QVariant directoriesList READ getDirectories NOTIFY directoriesUpdated)
-
     QSize m_appSize;
     QSize m_appPosition;
     unsigned m_appVisibility;
@@ -79,11 +76,6 @@ class SettingsManager: public QObject
     unsigned m_thumbFormat = 2;
     unsigned m_thumbSize = 2;
     bool m_mtpFullScan = false;
-
-    // Media directories
-    static const int max_media_directories = 16;
-    unsigned m_contentHierarchy = 0;
-    QList <QObject *> m_mediaDirectories;
 
     // Singleton
     static SettingsManager *instance;
@@ -108,10 +100,6 @@ Q_SIGNALS:
     void thumbFormatChanged();
     void thumbSizeChanged();
     void mtpFullScanChanged();
-    void contentHierarchyChanged();
-    void directoriesUpdated();
-    void directoryAdded(const QString &);
-    void directoryRemoved(const QString &);
 
 public:
     static SettingsManager *getInstance();
@@ -158,18 +146,6 @@ public:
 
     bool getMtpFullScan() const { return m_mtpFullScan; }
     void setMtpFullScan(bool value);
-
-    unsigned getContentHierarchy() const { return m_contentHierarchy; }
-    void setContentHierarchy(unsigned value);
-
-    QVariant getDirectories() const { if (m_mediaDirectories.size() > 0) { return QVariant::fromValue(m_mediaDirectories); } return QVariant(); }
-    const QList <QObject *> *getDirectoriesList() const { return &m_mediaDirectories; }
-
-public slots:
-    void addDirectory(const QString &path);
-    void removeDirectory(const QString &path);
-    void directoryModified();
-    void createDefaultDirectory();
 };
 
 /* ************************************************************************** */

@@ -123,6 +123,15 @@ void MediaDirectory::setContent(int content)
     m_content_type = content;
 }
 
+void MediaDirectory::setEnabled(bool enabled)
+{
+    if (enabled != m_enabled)
+    {
+        m_enabled = enabled;
+        emit enabledUpdated();
+    }
+}
+
 bool MediaDirectory::isAvailableFor(unsigned shotType, int64_t shotSize)
 {
     bool available = false;

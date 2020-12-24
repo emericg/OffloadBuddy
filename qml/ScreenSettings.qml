@@ -394,13 +394,13 @@ Item {
                     }
 
                     Component.onCompleted: {
-                        currentIndex = settingsManager.contentHierarchy;
+                        currentIndex = storageManager.contentHierarchy;
                         if (currentIndex === -1) { currentIndex = 0 }
                     }
                     property bool cbinit: false
                     onCurrentIndexChanged: {
                         if (cbinit)
-                            settingsManager.contentHierarchy = currentIndex;
+                            storageManager.contentHierarchy = currentIndex;
                         else
                             cbinit = true;
                     }
@@ -451,7 +451,7 @@ Item {
                         folder: shortcuts.home
 
                         onAccepted: {
-                            settingsManager.addDirectory(UtilsPath.cleanUrl(fileDialogAdd.fileUrl))
+                            storageManager.addDirectory(UtilsPath.cleanUrl(fileDialogAdd.fileUrl))
                         }
                     }
                 }
@@ -459,13 +459,13 @@ Item {
                 ListView {
                     id: mediadirectoriesview
                     width: parent.width
-                    height: settingsManager.directoriesList.length * 64 // 48px for the widget and 16px for spacing
+                    height: storageManager.directoriesList.length * 64 // 48px for the widget and 16px for spacing
                     anchors.left: parent.left
                     anchors.right: parent.right
 
                     spacing: 8
                     interactive: false
-                    model: settingsManager.directoriesList
+                    model: storageManager.directoriesList
                     delegate: ItemMediaDirectory { directory: modelData; }
                 }
             }

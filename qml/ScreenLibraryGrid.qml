@@ -199,7 +199,7 @@ Item {
 
             Component.onCompleted: comboBox_directories.updateDirectories()
             Connections {
-                target: settingsManager
+                target: storageManager
                 onDirectoriesUpdated: comboBox_directories.updateDirectories()
             }
 
@@ -207,9 +207,9 @@ Item {
                 cbMediaDirectories.clear()
                 cbMediaDirectories.append( { text: qsTr("ALL media directories") } );
 
-                for (var child in settingsManager.directoriesList) {
-                    if (settingsManager.directoriesList[child].available)
-                        cbMediaDirectories.append( { "text": settingsManager.directoriesList[child].directoryPath } )
+                for (var child in storageManager.directoriesList) {
+                    if (storageManager.directoriesList[child].available)
+                        cbMediaDirectories.append( { "text": storageManager.directoriesList[child].directoryPath } )
                 }
             }
 
