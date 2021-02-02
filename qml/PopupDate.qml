@@ -59,6 +59,8 @@ Popup {
     background: Rectangle {
         color: Theme.colorBackground
         radius: Theme.componentRadius
+        border.width: 1
+        border.color: Theme.colorSeparator
     }
 
     contentItem: Column {
@@ -70,7 +72,7 @@ Popup {
             anchors.left: parent.left
             anchors.right: parent.right
             radius: Theme.componentRadius
-            color: ThemeEngine.colorPrimary
+            color: Theme.colorPrimary
 
             Rectangle {
                 anchors.left: parent.left

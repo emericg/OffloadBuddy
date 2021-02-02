@@ -33,6 +33,8 @@ Popup {
     background: Rectangle {
         color: Theme.colorBackground
         radius: Theme.componentRadius
+        border.width: 1
+        border.color: Theme.colorSeparator
     }
 
     contentItem: Column {
