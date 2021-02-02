@@ -58,6 +58,8 @@ Item {
     property string colorLowContrast
     property string colorHighContrast
 
+    // App specific
+
     // Qt Quick controls & theming
     property string colorComponent
     property string colorComponentText
@@ -77,19 +79,21 @@ Item {
     ////////////////
 
     // Palette colors
+    readonly property string colorGrey: "#888"
+
+    // Fixed colors
     readonly property string colorMaterialBlue: "#2196f3"
     readonly property string colorMaterialIndigo: "#3f51b5"
     readonly property string colorMaterialPurple: "#9c27b0"
     readonly property string colorMaterialDeepPurple: "#673ab7"
     readonly property string colorMaterialRed: "#f44336"
+    readonly property string colorMaterialOrange: "#ff9800"
     readonly property string colorMaterialLightGreen: "#8bc34a"
 
     readonly property string colorMaterialDarkGrey: "#e0e0e0"
     readonly property string colorMaterialGrey: "#eeeeee"
     readonly property string colorMaterialLightGrey: "#fafafa"
     readonly property string colorMaterialThisblue: "#448aff"
-
-    readonly property string colorGrey: "#888"
 
     ////////////////
 
@@ -135,18 +139,18 @@ Item {
             colorBackground =       "#EEEEEE"
             colorForeground =       "#E0E0E0"
 
+            colorPrimary =          "#ffca28"
+            colorSecondary =        "#ffdd28"
+            colorSuccess =          colorMaterialLightGreen
+            colorWarning =          "#ffac00"
+            colorError =            "#dc4543"
+
             colorText =             "#222222"
             colorSubText =          "#555555"
             colorIcon =             "#333333"
             colorSeparator =        "#E4E4E4"
             colorLowContrast =      "white"
             colorHighContrast =     "black"
-
-            colorPrimary =          "#ffca28"
-            colorSecondary =        "#ffdd28"
-            colorSuccess =          colorMaterialLightGreen
-            colorWarning =          "#ffac00"
-            colorError =            "#dc4543"
 
             colorComponent =        "#DBDBDB"
             colorComponentText =    "black"
@@ -177,17 +181,18 @@ Item {
             colorBackground =       "#404040"
             colorForeground =       "#555555"
 
+            colorPrimary =          "#ff9f1a" // indigo: "#6C5ECD"
+            colorSecondary =        "#ffb81a" // indigo2: "#9388e5"
+            colorSuccess =          colorMaterialLightGreen
+            colorWarning =          "#e38541"
+            colorError =            "#dc322f"
+
             colorText =             "white"
             colorSubText =          "#ddd"
             colorIcon =             "white"
             colorSeparator =        "#666666"
             colorLowContrast =      "black"
             colorHighContrast =     "white"
-
-            colorPrimary =          "#ff9f1a" // indigo: "#6C5ECD"
-            colorSecondary =        "#ffb81a" // indigo2: "#9388e5"
-            colorWarning =          "#e38541"
-            colorError =            "#dc322f"
 
             colorComponent =        "#555555"
             colorComponentText =    "white"
@@ -218,17 +223,18 @@ Item {
             colorBackground =       "white"
             colorForeground =       "#F0F0F0"
 
+            colorPrimary =          "#0079e3"
+            colorSecondary =        "#00a0e3"
+            colorSuccess =          colorMaterialLightGreen
+            colorWarning =          "#FFC107"
+            colorError =            "#FF5722"
+
             colorText =             "black"
             colorSubText =          "#606060"
             colorIcon =             "black"
             colorSeparator =        "#E0E0E0"
             colorLowContrast =      "white"
             colorHighContrast =     "black"
-
-            colorPrimary =          "#0079e3"
-            colorSecondary =        "#00a0e3"
-            colorWarning =          "#FFC107"
-            colorError =            "#FF5722"
 
             colorComponent =        "#f3f3f3"
             colorComponentText =    "black"
@@ -259,17 +265,18 @@ Item {
             colorBackground =       "#222222"
             colorForeground =       "#333333"
 
+            colorPrimary =          "#009ee2"
+            colorSecondary =        "#00bee2"
+            colorSuccess =          colorMaterialLightGreen
+            colorWarning =          "#FFDB63"
+            colorError =            "#fa6871"
+
             colorText =             "#d2d2d2"
             colorSubText =          "#a3a3a3"
             colorIcon =             "#d2d2d2"
             colorSeparator =        "#666666"
             colorLowContrast =      "black"
             colorHighContrast =     "white"
-
-            colorPrimary =          "#009ee2"
-            colorSecondary =        "#00bee2"
-            colorWarning =          "#FFDB63"
-            colorError =            "#fa6871"
 
             colorComponent =        "white"
             colorComponentText =    "black"
@@ -308,14 +315,15 @@ Item {
             colorBackground =       "white"
             colorForeground =       "#ffddee"
 
+            colorPrimary =          "#FFE400"
+            colorSecondary =        "#fff600"
+            colorSuccess =          colorMaterialLightGreen
+            colorWarning =          "#944197"
+            colorError =            "#fa6871"
+
             colorText =             "#944197"
             colorSubText =          "#944197"
             colorIcon =             "#944197"
-
-            colorPrimary =          "#FFE400"
-            colorSecondary =        "#fff600"
-            colorWarning =          "#944197"
-            colorError =            "#fa6871"
             colorSeparator =        "#E4E4E4"
             colorLowContrast =      "white"
             colorHighContrast =     "red"
