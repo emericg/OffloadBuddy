@@ -432,12 +432,13 @@ Item {
                         color: Theme.colorText
                     }
 
-                    ItemImageButton {
+                    ItemImageButtonTooltip {
                         id: buttonNew
                         anchors.verticalCenter: parent.verticalCenter
 
                         source: "qrc:/assets/icons_material/outline-create_new_folder-24px.svg"
                         tooltipText: qsTr("Add a new media directory")
+                        tooltipPosition: "right"
                         onClicked: fileDialogAdd.open()
                     }
 

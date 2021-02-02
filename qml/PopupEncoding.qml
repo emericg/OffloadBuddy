@@ -734,7 +734,7 @@ Popup {
                     text: qsTr("Enable")
                 }
 
-                SliderValueFilled {
+                SliderValueSolid {
                     id: timelapseFramerate
                     width: parent.width - contentColumn.legendWidth - cbTimelapse.width - 32
                     anchors.verticalCenter: parent.verticalCenter
