@@ -42,9 +42,10 @@ class SettingsManager: public QObject
     Q_PROPERTY(QSize initialSize READ getInitialSize NOTIFY initialSizeChanged)
     Q_PROPERTY(QSize initialPosition READ getInitialPosition NOTIFY initialSizeChanged)
     Q_PROPERTY(uint initialVisibility READ getInitialVisibility NOTIFY initialSizeChanged)
-    Q_PROPERTY(bool clientSideDecoration READ getClientSideDecoration WRITE setClientSideDecoration NOTIFY csdChanged)
 
     Q_PROPERTY(uint appTheme READ getAppTheme WRITE setAppTheme NOTIFY appThemeChanged)
+    Q_PROPERTY(bool appThemeAuto READ getAppThemeAuto WRITE setAppThemeAuto NOTIFY appThemeAutoChanged)
+    Q_PROPERTY(bool appThemeCSD READ getAppThemeCSD WRITE setAppThemeCSD NOTIFY appThemeCSDChanged)
     Q_PROPERTY(uint appUnits READ getAppUnits WRITE setAppUnits NOTIFY appUnitsChanged)
     Q_PROPERTY(QString appLanguage READ getAppLanguage WRITE setAppLanguage NOTIFY appLanguageChanged)
 
@@ -58,15 +59,19 @@ class SettingsManager: public QObject
     Q_PROPERTY(bool ignorehdaudio READ getIgnoreHdAudio WRITE setIgnoreHdAudio NOTIFY ignoreHdAudioChanged)
     Q_PROPERTY(bool mtpfullscan READ getMtpFullScan WRITE setMtpFullScan NOTIFY mtpFullScanChanged)
 
+    // Application window
     QSize m_appSize;
     QSize m_appPosition;
-    unsigned m_appVisibility;
-    bool m_appClientSideDecoration = false;
+    unsigned m_appVisibility = 2;               //!< QWindow::Visibility
 
-    // Global
+    // Application generic
     unsigned m_appTheme = 0;
-    unsigned m_appUnits = 0;
+    bool m_appThemeAuto = false;
+    bool m_appThemeCSD = false;
+    unsigned m_appUnits = 0;                    //!< QLocale::MeasurementSystem
     QString m_appLanguage = "auto";
+
+    // Application specific
     bool m_ignoreJunk = true;
     bool m_ignoreHdAudio = true;
     bool m_autoMerge = false;
@@ -87,8 +92,9 @@ class SettingsManager: public QObject
 
 Q_SIGNALS:
     void initialSizeChanged();
-    void csdChanged();
     void appThemeChanged();
+    void appThemeAutoChanged();
+    void appThemeCSDChanged();
     void appUnitsChanged();
     void appLanguageChanged();
     void autoMergeChanged();
@@ -108,11 +114,14 @@ public:
     QSize getInitialPosition() { return m_appPosition; }
     unsigned getInitialVisibility() { return m_appVisibility; }
 
-    bool getClientSideDecoration() const { return m_appClientSideDecoration; }
-    void setClientSideDecoration(bool value);
-
     unsigned getAppTheme() const { return m_appTheme; }
     void setAppTheme(unsigned value);
+
+    bool getAppThemeAuto() const { return m_appThemeAuto; }
+    void setAppThemeAuto(bool value);
+
+    bool getAppThemeCSD() const { return m_appThemeCSD; }
+    void setAppThemeCSD(bool value);
 
     unsigned getAppUnits() const { return m_appUnits; }
     void setAppUnits(unsigned value);

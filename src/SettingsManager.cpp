@@ -74,11 +74,15 @@ bool SettingsManager::readSettings()
             m_appSize.setHeight(settings.value("ApplicationWindow/height").toInt());
         if (settings.contains("ApplicationWindow/visibility"))
             m_appVisibility = settings.value("ApplicationWindow/visibility").toUInt();
-        if (settings.contains("ApplicationWindow/clientSideDecoration"))
-            m_appClientSideDecoration = settings.value("ApplicationWindow/clientSideDecoration").toBool();
 
         if (settings.contains("global/appTheme"))
             m_appTheme = settings.value("global/appTheme").toUInt();
+
+        if (settings.contains("global/appThemeAuto"))
+            m_appThemeAuto = settings.value("global/appThemeAuto").toBool();
+
+        if (settings.contains("global/appThemeCSD"))
+            m_appThemeCSD = settings.value("global/appThemeCSD").toBool();
 
         if (settings.contains("global/appUnits"))
             m_appUnits = settings.value("global/appUnits").toUInt();
@@ -128,9 +132,9 @@ bool SettingsManager::writeSettings()
 
     if (settings.isWritable())
     {
-        settings.setValue("ApplicationWindow/clientSideDecoration", m_appClientSideDecoration);
-
         settings.setValue("global/appTheme", m_appTheme);
+        settings.setValue("global/appThemeAuto", m_appTheme);
+        settings.setValue("global/appThemeCSD", m_appThemeCSD);
         settings.setValue("global/appUnits", m_appUnits);
         settings.setValue("global/appLanguage", m_appLanguage);
         settings.setValue("global/autoMerge", m_autoMerge);
@@ -162,16 +166,6 @@ bool SettingsManager::writeSettings()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void SettingsManager::setClientSideDecoration(bool value)
-{
-    if (m_appClientSideDecoration != value)
-    {
-        m_appClientSideDecoration = value;
-        writeSettings();
-        Q_EMIT csdChanged();
-    }
-}
-
 void SettingsManager::setAppTheme(unsigned value)
 {
     if (m_appTheme != value)
@@ -179,6 +173,26 @@ void SettingsManager::setAppTheme(unsigned value)
         m_appTheme = value;
         writeSettings();
         Q_EMIT appThemeChanged();
+    }
+}
+
+void SettingsManager::setAppThemeAuto(bool value)
+{
+    if (m_appThemeAuto != value)
+    {
+        m_appThemeAuto = value;
+        writeSettings();
+        Q_EMIT appThemeAutoChanged();
+    }
+}
+
+void SettingsManager::setAppThemeCSD(bool value)
+{
+    if (m_appThemeCSD != value)
+    {
+        m_appThemeCSD = value;
+        writeSettings();
+        Q_EMIT appThemeCSDChanged();
     }
 }
 
