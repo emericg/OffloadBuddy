@@ -761,6 +761,7 @@ bool Shot::getMetadataFromPicture(int index)
             else if (strncmp(buf, "Left-bottom", sizeof(buf)) == 0)
                 transformation = QImageIOHandler::TransformationRotate270;
         }
+
         entry = exif_content_get_entry(ed->ifd[EXIF_IFD_EXIF], EXIF_TAG_FNUMBER);
         if (entry)
         {
@@ -841,6 +842,7 @@ bool Shot::getMetadataFromPicture(int index)
             m_date_gps = QDateTime(gpsDate, gpsTime);
 
         // GPS infos ///////////////////////////////////////////////////////////////
+
         if (m_date_gps.isValid())
         {
             hasGPS = true;
@@ -926,6 +928,7 @@ bool Shot::getMetadataFromPicture(int index)
         }
 
         // MAKERNOTE ///////////////////////////////////////////////////////////////
+
         ExifMnoteData *mn = exif_data_get_mnote_data(ed);
         if (mn)
         {
@@ -1024,6 +1027,7 @@ bool Shot::getMetadataFromVideo(int index)
             width = media->tracks_video[0]->width;
             height = media->tracks_video[0]->height;
             m_duration += media->tracks_video[0]->stream_duration_ms;
+            projection = media->tracks_video[0]->video_projection;
             rotation = media->tracks_video[0]->video_rotation * 90;
             if (media->tracks_video[0]->video_rotation == 1)
                 transformation = QImageIOHandler::TransformationRotate90;

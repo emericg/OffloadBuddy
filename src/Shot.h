@@ -281,7 +281,8 @@ class Shot: public QObject
     QList <ShotFile *> m_shotfiles;
 
     // Dates
-    QDateTime m_date_file;
+    QDateTime m_date_file;          //!< File creation
+    QDateTime m_date_file_m;        //!< File modification
     QDateTime m_date_metadata;
     QDateTime m_date_gps;
     QDateTime m_date_user;          //!< Set by the user
@@ -289,6 +290,9 @@ class Shot: public QObject
     // GLOBAL metadata
     unsigned width = 0;
     unsigned height = 0;
+    unsigned bpp = 0;
+    bool alpha = false;
+    unsigned projection = 0;
     unsigned transformation = 0;    //!< QImageIOHandler::Transformation
     int rotation = 0;
 
@@ -296,9 +300,11 @@ class Shot: public QObject
     QString gps_lat_str;
     QString gps_long_str;
     QString gps_alt_str;
+    QString gps_alt_egm96_str;
     double gps_lat = 0.0;
     double gps_long = 0.0;
     double gps_alt = 0.0;
+    double gps_alt_egm96 = 0.0;
 
     // PICTURES metadata
     QString focal;

@@ -103,14 +103,14 @@ Popup {
     function setClip(clipStart, clipStop) {
         //console.log("setClip() " + clipStart + "/" + clipStop)
 
-        if (shot.shotType >= Shared.SHOT_PICTURE) {
+        if (currentShot.shotType >= Shared.SHOT_PICTURE) {
             clipStartMs = -1
             clipDurationMs = -1
             clipCanBeCopied = false
             rectangleClip.visible = false
 
             // GIF only appear for short timelapse
-            if (shot.duration < 1000) { // check value
+            if (currentShot.duration < 1000) { // check value
                 clipIsShort = true
             } else {
                 clipIsShort = false
