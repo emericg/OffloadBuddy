@@ -5,7 +5,6 @@ OffloadBuddy
 [![AppVeyor](https://img.shields.io/appveyor/ci/emericg/OffloadBuddy.svg?style=flat-square&logo=appveyor)](https://ci.appveyor.com/project/emericg/offloadbuddy)
 [![License: GPL v3](https://img.shields.io/badge/license-GPL%20v3-blue.svg?style=flat-square)](http://www.gnu.org/licenses/gpl-3.0)
 
-
 OffloadBuddy is a multimedia offloading software with a few tricks up his sleeve!
 It's designed to remove the hassle of handling and transferring the many videos and pictures files from your devices like action cameras, regular cameras and smartphones...
 
@@ -28,7 +27,6 @@ Works on Linux, macOS and Windows!
   - [ ] Defisheye media (WIP)
   - [ ] Stabilize videos
 - [ ] GoPro firmware updates
-
 
 ### Screenshots!
 
@@ -59,14 +57,17 @@ Optional dependencies:
 ### Building OffloadBuddy
 
 Contribs (optional):
-> $ cd OffloadBuddy/contribs  
-> $ python3 contribs.py  
+```
+$ cd OffloadBuddy/contribs/
+$ python3 contribs.py
+```
 
 OffloadBuddy:
-> $ cd OffloadBuddy/  
-> $ qmake  
-> $ make  
-
+```
+> $ cd OffloadBuddy/
+> $ qmake
+> $ make
+```
 
 ## Get involved!
 
@@ -83,7 +84,7 @@ You can help us find and report bugs, suggest new features, help with translatio
 OffloadBuddy is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.  
 Read the [LICENSE](LICENSE) file or [consult the license on the FSF website](https://www.gnu.org/licenses/gpl-3.0.txt) directly.
 
-Emeric Grange <emeric.grange@gmail.com>
+> Emeric Grange <emeric.grange@gmail.com>
 
 ### Third party projects used by OffloadBuddy
 
