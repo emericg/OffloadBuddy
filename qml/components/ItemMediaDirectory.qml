@@ -20,8 +20,6 @@ Item {
         target: directory
         onAvailableChanged: {
             //console.log("onAvailableChanged: " + directory.directoryPath)
-
-            //
         }
     }
 
@@ -31,7 +29,6 @@ Item {
         id: textField_path
         width: (itemMediaDirectory.width < 720) ? 512 : 640
         anchors.left: parent.left
-        anchors.leftMargin: 4
         anchors.verticalCenter: parent.verticalCenter
 
         //readOnly: !directory.available

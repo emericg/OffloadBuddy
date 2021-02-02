@@ -36,7 +36,8 @@
 /*!
  * \brief Used when there is no saved MediaDirectory.
  */
-MediaDirectory::MediaDirectory()
+MediaDirectory::MediaDirectory(QObject *parent)
+    : QObject(parent)
 {
     // Use default path:
     // Linux '/home/USERNAME/Videos/OffloadBuddy'
@@ -70,7 +71,8 @@ MediaDirectory::MediaDirectory()
  * Do not check if the path exists, we are allow to save paths that have been
  * disconnected since (ex: removable media).
  */
-MediaDirectory::MediaDirectory(const QString &path, int content, bool primary)
+MediaDirectory::MediaDirectory(const QString &path, int content, bool primary, QObject *parent)
+    : QObject(parent)
 {
     setPath(path);
     setContent(content);
@@ -199,7 +201,7 @@ void MediaDirectory::refreshMediaDirectory()
         // basic checks // need at least 16MB
         if (m_storage->bytesAvailable() > 16*1024*1024 && !m_storage->isReadOnly())
         {
-#ifdef __linux
+#if defined(Q_OS_LINUX)
             // Advanced permission checks
             QFileInfo fi(m_path);
             QFile::Permissions e = fi.permissions();
@@ -210,7 +212,7 @@ void MediaDirectory::refreshMediaDirectory()
                 emit availableUpdated();
             }
             else
-#endif // __linux
+#endif // defined(Q_OS_LINUX)
             {
                 m_available = true;
                 emit availableUpdated();

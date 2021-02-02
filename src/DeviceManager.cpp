@@ -31,6 +31,9 @@
 #include <QThread>
 #include <QDebug>
 
+#define MAX_DEVICES         8
+#define SCANNING_INTERVAL  10 // seconds
+
 /* ************************************************************************** */
 
 DeviceManager::DeviceManager()

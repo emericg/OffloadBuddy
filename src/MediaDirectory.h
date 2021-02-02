@@ -81,26 +81,26 @@ private slots:
     void refreshMediaDirectory();
 
 public:
-    MediaDirectory();
-    MediaDirectory(const QString &path, int content, bool primary = false);
+    MediaDirectory(QObject *parent = nullptr);
+    MediaDirectory(const QString &path, int content, bool primary = false, QObject *parent = nullptr);
     ~MediaDirectory();
 
 public slots:
     QString getPath() { return m_path; }
     void setPath(const QString &path);
 
-    int getContent() { return m_content_type; }
+    int getContent() const { return m_content_type; }
     void setContent(int content);
 
-    bool isPrimary() { return m_primary; }
+    bool isPrimary() const { return m_primary; }
 
-    bool isEnabled() { return m_enabled; }
+    bool isEnabled() const { return m_enabled; }
     void setEnabled(bool enabled);
 
-    bool isAvailable() { return m_available; }
+    bool isAvailable() const { return m_available; }
     bool isAvailableFor(unsigned shotType, int64_t shotSize);
 
-    bool isScanning() { return m_scanning; }
+    bool isScanning() const { return m_scanning; }
     void setScanning(bool scanning);
 
     bool isReadOnly();

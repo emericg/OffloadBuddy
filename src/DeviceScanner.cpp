@@ -175,7 +175,7 @@ void DeviceScanner::scanFilesystems()
 
 void DeviceScanner::scanVirtualFilesystems()
 {
-#ifdef __linux
+#if defined(Q_OS_LINUX)
     QStringList connectedVirtualFilesystems;
 
     // Check if we have new device(s)
@@ -260,12 +260,14 @@ void DeviceScanner::scanVirtualFilesystems()
                         {
                             deviceInfos->brand = "GoPro";
 
-                            if (deviceInfos->stringId.contains("HERO7"))
+                            if (deviceInfos->stringId.contains("HERO9"))
+                                deviceInfos->model = "HERO9";
+                            else if (deviceInfos->stringId.contains("HERO8"))
+                                deviceInfos->model = "HERO8";
+                            else if (deviceInfos->stringId.contains("HERO7"))
                                 deviceInfos->model = "HERO7";
                             else if (deviceInfos->stringId.contains("HERO_6"))
-                            {
                                 deviceInfos->model = "HERO6";
-                            }
                             else if (deviceInfos->stringId.contains("HERO5"))
                                 deviceInfos->model = "HERO5";
                             else if (deviceInfos->stringId.contains("HERO4"))
@@ -383,7 +385,7 @@ void DeviceScanner::scanVirtualFilesystems()
         }
     }
 
-#endif // __linux
+#endif // defined(Q_OS_LINUX)
 }
 
 /* ************************************************************************** */
@@ -507,7 +509,7 @@ void DeviceScanner::scanMtpDevices()
                             s->m_device = mtpDevice;
                             s->m_storage = storage;
                             s->m_dcim_id = file->item_id;
-                            s->m_writable = storage->AccessCapability == 0;
+                            s->m_writable = (storage->AccessCapability == 0);
 /*
                             qDebug() << "MTP storage:";
                             qDebug() << "-" << s->m_device;

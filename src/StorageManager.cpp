@@ -79,7 +79,7 @@ bool StorageManager::readSettings()
                 QString pp = settings.value(p).toString();
                 int tt = settings.value(t).toInt();
 
-                MediaDirectory *d = new MediaDirectory(pp, tt);
+                MediaDirectory *d = new MediaDirectory(pp, tt, false, this);
                 m_mediaDirectories.push_back(d);
             }
         }
@@ -182,7 +182,7 @@ void StorageManager::addDirectory(const QString &path)
         }
 
         // Add
-        MediaDirectory *dd = new MediaDirectory(path, 0);
+        MediaDirectory *dd = new MediaDirectory(path, 0, false, this);
         //if (dd->isAvailable())
         {
             m_mediaDirectories.push_back(dd);
@@ -227,7 +227,7 @@ void StorageManager::directoryModified()
 void StorageManager::createDefaultDirectory()
 {
     // Create a default entry
-    MediaDirectory *d = new MediaDirectory();
+    MediaDirectory *d = new MediaDirectory(this);
     if (d)
     {
         m_mediaDirectories.push_back(d);
