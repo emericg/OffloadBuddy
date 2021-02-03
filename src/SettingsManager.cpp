@@ -23,10 +23,8 @@
 #include "MediaDirectory.h"
 
 #include <QCoreApplication>
-#include <QStandardPaths>
-#include <QLocale>
-#include <QDir>
 #include <QSettings>
+#include <QLocale>
 #include <QDebug>
 
 /* ************************************************************************** */

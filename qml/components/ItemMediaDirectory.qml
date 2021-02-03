@@ -217,8 +217,8 @@ Item {
                 id: textError
                 height: parent.height
                 anchors.verticalCenter: parent.verticalCenter
-
                 visible: (deviceSpaceText.width > 400)
+
                 text: qsTr("Directory is not available right now :/")
                 color: Theme.colorWarning
                 font.bold: true

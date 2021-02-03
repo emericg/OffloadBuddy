@@ -183,9 +183,8 @@ bool Device::addStorage_filesystem(const QString &path)
 
             if (storage->m_storage.isValid() && storage->m_storage.isReady())
             {
-                // basic checks
-                if (storage->m_storage.bytesAvailable() > 128*1024*1024 &&
-                    !storage->m_storage.isReadOnly())
+                // Basic checks // need at least 8 MB
+                if (!storage->m_storage.isReadOnly() && storage->m_storage.bytesAvailable() > 8*1024*1024)
                 {
 #if defined(Q_OS_LINUX)
 /*
@@ -194,7 +193,6 @@ bool Device::addStorage_filesystem(const QString &path)
                     QFile::Permissions  e = fi.permissions();
                     if (!e.testFlag(QFileDevice::WriteUser))
                     {
-                        m_writable = false;
                         qDebug() << "PERMS error on device:" << e << (unsigned)e;
                     }
 */
@@ -426,15 +424,11 @@ void Device::refreshStorageInfos()
         {
             storage->m_storage.refresh();
 
-            // Check if writable and some space is available // for firmware upates
+            // Check if writable and some space is available
             if (!storage->m_storage.isReadOnly() &&
-                storage->m_storage.bytesAvailable() > 128*1024*1024)
+                storage->m_storage.bytesAvailable() > 8*1024*1024)
             {
-                storage->m_writable = true;
-            }
-            else
-            {
-                storage->m_writable = false;
+                //
             }
         }
     }
@@ -508,7 +502,7 @@ bool Device::isReadOnly() const
     for (auto st: m_filesystemStorages)
     {
         if (st)
-            ro |= !st->m_writable;
+            ro |= st->m_storage.isReadOnly();
     }
 
     return ro;

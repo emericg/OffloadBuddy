@@ -58,6 +58,7 @@ MediaDirectory::MediaDirectory(QObject *parent)
     {
         setPath(path);
         setContent(CONTENT_ALL);
+        m_primary = true;
 
         m_refreshTimer.setInterval(MEDIA_DIRECTORIES_REFRESH_INTERVAL * 1000);
         connect(&m_refreshTimer, &QTimer::timeout, this, &MediaDirectory::refreshMediaDirectory);
@@ -195,11 +196,22 @@ void MediaDirectory::refreshMediaDirectory()
     {
         //qDebug() << "refreshMediaDirectory(" << m_storage->rootPath() << ")";
 
-        m_available = true;
-        emit availableUpdated();
+        if (m_storage->fileSystemType() == "vfat" ||
+            m_storage->fileSystemType() == "fat16" ||
+            m_storage->fileSystemType() == "fat32")
+        {
+            m_storage_lfs = false;
+            emit storageUpdated();
+        }
+
+        if (m_available == false)
+        {
+            m_available = true;
+            emit availableUpdated();
+        }
 /*
-        // basic checks // need at least 16MB
-        if (m_storage->bytesAvailable() > 16*1024*1024 && !m_storage->isReadOnly())
+        // Basic checks // need at least 8 MB
+        if (!m_storage->isReadOnly() && m_storage->bytesAvailable() > 8*1024*1024)
         {
 #if defined(Q_OS_LINUX)
             // Advanced permission checks
@@ -230,10 +242,15 @@ void MediaDirectory::refreshMediaDirectory()
     {
         //qDebug() << "MediaDirectory(" << m_path << ") is not available: invalid";
 
-        m_available = false;
-        emit availableUpdated();
+        if (m_available == true)
+        {
+            m_available = false;
+            emit availableUpdated();
+        }
     }
 }
+
+/* ************************************************************************** */
 
 bool MediaDirectory::isReadOnly()
 {

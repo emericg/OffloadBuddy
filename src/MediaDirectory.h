@@ -45,7 +45,6 @@ class MediaDirectory: public QObject
 
     Q_PROPERTY(QString directoryPath READ getPath WRITE setPath NOTIFY directoryUpdated)
     Q_PROPERTY(int directoryContent READ getContent WRITE setContent NOTIFY directoryUpdated)
-
     Q_PROPERTY(bool primary READ isPrimary NOTIFY directoryUpdated)
 
     Q_PROPERTY(bool enabled READ isEnabled NOTIFY enabledUpdated)
@@ -53,21 +52,24 @@ class MediaDirectory: public QObject
     Q_PROPERTY(bool scanning READ isScanning NOTIFY scanningUpdated)
 
     Q_PROPERTY(bool readOnly READ isReadOnly NOTIFY storageUpdated)
+    Q_PROPERTY(bool largeFileSupport READ hasLFS NOTIFY storageUpdated)
+
     Q_PROPERTY(qint64 spaceTotal READ getSpaceTotal NOTIFY storageUpdated)
     Q_PROPERTY(qint64 spaceUsed READ getSpaceUsed NOTIFY storageUpdated)
     Q_PROPERTY(double storageLevel READ getSpaceUsed_percent NOTIFY storageUpdated)
     Q_PROPERTY(qint64 spaceAvailable READ getSpaceAvailable NOTIFY storageUpdated)
 
     QString m_path;
-    int m_content_type = 0;
-    int m_storage_type = 0;
-
+    int m_content_type = 0; // see Utils::ContentTypes (dSphere)
+    int m_storage_type = 0; // (not implemented)
     bool m_primary = false;
+
     bool m_enabled = false;
     bool m_available = false;
     bool m_scanning = false;
 
     QStorageInfo *m_storage = nullptr;
+    bool m_storage_lfs = true;
     QTimer m_refreshTimer;
 
 Q_SIGNALS:
@@ -102,6 +104,8 @@ public slots:
 
     bool isScanning() const { return m_scanning; }
     void setScanning(bool scanning);
+
+    bool hasLFS() const { return m_storage_lfs; }
 
     bool isReadOnly();
     int64_t getSpaceTotal();
