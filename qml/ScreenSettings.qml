@@ -89,6 +89,7 @@ Item {
                 ComboBoxThemed {
                     id: comboBoxAppTheme
                     width: 256
+                    height: 36
                     anchors.verticalCenter: parent.verticalCenter
 
                     model: ListModel {
@@ -385,6 +386,7 @@ Item {
                 ComboBoxThemed {
                     id: comboBoxContentHierarchy
                     width: 256
+                    height: 36
                     anchors.verticalCenter: parent.verticalCenter
 
                     model: ListModel {

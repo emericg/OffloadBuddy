@@ -579,6 +579,8 @@ Item {
             anchors.verticalCenter: rowFilter.verticalCenter
             spacing: 12
 
+            visible: (rectangleHeader.width > 1280)
+
             ItemLilMenu {
                 width: rowLilMenuFormat.width
 
