@@ -141,7 +141,7 @@ bool MediaDirectory::isAvailableFor(unsigned shotType, int64_t shotSize)
 
     refreshMediaDirectory();
 
-    if (m_available && m_storage && !m_storage->isReadOnly())
+    if (m_available && m_storage /*&& !m_storage->isReadOnly()*/)
     {
         if (shotSize < getSpaceAvailable())
         {

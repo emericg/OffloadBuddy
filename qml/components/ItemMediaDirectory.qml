@@ -16,13 +16,6 @@ Item {
     property var directory: null
     property bool confirmation: false
 
-    Connections {
-        target: directory
-        onAvailableChanged: {
-            //console.log("onAvailableChanged: " + directory.directoryPath)
-        }
-    }
-
     ////////////////////////////////////////////////////////////////////////////
 
     TextFieldThemed {
@@ -37,7 +30,7 @@ Item {
 
         onEditingFinished: {
             directory.directoryPath = textField_path.text
-            settingsManager.directoryModified()
+            storageManager.directoryModified()
             focus = false
         }
 
@@ -46,6 +39,25 @@ Item {
             anchors.rightMargin: 8
             anchors.verticalCenter: parent.verticalCenter
             spacing: 0
+
+            ItemImageButtonTooltip {
+                id: button_w
+                width: 32
+                height: 32
+                anchors.verticalCenter: parent.verticalCenter
+
+                highlightMode: "color"
+                visible: directory.readOnly
+                iconColor: Theme.colorWarning
+                //source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
+                source: "qrc:/assets/icons_material/outline-https-24px.svg"
+                onClicked: {
+                    utilsApp.openWith(directory.directoryPath)
+                }
+
+                tooltipText: "Storage is read only"
+                tooltipPosition: "left"
+            }
 
             ItemImageButton {
                 id: button_open
@@ -108,7 +120,7 @@ Item {
 
             onAccepted: {
                 directory.directoryPath = UtilsPath.cleanUrl(fileDialogChange.fileUrl)
-                settingsManager.directoryModified()
+                storageManager.directoryModified()
             }
         }
 
@@ -154,7 +166,7 @@ Item {
         onCurrentIndexChanged: {
             if (cbinit) {
                 directory.directoryContent = currentIndex;
-                settingsManager.directoryModified();
+                storageManager.directoryModified();
             } else {
                 cbinit = true;
             }

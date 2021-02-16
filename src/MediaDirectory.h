@@ -52,7 +52,7 @@ class MediaDirectory: public QObject
     Q_PROPERTY(bool scanning READ isScanning NOTIFY scanningUpdated)
 
     Q_PROPERTY(bool readOnly READ isReadOnly NOTIFY storageUpdated)
-    Q_PROPERTY(bool largeFileSupport READ hasLFS NOTIFY storageUpdated)
+    Q_PROPERTY(bool largeFileSupport READ hasLFS NOTIFY directoryUpdated)
 
     Q_PROPERTY(qint64 spaceTotal READ getSpaceTotal NOTIFY storageUpdated)
     Q_PROPERTY(qint64 spaceUsed READ getSpaceUsed NOTIFY storageUpdated)

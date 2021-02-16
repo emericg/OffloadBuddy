@@ -81,7 +81,7 @@ void JobManager::attachLibrary(MediaLibrary *l)
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-MediaDirectory * JobManager::getAutoDestination(Shot *s)
+MediaDirectory *JobManager::getAutoDestination(Shot *s)
 {
     MediaDirectory *md_selected = nullptr;
 
