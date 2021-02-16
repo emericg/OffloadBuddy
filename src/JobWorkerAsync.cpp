@@ -317,6 +317,11 @@ void JobWorkerAsync::queueWork(Job *job)
                     video_filters += "[0v]crop=" + job->settings.crop + ",scale=" + job->settings.scale + ":sws_dither=ed,split=2[v1][2v];" \
                                      "[2v]reverse,fifo[v2];[v1][v2]concat=n=2:v=1[out]";
                 }
+                else if (job->settings.gif_effect == "backwardforward")
+                {
+                    video_filters += "[0v]crop=" + job->settings.crop + ",scale=" + job->settings.scale + ":sws_dither=ed,split=2[v1][2v];" \
+                                     "[2v]reverse,fifo[v2];[v2][v1]concat=n=2:v=1[out]";
+                }
                 else if (job->settings.gif_effect == "backward")
                 {
                     video_filters += "[0v]crop=" + job->settings.crop + ",scale=" + job->settings.scale + ":sws_dither=ed[2v];" \

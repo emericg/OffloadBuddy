@@ -978,6 +978,10 @@ Popup {
                         id: rbGifEffectBackandForth
                         text: qsTr("Back and Forth")
                     }
+                    RadioButtonThemed {
+                        id: rbGifEffectForthandBack
+                        text: qsTr("F and B")
+                    }
                 }
             }
 
@@ -1301,6 +1305,7 @@ Popup {
                         // Effect
                         if (rbGifEffectBackward.checked) encodingParams["gif_effect"] = "backward"
                         else if (rbGifEffectBackandForth.checked) encodingParams["gif_effect"] = "forwardbackward"
+                        else if (rbGifEffectForthandBack.checked) encodingParams["gif_effect"] = "backwardforward"
                     }
 
                     if (timelapseFramerate.visible)
