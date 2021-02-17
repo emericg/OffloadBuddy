@@ -342,10 +342,7 @@ Item {
             }
         }
 
-        CsdWindows {
-            anchors.top: parent.top
-            anchors.right: parent.right
-        }
+        CsdWindows { }
     }
 
     ////////////////////////////////////////////////////////////////////////////

@@ -28,8 +28,8 @@ import ThemeEngine 1.0
 
 ApplicationWindow {
     id: appWindow
-    flags: settingsManager.clientSideDecoration ? Qt.Window | Qt.FramelessWindowHint : Qt.Window
-    color: settingsManager.clientSideDecoration ? "transparent" : Theme.colorBackground
+    flags: settingsManager.appThemeCSD ? Qt.Window | Qt.FramelessWindowHint : Qt.Window
+    color: settingsManager.appThemeCSD ? "transparent" : Theme.colorBackground
 
     // Desktop stuff ///////////////////////////////////////////////////////////
 
@@ -108,6 +108,9 @@ ApplicationWindow {
         anchors.fill: parent
 
         color: Theme.colorBackground
+
+        border.color: Theme.colorSeparator
+        border.width: 1
 
         Sidebar {
             id: appSidebar
@@ -216,7 +219,7 @@ ApplicationWindow {
             ]
         }
 
-        layer.enabled: settingsManager.clientSideDecoration
+        layer.enabled: (settingsManager.appThemeCSD && Qt.platform.os !== "windows")
         layer.effect: OpacityMask {
             maskSource: Rectangle {
                 x: appBg.x
