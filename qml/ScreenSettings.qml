@@ -110,6 +110,16 @@ Item {
                             cbinit = true;
                     }
                 }
+
+                CheckBoxThemed {
+                    id: applicationCSD
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: qsTr("Use Client Side Decoration")
+
+                    checked: settingsManager.appThemeCSD
+                    onCheckStateChanged: settingsManager.appThemeCSD = checked
+                }
             }
 
             ////////

@@ -5,6 +5,7 @@ import ThemeEngine 1.0
 
 Popup {
     id: popupDelete
+
     x: (appWindow.width / 2) - (width / 2) - (appSidebar.width / 2)
     y: (appWindow.height / 2) - (height / 2)
     width: 640

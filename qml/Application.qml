@@ -108,9 +108,8 @@ ApplicationWindow {
         anchors.fill: parent
 
         color: Theme.colorBackground
-
         border.color: Theme.colorSeparator
-        border.width: 1
+        border.width: settingsManager.appThemeCSD ? 1 : 0
 
         Sidebar {
             id: appSidebar

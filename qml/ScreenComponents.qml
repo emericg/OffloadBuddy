@@ -393,12 +393,13 @@ Item {
                         background: false
                         highlightMode: "circle"
                     }
-                    ItemImageButton {
+                    ItemImageButtonTooltip {
                         width: 48
                         height: 48
                         source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
                         highlightMode: "color"
                         highlightColor: Theme.colorError
+
                         tooltipText: "this one has a tooltip!"
                     }
                 }
@@ -417,10 +418,11 @@ Item {
                         background: true
                         highlightMode: "circle"
                     }
-                    ItemImageButton {
+                    ItemImageButtonTooltip {
                         source: "qrc:/assets/icons_material/baseline-accessibility-24px.svg"
                         highlightMode: "color"
                         highlightColor: Theme.colorError
+
                         tooltipText: "another tooltip!"
                     }
                 }
