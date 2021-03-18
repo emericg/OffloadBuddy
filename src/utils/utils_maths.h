@@ -25,6 +25,8 @@
 //! Align buffer sizes to multiples of 'roundTo'
 int roundTo(const int value, const int roundTo);
 
+int mapNumber(const int value, const int a1, const int a2, const int b1, const int b2);
+
 /* ************************************************************************** */
 
 //! Calculate haversine distance for linear distance (km)

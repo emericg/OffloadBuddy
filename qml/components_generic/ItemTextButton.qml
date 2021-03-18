@@ -1,5 +1,4 @@
 import QtQuick 2.12
-import QtQuick.Controls 2.12
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsNumber.js" as UtilsNumber
@@ -71,6 +70,7 @@ Item {
         anchors.centerIn: bgRect
 
         text: itemTextButton.text
+        textFormat: Text.PlainText
         font.bold: true
         font.pixelSize: itemTextButton.txtSize
         font.capitalization: Font.AllUppercase

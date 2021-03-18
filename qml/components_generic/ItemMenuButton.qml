@@ -1,5 +1,4 @@
 import QtQuick 2.12
-import QtQuick.Controls 2.12
 
 import ThemeEngine 1.0
 
@@ -8,8 +7,8 @@ Item {
     implicitWidth: 64
     implicitHeight: 64
 
-    width: 16 + contentImage.width + (imgSize / 2) + contentText.width + 16
-    height: parent.height
+    width: 16 + imgSize * 1.5 + contentText.contentWidth + 16
+    //height: parent.height
 
     property int imgSize: 32
 

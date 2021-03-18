@@ -1,14 +1,13 @@
 import QtQuick 2.12
-import QtQuick.Controls 2.12
 import QtGraphicalEffects 1.0
 
 import ThemeEngine 1.0
 
 Item {
     id: itemMenuButton
-
     implicitWidth: 80
     implicitHeight: 48
+
     property int imgSize: 32
 
     signal clicked()

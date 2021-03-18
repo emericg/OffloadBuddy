@@ -4,8 +4,8 @@ import ThemeEngine 1.0
 import "qrc:/js/UtilsNumber.js" as UtilsNumber
 
 Item {
-    id: itemDataBar
-    height: 24
+    id: dataBarCompact
+    height: 32
     implicitWidth: 128
 
     property string legend: "legend"
@@ -25,10 +25,10 @@ Item {
     property bool animated: true
 
     property real value: 0
-    property int valueMin: 0
-    property int valueMax: 100
-    property int limitMin: -1
-    property int limitMax: -1
+    property real valueMin: 0
+    property real valueMax: 100
+    property real limitMin: -1
+    property real limitMax: -1
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -42,7 +42,9 @@ Item {
             anchors.verticalCenter: item_bg.verticalCenter
 
             visible: (legend.length)
+
             text: legend
+            textFormat: Text.PlainText
             font.bold: true
             font.pixelSize: 12
             font.capitalization: Font.AllUppercase
@@ -52,69 +54,75 @@ Item {
 
         ////////
 
-        Rectangle {
+        Item {
             id: item_bg
             height: hhh
-            width: itemDataBar.width - (item_legend.visible ? (item_legend.width + parent.spacing) : 0)
+            width: dataBarCompact.width - (item_legend.visible ? (item_legend.width + parent.spacing) : 0)
             anchors.bottom: parent.bottom
 
-            radius: 4
-            color: itemDataBar.colorBackground
-
             Rectangle {
-                id: item_data
-                width: {
-                    var res = UtilsNumber.normalize(value, valueMin, valueMax) * item_bg.width
+                id: rect_bg
+                anchors.fill: parent
 
-                    if (value <= valueMin || value >= valueMax)
-                        res += 0
-                    else
-                        res += 1.5*radius // +radius, so the indicator arrow point to the real value, not the rounded end of the data bar
+                clip: true
+                radius: 4
+                color: dataBarCompact.colorBackground
 
-                    if (res > item_bg.width)
-                        res = item_bg.width
+                Rectangle {
+                    id: item_data
+                    width: {
+                        var res = UtilsNumber.normalize(value, valueMin, valueMax) * rect_bg.width
 
-                     return res
+                        if (value <= valueMin || value >= valueMax)
+                            res += 0
+                        else
+                            res += 1.5*radius // +radius, so the indicator arrow point to the real value, not the rounded end of the data bar
+
+                        if (res > rect_bg.width)
+                            res = rect_bg.width
+
+                         return res
+                    }
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.bottom: parent.bottom
+
+                    radius: 3
+                    color: dataBarCompact.colorForeground
+
+                    Behavior on width { NumberAnimation { duration: 333 } }
                 }
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.bottom: parent.bottom
 
-                radius: 3
-                color: itemDataBar.colorForeground
+                Rectangle {
+                    id: item_limit_low
+                    width: 2
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
 
-                Behavior on width { NumberAnimation { duration: 333 } }
-            }
+                    visible: (limitMin > 0 && limitMin > valueMin)
+                    x: UtilsNumber.normalize(limitMin, valueMin, valueMax) * rect_bg.width
+                    color: (limitMin < value) ? Theme.colorLowContrast : Theme.colorHighContrast
+                    opacity: (limitMin < value) ? 0.66 : 0.33
 
-            Rectangle {
-                id: item_limit_low
-                width: 2
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
+                    Behavior on x { NumberAnimation { duration: 333 } }
+                    Behavior on color { ColorAnimation { duration: animated ? 333 : 0 } }
+                    Behavior on opacity { OpacityAnimator { duration: animated ? 333 : 0 } }
+                }
+                Rectangle {
+                    id: item_limit_high
+                    width: 2
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
 
-                visible: (limitMin > 0 && limitMin > valueMin)
-                x: UtilsNumber.normalize(limitMin, valueMin, valueMax) * item_bg.width
-                color: (limitMin < value) ? Theme.colorLowContrast : Theme.colorHighContrast
-                opacity: (limitMin < value) ? 0.66 : 0.33
+                    visible: (limitMax > 0 && limitMax < valueMax)
+                    x: UtilsNumber.normalize(limitMax, valueMin, valueMax) * rect_bg.width
+                    color: (limitMax < value) ? Theme.colorLowContrast : Theme.colorHighContrast
+                    opacity: (limitMax < value) ? 0.66 : 0.33
 
-                Behavior on x { NumberAnimation { duration: 333 } }
-                Behavior on color { ColorAnimation { duration: animated ? 333 : 0 } }
-                Behavior on opacity { OpacityAnimator { duration: animated ? 333 : 0 } }
-            }
-            Rectangle {
-                id: item_limit_high
-                width: 2
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-
-                visible: (limitMax > 0 && limitMax < valueMax)
-                x: UtilsNumber.normalize(limitMax, valueMin, valueMax) * item_bg.width
-                color: (limitMax < value) ? Theme.colorLowContrast : Theme.colorHighContrast
-                opacity: (limitMax < value) ? 0.66 : 0.33
-
-                Behavior on x { NumberAnimation { duration: 333 } }
-                Behavior on color { ColorAnimation { duration: animated ? 333 : 0 } }
-                Behavior on opacity { OpacityAnimator { duration: animated ? 333 : 0 } }
+                    Behavior on x { NumberAnimation { duration: 333 } }
+                    Behavior on color { ColorAnimation { duration: animated ? 333 : 0 } }
+                    Behavior on opacity { OpacityAnimator { duration: animated ? 333 : 0 } }
+                }
             }
 
             Text {
@@ -140,7 +148,6 @@ Item {
                     }
                 }
 
-                color: "white"
                 text: {
                     if (value < -20)
                         return " ? ";
@@ -151,7 +158,8 @@ Item {
                             return prefix + value.toFixed(floatprecision) + suffix
                     }
                 }
-
+                textFormat: Text.PlainText
+                color: "white"
                 font.bold: true
                 font.pixelSize: 12
                 horizontalAlignment: Text.AlignHCenter
@@ -166,7 +174,7 @@ Item {
 
                     z: -1
                     radius: 1
-                    color: itemDataBar.colorForeground
+                    color: dataBarCompact.colorForeground
 
                     Rectangle {
                         id: item_indicator_triangle
@@ -179,7 +187,7 @@ Item {
 
                         radius: 1
                         rotation: 45
-                        color: itemDataBar.colorForeground
+                        color: dataBarCompact.colorForeground
                     }
                 }
             }

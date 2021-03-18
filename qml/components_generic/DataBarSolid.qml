@@ -4,7 +4,7 @@ import ThemeEngine 1.0
 import "qrc:/js/UtilsNumber.js" as UtilsNumber
 
 Item {
-    id: itemDataBar
+    id: dataBarSolid
     height: 16
     implicitWidth: 128
 
@@ -25,10 +25,10 @@ Item {
     property bool animated: true
 
     property real value: 0
-    property int valueMin: 0
-    property int valueMax: 100
-    property int limitMin: -1
-    property int limitMax: -1
+    property real valueMin: 0
+    property real valueMax: 100
+    property real limitMin: -1
+    property real limitMax: -1
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -42,7 +42,9 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
 
             visible: (legend.length)
+
             text: legend
+            textFormat: Text.PlainText
             font.bold: true
             font.pixelSize: 12
             font.capitalization: Font.AllUppercase
@@ -54,13 +56,13 @@ Item {
 
         Rectangle {
             id: item_bg
-            width: itemDataBar.width - (item_legend.visible ? (item_legend.width + parent.spacing) : 0)
+            width: dataBarSolid.width - (item_legend.visible ? (item_legend.width + parent.spacing) : 0)
             height: hhh
             anchors.verticalCenter: parent.verticalCenter
 
             clip: true
             radius: hhh
-            color: itemDataBar.colorBackground
+            color: dataBarSolid.colorBackground
 
             Rectangle {
                 id: item_data
@@ -74,7 +76,7 @@ Item {
                 anchors.left: parent.left
 
                 radius: hhh
-                color: itemDataBar.colorForeground
+                color: dataBarSolid.colorForeground
 
                 Behavior on width { NumberAnimation { duration: animated ? 333 : 0 } }
             }
@@ -111,6 +113,7 @@ Item {
 
                 //: Short for minimum
                 text: qsTr("min")
+                textFormat: Text.PlainText
 
                 font.pixelSize: 12
                 color: (limitMin <= value) ? Theme.colorLowContrast : Theme.colorHighContrast
@@ -167,6 +170,7 @@ Item {
 
                 //: Short for maximum
                 text: qsTr("max")
+                textFormat: Text.PlainText
 
                 font.pixelSize: 12
                 color: (limitMax < value) ? Theme.colorLowContrast : Theme.colorHighContrast
@@ -205,9 +209,9 @@ Item {
                     if (value <= 0)
                         return "transparent"
                      else if (item_data.width > indicator.width)
-                        return itemDataBar.colorForeground
+                        return dataBarSolid.colorForeground
                     else
-                        return itemDataBar.colorBackground
+                        return dataBarSolid.colorBackground
                 }
 
                 x: {
@@ -223,6 +227,8 @@ Item {
                     anchors.verticalCenterOffset: 1
                     anchors.horizontalCenter: parent.horizontalCenter
 
+                    color: (item_data.width > indicator.width) ? "white" : Theme.colorText
+
                     text: {
                         if (value < -20)
                             return " ? ";
@@ -233,9 +239,7 @@ Item {
                                 return prefix + value.toFixed(floatprecision) + suffix
                         }
                     }
-
-                    color: (item_data.width > indicator.width) ? "white" : Theme.colorText
-
+                    textFormat: Text.PlainText
                     font.bold: true
                     font.pixelSize: 12
                     horizontalAlignment: Text.AlignHCenter
@@ -266,7 +270,7 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.horizontalCenter: parent.horizontalCenter
                         z: -1
-                        color: itemDataBar.colorBackground
+                        color: dataBarSolid.colorBackground
                         visible: (parent.opacity === 1)
                     }
                 }

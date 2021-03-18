@@ -70,7 +70,7 @@
         <file alias="TextFieldThemed.qml">components_themed/TextFieldThemed.qml</file>
     </qresource>
     <qresource prefix="/js">
-        <file alias="UtilsDevice.js">components_js/UtilsDevice.js</file>
+        <file alias="UtilsDeviceCamera.js">components_js/UtilsDeviceCamera.js</file>
         <file alias="UtilsMedia.js">components_js/UtilsMedia.js</file>
         <file alias="UtilsNumber.js">components_js/UtilsNumber.js</file>
         <file alias="UtilsPath.js">components_js/UtilsPath.js</file>

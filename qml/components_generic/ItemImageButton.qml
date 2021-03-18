@@ -1,5 +1,4 @@
 import QtQuick 2.12
-import QtQuick.Controls 2.12
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsNumber.js" as UtilsNumber
@@ -59,7 +58,7 @@ Item {
         visible: (highlightMode === "circle" || highlightMode === "both" || itemImageButton.background)
         color: itemImageButton.backgroundColor
 
-        border.width: itemImageButton.border ? 1 : 0
+        border.width: itemImageButton.border ? Theme.componentBorderWidth : 0
         border.color: itemImageButton.borderColor
 
         opacity: itemImageButton.background ? 0.75 : 0

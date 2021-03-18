@@ -1,30 +1,32 @@
 import QtQuick 2.12
-import QtQuick.Controls 2.12
 import QtGraphicalEffects 1.12
 
 Item {
     implicitWidth: 32
     implicitHeight: 32
 
-    property string source
+    property alias source: sourceImg.source
+    property alias fillMode: sourceImg.fillMode
     property string color
-    property int fillMode: Image.PreserveAspectFit
 
     Image {
         id: sourceImg
         anchors.fill: parent
-        visible: (parent.visible && parent.color) ? false : true
+        visible: parent.color ? false : true
 
-        source: parent.source
+        asynchronous: false
+        smooth: false
+
         sourceSize: Qt.size(width, height)
-        fillMode: parent.fillMode
+        fillMode: Image.PreserveAspectFit
     }
+
     ColorOverlay {
         source: sourceImg
-        anchors.fill: parent
-        visible: (parent.visible && parent.color) ? true : false
+        anchors.fill: sourceImg
+        visible: parent.color ? true : false
 
-        color: parent.color
         cached: visible
+        color: parent.color
     }
 }

@@ -9,18 +9,21 @@ TextField {
     implicitHeight: Theme.componentHeight
 
     property string colorText: Theme.colorComponentContent
-    property string colorPlaceholderText: Theme.colorSubText
     property string colorBorder: Theme.colorComponentBorder
     property string colorBackground: Theme.colorComponentBackground
 
-    placeholderText: ""
-    placeholderTextColor: colorPlaceholderText
+    //placeholderText: qsTr("TODO")
 
     text: ""
     color: colorText
     font.pixelSize: Theme.fontSizeComponent
 
-    onEditingFinished: focus = false
+    Text {
+        anchors.verticalCenter: parent.verticalCenter
+        x: textFieldThemed.contentWidth + 12
+        text: "aaaaaa"
+        color: Theme.colorSubText
+    }
 
     background: Rectangle {
         border.width: 2

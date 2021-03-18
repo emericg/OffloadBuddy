@@ -10,14 +10,22 @@ Rectangle {
     focus: isOpen && !isMobile
 
     color: Theme.colorBackground
-    radius: 2 // Theme.componentRadius
+    radius: Theme.componentRadius
+    border.color: Theme.colorSeparator
 
     signal menuSelected(var index)
+    property int menuWidth: 0
     property bool isOpen: false
 
-    function open() { isOpen = true; }
+    function open() { isOpen = true; updateSize(); }
     function close() { isOpen = false; }
-    function openClose() { isOpen = !isOpen; }
+    function openClose() { isOpen = !isOpen; updateSize(); }
+
+    function updateSize() {
+        if (isOpen) {
+            // TODO
+        }
+    }
 
     function setMenuButtons(folder, copy, merge, encode, gpmf, gps, remove) {
         if (folder)
@@ -58,6 +66,8 @@ Rectangle {
             removeSelected.visible = false
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 
     Column {
         id: menuHolder

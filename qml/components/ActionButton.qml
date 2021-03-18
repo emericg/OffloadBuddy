@@ -5,13 +5,12 @@ import ThemeEngine 1.0
 
 Item {
     id: actionButtonItem
-    height: 32
+    height: 34
     width: parent.width
 
     property string button_text
     property string button_source
     property int index
-    property bool enable: true
 
     property bool clicked
     signal buttonClicked
@@ -41,7 +40,7 @@ Item {
             width: 20
             height: 20
             anchors.left: parent.left
-            anchors.leftMargin: 8 // + 20
+            anchors.leftMargin: 12
             anchors.verticalCenter: parent.verticalCenter
 
             source: button_source
@@ -52,21 +51,19 @@ Item {
             id: tButton
             width: parent.width
             anchors.left: iButton.right
-            anchors.leftMargin: 8
+            anchors.leftMargin: 12
             anchors.verticalCenter: parent.verticalCenter
-            anchors.verticalCenterOffset: 1
 
             text: qsTr(button_text)
             font.bold: false
-            font.pixelSize: Theme.fontSizeContentSmall
-            color: Theme.colorText
+            font.pixelSize: Theme.fontSizeComponent
+            color: Theme.colorSubText
         }
 
         MouseArea {
             anchors.fill: parent
 
-            enabled: enable
-            hoverEnabled: enable
+            hoverEnabled: isDesktop
             onClicked: buttonClicked()
             onEntered: viewButtonHovered()
             onExited: viewButtonExited()
@@ -82,16 +79,14 @@ Item {
             State {
                 name: "hovered";
                 PropertyChanges { target: viewButton; color: Theme.colorForeground; }
-                //PropertyChanges { target: tButton; color: Theme.colorText; }
-                //PropertyChanges { target: iButton; color: Theme.colorText; }
-                PropertyChanges { target: tButton; color: { if (tButton.text === qsTr("DELETE")) Theme.colorError; else Theme.colorText; } }
-                PropertyChanges { target: iButton; color: { if (tButton.text === qsTr("DELETE")) Theme.colorError; else Theme.colorText; } }
+                PropertyChanges { target: tButton; color: { if (tButton.text === qsTr("DELETE")) Theme.colorWarning; else Theme.colorText; } }
+                PropertyChanges { target: iButton; color: { if (tButton.text === qsTr("DELETE")) Theme.colorWarning; else Theme.colorText; } }
             },
             State {
                 name: "normal";
                 PropertyChanges { target: viewButton; color: "transparent"; }
-                PropertyChanges { target: tButton; color: "#3d3d3d"; }
-                PropertyChanges { target: iButton; color: "#3d3d3d"; }
+                PropertyChanges { target: tButton; color: Theme.colorSubText; }
+                PropertyChanges { target: iButton; color: Theme.colorSubText; }
             }
         ]
     }

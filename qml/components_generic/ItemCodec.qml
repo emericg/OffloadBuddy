@@ -1,5 +1,4 @@
 import QtQuick 2.12
-import QtQuick.Controls 2.12
 
 import ThemeEngine 1.0
 
@@ -26,6 +25,7 @@ Item {
             anchors.fill: parent
 
             text: codec.text
+            textFormat: Text.PlainText
             color: codec.colorText
             font.capitalization: Font.AllUppercase
             font.pixelSize: Theme.fontSizeComponent

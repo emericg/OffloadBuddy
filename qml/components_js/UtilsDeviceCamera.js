@@ -1,5 +1,5 @@
-// UtilsDevice.js
-// Version 0.1
+// UtilsDeviceCamera.js
+// Version 2
 .pragma library
 
 /* ************************************************************************** */
@@ -55,6 +55,5 @@ function getDevicePicture(device) {
         }
     }
 
-    //if (inverted) camera_model += "-inverted"
     return camera_model + ".svg"
 }

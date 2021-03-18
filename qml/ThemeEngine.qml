@@ -70,6 +70,7 @@ Item {
 
     property int componentHeight: 40
     property int componentRadius: 4
+    property int componentBorderWidth: 1
 
     ////////////////
 
@@ -159,8 +160,9 @@ Item {
             colorComponentDown =    "#E4E4E4"
             colorComponentBackground = "#FAFAFA"
 
-            componentRadius = 3
+            componentRadius = 4
             sidebarSelector = ""
+            componentBorderWidth = 2
 
         } else if (themeIndex === ThemeEngine.DARK_AND_SPOOKY) {
 
@@ -203,6 +205,7 @@ Item {
 
             componentRadius = 3
             sidebarSelector = ""
+            componentBorderWidth = 1
 
         } else if (themeIndex === ThemeEngine.PLAIN_AND_BORING) {
 
@@ -245,6 +248,7 @@ Item {
 
             componentRadius = 4
             sidebarSelector = "arrow"
+            componentBorderWidth = 1
 
         } else if (themeIndex === ThemeEngine.BLOOD_AND_TEARS) {
 
@@ -287,6 +291,7 @@ Item {
 
             componentRadius = 1
             sidebarSelector = "bar"
+            componentBorderWidth = 1
 
         } else if (themeIndex === ThemeEngine.MIGHTY_KITTENS) {
 
@@ -335,8 +340,9 @@ Item {
             colorComponentDown =    "#F592C1"
             colorComponentBackground = "#fff4f9"
 
-            componentRadius = 6
+            componentRadius = 20
             sidebarSelector = ""
+            componentBorderWidth = 2
         }
 
         // This will emit the signal 'onCurrentThemeChanged'
