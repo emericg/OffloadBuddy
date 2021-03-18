@@ -29,7 +29,7 @@ install:
       sudo apt-get install ninja libtool automake m4 -y;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-      brew install qt;
+      brew install qt5;
       brew install ninja libtool;
       brew install gettext;
       brew link --force gettext;
