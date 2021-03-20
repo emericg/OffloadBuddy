@@ -118,7 +118,7 @@ Item {
                     text: qsTr("Use Client Side Decoration")
 
                     checked: settingsManager.appThemeCSD
-                    onCheckStateChanged: settingsManager.appThemeCSD = checked
+                    onClicked: settingsManager.appThemeCSD = checked
                 }
             }
 
@@ -367,7 +367,6 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Automatically extract telemetry")
-                    enabled: false
 
                     checked: settingsManager.autometadata
                     onCheckStateChanged: settingsManager.autometadata = checked
