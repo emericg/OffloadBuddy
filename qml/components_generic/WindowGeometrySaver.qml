@@ -38,7 +38,7 @@ Item {
             windowInstance.y = st.y;
             windowInstance.width = st.width;
             windowInstance.height = st.height;
-            windowInstance.visibility = st.visibility;
+            windowInstance.visibility = 2//st.visibility;
         }
     }
 
