@@ -115,7 +115,6 @@
         <file alias="usb.svg">devices/usb.svg</file>
     </qresource>
     <qresource prefix="/appicons">
-        <file alias="offloadbuddy.svg">desktop/offloadbuddy.svg</file>
-        <file alias="offloadbuddy.png">desktop/offloadbuddy.png</file>
+        <file alias="offloadbuddy.svg">logos/offloadbuddy.svg</file>
     </qresource>
 </RCC>

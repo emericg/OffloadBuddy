@@ -1,42 +1,48 @@
 
-# assets/cameras:
-- generic_actioncam.svg     // Faenza icon theme    // GPL v3
-- generic_camera.svg        // Yosa Max icon theme  // GPL v3
-- generic_smartphone.svg    // Lüv icon theme       // CC BY-SA 4.0
-- fusion.svg                // Emeric Grange        // CC BY-SA 4.0
-- H2.svg                    // Emeric Grange        // CC BY-SA 4.0
-- H3.svg                    // Emeric Grange        // CC BY-SA 4.0
-- H4.svg                    // Emeric Grange        // CC BY-SA 4.0
-- H5.svg                    // Emeric Grange        // CC BY-SA 4.0
-- H6.svg                    // Emeric Grange        // CC BY-SA 4.0
-- H7w.svg                   // Emeric Grange        // CC BY-SA 4.0
-- session.svg               // Emeric Grange        // CC BY-SA 4.0
+# Application logo and icons:
+- assets/logos/logo.svg                 // Emeric Grange // CC BY-ND 4.0
 
-# assets/desktop:
-- offloadbuddy.*            // Emeric Grange        // CC BY-SA 4.0
+# Google Material Design icons:
+- assets/icons_material/*               // Google // CC BY-SA 4.0
 
-# assets/devices:
-- card.svg                  // Lüv icon theme       // CC BY-SA 4.0
-- disk.svg                  // Lüv icon theme       // CC BY-SA 4.0
-- phone.svg                 // Lüv icon theme       // CC BY-SA 4.0
-- usb.svg                   // Lüv icon theme       // CC BY-SA 4.0
+# Lüv icons:
+- assets/other/camera.svg               // Emeric Grange        // CC BY-SA 4.0
+- assets/other/card.svg                 // Lüv icon theme       // CC BY-SA 4.0
+- assets/other/disk.svg                 // Lüv icon theme       // CC BY-SA 4.0
+- assets/other/phone.svg                // Lüv icon theme       // CC BY-SA 4.0
+- assets/other/usb.svg                  // Lüv icon theme       // CC BY-SA 4.0
 
-# assets/icons_material
-- *                         // Google Material Design icons // CC BY-SA 4.0
+# Cameras icons:
+- assets/other/generic_actioncam.svg    // Faenza icon theme    // GPL v3
+- assets/other/generic_camera.svg       // Yosa Max icon theme  // GPL v3
+- assets/other/generic_smartphone.svg   // Lüv icon theme       // CC BY-SA 4.0
+- assets/other/generic_smartphone2.svg  // Emeric Grange        // CC BY-SA 4.0
+- assets/other/fusion.svg               // Emeric Grange        // CC BY-SA 4.0
+- assets/other/H2.svg                   // Emeric Grange        // CC BY-SA 4.0
+- assets/other/H3.svg                   // Emeric Grange        // CC BY-SA 4.0
+- assets/other/H4.svg                   // Emeric Grange        // CC BY-SA 4.0
+- assets/other/H5.svg                   // Emeric Grange        // CC BY-SA 4.0
+- assets/other/H6.svg                   // Emeric Grange        // CC BY-SA 4.0
+- assets/other/H7w.svg                  // Emeric Grange        // CC BY-SA 4.0
+- assets/other/H8.svg                   // Emeric Grange        // CC BY-SA 4.0
+- assets/other/H9.svg                   // Emeric Grange        // CC BY-SA 4.0
+- assets/other/max.svg                  // Emeric Grange        // CC BY-SA 4.0
+- assets/other/osmo_action.svg          // Emeric Grange        // CC BY-SA 4.0
+- assets/other/session.svg              // Emeric Grange        // CC BY-SA 4.0
+- assets/other/sony_fdr.svg             // Emeric Grange        // CC BY-SA 4.0
+- assets/other/sony_hdr.svg             // Emeric Grange        // CC BY-SA 4.0
 
-# assets/logos:
-- github.svg                // https://github.com/logos
+# Menu icons:
+- assets/menus/about.svg                // Emeric Grange        // CC BY-SA 4.0
+- assets/menus/exit.svg                 // Paper icon theme     // CC BY-SA 4.0
+- assets/menus/jobs.svg                 // Emeric Grange        // CC BY-SA 4.0
+- assets/menus/media.svg                // Paper icon theme     // CC BY-SA 4.0
+- assets/menus/selector_arrow.svg       // Emeric Grange        // CC BY-SA 4.0
+- assets/menus/selector_bar.svg         // Emeric Grange        // CC BY-SA 4.0
+- assets/menus/settings.svg             // Paper icon theme     // CC BY-SA 4.0
 
-# assets/menus:
-- about.svg                 // Emeric Grange        // CC BY-SA 4.0
-- device.svg                // Yosa Max icon theme  // GPL v3
-- exit.svg                  // Paper icon theme     // CC BY-SA 4.0
-- jobs.svg                  // Emeric Grange        // CC BY-SA 4.0
-- media.svg                 // Paper icon theme     // CC BY-SA 4.0
-- selector_arrow.svg        // Emeric Grange        // CC BY-SA 4.0
-- selector_bar.svg          // Emeric Grange        // CC BY-SA 4.0
-- settings.svg              // Paper icon theme     // CC BY-SA 4.0
-
-# resources/other:
-- gps_marker.png            // Emeric Grange        // CC BY-SA 4.0
-- navigate_before_big.svg   // Google Material Design icons // CC BY-SA 4.0
+# Others:
+- assets/others/gps_marker.svg          // Emeric Grange // CC BY-SA 4.0
+- assets/others/navigate_before_big.svg // Google Material Design icons // CC BY-SA 4.0
+- assets/logos/github.svg               // https://github.com/logos // proprietary
+- assets/logos/gitlab.png               // https://about.gitlab.com/press/  // proprietary

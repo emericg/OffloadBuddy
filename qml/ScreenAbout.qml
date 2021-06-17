@@ -379,6 +379,6 @@ Item {
         anchors.bottomMargin: 32
 
         fillMode: Image.PreserveAspectCrop
-        source: "qrc:/appicons/offloadbuddy.png"
+        source: "qrc:/appicons/offloadbuddy.svg"
     }
 }

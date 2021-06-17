@@ -46,9 +46,9 @@ if sys.version_info < (3, 0):
 # Cross compilation (from Linux):
 # - Windows (mingw32-w64)
 # Cross compilation (from macOS):
-# - iOS (simulator, armv7a, armv8a)
+# - iOS (simulator, armv7, armv8)
 # Cross compilation (from Linux or macOS):
-# - Android (armv7a, armv8a)
+# - Android (armv7, armv8)
 
 OS_HOST = platform.system()
 ARCH_HOST = platform.machine()
@@ -182,6 +182,7 @@ if OS_HOST == "Darwin":
 
 if OS_HOST == "Windows":
     TARGETS.append(["windows", "x86_64"])
+    #TARGETS.append(["windows", "x86"])
     #TARGETS.append(["windows", "armv7"]) # WinRT
 
 ## SOFTWARES ###################################################################

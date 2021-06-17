@@ -48,6 +48,7 @@ find appdir/;
 ## DEPLOY ######################################################################
 
 export GIT_VERSION=$(git rev-parse --short HEAD);
+export APP_VERSION=0.6;
 
 unset LD_LIBRARY_PATH; unset QT_PLUGIN_PATH; #unset QTDIR;
 
@@ -68,7 +69,7 @@ echo '---- Downloading linuxdeployqt'
 if [ ! -x contribs/src/linuxdeployqt-6-x86_64.AppImage ]; then
   wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/6/linuxdeployqt-6-x86_64.AppImage" -P contribs/src/;
 fi
-chmod a+x contribs/src/linuxdeployqt-*-x86_64.AppImage;
+chmod a+x contribs/src/linuxdeployqt-6-x86_64.AppImage;
 
 echo '---- Running linuxdeployqt'
 mkdir -p appdir/$USRDIR/plugins/imageformats/ appdir/$USRDIR/plugins/iconengines/ appdir/$USRDIR/plugins/geoservices/ appdir/$USRDIR/plugins/mediaservice/;
@@ -93,6 +94,5 @@ fi
 if [[ $upload_package = true ]] ; then
   echo '---- Uploading to transfer.sh'
   find appdir -executable -type f -exec ldd {} \; | grep " => $USRDIR" | cut -d " " -f 2-3 | sort | uniq;
-  curl --upload-file OffloadBuddy*.AppImage https://transfer.sh/OffloadBuddy-git.$GIT_VERSION-linux64.AppImage;
-  echo '---- Uploaded...'
+  curl --upload-file OffloadBuddy*.AppImage https://transfer.sh/OffloadBuddy-$APP_VERSION-linux64.AppImage;
 fi

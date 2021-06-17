@@ -43,6 +43,7 @@ done
 ## DEPLOY ######################################################################
 
 export GIT_VERSION=$(git rev-parse --short HEAD);
+export APP_VERSION=0.6;
 
 #echo '---- Running windeployqt'
 windeployqt bin/ --qmldir qml/
@@ -61,15 +62,25 @@ cp contribs/env/windows_x86_64/usr/lib/swscale-*.dll bin/
 
 cp contribs/env/windows_x86_64/usr/bin/ffmpeg.exe bin/
 
-echo '---- Installation directory content recap:'
-find bin/;
+#echo '---- Installation directory content recap:'
+#find bin/;
 
-## PACKAGE #####################################################################
+mv bin OffloadBuddy-$GIT_VERSION-win64;
+
+## PACKAGE (zip) ###############################################################
 
 if [[ $create_package = true ]] ; then
   echo '---- Compressing package'
-  mv bin OffloadBuddy-$GIT_VERSION-win64
   7z a OffloadBuddy-$GIT_VERSION-win64.zip OffloadBuddy-$GIT_VERSION-win64
+fi
+
+## PACKAGE (NSIS) ##############################################################
+
+if [[ $create_package = true ]] ; then
+  echo '---- Creating installer'
+  mv OffloadBuddy-$GIT_VERSION-win64 assets/windows/offloadbuddy
+  makensis assets/windows/setup.nsi
+  mv assets/windows/*.exe OffloadBuddy-$APP_VERSION-win64.exe
 fi
 
 ## UPLOAD ######################################################################
@@ -77,5 +88,7 @@ fi
 if [[ $upload_package = true ]] ; then
   echo '---- Uploading to transfer.sh'
   curl --upload-file OffloadBuddy*.zip https://transfer.sh/OffloadBuddy-git.$GIT_VERSION-win64.zip;
-  echo '---- Uploaded...'
+  echo '\n'
+  curl --upload-file OffloadBuddy*.exe https://transfer.sh/OffloadBuddy-git.$GIT_VERSION-win64.exe;
+  echo '\n'
 fi

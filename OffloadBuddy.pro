@@ -1,16 +1,16 @@
 TARGET  = OffloadBuddy
 
 VERSION = 0.6
-DEFINES += APP_VERSION=\\\"$$VERSION\\\"
+DEFINES+= APP_VERSION=\\\"$$VERSION\\\"
 
 CONFIG += c++14
 QT     += core qml quickcontrols2 svg
 QT     += multimedia location charts
 
 # Validate Qt version
-if (lessThan(QT_MAJOR_VERSION, 5) | lessThan(QT_MINOR_VERSION, 12)) {
-    error("You need AT LEAST Qt 5.12 to build $${TARGET}")
-}
+!versionAtLeast(QT_VERSION, 5.12) : error("You need at least Qt version 5.12 for $${TARGET}")
+!versionAtMost(QT_VERSION, 6.0) : error("You can't use Qt 6.0+ for WatchFlower")
+
 
 # Project features #############################################################
 
@@ -101,6 +101,7 @@ RESOURCES   += qml/qml.qrc \
                assets/assets.qrc
 
 OTHER_FILES += .gitignore \
+               .github/workflows/builds.yml \
                .travis.yml \
                contribs/contribs.py \
                deploy_linux.sh \
@@ -193,11 +194,11 @@ linux:!android {
     isEmpty(PREFIX) { PREFIX = /usr/local }
     target_app.files       += $${OUT_PWD}/$${DESTDIR}/$$lower($${TARGET})
     target_app.path         = $${PREFIX}/bin/
-    target_icon.files      += $${OUT_PWD}/assets/desktop/$$lower($${TARGET}).svg
+    target_icon.files      += $${OUT_PWD}/assets/logos/$$lower($${TARGET}).svg
     target_icon.path        = $${PREFIX}/share/pixmaps/
-    target_appentry.files  += $${OUT_PWD}/assets/desktop/$$lower($${TARGET}).desktop
+    target_appentry.files  += $${OUT_PWD}/assets/linux/$$lower($${TARGET}).desktop
     target_appentry.path    = $${PREFIX}/share/applications
-    target_appdata.files   += $${OUT_PWD}/assets/desktop/$$lower($${TARGET}).appdata.xml
+    target_appdata.files   += $${OUT_PWD}/assets/linux/$$lower($${TARGET}).appdata.xml
     target_appdata.path     = $${PREFIX}/share/appdata
     INSTALLS += target_app target_icon target_appentry target_appdata
 
@@ -220,17 +221,17 @@ macx {
     HEADERS += src/utils/utils_macosdock.h
     LIBS    += -framework AppKit
 
-    # OS icons
-    ICON = $${PWD}/assets/desktop/$$lower($${TARGET}).icns
-    #QMAKE_ASSET_CATALOGS = $${PWD}/assets/desktop/Images.xcassets
+    # OS icon
+    ICON = $${PWD}/assets/macos/$$lower($${TARGET}).icns
+    #QMAKE_ASSET_CATALOGS = $${PWD}/assets/macos/Images.xcassets
     #QMAKE_ASSET_CATALOGS_APP_ICON = "AppIcon"
 
     # OS infos
-    #QMAKE_INFO_PLIST = $${PWD}/assets/desktop/Info.plist
+    #QMAKE_INFO_PLIST = $${PWD}/assets/macos/Info.plist
 
     # OS entitlement (sandbox and stuff)
     ENTITLEMENTS.name = CODE_SIGN_ENTITLEMENTS
-    ENTITLEMENTS.value = $${PWD}/assets/desktop/$$lower($${TARGET}).entitlements
+    ENTITLEMENTS.value = $${PWD}/assets/macos/$$lower($${TARGET}).entitlements
     QMAKE_MAC_XCODE_SETTINGS += ENTITLEMENTS
 
     #======== Automatic bundle packaging
@@ -252,7 +253,7 @@ macx {
 
 win32 {
     # OS icon
-    RC_ICONS = $${PWD}/assets/desktop/$$lower($${TARGET}).ico
+    RC_ICONS = $${PWD}/assets/windows/$$lower($${TARGET}).ico
 
     # Deploy step
     deploy.commands = $$quote(windeployqt $${OUT_PWD}/$${DESTDIR}/ --qmldir qml/)

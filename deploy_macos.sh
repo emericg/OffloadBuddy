@@ -48,6 +48,7 @@ done
 ## DEPLOY ######################################################################
 
 export GIT_VERSION=$(git rev-parse --short HEAD);
+export APP_VERSION=0.6;
 
 if [[ $use_contribs = true ]] ; then
   export LD_LIBRARY_PATH=$(pwd)/contribs/src/env/macOS_x86_64/usr/lib/;
@@ -86,21 +87,20 @@ if [[ $use_contribs = true ]] ; then
   install_name_tool -change @loader_path/libswscale.5.dylib @executable_path/../Frameworks/libswscale.5.dylib bin/OffloadBuddy.app/Contents/MacOS/OffloadBuddy
 fi
 
-echo '---- Installation directory content recap:'
-find bin/;
+#echo '---- Installation directory content recap:'
+#find bin/;
 
 ## PACKAGE #####################################################################
 
 if [[ $create_package = true ]] ; then
   echo '---- Compressing package'
   cd bin/;
-  zip -r -X OffloadBuddy-$GIT_VERSION-macos.zip OffloadBuddy.app;
+  zip -r -X OffloadBuddy-$APP_VERSION-macos.zip OffloadBuddy.app;
 fi
 
 ## UPLOAD ######################################################################
 
 if [[ $upload_package = true ]] ; then
   echo '---- Uploading to transfer.sh'
-  curl --upload-file OffloadBuddy*.zip https://transfer.sh/OffloadBuddy-git.$GIT_VERSION-macOS.zip;
-  echo '---- Uploaded...'
+  curl --upload-file OffloadBuddy*.zip https://transfer.sh/OffloadBuddy-git.$APP_VERSION-macOS.zip;
 fi
