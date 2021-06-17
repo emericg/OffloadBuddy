@@ -24,7 +24,7 @@ env:
 jobs:
   ## GNU/Linux build ###########################################################
   build-linux:
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-18.04
     steps:
       # Checkout the repository
       - name: Checkout repository and submodules
@@ -107,7 +107,7 @@ jobs:
       # Build dependencies
       - name: Build dependencies
         run: |
-             brew install libtool autoconf pkg-config automake
+             brew install libtool autoconf pkg-config automake gettext
              brew install ninja
              cd contribs/
              python3 contribs.py

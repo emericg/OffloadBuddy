@@ -350,6 +350,7 @@ for TARGET in TARGETS:
     ## BUILD & INSTALL
     if OS_HOST != "Windows":
         # libUSB
+        print("> Building libUSB")
         os.chdir(build_dir + DIR_libusb)
         os.chmod("bootstrap.sh", 509)
         os.system("./bootstrap.sh")
@@ -357,6 +358,7 @@ for TARGET in TARGETS:
         os.system("make -j" + str(CPU_COUNT))
         os.system("make install")
         # libMTP
+        print("> Building libMTP")
         os.chdir(build_dir + DIR_libmtp)
         os.chmod("autogen.sh", 509)
         os.system("./autogen.sh << \"y\"")
@@ -365,11 +367,13 @@ for TARGET in TARGETS:
         os.system("make install")
 
     # libexif
+    print("> Building libexif")
     subprocess.check_call(CMAKE_cmd + ["-G", CMAKE_gen, "-DCMAKE_BUILD_TYPE=Release", "-DBUILD_SHARED_LIBS:BOOL=" + build_shared, "-DBUILD_STATIC_LIBS:BOOL=" + build_static, "-DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=TRUE", "-DCMAKE_INSTALL_PREFIX=" + env_dir + "/usr", ".."], cwd=build_dir + DIR_libexif + "/build")
     subprocess.check_call(["cmake", "--build", ".", "--config", "Release"], cwd=build_dir + DIR_libexif + "/build")
     subprocess.check_call(["cmake", "--build", ".", "--target", "install", "--config", "Release"], cwd=build_dir + DIR_libexif + "/build")
 
     # minivideo
+    print("> Building minivideo")
     subprocess.check_call(CMAKE_cmd + ["-G", CMAKE_gen, "-DCMAKE_BUILD_TYPE=Release", "-DBUILD_SHARED_LIBS:BOOL=" + build_shared, "-DBUILD_STATIC_LIBS:BOOL=" + build_static, "-DCMAKE_INSTALL_PREFIX=" + env_dir + "/usr", ".."], cwd=build_dir + DIR_minivideo + "/minivideo/build")
     subprocess.check_call(["cmake", "--build", ".", "--config", "Release"], cwd=build_dir + DIR_minivideo + "/minivideo/build")
     subprocess.check_call(["cmake", "--build", ".", "--target", "install", "--config", "Release"], cwd=build_dir + DIR_minivideo + "/minivideo/build")
