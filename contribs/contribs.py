@@ -228,7 +228,7 @@ if not os.path.exists("src/" + FILE_taglib):
     urllib.request.urlretrieve("https://github.com/taglib/taglib/archive/master.zip", src_dir + FILE_taglib)
 
 ## minivideo
-## version: git (0.12+)
+## version: git (0.13+)
 FILE_minivideo = "minivideo-master.zip"
 DIR_minivideo = "MiniVideo-master"
 
