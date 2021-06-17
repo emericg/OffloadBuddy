@@ -140,7 +140,7 @@ int main(int argc, char *argv[])
     atexit(exithandler); // will stop running job on exit
 
     // Init OffloadBuddy utils
-    UtilsScreen *utilsScreen = new UtilsScreen();
+    UtilsScreen *utilsScreen = UtilsScreen::getInstance();
     UtilsApp *utilsApp = UtilsApp::getInstance();
     UtilsLanguage *utilsLanguage = UtilsLanguage::getInstance();
     if (!utilsScreen || !utilsApp || !utilsLanguage)
