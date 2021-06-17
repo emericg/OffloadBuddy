@@ -34,11 +34,45 @@ int roundTo(const int value, const int roundTo)
     return (value + (roundTo - 1)) & ~(roundTo - 1);
 }
 
-int mapNumber(const int value, const int a1, const int a2, const int b1, const int b2)
+int mapNumber(const int value, const int a1, const int a2, const int b1, const int b2, bool checks)
 {
-    return (b1 + ((value-a1) * (b2-b1)) / (a2-a1));
+    int n = value;
+    if (checks)
+    {
+        if (n < a1) n = a1;
+        if (n > a2) n = a2;
+    }
+
+    return (b1 + ((n - a1) * (b2 - b1)) / (a2 - a1));
 }
 
+/* ************************************************************************** */
+
+#define d2r (M_PI / 180.0)
+
+double haversine_km(double lat1, double long1, double lat2, double long2)
+{
+    double dlong = (long2 - long1) * d2r;
+    double dlat = (lat2 - lat1) * d2r;
+    double a = pow(sin(dlat/2.0), 2) + cos(lat1*d2r) * cos(lat2*d2r) * pow(sin(dlong/2.0), 2);
+    double c = 2 * atan2(sqrt(a), sqrt(1-a));
+    double d = 6367 * c;
+
+    return d;
+}
+
+double haversine_mi(double lat1, double long1, double lat2, double long2)
+{
+    double dlong = (long2 - long1) * d2r;
+    double dlat = (lat2 - lat1) * d2r;
+    double a = pow(sin(dlat/2.0), 2) + cos(lat1*d2r) * cos(lat2*d2r) * pow(sin(dlong/2.0), 2);
+    double c = 2 * atan2(sqrt(a), sqrt(1-a));
+    double d = 3956 * c;
+
+    return d;
+}
+
+/* ************************************************************************** */
 /* ************************************************************************** */
 
 //implements relative method - do not use for comparing with zero
@@ -103,32 +137,6 @@ static bool isWithinPrecisionInterval(TReal a, TReal b, unsigned int interval_si
     TReal max_a = a + (std::nextafter(a, std::numeric_limits<TReal>::max()) - a) * interval_size;
 
     return min_a <= b && max_a >= b;
-}
-
-/* ************************************************************************** */
-
-#define d2r (M_PI / 180.0)
-
-double haversine_km(double lat1, double long1, double lat2, double long2)
-{
-    double dlong = (long2 - long1) * d2r;
-    double dlat = (lat2 - lat1) * d2r;
-    double a = pow(sin(dlat/2.0), 2) + cos(lat1*d2r) * cos(lat2*d2r) * pow(sin(dlong/2.0), 2);
-    double c = 2 * atan2(sqrt(a), sqrt(1-a));
-    double d = 6367 * c;
-
-    return d;
-}
-
-double haversine_mi(double lat1, double long1, double lat2, double long2)
-{
-    double dlong = (long2 - long1) * d2r;
-    double dlat = (lat2 - lat1) * d2r;
-    double a = pow(sin(dlat/2.0), 2) + cos(lat1*d2r) * cos(lat2*d2r) * pow(sin(dlong/2.0), 2);
-    double c = 2 * atan2(sqrt(a), sqrt(1-a));
-    double d = 3956 * c;
-
-    return d;
 }
 
 /* ************************************************************************** */

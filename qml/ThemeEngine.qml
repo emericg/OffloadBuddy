@@ -59,6 +59,7 @@ Item {
     property string colorHighContrast
 
     // App specific
+    property string sidebarSelector: "" // 'arrow' or 'bar'
 
     // Qt Quick controls & theming
     property string colorComponent
@@ -71,11 +72,6 @@ Item {
     property int componentHeight: 40
     property int componentRadius: 4
     property int componentBorderWidth: 1
-
-    ////////////////
-
-    // sidebarSelector (arrow or bar)
-    property string sidebarSelector: "arrow"
 
     ////////////////
 
@@ -101,10 +97,12 @@ Item {
     // Fonts (sizes in pixel) (WIP)
     readonly property int fontSizeHeader: 30
     readonly property int fontSizeTitle: 24
+    readonly property int fontSizeContentVerySmall: 12
     readonly property int fontSizeContentSmall: 14
     readonly property int fontSizeContent: 16
     readonly property int fontSizeContentBig: 18
-    readonly property int fontSizeComponent: 15
+    readonly property int fontSizeContentVeryBig: 20
+    readonly property int fontSizeComponent: (Qt.platform.os === "ios" || Qt.platform.os === "android") ? 14 : 15
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -160,8 +158,8 @@ Item {
             colorComponentDown =    "#E4E4E4"
             colorComponentBackground = "#FAFAFA"
 
-            componentRadius = 4
             sidebarSelector = ""
+            componentRadius = 4
             componentBorderWidth = 2
 
         } else if (themeIndex === ThemeEngine.DARK_AND_SPOOKY) {
@@ -203,8 +201,8 @@ Item {
             colorComponentDown =    "#333333"
             colorComponentBackground = "#505050"
 
-            componentRadius = 3
             sidebarSelector = ""
+            componentRadius = 3
             componentBorderWidth = 1
 
         } else if (themeIndex === ThemeEngine.PLAIN_AND_BORING) {
@@ -246,8 +244,8 @@ Item {
             colorComponentDown =    "#c1c1c1"
             colorComponentBackground = "#f3f3f3"
 
-            componentRadius = 4
             sidebarSelector = "arrow"
+            componentRadius = 4
             componentBorderWidth = 1
 
         } else if (themeIndex === ThemeEngine.BLOOD_AND_TEARS) {
@@ -340,8 +338,8 @@ Item {
             colorComponentDown =    "#F592C1"
             colorComponentBackground = "#fff4f9"
 
-            componentRadius = 20
             sidebarSelector = ""
+            componentRadius = 20
             componentBorderWidth = 2
         }
 
