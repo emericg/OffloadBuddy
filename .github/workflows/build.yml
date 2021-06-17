@@ -61,7 +61,7 @@ jobs:
              sudo apt-get install libswscale5 libswresample3 libpostproc55 libavutil56 libavformat58 libavfilter7 libavdevice58 libavcodec58 ffmpeg -y;
              sudo apt-get install libavutil-dev libavformat-dev libavfilter-dev libavdevice-dev libavcodec-dev -y;
              sudo apt-get install libudev-dev libusb-dev -y;
-             sudo apt-get install ninja libtool automake m4 gettext -y;
+             sudo apt-get install ninja-build libtool automake m4 gettext -y;
 
       # Build dependencies
       - name: Build dependencies
@@ -107,8 +107,8 @@ jobs:
       # Build dependencies
       - name: Build dependencies
         run: |
-             brew install libtool autoconf pkg-config automake gettext
-             brew install ninja
+             brew install ninja automake autoconf libtool pkg-config gettext
+             brew link --force gettext
              cd contribs/
              python3 contribs.py
              cd ..
