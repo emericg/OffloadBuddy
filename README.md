@@ -1,7 +1,8 @@
 OffloadBuddy
 ============
 
-[![Travis](https://img.shields.io/travis/emericg/OffloadBuddy.svg?style=flat-square&logo=travis)](https://travis-ci.org/emericg/OffloadBuddy)
+[![Build Status](https://github.com/emericg/OffloadBuddy/workflows/build/badge.svg)](https://github.com/emericg/OffloadBuddy/actions)
+[![Travis](https://img.shields.io/travis/emericg/OffloadBuddy.svg?style=flat-square&logo=travis)](https://travis-ci.com/emericg/OffloadBuddy)
 [![AppVeyor](https://img.shields.io/appveyor/ci/emericg/OffloadBuddy.svg?style=flat-square&logo=appveyor)](https://ci.appveyor.com/project/emericg/offloadbuddy)
 [![License: GPL v3](https://img.shields.io/badge/license-GPL%20v3-blue.svg?style=flat-square)](http://www.gnu.org/licenses/gpl-3.0)
 
@@ -52,7 +53,7 @@ Optional dependencies:
 - libusb and libmtp  
 - libexif  
 - ffmpeg (3.4+)  
-- MiniVideo (0.11+)  
+- MiniVideo (0.13+)  
 
 ### Building OffloadBuddy
 
@@ -69,6 +70,7 @@ OffloadBuddy:
 > $ make
 ```
 
+
 ## Get involved!
 
 ### Developers
@@ -78,6 +80,7 @@ You can browse the code on the GitHub page, submit patches and pull requests! Yo
 ### Users
 
 You can help us find and report bugs, suggest new features, help with translation, documentation and more! Visit the Issues section of the GitHub page to start!
+
 
 ## License
 
@@ -89,9 +92,9 @@ Read the [LICENSE](LICENSE) file or [consult the license on the FSF website](htt
 ### Third party projects used by OffloadBuddy
 
 * Qt [website](https://www.qt.io) ([LGPL 3](https://www.gnu.org/licenses/lgpl-3.0.txt))
-* ffmpeg [website](https://www.ffmpeg.org/) ([LGPL 2.1](https://www.gnu.org/licenses/lgpl-2.1.txt))
 * MiniVideo [website](https://github.com/emericg/MiniVideo) ([LGPL 3](https://www.gnu.org/licenses/lgpl-3.0.txt))
+* ffmpeg [website](https://www.ffmpeg.org/) ([LGPL 2.1](https://www.gnu.org/licenses/lgpl-2.1.txt))
 * libexif [website](https://github.com/libexif/libexif/) ([LGPL 2.1](https://www.gnu.org/licenses/lgpl-2.1.txt))
 * libmtp [website](http://libmtp.sourceforge.net/) ([LGPL 2.1](https://www.gnu.org/licenses/lgpl-2.1.txt))
 * SingleApplication [website](https://github.com/itay-grudev/SingleApplication) ([MIT](https://opensource.org/licenses/MIT))
-* Graphical resources: please read [assets/COPYING](assets/COPYING)
+* Graphical resources: [assets/COPYING](assets/COPYING)
