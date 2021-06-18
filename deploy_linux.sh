@@ -2,6 +2,12 @@
 
 echo "> OffloadBuddy packager (Linux x86_64)"
 
+export APP_NAME="OffloadBuddy";
+export APP_VERSION=0.6;
+export GIT_VERSION=$(git rev-parse --short HEAD);
+
+## CHECKS ######################################################################
+
 if [ "$(id -u)" == "0" ]; then
   echo "This script MUST NOT be run as root" 1>&2
   exit 1
@@ -42,13 +48,10 @@ done
 echo '---- Running make install'
 make INSTALL_ROOT=appdir -j$(nproc) install;
 
-echo '---- Installation directory content recap:'
-find appdir/;
+#echo '---- Installation directory content recap:'
+#find appdir/;
 
 ## DEPLOY ######################################################################
-
-export GIT_VERSION=$(git rev-parse --short HEAD);
-export APP_VERSION=0.6;
 
 unset LD_LIBRARY_PATH; unset QT_PLUGIN_PATH; #unset QTDIR;
 
@@ -79,10 +82,14 @@ cp $QTDIR/plugins/geoservices/*.so appdir/$USRDIR/plugins/geoservices/;
 cp $QTDIR/plugins/mediaservice/*.so appdir/$USRDIR/plugins/mediaservice/;
 ./contribs/src/linuxdeployqt-6-x86_64.AppImage appdir/$USRDIR/share/applications/*.desktop -qmldir=qml/ -unsupported-allow-new-glibc -bundle-non-qt-libs -extra-plugins=geoservices,mediaservice,imageformats/libqsvg.so,iconengines/libqsvgicon.so;
 
-echo '---- Installation directory content recap:'
-find appdir/;
+#echo '---- Installation directory content recap:'
+#find appdir/;
 
-## PACKAGE #####################################################################
+## PACKAGE (ZIP) ###############################################################
+
+# TODO
+
+## PACKAGE (AppImage) ##########################################################
 
 if [[ $create_package = true ]] ; then
   echo '---- Running AppImage packager'
@@ -94,5 +101,5 @@ fi
 if [[ $upload_package = true ]] ; then
   echo '---- Uploading to transfer.sh'
   find appdir -executable -type f -exec ldd {} \; | grep " => $USRDIR" | cut -d " " -f 2-3 | sort | uniq;
-  curl --upload-file OffloadBuddy*.AppImage https://transfer.sh/OffloadBuddy-$APP_VERSION-linux64.AppImage;
+  curl --upload-file $APP_NAME*.AppImage https://transfer.sh/$APP_NAME-$APP_VERSION-linux64.AppImage;
 fi

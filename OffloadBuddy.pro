@@ -194,7 +194,7 @@ linux:!android {
     isEmpty(PREFIX) { PREFIX = /usr/local }
     target_app.files       += $${OUT_PWD}/$${DESTDIR}/$$lower($${TARGET})
     target_app.path         = $${PREFIX}/bin/
-    target_icon.files      += $${OUT_PWD}/assets/logos/$$lower($${TARGET}).svg
+    target_icon.files      += $${OUT_PWD}/assets/linux/$$lower($${TARGET}).svg
     target_icon.path        = $${PREFIX}/share/pixmaps/
     target_appentry.files  += $${OUT_PWD}/assets/linux/$$lower($${TARGET}).desktop
     target_appentry.path    = $${PREFIX}/share/applications

@@ -24,6 +24,7 @@ env:
 jobs:
   ## GNU/Linux build ###########################################################
   build-linux:
+    name: "Linux CI build"
     runs-on: ubuntu-18.04
     steps:
       # Checkout the repository
@@ -60,6 +61,7 @@ jobs:
              sudo apt-get install libgl1-mesa-dev libva-dev libvdpau-dev libmfx1 -y;
              sudo apt-get install libswscale5 libswresample3 libpostproc55 libavutil56 libavformat58 libavfilter7 libavdevice58 libavcodec58 ffmpeg -y;
              sudo apt-get install libavutil-dev libavformat-dev libavfilter-dev libavdevice-dev libavcodec-dev -y;
+             sudo apt-get install gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-libav -y;
              sudo apt-get install libudev-dev libusb-dev -y;
              sudo apt-get install ninja-build libtool automake m4 gettext -y;
 
@@ -91,6 +93,7 @@ jobs:
 
   ## macOS build ###############################################################
   build-mac:
+    name: "macOS CI build"
     runs-on: macos-latest
     steps:
       # Checkout the repository
@@ -136,6 +139,7 @@ jobs:
 
   ## Windows build #############################################################
   build-windows:
+    name: "Windows CI build"
     runs-on: windows-latest
     steps:
       # Checkout the repository

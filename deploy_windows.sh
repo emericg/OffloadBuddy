@@ -2,6 +2,12 @@
 
 echo "> OffloadBuddy packager (Windows x86_64)"
 
+export APP_NAME="OffloadBuddy";
+export APP_VERSION=0.6;
+export GIT_VERSION=$(git rev-parse --short HEAD);
+
+## CHECKS ######################################################################
+
 if [ ${PWD##*/} != "OffloadBuddy" ]; then
   echo "This script MUST be run from the OffloadBuddy/ directory"
   exit 1
@@ -42,9 +48,6 @@ done
 
 ## DEPLOY ######################################################################
 
-export GIT_VERSION=$(git rev-parse --short HEAD);
-export APP_VERSION=0.6;
-
 #echo '---- Running windeployqt'
 windeployqt bin/ --qmldir qml/
 
@@ -65,30 +68,30 @@ cp contribs/env/windows_x86_64/usr/bin/ffmpeg.exe bin/
 #echo '---- Installation directory content recap:'
 #find bin/;
 
-mv bin OffloadBuddy-$GIT_VERSION-win64;
+mv bin $APP_NAME-$GIT_VERSION-win64;
 
 ## PACKAGE (zip) ###############################################################
 
 if [[ $create_package = true ]] ; then
   echo '---- Compressing package'
-  7z a OffloadBuddy-$GIT_VERSION-win64.zip OffloadBuddy-$GIT_VERSION-win64
+  7z a $APP_NAME-$GIT_VERSION-win64.zip $APP_NAME-$GIT_VERSION-win64
 fi
 
 ## PACKAGE (NSIS) ##############################################################
 
 if [[ $create_package = true ]] ; then
   echo '---- Creating installer'
-  mv OffloadBuddy-$GIT_VERSION-win64 assets/windows/offloadbuddy
+  mv $APP_NAME-$GIT_VERSION-win64 assets/windows/$APP_NAME
   makensis assets/windows/setup.nsi
-  mv assets/windows/*.exe OffloadBuddy-$APP_VERSION-win64.exe
+  mv assets/windows/*.exe $APP_NAME-$APP_VERSION-win64.exe
 fi
 
 ## UPLOAD ######################################################################
 
 if [[ $upload_package = true ]] ; then
   echo '---- Uploading to transfer.sh'
-  curl --upload-file OffloadBuddy*.zip https://transfer.sh/OffloadBuddy-git.$GIT_VERSION-win64.zip;
+  curl --upload-file $APP_NAME*.zip https://transfer.sh/$APP_NAME-git.$GIT_VERSION-win64.zip;
   echo '\n'
-  curl --upload-file OffloadBuddy*.exe https://transfer.sh/OffloadBuddy-git.$GIT_VERSION-win64.exe;
+  curl --upload-file $APP_NAME*.exe https://transfer.sh/$APP_NAME-git.$GIT_VERSION-win64.exe;
   echo '\n'
 fi

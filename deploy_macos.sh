@@ -2,6 +2,12 @@
 
 echo "> OffloadBuddy packager (macOS x86_64)"
 
+export APP_NAME="OffloadBuddy";
+export APP_VERSION=0.6;
+export GIT_VERSION=$(git rev-parse --short HEAD);
+
+## CHECKS ######################################################################
+
 if [ "$(id -u)" == "0" ]; then
   echo "This script MUST NOT be run as root" 1>&2
   exit 1
@@ -47,9 +53,6 @@ done
 
 ## DEPLOY ######################################################################
 
-export GIT_VERSION=$(git rev-parse --short HEAD);
-export APP_VERSION=0.6;
-
 if [[ $use_contribs = true ]] ; then
   export LD_LIBRARY_PATH=$(pwd)/contribs/src/env/macOS_x86_64/usr/lib/;
 else
@@ -57,14 +60,14 @@ else
 fi
 
 echo '---- Running macdeployqt'
-macdeployqt bin/OffloadBuddy.app -qmldir=qml/ -appstore-compliant;
+macdeployqt bin/$APP_NAME.app -qmldir=qml/ -appstore-compliant;
 
 # Copy ffmpeg binary and libs
-cp contribs/env/macos_x86_64/usr/bin/ffmpeg bin/OffloadBuddy.app/Contents/MacOS/
-chmod +x bin/OffloadBuddy.app/Contents/MacOS/ffmpeg
-cp -RP contribs/env/macos_x86_64/usr/lib/libav*.dylib bin/OffloadBuddy.app/Contents/Frameworks/
-cp -RP contribs/env/macos_x86_64/usr/lib/libsw*.dylib bin/OffloadBuddy.app/Contents/Frameworks/
-cp -RP contribs/env/macos_x86_64/usr/lib/libpostproc*.dylib bin/OffloadBuddy.app/Contents/Frameworks/
+cp contribs/env/macos_x86_64/usr/bin/ffmpeg bin/$APP_NAME.app/Contents/MacOS/
+chmod +x bin/$APP_NAME.app/Contents/MacOS/ffmpeg
+cp -RP contribs/env/macos_x86_64/usr/lib/libav*.dylib bin/$APP_NAME.app/Contents/Frameworks/
+cp -RP contribs/env/macos_x86_64/usr/lib/libsw*.dylib bin/$APP_NAME.app/Contents/Frameworks/
+cp -RP contribs/env/macos_x86_64/usr/lib/libpostproc*.dylib bin/$APP_NAME.app/Contents/Frameworks/
 
 # Patch ffmpeg related rpaths
 if [[ $use_contribs = true ]] ; then
@@ -95,12 +98,12 @@ fi
 if [[ $create_package = true ]] ; then
   echo '---- Compressing package'
   cd bin/;
-  zip -r -X OffloadBuddy-$APP_VERSION-macos.zip OffloadBuddy.app;
+  zip -r -X $APP_NAME-$APP_VERSION-macos.zip $APP_NAME.app;
 fi
 
 ## UPLOAD ######################################################################
 
 if [[ $upload_package = true ]] ; then
   echo '---- Uploading to transfer.sh'
-  curl --upload-file OffloadBuddy*.zip https://transfer.sh/OffloadBuddy-git.$APP_VERSION-macOS.zip;
+  curl --upload-file $APP_NAME*.zip https://transfer.sh/$APP_NAME-git.$APP_VERSION-macOS.zip;
 fi

@@ -1,0 +1,31 @@
+app-id: com.emeric.offloadbuddy
+runtime: org.kde.Platform,
+runtime-version: 5.15,
+sdk: org.kde.Sdk,
+command: offloadbuddy
+
+rename-desktop-file: offloadbuddy.desktop
+rename-appdata-file: offloadbuddy.appdata.xml
+#rename-icon: offloadbuddy
+
+finish-args:
+  # Our UI is GPU accelerated
+  - --device=dri
+  # X11 + XShm access
+  - --share=ipc
+  - --socket=x11
+  # Wayland access
+  - --socket=wayland
+  # Needs to talk to the network:
+  - --share=network
+  # Needs access to files. This is a file management software...
+  - --filesystem=home
+
+modules:
+
+- name: offloadbuddy
+  buildsystem: qmake
+  sources:
+    - type: archive
+      url: https://github.com/emericg/OffloadBuddy/archive/refs/tags/v0.5.tar.gz
+      sha256: 0b237e0fc7990151d8a08c7083f7ebdcb01712274cc35628b04e261561e47929
