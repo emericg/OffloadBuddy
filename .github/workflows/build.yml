@@ -2,7 +2,7 @@
 # Workflow configuration
 #--------------------------------------------------------------------------------
 
-name: build
+name: "CI builds"
 on:
   push:
   pull_request:
@@ -82,7 +82,7 @@ jobs:
       # Deploy application
       - name: Deploy application
         run: |
-             ./deploy_linux.sh -c -p -u
+             ./deploy_linux.sh -c -i -p
 
       # Upload AppImage
       - name: Upload AppImage
@@ -128,7 +128,7 @@ jobs:
       - name: Deploy application
         run: |
              export PATH=$PATH:/usr/local/opt/qt@5/bin:/usr/local/bin
-             ./deploy_macos.sh -c -p -u
+             ./deploy_macos.sh -c -p
 
       # Upload app zip
       - name: Upload app zip
@@ -195,7 +195,7 @@ jobs:
       # Deploy application
       - name: Deploy application
         run: |
-             sh deploy_windows.sh -c -p -u
+             sh deploy_windows.sh -c -p
 
       # Upload NSIS installer
       - name: Upload NSIS installer

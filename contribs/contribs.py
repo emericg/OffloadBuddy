@@ -400,7 +400,7 @@ for TARGET in TARGETS:
 
     FFMPEG_FOLDER = build_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-dev" + FFMPEG_lgpl
     FFMPEG_FILE = src_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-dev" + FFMPEG_lgpl + ".zip"
-    FFMPEG_URL = "https://emeric.io/assets/ffmpeg-zeranoe/" + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-dev" + FFMPEG_lgpl + ".zip"
+    FFMPEG_URL = "https://emeric.io/CI/ffmpeg-zeranoe/" + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-dev" + FFMPEG_lgpl + ".zip"
 
     if not os.path.exists(FFMPEG_FILE):
         print("> Downloading " + FFMPEG_URL)

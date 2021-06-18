@@ -16,6 +16,7 @@ fi
 ## SETTINGS ####################################################################
 
 use_contribs=false
+make_install=false
 create_package=false
 upload_package=false
 
@@ -24,6 +25,9 @@ do
 case $1 in
   -c|--contribs)
   use_contribs=true
+  ;;
+  -i|--install)
+  make_install=true
   ;;
   -p|--package)
   create_package=true
@@ -40,15 +44,17 @@ done
 
 ## APP INSTALL #################################################################
 
-#echo '---- Running make install'
-#make INSTALL_ROOT=bin/ install;
+if [[ $make_install = true ]] ; then
+  echo '---- Running make install'
+  make INSTALL_ROOT=bin/ install;
 
-#echo '---- Installation directory content recap:'
-#find bin/;
+  #echo '---- Installation directory content recap:'
+  #find bin/;
+fi
 
 ## DEPLOY ######################################################################
 
-#echo '---- Running windeployqt'
+echo '---- Running windeployqt'
 windeployqt bin/ --qmldir qml/
 
 cp contribs/env/windows_x86_64/usr/lib/exif.dll bin/
@@ -68,7 +74,18 @@ cp contribs/env/windows_x86_64/usr/bin/ffmpeg.exe bin/
 #echo '---- Installation directory content recap:'
 #find bin/;
 
-mv bin $APP_NAME-$GIT_VERSION-win64;
+## PACKAGE #####################################################################
+
+if [[ $create_package = true ]] ; then
+  if [ ! -x bin/K-Lite_Codec_Pack_1625_Basic.exe ]; then
+    echo '---- Downloading KLite codec pack'
+    wget -c -nv "https://emeric.io/CI/klite/klcp_basic_unattended.ini" -P bin/;
+    wget -c -nv "https://emeric.io/CI/klite/K-Lite_Codec_Pack_1625_Basic.exe" -P bin/;
+    mv bin/K-Lite_Codec_Pack_1625_Basic.exe bin/klcp_basic.exe
+  fi
+
+  mv bin $APP_NAME-$GIT_VERSION-win64;
+fi
 
 ## PACKAGE (zip) ###############################################################
 

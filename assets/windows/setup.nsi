@@ -85,6 +85,12 @@ Section "Install Visual C++ Redistributable"
   Delete "${INSTALL_DIR}\vc_redist.x64.exe"
 SectionEnd
 
+Section "Install K-Lite codec pack"
+  ExecWait "${INSTALL_DIR}\klcp_basic.exe /verysilent /norestart /LoadInf=.\klcp_basic_unattended.ini"
+  Delete "${INSTALL_DIR}\klcp_basic_unattended.ini"
+  Delete "${INSTALL_DIR}\klcp_basic.exe"
+SectionEnd
+
 Function RunApplication
   ExecShell "" "${INSTALL_DIR}\${EXECNAME}.exe"
 FunctionEnd
