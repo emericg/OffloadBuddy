@@ -219,7 +219,7 @@ if not os.path.exists("src/" + FILE_libexif):
     urllib.request.urlretrieve("https://github.com/emericg/libexif/archive/master.zip", src_dir + FILE_libexif)
 
 ## taglib
-## version: git (1.12 beta)
+## version: git (1.12)
 FILE_taglib = "taglib-master.zip"
 DIR_taglib = "taglib-master"
 
@@ -421,7 +421,7 @@ for TARGET in TARGETS:
 
     FFMPEG_FOLDER = build_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-shared" + FFMPEG_lgpl
     FFMPEG_FILE = src_dir + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-shared" + FFMPEG_lgpl + ".zip"
-    FFMPEG_URL = "https://emeric.io/assets/ffmpeg-zeranoe/" + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-shared" + FFMPEG_lgpl + ".zip"
+    FFMPEG_URL = "https://emeric.io/CI/ffmpeg-zeranoe/" + "ffmpeg-" + FFMPEG_version + "-" + FFMPEG_key + "-shared" + FFMPEG_lgpl + ".zip"
 
     if not os.path.exists(FFMPEG_FILE):
         print("> Downloading " + FFMPEG_URL)

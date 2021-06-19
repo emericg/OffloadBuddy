@@ -59,7 +59,7 @@ fi
 
 ## DEPLOY ######################################################################
 
-unset LD_LIBRARY_PATH; unset QT_PLUGIN_PATH; #unset QTDIR;
+unset LD_LIBRARY_PATH; #unset QT_PLUGIN_PATH; #unset QTDIR;
 
 if [[ $use_contribs = true ]] ; then
   export LD_LIBRARY_PATH=$(pwd)/contribs/src/env/linux_x86_64/usr/lib/:/usr/lib;
@@ -75,10 +75,10 @@ if [ -z "$QTDIR" ]; then
 fi
 
 echo '---- Downloading linuxdeployqt'
-if [ ! -x contribs/src/linuxdeployqt-6-x86_64.AppImage ]; then
-  wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/6/linuxdeployqt-6-x86_64.AppImage" -P contribs/src/;
+if [ ! -x contribs/src/linuxdeployqt-7-x86_64.AppImage ]; then
+  wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/6/linuxdeployqt-7-x86_64.AppImage" -P contribs/src/;
 fi
-chmod a+x contribs/src/linuxdeployqt-6-x86_64.AppImage;
+chmod a+x contribs/src/linuxdeployqt-7-x86_64.AppImage;
 
 echo '---- Running linuxdeployqt'
 mkdir -p appdir/$USRDIR/plugins/imageformats/ appdir/$USRDIR/plugins/iconengines/ appdir/$USRDIR/plugins/geoservices/ appdir/$USRDIR/plugins/mediaservice/;
@@ -86,7 +86,7 @@ cp $QTDIR/plugins/imageformats/libqsvg.so appdir/$USRDIR/plugins/imageformats/;
 cp $QTDIR/plugins/iconengines/libqsvgicon.so appdir/$USRDIR/plugins/iconengines/;
 cp $QTDIR/plugins/geoservices/*.so appdir/$USRDIR/plugins/geoservices/;
 cp $QTDIR/plugins/mediaservice/*.so appdir/$USRDIR/plugins/mediaservice/;
-./contribs/src/linuxdeployqt-6-x86_64.AppImage appdir/$USRDIR/share/applications/*.desktop -qmldir=qml/ -unsupported-allow-new-glibc -bundle-non-qt-libs -extra-plugins=geoservices,mediaservice,imageformats/libqsvg.so,iconengines/libqsvgicon.so;
+./contribs/src/linuxdeployqt-7-x86_64.AppImage appdir/$USRDIR/share/applications/*.desktop -qmldir=qml/ -unsupported-allow-new-glibc -bundle-non-qt-libs -extra-plugins=geoservices,mediaservice,imageformats/libqsvg.so,iconengines/libqsvgicon.so;
 
 #echo '---- Installation directory content recap:'
 #find appdir/;
@@ -99,7 +99,7 @@ cp $QTDIR/plugins/mediaservice/*.so appdir/$USRDIR/plugins/mediaservice/;
 
 if [[ $create_package = true ]] ; then
   echo '---- Running AppImage packager'
-  ./contribs/src/linuxdeployqt-6-x86_64.AppImage appdir/$USRDIR/share/applications/*.desktop -qmldir=qml/ -unsupported-allow-new-glibc -appimage;
+  ./contribs/src/linuxdeployqt-7-x86_64.AppImage appdir/$USRDIR/share/applications/*.desktop -qmldir=qml/ -unsupported-allow-new-glibc -appimage;
 fi
 
 ## UPLOAD ######################################################################
