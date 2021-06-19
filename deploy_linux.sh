@@ -76,7 +76,7 @@ fi
 
 echo '---- Downloading linuxdeployqt'
 if [ ! -x contribs/src/linuxdeployqt-7-x86_64.AppImage ]; then
-  wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/6/linuxdeployqt-7-x86_64.AppImage" -P contribs/src/;
+  wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/7/linuxdeployqt-7-x86_64.AppImage" -P contribs/src/;
 fi
 chmod a+x contribs/src/linuxdeployqt-7-x86_64.AppImage;
 
