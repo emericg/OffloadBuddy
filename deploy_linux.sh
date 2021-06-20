@@ -51,10 +51,10 @@ done
 
 if [[ $make_install = true ]] ; then
   echo '---- Running make install'
-  make INSTALL_ROOT=appdir install;
+  make INSTALL_ROOT=appdir/ install;
 
-  echo '---- Installation directory content recap:'
-  find appdir/;
+  #echo '---- Installation directory content recap:'
+  #find appdir/;
 fi
 
 ## DEPLOY ######################################################################
@@ -94,6 +94,9 @@ export EXTRA_QT_PLUGINS="multimedia;svg;"
 mkdir -p appdir/$USRDIR/plugins/geoservices/;
 cp $QTDIR/plugins/geoservices/*.so appdir/$USRDIR/plugins/geoservices/;
 
+#echo '---- Installation directory content recap:'
+#find appdir/;
+
 ## PACKAGE (AppImage) ##########################################################
 
 if [[ $create_package = true ]] ; then
@@ -107,11 +110,8 @@ fi
 
 ## UPLOAD ######################################################################
 
-echo '---- Installation directory content recap:'
-find /;
-
 if [[ $upload_package = true ]] ; then
   echo '---- Uploading to transfer.sh'
   find appdir -executable -type f -exec ldd {} \; | grep " => $USRDIR" | cut -d " " -f 2-3 | sort | uniq;
-  curl --upload-file $APP_NAME*.AppImage https://transfer.sh/$APP_NAME-$APP_VERSION-linux64.AppImage;
+  curl --upload-file $APP_NAME*.AppImage https://transfer.sh/$APP_NAME-$APP_VERSION-git$GIT_VERSION-linux64.AppImage;
 fi

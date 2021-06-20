@@ -83,21 +83,21 @@ if [[ $create_package = true ]] ; then
   fi
   mv contribs/deploy/LAVFilters-0.75-Installer.exe bin/
 
-  mv bin $APP_NAME-$GIT_VERSION-win64;
+  mv bin $APP_NAME-$APP_VERSION-win64;
 fi
 
 ## PACKAGE (zip) ###############################################################
 
 if [[ $create_package = true ]] ; then
   echo '---- Compressing package'
-  7z a $APP_NAME-$GIT_VERSION-win64.zip $APP_NAME-$GIT_VERSION-win64
+  7z a $APP_NAME-$APP_VERSION-win64.zip $APP_NAME-$APP_VERSION-win64
 fi
 
 ## PACKAGE (NSIS) ##############################################################
 
 if [[ $create_package = true ]] ; then
   echo '---- Creating installer'
-  mv $APP_NAME-$GIT_VERSION-win64 assets/windows/$APP_NAME
+  mv $APP_NAME-$APP_VERSION-win64 assets/windows/$APP_NAME
   makensis assets/windows/setup.nsi
   mv assets/windows/*.exe $APP_NAME-$APP_VERSION-win64.exe
 fi
@@ -106,8 +106,8 @@ fi
 
 if [[ $upload_package = true ]] ; then
   echo '---- Uploading to transfer.sh'
-  curl --upload-file $APP_NAME*.zip https://transfer.sh/$APP_NAME-git.$GIT_VERSION-win64.zip;
+  curl --upload-file $APP_NAME*.zip https://transfer.sh/$APP_NAME-$APP_VERSION-git$GIT_VERSION-win64.zip;
   echo '\n'
-  curl --upload-file $APP_NAME*.exe https://transfer.sh/$APP_NAME-git.$GIT_VERSION-win64.exe;
+  curl --upload-file $APP_NAME*.exe https://transfer.sh/$APP_NAME-$APP_VERSION-git$GIT_VERSION-win64.exe;
   echo '\n'
 fi
