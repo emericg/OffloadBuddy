@@ -83,9 +83,6 @@ if [[ $create_package = true ]] ; then
   fi
   mv contribs/deploy/LAVFilters-0.75-Installer.exe bin/
 
-  echo '---- Installation directory content recap:'
-  find bin/;
-
   mv bin $APP_NAME-$GIT_VERSION-win64;
 fi
 

@@ -86,6 +86,10 @@ chmod a+x contribs/deploy/linuxdeploy-plugin-appimage-x86_64.AppImage;
 chmod a+x contribs/deploy/linuxdeploy-plugin-qt-x86_64.AppImage;
 chmod a+x contribs/deploy/linuxdeploy-plugin-gstreamer.sh;
 
+# linuxdeploy settings
+export QML_SOURCES_PATHS="$(pwd)/qml/"
+export EXTRA_QT_PLUGINS="multimedia;svg;"
+
 # Copy geoservices plugins manually
 mkdir -p appdir/$USRDIR/plugins/geoservices/;
 cp $QTDIR/plugins/geoservices/*.so appdir/$USRDIR/plugins/geoservices/;
@@ -94,8 +98,6 @@ cp $QTDIR/plugins/geoservices/*.so appdir/$USRDIR/plugins/geoservices/;
 
 if [[ $create_package = true ]] ; then
   echo '---- Running linuxdeploy'
-  export QML_SOURCES_PATHS="$(pwd)/qml/"
-  export EXTRA_QT_PLUGINS="multimedia;svg;"
   ./contribs/deploy/linuxdeploy-x86_64.AppImage --appdir appdir --plugin qt --plugin gstreamer --output appimage
 fi
 
