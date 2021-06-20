@@ -53,8 +53,8 @@ if [[ $make_install = true ]] ; then
   echo '---- Running make install'
   make INSTALL_ROOT=appdir install;
 
-  #echo '---- Installation directory content recap:'
-  #find appdir/;
+  echo '---- Installation directory content recap:'
+  find appdir/;
 fi
 
 ## DEPLOY ######################################################################
@@ -74,35 +74,35 @@ if [ -z "$QTDIR" ]; then
   QTDIR=/usr/lib/qt;
 fi
 
-echo '---- Downloading linuxdeployqt'
-if [ ! -x contribs/src/linuxdeployqt-7-x86_64.AppImage ]; then
-  wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/7/linuxdeployqt-7-x86_64.AppImage" -P contribs/src/;
+echo '---- Downloading linuxdeploy + plugins'
+if [ ! -x contribs/src/linuxdeploy-plugin-qt-x86_64.AppImage ]; then
+  wget -c -nv "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage" -P contribs/src/;
+  wget -c -nv "https://github.com/linuxdeploy/linuxdeploy-plugin-appimage/releases/download/continuous/linuxdeploy-plugin-appimage-x86_64.AppImage" -P contribs/src/;
+  wget -c -nv "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage" -P contribs/src/;
+  wget -c -nv "https://raw.githubusercontent.com/linuxdeploy/linuxdeploy-plugin-gstreamer/master/linuxdeploy-plugin-gstreamer.sh" -P contribs/src/;
 fi
-chmod a+x contribs/src/linuxdeployqt-7-x86_64.AppImage;
+chmod a+x contribs/src/linuxdeploy-x86_64.AppImage;
+chmod a+x contribs/src/linuxdeploy-plugin-appimage-x86_64.AppImage;
+chmod a+x contribs/src/linuxdeploy-plugin-qt-x86_64.AppImage;
+chmod a+x contribs/src/linuxdeploy-plugin-gstreamer.sh;
 
-echo '---- Running linuxdeployqt'
-mkdir -p appdir/$USRDIR/plugins/imageformats/ appdir/$USRDIR/plugins/iconengines/ appdir/$USRDIR/plugins/geoservices/ appdir/$USRDIR/plugins/mediaservice/;
-cp $QTDIR/plugins/imageformats/libqsvg.so appdir/$USRDIR/plugins/imageformats/;
-cp $QTDIR/plugins/iconengines/libqsvgicon.so appdir/$USRDIR/plugins/iconengines/;
-cp $QTDIR/plugins/geoservices/*.so appdir/$USRDIR/plugins/geoservices/;
-cp $QTDIR/plugins/mediaservice/*.so appdir/$USRDIR/plugins/mediaservice/;
-./contribs/src/linuxdeployqt-7-x86_64.AppImage appdir/$USRDIR/share/applications/*.desktop -qmldir=qml/ -unsupported-allow-new-glibc -bundle-non-qt-libs -extra-plugins=geoservices,mediaservice,imageformats/libqsvg.so,iconengines/libqsvgicon.so;
+## PACKAGE (AppImage) ##########################################################
 
-#echo '---- Installation directory content recap:'
-#find appdir/;
+if [[ $create_package = true ]] ; then
+  echo '---- Running linuxdeploy'
+  export QML_SOURCES_PATHS="qml/"
+  export EXTRA_QT_PLUGINS="multimedia;mediaservice;svg;geoservices;"
+  ./contribs/src/linuxdeploy-x86_64.AppImage --appdir appdir --plugin qt --plugin gstreamer --output appimage
+fi
 
 ## PACKAGE (ZIP) ###############################################################
 
 # TODO
 
-## PACKAGE (AppImage) ##########################################################
-
-if [[ $create_package = true ]] ; then
-  echo '---- Running AppImage packager'
-  ./contribs/src/linuxdeployqt-7-x86_64.AppImage appdir/$USRDIR/share/applications/*.desktop -qmldir=qml/ -unsupported-allow-new-glibc -appimage;
-fi
-
 ## UPLOAD ######################################################################
+
+echo '---- Installation directory content recap:'
+find /;
 
 if [[ $upload_package = true ]] ; then
   echo '---- Uploading to transfer.sh'

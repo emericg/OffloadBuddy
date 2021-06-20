@@ -250,14 +250,6 @@ for TARGET in TARGETS:
             zipSSL.extractall("env/")
         break
 
-## linuxdeployqt
-## version: git
-if OS_HOST == "Linux":
-    FILE_linuxdeployqt = "linuxdeployqt-6-x86_64.AppImage"
-    if not os.path.exists("src/" + FILE_linuxdeployqt):
-        print("> Downloading " + FILE_linuxdeployqt + "...")
-        urllib.request.urlretrieve("https://github.com/probonopd/linuxdeployqt/releases/download/6/" + FILE_linuxdeployqt, src_dir + FILE_linuxdeployqt)
-
 ## EXECUTE #####################################################################
 
 for TARGET in TARGETS:

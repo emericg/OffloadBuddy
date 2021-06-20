@@ -77,15 +77,16 @@ cp contribs/env/windows_x86_64/usr/bin/ffmpeg.exe bin/
 ## PACKAGE #####################################################################
 
 if [[ $create_package = true ]] ; then
-  if [ ! -x bin/K-Lite_Codec_Pack_1625_Basic.exe ]; then
-    echo '---- Downloading KLite codec pack'
-    wget -c -nv "https://emeric.io/CI/klite/klcp_basic_unattended.ini" -P bin/;
-    wget -c -nv "https://emeric.io/CI/klite/K-Lite_Codec_Pack_1625_Basic.exe" -P bin/;
-    mv bin/K-Lite_Codec_Pack_1625_Basic.exe bin/klcp_basic.exe
+  if [ ! -x bin/LAVFilters-0.75-Installer.exe ]; then
+    echo '---- Downloading LAVFilters'
+    wget -c -nv "https://github.com/Nevcairiel/LAVFilters/releases/download/0.75/LAVFilters-0.75-Installer.exe" -P bin/;
   fi
 
   mv bin $APP_NAME-$GIT_VERSION-win64;
 fi
+
+echo '---- Installation directory content recap:'
+find bin/;
 
 ## PACKAGE (zip) ###############################################################
 
