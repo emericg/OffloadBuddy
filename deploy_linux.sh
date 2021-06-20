@@ -75,24 +75,28 @@ if [ -z "$QTDIR" ]; then
 fi
 
 echo '---- Downloading linuxdeploy + plugins'
-if [ ! -x contribs/src/linuxdeploy-plugin-qt-x86_64.AppImage ]; then
-  wget -c -nv "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage" -P contribs/src/;
-  wget -c -nv "https://github.com/linuxdeploy/linuxdeploy-plugin-appimage/releases/download/continuous/linuxdeploy-plugin-appimage-x86_64.AppImage" -P contribs/src/;
-  wget -c -nv "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage" -P contribs/src/;
-  wget -c -nv "https://raw.githubusercontent.com/linuxdeploy/linuxdeploy-plugin-gstreamer/master/linuxdeploy-plugin-gstreamer.sh" -P contribs/src/;
+if [ ! -x contribs/deploy/linuxdeploy-x86_64.AppImage.AppImage ]; then
+  wget -c -nv "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage" -P contribs/deploy/;
+  wget -c -nv "https://github.com/linuxdeploy/linuxdeploy-plugin-appimage/releases/download/continuous/linuxdeploy-plugin-appimage-x86_64.AppImage" -P contribs/deploy/;
+  wget -c -nv "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage" -P contribs/deploy/;
+  wget -c -nv "https://raw.githubusercontent.com/linuxdeploy/linuxdeploy-plugin-gstreamer/master/linuxdeploy-plugin-gstreamer.sh" -P contribs/deploy/;
 fi
-chmod a+x contribs/src/linuxdeploy-x86_64.AppImage;
-chmod a+x contribs/src/linuxdeploy-plugin-appimage-x86_64.AppImage;
-chmod a+x contribs/src/linuxdeploy-plugin-qt-x86_64.AppImage;
-chmod a+x contribs/src/linuxdeploy-plugin-gstreamer.sh;
+chmod a+x contribs/deploy/linuxdeploy-x86_64.AppImage;
+chmod a+x contribs/deploy/linuxdeploy-plugin-appimage-x86_64.AppImage;
+chmod a+x contribs/deploy/linuxdeploy-plugin-qt-x86_64.AppImage;
+chmod a+x contribs/deploy/linuxdeploy-plugin-gstreamer.sh;
+
+# Copy geoservices plugins manually
+mkdir -p appdir/$USRDIR/plugins/geoservices/;
+cp $QTDIR/plugins/geoservices/*.so appdir/$USRDIR/plugins/geoservices/;
 
 ## PACKAGE (AppImage) ##########################################################
 
 if [[ $create_package = true ]] ; then
   echo '---- Running linuxdeploy'
-  export QML_SOURCES_PATHS="qml/"
-  export EXTRA_QT_PLUGINS="multimedia;mediaservice;svg;geoservices;"
-  ./contribs/src/linuxdeploy-x86_64.AppImage --appdir appdir --plugin qt --plugin gstreamer --output appimage
+  export QML_SOURCES_PATHS="$(pwd)/qml/"
+  export EXTRA_QT_PLUGINS="multimedia;svg;"
+  ./contribs/deploy/linuxdeploy-x86_64.AppImage --appdir appdir --plugin qt --plugin gstreamer --output appimage
 fi
 
 ## PACKAGE (ZIP) ###############################################################

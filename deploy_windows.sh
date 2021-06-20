@@ -77,16 +77,17 @@ cp contribs/env/windows_x86_64/usr/bin/ffmpeg.exe bin/
 ## PACKAGE #####################################################################
 
 if [[ $create_package = true ]] ; then
-  if [ ! -x bin/LAVFilters-0.75-Installer.exe ]; then
+  if [ ! -x contribs/deploy/LAVFilters-0.75-Installer.exe ]; then
     echo '---- Downloading LAVFilters'
-    wget -c -nv "https://github.com/Nevcairiel/LAVFilters/releases/download/0.75/LAVFilters-0.75-Installer.exe" -P bin/;
+    wget -c -nv "https://github.com/Nevcairiel/LAVFilters/releases/download/0.75/LAVFilters-0.75-Installer.exe" -P contribs/deploy/;
   fi
+  mv contribs/deploy/LAVFilters-0.75-Installer.exe bin/
+
+  echo '---- Installation directory content recap:'
+  find bin/;
 
   mv bin $APP_NAME-$GIT_VERSION-win64;
 fi
-
-echo '---- Installation directory content recap:'
-find bin/;
 
 ## PACKAGE (zip) ###############################################################
 

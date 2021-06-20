@@ -77,6 +77,7 @@ if platform.machine() not in ("x86_64", "AMD64"):
 
 contribs_dir = os.getcwd()
 src_dir = contribs_dir + "/src/"
+deploy_dir = contribs_dir + "/deploy/"
 
 clean = False
 rebuild = False
@@ -135,6 +136,8 @@ if clean:
 
 if not os.path.exists(src_dir):
     os.makedirs(src_dir)
+if not os.path.exists(deploy_dir):
+    os.makedirs(deploy_dir)
 
 ## UTILS #######################################################################
 
@@ -249,6 +252,25 @@ for TARGET in TARGETS:
             zipSSL = zipfile.ZipFile(src_dir + FILE_androidopenssl)
             zipSSL.extractall("env/")
         break
+
+## linuxdeploy
+## version: git
+if OS_HOST == "Linux":
+    FILE_linuxdeploy = "linuxdeploy-x86_64.AppImage"
+    if not os.path.exists("src/" + FILE_linuxdeploy):
+        print("> Downloading " + FILE_linuxdeploy + "...")
+        urllib.request.urlretrieve("https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/" + FILE_linuxdeploy, deploy_dir + FILE_linuxdeploy)
+        urllib.request.urlretrieve("https://github.com/linuxdeploy/linuxdeploy-plugin-appimage/releases/download/continuous/linuxdeploy-plugin-appimage-x86_64.AppImage", deploy_dir + "linuxdeploy-plugin-appimage-x86_64.AppImage")
+        urllib.request.urlretrieve("https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage", deploy_dir + "linuxdeploy-plugin-qt-x86_64.AppImage")
+        urllib.request.urlretrieve("https://raw.githubusercontent.com/linuxdeploy/linuxdeploy-plugin-gstreamer/master/linuxdeploy-plugin-gstreamer.sh", deploy_dir + "linuxdeploy-plugin-gstreamer.sh")
+
+## LAV Filters
+## version: 0.75
+if OS_HOST == "Windows":
+    FILE_lavfilters = "LAVFilters-0.75-Installer.exe"
+    if not os.path.exists("src/" + FILE_lavfilters):
+        print("> Downloading " + FILE_lavfilters + "...")
+        urllib.request.urlretrieve("https://github.com/Nevcairiel/LAVFilters/releases/download/0.75/" + FILE_lavfilters, deploy_dir + FILE_lavfilters)
 
 ## EXECUTE #####################################################################
 
