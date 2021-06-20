@@ -178,7 +178,7 @@ Item {
 
         //z: parent.z + 1
         gesture.enabled: moove
-        plugin: Plugin { name: "mapboxgl" } // "osm", "mapboxgl", "esri"
+        plugin: Plugin { name: "osm" } // "osm", "mapbox", "mapboxgl", "esri"
         copyrightsVisible: false
 
         property bool fullscreen: false
