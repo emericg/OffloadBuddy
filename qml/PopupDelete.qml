@@ -104,10 +104,16 @@ Popup {
                 anchors.right: parent.right
                 anchors.rightMargin: 0
 
-                flickableDirection: Flickable.HorizontalAndVerticalFlick
-                clip: true
                 model: files
-                delegate: Text { height: 16; text: modelData; font.pixelSize: 14; color: Theme.colorSubText; }
+                delegate: Text {
+                    height: 16
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    text: modelData
+                    font.pixelSize: 14
+                    elide: Text.ElideLeft
+                    color: Theme.colorSubText
+                }
             }
         }
 

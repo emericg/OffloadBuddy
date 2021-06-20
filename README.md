@@ -1,7 +1,7 @@
 OffloadBuddy
 ============
 
-[![Build Status](https://github.com/emericg/OffloadBuddy/workflows/build/badge.svg)](https://github.com/emericg/OffloadBuddy/actions)
+[![Build Status](https://github.com/emericg/OffloadBuddy/workflows/builds/badge.svg)](https://github.com/emericg/OffloadBuddy/actions)
 [![Travis](https://img.shields.io/travis/emericg/OffloadBuddy.svg?style=flat-square&logo=travis)](https://travis-ci.com/emericg/OffloadBuddy)
 [![AppVeyor](https://img.shields.io/appveyor/ci/emericg/OffloadBuddy.svg?style=flat-square&logo=appveyor)](https://ci.appveyor.com/project/emericg/offloadbuddy)
 [![License: GPL v3](https://img.shields.io/badge/license-GPL%20v3-blue.svg?style=flat-square)](http://www.gnu.org/licenses/gpl-3.0)
@@ -58,13 +58,13 @@ Optional dependencies:
 ### Building OffloadBuddy
 
 Contribs (optional):
-```
+```bash
 $ cd OffloadBuddy/contribs/
 $ python3 contribs.py
 ```
 
 OffloadBuddy:
-```
+```bash
 > $ cd OffloadBuddy/
 > $ qmake
 > $ make

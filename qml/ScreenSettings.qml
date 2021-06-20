@@ -51,19 +51,15 @@ Item {
         contentWidth: -1
 
         anchors.top: rectangleHeader.bottom
-        anchors.topMargin: 0
         anchors.left: parent.left
-        anchors.leftMargin: 0
         anchors.right: parent.right
-        anchors.rightMargin: 0
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
 
         Column {
+            anchors.fill: parent
             anchors.topMargin: 24
             anchors.leftMargin: 24
             anchors.rightMargin: 24
-            anchors.fill: parent
             spacing: 8
 
             ////////
@@ -428,7 +424,7 @@ Item {
 
                 Row {
                     height: 40
-                    spacing: 32
+                    spacing: 24
 
                     Text {
                         id: textMediaTitle

@@ -237,12 +237,12 @@ Rectangle {
             anchors.right: parent.right
             anchors.rightMargin: 8
 
-            clip: true
             opacity: mouseAreaItem.isHovered ? 1 : 0
             Behavior on opacity { NumberAnimation { duration: 133 } }
 
             color: "white"
             text: shot.name
+            elide: Text.ElideRight
             style: Text.Raised
             font.bold: true
             font.pixelSize: 13

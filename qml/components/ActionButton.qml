@@ -4,28 +4,17 @@ import QtQuick.Controls 2.12
 import ThemeEngine 1.0
 
 Item {
-    id: actionButtonItem
+    id: actionButton
     height: 34
     width: parent.width
 
+    property int index
     property string button_text
     property string button_source
-    property int index
 
-    property bool clicked
     signal buttonClicked
 
-    function viewButtonHovered() {
-        viewButton.state = "hovered"
-    }
-
-    function viewButtonExited() {
-        if (clicked == false) {
-            viewButton.state = ""
-        } else {
-            viewButton.state = "clicked"
-        }
-    }
+    property alias contentWidth: tButton.contentWidth
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -63,30 +52,25 @@ Item {
         MouseArea {
             anchors.fill: parent
 
-            hoverEnabled: isDesktop
+            hoverEnabled: isDesktop && visible
+            onEntered: viewButton.state = "hovered"
+            onExited: viewButton.state = "normal"
+
             onClicked: buttonClicked()
-            onEntered: viewButtonHovered()
-            onExited: viewButtonExited()
         }
 
         states: [
-            State {
-                name: "clicked";
-                PropertyChanges { target: viewButton; color: "transparent"; }
-                PropertyChanges { target: tButton; color: "#286E1E"; }
-                PropertyChanges { target: iButton; color: "#286E1E"; }
-            },
-            State {
-                name: "hovered";
-                PropertyChanges { target: viewButton; color: Theme.colorForeground; }
-                PropertyChanges { target: tButton; color: { if (tButton.text === qsTr("DELETE")) Theme.colorWarning; else Theme.colorText; } }
-                PropertyChanges { target: iButton; color: { if (tButton.text === qsTr("DELETE")) Theme.colorWarning; else Theme.colorText; } }
-            },
             State {
                 name: "normal";
                 PropertyChanges { target: viewButton; color: "transparent"; }
                 PropertyChanges { target: tButton; color: Theme.colorSubText; }
                 PropertyChanges { target: iButton; color: Theme.colorSubText; }
+            },
+            State {
+                name: "hovered";
+                PropertyChanges { target: viewButton; color: Theme.colorComponentBorder; }
+                PropertyChanges { target: tButton; color: { (tButton.text === qsTr("DELETE")) ? Theme.colorWarning : Theme.colorText } }
+                PropertyChanges { target: iButton; color: { (tButton.text === qsTr("DELETE")) ? Theme.colorWarning : Theme.colorText } }
             }
         ]
     }

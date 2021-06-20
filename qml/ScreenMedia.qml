@@ -25,13 +25,15 @@ Item {
             screenMedia.state = "overview"
 
             // save state
-            if (typeof deviceSavedState !== "undefined" && deviceSavedState)
-                if (screenMedia.shot)
+            if (typeof deviceSavedState !== "undefined" && deviceSavedState) {
+                if (screenMedia.shot) {
                     deviceSavedState.detail_shot = screenMedia.shot
+                    deviceSavedState.mainState = "stateMediaDetails"
+                }
+            }
         }
 
-        updateFocus()
-
+        // set state
         if (appContent.state === "library") screenLibrary.state = "stateMediaDetails"
         else if (appContent.state === "device") screenDevice.state = "stateMediaDetails"
     }
@@ -52,11 +54,6 @@ Item {
             if (typeof screenMedia.shot === "undefined" || !screenMedia.shot) return
             if (!screenMedia.shot.isValid()) return
         }
-
-        updateFocus()
-
-        if (appContent.state === "library") screenLibrary.state = "stateMediaDetails"
-        else if (appContent.state === "device") screenDevice.state = "stateMediaDetails"
     }
 
     function back() {
@@ -68,12 +65,12 @@ Item {
         //        deviceSavedState.detail_shot = screenMedia.shot
 
         // go back
-        if (appContent.state === "library") screenLibrary.state = "stateMediaGrid"
-        else if (appContent.state === "device") screenDevice.state = "stateMediaGrid"
-    }
-
-    onVisibleChanged: {
-        updateFocus()
+        if (appContent.state === "library") {
+            screenLibrary.state = "stateMediaGrid"
+        } else if (appContent.state === "device") {
+            screenDevice.state = "stateMediaGrid"
+            deviceSavedState.mainState = "stateMediaGrid"
+        }
     }
 
     function updateFocus() {
@@ -157,10 +154,12 @@ Item {
 
             source: "qrc:/assets/others/navigate_before_big.svg"
             onClicked: {
-                if (appContent.state == "library")
+                if (appContent.state === "library") {
                     screenLibrary.state = "stateMediaGrid"
-                else if (appContent.state == "device")
+                } else if (appContent.state === "device") {
                     screenDevice.state = "stateMediaGrid"
+                    deviceSavedState.mainState = "stateMediaGrid"
+                }
             }
         }
 
@@ -351,6 +350,8 @@ Item {
         // save state
         if (typeof deviceSavedState !== "undefined" && deviceSavedState)
             deviceSavedState.detail_state = screenMedia.state
+
+        screenMedia.updateFocus()
     }
 
     state: "overview"

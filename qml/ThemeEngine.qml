@@ -174,9 +174,9 @@ Item {
             colorSidebarContent =   "white"
             colorSidebarHighlight = ""
 
-            colorActionbar =        "#FED259"
+            colorActionbar =        "#fec759"
             colorActionbarContent = "white"
-            colorActionbarHighlight = "#FFBA00"
+            colorActionbarHighlight = "#ffaf00"
 
             colorBackground =       "#404040"
             colorForeground =       "#555555"
@@ -184,8 +184,8 @@ Item {
             colorPrimary =          "#ff9f1a" // indigo: "#6C5ECD"
             colorSecondary =        "#ffb81a" // indigo2: "#9388e5"
             colorSuccess =          colorMaterialLightGreen
-            colorWarning =          "#e38541"
-            colorError =            "#dc322f"
+            colorWarning =          "#fe8f2d"
+            colorError =            "#d33e39"
 
             colorText =             "white"
             colorSubText =          "#ddd"

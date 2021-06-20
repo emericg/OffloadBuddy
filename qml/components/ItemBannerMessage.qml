@@ -39,7 +39,6 @@ Rectangle {
         anchors.leftMargin: 16
         anchors.verticalCenter: parent.verticalCenter
 
-        text: "banner text"
         color: Theme.colorActionbarContent
         font.pixelSize: Theme.fontSizeContentBig
     }

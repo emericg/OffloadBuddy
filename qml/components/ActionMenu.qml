@@ -4,14 +4,16 @@ import QtQuick.Controls 2.12
 import ThemeEngine 1.0
 
 Rectangle {
+    id: actionMenu
     width: 220
     height: menuHolder.height
     visible: isOpen
     focus: isOpen && !isMobile
 
-    color: Theme.colorBackground
+    color: Theme.colorComponent
     radius: Theme.componentRadius
     border.color: Theme.colorSeparator
+    border.width: Theme.componentBorderWidth
 
     signal menuSelected(var index)
     property int menuWidth: 0
@@ -26,6 +28,8 @@ Rectangle {
             // TODO
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 
     function setMenuButtons(folder, copy, merge, encode, gpmf, gps, remove) {
         if (folder)
@@ -74,8 +78,8 @@ Rectangle {
         width: parent.width
         height: children.height * children.length
 
-        topPadding: 4
-        bottomPadding: 4
+        topPadding: 0
+        bottomPadding: 0
         spacing: 0
 
         ActionButton {
@@ -85,6 +89,8 @@ Rectangle {
             button_source: "qrc:/assets/icons_material/outline-folder-24px.svg"
             onButtonClicked: menuSelected(index)
         }
+
+        ////////
 
         ActionButton {
             id: offloadCopy
@@ -107,6 +113,9 @@ Rectangle {
             button_source: "qrc:/assets/icons_material/baseline-memory-24px.svg"
             onButtonClicked: menuSelected(index)
         }
+
+        ////////
+
         Rectangle {
             id: telemetrySeparator
             anchors.left: parent.left
@@ -128,6 +137,9 @@ Rectangle {
             button_source: "qrc:/assets/icons_material/baseline-map-24px.svg"
             onButtonClicked: menuSelected(index)
         }
+
+        ////////
+
         Rectangle {
             id: removeSeparator
             anchors.left: parent.left

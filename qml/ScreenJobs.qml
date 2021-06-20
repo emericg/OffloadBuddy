@@ -13,14 +13,20 @@ Item {
 
     Rectangle {
         id: rectangleHeader
-        height: 64
-        color: Theme.colorHeader
-        anchors.right: parent.right
-        anchors.rightMargin: 0
-        anchors.left: parent.left
-        anchors.leftMargin: 0
         anchors.top: parent.top
-        anchors.topMargin: 0
+        anchors.left: parent.left
+        anchors.right: parent.right
+
+        height: 64
+        z: 5
+        color: Theme.colorHeader
+
+        DragHandler {
+            // Drag on the sidebar to drag the whole window // Qt 5.15+
+            // Also, prevent clicks below this area
+            onActiveChanged: if (active) appWindow.startSystemMove();
+            target: null
+        }
 
         Text {
             id: textHeader

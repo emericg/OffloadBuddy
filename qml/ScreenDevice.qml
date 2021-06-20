@@ -94,11 +94,6 @@ Item {
 
     // STATES //////////////////////////////////////////////////////////////////
 
-    onStateChanged: {
-        // save state
-        if (deviceSavedState) deviceSavedState.mainState = state
-    }
-
     state: "stateMediaGrid"
     states: [
         State {

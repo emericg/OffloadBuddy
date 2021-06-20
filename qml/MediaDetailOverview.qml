@@ -160,6 +160,7 @@ Item {
         message: qsTr("Are you sure you want to delete the current shot?")
         onConfirmed: {
             if (appContent.state === "library") {
+                // delete shot
                 mediaLibrary.deleteSelected(screenMedia.shot.uuid)
                 // then back to media grid
                 screenLibrary.state = "stateMediaGrid"

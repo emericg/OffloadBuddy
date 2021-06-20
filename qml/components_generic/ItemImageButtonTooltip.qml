@@ -126,7 +126,7 @@ Item {
         visible: itemImageButton.tooltipText
         enabled: itemImageButton.tooltipText
 
-        property var tooltipVisible: itemImageButton.highlighted
+        property bool tooltipVisible: itemImageButton.highlighted
         onTooltipVisibleChanged: ttT.checkPosition()
 
         opacity: tooltipVisible ? 1 : 0

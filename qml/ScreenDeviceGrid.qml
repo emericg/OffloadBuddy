@@ -18,9 +18,9 @@ Item {
 
     ////////
 
-    property var selectionMode: false
+    property bool selectionMode: false
     property var selectionList: []
-    property var selectionCount: 0
+    property int selectionCount: 0
 
     function selectFile(index) {
         // make sure it's not already selected
@@ -107,15 +107,15 @@ Item {
         // Grid filters and settings
         comboBox_orderby.currentIndex = deviceSavedState.orderBy
         comboBox_filterby.currentIndex = deviceSavedState.filterBy
-        shotsView.setThumFormat()
+        shotsView.setThumbFormat()
 
         // Banner // TODO reopen ONLY if needed
-        bannerMessage.close()
         if (currentDevice.deviceStorage === 1) { // VFS
             bannerMessage.openMessage(qsTr("Previews are not available (yet) with MTP devices..."))
-        }
-        if (currentDevice.deviceStorage === 2) { // MTP
+        } else if (currentDevice.deviceStorage === 2) { // MTP
             bannerMessage.openMessage(qsTr("Metadata are not available from MTP devices. Offload media first, or plug SD cards directly."))
+        } else {
+            bannerMessage.close()
         }
 
         // Grid index
@@ -339,15 +339,17 @@ Item {
             target: null
         }
 
+        ////////////////
+
         ImageSvg {
             id: deviceImage
             width: 128
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 8
-            anchors.right: parent.right
-            anchors.rightMargin: 8
             anchors.top: parent.top
             anchors.topMargin: 8
+            anchors.right: parent.right
+            anchors.rightMargin: 16
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 8
 
             fillMode: Image.PreserveAspectCrop
             color: Theme.colorHeaderContent
@@ -362,12 +364,27 @@ Item {
             anchors.right: deviceImage.left
             anchors.rightMargin: 8
 
-            text: "Camera brand & model"
+            //text: "Camera brand & model"
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignRight
             color: Theme.colorHeaderContent
             font.bold: true
             font.pixelSize: Theme.fontSizeHeader
+        }
+        Text {
+            id: deviceSpaceText
+            width: 232
+            height: 24
+            anchors.right: deviceImage.left
+            anchors.rightMargin: 32
+            anchors.top: deviceModelText.bottom
+            anchors.topMargin: 0
+
+            //text: "64GB available of 128GB"
+            color: Theme.colorHeaderContent
+            font.pixelSize: Theme.fontSizeContent
+            horizontalAlignment: Text.AlignRight
+            verticalAlignment: Text.AlignBottom
         }
 
         ImageSvg {
@@ -395,34 +412,6 @@ Item {
             source: "qrc:/assets/icons_material/outline-sd_card-24px.svg"
             color: Theme.colorHeaderContent
         }
-        ImageSvg {
-            id: deviceBatteryIcon
-            width: 24
-            height: 24
-            anchors.top: deviceStorageImage.bottom
-            anchors.topMargin: 0
-            anchors.right: deviceModelText.right
-            anchors.rightMargin: -3
-
-            source: "qrc:/assets/icons_material/outline-power-24px.svg"
-            color: Theme.colorHeaderContent
-        }
-
-        Text {
-            id: deviceSpaceText
-            width: 232
-            height: 24
-            anchors.right: deviceImage.left
-            anchors.rightMargin: 32
-            anchors.top: deviceModelText.bottom
-            anchors.topMargin: 0
-
-            text: "64GB available of 128GB"
-            color: Theme.colorHeaderContent
-            font.pixelSize: Theme.fontSizeContentBig
-            horizontalAlignment: Text.AlignRight
-            verticalAlignment: Text.AlignBottom
-        }
 
         ProgressBarThemed {
             id: deviceSpaceBar1
@@ -433,7 +422,7 @@ Item {
             anchors.rightMargin: 2
             anchors.right: deviceStorageImage.left
 
-            //visible: currentDevice.getStorageCount() > 1
+            //visible: currentDevice.getStorageCount() > 0
             value: currentDevice.getStorageLevel(1)
         }
         ProgressBarThemed {
@@ -449,6 +438,18 @@ Item {
             value: currentDevice.getStorageLevel(2)
         }
 
+        ImageSvg {
+            id: deviceBatteryIcon
+            width: 24
+            height: 24
+            anchors.top: deviceStorageImage.bottom
+            anchors.topMargin: 0
+            anchors.right: deviceModelText.right
+            anchors.rightMargin: -3
+
+            source: "qrc:/assets/icons_material/outline-power-24px.svg"
+            color: Theme.colorHeaderContent
+        }
         ProgressBarThemed {
             id: deviceBatteryBar
             width: 256
@@ -593,7 +594,7 @@ Item {
                         selected: (shotsView.cellFormat === 1.0)
                         onClicked: {
                             deviceSavedState.thumbFormat = 1
-                            shotsView.setThumFormat()
+                            shotsView.setThumbFormat()
                         }
                     }
                     ItemLilMenuButton {
@@ -601,7 +602,7 @@ Item {
                         selected: (shotsView.cellFormat === 4/3)
                         onClicked: {
                             deviceSavedState.thumbFormat = 2
-                            shotsView.setThumFormat()
+                            shotsView.setThumbFormat()
                         }
                     }
                     ItemLilMenuButton {
@@ -609,7 +610,7 @@ Item {
                         selected: (shotsView.cellFormat === 16/9)
                         onClicked: {
                             deviceSavedState.thumbFormat = 3
-                            shotsView.setThumFormat()
+                            shotsView.setThumbFormat()
                         }
                     }
                 }
@@ -628,7 +629,7 @@ Item {
                         selected: (shotsView.cellSizeTarget === 221)
                         onClicked: {
                             deviceSavedState.thumbSize = 1
-                            shotsView.setThumFormat()
+                            shotsView.setThumbFormat()
                         }
                     }
                     ItemLilMenuButton {
@@ -637,7 +638,7 @@ Item {
                         selected: (shotsView.cellSizeTarget === 279)
                         onClicked: {
                             deviceSavedState.thumbSize = 2
-                            shotsView.setThumFormat()
+                            shotsView.setThumbFormat()
                         }
                     }
                     ItemLilMenuButton {
@@ -646,7 +647,7 @@ Item {
                         selected: (shotsView.cellSizeTarget === 376)
                         onClicked: {
                             deviceSavedState.thumbSize = 3
-                            shotsView.setThumFormat()
+                            shotsView.setThumbFormat()
                         }
                     }
                     ItemLilMenuButton {
@@ -655,7 +656,7 @@ Item {
                         selected: (shotsView.cellSizeTarget === 512)
                         onClicked: {
                             deviceSavedState.thumbSize = 4
-                            shotsView.setThumFormat()
+                            shotsView.setThumbFormat()
                         }
                     }
                 }
@@ -804,10 +805,9 @@ Item {
             rightMargin: 4
             bottomMargin: 4
 
-            //clip: true
-            //snapMode: GridView.SnapToRow
             interactive: !actionMenu.visible
             keyNavigationEnabled: true
+            //snapMode: GridView.FlowTopToBottom
             focus: (appContent.state === "device" && screenLibrary.state === "stateMediaGrid")
 
             onCountChanged: updateGridViewSettings()
@@ -847,7 +847,7 @@ Item {
             cellWidth: cellSize + cellMargin
             cellHeight: Math.round(cellSize / cellFormat) + cellMargin
 
-            function setThumFormat() {
+            function setThumbFormat() {
                 if (deviceSavedState.thumbFormat === 1)
                     shotsView.cellFormat = 1.0
                 else if (deviceSavedState.thumbFormat === 2)

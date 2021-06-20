@@ -13,7 +13,7 @@ Rectangle {
     anchors.leftMargin: 0
 
     z: 1
-    color: Theme.colorPrimary
+    color: Theme.colorActionbar
 
     // prevent clicks below this area
     MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
@@ -31,7 +31,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
 
             fullColor: true
-            primaryColor: "#5483EF"
+            primaryColor: Theme.colorActionbarHighlight
 
             text: (appContent.state === "device") ? qsTr("Offload") : qsTr("Move")
             source: "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
@@ -50,7 +50,7 @@ Rectangle {
             visible: (appContent.state !== "device" && mediaGrid.selectionCount >= 2)
 
             fullColor: true
-            primaryColor: "#5483EF"
+            primaryColor: Theme.colorActionbarHighlight
 
             text: qsTr("Merge shots together")
             source: "qrc:/assets/icons_material/baseline-merge_type-24px.svg"
@@ -64,7 +64,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
 
             fullColor: true
-            primaryColor: "#5483EF"
+            primaryColor: Theme.colorActionbarHighlight
 
             text: qsTr("Extract telemetry")
             source: "qrc:/assets/icons_material/baseline-insert_chart_outlined-24px.svg"
@@ -107,7 +107,7 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
 
         text: qsTr("%n element(s) selected", "", mediaGrid.selectionCount)
-        color: "white"
+        color: Theme.colorActionbarContent
         font.pixelSize: 16
         font.bold: true
     }
@@ -118,9 +118,9 @@ Rectangle {
         anchors.rightMargin: 8
         anchors.verticalCenter: parent.verticalCenter
 
-        source: "qrc:/assets/icons_material/baseline-close-24px.svg"
-        iconColor: "white"
-        backgroundColor: Theme.colorWarning
+        source: "qrc:/assets/icons_material/baseline-backspace-24px.svg"
+        iconColor: Theme.colorActionbarContent
+        backgroundColor: Theme.colorActionbarHighlight
         onClicked: mediaGrid.exitSelectionMode()
     }
 }

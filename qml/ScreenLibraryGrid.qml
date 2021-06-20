@@ -17,9 +17,9 @@ Item {
 
     ////////
 
-    property var selectionMode: false
+    property bool selectionMode: false
     property var selectionList: []
-    property var selectionCount: 0
+    property int selectionCount: 0
 
     function selectFile(index) {
         // make sure it's not already selected
@@ -535,10 +535,9 @@ Item {
             rightMargin: 4
             bottomMargin: 4
 
-            //clip: true
-            //snapMode: GridView.SnapToRow
             interactive: !actionMenu.visible
             keyNavigationEnabled: true
+            //snapMode: GridView.FlowTopToBottom
             focus: (appContent.state === "library" && screenLibrary.state === "stateMediaGrid")
 
             onCountChanged: updateGridViewSettings()

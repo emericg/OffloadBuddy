@@ -24,9 +24,9 @@ Item {
             anchors.top: parent.top
             anchors.topMargin: 24
             anchors.left: parent.left
-            anchors.leftMargin: 32
+            anchors.leftMargin: 24
             anchors.right: parent.right
-            anchors.rightMargin: 32
+            anchors.rightMargin: 24
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 24
 
@@ -286,7 +286,6 @@ Item {
                 anchors.left: parent.left
                 anchors.leftMargin: 24
                 anchors.right: parent.right
-                anchors.rightMargin: 16
 
                 clip: true
                 interactive: true
@@ -366,6 +365,7 @@ Item {
                     Row { // row right
                         id: rowRight
                         anchors.right: parent.right
+                        anchors.rightMargin: 12
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: 8
 
@@ -375,13 +375,13 @@ Item {
                             backgroundColor: Theme.colorBackground
                             source: "qrc:/assets/icons_material/baseline-launch-24px.svg"
                             onClicked: utilsApp.openWith(modelData.path)
-                        }
+                        }/*
                         ItemImageButton {
                             width: 32; height: 32;
                             visible: false
                             backgroundColor: Theme.colorBackground
                             source: "qrc:/assets/icons_material/baseline-delete-24px.svg"
-                        }
+                        }*/
                     }
                 }
             }

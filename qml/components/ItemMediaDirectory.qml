@@ -181,7 +181,6 @@ Item {
         anchors.leftMargin: 16
         anchors.right: rectangleDelete.left
         anchors.rightMargin: 12
-        clip: true
 
         // this
         Column {
@@ -267,7 +266,6 @@ Item {
         spacing: 12
         layoutDirection: Qt.RightToLeft
         visible: (itemMediaDirectory.confirmation)
-        clip: true
 
         ButtonWireframe {
             height: 32

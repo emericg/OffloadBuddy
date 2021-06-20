@@ -40,6 +40,10 @@
         <file alias="CsdWindows.qml">components_generic/CsdWindows.qml</file>
         <file alias="WindowGeometrySaver.qml">components_generic/WindowGeometrySaver.qml</file>
 
+        <file alias="ButtonImage.qml">components_generic/ButtonImage.qml</file>
+        <file alias="ButtonImageThemed.qml">components_generic/ButtonImageThemed.qml</file>
+        <file alias="ButtonWireframe.qml">components_generic/ButtonWireframe.qml</file>
+        <file alias="ButtonWireframeImage.qml">components_generic/ButtonWireframeImage.qml</file>
         <file alias="ImageSvg.qml">components_generic/ImageSvg.qml</file>
         <file alias="ItemBadge.qml">components_generic/ItemBadge.qml</file>
         <file alias="ItemCodec.qml">components_generic/ItemCodec.qml</file>
@@ -49,10 +53,6 @@
         <file alias="ItemMenuButton.qml">components_generic/ItemMenuButton.qml</file>
         <file alias="ItemLilMenu.qml">components_generic/ItemLilMenu.qml</file>
         <file alias="ItemLilMenuButton.qml">components_generic/ItemLilMenuButton.qml</file>
-        <file alias="ButtonImage.qml">components_generic/ButtonImage.qml</file>
-        <file alias="ButtonImageThemed.qml">components_generic/ButtonImageThemed.qml</file>
-        <file alias="ButtonWireframe.qml">components_generic/ButtonWireframe.qml</file>
-        <file alias="ButtonWireframeImage.qml">components_generic/ButtonWireframeImage.qml</file>
         <file alias="RangeSliderArrow.qml">components_generic/RangeSliderArrow.qml</file>
         <file alias="SliderValueSolid.qml">components_generic/SliderValueSolid.qml</file>
 
