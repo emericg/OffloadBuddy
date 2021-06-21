@@ -190,105 +190,133 @@ Item {
             ItemCodec { id: codecAudio }
         }
 
-        Row {
-            id: rowActions1
-            anchors.right: rowActions2.left
-            anchors.rightMargin: 24
-            anchors.verticalCenter: parent.verticalCenter
-            spacing: 4
-
-            visible: (shot && shot.fileType !== Shared.FILE_VIDEO)
-
-            ItemImageButton {
-                id: buttonTrim
-                width: 40
-                height: 40
-                source: "qrc:/assets/icons_material/baseline-timer-24px.svg"
-                visible: (shot && shot.fileType === Shared.FILE_VIDEO)
-                backgroundColor: Theme.colorForeground
-                onClicked: contentOverview.toggleTrim()
-            }
-
-            ItemImageButton {
-                id: buttonRotate
-                width: 40
-                height: 40
-                source: "qrc:/assets/icons_material/baseline-rotate_90_degrees_ccw-24px.svg"
-                backgroundColor: Theme.colorForeground
-                onClicked: contentOverview.toggleTransform()
-            }
-
-            ItemImageButton {
-                id: buttonCrop
-                width: 40
-                height: 40
-                source: "qrc:/assets/icons_material/baseline-crop-24px.svg"
-                backgroundColor: Theme.colorForeground
-                onClicked: contentOverview.toggleCrop()
-            }
-        }
+        ////////////////
 
         Row {
-            id: rowActions2
-            anchors.right: rowActions3.left
-            anchors.rightMargin: 24
-            anchors.verticalCenter: parent.verticalCenter
-            spacing: 4
-
-            ItemImageButton {
-                id: buttonTimestamp
-                width: 40
-                height: 40
-                source: "qrc:/assets/icons_material/baseline-date_range-24px.svg"
-                backgroundColor: Theme.colorForeground
-                onClicked: contentOverview.openDatePopup()
-            }
-
-            ItemImageButton {
-                id: buttonTelemetry
-                width: 40
-                height: 40
-                source: "qrc:/assets/icons_material/baseline-insert_chart-24px.svg"
-                visible: (shot && shot.hasGPMF && shot.hasGPS)
-                backgroundColor: Theme.colorForeground
-                onClicked: contentOverview.openTelemetryPopup()
-            }
-
-            ItemImageButton {
-                id: buttonEncode
-                width: 40
-                height: 40
-                source: "qrc:/assets/icons_material/baseline-settings_applications-24px.svg"
-                backgroundColor: Theme.colorForeground
-                onClicked: contentOverview.openEncodingPopup()
-            }
-        }
-
-        Row {
-            id: rowActions3
             anchors.right: rowMenus.left
             anchors.rightMargin: 24
             anchors.verticalCenter: parent.verticalCenter
-            spacing: 4
+            spacing: 12
 
-            ItemImageButton {
-                id: buttonShowFolder
-                width: 40
-                height: 40
-                source: "qrc:/assets/icons_material/outline-folder-24px.svg"
-                backgroundColor: Theme.colorForeground
-                onClicked: shot.openFolder()
+            Row {
+                id: rowActions1
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: 4
+
+                visible: (shot && shot.fileType !== Shared.FILE_VIDEO)
+
+                ItemImageButton {
+                    id: buttonTrim
+                    width: 40
+                    height: 40
+                    source: "qrc:/assets/icons_material/baseline-timer-24px.svg"
+                    visible: (shot && shot.fileType === Shared.FILE_VIDEO)
+                    backgroundColor: Theme.colorForeground
+                    onClicked: contentOverview.toggleTrim()
+                }
+
+                ItemImageButton {
+                    id: buttonRotate
+                    width: 40
+                    height: 40
+                    source: "qrc:/assets/icons_material/baseline-rotate_90_degrees_ccw-24px.svg"
+                    backgroundColor: Theme.colorForeground
+                    onClicked: contentOverview.toggleTransform()
+                }
+
+                ItemImageButton {
+                    id: buttonCrop
+                    width: 40
+                    height: 40
+                    source: "qrc:/assets/icons_material/baseline-crop-24px.svg"
+                    backgroundColor: Theme.colorForeground
+                    onClicked: contentOverview.toggleCrop()
+                }
             }
 
-            ItemImageButton {
-                id: buttonDelete
-                width: 40
-                height: 40
-                source: "qrc:/assets/icons_material/baseline-delete-24px.svg"
-                backgroundColor: Theme.colorForeground
-                onClicked: contentOverview.openDeletePopup()
+            Rectangle { // separator
+                width: 2; height: 40;
+                anchors.verticalCenter: parent.verticalCenter
+                color: Theme.colorForeground
+                visible: rowActions1.visible
+            }
+
+            Row {
+                id: rowActions2
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: 4
+
+                ItemImageButton {
+                    id: buttonTimestamp
+                    width: 40
+                    height: 40
+                    source: "qrc:/assets/icons_material/baseline-date_range-24px.svg"
+                    backgroundColor: Theme.colorForeground
+                    onClicked: contentOverview.openDatePopup()
+                }
+
+                ItemImageButton {
+                    id: buttonTelemetry
+                    width: 40
+                    height: 40
+                    source: "qrc:/assets/icons_material/baseline-insert_chart-24px.svg"
+                    visible: (shot && shot.hasGPMF && shot.hasGPS)
+                    backgroundColor: Theme.colorForeground
+                    onClicked: contentOverview.openTelemetryPopup()
+                }
+
+                ItemImageButton {
+                    id: buttonEncode
+                    width: 40
+                    height: 40
+                    source: "qrc:/assets/icons_material/baseline-settings_applications-24px.svg"
+                    backgroundColor: Theme.colorForeground
+                    onClicked: contentOverview.openEncodingPopup()
+                }
+            }
+
+            Rectangle { // separator
+                width: 2; height: 40;
+                anchors.verticalCenter: parent.verticalCenter
+                color: Theme.colorForeground
+                visible: rowActions2.visible
+            }
+
+            Row {
+                id: rowActions3
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: 4
+
+                ItemImageButton {
+                    id: buttonShowFolder
+                    width: 40
+                    height: 40
+                    source: "qrc:/assets/icons_material/outline-folder-24px.svg"
+                    backgroundColor: Theme.colorForeground
+                    onClicked: shot.openFolder()
+                }
+
+                ItemImageButton {
+                    id: buttonDelete
+                    width: 40
+                    height: 40
+                    source: "qrc:/assets/icons_material/baseline-delete-24px.svg"
+                    backgroundColor: Theme.colorForeground
+                    onClicked: contentOverview.openDeletePopup()
+                }
             }
         }
+
+        Rectangle { // separator
+            width: 2; height: 40;
+            anchors.right: rowMenus.left
+            anchors.rightMargin: 12
+            anchors.verticalCenter: parent.verticalCenter
+            color: Theme.colorForeground
+            //visible: (screenMedia.state !== "overview")
+        }
+
+        ////////////////
 
         Row {
             id: rowMenus

@@ -167,7 +167,7 @@ Item {
     Map {
         id: map
         width: fullscreen ? parent.width - 32 : parent.width * 0.40
-        Behavior on width { NumberAnimation { duration: 250 } }
+        Behavior on width { NumberAnimation { duration: 333 } }
 
         anchors.top: parent.top
         anchors.topMargin: 16
@@ -186,6 +186,21 @@ Item {
 
         //zoomLevel: 2
         //center: QtPositioning.coordinate(45.5, 6)
+
+        Rectangle {
+            anchors.fill: parent
+            z: -1
+            visible: !map.mapReady
+            color: Theme.colorForeground
+
+            ImageSvg {
+                width: 64; height: 64;
+                anchors.centerIn: parent
+
+                color: Theme.colorIcon
+                source: "qrc:/assets/icons_material/baseline-hourglass_empty-24px.svg"
+            }
+        }
 
         MouseArea {
             anchors.fill: parent

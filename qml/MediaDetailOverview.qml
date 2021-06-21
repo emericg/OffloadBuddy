@@ -19,7 +19,6 @@ Item {
     function toggleCrop() { mediaPreview.toggleCrop() }
 
     function updateOverview() {
-
         date.text = shot.date.toUTCString()
         size.text = UtilsString.bytesToString_short(shot.datasize)
         definition.text = shot.width + "x" + shot.height + "   (" + UtilsMedia.varToString(shot.width, shot.height) + ")"

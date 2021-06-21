@@ -233,7 +233,7 @@ Item {
                 anchors.left: parent.left
                 anchors.leftMargin: 24
                 anchors.right: parent.right
-                anchors.rightMargin: 16
+                anchors.rightMargin: 12
 
                 Text {
                     height: 32
@@ -247,10 +247,14 @@ Item {
                 }
                 Text {
                     height: 32
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.rightMargin: 48
                     anchors.bottom: parent.bottom
 
                     text: shot.folder
                     color: Theme.colorText
+                    elide: Text.ElideLeft
                     font.pixelSize: Theme.fontSizeContent
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -281,7 +285,6 @@ Item {
             }
 
             ListView {
-                //height: shot.filesList.length * 32
                 height: infosFiles.height - 40 - 64 - 24
                 anchors.left: parent.left
                 anchors.leftMargin: 24
@@ -351,7 +354,7 @@ Item {
                                 text: modelData.directory
                                 color: Theme.colorText
                                 font.pixelSize: Theme.fontSizeContentSmall
-                                visible: ((filePath.contentWidth + fileName.contentWidth) < (dlv.width - 40 - fileSize.width - rowRight.width))
+                                visible: ((filePath.contentWidth + fileName.contentWidth) < (dlv.width - 48 - fileSize.width - rowRight.width))
                             }
                             Text {
                                 id: fileName
