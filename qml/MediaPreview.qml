@@ -1089,6 +1089,9 @@ Item {
                     onExited: isHovered = false
                     propagateComposedEvents: true
 
+                    visible: videoPlayer.hasAudio
+                    enabled: videoPlayer.hasAudio
+
                     ItemImageButton {
                         id: buttonSound
                         width: 36
