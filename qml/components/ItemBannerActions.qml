@@ -6,13 +6,14 @@ import "qrc:/js/UtilsString.js" as UtilsString
 
 Rectangle {
     id: bannerActions
-    height: 56
-    anchors.right: parent.right
-    anchors.rightMargin: 0
     anchors.left: parent.left
-    anchors.leftMargin: 0
+    anchors.right: parent.right
 
-    z: 1
+    height: 0
+    Behavior on height { NumberAnimation { duration: 133 } }
+
+    clip: true
+    visible: (height > 0)
     color: Theme.colorActionbar
 
     // prevent clicks below this area

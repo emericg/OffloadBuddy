@@ -22,6 +22,7 @@ Item {
         id: viewButton
         height: parent.height
         width: parent.width
+        radius: Theme.componentRadius
         color: "transparent"
 
         ImageSvg {
@@ -69,8 +70,8 @@ Item {
             State {
                 name: "hovered";
                 PropertyChanges { target: viewButton; color: Theme.colorComponentBorder; }
-                PropertyChanges { target: tButton; color: { (tButton.text === qsTr("DELETE")) ? Theme.colorWarning : Theme.colorText } }
-                PropertyChanges { target: iButton; color: { (tButton.text === qsTr("DELETE")) ? Theme.colorWarning : Theme.colorText } }
+                PropertyChanges { target: tButton; color: { (tButton.text === qsTr("DELETE")) ? Theme.colorError : Theme.colorText } }
+                PropertyChanges { target: iButton; color: { (tButton.text === qsTr("DELETE")) ? Theme.colorError : Theme.colorText } }
             }
         ]
     }

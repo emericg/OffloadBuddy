@@ -16,7 +16,7 @@ Item {
     property int selectedItemIndex : shotsView.currentIndex
     property string selectedItemUuid: shotsView.currentItem ? shotsView.currentItem.shot.uuid : ""
 
-    ////////
+    ////////////////////////////////////////////////////////////////////////////
 
     property bool selectionMode: false
     property var selectionList: []
@@ -92,7 +92,7 @@ Item {
         }
     }
 
-    ////////
+    ////////////////////////////////////////////////////////////////////////////
 
     Connections {
         target: currentDevice
@@ -706,7 +706,7 @@ Item {
 
         ItemBannerActions {
             id: bannerSelection
-            visible: (mediaGrid.selectionCount)
+            height: (mediaGrid.selectionCount) ? 56 : 0
         }
 
         ItemBannerMessage {
@@ -754,9 +754,10 @@ Item {
                 x: 0; y: 0; z: 2;
 
                 visible: !mediaGrid.selectionMode
+
                 color: "transparent"
-                radius: 2
-                border.width: 4
+                radius: (Theme.componentRadius > 4) ? Theme.componentRadius-2 : 2
+                border.width: (Theme.componentRadius > 4) ? 6 : 4
                 border.color: Theme.colorPrimary
             }
         }

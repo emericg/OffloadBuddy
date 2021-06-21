@@ -6,30 +6,33 @@ import "qrc:/js/UtilsString.js" as UtilsString
 
 Rectangle {
     id: bannerMessage
-    height: 56
     anchors.left: parent.left
     anchors.right: parent.right
 
-    z: 1
+    height: 0
+    Behavior on height { NumberAnimation { duration: 133 } }
+
+    clip: true
+    visible: (height > 0)
     color: Theme.colorActionbar
+
+    // prevent clicks below this area
+    MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
+
+    ////////////////////////////////////////////////////////////////////////////
 
     Component.onCompleted: {
         bannerMessage.close()
     }
 
     function openMessage(message) {
-        bannerMessage.visible = true
         bannerMessage.height = 56
         bannerText.text = message
     }
 
     function close() {
-        bannerMessage.visible = false
         bannerMessage.height = 0
     }
-
-    // prevent clicks below this area
-    MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
 
     ////////////////////////////////////////////////////////////////////////////
 

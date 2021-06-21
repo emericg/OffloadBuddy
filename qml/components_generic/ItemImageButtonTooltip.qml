@@ -243,7 +243,8 @@ Item {
         Rectangle {
             id: ttA
             anchors.margins: 4
-            width: 12; height: 12; rotation: 45
+            width: 12; height: 12;
+            rotation: 45
             color: backgroundColor
         }
         Rectangle {

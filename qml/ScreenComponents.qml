@@ -142,19 +142,23 @@ Item {
         ////////////////
 
         Rectangle {
-            id: rectangleAction
+            id: rectangleActions
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
 
             height: 56
+            Behavior on height { NumberAnimation { duration: 133 } }
+
+            clip: true
+            visible: (height > 0)
             color: Theme.colorActionbar
 
             // left
 
             Text {
                 anchors.left: parent.left
-                anchors.leftMargin: 32
+                anchors.leftMargin: 24
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: "Action bar"
@@ -168,7 +172,7 @@ Item {
 
             Row {
                 anchors.right: itemImageButtonX.left
-                anchors.rightMargin: 32
+                anchors.rightMargin: 24
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 16
 
@@ -195,7 +199,7 @@ Item {
                 width: 40
                 height: 40
                 anchors.right: parent.right
-                anchors.rightMargin: 32
+                anchors.rightMargin: 24
                 anchors.verticalCenter: parent.verticalCenter
 
                 source: "qrc:/assets/icons_material/baseline-close-24px.svg"
@@ -210,7 +214,7 @@ Item {
             id: rectangleColors
             width: 64 + 4
             height: 6*64 + 4
-            anchors.top: rectangleAction.bottom
+            anchors.top: rectangleActions.bottom
             anchors.topMargin: 32
             anchors.right: parent.right
             anchors.rightMargin: 32
@@ -276,7 +280,7 @@ Item {
         Column {
             id: columnComponents
 
-            anchors.top: rectangleAction.bottom
+            anchors.top: rectangleActions.bottom
             anchors.topMargin: 24
             anchors.left: parent.left
             anchors.leftMargin: 24

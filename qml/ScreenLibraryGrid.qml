@@ -78,8 +78,8 @@ Item {
         }
 
         // Header texts
-        textFilesCount.text = qsTr("%1 shots  /  %2 files".arg(mediaLibrary.shotModel.getShotCount()).arg(mediaLibrary.shotModel.getFileCount()))
-        textFilesSize.text = qsTr("%1 of space used".arg(UtilsString.bytesToString_short(mediaLibrary.shotModel.getDiskSpace())))
+        textFilesCount.text = qsTr("%1 shots  /  %2 files").arg(mediaLibrary.shotModel.getShotCount()).arg(mediaLibrary.shotModel.getFileCount())
+        textFilesSize.text = qsTr("%1 of space used").arg(UtilsString.bytesToString_short(mediaLibrary.shotModel.getDiskSpace()))
     }
 
     // POPUPS //////////////////////////////////////////////////////////////////
@@ -489,9 +489,10 @@ Item {
                 x: 0; y: 0; z: 2;
 
                 visible: !mediaGrid.selectionMode
+
                 color: "transparent"
-                radius: 2
-                border.width: 4
+                radius: (Theme.componentRadius > 4) ? Theme.componentRadius-2 : 2
+                border.width: (Theme.componentRadius > 4) ? 6 : 4
                 border.color: Theme.colorPrimary
             }
         }
