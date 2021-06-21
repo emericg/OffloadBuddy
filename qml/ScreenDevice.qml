@@ -44,7 +44,7 @@ Item {
         screenDeviceGrid.initDeviceHeader()
         screenDeviceGrid.initGridViewSettings()
         screenDeviceGrid.restoreState()
-        screenMedia.restoreShot()
+        screenMedia.restoreShot(false)
     }
 
     // KEYS HANDLING ///////////////////////////////////////////////////////////
@@ -60,7 +60,7 @@ Item {
         sequence: StandardKey.Forward
         onActivated: {
             if (screenDevice.state === "stateMediaGrid")
-                screenMedia.restoreShot()
+                screenMedia.restoreShot(true)
         }
     }
 
@@ -77,7 +77,7 @@ Item {
                     screenMedia.back()
             } else if (mouse.button === Qt.ForwardButton) {
                 if (screenDevice.state === "stateMediaGrid")
-                    screenMedia.restoreShot()
+                    screenMedia.restoreShot(true)
             }
         }
     }

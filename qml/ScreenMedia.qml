@@ -33,12 +33,12 @@ Item {
             }
         }
 
-        // set state
+        // change state
         if (appContent.state === "library") screenLibrary.state = "stateMediaDetails"
         else if (appContent.state === "device") screenDevice.state = "stateMediaDetails"
     }
 
-    function restoreShot() {
+    function restoreShot(load) {
         //console.log("screenMedia - restoreShot()")
 
         if (typeof deviceSavedState !== "undefined" && deviceSavedState) {
@@ -53,6 +53,12 @@ Item {
         } else {
             if (typeof screenMedia.shot === "undefined" || !screenMedia.shot) return
             if (!screenMedia.shot.isValid()) return
+        }
+
+        // forward/backward action? we need to change state too
+        if (load) {
+            if (appContent.state === "library") screenLibrary.state = "stateMediaDetails"
+            else if (appContent.state === "device") screenDevice.state = "stateMediaDetails"
         }
     }
 

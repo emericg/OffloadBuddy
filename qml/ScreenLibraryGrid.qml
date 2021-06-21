@@ -444,7 +444,7 @@ Item {
 
         ItemBannerActions {
             id: bannerSelection
-            visible: (mediaGrid.selectionCount)
+            height: (mediaGrid.selectionCount) ? 56 : 0
         }
     }
 

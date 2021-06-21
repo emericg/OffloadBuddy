@@ -31,7 +31,7 @@ Item {
         sequence: StandardKey.Forward
         onActivated: {
             if (screenLibrary.state === "stateMediaGrid")
-                screenMedia.restoreShot()
+                screenMedia.restoreShot(true)
         }
     }
 /*
@@ -59,7 +59,7 @@ Item {
                     screenMedia.back()
             } else if (mouse.button === Qt.ForwardButton) {
                 if (screenLibrary.state === "stateMediaGrid")
-                    screenMedia.restoreShot()
+                    screenMedia.restoreShot(true)
             }
         }
     }
