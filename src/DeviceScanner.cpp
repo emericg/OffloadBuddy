@@ -83,9 +83,9 @@ void DeviceScanner::scanFilesystems()
             continue;
         }
 
-        if (storage.rootPath() == "/" ||
-            storage.rootPath() == "/home" ||
+        if (storage.rootPath() == "/" || storage.rootPath() == "/home" ||
             storage.rootPath().startsWith("/boot") ||
+            storage.rootPath().startsWith("/run/user/") ||
             storage.rootPath().startsWith("/Users/"))
         {
             //qDebug() << "> skipping OS internal filesystem";

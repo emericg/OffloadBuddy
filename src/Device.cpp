@@ -358,7 +358,7 @@ int Device::getMtpBatteryCount() const
 
 float Device::getMtpBatteryLevel(const int index) const
 {
-    float level = 0.f;
+    float level = -1.f;
 
     if (index == 0)
     {
