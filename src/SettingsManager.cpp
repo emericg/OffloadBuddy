@@ -112,6 +112,9 @@ bool SettingsManager::readSettings()
         if (settings.contains("global/thumbSize"))
             m_thumbSize = settings.value("global/thumbSize").toUInt();
 
+        if (settings.contains("global/moveToTrash"))
+            m_moveToTrash = settings.value("global/moveToTrash").toBool();
+
         status = true;
     }
     else
@@ -143,6 +146,7 @@ bool SettingsManager::writeSettings()
         settings.setValue("global/thumbQuality", m_thumbQuality);
         settings.setValue("global/thumbFormat", m_thumbFormat);
         settings.setValue("global/thumbSize", m_thumbSize);
+        settings.setValue("global/moveToTrash", m_moveToTrash);
 
         if (settings.status() == QSettings::NoError)
         {
@@ -290,6 +294,16 @@ void SettingsManager::setThumbSize(unsigned value)
         m_thumbSize = value;
         writeSettings();
         Q_EMIT thumbSizeChanged();
+    }
+}
+
+void SettingsManager::setMoveToTrash(bool value)
+{
+    if (m_moveToTrash != value)
+    {
+        m_moveToTrash = value;
+        writeSettings();
+        Q_EMIT moveToTrashChanged();
     }
 }
 

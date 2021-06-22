@@ -101,6 +101,7 @@ void JobWorkerSync::work()
                         {
                             //qDebug() << "JobWorkerSync  >  deleting:" << file.filesystemPath;
 
+                            //if (QFile::moveToTrash(file.filesystemPath)) // Qt 5.15
                             if (QFile::remove(file.filesystemPath))
                             {
                                 stuff_done++;

@@ -315,7 +315,7 @@ Item {
                     text: qsTr("Ignore LRVs and THM files")
 
                     checked: settingsManager.ignorejunk
-                    onCheckStateChanged: settingsManager.ignorejunk = checked
+                    onClicked: settingsManager.ignorejunk = checked
                 }
 
                 CheckBoxThemed {
@@ -326,7 +326,7 @@ Item {
                     text: qsTr("Ignore HD audio files")
 
                     checked: settingsManager.ignorehdaudio
-                    onCheckStateChanged: settingsManager.ignorehdaudio = checked
+                    onClicked: settingsManager.ignorehdaudio = checked
                 }
             }
 
@@ -342,7 +342,7 @@ Item {
                     text: qsTr("Automatically delete offloaded media")
 
                     checked: settingsManager.autodelete
-                    onCheckStateChanged: settingsManager.autodelete = checked
+                    onClicked: settingsManager.autodelete = checked
                 }
 
                 CheckBoxThemed {
@@ -354,7 +354,7 @@ Item {
                     enabled: false
 
                     checked: settingsManager.automerge
-                    onCheckStateChanged: settingsManager.automerge = checked
+                    onClicked: settingsManager.automerge = checked
                 }
 
                 CheckBoxThemed {
@@ -365,7 +365,23 @@ Item {
                     text: qsTr("Automatically extract telemetry")
 
                     checked: settingsManager.autometadata
-                    onCheckStateChanged: settingsManager.autometadata = checked
+                    onClicked: settingsManager.autometadata = checked
+                }
+            }
+
+            Row {
+                height: 40
+                spacing: 32
+
+                CheckBoxThemed {
+                    id: checkMoveToTrash
+                    width: 350
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: qsTr("Move to trash instead of delete")
+
+                    checked: settingsManager.moveToTrash
+                    onClicked: settingsManager.moveToTrash = checked
                 }
             }
 

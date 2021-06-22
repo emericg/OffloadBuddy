@@ -57,6 +57,7 @@ class SettingsManager: public QObject
     Q_PROPERTY(bool autodelete READ getAutoDelete WRITE setAutoDelete NOTIFY autoDeleteChanged)
     Q_PROPERTY(bool ignorejunk READ getIgnoreJunk WRITE setIgnoreJunk NOTIFY ignoreJunkChanged)
     Q_PROPERTY(bool ignorehdaudio READ getIgnoreHdAudio WRITE setIgnoreHdAudio NOTIFY ignoreHdAudioChanged)
+    Q_PROPERTY(bool moveToTrash READ getMoveToTrash WRITE setMoveToTrash NOTIFY moveToTrashChanged)
     Q_PROPERTY(bool mtpfullscan READ getMtpFullScan WRITE setMtpFullScan NOTIFY mtpFullScanChanged)
 
     // Application window
@@ -80,6 +81,7 @@ class SettingsManager: public QObject
     unsigned m_thumbQuality = 1;
     unsigned m_thumbFormat = 2;
     unsigned m_thumbSize = 2;
+    bool m_moveToTrash = false;
     bool m_mtpFullScan = false;
 
     // Singleton
@@ -105,6 +107,7 @@ Q_SIGNALS:
     void thumbQualityChanged();
     void thumbFormatChanged();
     void thumbSizeChanged();
+    void moveToTrashChanged();
     void mtpFullScanChanged();
 
 public:
@@ -152,6 +155,9 @@ public:
 
     unsigned getThumbSize() const { return m_thumbSize; }
     void setThumbSize(unsigned value);
+
+    bool getMoveToTrash() const { return m_moveToTrash; }
+    void setMoveToTrash(bool value);
 
     bool getMtpFullScan() const { return m_mtpFullScan; }
     void setMtpFullScan(bool value);
