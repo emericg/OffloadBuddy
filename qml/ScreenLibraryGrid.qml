@@ -84,36 +84,44 @@ Item {
 
     // POPUPS //////////////////////////////////////////////////////////////////
 
-    PopupEncoding {
-        id: popupEncoding
+    PopupMove {
+        id: popupMove
+
+        onConfirmed: {
+            //
+        }
     }
 
-    PopupDelete {
-        id: confirmDeleteMultipleFilesPopup
+    PopupTelemetry {
+        id: popupTelemetry
 
-        message: qsTr("Are you sure you want to delete selected shots?")
         onConfirmed: {
-            var indexes = mediaGrid.selectionList;
-            mediaGrid.exitSelectionMode();
+            //
+        }
+    }
 
-            //var uuid_list = mediaLibrary.getSelectedUuids(indexes);
-            //var path_list = mediaLibrary.getSelectedPaths(indexes);
-            //console.log("paths; " + path_list)
+    PopupEncoding {
+        id: popupEncoding
 
-            // actual deletion
-            mediaLibrary.deleteSelection(indexes)
+        onConfirmed: {
+            //
         }
     }
 
     PopupDelete {
-        id: confirmDeleteSingleFilePopup
+        id: popupDelete
 
-        message: qsTr("Are you sure you want to delete selected shot?")
         onConfirmed: {
-            mediaLibrary.deleteSelected(selectedItemUuid)
+/*
+            // multi
+            var indexes = mediaGrid.selectionList
+            mediaLibrary.deleteSelection(indexes)
 
-            shotsView.currentIndex = -1;
-            mediaGrid.exitSelectionMode();
+            // selected shot
+            currentDevice.deleteSelected(selectedItemUuid)
+            shotsView.currentIndex = -1
+            mediaGrid.exitSelectionMode()
+*/
         }
     }
 
@@ -508,18 +516,32 @@ Item {
         function actionMenuTriggered(index) {
             //console.log("actionMenuTriggered(" + index + ") selected shot: '" + shotsView.currentItem.shot.name + "'")
 
-            if (index === 0) {
-                selectedItem.shot.openFolder()
+            var indexes = []
+            if (mediaGrid.selectionMode) {
+                indexes = selectionList
+            } else {
+                indexes.push(shotsView.currentIndex)
+            }
+
+            if (index === 2) {
+                popupMove.shots = mediaLibrary.getSelectedShotsNames(indexes)
+                popupMove.files = mediaLibrary.getSelectedFilesPaths(indexes)
+                popupMove.openSelection()
             }
             if (index === 3) {
                 popupEncoding.updateEncodePanel(selectedItem.shot)
-                popupEncoding.open()
+                popupEncoding.openSingle(selectedItem.shot)
+            }
+            if (index === 12) {
+                selectedItem.shot.openFile()
+            }
+            if (index === 13) {
+                selectedItem.shot.openFolder()
             }
             if (index === 16) {
-                var indexes = []
-                indexes.push(shotsView.currentIndex)
-                confirmDeleteSingleFilePopup.files = mediaLibrary.getSelectedPaths(indexes);
-                confirmDeleteSingleFilePopup.open()
+                popupDelete.shots = mediaLibrary.getSelectedShotsNames(indexes)
+                popupDelete.files = mediaLibrary.getSelectedFilesPaths(indexes)
+                popupDelete.openSelection()
             }
 
             actionMenu.visible = false
@@ -652,15 +674,15 @@ Item {
                 } else if (event.key === Qt.Key_Menu) {
                     //console.log("shotsView::Key_Menu")
                 } else if (event.key === Qt.Key_Delete) {
+                    var indexes = []
                     if (mediaGrid.selectionMode) {
-                        confirmDeleteSingleFilePopup.files = mediaLibrary.getSelectedPaths(selectionList);
-                        confirmDeleteSingleFilePopup.open()
+                        indexes = selectionList
                     } else {
-                        var indexes = []
                         indexes.push(shotsView.currentIndex)
-                        confirmDeleteSingleFilePopup.files = mediaLibrary.getSelectedPaths(indexes);
-                        confirmDeleteSingleFilePopup.open()
                     }
+                    popupDelete.shots = mediaLibrary.getSelectedShotsNames(indexes);
+                    popupDelete.files = mediaLibrary.getSelectedFilesPaths(indexes);
+                    popupDelete.openSelection()
                 }
             }
         }

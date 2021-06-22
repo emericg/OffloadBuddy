@@ -15,17 +15,30 @@ Popup {
     width: 720
     padding: 0
 
-    signal confirmed()
-
     modal: true
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
-    ////////////////////////////////////////////////////////////////////////////
+    signal confirmed()
 
-    property string mode: ""
+    ////////
+
+    property int popupMode: 0
+
+    property var shots: []
+    property var files: []
+    property bool fileRecapOpened: false
+    property bool fileRecapEnabled: true
+
     property var mediaProvider: null
     property var currentShot: null
+
+    property string outputPath: ""
+    property var outputSettings: null
+
+    ////////
+
+    property string encodingMode: ""
 
     property int clipStartMs: -1
     property int clipDurationMs: -1
@@ -50,11 +63,11 @@ Popup {
         // Set mode
         if (shot.shotType === Shared.SHOT_PICTURE) {
             titleText.text = qsTr("Image encoding")
-            mode = "image"
+            encodingMode = "image"
         } else if (shot.shotType === Shared.SHOT_PICTURE_MULTI || shot.shotType === Shared.SHOT_PICTURE_BURST ||
                    shot.shotType === Shared.SHOT_PICTURE_TIMELAPSE || shot.shotType === Shared.SHOT_PICTURE_NIGHTLAPSE) {
             titleText.text = qsTr("Timelapse encoding")
-            mode = "timelapse"
+            encodingMode = "timelapse"
 
             cbTimelapse.checked = false
             cbTimelapse.visible = false
@@ -65,7 +78,7 @@ Popup {
 
         } else {
             titleText.text = qsTr("Video encoding")
-            mode = "video"
+            encodingMode = "video"
 
             cbTimelapse.checked = false
             cbTimelapse.visible = true
@@ -183,11 +196,13 @@ Popup {
     ////////////////////////////////////////////////////////////////////////////
 
     background: Rectangle {
-        color: Theme.colorBackground
+        color: fileRecapOpened ? ThemeEngine.colorForeground : ThemeEngine.colorBackground
         radius: Theme.componentRadius
         border.width: 1
         border.color: Theme.colorSeparator
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 
     contentItem: Column {
         id: contentColumn
@@ -238,7 +253,7 @@ Popup {
                 anchors.left: parent.left
                 anchors.right: parent.right
 
-                visible: (mode === "video" || mode === "timelapse")
+                visible: (encodingMode === "video" || encodingMode === "timelapse")
 
                 Text {
                     id: textCodec
@@ -319,7 +334,7 @@ Popup {
                 anchors.left: parent.left
                 anchors.right: parent.right
 
-                visible: (mode === "image")
+                visible: (encodingMode === "image")
 
                 Text {
                     id: textFormat
@@ -389,7 +404,7 @@ Popup {
                     anchors.right: parent.right
 
                     function setText() {
-                        if (mode === "video" || mode === "timelapse") {
+                        if (encodingMode === "video" || encodingMode === "timelapse") {
                             if (cbCOPY.checked) {
                                 text = qsTr("With this mode you can trim the duration without reencoding the video, so no quality will be lost. But you cannot apply any other transformation.")
                             } else {
@@ -473,7 +488,7 @@ Popup {
                 anchors.left: parent.left
                 anchors.right: parent.right
 
-                visible: (mode === "video" || mode === "timelapse") && !cbCOPY.checked && !rbGIF.checked
+                visible: (encodingMode === "video" || encodingMode === "timelapse") && !cbCOPY.checked && !rbGIF.checked
 
                 Text {
                     id: textSpeed
@@ -623,7 +638,7 @@ Popup {
                 height: 48
                 spacing: 16
 
-                visible: (mode === "video" && !cbCOPY.checked)
+                visible: (encodingMode === "video" && !cbCOPY.checked)
 
                 Text {
                     width: contentColumn.legendWidth
@@ -644,7 +659,7 @@ Popup {
                         id: selectorGifFps
                         height: parent.height
 
-                        property var fps: 15
+                        property int fps: 15
 
                         ItemLilMenuButton {
                             text: "10" + (selected ? " " + qsTr("fps") : "")
@@ -679,7 +694,7 @@ Popup {
                         id: selectorVideoFps
                         height: parent.height
 
-                        property var fps: Math.round(currentShot.framerate)
+                        property int fps: Math.round(currentShot.framerate)
 
                         ItemLilMenuButton {
                             text: "30" + (selected ? " " + qsTr("fps") : "")
@@ -716,7 +731,7 @@ Popup {
                 height: 48
                 spacing: 16
 
-                visible: (mode === "timelapse") || (mode === "video" && !cbCOPY.checked && shot.duration > 60000)
+                visible: (encodingMode === "timelapse") || (encodingMode === "video" && !cbCOPY.checked && shot.duration > 60000)
 
                 Text {
                     width: contentColumn.legendWidth
@@ -739,7 +754,7 @@ Popup {
                     width: parent.width - contentColumn.legendWidth - cbTimelapse.width - 32
                     anchors.verticalCenter: parent.verticalCenter
 
-                    visible: cbTimelapse.checked || mode === "timelapse"
+                    visible: cbTimelapse.checked || encodingMode === "timelapse"
                     from: 1
                     to: 15
                     value: 10
@@ -747,7 +762,7 @@ Popup {
                 }
             }
 
-            //////////////////
+            ////////////////
 
             Item {
                 id: rectangleOrientation
@@ -812,7 +827,7 @@ Popup {
                 }
             }
 
-            //////////////////
+            ////////////////
 
             Item {
                 id: rectangleClip
@@ -875,7 +890,7 @@ Popup {
                 }
             }
 
-            //////////////////
+            ////////////////
 
             Item {
                 id: rectangleCrop
@@ -936,7 +951,7 @@ Popup {
                 }
             }
 
-            //////////////////
+            ////////////////
 
             Item {
                 id: rectangleGifEffects
@@ -1009,7 +1024,7 @@ Popup {
                     anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
 
-                    // visible: isGoPro
+                    //visible: isGoPro
                     text: qsTr("defisheye")
                 }
 
@@ -1019,7 +1034,7 @@ Popup {
                     anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
 
-                    visible: (mode != "image")
+                    visible: (encodingMode !== "image")
                     text: qsTr("stabilization")
                 }
             }
@@ -1057,7 +1072,7 @@ Popup {
                 }
             }
 
-            //////////////////
+            ////////////////
 /*
             Rectangle { // separator
                 height: 1; color: Theme.colorSeparator;
@@ -1212,7 +1227,7 @@ Popup {
 
                     var encodingParams = {}
 
-                    if (mode === "image") {
+                    if (encodingMode === "image") {
                         if (rbPNG.checked)
                             encodingParams["codec"] = "PNG";
                         else if (rbJPEG.checked)
@@ -1225,7 +1240,7 @@ Popup {
                             encodingParams["codec"] = "HEIF";
                     }
 
-                    if (mode === "video" || mode === "timelapse") {
+                    if (encodingMode === "video" || encodingMode === "timelapse") {
                         if (rbH264.checked)
                             encodingParams["codec"] = "H.264";
                         else if (rbH265.checked)

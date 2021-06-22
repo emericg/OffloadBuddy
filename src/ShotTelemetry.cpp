@@ -618,7 +618,7 @@ QGeoCoordinate Shot::getGpsCoordinates(unsigned index)
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-bool Shot::exportTelemetry(const QString &path, int accl_frequency, int gps_frequency, bool egm96_correction)
+bool Shot::exportTelemetry(const QString &path, int format, int accl_frequency, int gps_frequency, bool egm96_correction)
 {
     //qDebug() << "Shot::exportTelemetry('" << path << "', " << accl_frequency << ", " << gps_frequency << ", " << egm96_correction << ")";
     bool status = false;
@@ -725,7 +725,7 @@ bool Shot::exportTelemetry(const QString &path, int accl_frequency, int gps_freq
     return status;
 }
 
-bool Shot::exportGps(const QString &path, int gps_frequency, bool egm96_correction)
+bool Shot::exportGps(const QString &path, int format, int gps_frequency, bool egm96_correction)
 {
     //qDebug() << "Shot::exportGps('" << path << "', " << gps_frequency << ")";
     bool status = false;

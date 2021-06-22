@@ -231,7 +231,7 @@ Item {
             }
         }
 
-        ////////////////////
+        ////////////////
 
         Item {
             id: grid_rulesofthree
@@ -295,7 +295,7 @@ Item {
             }
         }
 
-        ////////////////////
+        ////////////////
 
         // controls
         Row {
@@ -440,7 +440,7 @@ Item {
             onClicked: resizeWidget.editing = false
         }
 
-        ////////////////////
+        ////////////////
 
         MouseArea { // top
             id: mouseAreaTOP

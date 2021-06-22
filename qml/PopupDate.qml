@@ -406,8 +406,8 @@ Popup {
                 fullColor: true
                 primaryColor: Theme.colorPrimary
                 onClicked: {
-                    popupDate.confirmed()
-                    popupDate.close()
+                    //popupDate.confirmed()
+                    //popupDate.close()
                 }
             }
         }

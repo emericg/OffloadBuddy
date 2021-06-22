@@ -72,8 +72,12 @@ public slots:
     void deleteSelected(const QString &shot_uuid);
 
     //
-    QStringList getSelectedUuids(const QVariant &indexes);
-    QStringList getSelectedPaths(const QVariant &indexes);
+    QStringList getSelectedShotsUuids(const QVariant &indexes);
+    QStringList getSelectedShotsNames(const QVariant &indexes);
+    QStringList getSelectedFilesPaths(const QVariant &indexes);
+    //
+    //void moveSelection(const QVariant &indexes);
+    //void extractTelemetrySelection(const QVariant &indexes);
     void deleteSelection(const QVariant &indexes);
 };
 

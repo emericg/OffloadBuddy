@@ -622,6 +622,27 @@ QString Shot::getFilesString() const
     return list;
 }
 
+void Shot::openFile() const
+{
+    QString file;
+
+    if (m_pictures.size())
+    {
+        file = m_pictures.at(0)->filesystemPath;
+    }
+    else if (m_videos.size())
+    {
+        file = m_videos.at(0)->filesystemPath;
+    }
+
+    QFileInfo d(file);
+    if (!file.isEmpty() && d.exists())
+    {
+        //qDebug() << "Shot::openFile()" << file;
+        QDesktopServices::openUrl(QUrl::fromLocalFile(file));
+    }
+}
+
 void Shot::openFolder() const
 {
     QString folder;

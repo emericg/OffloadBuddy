@@ -102,6 +102,7 @@ Item {
     }
 
     function restoreState() {
+        if (typeof currentDevice === "undefined" || !currentDevice) return
         //console.log("ScreenDeviceGrid.restoreState()")
 
         // Grid filters and settings
@@ -135,7 +136,6 @@ Item {
 
     function initDeviceHeader() {
         if (typeof currentDevice === "undefined" || !currentDevice) return
-
         //console.log("ScreenDeviceGrid.initDeviceHeader()")
 
         // Header text and picture
@@ -269,53 +269,47 @@ Item {
 
     // POPUPS //////////////////////////////////////////////////////////////////
 
+    PopupTelemetry {
+        id: popupTelemetry
+
+        onConfirmed: {
+            //
+        }
+    }
+
     PopupEncoding {
         id: popupEncoding
+
+        onConfirmed: {
+            //
+        }
     }
 
     PopupOffload {
-        id: popupOffloadAll
+        id: popupOffload
 
         onConfirmed: {
-            currentDevice.offloadAll(popupOffloadAll.selectedPath)
+            //currentDevice.offloadAll(popupOffload.selectedPath)
         }
     }
 
     PopupDelete {
-        id: confirmDeleteAll
+        id: popupDelete
 
-        message: qsTr("Are you sure you want to delete ALL of the files from this device?")
         onConfirmed: {
+/*
+            // all
             currentDevice.deleteAll()
-        }
-    }
 
-    PopupDelete {
-        id: confirmDeleteMultipleFilesPopup
-
-        message: qsTr("Are you sure you want to delete selected files?")
-        onConfirmed: {
+            // multi
             var indexes = mediaGrid.selectionList
-            mediaGrid.exitSelectionMode()
-
-            //var uuid_list = currentDevice.getSelectedUuids(indexes)
-            //var path_list = currentDevice.getSelectedPaths(indexes)
-            //console.log("paths; " + path_list)
-
-            // actual deletion
             currentDevice.deleteSelection(indexes)
-        }
-    }
 
-    PopupDelete {
-        id: confirmDeleteSingleFilePopup
-
-        message: qsTr("Are you sure you want to delete selected shot?")
-        onConfirmed: {
+            // selected shot
             currentDevice.deleteSelected(selectedItemUuid)
-
             shotsView.currentIndex = -1
             mediaGrid.exitSelectionMode()
+*/
         }
     }
 
@@ -677,7 +671,7 @@ Item {
             primaryColor: Theme.colorPrimary
 
             text: qsTr("Offload content")
-            onClicked: popupOffloadAll.open()
+            onClicked: popupOffload.openAll()
         }
 
         ButtonWireframe {
@@ -691,7 +685,7 @@ Item {
             fullColor: true
             primaryColor: Theme.colorError
             text: qsTr("Delete ALL content!")
-            onClicked: confirmDeleteAll.open()
+            onClicked: popupDelete.openAll()
         }
     }
 
@@ -772,23 +766,32 @@ Item {
         function actionMenuTriggered(index) {
             //console.log("actionMenuTriggered(" + index + ") selected shot: '" + shotsView.currentItem.shot.name + "'")
 
-            if (index === 0) {
-                shotsView.currentItem.shot.openFolder()
+            var indexes = []
+            if (mediaGrid.selectionMode) {
+                indexes = selectionList
+            } else {
+                indexes.push(shotsView.currentIndex)
             }
+
             if (index === 1) {
-                currentDevice.offloadCopySelected(selectedItemUuid)
-            }
-            if (index === 2) {
-                currentDevice.offloadMergeSelected(selectedItemUuid)
+                popupOffload.shots = currentDevice.getSelectedShotsNames(indexes)
+                popupOffload.files = currentDevice.getSelectedFilesPaths(indexes)
+                popupOffload.openSelection()
             }
             if (index === 3) {
                 popupEncoding.updateEncodePanel(selectedItem.shot)
-                popupEncoding.open()
+                popupEncoding.openSingle(selectedItem.shot)
+            }
+            if (index === 12) {
+                shotsView.currentItem.shot.openFile()
+            }
+            if (index === 13) {
+                shotsView.currentItem.shot.openFolder()
             }
             if (index === 16) {
                 var indexes = []
                 indexes.push(shotsView.currentIndex)
-                confirmDeleteSingleFilePopup.files = currentDevice.getSelectedPaths(indexes);
+                confirmDeleteSingleFilePopup.files = currentDevice.getSelectedFilesPaths(indexes);
                 confirmDeleteSingleFilePopup.open()
             }
 
@@ -889,7 +892,7 @@ Item {
 
                 // save state
                 if (deviceSavedState)
-                    if (shotsView.currentIndex != 0 && shotsView.currentItem != null)
+                    if (shotsView.currentIndex >= 0 && shotsView.currentItem != null)
                         deviceSavedState.selectedIndex = shotsView.currentIndex
             }
             onCurrentItemChanged: {
@@ -936,15 +939,15 @@ Item {
                 } else if (event.key === Qt.Key_Menu) {
                     //console.log("shotsView::Key_Menu")
                 } else if (event.key === Qt.Key_Delete) {
-                    if (selectionMode) {
-                        confirmDeleteSingleFilePopup.files = currentDevice.getSelectedPaths(selectionList)
-                        confirmDeleteSingleFilePopup.open()
+                    var indexes = []
+                    if (mediaGrid.selectionMode) {
+                        indexes = selectionList
                     } else {
-                        var indexes = []
                         indexes.push(shotsView.currentIndex)
-                        confirmDeleteSingleFilePopup.files = currentDevice.getSelectedPaths(indexes)
-                        confirmDeleteSingleFilePopup.open()
                     }
+                    popupDelete.shots = currentDevice.getSelectedShotsNames(indexes);
+                    popupDelete.files = currentDevice.getSelectedFilesPaths(indexes);
+                    popupDelete.openSelection()
                 }
             }
         }

@@ -7,7 +7,7 @@ import "qrc:/js/UtilsString.js" as UtilsString
 import "qrc:/js/UtilsPath.js" as UtilsPath
 
 Popup {
-    id: popupTelemetry
+    id: popupMove
     x: (appWindow.width / 2) - (width / 2) - (appSidebar.width / 2)
     y: (appWindow.height / 2) - (height / 2)
     width: 720
@@ -19,7 +19,7 @@ Popup {
 
     signal confirmed()
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////
 
     property int popupMode: 0
 
@@ -54,6 +54,18 @@ Popup {
         popupMode = 2
         if (shots.length === 0) return
         fileRecapEnabled = true
+        fileRecapOpened = false
+        mediaProvider = null
+        currentShot = null
+
+        visible = true
+    }
+
+    function openAll() {
+        popupMode = 3
+        shots = []
+        files = []
+        fileRecapEnabled = false
         fileRecapOpened = false
         mediaProvider = null
         currentShot = null
@@ -96,7 +108,7 @@ Popup {
                 anchors.leftMargin: 24
                 anchors.verticalCenter: parent.verticalCenter
 
-                text: qsTr("Extract telemetry")
+                text: qsTr("Move")
                 font.pixelSize: Theme.fontSizeTitle
                 font.bold: true
                 color: "white"
@@ -142,7 +154,7 @@ Popup {
 
         Item {
             id: contentArea
-            height: columnTelemetry.height
+            height: columnMove.height
             anchors.left: parent.left
             anchors.right: parent.right
 
@@ -170,7 +182,7 @@ Popup {
             ////////
 
             Column {
-                id: columnTelemetry
+                id: columnMove
                 anchors.left: parent.left
                 anchors.leftMargin: 24
                 anchors.right: parent.right
@@ -180,121 +192,13 @@ Popup {
 
                 visible: !fileRecapOpened
 
-                Item {
-                    id: elementAltitude
-                    height: 48
-                    anchors.right: parent.right
-                    anchors.rightMargin: 0
-                    anchors.left: parent.left
-                    anchors.leftMargin: 0
-
-                    Text {
-                        id: titleAltitude
-                        width: 128
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        text: qsTr("Altitude")
-                        font.pixelSize: 16
-                        color: Theme.colorSubText
-                    }
-
-                    SwitchThemedDesktop {
-                        id: switchEGM96
-                        anchors.left: titleAltitude.right
-                        anchors.leftMargin: 16
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        checked: true
-                        enabled: false
-                        text: qsTr("EGM96 correction")
-                    }
-                }
-
-                Item {
-                    id: elementGPS
-                    height: 48
-                    anchors.left: parent.left                    
-                    anchors.right: parent.right
-
-                    Text {
-                        id: titleGPS
-                        width: 128
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        text: qsTr("GPS trace")
-                        font.pixelSize: 16
-                        color: Theme.colorSubText
-                    }
-
-                    Row {
-                        anchors.left: titleGPS.right
-                        anchors.leftMargin: 16
-                        anchors.right: parent.right
-                        anchors.rightMargin: 0
-                        anchors.verticalCenter: parent.verticalCenter
-                        spacing: 16
-
-                        RadioButtonThemed {
-                            id: rbGPX
-                            text: "GPX"
-                            checked: true
-                        }
-                        RadioButtonThemed {
-                            id: rbIGC
-                            text: "IGC"
-                            enabled: false
-                        }
-                        RadioButtonThemed {
-                            id: rbKML
-                            text: "KML"
-                            enabled: false
-                        }
-                    }
-                }
-
-                Item {
-                    id: elementTelemetry
-                    height: 48
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-
-                    Text {
-                        id: titleTelemetry
-                        width: 128
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        text: qsTr("Telemetry")
-                        font.pixelSize: 16
-                        color: Theme.colorSubText
-                    }
-
-                    Row {
-                        anchors.left: titleTelemetry.right
-                        anchors.leftMargin: 16
-                        anchors.right: parent.right
-                        anchors.rightMargin: 0
-                        anchors.verticalCenter: parent.verticalCenter
-                        spacing: 16
-
-                        RadioButtonThemed {
-                            id: rbJSON
-                            text: "JSON"
-                            checked: true
-                        }
-                        RadioButtonThemed {
-                            id: rbCSV
-                            text: "CSV"
-                            enabled: false
-                        }
-                    }
-                }
-
-                ////////////////
-    /*
-                Rectangle { // separator
+                //////////////////
+/*
+                Rectangle {
                     height: 1; color: Theme.colorSeparator;
-                    anchors.right: parent.right; anchors.left: parent.left; }
-    */
+                    anchors.right: parent.right; anchors.left: parent.left;
+                } // separator
+*/
                 Item { height: 16; anchors.right: parent.right; anchors.left: parent.left; } // spacer
 
                 Item {
@@ -324,15 +228,36 @@ Popup {
 
                         ListModel {
                             id: cbDestinations
-                            ListElement { text: qsTr("Next to the video file"); }
-                            ListElement { text: qsTr("Select path manually"); }
+                            //ListElement { text: "auto"; }
                         }
 
                         model: cbDestinations
 
+                        Component.onCompleted: comboBoxDestination.updateDestinations()
+                        Connections {
+                            target: storageManager
+                            onDirectoriesUpdated: comboBoxDestination.updateDestinations()
+                        }
+
+                        function updateDestinations() {
+                            cbDestinations.clear()
+
+                            for (var child in storageManager.directoriesList) {
+                                if (storageManager.directoriesList[child].available &&
+                                    storageManager.directoriesList[child].directoryContent !== 1)
+                                    cbDestinations.append( { "text": storageManager.directoriesList[child].directoryPath } )
+                            }
+                            cbDestinations.append( { "text": qsTr("Select path manually") } )
+
+                            comboBoxDestination.currentIndex = 0
+                        }
+
                         property bool cbinit: false
                         onCurrentIndexChanged: {
-                            if (currentShot) textField_path.text = currentShot.getFolderString()
+                            if (storageManager.directoriesList.length <= 0) return
+
+                            if (comboBoxDestination.currentIndex < cbDestinations.count)
+                                textField_path.text = comboBoxDestination.displayText
 
                             if (cbinit) {
                                 if (comboBoxDestination.currentIndex === cbDestinations.count) {
@@ -345,60 +270,53 @@ Popup {
                     }
                 }
 
-                Item {
-                    height: 48
-                    anchors.right: parent.right
+                TextFieldThemed {
+                    id: textField_path
                     anchors.left: parent.left
+                    anchors.right: parent.right
 
                     visible: (comboBoxDestination.currentIndex === (cbDestinations.count - 1))
 
-                    TextFieldThemed {
-                        id: textField_path
-                        anchors.left: parent.left
+                    FileDialog {
+                        id: fileDialogChange
+                        title: qsTr("Please choose a destination directory!")
+                        sidebarVisible: true
+                        selectExisting: true
+                        selectMultiple: false
+                        selectFolder: true
+
+                        onAccepted: {
+                            textField_path.text = UtilsPath.cleanUrl(fileDialogChange.fileUrl);
+                        }
+                    }
+
+                    ButtonThemed {
+                        id: button_change
+                        width: 72
+                        height: 36
                         anchors.right: parent.right
+                        anchors.rightMargin: 2
                         anchors.verticalCenter: parent.verticalCenter
 
-                        FileDialog {
-                            id: fileDialogChange
-                            title: qsTr("Please choose a destination!")
-                            sidebarVisible: true
-                            selectExisting: true
-                            selectMultiple: false
-                            selectFolder: true
-
-                            onAccepted: {
-                                textField_path.text = UtilsPath.cleanUrl(fileDialogChange.fileUrl);
-                            }
-                        }
-
-                        ButtonThemed {
-                            id: button_change
-                            width: 72
-                            height: 36
-                            anchors.right: parent.right
-                            anchors.rightMargin: 2
-                            anchors.verticalCenter: parent.verticalCenter
-
-                            text: qsTr("change")
-                            embedded: true
-                            onClicked: {
-                                fileDialogChange.folder =  "file:///" + textField_path.text
-                                fileDialogChange.open()
-                            }
+                        embedded: true
+                        text: qsTr("change")
+                        onClicked: {
+                            fileDialogChange.folder =  "file:///" + textField_path.text
+                            fileDialogChange.open()
                         }
                     }
                 }
             }
         }
 
-        ////////////////
+        //////////////////
 
         Row {
             id: rowButtons
             height: Theme.componentHeight*2 + parent.spacing
             anchors.right: parent.right
             anchors.rightMargin: 24
-            spacing: 16
+            spacing: 24
 
             ButtonWireframe {
                 id: buttonCancel
@@ -408,36 +326,21 @@ Popup {
                 text: qsTr("Cancel")
                 fullColor: true
                 primaryColor: Theme.colorGrey
-                onClicked: popupTelemetry.close()
+                onClicked: popupMove.close()
             }
             ButtonWireframeImage {
-                id: buttonExtractTelemetry
+                id: buttonOffload
                 anchors.verticalCenter: parent.verticalCenter
 
-                text: qsTr("Extract telemetry")
-                source: "qrc:/assets/icons_material/baseline-insert_chart-24px.svg"
-                fullColor: true
-                primaryColor: Theme.colorSecondary
-
-                onClicked: {
-                    if (currentShot) currentShot.exportTelemetry(textField_path.text, 0, 30, 2, switchEGM96.checked)
-                    popupTelemetry.confirmed()
-                    popupTelemetry.close()
-                }
-            }
-            ButtonWireframeImage {
-                id: buttonExtractGps
-                anchors.verticalCenter: parent.verticalCenter
-
-                text: qsTr("Extract GPS")
-                source: "qrc:/assets/icons_material/baseline-map-24px.svg"
+                text: qsTr("Move")
+                source: "qrc:/assets/icons_material/baseline-archive-24px.svg"
                 fullColor: true
                 primaryColor: Theme.colorPrimary
 
                 onClicked: {
-                    if (currentShot) currentShot.exportGps(textField_path.text, 0, 2, switchEGM96.checked)
-                    popupTelemetry.confirmed()
-                    popupTelemetry.close()
+                    popupMove.outputPath = textField_path.text
+                    popupMove.confirmed()
+                    popupMove.close()
                 }
             }
         }

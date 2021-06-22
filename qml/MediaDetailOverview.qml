@@ -115,14 +115,13 @@ Item {
         popupEncoding.setOrientation(mediaPreview.rotation, mediaPreview.hflipped, mediaPreview.vflipped)
         popupEncoding.setCrop(mediaPreview.cropX, mediaPreview.cropY,
                               mediaPreview.cropW, mediaPreview.cropH)
-        popupEncoding.open()
+        popupEncoding.openSingle(shot)
     }
     function openTelemetryPopup() {
-        popupTelemetry.updateTelemetryPanel(shot)
-        popupTelemetry.open()
+        popupTelemetry.openSingle(shot)
     }
     function openDeletePopup() {
-        popupDelete.open()
+        popupDelete.openSingle(shot)
     }
     function openDatePopup() {
         popupDate.loadDates()
@@ -156,7 +155,6 @@ Item {
         x: (appWindow.width / 2) - (popupDelete.width / 2) - (appSidebar.width)
         y: (appWindow.height / 2) - (popupDelete.height / 2) - (rectangleHeader.height)
 
-        message: qsTr("Are you sure you want to delete the current shot?")
         onConfirmed: {
             if (appContent.state === "library") {
                 // delete shot

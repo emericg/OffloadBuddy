@@ -425,8 +425,8 @@ public slots:
     Q_INVOKABLE void updateGyroSeries(QtCharts::QLineSeries *x, QtCharts::QLineSeries *y, QtCharts::QLineSeries *z);
     Q_INVOKABLE QGeoCoordinate getGpsCoordinates(unsigned index);
 
-    Q_INVOKABLE bool exportTelemetry(const QString &path, int accl_frequency, int gps_frequency, bool egm96_correction);
-    Q_INVOKABLE bool exportGps(const QString &path, int gps_frequency, bool egm96_correction);
+    Q_INVOKABLE bool exportTelemetry(const QString &path, int format, int accl_frequency, int gps_frequency, bool egm96_correction);
+    Q_INVOKABLE bool exportGps(const QString &path, int format, int gps_frequency, bool egm96_correction);
 
     /// < GPMF WIP /////////////////////////
 
@@ -543,6 +543,7 @@ public slots:
     int getCameraId() const { return m_camera_id; }
     void setCameraId(int id) { m_camera_id = id; }
 
+    void openFile() const;
     void openFolder() const;
 };
 

@@ -577,7 +577,7 @@ int64_t Device::getSpaceAvailable_withrefresh()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void Device::offloadAll(const QString &path)
+void Device::offloadAll(const QString &path, const QVariant &values)
 {
     //qDebug() << "offloadAll()";
     //qDebug() << "(a) shots count: " << m_shotModel->getShotCount();
@@ -633,10 +633,9 @@ void Device::deleteAll()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-QStringList Device::getSelectedUuids(const QVariant &indexes)
+QStringList Device::getSelectedShotsUuids(const QVariant &indexes)
 {
-    qDebug() << "Device::getSelectedUuids(" << indexes << ")";
-
+    qDebug() << "Device::getSelectedShotsUuids(" << indexes << ")";
     QStringList selectedUuids;
 
     // indexes from qml gridview (after filtering)
@@ -651,7 +650,7 @@ QStringList Device::getSelectedUuids(const QVariant &indexes)
 
         Shot *shot = qvariant_cast<Shot*>(m_shotFilter->data(proxyIndexes.at(i), ShotModel::PointerRole));
         if (shot) selectedUuids += shot->getUuid();
-        //qDebug() << "MediaLibrary::getSelectedUuids(" <<  shot->getUuid();
+        //qDebug() << "MediaLibrary::getSelectedShotsUuids(" <<  shot->getUuid();
     }
 
     return selectedUuids;
@@ -659,9 +658,34 @@ QStringList Device::getSelectedUuids(const QVariant &indexes)
 
 /* ************************************************************************** */
 
-QStringList Device::getSelectedPaths(const QVariant &indexes)
+QStringList Device::getSelectedShotsNames(const QVariant &indexes)
 {
-    //qDebug() << "Device::getSelectedPaths(" << indexes << ")";
+    //qDebug() << "Device::getSelectedShotsNames(" << indexes << ")";
+    QStringList selectedUuids;
+
+    // indexes from qml gridview (after filtering)
+    QJSValue jsArray = indexes.value<QJSValue>();
+    const int jsArray_length = jsArray.property("length").toInt();
+    QList<QPersistentModelIndex> proxyIndexes;
+
+    for (int i = 0; i < jsArray_length; i++)
+    {
+        QModelIndex proxyIndex = m_shotFilter->index(jsArray.property(static_cast<quint32>(i)).toInt(), 0);
+        proxyIndexes.append(QPersistentModelIndex(proxyIndex));
+
+        Shot *shot = qvariant_cast<Shot*>(m_shotFilter->data(proxyIndexes.at(i), ShotModel::PointerRole));
+        if (shot) selectedUuids += shot->getName();
+        //qDebug() << "MediaLibrary::getSelectedShotsNames(" <<  shot->getUuid();
+    }
+
+    return selectedUuids;
+}
+
+/* ************************************************************************** */
+
+QStringList Device::getSelectedFilesPaths(const QVariant &indexes)
+{
+    //qDebug() << "Device::getSelectedFilesPaths(" << indexes << ")";
 
     QStringList selectedPaths;
 
@@ -686,7 +710,7 @@ QStringList Device::getSelectedPaths(const QVariant &indexes)
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void Device::offloadCopySelected(const QString &shot_uuid)
+void Device::offloadSelected(const QString &shot_uuid, const QVariant &values)
 {
     qDebug() << "offloadCopySelected(" << shot_uuid << ")";
 
@@ -802,7 +826,7 @@ void Device::deleteSelection(const QVariant &indexes)
 {
     qDebug() << "deleteSelection(" << indexes << ")";
 
-    QStringList selectedUuids = getSelectedUuids(indexes);
+    QStringList selectedUuids = getSelectedShotsUuids(indexes);
     QList<Shot *> list;
 
     for (const auto &u: qAsConst(selectedUuids))
@@ -818,7 +842,7 @@ void Device::offloadCopySelection(const QVariant &indexes)
 {
     qDebug() << "offloadCopySelection(" << indexes << ")";
 
-    QStringList selectedUuids = getSelectedUuids(indexes);
+    QStringList selectedUuids = getSelectedShotsUuids(indexes);
     QList<Shot *> list;
 
     for (const auto &u: qAsConst(selectedUuids))
@@ -834,7 +858,7 @@ void Device::offloadMergeSelection(const QVariant &indexes)
 {
     qDebug() << "offloadMergeSelection(" << indexes << ")";
 
-    QStringList selectedUuids = getSelectedUuids(indexes);
+    QStringList selectedUuids = getSelectedShotsUuids(indexes);
     QList<Shot *> list;
 
     for (const auto &u: qAsConst(selectedUuids))

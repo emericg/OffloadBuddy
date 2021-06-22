@@ -125,18 +125,16 @@ Rectangle {
     }
 
     function openMenu() {
-        var folder = true
-        var copy = true
-        var merge = false
+        var move = false
+        var offload = false
         var encode = true
         var telemetry_gpmf = false
         var telemetry_gps = false
+        var file = true
+        var folder = true
         var remove = true
 
         if (shot.fileType === Shared.FILE_VIDEO) { // all kind of videos
-            if (shot.chapterCount > 1)
-                merge = true
-
             if (shot.hasGPMF)
                 telemetry_gpmf = true
             if (shot.hasGPS)
@@ -149,22 +147,27 @@ Rectangle {
         }
 
         if (shotDevice) {
+            move = false
+            offload = true
             if (shotDevice.deviceStorage === Shared.STORAGE_MTP) {
+                file = false
                 folder = false
-                merge = false
                 encode = false
             }
             if (shotDevice.readOnly)
                 remove = false
         } else {
-            copy = false
+            move = true
+            offload = false
         }
 
-        actionMenu.setMenuButtons(folder, copy, merge, encode, telemetry_gpmf, telemetry_gps, remove)
+        actionMenu.setMenuButtons(move, offload, encode,
+                                  telemetry_gpmf, telemetry_gps,
+                                  file, folder, remove)
 
         actionMenu.visible = true
-        actionMenu.x = mouseAreaOutsideView.mouseX + 4
-        actionMenu.y = mouseAreaOutsideView.mouseY + 4
+        actionMenu.x = mouseAreaOutsideView.mouseX + 8
+        actionMenu.y = mouseAreaOutsideView.mouseY + 8
     }
 
     ////////////////////////////////////////////////////////////////////////////

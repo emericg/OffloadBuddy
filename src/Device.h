@@ -259,20 +259,22 @@ public slots:
     float getMtpBatteryLevel(const int index = 0) const;
 
     //
-    void offloadAll(const QString &path);
+    void offloadAll(const QString &path, const QVariant &values);
     void deleteAll();
 
     //
-    void offloadCopySelected(const QString &shot_uuid);
-    void offloadMergeSelected(const QString &shot_uuid);
+    void offloadSelected(const QString &shot_uuid, const QVariant &values);
     void reencodeSelected(const QString &shot_uuid, const QVariant &values);
     void deleteSelected(const QString &shot_uuid);
 
     //
-    QStringList getSelectedUuids(const QVariant &indexes);
-    QStringList getSelectedPaths(const QVariant &indexes);
+    QStringList getSelectedShotsUuids(const QVariant &indexes);
+    QStringList getSelectedShotsNames(const QVariant &indexes);
+    QStringList getSelectedFilesPaths(const QVariant &indexes);
+    //
     void offloadCopySelection(const QVariant &indexes);
     void offloadMergeSelection(const QVariant &indexes);
+    //void extractTelemetrySelection(const QVariant &indexes);
     void deleteSelection(const QVariant &indexes);
 };
 

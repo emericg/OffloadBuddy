@@ -31,44 +31,15 @@ Rectangle {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    function setMenuButtons(folder, copy, merge, encode, gpmf, gps, remove) {
-        if (folder)
-            openFolder.visible = true
-        else
-            openFolder.visible = false
-        if (copy)
-            offloadCopy.visible = true
-        else
-            offloadCopy.visible = false
-        if (merge)
-            offloadMerge.visible = true
-        else
-            offloadMerge.visible = false
-        if (encode)
-            offloadReencode.visible = true
-        else
-            offloadReencode.visible = false
-        if (gpmf) {
-            telemetrySeparator.visible = true
-            telemetryGPMF.visible = true
-        } else {
-            telemetrySeparator.visible = false
-            telemetryGPMF.visible = false
-        }
-        if (gps) {
-            telemetrySeparator.visible = true
-            telemetryGPS.visible = true
-        } else {
-            telemetrySeparator.visible = false
-            telemetryGPS.visible = false
-        }
-        if (remove) {
-            removeSeparator.visible = true
-            removeSelected.visible = true
-        } else {
-            removeSeparator.visible = false
-            removeSelected.visible = false
-        }
+    function setMenuButtons(move, offload, encode, gpmf, gps, file, folder, remove) {
+        shotMove.visible = move
+        shotOffload.visible = offload
+        shotEncode.visible = encode
+        telemetryGPMF.visible = gpmf
+        telemetryGPS.visible = gps
+        openFile.visible = file
+        openFolder.visible = folder
+        removeSelected.visible = remove
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -82,32 +53,24 @@ Rectangle {
         bottomPadding: 0
         spacing: 0
 
-        ActionButton {
-            id: openFolder
-            index: 0
-            button_text: qsTr("Open folder")
-            button_source: "qrc:/assets/icons_material/outline-folder-24px.svg"
-            onButtonClicked: menuSelected(index)
-        }
-
         ////////
 
         ActionButton {
-            id: offloadCopy
+            id: shotOffload
             index: 1
-            button_text: qsTr("Offload (copy)")
+            button_text: qsTr("Offload")
             button_source: "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
             onButtonClicked: menuSelected(index)
         }
         ActionButton {
-            id: offloadMerge
+            id: shotMove
             index: 2
-            button_text: qsTr("Offload (merge)")
-            button_source: "qrc:/assets/icons_material/baseline-merge_type-24px.svg"
+            button_text: qsTr("Move")
+            button_source: "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
             onButtonClicked: menuSelected(index)
         }
         ActionButton {
-            id: offloadReencode
+            id: shotEncode
             index: 3
             button_text: qsTr("Reencode")
             button_source: "qrc:/assets/icons_material/baseline-memory-24px.svg"
@@ -121,6 +84,7 @@ Rectangle {
             anchors.left: parent.left
             anchors.right: parent.right
             height: 1
+            visible: telemetryGPMF.visible || telemetryGPS.visible
             color: Theme.colorSeparator
         }
         ActionButton {
@@ -141,10 +105,36 @@ Rectangle {
         ////////
 
         Rectangle {
+            id: openSeparator
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 1
+            visible: openFile.visible || openFolder.visible
+            color: Theme.colorSeparator
+        }
+        ActionButton {
+            id: openFile
+            index: 12
+            button_text: qsTr("Open file")
+            button_source: "qrc:/assets/icons_material/outline-folder-24px.svg"
+            onButtonClicked: menuSelected(index)
+        }
+        ActionButton {
+            id: openFolder
+            index: 13
+            button_text: qsTr("Open folder")
+            button_source: "qrc:/assets/icons_material/outline-folder-24px.svg"
+            onButtonClicked: menuSelected(index)
+        }
+
+        ////////
+
+        Rectangle {
             id: removeSeparator
             anchors.left: parent.left
             anchors.right: parent.right
             height: 1
+            visible: removeSelected.visible
             color: Theme.colorSeparator
         }
         ActionButton {
