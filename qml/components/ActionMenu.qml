@@ -69,7 +69,7 @@ Rectangle {
         ActionButton {
             id: shotEncode
             index: 3
-            button_text: qsTr("Reencode")
+            button_text: qsTr("Encode")
             button_source: "qrc:/assets/icons_material/baseline-memory-24px.svg"
             onButtonClicked: menuSelected(index)
         }

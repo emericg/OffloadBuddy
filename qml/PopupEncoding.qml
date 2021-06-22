@@ -38,6 +38,33 @@ Popup {
 
     ////////
 
+    function open() { return; }
+
+    function openSingle(shot) {
+        popupMode = 1
+        shots = []
+        files = []
+        fileRecapEnabled = false
+        fileRecapOpened = false
+        mediaProvider = null
+        currentShot = shot
+
+        visible = true
+    }
+
+    function openSelection() {
+        popupMode = 2
+        if (shots.length === 0) return
+        fileRecapEnabled = true
+        fileRecapOpened = false
+        mediaProvider = null
+        currentShot = null
+
+        visible = true
+    }
+
+    ////////
+
     property string encodingMode: ""
 
     property int clipStartMs: -1
