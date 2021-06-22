@@ -48,7 +48,5 @@ public:
     void setAcceptedFolder(const QString acceptedFolder) { m_acceptedFolder = acceptedFolder; }
 };
 
-//Q_DECLARE_METATYPE(ShotFilter*)
-
 /* ************************************************************************** */
 #endif // SHOT_FILTER_H

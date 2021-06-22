@@ -98,18 +98,12 @@ void ShotModel::addFile(ofb_file *f, ofb_shot *s)
         }
     }
 
-    if (shot)
+    if (!shot)
     {
-        //qDebug() << "Adding file:" << f->name << "to an existing shot";
-        shot->addFile(f);
-    }
-    else
-    {
-        //qDebug() << "file:" << f->name << "is a new shot";
+        //qDebug() << "File:" << f->name << "is from a new shot";
         shot = new Shot(s->shot_type, this);
         if (shot)
         {
-            shot->addFile(f);
             shot->setFileId(s->shot_id);
             shot->setCameraId(s->camera_id);
             addShot(shot);
@@ -120,6 +114,17 @@ void ShotModel::addFile(ofb_file *f, ofb_shot *s)
         }
     }
 
+    if (shot)
+    {
+        //qDebug() << "Adding file:" << f->name << "to an existing shot";
+        shot->addFile(f);
+
+        // update content stats
+        m_fileCount++;
+        m_diskSpace += f->size;
+        Q_EMIT statsUpdated();
+    }
+
     delete s;
 }
 
@@ -127,9 +132,18 @@ void ShotModel::addShot(Shot *shot)
 {
     if (shot)
     {
+        // add
         beginInsertRows(QModelIndex(), getShotCount(), getShotCount());
         m_shots.push_back(shot);
         endInsertRows();
+
+        if (shot->getFileCount())
+        {
+            // update content stats
+            m_fileCount += shot->getFileCount();
+            m_diskSpace += shot->getFullSize();
+            Q_EMIT statsUpdated();
+        }
     }
 }
 
@@ -137,6 +151,12 @@ void ShotModel::removeShot(Shot *shot)
 {
     if (shot)
     {
+        // update content stats
+        m_fileCount -= shot->getFileCount();
+        m_diskSpace -= shot->getFullSize();
+        Q_EMIT statsUpdated();
+
+        // remove
         beginRemoveRows(QModelIndex(), m_shots.indexOf(shot), m_shots.indexOf(shot));
         m_shots.removeOne(shot);
         delete shot;
@@ -287,35 +307,6 @@ Shot *ShotModel::getShotAt(Shared::ShotType type, int file_id, int camera_id) co
     }
 
     return nullptr;
-}
-
-qint64 ShotModel::getDiskSpace() const
-{
-    qint64 size = 0;
-
-    for (auto shot: m_shots)
-    {
-        size += shot->getFullSize();
-    }
-
-    return size;
-}
-
-int ShotModel::getShotCount() const
-{
-    return m_shots.size();
-}
-
-int ShotModel::getFileCount() const
-{
-    int count = 0;
-
-    for (auto shot: m_shots)
-    {
-        count += shot->getFileCount();
-    }
-
-    return count;
 }
 
 /* ************************************************************************** */

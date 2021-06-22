@@ -1149,7 +1149,7 @@ Popup {
 
                 visible: (comboBoxDestination.currentIndex === (cbDestinations.count - 1))
 
-                TextFieldComplex {
+                TextField {
                     id: textField_path
                     anchors.left: parent.left
                     anchors.right: parent.right
@@ -1189,32 +1189,6 @@ Popup {
                             fileDialogChange.open()
                         }
                     }
-                }
-            }
-
-            Row  {
-                id: rectangleFileWarning
-                anchors.left: parent.left
-                anchors.right: parent.right
-                height: 48
-                spacing: 16
-
-                ImageSvg {
-                    width: 28
-                    height: 28
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    color: Theme.colorWarning
-                    source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
-                }
-
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: qsTr("Warning, this file exists already and will be overwritten...")
-                    color: Theme.colorText
-                    font.bold: false
-                    font.pixelSize: Theme.fontSizeContent
-                    wrapMode: Text.WordWrap
                 }
             }
         }

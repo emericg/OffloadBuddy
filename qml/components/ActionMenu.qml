@@ -7,8 +7,8 @@ Rectangle {
     id: actionMenu
     width: 220
     height: menuHolder.height
-    visible: isOpen
-    focus: isOpen && !isMobile
+    visible: false
+    focus: visible && !isMobile
 
     color: Theme.colorComponent
     radius: Theme.componentRadius
@@ -17,16 +17,13 @@ Rectangle {
 
     signal menuSelected(var index)
     property int menuWidth: 0
-    property bool isOpen: false
 
-    function open() { isOpen = true; updateSize(); }
-    function close() { isOpen = false; }
-    function openClose() { isOpen = !isOpen; updateSize(); }
+    function open() { visible = true; updateSize(); }
+    function close() { visible = false; }
+    function openClose() { visible = !visible; updateSize(); }
 
     function updateSize() {
-        if (isOpen) {
-            // TODO
-        }
+        // TODO
     }
 
     ////////////////////////////////////////////////////////////////////////////

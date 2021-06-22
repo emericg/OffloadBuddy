@@ -65,21 +65,17 @@ Item {
     ////////
 
     function initGridViewSettings() {
-        // Grid menu
-        actionMenu.visible = false
+        //
     }
 
     function updateGridViewSettings() {
         if (typeof mediaLibrary === "undefined" || !mediaLibrary) return
 
         if (shotsView.count <= 0) {
+            actionMenu.visible = false
             shotsView.currentIndex = -1
             mediaGrid.exitSelectionMode()
         }
-
-        // Header texts
-        textFilesCount.text = qsTr("%1 shots  /  %2 files").arg(mediaLibrary.shotModel.getShotCount()).arg(mediaLibrary.shotModel.getFileCount())
-        textFilesSize.text = qsTr("%1 of space used").arg(UtilsString.bytesToString_short(mediaLibrary.shotModel.getDiskSpace()))
     }
 
     // POPUPS //////////////////////////////////////////////////////////////////
@@ -169,7 +165,7 @@ Item {
             anchors.right: parent.right
             anchors.rightMargin: 16
 
-            text: "%42 shots  /  128 files"
+            text: qsTr("%1 shots  /  %2 files").arg(mediaLibrary.shotModel.shotCount).arg(mediaLibrary.shotModel.fileCount)
             verticalAlignment: Text.AlignVCenter
             color: Theme.colorHeaderContent
             font.pixelSize: Theme.fontSizeContentBig
@@ -183,7 +179,7 @@ Item {
             anchors.right: parent.right
             anchors.rightMargin: 16
 
-            text: "236 GB of space used"
+            text: qsTr("%1 of space used").arg(UtilsString.bytesToString_short(mediaLibrary.shotModel.diskSpace))
             verticalAlignment: Text.AlignVCenter
             color: Theme.colorHeaderContent
             font.pixelSize: Theme.fontSizeContentBig
@@ -660,13 +656,14 @@ Item {
             }
 
             Keys.onPressed: {
+                actionMenu.visible = false
+
                 if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-                    actionMenu.visible = false
                     screenMedia.loadShot(mediaLibrary.getShotByUuid(screenLibraryGrid.selectedItemUuid))
                 } else if (event.key === Qt.Key_PageUp) {
-                    shotsView.currentIndex = 0;
+                    shotsView.currentIndex = 0
                 } else if (event.key === Qt.Key_PageDown) {
-                    shotsView.currentIndex = shotsView.count - 1;
+                    shotsView.currentIndex = shotsView.count - 1
                 } else if ((event.key === Qt.Key_A) && (event.modifiers & Qt.ControlModifier)) {
                     mediaGrid.selectAll()
                 } else if (event.key === Qt.Key_Clear) {
@@ -680,8 +677,8 @@ Item {
                     } else {
                         indexes.push(shotsView.currentIndex)
                     }
-                    popupDelete.shots = mediaLibrary.getSelectedShotsNames(indexes);
-                    popupDelete.files = mediaLibrary.getSelectedFilesPaths(indexes);
+                    popupDelete.shots = mediaLibrary.getSelectedShotsNames(indexes)
+                    popupDelete.files = mediaLibrary.getSelectedFilesPaths(indexes)
                     popupDelete.openSelection()
                 }
             }

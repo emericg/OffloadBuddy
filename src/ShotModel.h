@@ -36,7 +36,21 @@ class ShotModel : public QAbstractListModel
 {
     Q_OBJECT
 
+    Q_PROPERTY(qint64 diskSpace READ getDiskSpace NOTIFY statsUpdated)
+    Q_PROPERTY(int shotCount READ getShotCount NOTIFY statsUpdated)
+    Q_PROPERTY(int fileCount READ getFileCount NOTIFY statsUpdated)
+
     QList<Shot *> m_shots;
+
+    qint64 m_diskSpace = 0;
+    int m_fileCount = 0;
+
+    qint64 getDiskSpace() const { return m_diskSpace; }
+    int getShotCount() const { return m_shots.size(); }
+    int getFileCount() const { return m_fileCount; }
+
+Q_SIGNALS:
+    void statsUpdated();
 
 protected:
     QHash<int, QByteArray> roleNames() const;
@@ -72,18 +86,13 @@ public:
     Shot *getShotWithName(const QString &name);
     Shot *getShotWithPath(const QString &path);
 
-    Q_INVOKABLE qint64 getDiskSpace() const;
-    Q_INVOKABLE int getShotCount() const;
-    Q_INVOKABLE int getFileCount() const;
-
 public slots:
     void addFile(ofb_file *f, ofb_shot *s);
     void addShot(Shot *shot);
     void removeShot(Shot *shot);
+    //void removeFile(); // TODO
     void sanetize();
 };
-
-//Q_DECLARE_METATYPE(ShotModel*)
 
 /* ************************************************************************** */
 #endif // SHOT_MODEL_H

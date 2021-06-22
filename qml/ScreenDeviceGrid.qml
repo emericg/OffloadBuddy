@@ -138,15 +138,7 @@ Item {
         if (typeof currentDevice === "undefined" || !currentDevice) return
         //console.log("ScreenDeviceGrid.initDeviceHeader()")
 
-        // Header text and picture
-        if (currentDevice.batteryLevel > 0.0 && currentDevice.storageLevel > 0.0)
-            deviceModelText.anchors.topMargin = 12
-        else if (currentDevice.batteryLevel <= 0.0 && currentDevice.storageLevel <= 0.0)
-            deviceModelText.anchors.topMargin = 38
-        else
-            deviceModelText.anchors.topMargin = 26
-
-        deviceModelText.text = currentDevice.brand + " " + currentDevice.model;
+        // Header picture
         deviceImage.source = UtilsDevice.getDevicePicture(currentDevice)
 
         // Storage and battery infos
@@ -156,55 +148,23 @@ Item {
 
     function updateBattery() {
         if (typeof currentDevice === "undefined" || !currentDevice) return
-
-        //console.log("ScreenDeviceGrid.updateBattery() currentDevice.batteryLevel" + currentDevice.batteryLevel)
-
-        if (currentDevice.batteryLevel > 0.0) {
-            deviceBatteryIcon.visible = true
-            deviceBatteryBar.visible = true
-            deviceBatteryBar.value = currentDevice.batteryLevel
-        } else {
-            deviceBatteryIcon.visible = false
-            deviceBatteryBar.visible = false
-        }
+        //console.log("ScreenDeviceGrid.updateBattery() batteryLevel: " + currentDevice.batteryLevel)
     }
 
     function updateStorage() {
         if (typeof currentDevice === "undefined" || !currentDevice) return
-
-        //console.log("ScreenDeviceGrid.updateStorage() currentDevice.storageLevel" + currentDevice.storageLevel)
-
-        if (currentDevice.spaceTotal > 0) {
-            deviceSpaceText.text = UtilsString.bytesToString_short(currentDevice.spaceUsed)
-                    + qsTr(" used of ") + UtilsString.bytesToString_short(currentDevice.spaceTotal)
-        } else {
-            deviceSpaceText.text = qsTr("Unknown storage")
-        }
-
-        if (currentDevice.readOnly === true) {
-            deviceSpaceText.anchors.rightMargin = 32
-            deviceLockedImage.visible = true
-        } else {
-            deviceSpaceText.anchors.rightMargin = 8
-            deviceLockedImage.visible = false
-        }
+        //console.log("ScreenDeviceGrid.updateStorage() storageLevel: " + currentDevice.storageLevel)
 
         if (currentDevice.spaceTotal > 0) {
-            deviceStorageImage.visible = true
-            if (currentDevice.getStorageCount() > 1) {
-                deviceSpaceBar1.visible = true
-                deviceSpaceBar1.value = currentDevice.getStorageLevel(2)
-                deviceSpaceBar2.visible = true
-                deviceSpaceBar2.value = currentDevice.getStorageLevel(1)
-            } else {
-                deviceSpaceBar1.visible = false
-                deviceSpaceBar2.visible = true
-                deviceSpaceBar2.value = currentDevice.storageLevel
+            if (currentDevice.getStorageCount() === 1) {
+                deviceSpaceBar0.value = currentDevice.storageLevel
+                deviceSpaceBar0.vsu = currentDevice.spaceUsed
+                deviceSpaceBar0.vst = currentDevice.spaceTotal
+
+            } else if (currentDevice.getStorageCount() > 1) {
+                deviceSpaceBar0.value = currentDevice.getStorageLevel(2)
+                deviceSpaceBar1.value = currentDevice.getStorageLevel(1)
             }
-        } else {
-            deviceStorageImage.visible = false
-            deviceSpaceBar1.visible = false
-            deviceSpaceBar2.visible = false
         }
     }
 
@@ -348,113 +308,109 @@ Item {
 
             fillMode: Image.PreserveAspectCrop
             color: Theme.colorHeaderContent
+
+            Row {
+                id: lilIcons
+                height: 28
+                anchors.right: parent.right
+                anchors.rightMargin: -16
+                anchors.bottom: parent.bottom
+                layoutDirection: Qt.RightToLeft
+/*
+                ItemImageButton {
+                    id: deviceSettings
+                    height: 28
+                    btnSize: 28
+                    imgSize: 24
+                    background: true
+                    source: "qrc:/assets/icons_material/baseline-memory-24px.svg"
+                }
+*/
+                ItemImageButtonTooltip {
+                    id: deviceRO
+                    height: 28
+                    btnSize: 28
+                    imgSize: 24
+                    background: true
+                    source: "qrc:/assets/icons_material/outline-https-24px.svg"
+                    iconColor: Theme.colorWarning
+                    tooltipText: "Read Only storage"
+                    tooltipPosition: "left"
+
+                    visible: currentDevice.readOnly
+                }
+            }
         }
 
-        Text {
-            id: deviceModelText
-            width: 256
-            height: 30
-            anchors.top: parent.top
-            anchors.topMargin: 12
+        ////////////////
+
+        Column {
             anchors.right: deviceImage.left
             anchors.rightMargin: 8
-
-            //text: "Camera brand & model"
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignRight
-            color: Theme.colorHeaderContent
-            font.bold: true
-            font.pixelSize: Theme.fontSizeHeader
-        }
-        Text {
-            id: deviceSpaceText
-            width: 232
-            height: 24
-            anchors.right: deviceImage.left
-            anchors.rightMargin: 32
-            anchors.top: deviceModelText.bottom
-            anchors.topMargin: 0
-
-            //text: "64GB available of 128GB"
-            color: Theme.colorHeaderContent
-            font.pixelSize: Theme.fontSizeContent
-            horizontalAlignment: Text.AlignRight
-            verticalAlignment: Text.AlignBottom
-        }
-
-        ImageSvg {
-            id: deviceLockedImage
-            width: 24
-            height: 24
-            anchors.top: deviceModelText.bottom
-            anchors.topMargin: 0
-            anchors.right: deviceModelText.right
-            anchors.rightMargin: -3
-
-            visible: currentDevice.readOnly
-            source: "qrc:/assets/icons_material/outline-https-24px.svg"
-            color: Theme.colorHeaderContent
-        }
-        ImageSvg {
-            id: deviceStorageImage
-            width: 24
-            height: 24
-            anchors.top: deviceLockedImage.bottom
-            anchors.topMargin: 0
-            anchors.right: deviceModelText.right
-            anchors.rightMargin: -3
-
-            source: "qrc:/assets/icons_material/outline-sd_card-24px.svg"
-            color: Theme.colorHeaderContent
-        }
-
-        ProgressBarThemed {
-            id: deviceSpaceBar1
+            anchors.verticalCenter: deviceImage.verticalCenter
             width: 256
-            height: 6
-            anchors.verticalCenterOffset: -4
-            anchors.verticalCenter: deviceStorageImage.verticalCenter
-            anchors.rightMargin: 2
-            anchors.right: deviceStorageImage.left
+            spacing: 4
 
-            //visible: currentDevice.getStorageCount() > 0
-            value: currentDevice.getStorageLevel(1)
-        }
-        ProgressBarThemed {
-            id: deviceSpaceBar2
-            width: 256
-            height: 6
-            anchors.verticalCenterOffset: 4
-            anchors.verticalCenter: deviceStorageImage.verticalCenter
-            anchors.right: deviceStorageImage.left
-            anchors.rightMargin: 2
+            Text {
+                id: deviceModel
+                anchors.right: parent.right
 
-            visible: currentDevice.getStorageCount() > 1
-            value: currentDevice.getStorageLevel(2)
-        }
+                text: currentDevice.brand + " " + currentDevice.model
+                color: Theme.colorHeaderContent
+                font.bold: true
+                font.pixelSize: Theme.fontSizeHeader
+            }
 
-        ImageSvg {
-            id: deviceBatteryIcon
-            width: 24
-            height: 24
-            anchors.top: deviceStorageImage.bottom
-            anchors.topMargin: 0
-            anchors.right: deviceModelText.right
-            anchors.rightMargin: -3
+            Text {
+                id: deviceFirmware
+                anchors.right: parent.right
+                visible: currentDevice.deviceType > 3
 
-            source: "qrc:/assets/icons_material/outline-power-24px.svg"
-            color: Theme.colorHeaderContent
-        }
-        ProgressBarThemed {
-            id: deviceBatteryBar
-            width: 256
-            height: 6
-            anchors.right: deviceBatteryIcon.left
-            anchors.rightMargin: 2
-            anchors.verticalCenter: deviceBatteryIcon.verticalCenter
+                text: qsTr("firmware") + " " + currentDevice.firmware
+                color: Theme.colorHeaderContent
+                font.pixelSize: Theme.fontSizeContentSmall
+            }
+/*
+            Text {
+                anchors.right: parent.right
+                visible: currentDevice.deviceType > 3
 
-            visible: currentDevice.batteryLevel
-            value: currentDevice.batteryLevel
+                text: qsTr("serial") + " " + currentDevice.serial
+                color: Theme.colorHeaderContent
+                font.pixelSize: Theme.fontSizeContentSmall
+            }
+*/
+            DataBarSpace {
+                id: deviceSpaceBar0
+                width: 256
+                height: 12
+
+                visible: currentDevice.getStorageCount() > 0
+                value: currentDevice.storageLevel
+                valueMin: 0
+                valueMax: 100
+            }
+            DataBarSpace {
+                id: deviceSpaceBar1
+                width: 256
+                height: 12
+
+                visible: currentDevice.getStorageCount() > 1
+                value: currentDevice.storageLevel
+                valueMin: 0
+                valueMax: 100
+            }
+
+            DataBarPower {
+                id: deviceBatteryBar0
+                width: 256
+                height: 12
+
+                visible: currentDevice.batteryLevel > 0
+                value: currentDevice.batteryLevel
+                valueMin: 0
+                valueMax: 100
+            }
         }
 
         ////////////////
@@ -925,8 +881,9 @@ Item {
             }
 
             Keys.onPressed: {
+                actionMenu.visible = false
+
                 if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-                    actionMenu.visible = false
                     screenMedia.loadShot(currentDevice.getShotByUuid(screenDeviceGrid.selectedItemUuid))
                 } else if (event.key === Qt.Key_PageUp) {
                     shotsView.currentIndex = 0
@@ -945,8 +902,8 @@ Item {
                     } else {
                         indexes.push(shotsView.currentIndex)
                     }
-                    popupDelete.shots = currentDevice.getSelectedShotsNames(indexes);
-                    popupDelete.files = currentDevice.getSelectedFilesPaths(indexes);
+                    popupDelete.shots = currentDevice.getSelectedShotsNames(indexes)
+                    popupDelete.files = currentDevice.getSelectedFilesPaths(indexes)
                     popupDelete.openSelection()
                 }
             }
