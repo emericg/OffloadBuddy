@@ -31,6 +31,12 @@ ApplicationWindow {
     flags: settingsManager.appThemeCSD ? Qt.Window | Qt.FramelessWindowHint : Qt.Window
     color: settingsManager.appThemeCSD ? "transparent" : Theme.colorBackground
 
+    property bool isDesktop: true
+    property bool isMobile: false
+    property bool isPhone: false
+    property bool isTablet: false
+    property bool isHdpi: (utilsScreen.screenDpi > 128)
+
     // Desktop stuff ///////////////////////////////////////////////////////////
 
     minimumWidth: isHdpi ? 800 : 1280
@@ -55,19 +61,42 @@ ApplicationWindow {
         windowInstance: appWindow
     }
 
-    // Mobile stuff ////////////////////////////////////////////////////////////
-
-    property bool isHdpi: (utilsScreen.screenDpi > 128)
-    property bool isDesktop: true
-    property bool isMobile: false
-    property bool isPhone: false
-    property bool isTablet: false
-
     // Events handling /////////////////////////////////////////////////////////
 
     Component.onCompleted: {
         mediaLibrary.searchMediaDirectories()
         deviceManager.searchDevices()
+    }
+/*
+    Shortcut {
+        sequences: [StandardKey.Back, StandardKey.Backspace]
+        onActivated: backAction()
+    }
+    Shortcut {
+        sequence: StandardKey.Forward
+        onActivated: forwardAction()
+    }
+    Shortcut {
+        sequence: StandardKey.Refresh
+        onActivated: //
+    }
+    Shortcut {
+        sequence: "Ctrl+F5"
+        onActivated: //
+    }
+    Shortcut {
+        sequences: [StandardKey.Deselect, StandardKey.Cancel]
+        onActivated: deselectAction()
+    }
+*/
+    Shortcut {
+        sequence: StandardKey.FullScreen
+        onActivated: {
+            if (appWindow.visibility === Window.Windowed)
+                appWindow.visibility = Window.FullScreen
+            else
+                appWindow.visibility = Window.Windowed
+        }
     }
     Shortcut {
         sequence: StandardKey.Preferences

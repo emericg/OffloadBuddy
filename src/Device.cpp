@@ -718,16 +718,16 @@ void Device::offloadSelected(const QString &shot_uuid, const QVariant &values)
     Shot *shot = m_shotModel->getShotWithUuid(shot_uuid);
 
     if (jm && shot)
-        jm->addJob(JOB_COPY, this, nullptr, shot);
+        jm->addJob(JOB_OFFLOAD, this, nullptr, shot);
 }
 
-void Device::offloadMergeSelected(const QString &shot_uuid)
+void Device::moveSelected(const QString &shot_uuid, const QVariant &values)
 {
-    qDebug() << "offloadMergeSelected(" << shot_uuid << ")";
+    qDebug() << "moveSelected(" << shot_uuid << ")";
 
     JobManager *jm = JobManager::getInstance();
     Shot *shot = m_shotModel->getShotWithUuid(shot_uuid);
-    if (jm && shot) jm->addJob(JOB_COPY, this, nullptr, shot);
+    if (jm && shot) jm->addJob(JOB_MOVE, this, nullptr, shot);
 }
 
 void Device::reencodeSelected(const QString &shot_uuid, const QVariant &values)

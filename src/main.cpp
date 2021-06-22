@@ -51,8 +51,8 @@
 void print_build_infos()
 {
     qDebug() << "OffloadBuddy::print_build_infos()";
-
     qDebug() << "* Built on '" << __DATE__ << __TIME__ << "'";
+
 #if defined(__ICC) || defined(__INTEL_COMPILER)
     qDebug() << "* Built with ICC '" << __INTEL_COMPILER << "/" __INTEL_COMPILER_BUILD_DATE << "'";
 #elif defined(_MSC_VER)
@@ -65,7 +65,7 @@ void print_build_infos()
     qDebug() << "* Built with an unknown compiler";
 #endif
 
-#ifndef QT_NO_DEBUG
+#if !defined(QT_NO_DEBUG) && !defined(NDEBUG)
     qDebug() << "* This is a DEBUG build";
 #endif
 

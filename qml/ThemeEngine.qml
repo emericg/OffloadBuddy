@@ -142,7 +142,7 @@ Item {
             colorSecondary =        "#ffdd28"
             colorSuccess =          colorMaterialLightGreen
             colorWarning =          "#ffac00"
-            colorError =            "#dc4543"
+            colorError =            "#e64b39"
 
             colorText =             "#222222"
             colorSubText =          "#555555"

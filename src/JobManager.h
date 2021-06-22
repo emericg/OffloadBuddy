@@ -51,6 +51,8 @@ typedef enum JobType
     JOB_FORMAT,
     JOB_DELETE,
 
+    JOB_OFFLOAD,
+    JOB_MOVE,
     JOB_COPY,
     JOB_MERGE,
 
@@ -207,8 +209,7 @@ public:
     void setProgress(float p) { m_percent = p; Q_EMIT jobUpdated(); }
     float getProgress() { return m_percent / 100.f; }
 
-public slots:
-    void openDestination() const
+    Q_INVOKABLE void openDestination() const
     {
         QFileInfo d(m_destination);
         if (!m_destination.isEmpty() && d.exists())
@@ -287,6 +288,17 @@ public slots:
     //void shotErrored(int, Shot *); // TODO?
 
     void newFile(QString);
+
+    Q_INVOKABLE bool fileExists(const QString &path) const
+    {
+        QFileInfo f(path);
+        if (path.isEmpty() || f.exists())
+        {
+            return true;
+        }
+
+        return false;
+    }
 };
 
 /* ************************************************************************** */

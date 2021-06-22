@@ -337,6 +337,7 @@ Item {
 
         ImageSvg {
             id: deviceImage
+            z: 5
             width: 128
             anchors.top: parent.top
             anchors.topMargin: 8
@@ -789,10 +790,9 @@ Item {
                 shotsView.currentItem.shot.openFolder()
             }
             if (index === 16) {
-                var indexes = []
-                indexes.push(shotsView.currentIndex)
-                confirmDeleteSingleFilePopup.files = currentDevice.getSelectedFilesPaths(indexes);
-                confirmDeleteSingleFilePopup.open()
+                popupDelete.shots = currentDevice.getSelectedShotsNames(indexes)
+                popupDelete.files = currentDevice.getSelectedFilesPaths(indexes)
+                popupDelete.openSelection()
             }
 
             actionMenu.visible = false

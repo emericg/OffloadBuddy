@@ -250,9 +250,10 @@ Item {
                 id: button_map_fullscreen
                 width: map.fullscreen ? 48 : 40
                 height: map.fullscreen ? 48 : 40
+
                 background: true
-                backgroundColor: "#555"
-                iconColor: "white"
+                backgroundColor: Theme.colorHeader
+                iconColor: Theme.colorHeaderContent
                 highlightMode: "color"
 
                 source: map.fullscreen ? "qrc:/assets/icons_material/baseline-fullscreen_exit-24px.svg"
@@ -264,14 +265,15 @@ Item {
                 id: button_map_moove
                 width: map.fullscreen ? 48 : 40
                 height: map.fullscreen ? 48 : 40
-                background: true
-                backgroundColor: "#555"
-                iconColor: "white"
-                highlightMode: "color"
-                selected: map.moove
 
-                source: "qrc:/assets/icons_material/baseline-open_with-24px.svg"
+                background: true
+                backgroundColor: Theme.colorHeader
+                iconColor: Theme.colorHeaderContent
+                highlightMode: "color"
+
+                selected: map.moove
                 onClicked: map.moove = !map.moove
+                source: "qrc:/assets/icons_material/baseline-open_with-24px.svg"
             }
         }
 
@@ -286,9 +288,10 @@ Item {
                 id: button_map_dezoom
                 width: map.fullscreen ? 48 : 40
                 height: map.fullscreen ? 48 : 40
+
                 background: true
-                backgroundColor: "#555"
-                iconColor: "white"
+                backgroundColor: Theme.colorHeader
+                iconColor: Theme.colorHeaderContent
                 highlightMode: "color"
 
                 source: "qrc:/assets/icons_material/baseline-zoom_out-24px.svg"
@@ -303,9 +306,10 @@ Item {
                 id: button_map_zoom
                 width: map.fullscreen ? 48 : 40
                 height: map.fullscreen ? 48 : 40
+
                 background: true
-                backgroundColor: "#555"
-                iconColor: "white"
+                backgroundColor: Theme.colorHeader
+                iconColor: Theme.colorHeaderContent
                 highlightMode: "color"
 
                 source: "qrc:/assets/icons_material/baseline-zoom_in-24px.svg"
@@ -363,7 +367,7 @@ Item {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
 
-            color: "#555"
+            color: Theme.colorHeader
             opacity: 0.8
             visible: mapMarker.visible
 
@@ -379,7 +383,7 @@ Item {
                     text: qsTr("GPS coordinates:")
                     font.pixelSize: Theme.fontSizeContent
                     font.bold: true
-                    color: "white"
+                    color: Theme.colorHeaderContent
                 }
 
                 Text {
@@ -387,7 +391,7 @@ Item {
 
                     text: shot.latitudeString + "    " + shot.longitudeString
                     font.pixelSize: Theme.fontSizeContent
-                    color: "white"
+                    color: Theme.colorHeaderContent
                 }
 
                 Item { width: 1; height: 1; } // spacer
@@ -398,7 +402,7 @@ Item {
                     text: qsTr("Altitude:")
                     font.pixelSize: Theme.fontSizeContent
                     font.bold: true
-                    color: "white"
+                    color: Theme.colorHeaderContent
                 }
 
                 Text {
@@ -406,7 +410,7 @@ Item {
 
                     text: UtilsString.altitudeToString(shot.altitude - shot.altitudeOffset, 0, settingsManager.appUnits)
                     font.pixelSize: Theme.fontSizeContent
-                    color: "white"
+                    color: Theme.colorHeaderContent
                 }
             }
         }
@@ -419,7 +423,6 @@ Item {
 
         anchors.top: parent.top
         anchors.left: parent.left
-        //anchors.right: map.left
         anchors.bottom: parent.bottom
 
         //visible: !map.fullscreen

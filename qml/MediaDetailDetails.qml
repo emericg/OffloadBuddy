@@ -277,7 +277,7 @@ Item {
                 anchors.right: parent.right
                 anchors.rightMargin: 16
 
-                text: qsTr("File(s):")
+                text: (shot.fileCount > 1) ? qsTr("Files:") : qsTr("File:")
                 color: Theme.colorText
                 font.bold: true
                 font.pixelSize: Theme.fontSizeContent
@@ -300,6 +300,8 @@ Item {
                     height: 32
                     anchors.left: parent.left
                     anchors.right: parent.right
+
+                    ////////
 
                     Row { // row left
                         id: rowLeft
@@ -365,6 +367,8 @@ Item {
                         }
                     }
 
+                    ////////
+
                     Row { // row right
                         id: rowRight
                         anchors.right: parent.right
@@ -378,13 +382,15 @@ Item {
                             backgroundColor: Theme.colorBackground
                             source: "qrc:/assets/icons_material/baseline-launch-24px.svg"
                             onClicked: utilsApp.openWith(modelData.path)
-                        }/*
+                        }
+/*
                         ItemImageButton {
                             width: 32; height: 32;
                             visible: false
                             backgroundColor: Theme.colorBackground
                             source: "qrc:/assets/icons_material/baseline-delete-24px.svg"
-                        }*/
+                        }
+*/
                     }
                 }
             }

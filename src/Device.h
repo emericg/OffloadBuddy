@@ -264,6 +264,7 @@ public slots:
 
     //
     void offloadSelected(const QString &shot_uuid, const QVariant &values);
+    void moveSelected(const QString &shot_uuid, const QVariant &values);
     void reencodeSelected(const QString &shot_uuid, const QVariant &values);
     void deleteSelected(const QString &shot_uuid);
 

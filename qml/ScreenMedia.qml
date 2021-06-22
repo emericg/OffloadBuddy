@@ -14,6 +14,9 @@ Item {
     property string startedFrom: ""
     property var shot: null
 
+    focus : (screenMedia.startedFrom === "device" && appContent.state === "device" && screenDevice.state === "stateMediaDetails") ||
+            (screenMedia.startedFrom === "library" && appContent.state === "library" && screenLibrary.state === "stateMediaDetails")
+
     function loadShot(newshot) {
         //console.log("screenMedia - loadShot(" + newshot.name + ")")
         if (typeof newshot === "undefined" || !newshot) return
@@ -80,8 +83,8 @@ Item {
     }
 
     function updateFocus() {
-        focus = (screenMedia.startedFrom === "device" && appContent.state === "device" && screenDevice.state === "stateMediaDetails") ||
-                (screenMedia.startedFrom === "library" && appContent.state === "library" && screenLibrary.state === "stateMediaDetails")
+        //focus = (screenMedia.startedFrom === "device" && appContent.state === "device" && screenDevice.state === "stateMediaDetails") ||
+        //        (screenMedia.startedFrom === "library" && appContent.state === "library" && screenLibrary.state === "stateMediaDetails")
 
         if (focus === false) contentOverview.setPause()
     }
@@ -380,6 +383,12 @@ Item {
 
     ////////////////////////////////////////////////////////////////////////////
 
+    onFocusChanged: {
+        screenMedia.updateFocus()
+    }
+    onVisibleChanged: {
+        screenMedia.updateFocus()
+    }
     onStateChanged: {
         // save state
         if (typeof deviceSavedState !== "undefined" && deviceSavedState)
