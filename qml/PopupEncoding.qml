@@ -1000,6 +1000,8 @@ Popup {
                 }
             }
 
+            ////////////////
+
             Item {
                 id: rectangleFilter
                 height: 48
@@ -1039,6 +1041,8 @@ Popup {
                 }
             }
 
+            ////////////////
+
             Item {
                 id: rectangleMetadataWarning
                 height: 48
@@ -1073,12 +1077,8 @@ Popup {
             }
 
             ////////////////
-/*
-            Rectangle { // separator
-                height: 1; color: Theme.colorSeparator;
-                anchors.right: parent.right; anchors.left: parent.left; }
-*/
-            Item { height: 16; anchors.right: parent.right; anchors.left: parent.left; } // spacer
+
+            Item { width: 16; height: 16; } // spacer
 
             Item {
                 id: rectangleDestination
@@ -1149,7 +1149,7 @@ Popup {
 
                 visible: (comboBoxDestination.currentIndex === (cbDestinations.count - 1))
 
-                TextField {
+                TextFieldComplex {
                     id: textField_path
                     anchors.left: parent.left
                     anchors.right: parent.right
@@ -1189,6 +1189,32 @@ Popup {
                             fileDialogChange.open()
                         }
                     }
+                }
+            }
+
+            Row  {
+                id: rectangleFileWarning
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: 48
+                spacing: 16
+
+                ImageSvg {
+                    width: 28
+                    height: 28
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    color: Theme.colorWarning
+                    source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
+                }
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: qsTr("Warning, this file exists already and will be overwritten...")
+                    color: Theme.colorText
+                    font.bold: false
+                    font.pixelSize: Theme.fontSizeContent
+                    wrapMode: Text.WordWrap
                 }
             }
         }

@@ -297,14 +297,7 @@ Popup {
                     }
                 }
 
-                //////////////////
-/*
-                Rectangle {
-                    height: 1; color: Theme.colorSeparator;
-                    anchors.right: parent.right; anchors.left: parent.left;
-                } // separator
-*/
-                Item { height: 16; anchors.right: parent.right; anchors.left: parent.left; } // spacer
+                Item { width: 16; height: 16; } // spacer
 
                 Item {
                     id: rectangleDestination
