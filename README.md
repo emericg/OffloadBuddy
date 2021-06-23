@@ -18,15 +18,22 @@ Works on Linux, macOS and Windows!
   - [x] Copy, merge or reencode media
   - [ ] Change wrong dates (WIP)
   - [x] Show and export GoPro telemetry & GPS traces
-- [x] Create short video clips (and GIFs) from your videos!
-- [x] Assemble photo timelapses into videos
-- [x] Extract photos/screenshots from videos
-- [x] Create timelapse from videos
-- [x] Apply filters to media
+- [x] Media transcoding
+  - [x] Create short video clips (and GIFs) from your videos!
+  - [x] Create videos from timelapses
+  - [x] Create timelapse from videos
+  - [x] Extract photos/screenshots from videos
+- [x] Apply filters to transcoded media
   - [x] Reframe media
+  - [x] Cip duration
   - [x] Rotate media (WIP)
   - [ ] Defisheye media (WIP)
   - [ ] Stabilize videos
+- [x] Telemetry handling
+  - [x] Export GoPro telemetry and GPS trace
+  - [x] Visualize telemetry with graphs
+  - [x] Visualize GPS trace on maps
+  - [ ] Video overlay
 - [ ] GoPro firmware updates
 
 ### Screenshots!
@@ -44,9 +51,8 @@ Works on Linux, macOS and Windows!
 You will need a C++14 capable compiler and Qt 5.12+ (with QtMultimedia, QtLocation and QtCharts)
 On Windows, the contribs builds fine with MSVC 2017.
 
-Build dependencies:
+Build OffloadBuddy:
 - Qt (5.12+)  
-- CMake  
 - pkg-config (linux / macOS without contribs)  
 
 Optional dependencies:
@@ -55,19 +61,24 @@ Optional dependencies:
 - ffmpeg (3.4+)  
 - MiniVideo (0.13+)  
 
+Build dependencies:
+- python 3  
+- cmake  
+- and a couple others (see contribs/contribs.py)
+
 ### Building OffloadBuddy
 
-Contribs (optional):
+Build dependencies using the 'contribs' script (optional):
 ```bash
 $ cd OffloadBuddy/contribs/
 $ python3 contribs.py
 ```
 
-OffloadBuddy:
+Build OffloadBuddy:
 ```bash
-> $ cd OffloadBuddy/
-> $ qmake
-> $ make
+$ cd OffloadBuddy/
+$ qmake DEFINES+=USE_CONTRIBS CONFIG+=release
+$ make
 ```
 
 
