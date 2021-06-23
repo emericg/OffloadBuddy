@@ -15,6 +15,8 @@
         <file>icons_material/baseline-burst_mode-24px.svg</file>
         <file>icons_material/baseline-camera-24px.svg</file>
         <file>icons_material/baseline-cancel-24px.svg</file>
+        <file>icons_material/baseline-center_focus-24px.svg</file>
+        <file>icons_material/baseline-center_focus_strong-24px.svg</file>
         <file>icons_material/baseline-center_focus_weak-24px.svg</file>
         <file>icons_material/baseline-check_circle_outline-24px.svg</file>
         <file>icons_material/baseline-close-24px.svg</file>
@@ -29,6 +31,7 @@
         <file>icons_material/baseline-flip-24px.svg</file>
         <file>icons_material/baseline-filter_list-24px.svg</file>
         <file>icons_material/baseline-folder-24px.svg</file>
+        <file>icons_material/baseline-folder_open-24px.svg</file>
         <file>icons_material/baseline-fullscreen_exit-24px.svg</file>
         <file>icons_material/baseline-fullscreen-24px.svg</file>
         <file>icons_material/baseline-hourglass_empty-24px.svg</file>
@@ -76,8 +79,9 @@
         <file>icons_material/baseline-warning-24px.svg</file>
         <file>icons_material/baseline-zoom_in-24px.svg</file>
         <file>icons_material/baseline-zoom_out-24px.svg</file>
-        <file>icons_material/outline-create_new_folder-24px.svg</file>
+        <file>icons_material/outline-camera-24px.svg</file>
         <file>icons_material/outline-camera_alt-24px.svg</file>
+        <file>icons_material/outline-create_new_folder-24px.svg</file>
         <file>icons_material/outline-folder-24px.svg</file>
         <file>icons_material/outline-https-24px.svg</file>
         <file>icons_material/outline-local_movies-24px.svg</file>

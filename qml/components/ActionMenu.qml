@@ -113,14 +113,14 @@ Rectangle {
             id: openFile
             index: 12
             button_text: qsTr("Open file")
-            button_source: "qrc:/assets/icons_material/outline-folder-24px.svg"
+            button_source: "qrc:/assets/icons_material/baseline-folder-24px.svg"
             onButtonClicked: menuSelected(index)
         }
         ActionButton {
             id: openFolder
             index: 13
             button_text: qsTr("Open folder")
-            button_source: "qrc:/assets/icons_material/outline-folder-24px.svg"
+            button_source: "qrc:/assets/icons_material/baseline-folder_open-24px.svg"
             onButtonClicked: menuSelected(index)
         }
 

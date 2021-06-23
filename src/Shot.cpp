@@ -689,12 +689,10 @@ bool Shot::getMetadataFromPicture(int index)
 {
     bool status = false;
 
-    if (m_pictures.empty())
-        return false;
-    if (m_pictures.at(index)->filesystemPath.isEmpty())
-        return false;
+    if (m_pictures.empty()) return false;
+    if (m_pictures.at(index)->filesystemPath.isEmpty()) return false;
 
-#ifdef ENABLE_LIBEXIF
+#if defined(ENABLE_LIBEXIF)
 
     // Check if the file is already parsed
     if (!m_pictures.at(index)->ed)
@@ -710,6 +708,8 @@ bool Shot::getMetadataFromPicture(int index)
         hasEXIF = true;
 
         // EXIF ////////////////////////////////////////////////////////////////
+
+        ExifByteOrder byteOrder = exif_data_get_byte_order(ed);
 
         // Parse tags
         ExifEntry *entry;
@@ -754,7 +754,6 @@ bool Shot::getMetadataFromPicture(int index)
         entry = exif_content_get_entry(ed->ifd[EXIF_IFD_0], EXIF_TAG_ORIENTATION);
         if (entry)
         {
-            exif_entry_get_value(entry, buf, sizeof(buf));
 /*
             1 = Horizontal (normal)     // "Top-left"
             2 = Mirror horizontal       // "Top-right"
@@ -765,6 +764,29 @@ bool Shot::getMetadataFromPicture(int index)
             7 = Mirror horizontal and rotate 90 CW  // "Right-bottom"
             8 = Rotate 270 CW                       // "Left-bottom"
 */
+            int orientation = exif_get_short(entry->data, byteOrder);
+            //qDebug() << "orientation:" << orientation;
+
+            if (orientation == 1)
+                transformation = QImageIOHandler::TransformationNone;
+            else if (orientation == 2)
+                transformation = QImageIOHandler::TransformationMirror;
+            else if (orientation == 3)
+                transformation = QImageIOHandler::TransformationRotate180;
+            else if (orientation == 4)
+                transformation = QImageIOHandler::TransformationFlip;
+            else if (orientation == 5)
+                transformation = QImageIOHandler::TransformationFlipAndRotate90;
+            else if (orientation == 6)
+                transformation = QImageIOHandler::TransformationRotate90;
+            else if (orientation == 7)
+                transformation = QImageIOHandler::TransformationMirrorAndRotate90;
+            else if (orientation == 8)
+                transformation = QImageIOHandler::TransformationRotate270;
+/*
+            exif_entry_get_value(entry, buf, sizeof(buf));
+            //qDebug() << "orientation string:" << buf;
+
             if (strncmp(buf, "Top-left", sizeof(buf)) == 0)
                 transformation = QImageIOHandler::TransformationNone;
             else if (strncmp(buf, "Top-right", sizeof(buf)) == 0)
@@ -781,6 +803,7 @@ bool Shot::getMetadataFromPicture(int index)
                 transformation = QImageIOHandler::TransformationMirrorAndRotate90;
             else if (strncmp(buf, "Left-bottom", sizeof(buf)) == 0)
                 transformation = QImageIOHandler::TransformationRotate270;
+*/
         }
 
         entry = exif_content_get_entry(ed->ifd[EXIF_IFD_EXIF], EXIF_TAG_FNUMBER);
@@ -814,7 +837,7 @@ bool Shot::getMetadataFromPicture(int index)
         if (entry)
         {
             exif_entry_get_value(entry, buf, sizeof(buf));
-            esposure_time = buf;
+            exposure_time = buf;
         }
         entry = exif_content_get_entry(ed->ifd[EXIF_IFD_EXIF], EXIF_TAG_FLASH);
         if (entry)
@@ -823,6 +846,12 @@ bool Shot::getMetadataFromPicture(int index)
             int flashvalue = QString::fromLatin1(buf).toInt();
 
             if (flashvalue > 0) flash = true;
+        }
+        entry = exif_content_get_entry(ed->ifd[EXIF_IFD_EXIF], EXIF_TAG_METERING_MODE);
+        if (entry)
+        {
+            exif_entry_get_value(entry, buf, sizeof(buf));
+            metering_mode = buf;
         }
 
         entry = exif_content_get_entry(ed->ifd[EXIF_IFD_0], EXIF_TAG_DATE_TIME);
@@ -964,9 +993,9 @@ bool Shot::getMetadataFromPicture(int index)
     {
         //qDebug() << "File not readable or no EXIF data";
     }
-#endif // ENABLE_LIBEXIF
 
-#ifdef ENABLE_EXIV2
+#elif defined(ENABLE_EXIV2)
+
     Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(m_pictures.at(index)->filesystemPath.toStdString());
     image->readMetadata();
 
@@ -979,7 +1008,8 @@ bool Shot::getMetadataFromPicture(int index)
     {
         //qDebug() << "File not readable or no EXIF data";
     }
-#endif // ENABLE_EXIV2
+
+#else // !defined(ENABLE_LIBEXIF) && !defined(ENABLE_EXIV2)
 
     // Gather additional infos
     QImageReader img_infos(m_pictures.at(index)->filesystemPath);
@@ -994,6 +1024,8 @@ bool Shot::getMetadataFromPicture(int index)
 
         status = true;
     }
+
+#endif
 
     return status;
 }

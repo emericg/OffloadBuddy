@@ -206,7 +206,8 @@ class Shot: public QObject
 
     Q_PROPERTY(QString iso READ getIso NOTIFY shotUpdated)
     Q_PROPERTY(QString focal READ getFocal NOTIFY shotUpdated)
-    Q_PROPERTY(QString exposure READ getExposure NOTIFY shotUpdated)
+    Q_PROPERTY(QString exposureTime READ getExposureTime NOTIFY shotUpdated)
+    Q_PROPERTY(QString meteringMode READ getMeteringMode NOTIFY shotUpdated)
     Q_PROPERTY(bool flash READ getFlash NOTIFY shotUpdated)
 
     Q_PROPERTY(QString codecVideo READ getCodecVideo NOTIFY shotUpdated)
@@ -309,7 +310,8 @@ class Shot: public QObject
     // PICTURES metadata
     QString focal;
     QString iso;
-    QString esposure_time;
+    QString exposure_time;
+    QString metering_mode;
     bool flash = false;
 
     // VIDEO metadata
@@ -497,7 +499,8 @@ public slots:
 
     QString getIso() const { return iso; }
     QString getFocal() const { return focal; }
-    QString getExposure() const { return esposure_time; }
+    QString getExposureTime() const { return exposure_time; }
+    QString getMeteringMode() const { return metering_mode; }
     bool getFlash() const { return flash; }
 
     QString getCodecVideo() const { return vcodec; }

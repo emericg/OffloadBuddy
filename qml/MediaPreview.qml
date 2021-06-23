@@ -213,6 +213,7 @@ Item {
     ////////
 
     function computeTransformation() {
+        if (typeof shot === "undefined" || !shot) return
         //console.log("computeTransformation(" + shot.transformation + ")")
 
         transformToOrientation_qt(shot.transformation)
@@ -225,7 +226,7 @@ Item {
 
     function computeOverlaySize() {
         if (typeof shot === "undefined" || !shot) return
-        //console.log("computeSize()")
+        //console.log("computeOverlaySize()")
 
         var mediaWidth = shot.width
         var mediaHeight = shot.height
@@ -276,7 +277,8 @@ Item {
     Matrix4x4 { id: vhflip; matrix: Qt.matrix4x4(-1, 0, 0, output.width, 0, -1, 0, output.height, 0, 0, 1, 0, 0, 0, 0, 1) }
 
     function setFlip(value) {
-        //console.log("setflip() " + value)
+        if (typeof shot === "undefined" || !shot) return
+        //console.log("setflip(" + value + ")")
 
         if (value === "vertical")
             mediaArea.vflipped = !mediaArea.vflipped
@@ -294,7 +296,8 @@ Item {
     }
 
     function addRotation(value) {
-        //console.log("addRotation() " + value)
+        if (typeof shot === "undefined" || !shot) return
+        //console.log("addRotation(" + value + ")")
 
         mediaArea.rotation += value
         mediaArea.rotation = UtilsNumber.mod(mediaArea.rotation, 360)
@@ -322,7 +325,8 @@ Item {
     }
 
     function setRotation(value) {
-        //console.log("setRotation() " + value)
+        if (typeof shot === "undefined" || !shot) return
+        //console.log("setRotation(" + value + ")")
 
         mediaArea.rotation = value
         mediaArea.rotation = UtilsNumber.mod(mediaArea.rotation, 360)
@@ -344,6 +348,7 @@ Item {
     }
 
     function transformToOrientation_exif(transform) {
+        //console.log("transformToOrientation_exif(" + transform +")")
         // EXIF transformation > rotation, horizontal flip, vertical flip
 
         if (transform <= 1) {
@@ -386,7 +391,9 @@ Item {
         }
     }
     function orientationToTransform_exif(rot, hflip, vflip) {
+        //console.log("orientationToTransform_exif(" + rot + "/" + hflip + "/" + vflip +")")
         // rotation, horizontal flip, vertical flip > EXIF transformation
+
         var transform = 0
 
         if (hflip && vflip) {
@@ -421,6 +428,7 @@ Item {
         return transform
     }
     function transformToOrientation_qt(transform) {
+        //console.log("transformToOrientation_qt(" + transform +")")
         // QImageIOHandler::Transformation > rotation, horizontal flip, vertical flip
 
         if (transform <= 0) {
@@ -463,6 +471,7 @@ Item {
         }
     }
     function orientationToTransform_qt(rot, hflip, vflip) {
+        //console.log("orientationToTransform_qt(" + rot + "/" + hflip + "/" + vflip +")")
         // rotation, horizontal flip, vertical flip > QImageIOHandler::Transformation
         var transform = 0
 
@@ -522,11 +531,11 @@ Item {
 
         Image {
             id: imageOutput
-            width: !output.rotated ? output.width : output.height
-            height: !output.rotated ? output.height : output.width
+            width: output.rotated ? output.height : output.width
+            height: output.rotated ? output.width : output.height
             anchors.centerIn: parent
 
-            autoTransform: true
+            autoTransform: false
             fillMode: Image.Stretch
 
             sourceSize.width: width
@@ -823,7 +832,7 @@ Item {
 
             visible: (imageOutput.visible && shot.duration > 1)
 
-            property var wide: maxrects > shot.duration
+            property bool wide: maxrects > shot.duration
             property var maxrects: (parent.width / (24+8))
             property var maxpoints: (parent.width / (12+8))
             property var points: (mediaArea.mode === "image") ? ((shot.duration > maxpoints) ? maxpoints-3 : shot.duration) : 0

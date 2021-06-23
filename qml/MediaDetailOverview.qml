@@ -48,8 +48,10 @@ Item {
                 iso.text = qsTr("ISO") + " " + shot.iso
                 labelFocal.visible = (shot.focal.length)
                 focal.text = shot.focal
-                labelExposure.visible = (shot.exposure.length)
-                exposure.text = shot.exposure
+                labelExposureTime.visible = (shot.exposureTime.length)
+                exposuretime.text = shot.exposureTime
+                labelMeteringMode.visible = (shot.meteringMode.length)
+                meteringmode.text = shot.meteringMode
                 labelFlash.visible = (shot.flash)
                 flash.text = qsTr("Enabled")
             }
@@ -396,7 +398,7 @@ Item {
                 }
 
                 ImageSvg {
-                    id: labelExposure
+                    id: labelExposureTime
                     width: 28
                     height: 28
 
@@ -404,7 +406,29 @@ Item {
                     color: Theme.colorText
 
                     Text {
-                        id: exposure
+                        id: exposuretime
+                        height: 28
+                        anchors.left: parent.right
+                        anchors.leftMargin: 16
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignRight
+                        font.pixelSize: Theme.fontSizeContentSmall
+                        color: Theme.colorText
+                    }
+                }
+
+                ImageSvg {
+                    id: labelMeteringMode
+                    width: 28
+                    height: 28
+
+                    source: "qrc:/assets/icons_material/baseline-center_focus-24px.svg"
+                    color: Theme.colorText
+
+                    Text {
+                        id: meteringmode
                         height: 28
                         anchors.left: parent.right
                         anchors.leftMargin: 16
