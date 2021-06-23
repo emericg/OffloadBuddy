@@ -71,7 +71,7 @@ Item {
             altiMAX.text = UtilsString.altitudeToString(shot.maxAlti, 0, settingsManager.appUnits)
 
             trackDuration.text = UtilsString.durationToString_long(shot.duration)
-            trackDistance.text = UtilsString.distanceToString(shot.distanceKm, 1, settingsManager.appUnits)
+            trackDistance.text = UtilsString.distanceToString_km(shot.distanceKm, 1, settingsManager.appUnits)
             acclMAX.text = (shot.maxG / 9.80665).toFixed(1) + " G's"
 
             // Graphs axis
@@ -107,6 +107,7 @@ Item {
                 for (var i = 0; i < shot.getGpsPointCount(); i += 18)
                     mapTrace.addCoordinate(shot.getGpsCoordinates(i))
 
+                // choose a default zoom level
                 if (shot.distanceKm < 0.5)
                     map.zoomLevel = 18
                 else if (shot.distanceKm < 2)
@@ -118,7 +119,11 @@ Item {
                 else if (shot.distanceKm < 100)
                     map.zoomLevel = 8
 
+                // center view
                 map.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
+                mapMarker.coordinate = QtPositioning.coordinate(shot.latitude, shot.longitude)
+
+                // scale indicator
                 calculateScale()
 
                 if (mapTrace.pathLength() > 1) {
@@ -127,7 +132,6 @@ Item {
                 } else {
                     mapTrace.visible = false
                     mapMarker.visible = true
-                    mapMarker.coordinate = QtPositioning.coordinate(shot.latitude, shot.longitude)
                 }
             }
         }
@@ -136,6 +140,8 @@ Item {
     property variant scaleLengths: [5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000]
 
     function calculateScale() {
+        //console.log("calculateScale(zoom: " + map.zoomLevel + ")")
+
         var coord1, coord2, dist, f
         f = 0
         coord1 = map.toCoordinate(Qt.point(0, mapScale.y))
@@ -159,7 +165,23 @@ Item {
         }
 
         mapScale.width = 100 * f
-        mapScaleText.text = dist + "m"
+        mapScaleText.text = UtilsString.distanceToString(dist, 0, settingsManager.appUnits)
+    }
+
+    function zoomIn() {
+        if (map.zoomLevel < Math.round(map.maximumZoomLevel)) {
+            map.zoomLevel = Math.round(map.zoomLevel + 1)
+            if (!map.moove) map.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
+            calculateScale()
+        }
+    }
+
+    function zoomOut() {
+        if (map.zoomLevel > Math.round(map.minimumZoomLevel)) {
+            map.zoomLevel = Math.round(map.zoomLevel - 1)
+            if (!map.moove) map.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
+            calculateScale()
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -176,9 +198,11 @@ Item {
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 16
 
-        //z: parent.z + 1
         gesture.enabled: moove
-        plugin: Plugin { name: "osm" } // "osm", "mapbox", "mapboxgl", "esri"
+        plugin: Plugin {
+            //name: "mapboxgl"
+            preferred: ["mapboxgl", "osm", "esri"]
+        }
         copyrightsVisible: false
 
         property bool fullscreen: false
@@ -205,13 +229,8 @@ Item {
         MouseArea {
             anchors.fill: parent
             onWheel: {
-                if (wheel.angleDelta.y < 0)
-                    map.zoomLevel--
-                else
-                    map.zoomLevel++
-
-                if (!map.moove) map.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
-                calculateScale()
+                if (wheel.angleDelta.y < 0) zoomOut()
+                else zoomIn()
             }
         }
 
@@ -295,11 +314,7 @@ Item {
                 highlightMode: "color"
 
                 source: "qrc:/assets/icons_material/baseline-zoom_out-24px.svg"
-                onClicked: {
-                    map.zoomLevel--
-                    if (!map.moove) map.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
-                    calculateScale()
-                }
+                onClicked: zoomOut()
             }
 
             ItemImageButton {
@@ -313,11 +328,7 @@ Item {
                 highlightMode: "color"
 
                 source: "qrc:/assets/icons_material/baseline-zoom_in-24px.svg"
-                onClicked: {
-                    map.zoomLevel++
-                    if (!map.moove) map.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
-                    calculateScale()
-                }
+                onClicked: zoomIn()
             }
         }
 

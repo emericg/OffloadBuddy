@@ -1,5 +1,5 @@
 // UtilsString.js
-// Version 9
+// Version 10
 .pragma library
 
 /* ************************************************************************** */
@@ -368,14 +368,38 @@ function altitudeUnit(unit) {
 /*!
  * distanceToString()
  */
-function distanceToString(value, precision, unit) {
+function distanceToString(value_m, precision, unit) {
     var text = "";
     unit = unit || 0;
 
     if (unit === 0) {
-        text = value.toFixed(precision) + " " + qsTr("km");
+        if (value_m > 1000) {
+            text = (value_m / 1000).toFixed(precision) + " " + qsTr("km");
+        } else {
+            text = (value_m).toFixed(precision) + " " + qsTr("m");
+        }
     } else {
-        text = (value / 1609.344).toFixed(precision) + " " + qsTr("mi");
+        if (value_m > 1609.3) {
+            text = (value_m / 1609.344).toFixed(precision) + " " + qsTr("mi");
+        } else {
+            text = (value_m / 0.9144).toFixed(precision) + " " + qsTr("yd");
+        }
+    }
+
+    return text;
+}
+
+/*!
+ * distanceToString_km()
+ */
+function distanceToString_km(value_km, precision, unit) {
+    var text = "";
+    unit = unit || 0;
+
+    if (unit === 0) {
+        text = value_km.toFixed(precision) + " " + qsTr("km");
+    } else {
+        text = (value_km / 1609.344).toFixed(precision) + " " + qsTr("mi");
     }
 
     return text;
