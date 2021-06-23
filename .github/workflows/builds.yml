@@ -52,7 +52,6 @@ jobs:
       # Install dependencies
       - name: Install dependencies
         run: |
-             sudo apt-add-repository ppa:beineri/opt-qt-5.15.2-bionic -y;
              sudo apt-add-repository ppa:savoury1/ffmpeg4 -y;
              sudo apt-add-repository ppa:savoury1/graphics -y;
              sudo apt-add-repository ppa:savoury1/multimedia -y;
