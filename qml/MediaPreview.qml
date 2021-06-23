@@ -833,10 +833,10 @@ Item {
             visible: (imageOutput.visible && shot.duration > 1)
 
             property bool wide: maxrects > shot.duration
-            property var maxrects: (parent.width / (24+8))
-            property var maxpoints: (parent.width / (12+8))
+            property real maxrects: (parent.width / (24+8))
+            property real maxpoints: (parent.width / (12+8))
             property var points: (mediaArea.mode === "image") ? ((shot.duration > maxpoints) ? maxpoints-3 : shot.duration) : 0
-            property var divider: (shot.duration / points)
+            property real divider: (shot.duration / points)
 
             ImageSvg {
                 anchors.verticalCenter: parent.verticalCenter

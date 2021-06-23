@@ -123,33 +123,41 @@ Popup {
                     verticalAlignment: Text.AlignVCenter
                 }
 
-                ImageSvg {
-                    id: dateFileValidator
-                    width: 24
-                    height: 24
-                    anchors.right: parent.right
-                    anchors.rightMargin: 40
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    visible: (qdateFile < qdateFirst || qdateFile > qdateToday)
-                    source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
-                    color: Theme.colorWarning
-                    fillMode: Image.PreserveAspectFit
-                }
-                ItemImageButton {
-                    id: dateFileSelector
-                    width: 36
-                    height: 36
+                Row {
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
 
-                    highlightMode: "color"
-                    source: "qrc:/assets/icons_material/baseline-done-24px.svg"
+                    Item {
+                        width: 36
+                        height: 36
 
-                    enabled: (qdateFile > qdateFirst && qdateFile < qdateToday)
-                    selected: (Qt.formatDateTime(qdate) == Qt.formatDateTime(qdateFile))
-                    background: selected
-                    onClicked: loadDate(qdateFile)
+                        ImageSvg {
+                            id: dateFileValidator
+                            width: 24
+                            height: 24
+                            anchors.centerIn: parent
+
+                            visible: (qdateFile < qdateFirst || qdateFile > qdateToday)
+                            source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
+                            color: Theme.colorWarning
+                            fillMode: Image.PreserveAspectFit
+                        }
+                        ItemImageButton {
+                            id: dateFileSelector
+                            width: 36
+                            height: 36
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            highlightMode: "color"
+                            source: "qrc:/assets/icons_material/baseline-done-24px.svg"
+
+                            visible: (qdateFile > qdateFirst && qdateFile < qdateToday)
+                            enabled: visible
+                            selected: (Qt.formatDateTime(qdate) == Qt.formatDateTime(qdateFile))
+                            background: selected
+                            onClicked: loadDate(qdateFile)
+                        }
+                    }
                 }
             }
 
@@ -176,33 +184,40 @@ Popup {
                     verticalAlignment: Text.AlignVCenter
                 }
 
-                ImageSvg {
-                    id: dateMetadataValidator
-                    width: 24
-                    height: 24
-                    anchors.right: parent.right
-                    anchors.rightMargin: 40
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    visible: (qdateMetadata < qdateFirst || qdateMetadata > qdateToday)
-                    source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
-                    color: Theme.colorWarning
-                    fillMode: Image.PreserveAspectFit
-                }
-                ItemImageButton {
-                    id: dateMetadataSelector
-                    width: 36
-                    height: 36
+                Row {
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
 
-                    highlightMode: "color"
-                    source: "qrc:/assets/icons_material/baseline-done-24px.svg"
+                    Item {
+                        width: 36
+                        height: 36
+                        ImageSvg {
+                            id: dateMetadataValidator
+                            width: 24
+                            height: 24
+                            anchors.centerIn: parent
 
-                    enabled: (qdateMetadata > qdateFirst && qdateMetadata < qdateToday)
-                    selected: (Qt.formatDateTime(qdate) == Qt.formatDateTime(qdateMetadata))
-                    background: selected
-                    onClicked: loadDate(qdateMetadata)
+                            visible: (qdateMetadata < qdateFirst || qdateMetadata > qdateToday)
+                            source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
+                            color: Theme.colorWarning
+                            fillMode: Image.PreserveAspectFit
+                        }
+                    }
+                    ItemImageButton {
+                        id: dateMetadataSelector
+                        width: 36
+                        height: 36
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        highlightMode: "color"
+                        source: "qrc:/assets/icons_material/baseline-done-24px.svg"
+
+                        visible: (qdateMetadata > qdateFirst && qdateMetadata < qdateToday)
+                        enabled: visible
+                        selected: (Qt.formatDateTime(qdate) == Qt.formatDateTime(qdateMetadata))
+                        background: selected
+                        onClicked: loadDate(qdateMetadata)
+                    }
                 }
             }
 
@@ -229,33 +244,40 @@ Popup {
                     verticalAlignment: Text.AlignVCenter
                 }
 
-                ImageSvg {
-                    id: dateGpsValidator
-                    width: 24
-                    height: 24
-                    anchors.right: parent.right
-                    anchors.rightMargin: 40
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    visible: (qdateGps < qdateFirst || qdateGps > qdateToday)
-                    source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
-                    color: Theme.colorWarning
-                    fillMode: Image.PreserveAspectFit
-                }
-                ItemImageButton {
-                    id: dateGpsSelector
-                    width: 36
-                    height: 36
+                Row {
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
 
-                    highlightMode: "color"
-                    source: "qrc:/assets/icons_material/baseline-done-24px.svg"
+                    Item {
+                        width: 36
+                        height: 36
+                        ImageSvg {
+                            id: dateGpsValidator
+                            width: 24
+                            height: 24
+                            anchors.centerIn: parent
 
-                    enabled: (qdateGps > qdateFirst && qdateGps < qdateToday)
-                    selected: (Qt.formatDateTime(qdate) == Qt.formatDateTime(qdateGps))
-                    background: selected
-                    onClicked: loadDate(qdateGps)
+                            visible: (qdateGps < qdateFirst || qdateGps > qdateToday)
+                            source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
+                            color: Theme.colorWarning
+                            fillMode: Image.PreserveAspectFit
+                        }
+                    }
+                    ItemImageButton {
+                        id: dateGpsSelector
+                        width: 36
+                        height: 36
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        highlightMode: "color"
+                        source: "qrc:/assets/icons_material/baseline-done-24px.svg"
+
+                        visible: (qdateGps > qdateFirst && qdateGps < qdateToday)
+                        enabled: visible
+                        selected: (Qt.formatDateTime(qdate) == Qt.formatDateTime(qdateGps))
+                        background: selected
+                        onClicked: loadDate(qdateGps)
+                    }
                 }
             }
         }
