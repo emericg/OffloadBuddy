@@ -72,6 +72,11 @@ Item {
 
             trackDuration.text = UtilsString.durationToString_long(shot.duration)
             trackDistance.text = UtilsString.distanceToString_km(shot.distanceKm, 1, settingsManager.appUnits)
+
+            trackDuration2.text = UtilsString.durationToString_short(shot.duration)
+            trackDistance2.text = trackDistance.text
+            trackSpeed2.text = speedAVG.text
+
             acclMAX.text = (shot.maxG / 9.80665).toFixed(1) + " G's"
 
             // Graphs axis
@@ -436,7 +441,6 @@ Item {
         anchors.left: parent.left
         anchors.bottom: parent.bottom
 
-        //visible: !map.fullscreen
         width: parent.width * 0.6
         z: -1
 
@@ -445,11 +449,111 @@ Item {
 
             anchors.top: parent.top
             anchors.topMargin: 24
-            anchors.right: parent.right
-            anchors.rightMargin: 24
             anchors.left: parent.left
             anchors.leftMargin: 24
+            anchors.right: parent.right
+            anchors.rightMargin: 24
             spacing: 12
+
+            Row {
+                spacing: 24
+
+                Row {
+                    height: 28
+
+                    Rectangle {
+                        width: parent.height
+                        height: parent.height
+                        color: Theme.colorMaterialLightGreen
+                        ImageSvg {
+                            width: 20
+                            height: 20
+                            anchors.centerIn: parent
+                            source: "qrc:/assets/icons_material/baseline-timer-24px.svg"
+                            color: "white"
+                        }
+                    }
+                    Rectangle {
+                        width: 24 + trackDuration2.contentWidth
+                        height: parent.height
+                        color: Theme.colorForeground
+                        Text {
+                            id: trackDuration2
+                            anchors.centerIn: parent
+                            text: "01:24.254"
+                            color: Theme.colorText
+                            font.bold: true
+                            font.pixelSize: Theme.fontSizeContentSmall
+                        }
+                    }
+                }
+
+                Row {
+                    height: 28
+
+                    Rectangle {
+                        width: parent.height
+                        height: parent.height
+                        color: Theme.colorMaterialLightGreen
+                        ImageSvg {
+                            width: 20
+                            height: 20
+                            anchors.centerIn: parent
+                            source: "qrc:/assets/icons_material/baseline-straighten-24px.svg"
+                            color: "white"
+                        }
+                    }
+                    Rectangle {
+                        width: 24 + trackDistance2.contentWidth
+                        height: parent.height
+                        color: Theme.colorForeground
+                        Text {
+                            id: trackDistance2
+                            height: parent.height
+                            anchors.centerIn: parent
+                            text: "0.0 km"
+                            color: Theme.colorText
+                            font.bold: true
+                            font.pixelSize: Theme.fontSizeContentSmall
+                            verticalAlignment: Text.AlignVCenter
+                        }
+                    }
+                }
+
+                Row {
+                    height: 28
+
+                    Rectangle {
+                        width: parent.height
+                        height: parent.height
+                        color: Theme.colorMaterialLightGreen
+                        ImageSvg {
+                            width: 20
+                            height: 20
+                            anchors.centerIn: parent
+                            source: "qrc:/assets/icons_material/outline-speed-24px.svg"
+                            color: "white"
+                        }
+                    }
+                    Rectangle {
+                        width: 24 + trackSpeed2.contentWidth
+                        height: parent.height
+                        color: Theme.colorForeground
+                        Text {
+                            id: trackSpeed2
+                            height: parent.height
+                            anchors.centerIn: parent
+                            text: "0.0 km/h"
+                            color: Theme.colorText
+                            font.bold: true
+                            font.pixelSize: Theme.fontSizeContentSmall
+                            verticalAlignment: Text.AlignVCenter
+                        }
+                    }
+                }
+            }
+
+            ////////
 
             Row {
                 spacing: 12

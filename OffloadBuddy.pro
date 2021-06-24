@@ -137,11 +137,11 @@ contains(DEFINES, USE_CONTRIBS) {
     QMAKE_RPATHDIR  += $${CONTRIBS_DIR}/lib/
     LIBS            += -L$${CONTRIBS_DIR}/lib/
 
+    contains(DEFINES, ENABLE_LIBCPUID) { LIBS += -lcpuid }
     contains(DEFINES, ENABLE_LIBMTP) { LIBS += -lusb-1.0 -lmtp }
     contains(DEFINES, ENABLE_LIBEXIF) { LIBS += -lexif }
     contains(DEFINES, ENABLE_EXIV2) { LIBS += -lexiv2 }
     contains(DEFINES, ENABLE_MINIVIDEO) { LIBS += -lminivideo }
-    contains(DEFINES, ENABLE_LIBCPUID) { LIBS += -lcpuid }
     linux {
         CONFIG += link_pkgconfig
         contains(DEFINES, ENABLE_FFMPEG) { PKGCONFIG += libavformat libavcodec libswscale libswresample libavutil }
@@ -158,11 +158,11 @@ contains(DEFINES, USE_CONTRIBS) {
     macx { PKG_CONFIG = /usr/local/bin/pkg-config } # use pkg-config from brew
     macx { INCLUDEPATH += /usr/local/include/ }
 
+    contains(DEFINES, ENABLE_LIBCPUID) { PKGCONFIG += libcpuid }
     contains(DEFINES, ENABLE_LIBMTP) { PKGCONFIG += libusb-1.0 libmtp }
     contains(DEFINES, ENABLE_LIBEXIF) { PKGCONFIG += libexif }
     contains(DEFINES, ENABLE_EXIV2) { PKGCONFIG += exiv2 }
     contains(DEFINES, ENABLE_MINIVIDEO) { PKGCONFIG += libminivideo }
-    contains(DEFINES, ENABLE_LIBCPUID) { PKGCONFIG += libcpuid }
     contains(DEFINES, ENABLE_FFMPEG) { PKGCONFIG += libavformat libavcodec libswscale libswresample libavutil }
 }
 
