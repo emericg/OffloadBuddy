@@ -479,6 +479,7 @@ void JobManager::shotFinished(int jobId, Shot *shot)
             else
             {
                 switch (j->getType()) {
+                case JOB_OFFLOAD:
                 case JOB_COPY:
                 case JOB_MERGE:
                     shot->setState(Shared::SHOT_STATE_OFFLOADED);

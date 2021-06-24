@@ -9,11 +9,6 @@ Item {
     width: 1280
     height: 720
 
-    Connections {
-        target: mediaLibrary
-        onStateUpdated: screenLibraryGrid.updateGridViewSettings()
-    }
-
     function updateFocus() {
         screenMedia.updateFocus()
     }

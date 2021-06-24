@@ -22,17 +22,15 @@ Popup {
     ////////
 
     property int popupMode: 0
+    property bool recapEnabled: true
+    property bool recapOpened: false
 
+    property var uuids: []
     property var shots: []
     property var files: []
-    property bool fileRecapOpened: false
-    property bool fileRecapEnabled: true
 
     property var mediaProvider: null
     property var currentShot: null
-
-    property string outputPath: ""
-    property var outputSettings: null
 
     ////////
 
@@ -44,7 +42,7 @@ Popup {
         switchIgnoreJunk.checked = settingsManager.ignorejunk
         switchIgnoreAudio.checked = settingsManager.ignorehdaudio
         switchMerge.checked = settingsManager.automerge
-        switchMetadata.checked = settingsManager.autometadata
+        switchTelemetry.checked = settingsManager.autometadata
         switchDelete.checked = settingsManager.autodelete
     }
 
@@ -54,7 +52,7 @@ Popup {
         onIgnoreJunkChanged: switchIgnoreJunk.checked = settingsManager.ignorejunk
         onIgnoreHdAudioChanged: switchIgnoreAudio.checked = settingsManager.ignorehdaudio
         onAutoMergeChanged: switchMerge.checked = settingsManager.automerge
-        onAutoMetadataChanged: switchMetadata.checked = settingsManager.autometadata
+        onAutoMetadataChanged: switchTelemetry.checked = settingsManager.autometadata
         onAutoDeleteChanged: switchDelete.checked = settingsManager.autodelete
     }
 
@@ -62,36 +60,39 @@ Popup {
 
     function open() { return; }
 
-    function openSingle(shot) {
+    function openSingle(provider, shot) {
         popupMode = 1
+        recapEnabled = false
+        recapOpened = false
+        uuids = []
         shots = []
         files = []
-        fileRecapEnabled = false
-        fileRecapOpened = false
-        mediaProvider = null
+        mediaProvider = provider
         currentShot = shot
 
         visible = true
     }
 
-    function openSelection() {
+    function openSelection(provider) {
+        if (uuids.length === 0 || shots.length === 0) return
+
         popupMode = 2
-        if (shots.length === 0) return
-        fileRecapEnabled = true
-        fileRecapOpened = false
-        mediaProvider = null
+        recapEnabled = true
+        recapOpened = false
+        mediaProvider = provider
         currentShot = null
 
         visible = true
     }
 
-    function openAll() {
+    function openAll(provider) {
         popupMode = 3
+        recapEnabled = true
+        recapOpened = false
+        uuids = []
         shots = []
         files = []
-        fileRecapEnabled = false
-        fileRecapOpened = false
-        mediaProvider = null
+        mediaProvider = provider
         currentShot = null
 
         visible = true
@@ -99,8 +100,13 @@ Popup {
 
     ////////////////////////////////////////////////////////////////////////////
 
+    enter: Transition { NumberAnimation { property: "opacity"; from: 0.33; to: 1.0; duration: 133; } }
+    exit: Transition { NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; duration: 333; } }
+
+    ////////////////////////////////////////////////////////////////////////////
+
     background: Rectangle {
-        color: fileRecapOpened ? ThemeEngine.colorForeground : ThemeEngine.colorBackground
+        color: recapOpened ? ThemeEngine.colorForeground : ThemeEngine.colorBackground
         radius: Theme.componentRadius
         border.width: 1
         border.color: Theme.colorSeparator
@@ -169,8 +175,8 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 source: "qrc:/assets/icons_material/baseline-navigate_next-24px.svg"
-                rotation: fileRecapOpened ? -90 : 90
-                onClicked: fileRecapOpened = !fileRecapOpened
+                rotation: recapOpened ? -90 : 90
+                onClicked: recapOpened = !recapOpened
             }
         }
 
@@ -190,7 +196,7 @@ Popup {
                 anchors.leftMargin: 24
                 anchors.rightMargin: 24
 
-                visible: fileRecapOpened
+                visible: recapOpened
 
                 model: shots
                 delegate: Text {
@@ -214,7 +220,7 @@ Popup {
                 topPadding: 16
                 bottomPadding: 16
 
-                visible: !fileRecapOpened
+                visible: !recapOpened
 
                 Row {
                     anchors.left: parent.left
@@ -251,7 +257,7 @@ Popup {
                     visible: isGoPro
 
                     SwitchThemedDesktop {
-                        id: switchMetadata
+                        id: switchTelemetry
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
 
@@ -436,8 +442,21 @@ Popup {
                 primaryColor: Theme.colorPrimary
 
                 onClicked: {
-                    popupOffload.outputPath = textField_path.text
-                    popupOffload.confirmed()
+                    var settingsOffload = {}
+                    settingsOffload["ignoreJunk"] = switchIgnoreJunk.checked
+                    settingsOffload["ignoreAudio"] = switchIgnoreAudio.checked
+                    settingsOffload["telemetry"] = switchTelemetry.checked
+                    settingsOffload["delete"] = switchDelete.checked
+                    settingsOffload["path"] = textField_path.text
+
+                    if (currentShot) {
+                        mediaProvider.offloadSelected(currentShot.uuid, settingsOffload)
+                    } else if (uuids.length > 0) {
+                        mediaProvider.offloadSelection(uuids, settingsOffload)
+                    } else if (popupMode === 3) {
+                        mediaProvider.offloadAll(settingsOffload)
+                    }
+
                     popupOffload.close()
                 }
             }

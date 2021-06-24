@@ -258,25 +258,28 @@ public slots:
     int getMtpBatteryCount() const;
     float getMtpBatteryLevel(const int index = 0) const;
 
-    //
-    void offloadAll(const QString &path, const QVariant &values);
-    void deleteAll();
-
-    //
-    void offloadSelected(const QString &shot_uuid, const QVariant &values);
-    void moveSelected(const QString &shot_uuid, const QVariant &values);
-    void reencodeSelected(const QString &shot_uuid, const QVariant &values);
-    void deleteSelected(const QString &shot_uuid);
-
-    //
+    // Get uuids/names/paths from grid indexes
     QStringList getSelectedShotsUuids(const QVariant &indexes);
     QStringList getSelectedShotsNames(const QVariant &indexes);
     QStringList getSelectedFilesPaths(const QVariant &indexes);
-    //
-    void offloadCopySelection(const QVariant &indexes);
-    void offloadMergeSelection(const QVariant &indexes);
-    //void extractTelemetrySelection(const QVariant &indexes);
-    void deleteSelection(const QVariant &indexes);
+
+    // Submit jobs
+    void offloadAll(const QVariant &settings);
+    void offloadSelected(const QString &shot_uuid, const QVariant &settings);
+    void offloadSelection(const QVariant &uuids, const QVariant &settings);
+
+    void deleteAll(const QVariant &settings);
+    void deleteSelected(const QString &shot_uuid, const QVariant &settings);
+    void deleteSelection(const QVariant &uuids, const QVariant &settings);
+
+    void moveSelected(const QString &shot_uuid, const QVariant &settings);
+    void moveSelection(const QVariant &uuids, const QVariant &settings);
+
+    void reencodeSelected(const QString &shot_uuid, const QVariant &settings);
+    void reencodeSelection(const QVariant &uuids, const QVariant &settings);
+
+    void extractTelemetrySelected(const QString &shot_uuid, const QVariant &settings);
+    void extractTelemetrySelection(const QVariant &uuids, const QVariant &settings);
 };
 
 /* ************************************************************************** */

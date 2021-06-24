@@ -577,62 +577,6 @@ int64_t Device::getSpaceAvailable_withrefresh()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void Device::offloadAll(const QString &path, const QVariant &values)
-{
-    //qDebug() << "offloadAll()";
-    //qDebug() << "(a) shots count: " << m_shotModel->getShotCount();
-
-    JobManager *jm = JobManager::getInstance();
-    StorageManager *sm = StorageManager::getInstance();
-
-    QList<Shot *> shots;
-    m_shotModel->getShots(shots);
-
-    // MediaDirectory
-    MediaDirectory *md = nullptr;
-    if (!path.isEmpty())
-    {
-        QString selectedPath = path;
-        if (sm)
-        {
-            const QList <QObject *> *mediaDirectories = sm->getDirectoriesList();
-            for (auto d: *mediaDirectories)
-            {
-                MediaDirectory *dd = qobject_cast<MediaDirectory*>(d);
-                if (dd && dd->getPath() == selectedPath)
-                {
-                    md = dd;
-                }
-            }
-        }
-    }
-
-    if (jm && !shots.empty())
-    {
-        //if (sm->getAutoMerge())
-        //    jm->addJobs(JOB_MERGE, this, shots, md);
-        //else
-            jm->addJobs(JOB_COPY, this, nullptr, shots, md);
-    }
-}
-
-void Device::deleteAll()
-{
-    //qDebug() << "deleteAll()";
-    //qDebug() << "(a) shots count: " << m_shotModel->getShotCount();
-
-    JobManager *jm = JobManager::getInstance();
-
-    QList<Shot *> shots;
-    m_shotModel->getShots(shots);
-
-    if (jm && !shots.empty())
-        jm->addJobs(JOB_DELETE, this, nullptr, shots);
-}
-
-/* ************************************************************************** */
-/* ************************************************************************** */
-
 QStringList Device::getSelectedShotsUuids(const QVariant &indexes)
 {
     qDebug() << "Device::getSelectedShotsUuids(" << indexes << ")";
@@ -710,86 +654,20 @@ QStringList Device::getSelectedFilesPaths(const QVariant &indexes)
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void Device::offloadSelected(const QString &shot_uuid, const QVariant &values)
+void Device::offloadAll(const QVariant &settings)
 {
-    qDebug() << "offloadCopySelected(" << shot_uuid << ")";
+    qDebug() << "Device::offloadAll()";
 
-    JobManager *jm = JobManager::getInstance();
-    Shot *shot = m_shotModel->getShotWithUuid(shot_uuid);
-
-    if (jm && shot)
-        jm->addJob(JOB_OFFLOAD, this, nullptr, shot);
-}
-
-void Device::moveSelected(const QString &shot_uuid, const QVariant &values)
-{
-    qDebug() << "moveSelected(" << shot_uuid << ")";
-
-    JobManager *jm = JobManager::getInstance();
-    Shot *shot = m_shotModel->getShotWithUuid(shot_uuid);
-    if (jm && shot) jm->addJob(JOB_MOVE, this, nullptr, shot);
-}
-
-void Device::reencodeSelected(const QString &shot_uuid, const QVariant &values)
-{
-    qDebug() << "Device::reencodeSelected(" << shot_uuid << ")";
-
-    QVariant variant = qvariant_cast<QJSValue>(values).toVariant();
-    if (variant.type() != QMetaType::QVariantMap) return;
-    QVariantMap variantMap = variant.toMap();
-    //qDebug() << "> variantMap " << variantMap;
-
-    // Job settings
-    JobEncodeSettings sett;
-
-    if (variantMap.contains("codec"))
-        sett.codec = variantMap.value("codec").toString();
-
-    if (variantMap.contains("quality"))
-        sett.encoding_quality = variantMap.value("quality").toInt();
-    if (variantMap.contains("speed"))
-        sett.encoding_speed = variantMap.value("speed").toInt();
-
-    if (variantMap.contains("resolution"))
-        sett.resolution = variantMap.value("resolution").toInt();
-
-    if (variantMap.contains("scale"))
-        sett.scale = variantMap.value("scale").toString();
-
-    if (variantMap.contains("transform"))
-        sett.transform = variantMap.value("transform").toInt();
-
-    if (variantMap.contains("crop"))
-        sett.crop = variantMap.value("crop").toString();
-
-    if (variantMap.contains("fps"))
-        sett.fps = variantMap.value("fps").toFloat();
-
-    if (variantMap.contains("gif_effect"))
-        sett.gif_effect = variantMap.value("gif_effect").toString();
-
-    if (variantMap.contains("timelapse_fps"))
-        sett.timelapse_fps = variantMap.value("timelapse_fps").toInt();
-
-    if (variantMap.contains("defisheye"))
-        sett.defisheye = variantMap.value("defisheye").toString();
-    if (variantMap.contains("deshake"))
-        sett.deshake = variantMap.value("deshake").toBool();
-
-    if (variantMap.contains("screenshot"))
-        sett.screenshot = variantMap.value("screenshot").toBool();
-
-    if (variantMap.contains("clipStartMs"))
-        sett.startMs = variantMap.value("clipStartMs").toInt();
-    if (variantMap.contains("clipDurationMs"))
-        sett.durationMs = variantMap.value("clipDurationMs").toInt();
+    // Get shots
+    QList<Shot *> shots;
+    m_shotModel->getShots(shots);
 
     // MediaDirectory
-    MediaDirectory *md = nullptr;
-    if (variantMap.contains("path"))
+    StorageManager *sm = StorageManager::getInstance();
+    MediaDirectory *md = nullptr;/*
+    if (!path.isEmpty())
     {
-        QString selectedPath = variantMap.value("path").toString();
-        StorageManager *sm = StorageManager::getInstance();
+        QString selectedPath = path;
         if (sm)
         {
             const QList <QObject *> *mediaDirectories = sm->getDirectoriesList();
@@ -802,31 +680,83 @@ void Device::reencodeSelected(const QString &shot_uuid, const QVariant &values)
                 }
             }
         }
-    }
+    }*/
 
-    // Job
+    // Submit jobs
     JobManager *jm = JobManager::getInstance();
-    Shot *shot = m_shotModel->getShotWithUuid(shot_uuid);
-    if (jm && shot) jm->addJob(JOB_REENCODE, this, nullptr, shot, md, &sett);
+    if (jm && !shots.empty()) jm->addJobs(JOB_OFFLOAD, this, nullptr, shots, md);
 }
 
-void Device::deleteSelected(const QString &shot_uuid)
+/* ************************************************************************** */
+
+void Device::offloadSelected(const QString &shot_uuid, const QVariant &settings)
+{
+    qDebug() << "Device::offloadCopySelected(" << shot_uuid << ")";
+
+    // Get shots
+    Shot *shot = m_shotModel->getShotWithUuid(shot_uuid);
+
+    // Submit jobs
+    JobManager *jm = JobManager::getInstance();
+    if (jm && shot) jm->addJob(JOB_OFFLOAD, this, nullptr, shot);
+}
+
+/* ************************************************************************** */
+
+void Device::offloadSelection(const QVariant &uuids, const QVariant &settings)
+{
+    qDebug() << "Device::offloadSelection(" << uuids << ")";
+
+    QStringList selectedUuids = getSelectedShotsUuids(uuids);
+    QList<Shot *> list;
+
+    for (const auto &u: qAsConst(selectedUuids))
+    {
+        list.push_back(m_shotModel->getShotWithUuid(u));
+    }
+
+    JobManager *jm = JobManager::getInstance();
+    if (jm && !list.empty()) jm->addJobs(JOB_OFFLOAD, this, nullptr, list);
+}
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+void Device::deleteAll(const QVariant &settings)
+{
+    qDebug() << "Device::deleteAll()";
+
+    // Get shots
+    QList<Shot *> shots;
+    m_shotModel->getShots(shots);
+
+    // Submit job
+    JobManager *jm = JobManager::getInstance();
+    if (jm && !shots.empty()) jm->addJobs(JOB_DELETE, this, nullptr, shots);
+}
+
+/* ************************************************************************** */
+
+void Device::deleteSelected(const QString &shot_uuid, const QVariant &settings)
 {
     qDebug() << "Device::deleteSelected(" << shot_uuid << ")";
 
-    JobManager *jm = JobManager::getInstance();
+    // Get shots
     Shot *shot = m_shotModel->getShotWithUuid(shot_uuid);
+
+    // Submit job
+    JobManager *jm = JobManager::getInstance();
     if (jm && shot) jm->addJob(JOB_DELETE, this, nullptr, shot);
 }
 
 /* ************************************************************************** */
-/* ************************************************************************** */
 
-void Device::deleteSelection(const QVariant &indexes)
+void Device::deleteSelection(const QVariant &uuids, const QVariant &settings)
 {
-    qDebug() << "deleteSelection(" << indexes << ")";
+    qDebug() << "Device::deleteSelection(" << uuids << ")";
 
-    QStringList selectedUuids = getSelectedShotsUuids(indexes);
+    // Get shots
+    QStringList selectedUuids = getSelectedShotsUuids(uuids);
     QList<Shot *> list;
 
     for (const auto &u: qAsConst(selectedUuids))
@@ -834,40 +764,142 @@ void Device::deleteSelection(const QVariant &indexes)
         list.push_back(m_shotModel->getShotWithUuid(u));
     }
 
+    // Submit job
     JobManager *jm = JobManager::getInstance();
     if (jm && !list.empty()) jm->addJobs(JOB_DELETE, this, nullptr, list);
 }
 
-void Device::offloadCopySelection(const QVariant &indexes)
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+void Device::moveSelected(const QString &shot_uuid, const QVariant &settings)
 {
-    qDebug() << "offloadCopySelection(" << indexes << ")";
+    qDebug() << "Device::moveSelected(" << shot_uuid << ")";
 
-    QStringList selectedUuids = getSelectedShotsUuids(indexes);
-    QList<Shot *> list;
-
-    for (const auto &u: qAsConst(selectedUuids))
-    {
-        list.push_back(m_shotModel->getShotWithUuid(u));
-    }
+    Shot *shot = m_shotModel->getShotWithUuid(shot_uuid);
 
     JobManager *jm = JobManager::getInstance();
-    if (jm && !list.empty()) jm->addJobs(JOB_COPY, this, nullptr, list);
+    if (jm && shot) jm->addJob(JOB_MOVE, this, nullptr, shot);
 }
 
-void Device::offloadMergeSelection(const QVariant &indexes)
-{
-    qDebug() << "offloadMergeSelection(" << indexes << ")";
+/* ************************************************************************** */
 
-    QStringList selectedUuids = getSelectedShotsUuids(indexes);
+void Device::moveSelection(const QVariant &uuids, const QVariant &settings)
+{
+    qDebug() << "Device::moveSelection(" << uuids << ")";
+
+    QStringList selectedUuids = getSelectedShotsUuids(uuids);
     QList<Shot *> list;
 
-    for (const auto &u: qAsConst(selectedUuids))
-    {
-        list.push_back(m_shotModel->getShotWithUuid(u));
-    }
-
     JobManager *jm = JobManager::getInstance();
-    if (jm && !list.empty()) jm->addJobs(JOB_COPY, this, nullptr, list);
+    if (jm && !list.empty()) jm->addJobs(JOB_MOVE, this, nullptr, list);
 }
 
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+void Device::reencodeSelected(const QString &shot_uuid, const QVariant &settings)
+{
+    qDebug() << "Device::reencodeSelected(" << shot_uuid << ")";
+
+    // Get shots
+    Shot *shot = m_shotModel->getShotWithUuid(shot_uuid);
+
+    // Get settings
+    JobEncodeSettings sett;
+    MediaDirectory *md = nullptr;
+    {
+        QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
+        if (variant.type() != QMetaType::QVariantMap) return;
+        QVariantMap variantMap = variant.toMap();
+        //qDebug() << "> variantMap " << variantMap;
+
+        if (variantMap.contains("codec"))
+            sett.codec = variantMap.value("codec").toString();
+
+        if (variantMap.contains("quality"))
+            sett.encoding_quality = variantMap.value("quality").toInt();
+        if (variantMap.contains("speed"))
+            sett.encoding_speed = variantMap.value("speed").toInt();
+
+        if (variantMap.contains("resolution"))
+            sett.resolution = variantMap.value("resolution").toInt();
+
+        if (variantMap.contains("scale"))
+            sett.scale = variantMap.value("scale").toString();
+
+        if (variantMap.contains("transform"))
+            sett.transform = variantMap.value("transform").toInt();
+
+        if (variantMap.contains("crop"))
+            sett.crop = variantMap.value("crop").toString();
+
+        if (variantMap.contains("fps"))
+            sett.fps = variantMap.value("fps").toFloat();
+
+        if (variantMap.contains("gif_effect"))
+            sett.gif_effect = variantMap.value("gif_effect").toString();
+
+        if (variantMap.contains("timelapse_fps"))
+            sett.timelapse_fps = variantMap.value("timelapse_fps").toInt();
+
+        if (variantMap.contains("defisheye"))
+            sett.defisheye = variantMap.value("defisheye").toString();
+        if (variantMap.contains("deshake"))
+            sett.deshake = variantMap.value("deshake").toBool();
+
+        if (variantMap.contains("screenshot"))
+            sett.screenshot = variantMap.value("screenshot").toBool();
+
+        if (variantMap.contains("clipStartMs"))
+            sett.startMs = variantMap.value("clipStartMs").toInt();
+        if (variantMap.contains("clipDurationMs"))
+            sett.durationMs = variantMap.value("clipDurationMs").toInt();
+
+        // MediaDirectory
+        if (variantMap.contains("path"))
+        {
+            QString selectedPath = variantMap.value("path").toString();
+            StorageManager *sm = StorageManager::getInstance();
+            if (sm)
+            {
+                const QList <QObject *> *mediaDirectories = sm->getDirectoriesList();
+                for (auto d: *mediaDirectories)
+                {
+                    MediaDirectory *dd = qobject_cast<MediaDirectory*>(d);
+                    if (dd && dd->getPath() == selectedPath)
+                    {
+                        md = dd;
+                    }
+                }
+            }
+        }
+    }
+
+    // Submit job
+    JobManager *jm = JobManager::getInstance();
+    if (jm && shot) jm->addJob(JOB_REENCODE, this, nullptr, shot, md, &sett);
+}
+
+/* ************************************************************************** */
+
+void Device::reencodeSelection(const QVariant &uuids, const QVariant &settings)
+{
+    qDebug() << "Device::reencodeSelection(" << uuids << ")";
+}
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+void Device::extractTelemetrySelected(const QString &shot_uuid, const QVariant &settings)
+{
+    qDebug() << "Device::extractTelemetrySelected(" << shot_uuid << ")";
+}
+
+void Device::extractTelemetrySelection(const QVariant &uuids, const QVariant &settings)
+{
+    qDebug() << "Device::extractTelemetrySelection(" << uuids << ")";
+}
+
+/* ************************************************************************** */
 /* ************************************************************************** */

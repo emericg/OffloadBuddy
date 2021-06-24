@@ -117,13 +117,26 @@ Item {
         popupEncoding.setOrientation(mediaPreview.rotation, mediaPreview.hflipped, mediaPreview.vflipped)
         popupEncoding.setCrop(mediaPreview.cropX, mediaPreview.cropY,
                               mediaPreview.cropW, mediaPreview.cropH)
-        popupEncoding.openSingle(shot)
+
+        if (appContent.state === "library") {
+            popupEncoding.openSingle(mediaLibrary, shot)
+        } else if (appContent.state === "device") {
+            popupEncoding.openSingle(currentDevice, shot)
+        }
     }
     function openTelemetryPopup() {
-        popupTelemetry.openSingle(shot)
+        if (appContent.state === "library") {
+            popupTelemetry.openSingle(mediaLibrary, shot)
+        } else if (appContent.state === "device") {
+            popupTelemetry.openSingle(currentDevice, shot)
+        }
     }
     function openDeletePopup() {
-        popupDelete.openSingle(shot)
+        if (appContent.state === "library") {
+            popupDelete.openSingle(mediaLibrary, shot)
+        } else if (appContent.state === "device") {
+            popupDelete.openSingle(currentDevice, shot)
+        }
     }
     function openDatePopup() {
         popupDate.loadDates()

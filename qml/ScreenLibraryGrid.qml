@@ -64,17 +64,15 @@ Item {
     ////////
 
     function initGridViewSettings() {
-        //
+        actionMenu.visible = false
+        shotsView.currentIndex = -1
+        mediaGrid.exitSelectionMode()
     }
 
     function updateGridViewSettings() {
-        if (typeof mediaLibrary === "undefined" || !mediaLibrary) return
-
-        if (shotsView.count <= 0) {
-            actionMenu.visible = false
-            shotsView.currentIndex = -1
-            mediaGrid.exitSelectionMode()
-        }
+        actionMenu.visible = false
+        shotsView.currentIndex = -1
+        mediaGrid.exitSelectionMode()
     }
 
     // POPUPS //////////////////////////////////////////////////////////////////
@@ -107,16 +105,7 @@ Item {
         id: popupDelete
 
         onConfirmed: {
-/*
-            // multi
-            var indexes = mediaGrid.selectionList
-            mediaLibrary.deleteSelection(indexes)
-
-            // selected shot
-            currentDevice.deleteSelected(selectedItemUuid)
-            shotsView.currentIndex = -1
-            mediaGrid.exitSelectionMode()
-*/
+            //
         }
     }
 
@@ -545,13 +534,17 @@ Item {
             }
 
             if (index === 2) {
+                popupMove.uuids = mediaLibrary.getSelectedShotsUuids(indexes)
                 popupMove.shots = mediaLibrary.getSelectedShotsNames(indexes)
                 popupMove.files = mediaLibrary.getSelectedFilesPaths(indexes)
-                popupMove.openSelection()
+                popupMove.openSelection(mediaLibrary)
             }
             if (index === 3) {
+                popupEncoding.uuids = mediaLibrary.getSelectedShotsUuids(indexes)
+                popupEncoding.shots = mediaLibrary.getSelectedShotsNames(indexes)
+                popupEncoding.files = mediaLibrary.getSelectedFilesPaths(indexes)
                 popupEncoding.updateEncodePanel(selectedItem.shot)
-                popupEncoding.openSingle(selectedItem.shot)
+                popupEncoding.openSingle(mediaLibrary, selectedItem.shot)
             }
             if (index === 12) {
                 selectedItem.shot.openFile()
@@ -560,9 +553,10 @@ Item {
                 selectedItem.shot.openFolder()
             }
             if (index === 16) {
+                popupDelete.uuids = mediaLibrary.getSelectedShotsUuids(indexes)
                 popupDelete.shots = mediaLibrary.getSelectedShotsNames(indexes)
                 popupDelete.files = mediaLibrary.getSelectedFilesPaths(indexes)
-                popupDelete.openSelection()
+                popupDelete.openSelection(mediaLibrary)
             }
 
             actionMenu.visible = false
@@ -587,11 +581,7 @@ Item {
             onCountChanged: updateGridViewSettings()
             onWidthChanged: computeCellSize()
 
-            Component.onCompleted: {
-                mediaGrid.exitSelectionMode()
-                shotsView.currentIndex = -1
-                actionMenu.visible = false
-            }
+            Component.onCompleted: initGridViewSettings()
 
             Connections {
                 target: settingsManager
@@ -693,6 +683,8 @@ Item {
                     mediaGrid.selectAll()
                 } else if (event.key === Qt.Key_Clear) {
                     mediaGrid.exitSelectionMode()
+                } else if (event.key === Qt.Key_Escape) {
+                    mediaGrid.exitSelectionMode()
                 } else if (event.key === Qt.Key_Menu) {
                     //console.log("shotsView::Key_Menu")
                 } else if (event.key === Qt.Key_Delete) {
@@ -702,9 +694,10 @@ Item {
                     } else {
                         indexes.push(shotsView.currentIndex)
                     }
+                    popupDelete.uuids = mediaLibrary.getSelectedShotsUuids(indexes)
                     popupDelete.shots = mediaLibrary.getSelectedShotsNames(indexes)
                     popupDelete.files = mediaLibrary.getSelectedFilesPaths(indexes)
-                    popupDelete.openSelection()
+                    popupDelete.openSelection(mediaLibrary)
                 }
             }
         }

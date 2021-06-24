@@ -248,7 +248,7 @@ Item {
         id: popupOffload
 
         onConfirmed: {
-            //currentDevice.offloadAll(popupOffload.selectedPath)
+            //
         }
     }
 
@@ -256,19 +256,7 @@ Item {
         id: popupDelete
 
         onConfirmed: {
-/*
-            // all
-            currentDevice.deleteAll()
-
-            // multi
-            var indexes = mediaGrid.selectionList
-            currentDevice.deleteSelection(indexes)
-
-            // selected shot
-            currentDevice.deleteSelected(selectedItemUuid)
-            shotsView.currentIndex = -1
-            mediaGrid.exitSelectionMode()
-*/
+            //
         }
     }
 
@@ -641,7 +629,7 @@ Item {
             fullColor: true
             primaryColor: Theme.colorError
             text: qsTr("Delete ALL content!")
-            onClicked: popupDelete.openAll()
+            onClicked: popupDelete.openAll(currentDevice)
         }
 
         ////////
@@ -756,13 +744,17 @@ Item {
             }
 
             if (index === 1) {
+                popupOffload.uuids = currentDevice.getSelectedShotsUuids(indexes)
                 popupOffload.shots = currentDevice.getSelectedShotsNames(indexes)
                 popupOffload.files = currentDevice.getSelectedFilesPaths(indexes)
-                popupOffload.openSelection()
+                popupOffload.openSelection(currentDevice)
             }
             if (index === 3) {
+                popupEncoding.uuids = currentDevice.getSelectedShotsUuids(indexes)
+                popupEncoding.shots = currentDevice.getSelectedShotsNames(indexes)
+                popupEncoding.files = currentDevice.getSelectedFilesPaths(indexes)
                 popupEncoding.updateEncodePanel(selectedItem.shot)
-                popupEncoding.openSingle(selectedItem.shot)
+                popupEncoding.openSingle(currentDevice, selectedItem.shot)
             }
             if (index === 12) {
                 shotsView.currentItem.shot.openFile()
@@ -771,9 +763,10 @@ Item {
                 shotsView.currentItem.shot.openFolder()
             }
             if (index === 16) {
+                popupDelete.uuids = currentDevice.getSelectedShotsUuids(indexes)
                 popupDelete.shots = currentDevice.getSelectedShotsNames(indexes)
                 popupDelete.files = currentDevice.getSelectedFilesPaths(indexes)
-                popupDelete.openSelection()
+                popupDelete.openSelection(currentDevice)
             }
 
             actionMenu.visible = false
@@ -918,6 +911,8 @@ Item {
                     mediaGrid.selectAll()
                 } else if (event.key === Qt.Key_Clear) {
                     mediaGrid.exitSelectionMode()
+                } else if (event.key === Qt.Key_Escape) {
+                    mediaGrid.exitSelectionMode()
                 } else if (event.key === Qt.Key_Menu) {
                     //console.log("shotsView::Key_Menu")
                 } else if (event.key === Qt.Key_Delete) {
@@ -927,9 +922,10 @@ Item {
                     } else {
                         indexes.push(shotsView.currentIndex)
                     }
+                    popupDelete.uuids = currentDevice.getSelectedShotsUuids(indexes)
                     popupDelete.shots = currentDevice.getSelectedShotsNames(indexes)
                     popupDelete.files = currentDevice.getSelectedFilesPaths(indexes)
-                    popupDelete.openSelection()
+                    popupDelete.openSelection(currentDevice)
                 }
             }
         }

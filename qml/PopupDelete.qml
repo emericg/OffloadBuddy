@@ -5,7 +5,6 @@ import ThemeEngine 1.0
 
 Popup {
     id: popupDelete
-
     x: (appWindow.width / 2) - (width / 2) - (appSidebar.width / 2)
     y: (appWindow.height / 2) - (height / 2)
     width: 720
@@ -20,36 +19,41 @@ Popup {
     ////////
 
     property int popupMode: 0
+    property bool recapEnabled: true
+    property bool recapOpened: false
 
+    property var uuids: []
     property var shots: []
     property var files: []
-    property bool fileRecapOpened: false
-    property bool fileRecapEnabled: true
 
     property var mediaProvider: null
     property var currentShot: null
 
+    ////////
+
     function open() { return; }
 
-    function openSingle(shot) {
+    function openSingle(provider, shot) {
         popupMode = 1
+        recapEnabled = false
+        recapOpened = false
+        uuids = []
         shots = []
         files = []
-        fileRecapEnabled = false
-        fileRecapOpened = false
-        mediaProvider = null
+        mediaProvider = provider
         currentShot = shot
 
         textArea.text = qsTr("Are you sure you want to delete current shot?")
         visible = true
     }
 
-    function openSelection() {
+    function openSelection(provider) {
+        if (uuids.length === 0 || shots.length === 0 || files.length === 0) return
+
         popupMode = 2
-        if (shots.length === 0 || files.length === 0) return
-        fileRecapEnabled = true
-        fileRecapOpened = false
-        mediaProvider = null
+        recapEnabled = true
+        recapOpened = false
+        mediaProvider = provider
         currentShot = null
 
         if (shots.length > 1)
@@ -59,13 +63,14 @@ Popup {
         visible = true
     }
 
-    function openAll() {
+    function openAll(provider) {
         popupMode = 3
+        recapEnabled = false
+        recapOpened = false
+        uuids = []
         shots = []
         files = []
-        fileRecapEnabled = false
-        fileRecapOpened = false
-        mediaProvider = null
+        mediaProvider = provider
         currentShot = null
 
         textArea.text = qsTr("Are you sure you want to delete ALL of the files from this device?")
@@ -74,8 +79,13 @@ Popup {
 
     ////////////////////////////////////////////////////////////////////////////
 
+    enter: Transition { NumberAnimation { property: "opacity"; from: 0.5; to: 1.0; duration: 133; } }
+    exit: Transition { NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; duration: 233; } }
+
+    ////////////////////////////////////////////////////////////////////////////
+
     background: Rectangle {
-        color: fileRecapOpened ? ThemeEngine.colorForeground : ThemeEngine.colorBackground
+        color: recapOpened ? ThemeEngine.colorForeground : ThemeEngine.colorBackground
         radius: Theme.componentRadius
         border.width: 1
         border.color: Theme.colorSeparator
@@ -144,8 +154,8 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 source: "qrc:/assets/icons_material/baseline-navigate_next-24px.svg"
-                rotation: fileRecapOpened ? -90 : 90
-                onClicked: fileRecapOpened = !fileRecapOpened
+                rotation: recapOpened ? -90 : 90
+                onClicked: recapOpened = !recapOpened
             }
         }
 
@@ -164,7 +174,7 @@ Popup {
                 anchors.leftMargin: 24
                 anchors.rightMargin: 24
 
-                visible: fileRecapOpened
+                visible: recapOpened
 
                 model: files
                 delegate: Text {
@@ -189,7 +199,7 @@ Popup {
                 anchors.right: parent.right
                 anchors.rightMargin: 24
 
-                visible: !fileRecapOpened
+                visible: !recapOpened
                 font.pixelSize: Theme.fontSizeContent
                 color: Theme.colorText
                 verticalAlignment: Text.AlignVCenter
@@ -207,7 +217,7 @@ Popup {
                 anchors.rightMargin: 24
                 anchors.bottom: parent.bottom
 
-                visible: !fileRecapOpened
+                visible: !recapOpened
 
                 model: files
                 delegate: Text {
@@ -250,7 +260,20 @@ Popup {
                 fullColor: true
                 primaryColor: Theme.colorError
                 onClicked: {
-                    popupDelete.confirmed()
+                    var settingsDeletion = {}
+
+                    if (currentShot) {
+                        console.log("single deletion")
+                        mediaProvider.deleteSelected(currentShot.uuid, settingsDeletion)
+                        //mediaProvider.deleteSelected(uuids[0], settingsDeletion)
+                    } else if (uuids.length > 0) {
+                        console.log("multi deletion")
+                        mediaProvider.deleteSelection(uuids, settingsDeletion)
+                    } else if (popupMode === 3) {
+                        console.log("DELETE EVERYTHING")
+                        mediaProvider.deleteAll(settingsDeletion)
+                    }
+
                     popupDelete.close()
                 }
             }

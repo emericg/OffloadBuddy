@@ -19,43 +19,43 @@ Popup {
 
     signal confirmed()
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////
 
     property int popupMode: 0
+    property bool recapEnabled: true
+    property bool recapOpened: false
 
+    property var uuids: []
     property var shots: []
     property var files: []
-    property bool fileRecapOpened: false
-    property bool fileRecapEnabled: true
 
     property var mediaProvider: null
     property var currentShot: null
-
-    property string outputPath: ""
-    property var outputSettings: null
 
     ////////
 
     function open() { return; }
 
-    function openSingle(shot) {
+    function openSingle(provider, shot) {
         popupMode = 1
+        uuids = []
         shots = []
         files = []
-        fileRecapEnabled = false
-        fileRecapOpened = false
-        mediaProvider = null
+        recapEnabled = false
+        recapOpened = false
+        mediaProvider = provider
         currentShot = shot
 
         visible = true
     }
 
-    function openSelection() {
+    function openSelection(provider) {
+        if (uuids.length === 0 || shots.length === 0) return
+
         popupMode = 2
-        if (shots.length === 0) return
-        fileRecapEnabled = true
-        fileRecapOpened = false
-        mediaProvider = null
+        recapEnabled = true
+        recapOpened = false
+        mediaProvider = provider
         currentShot = null
 
         visible = true
@@ -63,8 +63,13 @@ Popup {
 
     ////////////////////////////////////////////////////////////////////////////
 
+    enter: Transition { NumberAnimation { property: "opacity"; from: 0.5; to: 1.0; duration: 133; } }
+    exit: Transition { NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; duration: 233; } }
+
+    ////////////////////////////////////////////////////////////////////////////
+
     background: Rectangle {
-        color: fileRecapOpened ? ThemeEngine.colorForeground : ThemeEngine.colorBackground
+        color: recapOpened ? ThemeEngine.colorForeground : ThemeEngine.colorBackground
         radius: Theme.componentRadius
         border.width: 1
         border.color: Theme.colorSeparator
@@ -133,8 +138,8 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 source: "qrc:/assets/icons_material/baseline-navigate_next-24px.svg"
-                rotation: fileRecapOpened ? -90 : 90
-                onClicked: fileRecapOpened = !fileRecapOpened
+                rotation: recapOpened ? -90 : 90
+                onClicked: recapOpened = !recapOpened
             }
         }
 
@@ -154,7 +159,7 @@ Popup {
                 anchors.leftMargin: 24
                 anchors.rightMargin: 24
 
-                visible: fileRecapOpened
+                visible: recapOpened
 
                 model: shots
                 delegate: Text {
@@ -178,42 +183,12 @@ Popup {
                 topPadding: 16
                 bottomPadding: 16
 
-                visible: !fileRecapOpened
-
-                Item {
-                    id: elementAltitude
-                    height: 48
-                    anchors.right: parent.right
-                    anchors.rightMargin: 0
-                    anchors.left: parent.left
-                    anchors.leftMargin: 0
-
-                    Text {
-                        id: titleAltitude
-                        width: 128
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        text: qsTr("Altitude")
-                        font.pixelSize: 16
-                        color: Theme.colorSubText
-                    }
-
-                    SwitchThemedDesktop {
-                        id: switchEGM96
-                        anchors.left: titleAltitude.right
-                        anchors.leftMargin: 16
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        checked: true
-                        enabled: false
-                        text: qsTr("EGM96 correction")
-                    }
-                }
+                visible: !recapOpened
 
                 Item {
                     id: elementGPS
                     height: 48
-                    anchors.left: parent.left                    
+                    anchors.left: parent.left
                     anchors.right: parent.right
 
                     Text {
@@ -286,6 +261,36 @@ Popup {
                             text: "CSV"
                             enabled: false
                         }
+                    }
+                }
+
+                Item {
+                    id: elementAltitude
+                    height: 48
+                    anchors.right: parent.right
+                    anchors.rightMargin: 0
+                    anchors.left: parent.left
+                    anchors.leftMargin: 0
+
+                    Text {
+                        id: titleAltitude
+                        width: 128
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        text: qsTr("Altitude")
+                        font.pixelSize: 16
+                        color: Theme.colorSubText
+                    }
+
+                    SwitchThemedDesktop {
+                        id: switchEGM96
+                        anchors.left: titleAltitude.right
+                        anchors.leftMargin: 16
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        checked: true
+                        enabled: false
+                        text: qsTr("EGM96 correction")
                     }
                 }
 
@@ -397,11 +402,11 @@ Popup {
             spacing: 16
 
             ButtonWireframe {
-                id: buttonCancel
+                id: buttonClose
                 width: 96
                 anchors.verticalCenter: parent.verticalCenter
 
-                text: qsTr("Cancel")
+                text: qsTr("Close")
                 fullColor: true
                 primaryColor: Theme.colorGrey
                 onClicked: popupTelemetry.close()
@@ -416,9 +421,23 @@ Popup {
                 primaryColor: Theme.colorSecondary
 
                 onClicked: {
-                    if (currentShot) currentShot.exportTelemetry(textField_path.text, 0, 30, 2, switchEGM96.checked)
-                    popupTelemetry.confirmed()
-                    popupTelemetry.close()
+                    var settingsTelemetry = {}
+
+                    if (rbJSON.checked)
+                        settingsTelemetry["format"] = "JSON";
+                    else if (rbCSV.checked)
+                        settingsTelemetry["format"] = "CSV";
+
+                    settingsTelemetry["accl_frequency"] = 30
+                    settingsTelemetry["gps_frequency"] = 2
+                    settingsTelemetry["egm96_correction"] = switchEGM96.checked
+                    settingsTelemetry["path"] = textField_path.text
+
+                    if (currentShot) {
+                        currentShot.exportTelemetry(textField_path.text, 0, 30, 2, switchEGM96.checked)
+                    } else if (uuids.length > 0) {
+                        mediaProvider.extractTelemetrySelected(uuids, settingsTelemetry)
+                    }
                 }
             }
             ButtonWireframeImage {
@@ -431,9 +450,24 @@ Popup {
                 primaryColor: Theme.colorPrimary
 
                 onClicked: {
-                    if (currentShot) currentShot.exportGps(textField_path.text, 0, 2, switchEGM96.checked)
-                    popupTelemetry.confirmed()
-                    popupTelemetry.close()
+                    var settingsTelemetry = {}
+
+                    if (rbGPX.checked)
+                        settingsTelemetry["format"] = "GPX";
+                    else if (rbIGC.checked)
+                        settingsTelemetry["format"] = "IGC";
+                    else if (rbKML.checked)
+                        settingsTelemetry["format"] = "KML";
+
+                    settingsTelemetry["gps_frequency"] = 2
+                    settingsTelemetry["egm96_correction"] = switchEGM96.checked
+                    settingsTelemetry["path"] = textField_path.text
+
+                    if (currentShot) {
+                        currentShot.exportGps(textField_path.text, 0, 2, switchEGM96.checked)
+                    } else if (uuids.length > 0) {
+                        mediaProvider.extractTelemetrySelected(uuids, settingsTelemetry)
+                    }
                 }
             }
         }

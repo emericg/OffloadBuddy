@@ -7,16 +7,16 @@ Popup {
     id: popupDate
     x: (appWindow.width / 2) - (width / 2) - (appSidebar.width / 2)
     y: (appWindow.height / 2) - (height / 2)
-    width: 640
+    width: 720
     padding: 0
-
-    signal confirmed()
 
     modal: true
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
-    ////////////////////////////////////////////////////////////////////////////
+    signal confirmed()
+
+    ////////
 
     property var qdateFirst: new Date(2001, 1, 1, 0, 0, 0)
     property var qdateToday: new Date();
@@ -56,12 +56,19 @@ Popup {
 
     ////////////////////////////////////////////////////////////////////////////
 
+    enter: Transition { NumberAnimation { property: "opacity"; from: 0.5; to: 1.0; duration: 133; } }
+    exit: Transition { NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; duration: 233; } }
+
+    ////////////////////////////////////////////////////////////////////////////
+
     background: Rectangle {
         color: Theme.colorBackground
         radius: Theme.componentRadius
         border.width: 1
         border.color: Theme.colorSeparator
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 
     contentItem: Column {
         spacing: 16
