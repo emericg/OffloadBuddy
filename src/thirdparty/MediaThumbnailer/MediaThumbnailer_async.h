@@ -1,55 +1,51 @@
 /*!
- * This file is part of OffloadBuddy.
- * COPYRIGHT (C) 2020 Emeric Grange - All Rights Reserved
+ * COPYRIGHT (C) 2021 Emeric Grange - All Rights Reserved
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+ * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * \date      2018
  * \author    Emeric Grange <emeric.grange@gmail.com>
+ * \date      2021
  */
 
-#ifndef GRID_THUMBNAILER_H
-#define GRID_THUMBNAILER_H
+#ifndef MEDIA_THUMBNAILER_ASYNC_H
+#define MEDIA_THUMBNAILER_ASYNC_H
 /* ************************************************************************** */
 
+#include "ThumbnailerBackend.h"
+
 #include <QQuickAsyncImageProvider>
+
+class QQmlApplicationEngine;
 
 /* ************************************************************************** */
 
 /*!
- * \brief The GridThumbnailer class
+ * \brief The MediaThumbnailer class
  */
-class GridThumbnailer : public QQuickImageProvider
+class MediaThumbnailer_async : public QQuickImageProvider
 {
     const int DEFAULT_THUMB_SIZE = 512;
 
-#ifdef ENABLE_FFMPEG
-    bool getImage_withFfmpeg(const QString &path, QImage &img,
-                             const int timecode_s,
-                             const int width, const int height);
-#endif
-#ifdef ENABLE_MINIVIDEO
-    bool getImage_withMinivideo(const QString &path, QImage &img,
-                                const int timecode_s,
-                                const int width, const int height);
-#endif
+    ThumbnailerBackend mediaThumbnailer;
 
 public:
-    GridThumbnailer();
+    MediaThumbnailer_async();
+
+    bool registerQml(QQmlApplicationEngine *engine);
 
     QImage requestImage(const QString &id, QSize *size,
-                        const QSize& requestedSize) override;
+                        const QSize &requestedSize) override;
 
     QPixmap requestPixmap(const QString &id, QSize *size,
                           const QSize &requestedSize) override;
@@ -59,4 +55,4 @@ public:
 };
 
 /* ************************************************************************** */
-#endif // GRID_THUMBNAILER_H
+#endif // MEDIA_THUMBNAILER_ASYNC_H

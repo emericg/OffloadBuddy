@@ -60,9 +60,9 @@ Rectangle {
 
         handleState()
         if (shot.previewVideo)
-            imageFs.source = "image://GridThumbnailer/" + shot.previewVideo + "@" + (shot.duration/12000).toFixed()
+            imageFs.source = "image://MediaThumbnailer/" + shot.previewVideo + "@" + (shot.duration/12000).toFixed()
         else if (shot.previewPhoto)
-            imageFs.source = "image://GridThumbnailer/" + shot.previewPhoto
+            imageFs.source = "image://MediaThumbnailer/" + shot.previewPhoto
         else if (shotDevice && shotDevice.deviceStorage === Shared.STORAGE_MTP) {
             imageMtp.enabled = true
             imageMtp.visible = true
@@ -427,9 +427,9 @@ Rectangle {
                         mouseAreaItem.thumbId = 1
 
                     if (shot.previewVideo)
-                        imageFs.source = "image://GridThumbnailer/" + shot.previewVideo + "@" + timecode_s
+                        imageFs.source = "image://MediaThumbnailer/" + shot.previewVideo + "@" + timecode_s
                     else if (shot.previewPhoto)
-                        imageFs.source = "image://GridThumbnailer/" + shot.previewPhoto
+                        imageFs.source = "image://MediaThumbnailer/" + shot.previewPhoto
                 }
             }
         }
@@ -451,9 +451,9 @@ Rectangle {
                     thumbId = 1
                     thumbTimer.stop()
                     if (shot.previewVideo)
-                        imageFs.source = "image://GridThumbnailer/" + shot.previewVideo + "@" + (shot.duration/12000).toFixed()
+                        imageFs.source = "image://MediaThumbnailer/" + shot.previewVideo + "@" + (shot.duration/12000).toFixed()
                     else if (shot.previewPhoto)
-                        imageFs.source = "image://GridThumbnailer/" + shot.previewPhoto
+                        imageFs.source = "image://MediaThumbnailer/" + shot.previewPhoto
                 }
             }
         }

@@ -24,11 +24,12 @@
 #include "DeviceManager.h"
 #include "JobManager.h"
 #include "MediaLibrary.h"
-#include "GridThumbnailer.h"
+#include "MediaThumbnailer.h"
 #include "ItemImage.h"
 
 #include "utils/utils_app.h"
 #include "utils/utils_screen.h"
+#include "utils/utils_sysinfo.h"
 #include "utils/utils_language.h"
 #include "utils/utils_macosdock.h"
 
@@ -53,6 +54,10 @@ void print_build_infos()
     qDebug() << "OffloadBuddy::print_build_infos()";
     qDebug() << "* Built on '" << __DATE__ << __TIME__ << "'";
 
+#if !defined(QT_NO_DEBUG) && !defined(NDEBUG)
+    qDebug() << "* This is a DEBUG build";
+#endif
+
 #if defined(__ICC) || defined(__INTEL_COMPILER)
     qDebug() << "* Built with ICC '" << __INTEL_COMPILER << "/" __INTEL_COMPILER_BUILD_DATE << "'";
 #elif defined(_MSC_VER)
@@ -65,11 +70,8 @@ void print_build_infos()
     qDebug() << "* Built with an unknown compiler";
 #endif
 
-#if !defined(QT_NO_DEBUG) && !defined(NDEBUG)
-    qDebug() << "* This is a DEBUG build";
-#endif
-
     qDebug() << "- Qt version:" << QT_VERSION_MAJOR << QT_VERSION_MINOR << QT_VERSION_PATCH;
+
 #ifdef ENABLE_LIBMTP
     qDebug() << "- libmtp enabled, version:" << LIBMTP_VERSION_STRING;
 #endif
@@ -79,6 +81,9 @@ void print_build_infos()
 #ifdef ENABLE_EXIV2
     qDebug() << "- exiv2 enabled";
 #endif
+#ifdef ENABLE_LIBCPUID
+    qDebug() << "- libcpuid enabled";
+#endif
 #ifdef ENABLE_MINIVIDEO
     int mv_maj, mv_min, mv_patch;
     minivideo_get_infos(&mv_maj, &mv_min, &mv_patch, nullptr, nullptr, nullptr);
@@ -86,6 +91,9 @@ void print_build_infos()
 #endif
 #ifdef ENABLE_FFMPEG
     qDebug() << "- ffmpeg enabled";
+#endif
+#ifdef ENABLE_GSTREAMER
+    qDebug() << "- GStreamer enabled";
 #endif
 }
 
@@ -143,7 +151,8 @@ int main(int argc, char *argv[])
     UtilsScreen *utilsScreen = UtilsScreen::getInstance();
     UtilsApp *utilsApp = UtilsApp::getInstance();
     UtilsLanguage *utilsLanguage = UtilsLanguage::getInstance();
-    if (!utilsScreen || !utilsApp || !utilsLanguage)
+    UtilsSysinfo *utilsSysinfo = UtilsSysinfo::getInstance();
+    if (!utilsScreen || !utilsApp || !utilsLanguage || !utilsSysinfo)
     {
         qWarning() << "Cannot init OffloadBuddy utils!";
         return EXIT_FAILURE;
@@ -179,7 +188,9 @@ int main(int argc, char *argv[])
     engine_context->setContextProperty("jobManager", jm);
     engine_context->setContextProperty("mediaLibrary", ml);
     engine_context->setContextProperty("utilsApp", utilsApp);
-    engine.addImageProvider("GridThumbnailer", new GridThumbnailer);
+
+    MediaThumbnailer_threadpool *tmb = new MediaThumbnailer_threadpool();
+    tmb->registerQml(&engine);
 
     // Load the main view
     engine.load(QUrl(QStringLiteral("qrc:/qml/Application.qml")));

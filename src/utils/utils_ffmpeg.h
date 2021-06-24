@@ -34,7 +34,7 @@ extern "C"
 /* ************************************************************************** */
 
 #undef av_err2str
-#ifdef _MSC_VER
+#if defined(_MSC_VER)
 //! to work around av_err2str() in C++
 #define av_err2str(errnum) av_make_error_string(static_cast<char*>(_alloca(AV_ERROR_MAX_STRING_SIZE)), AV_ERROR_MAX_STRING_SIZE, errnum)
 #else

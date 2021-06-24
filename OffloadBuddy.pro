@@ -11,7 +11,6 @@ QT     += multimedia location charts
 !versionAtLeast(QT_VERSION, 5.12) : error("You need at least Qt version 5.12 for $${TARGET}")
 !versionAtMost(QT_VERSION, 6.0) : error("You can't use Qt 6.0+ for WatchFlower")
 
-
 # Project features #############################################################
 
 # Use Qt Quick compiler
@@ -27,13 +26,23 @@ include(src/thirdparty/SingleApplication/singleapplication.pri)
 DEFINES += QAPPLICATION_CLASS=QApplication
 
 unix { DEFINES += ENABLE_LIBMTP }
+
+#DEFINES += ENABLE_GSTREAMER
+
 DEFINES += ENABLE_FFMPEG
+
+#DEFINES += ENABLE_LIBCPUID
 
 # Metadata backends
 DEFINES += ENABLE_MINIVIDEO
 DEFINES += ENABLE_LIBEXIF
 #DEFINES += ENABLE_EXIV2
+
+# EGM96 altitude correction
 include(src/thirdparty/EGM96/EGM96.pri)
+
+# Fast thumbnailer for photo and video
+include(src/thirdparty/MediaThumbnailer/MediaThumbnailer.pri)
 
 # Project files ################################################################
 
@@ -57,7 +66,6 @@ SOURCES  += src/main.cpp \
             src/ShotProvider.cpp \
             src/GenericFileModel.cpp \
             src/GoProFileModel.cpp \
-            src/GridThumbnailer.cpp \
             src/GpmfBuffer.cpp \
             src/GpmfKLV.cpp \
             src/GpmfTags.cpp \
@@ -65,6 +73,7 @@ SOURCES  += src/main.cpp \
             src/utils/utils_screen.cpp \
             src/utils/utils_language.cpp \
             src/utils/utils_ffmpeg.cpp \
+            src/utils/utils_sysinfo.cpp \
             src/utils/utils_maths.cpp
 
 HEADERS  += src/SettingsManager.h \
@@ -85,7 +94,6 @@ HEADERS  += src/SettingsManager.h \
             src/ShotProvider.h \
             src/GenericFileModel.h \
             src/GoProFileModel.h \
-            src/GridThumbnailer.h \
             src/GpmfBuffer.h \
             src/GpmfKLV.h \
             src/GpmfTags.h \
@@ -94,6 +102,7 @@ HEADERS  += src/SettingsManager.h \
             src/utils/utils_language.h \
             src/utils/utils_ffmpeg.h \
             src/utils/utils_maths.h \
+            src/utils/utils_sysinfo.h \
             src/utils/utils_enums.h
 
 RESOURCES   += qml/qml.qrc \
@@ -132,6 +141,7 @@ contains(DEFINES, USE_CONTRIBS) {
     contains(DEFINES, ENABLE_LIBEXIF) { LIBS += -lexif }
     contains(DEFINES, ENABLE_EXIV2) { LIBS += -lexiv2 }
     contains(DEFINES, ENABLE_MINIVIDEO) { LIBS += -lminivideo }
+    contains(DEFINES, ENABLE_LIBCPUID) { LIBS += -lcpuid }
     linux {
         CONFIG += link_pkgconfig
         contains(DEFINES, ENABLE_FFMPEG) { PKGCONFIG += libavformat libavcodec libswscale libswresample libavutil }
@@ -152,6 +162,7 @@ contains(DEFINES, USE_CONTRIBS) {
     contains(DEFINES, ENABLE_LIBEXIF) { PKGCONFIG += libexif }
     contains(DEFINES, ENABLE_EXIV2) { PKGCONFIG += exiv2 }
     contains(DEFINES, ENABLE_MINIVIDEO) { PKGCONFIG += libminivideo }
+    contains(DEFINES, ENABLE_LIBCPUID) { PKGCONFIG += libcpuid }
     contains(DEFINES, ENABLE_FFMPEG) { PKGCONFIG += libavformat libavcodec libswscale libswresample libavutil }
 }
 

@@ -1,27 +1,25 @@
 /*!
- * This file is part of OffloadBuddy.
- * COPYRIGHT (C) 2020 Emeric Grange - All Rights Reserved
+ * COPYRIGHT (C) 2021 Emeric Grange - All Rights Reserved
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+ * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * \date      2018
  * \author    Emeric Grange <emeric.grange@gmail.com>
+ * \date      2021
  */
 
-#include "GridThumbnailer.h"
+#include "ThumbnailerBackend_ffmpeg.h"
 
-#ifdef ENABLE_FFMPEG
 #ifdef __cplusplus
 extern "C"
 {
@@ -33,16 +31,6 @@ extern "C"
 }
 #endif // __cplusplus
 
-#include "utils/utils_maths.h"
-#include "utils/utils_ffmpeg.h"
-#endif // ENABLE_FFMPEG
-
-#ifdef ENABLE_MINIVIDEO
-#include "minivideo.h"
-#endif
-
-#include "SettingsManager.h"
-
 #include <QImageReader>
 #include <QImage>
 #include <QDebug>
@@ -51,164 +39,15 @@ extern "C"
 
 /* ************************************************************************** */
 
-GridThumbnailer::GridThumbnailer() :
-    QQuickImageProvider(QQuickImageProvider::Image,
-                        QQmlImageProviderBase::ForceAsynchronousImageLoading)
-{
-    //
-}
-
-/* ************************************************************************** */
-/* ************************************************************************** */
-
-QImage GridThumbnailer::requestImage(const QString &id, QSize *size,
-                                     const QSize &requestedSize)
-{
-    bool decoding_status = false;
-
-    QString path = id;
-    int target_width = requestedSize.width() > 0 ? requestedSize.width() : DEFAULT_THUMB_SIZE;
-    int target_height = requestedSize.height() > 0 ? requestedSize.height() : DEFAULT_THUMB_SIZE;
-
-    // Get timecode from string id, and remove it from string path
-    int timecode_pos = id.lastIndexOf('@');
-    int timecode_s = 0;
-    if (timecode_pos)
-    {
-        bool timecode_validity = false;
-        timecode_pos = id.size() - timecode_pos;
-        timecode_s = id.rightRef(timecode_pos - 1).toInt(&timecode_validity);
-
-        // Make sure we had a timecode and not a random '@' character
-        if (timecode_validity)
-            path.chop(timecode_pos);
-    }
-/*
-    qDebug() << "@ requestId: " << id;
-    qDebug() << "@ requestPath: " << path;
-    qDebug() << "@ requestedTimecode: " << timecode_s;
-    qDebug() << "@ requestedSize: " << requestedSize;
-*/
-
-    QImage thumb;
-
-    // First, try QImageReader
-    QImageReader img_infos(path);
-    if (img_infos.canRead())
-    {
-        // check size first, don't even try to thumbnail very big (>10K) pictures
-        if (img_infos.size().rwidth() > 0 && img_infos.size().rheight() > 0 &&
-            img_infos.size().rwidth() < 10000 && img_infos.size().rheight() < 10000)
-        {
-            // load data into the QImage
-            img_infos.setAutoTransform(true);
-            decoding_status = img_infos.read(&thumb);
-
-            // scale down (not up)
-            if (target_width < img_infos.size().rwidth() && target_height < img_infos.size().rheight())
-                thumb = thumb.scaled(target_width, target_height, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-        }
-    }
-
-    // Video file fallback
-    if (!decoding_status)
-    {
-#if defined(ENABLE_FFMPEG)
-        decoding_status = getImage_withFfmpeg(path, thumb, timecode_s, target_width, target_height);
-#elif defined(ENABLE_MINIVIDEO)
-        decoding_status = getImage_withMinivideo(path, thumb, timecode, target_width, target_height);
+#undef av_err2str
+#if defined(_MSC_VER)
+//! to work around av_err2str() in C++
+#define av_err2str(errnum) av_make_error_string(static_cast<char*>(_alloca(AV_ERROR_MAX_STRING_SIZE)), AV_ERROR_MAX_STRING_SIZE, errnum)
+#else
+#define av_err2str(errnum) av_make_error_string(static_cast<char*>(__builtin_alloca(AV_ERROR_MAX_STRING_SIZE)), AV_ERROR_MAX_STRING_SIZE, errnum)
 #endif
-    }
-
-    // Use our own static fallback pictures
-    if (!decoding_status)
-    {
-        if (size) *size = QSize(DEFAULT_THUMB_SIZE, DEFAULT_THUMB_SIZE);
-        //if (id.contains(".mp4") || id.contains(".m4v") || id.contains(".mov") || id.contains(".mkv") || id.contains(".webm"))
-        //    return fallback_video;
-        //if (id.contains(".jpg") || id.contains(".jpeg") || id.contains(".png") || id.contains(".gpr") || id.contains(".tif") || id.contains(".tiff"))
-        //    return fallback_picture;
-    }
-
-    if (size) *size = QSize(thumb.width(), thumb.height());
-
-    return thumb;
-}
 
 /* ************************************************************************** */
-
-QPixmap GridThumbnailer::requestPixmap(const QString &id, QSize *size,
-                                       const QSize &requestedSize)
-{
-    return QPixmap::fromImage(requestImage(id, size, requestedSize));
-}
-
-/* ************************************************************************** */
-
-QQuickTextureFactory *GridThumbnailer::requestTexture(const QString &id, QSize *size,
-                                                      const QSize &requestedSize)
-{
-    Q_UNUSED(id)
-    Q_UNUSED(size)
-    Q_UNUSED(requestedSize)
-
-    return nullptr;
-}
-
-/* ************************************************************************** */
-/* ************************************************************************** */
-
-#ifdef ENABLE_MINIVIDEO
-
-bool GridThumbnailer::getImage_withMinivideo(const QString &path, QImage &img,
-                                             const int timecode_s,
-                                             const int width, const int height)
-{
-    bool status = false;
-
-    MediaFile_t *media = nullptr;
-    if (minivideo_open(path.toLocal8Bit(), &media) > 0)
-    {
-        if (minivideo_parse(media, false, false) > 0)
-        {
-            unsigned tid = 0, sid = 0;
-
-            if (media && media->tracks_video_count > tid)
-            {
-                MediaStream_t *track = media->tracks_video[tid];
-                if (track && track->sample_count > tid)
-                {
-                    // TODO seek
-                    Q_UNUSED(timecode_s)
-
-                    // TODO make sure sid is a keyframe
-                    //track->sample_type[sid] == sample_VIDEO_SYNC)
-
-                    OutputSurface_t *out = minivideo_decode_frame(media, sid);
-                    if (out)
-                    {
-                        img = QImage(out->surface, out->width, out->height,
-                                     QImage::Format_RGB888, &free).scaled(width*2, height);
-                        minivideo_destroy_frame(&out);
-
-                        status = true;
-                    }
-                }
-            }
-        }
-
-        minivideo_close(&media);
-    }
-
-    return status;
-}
-
-#endif // ENABLE_MINIVIDEO
-
-/* ************************************************************************** */
-/* ************************************************************************** */
-
-#ifdef ENABLE_FFMPEG
 
 bool decode_packet(AVPacket *pPacket, AVCodecContext *pCodecContext, AVFrame *pFrame,
                    QImage &img, const int width, const int height)
@@ -250,7 +89,7 @@ bool decode_packet(AVPacket *pPacket, AVCodecContext *pCodecContext, AVFrame *pF
             int src_h = pFrame->height;
             int srcRange = 0;
             double src_ar = static_cast<double>(src_w) / static_cast<double>(src_h);
-            AVPixelFormat src_pix_fmt = static_cast<AVPixelFormat>(pFrame->format);
+            enum AVPixelFormat src_pix_fmt = static_cast<AVPixelFormat>(pFrame->format);
 
             // Remove the 'J' in deprecated pixel formats, which denotes full range
             switch (pFrame->format)
@@ -276,29 +115,17 @@ bool decode_packet(AVPacket *pPacket, AVCodecContext *pCodecContext, AVFrame *pF
                     break;
             }
 
-            int dst_w = roundTo(static_cast<int>(std::round(width * src_ar)), 32);
+            int dst_w = ((static_cast<int>(std::round(width * src_ar)) + (31)) & ~(31));
             int dst_h = height;
             int dstRange;
             enum AVPixelFormat dst_pix_fmt = AV_PIX_FMT_RGB24;
 
             /// SCALING (ffmpeg) ///////////////////////////////////////////////
 
-            int filtering_mode = SWS_FAST_BILINEAR;
-            SettingsManager *sm = SettingsManager::getInstance();
-            if (sm)
-            {
-                if (sm->getThumbQuality() == 0)
-                    filtering_mode = SWS_FAST_BILINEAR;
-                else if (sm->getThumbQuality() == 1)
-                    filtering_mode = SWS_BILINEAR;
-                else if (sm->getThumbQuality() == 2)
-                    filtering_mode = SWS_BILINEAR; // SWS_BICUBIC ?
-            }
-
             // create scaling context
             struct SwsContext *sws_ctx = sws_getContext(src_w, src_h, src_pix_fmt,
                                                         dst_w, dst_h, dst_pix_fmt,
-                                                        filtering_mode,
+                                                        SWS_BILINEAR,
                                                         nullptr, nullptr, nullptr);
             if (!sws_ctx)
             {
@@ -339,6 +166,7 @@ bool decode_packet(AVPacket *pPacket, AVCodecContext *pCodecContext, AVFrame *pF
             img = QImage(dst_data[0], dst_w, dst_h, QImage::Format_RGB888).copy();
 
             av_freep(dst_data);
+
             av_frame_unref(pFrame);
             sws_freeContext(sws_ctx);
 
@@ -351,21 +179,21 @@ bool decode_packet(AVPacket *pPacket, AVCodecContext *pCodecContext, AVFrame *pF
 
 /* ************************************************************************** */
 
-bool GridThumbnailer::getImage_withFfmpeg(const QString &path, QImage &img,
-                                          const int timecode_s,
-                                          const int width, const int height)
+bool ThumbnailerBackend_ffmpeg::getImage(const QString &path, QImage &img,
+                                         const int timecode_s,
+                                         const int width, const int height)
 {
     bool status = false;
 
     AVStream *videoStreamContext = nullptr;
     AVCodec *videoCodec = nullptr;
-    AVCodecParameters *videoCodecParameters =  nullptr;
+    AVCodecParameters *videoCodecParameters = nullptr;
     AVCodecContext *videoCodecContext = nullptr;
     int videoStreamIndex = -1;
 
     AVFrame *pFrame = nullptr;
     AVPacket *pPacket = nullptr;
-    int max_packets_to_process = 4;
+    int max_packets_to_process = 16;
 
     /// DEMUX //////////////////////////////////////////////////////////////////
 
@@ -375,7 +203,7 @@ bool GridThumbnailer::getImage_withFfmpeg(const QString &path, QImage &img,
         qDebug() << "ERROR could not allocate memory for Format Context";
         return status;
     }
-    if (avformat_open_input(&demuxContext, path.toLocal8Bit(), nullptr, nullptr) != 0)
+    if (avformat_open_input(&demuxContext, path.toUtf8(), nullptr, nullptr) != 0)
     {
         qDebug() << "ERROR could not open the file:" << path;
         goto abort_stage1;
@@ -401,7 +229,7 @@ bool GridThumbnailer::getImage_withFfmpeg(const QString &path, QImage &img,
         AVCodec *pLocalCodec = avcodec_find_decoder(pLocalCodecParameters->codec_id);
         if (pLocalCodec == nullptr)
         {
-            qDebug() << "ERROR unsupported codec!" << QByteArray::fromHex(QString::number(pLocalCodecParameters->codec_tag, 16).toLocal8Bit());
+            qDebug() << "ERROR unsupported codec!" << QByteArray::fromHex(QString::number(pLocalCodecParameters->codec_tag, 16).toUtf8());
             goto abort_stage1;
         }
 
@@ -413,12 +241,6 @@ bool GridThumbnailer::getImage_withFfmpeg(const QString &path, QImage &img,
             videoCodecParameters = pLocalCodecParameters;
             videoStreamContext = demuxContext->streams[i];
         }
-
-        //qDebug() << "STREAM #" << i;
-        //qDebug() << "Video Codec:" << QByteArray::fromHex(QString::number(pLocalCodecParameters->codec_tag, 16).toLocal8Bit());
-        //qDebug() << "Video Codec: resolution" << pLocalCodecParameters->width << "x" << pLocalCodecParameters->height;
-        //qDebug() << "Codec name:" << pLocalCodec->long_name << " ID:" << pLocalCodec->id;
-        //qDebug() << "Bitrate:" << pCodecParameters->bit_rate;
     }
 
     /// CONTEXES ALLOCATIONS ///////////////////////////////////////////////////
@@ -442,15 +264,17 @@ bool GridThumbnailer::getImage_withFfmpeg(const QString &path, QImage &img,
 
     // SPEED FLAGS // "ain't nobody got time for that"
     videoCodecContext->skip_loop_filter = AVDISCARD_ALL;
-    videoCodecContext->flags2 |= AV_CODEC_FLAG2_FAST;
+    videoCodecContext->flags2 = AV_CODEC_FLAG2_FAST;
     videoCodecContext->thread_count = 2;
-    //videoCodecContext->thread_type = FF_THREAD_FRAME | FF_THREAD_SLICE;
+    videoCodecContext->thread_type = FF_THREAD_SLICE;
 
     if (avcodec_open2(videoCodecContext, videoCodec, nullptr) < 0)
     {
         qDebug() << "ERROR failed to open codec through avcodec_open2";
         goto abort_stage2;
     }
+
+    videoCodecContext->hwaccel = nullptr;
 
     /// FRAMES ALLOCATIONS /////////////////////////////////////////////////////
 
@@ -476,11 +300,10 @@ bool GridThumbnailer::getImage_withFfmpeg(const QString &path, QImage &img,
         int64_t target_opt = av_rescale_q(timecode_s, timebase_s, videoStreamContext->time_base);
 
         // Keyframe around optimal seek point
-        int64_t prev_keyframe = -1;
-        int64_t next_keyframe = -1;
-        ffmpeg_get_keyframes(videoStreamContext, target_opt, prev_keyframe, next_keyframe);
+        //int64_t prev_keyframe = -1, next_keyframe = -1;
+        //ffmpeg_get_keyframes(videoStreamContext, target_opt, prev_keyframe, next_keyframe);
 
-        int ret_seek = av_seek_frame(demuxContext, videoStreamIndex, prev_keyframe, 0);
+        int ret_seek = av_seek_frame(demuxContext, videoStreamIndex, target_opt, AVSEEK_FLAG_BACKWARD);
         if (ret_seek < 0)
         {
             qDebug() << "ERROR couldn't seek at" << timecode_s << "sec into the stream...";
@@ -527,7 +350,5 @@ abort_stage1:
 
     return status;
 }
-
-#endif // ENABLE_FFMPEG
 
 /* ************************************************************************** */
