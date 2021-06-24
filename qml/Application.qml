@@ -142,6 +142,7 @@ ApplicationWindow {
 
         Sidebar {
             id: appSidebar
+            z: 2
 
             anchors.top: parent.top
             anchors.left: parent.left
@@ -167,7 +168,6 @@ ApplicationWindow {
             ScreenJobs {
                 anchors.fill: parent
                 id: screenJobs
-                myJobs: jobManager
             }
             ScreenSettings {
                 anchors.fill: parent

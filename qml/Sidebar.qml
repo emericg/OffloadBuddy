@@ -148,4 +148,13 @@ Rectangle {
             onClicked: appWindow.close()
         }
     }
+
+    SimpleShadow {
+        anchors.top: parent.top
+        anchors.left: parent.right
+        anchors.leftMargin: -width
+        anchors.bottom: parent.bottom
+        width: 4
+        color: Theme.colorSidebar
+    }
 }

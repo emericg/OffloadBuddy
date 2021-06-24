@@ -6,22 +6,20 @@ import "qrc:/js/UtilsString.js" as UtilsString
 
 Item {
     id: screenComponent
-
     width: 1280
     height: 720
-    anchors.fill: parent
 
     // HEADER //////////////////////////////////////////////////////////////////
 
     Rectangle {
         id: rectangleHeader
-        height: 64
-        z: 5
-        color: Theme.colorHeader
-
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
+
+        z: 1
+        height: 64
+        color: Theme.colorHeader
 
         // prevent clicks below this area
         //MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
@@ -126,24 +124,41 @@ Item {
             }
         }
 
+        ////////
+
         CsdWindows { }
+
+        ////////
+
+        Rectangle {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+
+            height: 2
+            opacity: 0.1
+            color: Theme.colorHeaderHighlight
+        }
+        SimpleShadow {
+            anchors.top: parent.bottom
+            anchors.topMargin: -height
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 2
+        }
     }
 
-    // CONTENT /////////////////////////////////////////////////////////////////
+    // MENUS ///////////////////////////////////////////////////////////////////
 
-    Item {
-        id: rectangleContent
-
+    Column {
+        id: menusArea
         anchors.top: rectangleHeader.bottom
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
         anchors.left: parent.left
-
-        ////////////////
+        anchors.right: parent.right
+        z: 1
 
         Rectangle {
             id: rectangleActions
-            anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
 
@@ -207,6 +222,17 @@ Item {
                 backgroundColor: Theme.colorActionbarHighlight
             }
         }
+    }
+
+    // CONTENT /////////////////////////////////////////////////////////////////
+
+    Item {
+        id: rectangleContent
+
+        anchors.top: menusArea.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
 
         ////////////////
 
@@ -214,7 +240,7 @@ Item {
             id: rectangleColors
             width: 64 + 4
             height: 6*64 + 4
-            anchors.top: rectangleActions.bottom
+            anchors.top: parent.top
             anchors.topMargin: 32
             anchors.right: parent.right
             anchors.rightMargin: 32
@@ -280,7 +306,7 @@ Item {
         Column {
             id: columnComponents
 
-            anchors.top: rectangleActions.bottom
+            anchors.top: parent.top
             anchors.topMargin: 24
             anchors.left: parent.left
             anchors.leftMargin: 24

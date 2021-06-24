@@ -57,6 +57,7 @@
         <file alias="ItemLilMenu.qml">components_generic/ItemLilMenu.qml</file>
         <file alias="ItemLilMenuButton.qml">components_generic/ItemLilMenuButton.qml</file>
         <file alias="RangeSliderArrow.qml">components_generic/RangeSliderArrow.qml</file>
+        <file alias="SimpleShadow.qml">components_generic/SimpleShadow.qml</file>
         <file alias="SliderValueSolid.qml">components_generic/SliderValueSolid.qml</file>
 
         <file alias="ButtonThemed.qml">components_themed/ButtonThemed.qml</file>

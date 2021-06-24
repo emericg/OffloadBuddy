@@ -14,8 +14,8 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
 
+        z: 1
         height: 64
-        z: 5
         color: Theme.colorHeader
 
         DragHandler {
@@ -51,7 +51,28 @@ Item {
             color: Theme.colorHeaderContent
         }
 
+        ////////
+
         CsdWindows { }
+
+        ////////
+
+        Rectangle {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+
+            height: 2
+            opacity: 0.1
+            color: Theme.colorHeaderHighlight
+        }
+        SimpleShadow {
+            anchors.top: parent.bottom
+            anchors.topMargin: -height
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 2
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////

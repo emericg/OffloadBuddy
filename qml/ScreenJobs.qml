@@ -6,10 +6,9 @@ import ThemeEngine 1.0
 import "qrc:/js/UtilsString.js" as UtilsString
 
 Item {
+    id: screenJobs
     width: 1280
     height: 720
-
-    property var myJobs
 
     Rectangle {
         id: rectangleHeader
@@ -17,8 +16,8 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
 
-        height: 64
         z: 5
+        height: 64
         color: Theme.colorHeader
 
         DragHandler {
@@ -51,21 +50,42 @@ Item {
 
             text: qsTr("Clear finished jobs")
             source: "qrc:/assets/icons_material/baseline-close-24px.svg"
-            onClicked: myJobs.clearFinishedJobs()
+            onClicked: jobManager.clearFinishedJobs()
+        }
+
+        ////////
+
+        CsdWindows { }
+
+        ////////
+
+        Rectangle {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+
+            height: 2
+            opacity: 0.1
+            color: Theme.colorHeaderHighlight
+        }
+        SimpleShadow {
+            anchors.top: parent.bottom
+            anchors.topMargin: -height
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 2
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 
     Item {
         id: rectangleContent
 
         anchors.top: rectangleHeader.bottom
-        anchors.topMargin: 0
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
         anchors.left: parent.left
-        anchors.leftMargin: 0
         anchors.right: parent.right
-        anchors.rightMargin: 0
+        anchors.bottom: parent.bottom
 
         ListView {
             id: jobsView

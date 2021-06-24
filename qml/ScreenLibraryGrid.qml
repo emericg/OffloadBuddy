@@ -9,7 +9,6 @@ Item {
     id: mediaGrid
     width: 1280
     height: 720
-    anchors.fill: parent
 
     property var selectedItem: shotsView.currentItem
     property int selectedItemIndex: shotsView.currentIndex
@@ -125,12 +124,12 @@ Item {
 
     Rectangle {
         id: rectangleHeader
-        height: 128
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
 
         z: 1
+        height: 128
         color: Theme.colorHeader
 
         DragHandler {
@@ -435,6 +434,25 @@ Item {
                 }
             }
         }
+
+        ////////
+
+        Rectangle {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+
+            height: 2
+            opacity: 0.1
+            color: Theme.colorHeaderHighlight
+        }
+        SimpleShadow {
+            anchors.top: parent.bottom
+            anchors.topMargin: -height
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 2
+        }
     }
 
     // MENUS ///////////////////////////////////////////////////////////////////
@@ -495,9 +513,16 @@ Item {
                 visible: !mediaGrid.selectionMode
 
                 color: "transparent"
-                radius: (Theme.componentRadius > 4) ? Theme.componentRadius-2 : 2
+                radius: (Theme.componentRadius > 6) ? Theme.componentRadius-2 : 3
                 border.width: (Theme.componentRadius > 4) ? 6 : 4
                 border.color: Theme.colorPrimary
+
+                SimpleShadow {
+                    anchors.fill: parent
+                    color: Theme.colorPrimary
+                    radius: parent.radius
+                    filled: false
+                }
             }
         }
 
