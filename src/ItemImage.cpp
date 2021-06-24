@@ -28,7 +28,20 @@
 
 ItemImage::ItemImage(QQuickItem *parent) : QQuickPaintedItem(parent)
 {
-    m_image = QImage(":/images/no_image.png");
+    m_image = QImage();
+}
+
+/* ************************************************************************** */
+
+QImage ItemImage::image() const
+{
+    return m_image;
+}
+
+void ItemImage::setImage(const QImage &image)
+{
+    m_image = image;
+    update();
 }
 
 /* ************************************************************************** */
@@ -41,24 +54,11 @@ void ItemImage::paint(QPainter *painter)
         QImage scaled = m_image.scaledToHeight(bounding_rect.height(), Qt::SmoothTransformation);
         QPointF center = bounding_rect.center() - scaled.rect().center();
 
-        if (center.x() < 0)
-            center.setX(0);
-        if (center.y() < 0)
-            center.setY(0);
+        if (center.x() < 0) center.setX(0);
+        if (center.y() < 0) center.setY(0);
 
         painter->drawImage(center, scaled);
     }
-}
-
-QImage ItemImage::image() const
-{
-    return m_image;
-}
-
-void ItemImage::setImage(const QImage &image)
-{
-    m_image = image;
-    update();
 }
 
 /* ************************************************************************** */

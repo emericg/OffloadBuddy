@@ -36,20 +36,22 @@ class QPainter;
  */
 class ItemImage : public QQuickPaintedItem
 {
-Q_OBJECT
+    Q_OBJECT
+
     Q_PROPERTY(QImage image READ image WRITE setImage NOTIFY imageChanged)
 
-public:
-    ItemImage(QQuickItem *parent = nullptr);
-    Q_INVOKABLE void setImage(const QImage &image);
-    void paint(QPainter *painter);
-    QImage image() const;
+    QImage m_image;
 
 signals:
     void imageChanged();
 
-private:
-    QImage m_image;
+public:
+    ItemImage(QQuickItem *parent = nullptr);
+
+    QImage image() const;
+    Q_INVOKABLE void setImage(const QImage &image);
+
+    void paint(QPainter *painter);
 };
 
 /* ************************************************************************** */
