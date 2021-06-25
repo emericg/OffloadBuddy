@@ -783,10 +783,10 @@ Popup {
 
                 SliderValueSolid {
                     id: timelapseFramerate
-                    width: parent.width - contentColumn.legendWidth - cbTimelapse.width - 32
+                    width: parent.width - contentColumn.legendWidth - (cbTimelapse.visible ? cbTimelapse.width + 16 : 0) - 16
                     anchors.verticalCenter: parent.verticalCenter
 
-                    visible: cbTimelapse.checked || encodingMode === "timelapse"
+                    visible: (cbTimelapse.checked || encodingMode === "timelapse")
                     from: 1
                     to: 15
                     value: 10

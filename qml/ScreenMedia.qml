@@ -245,7 +245,7 @@ Item {
                 width: 2; height: 40;
                 anchors.verticalCenter: parent.verticalCenter
                 visible: rowActions1.visible
-                color: Theme.colorHeaderHighlight
+                color: Theme.colorHeaderContent
                 opacity: 0.1
             }
 
@@ -287,7 +287,7 @@ Item {
                 width: 2; height: 40;
                 anchors.verticalCenter: parent.verticalCenter
                 visible: rowActions2.visible
-                color: Theme.colorHeaderHighlight
+                color: Theme.colorHeaderContent
                 opacity: 0.1
             }
 
@@ -322,7 +322,7 @@ Item {
             anchors.rightMargin: 12
             anchors.verticalCenter: parent.verticalCenter
             //visible: (screenMedia.state !== "overview")
-            color: Theme.colorHeaderHighlight
+            color: Theme.colorHeaderContent
             opacity: 0.1
         }
 
@@ -392,7 +392,7 @@ Item {
 
             height: 2
             opacity: 0.1
-            color: Theme.colorHeaderHighlight
+            color: Theme.colorHeaderContent
         }
         SimpleShadow {
             anchors.top: parent.bottom
@@ -400,6 +400,7 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             height: 2
+            color: Theme.colorHighcontrast
         }
     }
 

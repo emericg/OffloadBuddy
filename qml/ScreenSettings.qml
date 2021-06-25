@@ -55,7 +55,7 @@ Item {
 
             height: 2
             opacity: 0.1
-            color: Theme.colorHeaderHighlight
+            color: Theme.colorHeaderContent
         }
         SimpleShadow {
             anchors.top: parent.bottom
@@ -63,6 +63,7 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             height: 2
+            color: Theme.colorHighcontrast
         }
     }
 

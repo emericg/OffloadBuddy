@@ -115,7 +115,7 @@ Popup {
                 anchors.right: parent.right
 
                 text: qsTr("File date")
-                color: Theme.colorText
+                color: Theme.colorSubText
                 font.pixelSize: Theme.fontSizeContent
                 verticalAlignment: Text.AlignVCenter
 
@@ -236,7 +236,7 @@ Popup {
                 visible: dateGps.text
 
                 text: qsTr("GPS date")
-                color: Theme.colorText
+                color: Theme.colorSubText
                 font.pixelSize: Theme.fontSizeContent
                 verticalAlignment: Text.AlignVCenter
 
