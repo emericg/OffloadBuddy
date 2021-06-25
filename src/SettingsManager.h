@@ -58,7 +58,7 @@ class SettingsManager: public QObject
     Q_PROPERTY(bool ignorejunk READ getIgnoreJunk WRITE setIgnoreJunk NOTIFY ignoreJunkChanged)
     Q_PROPERTY(bool ignorehdaudio READ getIgnoreHdAudio WRITE setIgnoreHdAudio NOTIFY ignoreHdAudioChanged)
     Q_PROPERTY(bool moveToTrash READ getMoveToTrash WRITE setMoveToTrash NOTIFY moveToTrashChanged)
-    Q_PROPERTY(bool mtpfullscan READ getMtpFullScan WRITE setMtpFullScan NOTIFY mtpFullScanChanged)
+    Q_PROPERTY(bool mtpFullScan READ getMtpFullScan WRITE setMtpFullScan NOTIFY mtpFullScanChanged)
 
     // Application window
     QSize m_appSize;

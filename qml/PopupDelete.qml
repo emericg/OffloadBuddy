@@ -261,16 +261,14 @@ Popup {
                 primaryColor: Theme.colorError
                 onClicked: {
                     var settingsDeletion = {}
+                    settingsDeletion["trash"] = settingsManager.moveToTrash
 
                     if (currentShot) {
-                        console.log("single deletion")
                         mediaProvider.deleteSelected(currentShot.uuid, settingsDeletion)
                         //mediaProvider.deleteSelected(uuids[0], settingsDeletion)
                     } else if (uuids.length > 0) {
-                        console.log("multi deletion")
                         mediaProvider.deleteSelection(uuids, settingsDeletion)
                     } else if (popupMode === 3) {
-                        console.log("DELETE EVERYTHING")
                         mediaProvider.deleteAll(settingsDeletion)
                     }
 

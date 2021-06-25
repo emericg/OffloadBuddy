@@ -33,6 +33,7 @@ Item {
         hoverEnabled: false
         onEntered: isHovered = true
         onExited: isHovered = false
+        onCanceled: isHovered = false
     }
 
     Rectangle {
