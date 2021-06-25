@@ -5,7 +5,7 @@ import ThemeEngine 1.0
 
 Button {
     id: control
-    width: contentText.width + (contentText.width / 3)
+    implicitWidth: contentText.contentWidth + (contentText.contentWidth / 2)
     implicitHeight: Theme.componentHeight
 
     font.pixelSize: Theme.fontSizeComponent
@@ -20,23 +20,19 @@ Button {
         color: control.down ? Theme.colorComponentDown : Theme.colorComponent
     }
 
-    contentItem: Item {
-        Text {
-            id: contentText
-            height: parent.height
+    contentItem: Text {
+        id: contentText
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenter: parent.horizontalCenter
 
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.horizontalCenter: parent.horizontalCenter
+        text: control.text
+        textFormat: Text.PlainText
+        font: control.font
+        elide: Text.ElideRight
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
 
-            text: control.text
-            textFormat: Text.PlainText
-            font: control.font
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            elide: Text.ElideRight
-
-            opacity: enabled ? 1.0 : 0.33
-            color: control.down ? Theme.colorComponentContent : Theme.colorComponentContent
-        }
+        opacity: enabled ? 1.0 : 0.33
+        color: control.down ? Theme.colorComponentContent : Theme.colorComponentContent
     }
 }

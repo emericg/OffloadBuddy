@@ -4,12 +4,11 @@ import QtGraphicalEffects 1.12
 import ThemeEngine 1.0
 
 Item {
-    property alias radius: rect.radius
+    z: -1
 
     property string color: "#666"
+    property alias radius: rect.radius
     property bool filled: true
-
-    z: -1
 
     Rectangle {
         id: rect

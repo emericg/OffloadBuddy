@@ -28,12 +28,12 @@ SpinBox {
     contentItem: TextInput {
         text: control.textFromValue(control.value, control.locale) + legend
         font: control.font
-
         color: Theme.colorComponentText
-        selectionColor: Theme.colorText
-        selectedTextColor: "white"
         horizontalAlignment: Qt.AlignHCenter
         verticalAlignment: Qt.AlignVCenter
+
+        selectionColor: Theme.colorText
+        selectedTextColor: "white"
 
         readOnly: !control.editable
         validator: control.validator

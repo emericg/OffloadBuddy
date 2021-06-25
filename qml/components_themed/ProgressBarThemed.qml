@@ -5,7 +5,6 @@ import ThemeEngine 1.0
 
 ProgressBar {
     id: control
-
     implicitWidth: 200
     implicitHeight: 6
 
