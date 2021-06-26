@@ -169,7 +169,7 @@ void JobWorkerAsync::queueWork(Job *job)
             ptiwrap->job = job;
             ptiwrap->job_element_index = i;
 
-            QString name_suffix = (job->settings.codec == "copy") ? "_clipped" : "_reencoded";
+            QString name_suffix = (job->settings_encode.codec == "copy") ? "_clipped" : "_reencoded";
             QString file_extension = "mp4";
             QString video_filters;
             QString audio_filters;
@@ -195,7 +195,7 @@ void JobWorkerAsync::queueWork(Job *job)
             if (element->parent_shots->getShotType() > Shared::SHOT_PICTURE)
             {
                 // timelapse to video
-                ptiwrap->arguments << "-r" << QString::number(job->settings.timelapse_fps);
+                ptiwrap->arguments << "-r" << QString::number(job->settings_encode.timelapse_fps);
                 ptiwrap->arguments << "-start_number" << element->files.at(0).name.mid(1, -1);
                 QString replacestr = "/" + element->files.at(0).name + "." + element->files.at(0).extension.toUpper();
                 ptiwrap->arguments << "-i" << element->files.at(0).filesystemPath.replace(replacestr, "/G%07d.JPG");
@@ -207,21 +207,21 @@ void JobWorkerAsync::queueWork(Job *job)
 
             //// CODECS
 
-            if (job->settings.codec == "copy")
+            if (job->settings_encode.codec == "copy")
             {
                 ptiwrap->arguments << "-codec" << "copy";
             }
 
-            if (job->settings.codec == "H.264")
+            if (job->settings_encode.codec == "H.264")
             {
                 file_extension = "mp4";
 
                 // H.264 video
                 ptiwrap->arguments << "-c:v" << "libx264";
 
-                if (job->settings.encoding_speed == 0)
+                if (job->settings_encode.encoding_speed == 0)
                     ptiwrap->arguments << "-preset" << "faster";
-                else if (job->settings.encoding_speed == 2)
+                else if (job->settings_encode.encoding_speed == 2)
                     ptiwrap->arguments << "-preset" << "slower";
                 else
                     ptiwrap->arguments << "-preset" << "medium";
@@ -230,41 +230,41 @@ void JobWorkerAsync::queueWork(Job *job)
 
                 // CRF scale range is 0–51
                 // (0 is lossless, 23 is default, 51 is worst) // sane range is 17–28
-                int crf = 21 - job->settings.encoding_quality;
+                int crf = 21 - job->settings_encode.encoding_quality;
                 ptiwrap->arguments << "-crf" << QString::number(crf);
 
                 // AAC audio copy
                 ptiwrap->arguments << "-c:a" << "copy";
             }
 
-            if (job->settings.codec == "H.265")
+            if (job->settings_encode.codec == "H.265")
             {
                 file_extension = "mp4";
 
                 // H.265 video
                 ptiwrap->arguments << "-c:v" << "libx265";
 
-                if (job->settings.encoding_speed == 0)
+                if (job->settings_encode.encoding_speed == 0)
                     ptiwrap->arguments << "-preset" << "faster";
-                else if (job->settings.encoding_speed == 2)
+                else if (job->settings_encode.encoding_speed == 2)
                     ptiwrap->arguments << "-preset" << "slower";
                 else
                     ptiwrap->arguments << "-preset" << "medium";
 
-                int crf = 28 - job->settings.encoding_quality;
+                int crf = 28 - job->settings_encode.encoding_quality;
                 ptiwrap->arguments << "-crf" << QString::number(crf);
 
                 // AAC audio copy
                 ptiwrap->arguments << "-c:a" << "copy";
             }
 
-            if (job->settings.codec == "VP9")
+            if (job->settings_encode.codec == "VP9")
             {
                 file_extension = "mkv";
 
                 // CRF scale range is 0–63
                 // (0 is lossless, 23 is default, 63 is worst) // sane range is 15–35
-                int crf = 35 - job->settings.encoding_quality;
+                int crf = 35 - job->settings_encode.encoding_quality;
 
                 // VP9 video
                 ptiwrap->arguments << "-c:v" << "libvpx-vp9";
@@ -274,27 +274,27 @@ void JobWorkerAsync::queueWork(Job *job)
                 ptiwrap->arguments << "-b:a" << "70K";
             }
 
-            if (job->settings.codec == "GIF")
+            if (job->settings_encode.codec == "GIF")
             {
                 file_extension = "gif";
             }
 
-            if (job->settings.codec == "PNG")
+            if (job->settings_encode.codec == "PNG")
             {
                 file_extension = "png";
             }
-            if (job->settings.codec == "JPEG")
+            if (job->settings_encode.codec == "JPEG")
             {
                 file_extension = "jpg";
 
-                int qscale = 5 - job->settings.encoding_quality;
+                int qscale = 5 - job->settings_encode.encoding_quality;
                 ptiwrap->arguments << "-q:v" << QString::number(qscale);
             }
-            if (job->settings.codec == "WEBP")
+            if (job->settings_encode.codec == "WEBP")
             {
                 file_extension = "webp";
 
-                int qscale = 75 + (job->settings.encoding_quality * 4);
+                int qscale = 75 + (job->settings_encode.encoding_quality * 4);
                 ptiwrap->arguments << "-quality" << QString::number(qscale);
                 ptiwrap->arguments << "-preset" << "photo";
                 ptiwrap->arguments << "-compression_level" << QString::number(6);
@@ -302,66 +302,66 @@ void JobWorkerAsync::queueWork(Job *job)
 
             //// PARAMS
 
-            if (job->settings.codec == "GIF")
+            if (job->settings_encode.codec == "GIF")
             {
-                ptiwrap->arguments << "-r" << QString::number(job->settings.fps);
+                ptiwrap->arguments << "-r" << QString::number(job->settings_encode.fps);
 
                 // Using simple filter:
                 //if (!video_filters.isEmpty()) video_filters += ",";
                 //video_filters += "scale=-1:400:sws_dither=ed"; // sws_dither=[none,auto,bayer,ed,a_dither,x_dither]
 
                 // Using complex filter
-                video_filters = "[0:v]trim="+ getFFmpegDurationStringEscaped(job->settings.startMs) + ":" + getFFmpegDurationStringEscaped(job->settings.startMs + job->settings.durationMs) + ",setpts=PTS-STARTPTS[0v];";
-                if (job->settings.gif_effect == "forwardbackward")
+                video_filters = "[0:v]trim="+ getFFmpegDurationStringEscaped(job->settings_encode.startMs) + ":" + getFFmpegDurationStringEscaped(job->settings_encode.startMs + job->settings_encode.durationMs) + ",setpts=PTS-STARTPTS[0v];";
+                if (job->settings_encode.gif_effect == "forwardbackward")
                 {
-                    video_filters += "[0v]crop=" + job->settings.crop + ",scale=" + job->settings.scale + ":sws_dither=ed,split=2[v1][2v];" \
+                    video_filters += "[0v]crop=" + job->settings_encode.crop + ",scale=" + job->settings_encode.scale + ":sws_dither=ed,split=2[v1][2v];" \
                                      "[2v]reverse,fifo[v2];[v1][v2]concat=n=2:v=1[out]";
                 }
-                else if (job->settings.gif_effect == "backwardforward")
+                else if (job->settings_encode.gif_effect == "backwardforward")
                 {
-                    video_filters += "[0v]crop=" + job->settings.crop + ",scale=" + job->settings.scale + ":sws_dither=ed,split=2[v1][2v];" \
+                    video_filters += "[0v]crop=" + job->settings_encode.crop + ",scale=" + job->settings_encode.scale + ":sws_dither=ed,split=2[v1][2v];" \
                                      "[2v]reverse,fifo[v2];[v2][v1]concat=n=2:v=1[out]";
                 }
-                else if (job->settings.gif_effect == "backward")
+                else if (job->settings_encode.gif_effect == "backward")
                 {
-                    video_filters += "[0v]crop=" + job->settings.crop + ",scale=" + job->settings.scale + ":sws_dither=ed[2v];" \
+                    video_filters += "[0v]crop=" + job->settings_encode.crop + ",scale=" + job->settings_encode.scale + ":sws_dither=ed[2v];" \
                                      "[2v]reverse,fifo[out]";
                 }
                 else // forward
                 {
-                    video_filters += "[0v]crop=" + job->settings.crop + ",scale=" + job->settings.scale + ":sws_dither=ed[out]";
+                    video_filters += "[0v]crop=" + job->settings_encode.crop + ",scale=" + job->settings_encode.scale + ":sws_dither=ed[out]";
                 }
                 ptiwrap->arguments << "-filter_complex" << video_filters << "-map" << "[out]";
             }
             else
             {
                 // Change output framerate
-                if (job->settings.fps > 0 && job->settings.codec != "GIF")
+                if (job->settings_encode.fps > 0 && job->settings_encode.codec != "GIF")
                 {
-                    ptiwrap->arguments << "-r" << QString::number(job->settings.fps);
+                    ptiwrap->arguments << "-r" << QString::number(job->settings_encode.fps);
                 }
 
                 // Clip duration
-                if (job->settings.durationMs > 0)
+                if (job->settings_encode.durationMs > 0)
                 {
-                    ptiwrap->arguments << "-ss" << getFFmpegDurationString(job->settings.startMs);
-                    ptiwrap->arguments << "-t" << getFFmpegDurationString(job->settings.durationMs);
+                    ptiwrap->arguments << "-ss" << getFFmpegDurationString(job->settings_encode.startMs);
+                    ptiwrap->arguments << "-t" << getFFmpegDurationString(job->settings_encode.durationMs);
                 }
 
                 // Screenshot?
-                if (job->settings.screenshot)
+                if (job->settings_encode.screenshot)
                 {
-                    ptiwrap->arguments << "-ss" << getFFmpegDurationString(job->settings.startMs);
+                    ptiwrap->arguments << "-ss" << getFFmpegDurationString(job->settings_encode.startMs);
                     ptiwrap->arguments << "-frames:v" << "1";
-                    name_suffix = "_screen" + QString::number(job->settings.startMs / 1000);
+                    name_suffix = "_screen" + QString::number(job->settings_encode.startMs / 1000);
                 }
 
                 // Filters
                 {
                     // Transformations
-                    if (job->settings.transform > 1)
+                    if (job->settings_encode.transform > 1)
                     {
-                        // job->settings.transform
+                        // job->settings_encode.transform
                         //1 = Horizontal (normal)
                         //2 = Mirror horizontal
                         //3 = Rotate 180
@@ -383,19 +383,19 @@ void JobWorkerAsync::queueWork(Job *job)
                         //-noautorotate
 
                         QString rf = "";
-                        if (job->settings.transform == 2)
+                        if (job->settings_encode.transform == 2)
                             rf = "hflip";
-                        else if (job->settings.transform == 3)
+                        else if (job->settings_encode.transform == 3)
                             rf = "transpose=2,transpose=2"; // 180°
-                        else if (job->settings.transform == 4)
+                        else if (job->settings_encode.transform == 4)
                             rf = "vflip";
-                        else if (job->settings.transform == 5)
+                        else if (job->settings_encode.transform == 5)
                             rf = "hflip,transpose=2";
-                        else if (job->settings.transform == 6)
+                        else if (job->settings_encode.transform == 6)
                             rf = "transpose=1"; // 90°
-                        else if (job->settings.transform == 7)
+                        else if (job->settings_encode.transform == 7)
                             rf = "hflip,transpose=1";
-                        else if (job->settings.transform == 8)
+                        else if (job->settings_encode.transform == 8)
                             rf = "transpose=2"; // 270°
 
                         if (!video_filters.isEmpty()) video_filters += ",";
@@ -403,47 +403,47 @@ void JobWorkerAsync::queueWork(Job *job)
                     }
 
                     // Crop // -filter:v "crop=out_w:out_h:x:y"
-                    if (!job->settings.crop.isEmpty())
+                    if (!job->settings_encode.crop.isEmpty())
                     {
                         if (!video_filters.isEmpty()) video_filters += ",";
-                        video_filters += "crop=" + job->settings.crop;
+                        video_filters += "crop=" + job->settings_encode.crop;
                     }
 
                     // Scaling
-                    if (!job->settings.scale.isEmpty())
+                    if (!job->settings_encode.scale.isEmpty())
                     {
                         if (!video_filters.isEmpty()) video_filters += ",";
-                        video_filters += "scale=" + job->settings.scale;
+                        video_filters += "scale=" + job->settings_encode.scale;
                     }
-                    if (job->settings.resolution > 0)
+                    if (job->settings_encode.resolution > 0)
                     {
                         //if (!video_filters.isEmpty()) video_filters += ",";
-                        //video_filters += "scale=" + QString::number(job->settings.resolution) + ":-1";
+                        //video_filters += "scale=" + QString::number(job->settings_encode.resolution) + ":-1";
                     }
 
                     // Timelapse
-                    if (job->settings.timelapse_fps > 0)
+                    if (job->settings_encode.timelapse_fps > 0)
                     {
                         if (element->parent_shots->getShotType() < Shared::SHOT_PICTURE)
                         {
                             // video to video timelapse
                             if (!video_filters.isEmpty()) video_filters += ",";
-                            video_filters += "select='not(mod(n," + QString::number(job->settings.timelapse_fps) + "))',setpts=N/FRAME_RATE/TB";
+                            video_filters += "select='not(mod(n," + QString::number(job->settings_encode.timelapse_fps) + "))',setpts=N/FRAME_RATE/TB";
                             //video_filters += "setpts=" + QString::number(0.5) + "*PTS";
 
-                            ptiwrap->arguments << "-r" << QString::number(job->settings.fps);
+                            ptiwrap->arguments << "-r" << QString::number(job->settings_encode.fps);
                         }
                         else
                         {
                             // timelapse to video timelapse
-                            ptiwrap->arguments << "-r" << QString::number(job->settings.timelapse_fps);
+                            ptiwrap->arguments << "-r" << QString::number(job->settings_encode.timelapse_fps);
                         }
 
                         ptiwrap->arguments << "-an";
                     }
 
                     // Defisheye filter
-                    if (!job->settings.defisheye.isEmpty())
+                    if (!job->settings_encode.defisheye.isEmpty())
                     {
                         if (!video_filters.isEmpty()) video_filters += ",";
 
@@ -466,7 +466,7 @@ void JobWorkerAsync::queueWork(Job *job)
                     }
 
                     // Deshake filter
-                    if (job->settings.deshake)
+                    if (job->settings_encode.deshake)
                     {
                         if (!video_filters.isEmpty()) video_filters += ",";
                         video_filters += "deshake";
@@ -495,16 +495,16 @@ void JobWorkerAsync::queueWork(Job *job)
 /*
         // Recap settings:
         qDebug() << "ENCODING SETTINGS:";
-        qDebug() << "* codec:" << job->settings.codec;
-        qDebug() << "* encoding quality:" << job->settings.encoding_quality;
-        qDebug() << "* encoding speed:" << job->settings.encoding_speed;
-        qDebug() << "* fps:" << job->settings.fps;
-        qDebug() << "* resolution:" << job->settings.resolution;
-        qDebug() << "* transform:" << job->settings.transform;
-        qDebug() << "* scale:" << job->settings.scale;
-        qDebug() << "* crop:" << job->settings.crop;
-        qDebug() << "* start (ms)   :" << job->settings.startMs;
-        qDebug() << "* duration (ms):" << job->settings.durationMs;
+        qDebug() << "* codec:" << job->settings_encode.codec;
+        qDebug() << "* encoding quality:" << job->settings_encode.encoding_quality;
+        qDebug() << "* encoding speed:" << job->settings_encode.encoding_speed;
+        qDebug() << "* fps:" << job->settings_encode.fps;
+        qDebug() << "* resolution:" << job->settings_encode.resolution;
+        qDebug() << "* transform:" << job->settings_encode.transform;
+        qDebug() << "* scale:" << job->settings_encode.scale;
+        qDebug() << "* crop:" << job->settings_encode.crop;
+        qDebug() << "* start (ms)   :" << job->settings_encode.startMs;
+        qDebug() << "* duration (ms):" << job->settings_encode.durationMs;
 */
     }
 

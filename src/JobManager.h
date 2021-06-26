@@ -46,8 +46,6 @@ typedef enum JobType
 {
     JOB_INVALID = 0,
 
-    JOB_METADATA,
-
     JOB_FORMAT,
     JOB_DELETE,
 
@@ -57,9 +55,8 @@ typedef enum JobType
     JOB_MERGE,
 
     JOB_CLIP,
-    JOB_TIMELAPSE_TO_VIDEO,
-    JOB_REENCODE,
-    JOB_STAB,
+    JOB_ENCODE,
+    JOB_TELEMETRY,
 
     JOB_FIRMWARE_DOWNLOAD,
     JOB_FIRMWARE_UPLOAD,
@@ -77,7 +74,40 @@ typedef enum JobState
 
 } JobState;
 
-typedef struct JobEncodeSettings
+typedef struct JobDestination
+{
+    QString path;
+    QString name;
+
+} JobDestination;
+
+typedef struct JobSettingsDelete
+{
+    bool moveToTrash = true;
+
+} JobSettingsDelete;
+
+typedef struct JobSettingsOffload
+{
+    bool ignoreJunk = true;
+    bool ignoreAudio = true;
+    bool extractTelemetry = true;
+    bool mergeChapters = true;
+    bool autoDelete = true;
+
+} JobSettingsOffload;
+
+typedef struct JobSettingsTelemetry
+{
+    QString gps_format = "gpx";
+    int gps_frequency = 2;
+    QString telemetry_format = "json";
+    int telemetry_frequency = 30;
+    bool EGM96 = true;
+
+} JobSettingsTelemetry;
+
+typedef struct JobSettingsEncode
 {
     QString codec = "H.264";
     int encoding_quality = 3;   // [1:5]
@@ -99,7 +129,7 @@ typedef struct JobEncodeSettings
     int64_t startMs = -1;
     int64_t durationMs = -1;
 
-} JobEncodeSettings;
+} JobSettingsEncode;
 
 typedef struct JobElement
 {
@@ -114,7 +144,11 @@ typedef struct Job
 {
     int id = -1;
     JobType type = JOB_INVALID;
-    JobEncodeSettings settings;
+
+    JobSettingsDelete settings_delete;
+    JobSettingsOffload settings_offload;
+    JobSettingsTelemetry settings_telemetry;
+    JobSettingsEncode settings_encode;
 
     std::vector<JobElement *> elements;
 
@@ -162,23 +196,24 @@ public:
     JobType getType() { return m_type; }
     QString getTypeString()
     {
-        if (m_type == JOB_METADATA)
-            return tr("METADATA EXTRACTION");
+        if (m_type == JOB_FORMAT)
+            return tr("FORMAT");
+        else if (m_type == JOB_DELETE)
+            return tr("DELETION");
+        else if (m_type == JOB_OFFLOAD)
+            return tr("OFFLOADING");
+        else if (m_type == JOB_MOVE)
+            return tr("MOVE");
         else if (m_type == JOB_COPY)
             return tr("COPYING");
         else if (m_type == JOB_MERGE)
             return tr("MERGING");
-        else if (m_type == JOB_FORMAT)
-            return tr("FORMAT");
-        else if (m_type == JOB_DELETE)
-            return tr("DELETION");
         else if (m_type == JOB_CLIP)
-            return tr("CLIP CREATION");
-        else if (m_type == JOB_REENCODE ||
-                 m_type == JOB_TIMELAPSE_TO_VIDEO)
+            return tr("CLIP");
+        else if (m_type == JOB_ENCODE)
             return tr("ENCODING");
-        else if (m_type == JOB_STAB)
-            return tr("STABILIZATION");
+        else if (m_type == JOB_TELEMETRY)
+            return tr("TELEMETRY EXTRACTION");
         else if (m_type == JOB_FIRMWARE_DOWNLOAD)
             return tr("DOWNLOADING");
         else if (m_type == JOB_FIRMWARE_UPLOAD)
@@ -266,10 +301,18 @@ public:
     void attachLibrary(MediaLibrary *l);
     void cleanup();
 
-    bool addJob(JobType type, Device *d, MediaLibrary *ml, Shot *s,
-                MediaDirectory *md = nullptr, JobEncodeSettings *set = nullptr);
-    bool addJobs(JobType type, Device *d, MediaLibrary *ml, QList<Shot *> list,
-                 MediaDirectory *md = nullptr, JobEncodeSettings *set = nullptr);
+    bool addJob(JobType type, Device *dev, MediaLibrary *lib, Shot *shot,
+                MediaDirectory *md = nullptr, JobDestination *dst = nullptr,
+                JobSettingsDelete *sett_delete = nullptr,
+                JobSettingsOffload *sett_offload = nullptr,
+                JobSettingsTelemetry *sett_telemetry = nullptr,
+                JobSettingsEncode *sett_encode = nullptr);
+    bool addJobs(JobType type, Device *dev, MediaLibrary *lib, QList<Shot *> list,
+                 MediaDirectory *md = nullptr, JobDestination *dst = nullptr,
+                 JobSettingsDelete *sett_delete = nullptr,
+                 JobSettingsOffload *sett_offload = nullptr,
+                 JobSettingsTelemetry *sett_telemetry = nullptr,
+                 JobSettingsEncode *sett_encode = nullptr);
 
 public slots:
     QVariant getTrackedJobs() const { if (m_trackedJobs.size() > 0) { return QVariant::fromValue(m_trackedJobs); } return QVariant(); }

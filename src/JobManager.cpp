@@ -196,22 +196,32 @@ QString JobManager::getandmakeDestination(Shot *s, Device *d, MediaDirectory *md
 
 /* ************************************************************************** */
 
-bool JobManager::addJob(JobType type, Device *d, MediaLibrary *ml, Shot *s,
-                        MediaDirectory *md, JobEncodeSettings *settings)
+bool JobManager::addJob(JobType type, Device *dev, MediaLibrary *lib, Shot *shot,
+                        MediaDirectory *md, JobDestination *dst,
+                        JobSettingsDelete *sett_delete,
+                        JobSettingsOffload *sett_offload,
+                        JobSettingsTelemetry *sett_telemetry,
+                        JobSettingsEncode *sett_encode)
 {
     bool status = false;
 
-    if (type == 0 || !s)
-        return status;
+    if (type == 0 || (dev == nullptr && lib == nullptr) || !shot) return status;
 
     QList<Shot *> list;
-    list.push_back(s);
+    list.push_back(shot);
 
-    return addJobs(type, d, ml, list, md, settings);
+    return addJobs(type, dev, lib, list,
+                   md, dst,
+                   sett_delete, sett_offload, sett_telemetry, sett_encode);
 }
 
-bool JobManager::addJobs(JobType type, Device *d, MediaLibrary *ml,  QList<Shot *> list,
-                         MediaDirectory *md, JobEncodeSettings *settings)
+bool JobManager::addJobs(JobType type, Device *dev, MediaLibrary *lib,
+                         QList<Shot *> list,
+                         MediaDirectory *md, JobDestination *dst,
+                         JobSettingsDelete *sett_delete,
+                         JobSettingsOffload *sett_offload,
+                         JobSettingsTelemetry *sett_telemetry,
+                         JobSettingsEncode *sett_encode)
 {
     bool status = false;
 
@@ -229,7 +239,7 @@ bool JobManager::addJobs(JobType type, Device *d, MediaLibrary *ml,  QList<Shot 
     // CREATE JOB //////////////////////////////////////////////////////////////
 
     // FUSION hack
-    if (type == JOB_COPY && (d && d->getModel().contains("Fusion", Qt::CaseInsensitive)))
+    if (type == JOB_COPY && (dev && dev->getModel().contains("Fusion", Qt::CaseInsensitive)))
     {
         // Fusion Studio needs every files from a shot to work
         getPreviews = true;
@@ -248,13 +258,16 @@ bool JobManager::addJobs(JobType type, Device *d, MediaLibrary *ml,  QList<Shot 
     Job *job = new Job;
     job->id = rand(); // TODO // Use QUuid
     job->type = type;
-    if (settings)
-        job->settings = *settings;
+
+    if (sett_delete) job->settings_delete = *sett_delete;
+    if (sett_offload) job->settings_offload = *sett_offload;
+    if (sett_telemetry) job->settings_telemetry = *sett_telemetry;
+    if (sett_encode) job->settings_encode = *sett_encode;
 
     for (auto shot: list)
     {
         JobElement *je = new JobElement;
-        je->destination_dir = getandmakeDestination(shot, d, md);
+        je->destination_dir = getandmakeDestination(shot, dev, md);
         je->parent_shots = shot;
         QList <ofb_file *> files = shot->getFiles(getPreviews, getHdAudio);
         for (auto f: qAsConst(files))
@@ -269,8 +282,8 @@ bool JobManager::addJobs(JobType type, Device *d, MediaLibrary *ml,  QList<Shot 
     }
 
     JobTracker *tracker = new JobTracker(job->id, job->type);
-    tracker->setDevice(d);
-    tracker->setLibrary(ml);
+    tracker->setDevice(dev);
+    tracker->setLibrary(lib);
     tracker->setAutoDelete(autoDelete);
     if (!job->elements.empty())
         tracker->setDestination(job->elements.front()->destination_dir);
@@ -279,7 +292,7 @@ bool JobManager::addJobs(JobType type, Device *d, MediaLibrary *ml,  QList<Shot 
 
     // DISPATCH JOB ////////////////////////////////////////////////////////////
 
-    if (type == JOB_REENCODE || type == JOB_TIMELAPSE_TO_VIDEO || type == JOB_STAB)
+    if (type == JOB_ENCODE)
     {
         // ffmpeg worker
         if (m_job_cpu == nullptr)
@@ -316,11 +329,12 @@ bool JobManager::addJobs(JobType type, Device *d, MediaLibrary *ml,  QList<Shot 
         {
             m_selected_worker = m_job_web; // TODO
         }
-        else if (type == JOB_METADATA || type == JOB_FIRMWARE_UPLOAD ||
+        else if (type == JOB_TELEMETRY || type == JOB_FIRMWARE_UPLOAD ||
                  type == JOB_CLIP ||
+                 type == JOB_OFFLOAD || type == JOB_MOVE ||
                  type == JOB_COPY || type == JOB_MERGE)
         {
-            m_selected_worker = m_job_disk[d->getUuid()];
+            m_selected_worker = m_job_disk[dev->getUuid()];
 
             if (m_selected_worker == nullptr)
             {
@@ -346,7 +360,7 @@ bool JobManager::addJobs(JobType type, Device *d, MediaLibrary *ml,  QList<Shot 
                     status = true;
                 }
 
-                m_job_disk.insert(d->getUuid(), m_selected_worker);
+                m_job_disk.insert(dev->getUuid(), m_selected_worker);
             }
         }
         else
@@ -445,7 +459,7 @@ void JobManager::shotStarted(int jobId, Shot *shot)
         if (j && j->getId() == jobId)
         {
             j->setName(shot->getName());
-            if (j->getType() == JOB_REENCODE)
+            if (j->getType() == JOB_ENCODE)
                 shot->setState(Shared::SHOT_STATE_ENCODING);
             else
                 shot->setState(Shared::SHOT_STATE_OFFLOADING);
@@ -486,9 +500,7 @@ void JobManager::shotFinished(int jobId, Shot *shot)
                     break;
 
                 case JOB_CLIP:
-                case JOB_TIMELAPSE_TO_VIDEO:
-                case JOB_REENCODE:
-                case JOB_STAB:
+                case JOB_ENCODE:
                     shot->setState(Shared::SHOT_STATE_ENCODED);
                     break;
 

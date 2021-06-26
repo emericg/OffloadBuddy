@@ -658,29 +658,44 @@ void Device::offloadAll(const QVariant &settings)
 {
     qDebug() << "Device::offloadAll()";
 
+    QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
+    if (variant.type() != QMetaType::QVariantMap) return;
+    QVariantMap variantMap = variant.toMap();
+    //qDebug() << "> variantMap " << variantMap;
+
     // Get shots
     QList<Shot *> shots;
     m_shotModel->getShots(shots);
 
-    // MediaDirectory
-    StorageManager *sm = StorageManager::getInstance();
-    MediaDirectory *md = nullptr;/*
-    if (!path.isEmpty())
+    // Get destination
+    MediaDirectory *md = nullptr;
+    JobDestination dst;
     {
-        QString selectedPath = path;
-        if (sm)
-        {
-            const QList <QObject *> *mediaDirectories = sm->getDirectoriesList();
-            for (auto d: *mediaDirectories)
-            {
-                MediaDirectory *dd = qobject_cast<MediaDirectory*>(d);
-                if (dd && dd->getPath() == selectedPath)
-                {
-                    md = dd;
-                }
-            }
-        }
-    }*/
+        if (variantMap.contains("path"))
+            dst.path = variantMap.value("path").toString();
+
+        if (variantMap.contains("file"))
+            dst.name = variantMap.value("file").toString();
+    }
+
+    // Get settings
+    JobSettingsOffload set;
+    {
+        if (variantMap.contains("ignoreJunk"))
+            set.ignoreJunk = variantMap.value("ignoreJunk").toBool();
+
+        if (variantMap.contains("ignoreAudio"))
+            set.ignoreAudio = variantMap.value("ignoreAudio").toBool();
+
+        if (variantMap.contains("extractTelemetry"))
+            set.extractTelemetry = variantMap.value("extractTelemetry").toBool();
+
+        if (variantMap.contains("mergeChapters"))
+            set.mergeChapters = variantMap.value("mergeChapters").toBool();
+
+        if (variantMap.contains("autoDelete"))
+            set.autoDelete = variantMap.value("autoDelete").toBool();
+    }
 
     // Submit jobs
     JobManager *jm = JobManager::getInstance();
@@ -692,6 +707,11 @@ void Device::offloadAll(const QVariant &settings)
 void Device::offloadSelected(const QString &shot_uuid, const QVariant &settings)
 {
     qDebug() << "Device::offloadCopySelected(" << shot_uuid << ")";
+
+    QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
+    if (variant.type() != QMetaType::QVariantMap) return;
+    QVariantMap variantMap = variant.toMap();
+    //qDebug() << "> variantMap " << variantMap;
 
     // Get shots
     Shot *shot = m_shotModel->getShotWithUuid(shot_uuid);
@@ -707,14 +727,20 @@ void Device::offloadSelection(const QVariant &uuids, const QVariant &settings)
 {
     qDebug() << "Device::offloadSelection(" << uuids << ")";
 
+    QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
+    if (variant.type() != QMetaType::QVariantMap) return;
+    QVariantMap variantMap = variant.toMap();
+    //qDebug() << "> variantMap " << variantMap;
+
+    // Get shots
     QStringList selectedUuids = getSelectedShotsUuids(uuids);
     QList<Shot *> list;
-
     for (const auto &u: qAsConst(selectedUuids))
     {
         list.push_back(m_shotModel->getShotWithUuid(u));
     }
 
+    // Submit jobs
     JobManager *jm = JobManager::getInstance();
     if (jm && !list.empty()) jm->addJobs(JOB_OFFLOAD, this, nullptr, list);
 }
@@ -726,13 +752,27 @@ void Device::deleteAll(const QVariant &settings)
 {
     qDebug() << "Device::deleteAll()";
 
+    QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
+    if (variant.type() != QMetaType::QVariantMap) return;
+    QVariantMap variantMap = variant.toMap();
+    //qDebug() << "> variantMap " << variantMap;
+
     // Get shots
     QList<Shot *> shots;
     m_shotModel->getShots(shots);
 
+    // Get settings
+    JobSettingsDelete set;
+    {
+        if (variantMap.contains("moveToTrash"))
+            set.moveToTrash = variantMap.value("moveToTrash").toBool();
+    }
+
     // Submit job
     JobManager *jm = JobManager::getInstance();
-    if (jm && !shots.empty()) jm->addJobs(JOB_DELETE, this, nullptr, shots);
+    if (jm && !shots.empty()) jm->addJobs(JOB_DELETE, this, nullptr, shots,
+                                          nullptr, nullptr,
+                                          &set, nullptr, nullptr, nullptr);
 }
 
 /* ************************************************************************** */
@@ -741,12 +781,26 @@ void Device::deleteSelected(const QString &shot_uuid, const QVariant &settings)
 {
     qDebug() << "Device::deleteSelected(" << shot_uuid << ")";
 
+    QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
+    if (variant.type() != QMetaType::QVariantMap) return;
+    QVariantMap variantMap = variant.toMap();
+    //qDebug() << "> variantMap " << variantMap;
+
     // Get shots
     Shot *shot = m_shotModel->getShotWithUuid(shot_uuid);
 
+    // Get settings
+    JobSettingsDelete set;
+    {
+        if (variantMap.contains("moveToTrash"))
+            set.moveToTrash = variantMap.value("moveToTrash").toBool();
+    }
+
     // Submit job
     JobManager *jm = JobManager::getInstance();
-    if (jm && shot) jm->addJob(JOB_DELETE, this, nullptr, shot);
+    if (jm && shot) jm->addJob(JOB_DELETE, this, nullptr, shot,
+                               nullptr, nullptr,
+                               &set, nullptr, nullptr, nullptr);
 }
 
 /* ************************************************************************** */
@@ -755,18 +809,31 @@ void Device::deleteSelection(const QVariant &uuids, const QVariant &settings)
 {
     qDebug() << "Device::deleteSelection(" << uuids << ")";
 
+    QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
+    if (variant.type() != QMetaType::QVariantMap) return;
+    QVariantMap variantMap = variant.toMap();
+    //qDebug() << "> variantMap " << variantMap;
+
     // Get shots
     QStringList selectedUuids = getSelectedShotsUuids(uuids);
     QList<Shot *> list;
-
     for (const auto &u: qAsConst(selectedUuids))
     {
         list.push_back(m_shotModel->getShotWithUuid(u));
     }
 
+    // Get settings
+    JobSettingsDelete set;
+    {
+        if (variantMap.contains("moveToTrash"))
+            set.moveToTrash = variantMap.value("moveToTrash").toBool();
+    }
+
     // Submit job
     JobManager *jm = JobManager::getInstance();
-    if (jm && !list.empty()) jm->addJobs(JOB_DELETE, this, nullptr, list);
+    if (jm && !list.empty()) jm->addJobs(JOB_DELETE, this, nullptr, list,
+                                         nullptr, nullptr,
+                                         &set, nullptr, nullptr, nullptr);
 }
 
 /* ************************************************************************** */
@@ -775,11 +842,6 @@ void Device::deleteSelection(const QVariant &uuids, const QVariant &settings)
 void Device::moveSelected(const QString &shot_uuid, const QVariant &settings)
 {
     qDebug() << "Device::moveSelected(" << shot_uuid << ")";
-
-    Shot *shot = m_shotModel->getShotWithUuid(shot_uuid);
-
-    JobManager *jm = JobManager::getInstance();
-    if (jm && shot) jm->addJob(JOB_MOVE, this, nullptr, shot);
 }
 
 /* ************************************************************************** */
@@ -787,12 +849,6 @@ void Device::moveSelected(const QString &shot_uuid, const QVariant &settings)
 void Device::moveSelection(const QVariant &uuids, const QVariant &settings)
 {
     qDebug() << "Device::moveSelection(" << uuids << ")";
-
-    QStringList selectedUuids = getSelectedShotsUuids(uuids);
-    QList<Shot *> list;
-
-    JobManager *jm = JobManager::getInstance();
-    if (jm && !list.empty()) jm->addJobs(JOB_MOVE, this, nullptr, list);
 }
 
 /* ************************************************************************** */
@@ -802,83 +858,75 @@ void Device::reencodeSelected(const QString &shot_uuid, const QVariant &settings
 {
     qDebug() << "Device::reencodeSelected(" << shot_uuid << ")";
 
+    QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
+    if (variant.type() != QMetaType::QVariantMap) return;
+    QVariantMap variantMap = variant.toMap();
+    //qDebug() << "> variantMap " << variantMap;
+
     // Get shots
     Shot *shot = m_shotModel->getShotWithUuid(shot_uuid);
 
-    // Get settings
-    JobEncodeSettings sett;
-    MediaDirectory *md = nullptr;
+    // Get destination
+    JobDestination dst;
     {
-        QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
-        if (variant.type() != QMetaType::QVariantMap) return;
-        QVariantMap variantMap = variant.toMap();
-        //qDebug() << "> variantMap " << variantMap;
+        if (variantMap.contains("path"))
+            dst.path = variantMap.value("path").toString();
 
+        if (variantMap.contains("file"))
+            dst.name = variantMap.value("file").toString();
+    }
+
+    // Get settings
+    JobSettingsEncode set;
+    {
         if (variantMap.contains("codec"))
-            sett.codec = variantMap.value("codec").toString();
+            set.codec = variantMap.value("codec").toString();
 
         if (variantMap.contains("quality"))
-            sett.encoding_quality = variantMap.value("quality").toInt();
+            set.encoding_quality = variantMap.value("quality").toInt();
         if (variantMap.contains("speed"))
-            sett.encoding_speed = variantMap.value("speed").toInt();
+            set.encoding_speed = variantMap.value("speed").toInt();
 
         if (variantMap.contains("resolution"))
-            sett.resolution = variantMap.value("resolution").toInt();
+            set.resolution = variantMap.value("resolution").toInt();
 
         if (variantMap.contains("scale"))
-            sett.scale = variantMap.value("scale").toString();
+            set.scale = variantMap.value("scale").toString();
 
         if (variantMap.contains("transform"))
-            sett.transform = variantMap.value("transform").toInt();
+            set.transform = variantMap.value("transform").toInt();
 
         if (variantMap.contains("crop"))
-            sett.crop = variantMap.value("crop").toString();
+            set.crop = variantMap.value("crop").toString();
 
         if (variantMap.contains("fps"))
-            sett.fps = variantMap.value("fps").toFloat();
+            set.fps = variantMap.value("fps").toFloat();
 
         if (variantMap.contains("gif_effect"))
-            sett.gif_effect = variantMap.value("gif_effect").toString();
+            set.gif_effect = variantMap.value("gif_effect").toString();
 
         if (variantMap.contains("timelapse_fps"))
-            sett.timelapse_fps = variantMap.value("timelapse_fps").toInt();
+            set.timelapse_fps = variantMap.value("timelapse_fps").toInt();
 
         if (variantMap.contains("defisheye"))
-            sett.defisheye = variantMap.value("defisheye").toString();
+            set.defisheye = variantMap.value("defisheye").toString();
         if (variantMap.contains("deshake"))
-            sett.deshake = variantMap.value("deshake").toBool();
+            set.deshake = variantMap.value("deshake").toBool();
 
         if (variantMap.contains("screenshot"))
-            sett.screenshot = variantMap.value("screenshot").toBool();
+            set.screenshot = variantMap.value("screenshot").toBool();
 
         if (variantMap.contains("clipStartMs"))
-            sett.startMs = variantMap.value("clipStartMs").toInt();
+            set.startMs = variantMap.value("clipStartMs").toInt();
         if (variantMap.contains("clipDurationMs"))
-            sett.durationMs = variantMap.value("clipDurationMs").toInt();
-
-        // MediaDirectory
-        if (variantMap.contains("path"))
-        {
-            QString selectedPath = variantMap.value("path").toString();
-            StorageManager *sm = StorageManager::getInstance();
-            if (sm)
-            {
-                const QList <QObject *> *mediaDirectories = sm->getDirectoriesList();
-                for (auto d: *mediaDirectories)
-                {
-                    MediaDirectory *dd = qobject_cast<MediaDirectory*>(d);
-                    if (dd && dd->getPath() == selectedPath)
-                    {
-                        md = dd;
-                    }
-                }
-            }
-        }
+            set.durationMs = variantMap.value("clipDurationMs").toInt();
     }
 
     // Submit job
     JobManager *jm = JobManager::getInstance();
-    if (jm && shot) jm->addJob(JOB_REENCODE, this, nullptr, shot, md, &sett);
+    if (jm && shot) jm->addJob(JOB_ENCODE, this, nullptr, shot,
+                               nullptr, &dst,
+                               nullptr, nullptr, nullptr, &set);
 }
 
 /* ************************************************************************** */
@@ -894,11 +942,102 @@ void Device::reencodeSelection(const QVariant &uuids, const QVariant &settings)
 void Device::extractTelemetrySelected(const QString &shot_uuid, const QVariant &settings)
 {
     qDebug() << "Device::extractTelemetrySelected(" << shot_uuid << ")";
+
+    QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
+    if (variant.type() != QMetaType::QVariantMap) return;
+    QVariantMap variantMap = variant.toMap();
+    //qDebug() << "> variantMap " << variantMap;
+
+    // Get shots
+    Shot *shot = m_shotModel->getShotWithUuid(shot_uuid);
+
+    // Get destination
+    JobDestination dst;
+    {
+        if (variantMap.contains("path"))
+            dst.path = variantMap.value("path").toString();
+
+        if (variantMap.contains("file"))
+            dst.name = variantMap.value("file").toString();
+    }
+
+    // Get settings
+    JobSettingsTelemetry set;
+    {
+        if (variantMap.contains("telemetry_format"))
+            set.telemetry_format = variantMap.value("telemetry_format").toString();
+
+        if (variantMap.contains("telemetry_frequency"))
+            set.telemetry_frequency = variantMap.value("telemetry_frequency").toInt();
+
+        if (variantMap.contains("gps_format"))
+            set.gps_format = variantMap.value("gps_format").toString();
+
+        if (variantMap.contains("gps_frequency"))
+            set.gps_frequency = variantMap.value("gps_frequency").toInt();
+
+        if (variantMap.contains("egm96_correction"))
+            set.EGM96 = variantMap.value("egm96_correction").toBool();
+    }
+
+    // Submit job
+    JobManager *jm = JobManager::getInstance();
+    if (jm && shot) jm->addJob(JOB_TELEMETRY, this, nullptr, shot,
+                               nullptr, &dst,
+                               nullptr, nullptr, &set, nullptr);
 }
 
 void Device::extractTelemetrySelection(const QVariant &uuids, const QVariant &settings)
 {
     qDebug() << "Device::extractTelemetrySelection(" << uuids << ")";
+
+    QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
+    if (variant.type() != QMetaType::QVariantMap) return;
+    QVariantMap variantMap = variant.toMap();
+    //qDebug() << "> variantMap " << variantMap;
+
+    // Get shots
+    QStringList selectedUuids = getSelectedShotsUuids(uuids);
+    QList<Shot *> list;
+    for (const auto &u: qAsConst(selectedUuids))
+    {
+        list.push_back(m_shotModel->getShotWithUuid(u));
+    }
+
+    // Get destination
+    JobDestination dst;
+    {
+        if (variantMap.contains("path"))
+            dst.path = variantMap.value("path").toString();
+
+        if (variantMap.contains("file"))
+            dst.name = variantMap.value("file").toString();
+    }
+
+    // Get settings
+    JobSettingsTelemetry set;
+    {
+        if (variantMap.contains("telemetry_format"))
+            set.telemetry_format = variantMap.value("telemetry_format").toString();
+
+        if (variantMap.contains("telemetry_frequency"))
+            set.telemetry_frequency = variantMap.value("telemetry_frequency").toInt();
+
+        if (variantMap.contains("gps_format"))
+            set.gps_format = variantMap.value("gps_format").toString();
+
+        if (variantMap.contains("gps_frequency"))
+            set.gps_frequency = variantMap.value("gps_frequency").toInt();
+
+        if (variantMap.contains("egm96_correction"))
+            set.EGM96 = variantMap.value("egm96_correction").toBool();
+    }
+
+    // Submit job
+    JobManager *jm = JobManager::getInstance();
+    if (jm && !list.empty()) jm->addJobs(JOB_TELEMETRY, this, nullptr, list,
+                                         nullptr, &dst,
+                                         nullptr, nullptr, &set, nullptr);
 }
 
 /* ************************************************************************** */
