@@ -84,25 +84,25 @@ QImage MediaThumbnailer_async::requestImage(const QString &id, QSize *size,
     qDebug() << "@ requestPath: " << path;
     qDebug() << "@ requestedTimecode: " << timecode_s << "s";
     qDebug() << "@ requestedSize: " << requestedSize;
+    qDebug() << "@ width/height: " << width << "/" << height;
 */
-    // Media thumbnail
-    decoding_status = mediaThumbnailer.getImage(path, thumb, timecode_s, width, height);
+    // Imge thumbnail?
+    QImageReader img_infos(path);
+    if (img_infos.canRead())
+    {
+        // check size first, don't even try to thumbnail very big (>8K) pictures
+        if (img_infos.size().rwidth() < 8192 && img_infos.size().rheight() < 8192)
+        {
+            img_infos.setAutoTransform(true);
+            img_infos.setScaledSize(QSize(width, height/2));
+            decoding_status = img_infos.read(&thumb);
+        }
+    }
 
-    // QImage fallback
+    // Media thumbnail
     if (decoding_status == false)
     {
-        QImageReader img_infos(path);
-
-        // do we really have an image?
-        if (img_infos.canRead())
-        {
-            // check size first, don't even try to thumbnail very big (>10K) pictures
-            if (img_infos.size().rwidth() < 10000 && img_infos.size().rheight() < 10000)
-            {
-                decoding_status = thumb.load(path);
-                thumb = thumb.scaled(width, height, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-            }
-        }
+        decoding_status = mediaThumbnailer.getImage(path, thumb, timecode_s, width, height);
     }
 
     if (size) *size = QSize(thumb.width(), thumb.height());
