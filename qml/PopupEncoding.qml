@@ -1211,6 +1211,12 @@ Popup {
                     ListModel { id: cbDestinations }
                     model: cbDestinations
 
+                    Component.onCompleted: comboBoxDestination.updateDestinations()
+                    Connections {
+                        target: storageManager
+                        onDirectoriesUpdated: comboBoxDestination.updateDestinations()
+                    }
+
                     function updateDestinations() {
                         cbDestinations.clear()
 
@@ -1221,7 +1227,10 @@ Popup {
                         }
                         cbDestinations.append( { "text": qsTr("Select path manually") } )
 
-                        comboBoxDestination.currentIndex = 0
+                        comboBoxDestination.currentIndex = 0 // TODO save value?
+
+                        var path = textField_path.folder + textField_path.file + "." + textField_path.extension
+                        rectangleFileWarning.visible = jobManager.fileExists(path)
                     }
 
                     property bool cbinit: false
@@ -1237,11 +1246,8 @@ Popup {
                                 textField_path.folder = comboBoxDestination.displayText
                                 textField_path.file = currentShot.name + "_rencoded"
                             }
-
-                            var path = textField_path.folder + textField_path.file + "." + textField_path.extension
-                            rectangleFileWarning.visible = jobManager.fileExists(path)
                         } else {
-                            cbinit = true;
+                            cbinit = true
                         }
                     }
                 }
@@ -1278,6 +1284,8 @@ Popup {
                 anchors.right: parent.right
                 height: 48
                 spacing: 16
+
+                visible: false
 
                 ImageSvg {
                     width: 28

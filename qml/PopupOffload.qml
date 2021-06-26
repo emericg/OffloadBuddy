@@ -334,14 +334,10 @@ Popup {
                         anchors.left: textDestinationTitle.right
                         anchors.leftMargin: 16
                         anchors.right: parent.right
-                        anchors.rightMargin: 0
                         anchors.verticalCenter: parent.verticalCenter
+                        height: 36
 
-                        ListModel {
-                            id: cbDestinations
-                            //ListElement { text: "auto"; }
-                        }
-
+                        ListModel { id: cbDestinations }
                         model: cbDestinations
 
                         Component.onCompleted: comboBoxDestination.updateDestinations()
@@ -360,7 +356,7 @@ Popup {
                             }
                             cbDestinations.append( { "text": qsTr("Select path manually") } )
 
-                            comboBoxDestination.currentIndex = 0
+                            comboBoxDestination.currentIndex = 0 // TODO save value?
                         }
 
                         property bool cbinit: false
@@ -381,41 +377,12 @@ Popup {
                     }
                 }
 
-                TextFieldThemed {
+                FolderInputArea {
                     id: textField_path
                     anchors.left: parent.left
                     anchors.right: parent.right
 
                     visible: (comboBoxDestination.currentIndex === (cbDestinations.count - 1))
-
-                    FileDialog {
-                        id: fileDialogChange
-                        title: qsTr("Please choose a destination directory!")
-                        sidebarVisible: true
-                        selectExisting: true
-                        selectMultiple: false
-                        selectFolder: true
-
-                        onAccepted: {
-                            textField_path.text = UtilsPath.cleanUrl(fileDialogChange.fileUrl);
-                        }
-                    }
-
-                    ButtonThemed {
-                        id: button_change
-                        width: 72
-                        height: 36
-                        anchors.right: parent.right
-                        anchors.rightMargin: 2
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        embedded: true
-                        text: qsTr("change")
-                        onClicked: {
-                            fileDialogChange.folder =  "file:///" + textField_path.text
-                            fileDialogChange.open()
-                        }
-                    }
                 }
             }
         }
@@ -452,8 +419,9 @@ Popup {
                     var settingsOffload = {}
                     settingsOffload["ignoreJunk"] = switchIgnoreJunk.checked
                     settingsOffload["ignoreAudio"] = switchIgnoreAudio.checked
-                    settingsOffload["telemetry"] = switchTelemetry.checked
-                    settingsOffload["delete"] = switchDelete.checked
+                    settingsOffload["extractTelemetry"] = switchTelemetry.checked
+                    settingsOffload["mergeChapters"] = switchMerge.checked
+                    settingsOffload["autoDelete"] = switchDelete.checked
                     settingsOffload["path"] = textField_path.text
 
                     if (currentShot) {

@@ -12,10 +12,8 @@ Button {
 
     focusPolicy: Qt.NoFocus
 
-    property bool embedded: false
-
     background: Rectangle {
-        radius: embedded ? 0 : Theme.componentRadius
+        radius: Theme.componentRadius
         opacity: enabled ? 1 : 0.33
         color: control.down ? Theme.colorComponentDown : Theme.colorComponent
     }

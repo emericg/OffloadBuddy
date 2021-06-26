@@ -327,8 +327,8 @@ Popup {
                         anchors.left: textDestinationTitle.right
                         anchors.leftMargin: 16
                         anchors.right: parent.right
-                        anchors.rightMargin: 0
                         anchors.verticalCenter: parent.verticalCenter
+                        height: 36
 
                         ListModel {
                             id: cbDestinations
@@ -360,40 +360,11 @@ Popup {
 
                     visible: (comboBoxDestination.currentIndex === (cbDestinations.count - 1))
 
-                    TextFieldThemed {
+                    FolderInputArea {
                         id: textField_path
                         anchors.left: parent.left
                         anchors.right: parent.right
                         anchors.verticalCenter: parent.verticalCenter
-
-                        FileDialog {
-                            id: fileDialogChange
-                            title: qsTr("Please choose a destination!")
-                            sidebarVisible: true
-                            selectExisting: true
-                            selectMultiple: false
-                            selectFolder: true
-
-                            onAccepted: {
-                                textField_path.text = UtilsPath.cleanUrl(fileDialogChange.fileUrl);
-                            }
-                        }
-
-                        ButtonThemed {
-                            id: button_change
-                            width: 72
-                            height: 36
-                            anchors.right: parent.right
-                            anchors.rightMargin: 2
-                            anchors.verticalCenter: parent.verticalCenter
-
-                            text: qsTr("change")
-                            embedded: true
-                            onClicked: {
-                                fileDialogChange.folder =  "file:///" + textField_path.text
-                                fileDialogChange.open()
-                            }
-                        }
                     }
                 }
             }
@@ -431,11 +402,11 @@ Popup {
                     var settingsTelemetry = {}
 
                     if (rbJSON.checked)
-                        settingsTelemetry["format"] = "JSON";
+                        settingsTelemetry["telemetry_format"] = "JSON";
                     else if (rbCSV.checked)
-                        settingsTelemetry["format"] = "CSV";
+                        settingsTelemetry["telemetry_format"] = "CSV";
 
-                    settingsTelemetry["accl_frequency"] = 30
+                    settingsTelemetry["telemetry_frequency"] = 30
                     settingsTelemetry["gps_frequency"] = 2
                     settingsTelemetry["egm96_correction"] = switchEGM96.checked
                     settingsTelemetry["path"] = textField_path.text
@@ -460,11 +431,11 @@ Popup {
                     var settingsTelemetry = {}
 
                     if (rbGPX.checked)
-                        settingsTelemetry["format"] = "GPX";
+                        settingsTelemetry["gps_format"] = "GPX";
                     else if (rbIGC.checked)
-                        settingsTelemetry["format"] = "IGC";
+                        settingsTelemetry["gps_format"] = "IGC";
                     else if (rbKML.checked)
-                        settingsTelemetry["format"] = "KML";
+                        settingsTelemetry["gps_format"] = "KML";
 
                     settingsTelemetry["gps_frequency"] = 2
                     settingsTelemetry["egm96_correction"] = switchEGM96.checked

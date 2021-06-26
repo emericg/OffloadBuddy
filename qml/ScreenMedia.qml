@@ -173,8 +173,10 @@ Item {
         Text {
             id: textShotName
             height: 40
-            anchors.leftMargin: 8
             anchors.left: buttonBack.right
+            anchors.leftMargin: 8
+            anchors.right: rowButtons.left
+            anchors.rightMargin: 16
             anchors.verticalCenter: parent.verticalCenter
 
             text: "SHOT NAME"
@@ -182,15 +184,16 @@ Item {
             font.bold: true
             font.pixelSize: Theme.fontSizeHeader
             verticalAlignment: Text.AlignVCenter
+            elide: Text.ElideRight
         }
 
         Row {
             id: rowCodecs
+            anchors.verticalCenter: parent.verticalCenter
+            x: (textShotName.x + textShotName.contentWidth + 16)
+            visible: (textShotName.contentWidth + rowCodecs.width + 8 < textShotName.width)
             height: 28
             spacing: 16
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.left: textShotName.right
-            anchors.leftMargin: 32
 
             ItemCodec { id: codecVideo }
 
@@ -200,6 +203,7 @@ Item {
         ////////////////
 
         Row {
+            id: rowButtons
             anchors.right: rowMenus.left
             anchors.rightMargin: 24
             anchors.verticalCenter: parent.verticalCenter

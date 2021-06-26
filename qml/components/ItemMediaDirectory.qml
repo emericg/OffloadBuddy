@@ -16,27 +16,25 @@ Item {
     property var directory: null
     property bool confirmation: false
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
-    TextFieldThemed {
+    FolderInputArea {
         id: textField_path
         width: (itemMediaDirectory.width < 720) ? 512 : 640
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
 
-        //readOnly: !directory.available
-        colorBorder: directory.available ? Theme.colorComponentBorder : Theme.colorWarning
         text: directory.directoryPath
 
-        onEditingFinished: {
-            directory.directoryPath = textField_path.text
+        onPathChanged: {
+            directory.directoryPath = path
             storageManager.directoryModified()
             focus = false
         }
 
         Row {
-            anchors.right: button_change.left
-            anchors.rightMargin: 8
+            anchors.right: parent.right
+            anchors.rightMargin: textField_path.buttonWidth + 8
             anchors.verticalCenter: parent.verticalCenter
             spacing: 0
 
@@ -67,7 +65,7 @@ Item {
 
                 highlightMode: "color"
                 visible: directory.available
-                source: "qrc:/assets/icons_material/outline-folder-24px.svg"
+                source: "qrc:/assets/icons_material/baseline-folder_open-24px.svg"
                 onClicked: {
                     utilsApp.openWith(directory.directoryPath)
                 }
@@ -109,36 +107,6 @@ Item {
                 color: Theme.colorWarning
             }
         }
-
-        FileDialog {
-            id: fileDialogChange
-            title: qsTr("Please choose a destination directory!")
-            sidebarVisible: true
-            selectExisting: true
-            selectMultiple: false
-            selectFolder: true
-
-            onAccepted: {
-                directory.directoryPath = UtilsPath.cleanUrl(fileDialogChange.fileUrl)
-                storageManager.directoryModified()
-            }
-        }
-
-        ButtonThemed {
-            id: button_change
-            width: 72
-            height: 36
-            anchors.right: parent.right
-            anchors.rightMargin: 2
-            anchors.verticalCenter: parent.verticalCenter
-
-            embedded: true
-            text: qsTr("change")
-            onClicked: {
-                fileDialogChange.folder = UtilsPath.makeUrl(textField_path.text)
-                fileDialogChange.open()
-            }
-        }
     }
 
     ////////////////
@@ -165,8 +133,8 @@ Item {
         property bool cbinit: false
         onCurrentIndexChanged: {
             if (cbinit) {
-                directory.directoryContent = currentIndex;
-                storageManager.directoryModified();
+                directory.directoryContent = currentIndex
+                storageManager.directoryModified()
             } else {
                 cbinit = true;
             }
@@ -186,7 +154,7 @@ Item {
         Column {
             anchors.verticalCenter: parent.verticalCenter
             width: parent.width
-            spacing: 6
+            spacing: 4
             visible: directory.available && !itemMediaDirectory.confirmation
 
             Text {
