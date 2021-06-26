@@ -228,37 +228,13 @@ Item {
 
     // POPUPS //////////////////////////////////////////////////////////////////
 
-    PopupTelemetry {
-        id: popupTelemetry
+    PopupOffload { id: popupOffload }
 
-        onConfirmed: {
-            //
-        }
-    }
+    PopupEncoding { id: popupEncoding }
 
-    PopupEncoding {
-        id: popupEncoding
+    PopupTelemetry { id: popupTelemetry }
 
-        onConfirmed: {
-            //
-        }
-    }
-
-    PopupOffload {
-        id: popupOffload
-
-        onConfirmed: {
-            //
-        }
-    }
-
-    PopupDelete {
-        id: popupDelete
-
-        onConfirmed: {
-            //
-        }
-    }
+    PopupDelete { id: popupDelete }
 
     // HEADER //////////////////////////////////////////////////////////////////
 
@@ -792,11 +768,7 @@ Item {
             onCountChanged: updateGridViewSettings()
             onWidthChanged: computeCellSize()
 
-            Component.onCompleted: {
-                mediaGrid.exitSelectionMode()
-                shotsView.currentIndex = -1
-                actionMenu.visible = false
-            }
+            Component.onCompleted: initGridViewSettings()
 
             Connections {
                 target: settingsManager

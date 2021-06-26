@@ -277,10 +277,10 @@ Popup {
     ////////////////////////////////////////////////////////////////////////////
 
     background: Rectangle {
-        color: recapOpened ? ThemeEngine.colorForeground : ThemeEngine.colorBackground
+        color: recapOpened ? Theme.colorForeground : Theme.colorBackground
         radius: Theme.componentRadius
-        border.width: 1
-        border.color: Theme.colorSeparator
+        border.width: Theme.componentBorderWidth
+        border.color: Theme.colorForeground
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -293,15 +293,18 @@ Popup {
 
         Rectangle {
             id: titleArea
-            height: 64
             anchors.left: parent.left
             anchors.right: parent.right
+
+            height: 64
+            color: Theme.colorPrimary
             radius: Theme.componentRadius
-            color: ThemeEngine.colorPrimary
 
             Rectangle {
                 anchors.left: parent.left
+                anchors.leftMargin: 1
                 anchors.right: parent.right
+                anchors.rightMargin: 0
                 anchors.bottom: parent.bottom
                 height: parent.radius
                 color: parent.color
@@ -320,13 +323,54 @@ Popup {
             }
         }
 
+        ////////////////
+
+        Rectangle {
+            id: filesArea
+            anchors.left: parent.left
+            anchors.leftMargin: 1
+            anchors.right: parent.right
+            anchors.rightMargin: 0
+
+            z: 1
+            height: 48
+            visible: shots.length
+            color: Theme.colorForeground
+
+            Text {
+                anchors.left: parent.left
+                anchors.leftMargin: 24
+                anchors.right: parent.right
+                anchors.rightMargin: 48+16+16
+                anchors.verticalCenter: parent.verticalCenter
+
+                text: qsTr("%n shot(s) selected", "", shots.length)
+                color: Theme.colorText
+                font.pixelSize: Theme.fontSizeContent
+            }
+
+            ItemImageButton {
+                width: 48
+                height: 48
+                anchors.right: parent.right
+                anchors.rightMargin: 16
+                anchors.verticalCenter: parent.verticalCenter
+
+                source: "qrc:/assets/icons_material/baseline-navigate_next-24px.svg"
+                rotation: recapOpened ? -90 : 90
+                onClicked: recapOpened = !recapOpened
+            }
+        }
+
+        ////////////////
+
         Column {
             anchors.left: parent.left
             anchors.leftMargin: 24
             anchors.right: parent.right
             anchors.rightMargin: 24
 
-            //////////////////
+            ////////
 
             Item {
                 id: rectangleVideoCodec
@@ -490,7 +534,7 @@ Popup {
                 }
             }
 
-            ////////////////
+            ////////
 
             Item {
                 id: rectangleEncodingQuality
@@ -560,7 +604,7 @@ Popup {
                 }
             }
 
-            //////////////////
+            ////////
 
             Row {
                 id: rectangleDefinition
@@ -673,7 +717,7 @@ Popup {
                 }
             }
 
-            //////////////////
+            ////////
 
             Row {
                 id: rectangleFramerate
@@ -806,7 +850,7 @@ Popup {
                 }
             }
 
-            ////////////////
+            ////////
 
             Item {
                 id: rectangleOrientation
@@ -871,7 +915,7 @@ Popup {
                 }
             }
 
-            ////////////////
+            ////////
 
             Item {
                 id: rectangleClip
@@ -934,7 +978,7 @@ Popup {
                 }
             }
 
-            ////////////////
+            ////////
 
             Item {
                 id: rectangleCrop
@@ -995,7 +1039,7 @@ Popup {
                 }
             }
 
-            ////////////////
+            ////////
 
             Item {
                 id: rectangleGifEffects
@@ -1044,7 +1088,7 @@ Popup {
                 }
             }
 
-            ////////////////
+            ////////
 
             Item {
                 id: rectangleFilter
@@ -1055,9 +1099,9 @@ Popup {
                 Text {
                     id: titleFilter
                     width: contentColumn.legendWidth
-                    anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
                     anchors.leftMargin: 0
+                    anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Apply filters")
                     font.pixelSize: 16
@@ -1085,7 +1129,7 @@ Popup {
                 }
             }
 
-            ////////////////
+            ////////
 
             Item {
                 id: rectangleMetadataWarning
@@ -1098,9 +1142,9 @@ Popup {
                 Text {
                     id: titleWarning
                     width: contentColumn.legendWidth
-                    anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
                     anchors.leftMargin: 0
+                    anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Be aware")
                     font.pixelSize: 16
@@ -1120,24 +1164,24 @@ Popup {
                 }
             }
 
-            ////////////////
+            ////////
 
             Item { // delimiter
                 anchors.left: parent.left
-                anchors.leftMargin: -24
+                anchors.leftMargin: -23
                 anchors.right: parent.right
-                anchors.rightMargin: -24
+                anchors.rightMargin: -23
                 height: 32
 
                 Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
-                    width: parent.width;
-                    height: 2;
-                    color: Theme.colorSeparator
+                    width: parent.width
+                    height: Theme.componentBorderWidth
+                    color: Theme.colorForeground
                 }
             }
 
-            ////////////////
+            ////////
 
             Item {
                 id: rectangleDestination

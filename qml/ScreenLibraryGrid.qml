@@ -77,37 +77,13 @@ Item {
 
     // POPUPS //////////////////////////////////////////////////////////////////
 
-    PopupMove {
-        id: popupMove
+    PopupMove { id: popupMove }
 
-        onConfirmed: {
-            //
-        }
-    }
+    PopupEncoding { id: popupEncoding }
 
-    PopupTelemetry {
-        id: popupTelemetry
+    PopupTelemetry { id: popupTelemetry }
 
-        onConfirmed: {
-            //
-        }
-    }
-
-    PopupEncoding {
-        id: popupEncoding
-
-        onConfirmed: {
-            //
-        }
-    }
-
-    PopupDelete {
-        id: popupDelete
-
-        onConfirmed: {
-            //
-        }
-    }
+    PopupDelete { id: popupDelete }
 
     // HEADER //////////////////////////////////////////////////////////////////
 

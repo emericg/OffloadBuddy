@@ -26,8 +26,8 @@ Popup {
     background: Rectangle {
         color: Theme.colorBackground
         radius: Theme.componentRadius
-        border.width: 1
-        border.color: Theme.colorSeparator
+        border.width: Theme.componentBorderWidth
+        border.color: Theme.colorForeground
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -37,15 +37,18 @@ Popup {
 
         Rectangle {
             id: titleArea
-            height: 64
             anchors.left: parent.left
             anchors.right: parent.right
+
+            height: 64
+            color: Theme.colorPrimary
             radius: Theme.componentRadius
-            color: ThemeEngine.colorPrimary
 
             Rectangle {
                 anchors.left: parent.left
+                anchors.leftMargin: 1
                 anchors.right: parent.right
+                anchors.rightMargin: 0
                 anchors.bottom: parent.bottom
                 height: parent.radius
                 color: parent.color

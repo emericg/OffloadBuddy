@@ -166,8 +166,16 @@ Rectangle {
                                   file, folder, remove)
 
         actionMenu.visible = true
-        actionMenu.x = mouseAreaOutsideView.mouseX + 8
-        actionMenu.y = mouseAreaOutsideView.mouseY + 8
+
+        if (appSidebar.width + mouseAreaOutsideView.mouseX + actionMenu.width < appWindow.width)
+            actionMenu.x = mouseAreaOutsideView.mouseX + 8
+        else
+            actionMenu.x = mouseAreaOutsideView.mouseX - actionMenu.width
+
+        if (rectangleHeader.height + mouseAreaOutsideView.mouseY + actionMenu.height < appWindow.height)
+            actionMenu.y = mouseAreaOutsideView.mouseY + 8
+        else
+            actionMenu.y = mouseAreaOutsideView.mouseY - 4 - actionMenu.height
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -207,7 +215,7 @@ Rectangle {
 
         //visible: (imageFs.progress === 1.0)
         opacity: (imageFs.progress === 1.0) ? 1 : 0
-        Behavior on opacity { NumberAnimation { duration: 250 } }
+        Behavior on opacity { NumberAnimation { duration: 133 } }
 
         // extra filtering?
         smooth: (settingsManager.thumbQuality === 2)

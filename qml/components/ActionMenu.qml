@@ -10,8 +10,8 @@ Rectangle {
     visible: false
     focus: visible && !isMobile
 
-    color: Theme.colorComponent
-    radius: Theme.componentRadius
+    color: "white" // Theme.colorComponent
+    radius: 2 // Theme.componentRadius
     border.color: Theme.colorSeparator
     border.width: Theme.componentBorderWidth
 

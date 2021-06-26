@@ -265,7 +265,7 @@ Item {
 
                     backgroundColor: Theme.colorBackground
                     width: 40; height: 40;
-                    source: "qrc:/assets/icons_material/outline-folder-24px.svg"
+                    source: "qrc:/assets/icons_material/baseline-folder_open-24px.svg"
                     onClicked: utilsApp.openWith(shot.folder)
                 }
             }

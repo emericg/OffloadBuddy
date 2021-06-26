@@ -106,10 +106,10 @@ Popup {
     ////////////////////////////////////////////////////////////////////////////
 
     background: Rectangle {
-        color: recapOpened ? ThemeEngine.colorForeground : ThemeEngine.colorBackground
+        color: recapOpened ? Theme.colorForeground : Theme.colorBackground
         radius: Theme.componentRadius
-        border.width: 1
-        border.color: Theme.colorSeparator
+        border.width: Theme.componentBorderWidth
+        border.color: Theme.colorForeground
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -119,15 +119,18 @@ Popup {
 
         Rectangle {
             id: titleArea
-            height: 64
             anchors.left: parent.left
             anchors.right: parent.right
+
+            height: 64
+            color: Theme.colorPrimary
             radius: Theme.componentRadius
-            color: ThemeEngine.colorPrimary
 
             Rectangle {
                 anchors.left: parent.left
+                anchors.leftMargin: 1
                 anchors.right: parent.right
+                anchors.rightMargin: 0
                 anchors.bottom: parent.bottom
                 height: parent.radius
                 color: parent.color
@@ -149,12 +152,15 @@ Popup {
 
         Rectangle {
             id: filesArea
-            height: 48
             anchors.left: parent.left
+            anchors.leftMargin: 1
             anchors.right: parent.right
-            color: ThemeEngine.colorForeground
+            anchors.rightMargin: 0
 
+            z: 1
+            height: 48
             visible: shots.length
+            color: Theme.colorForeground
 
             Text {
                 anchors.left: parent.left
@@ -164,6 +170,7 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("%n shot(s) selected", "", shots.length)
+                color: Theme.colorText
                 font.pixelSize: Theme.fontSizeContent
             }
 
