@@ -10,12 +10,16 @@ ComboBox {
 
     font.pixelSize: Theme.fontSizeComponent
 
+    ////////
+
     background: Rectangle {
         radius: Theme.componentRadius
         color: control.down ? Theme.colorComponentDown : Theme.colorComponent
         border.width: 1
         border.color: Theme.colorComponentBorder
     }
+
+    ////////
 
     contentItem: Text {
         leftPadding: 16
@@ -24,10 +28,12 @@ ComboBox {
         text: control.displayText
         textFormat: Text.PlainText
         font: control.font
-        color: Theme.colorComponentText
+        color: Theme.colorComponentContent
         elide: Text.ElideRight
         verticalAlignment: Text.AlignVCenter
     }
+
+    ////////
 
     indicator: Canvas {
         id: canvas
@@ -35,7 +41,6 @@ ComboBox {
         y: control.topPadding + (control.availableHeight - height) / 2
         width: 12
         height: 8
-        contextType: "2d"
 
         Connections {
             target: ThemeEngine
@@ -43,15 +48,18 @@ ComboBox {
         }
 
         onPaint: {
-            context.reset()
-            context.moveTo(0, 0)
-            context.lineTo(width, 0)
-            context.lineTo(width / 2, height)
-            context.closePath()
-            context.fillStyle = Theme.colorComponentText
-            context.fill()
+            var ctx = getContext("2d");
+            ctx.reset()
+            ctx.moveTo(0, 0)
+            ctx.lineTo(width, 0)
+            ctx.lineTo(width / 2, height)
+            ctx.closePath()
+            ctx.fillStyle = Theme.colorComponentContent
+            ctx.fill()
         }
     }
+
+    ////////
 
     delegate: ItemDelegate {
         width: control.width - 2
@@ -62,19 +70,21 @@ ComboBox {
             implicitWidth: 200
             implicitHeight: Theme.componentHeight
 
-            radius: Theme.componentRadius + 2
+            radius: Theme.componentRadius
             opacity: enabled ? 1 : 0.3
-            color: highlighted ? "#f6f6f6" : "white"
+            color: highlighted ? "#F6F6F6" : "white"
         }
 
         contentItem: Text {
             text: modelData
-            color: highlighted ? "#000000" : "#555555"
+            color: highlighted ? "black" : "#666"
             font.pixelSize: Theme.fontSizeComponent
             elide: Text.ElideRight
             verticalAlignment: Text.AlignVCenter
         }
     }
+
+    ////////
 
     popup: Popup {
         y: control.height - 1
@@ -83,11 +93,10 @@ ComboBox {
         padding: 1
 
         contentItem: ListView {
-            clip: true
             implicitHeight: contentHeight
-
-            model: control.popup.visible ? control.delegateModel : null
+            clip: true
             currentIndex: control.highlightedIndex
+            model: control.popup.visible ? control.delegateModel : null
         }
 
         background: Rectangle {

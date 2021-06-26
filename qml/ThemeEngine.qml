@@ -335,7 +335,7 @@ Item {
             colorComponentText =        "#944197"
             colorComponentContent =     "white"
             colorComponentBorder =      "#F592C1"
-            colorComponentDown =        "#F592C1"
+            colorComponentDown =        "#FF9ED9"
             colorComponentBackground =  "#FFF4F9"
 
             sidebarSelector = ""

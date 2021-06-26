@@ -767,7 +767,7 @@ Item {
                         text: "Button"
                     }
 
-                    RoundButton {
+                    RoundButtonThemed {
                         anchors.verticalCenter: parent.verticalCenter
                         text: "+"
                     }

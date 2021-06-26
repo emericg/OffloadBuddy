@@ -1254,7 +1254,7 @@ Popup {
 
                 visible: (comboBoxDestination.currentIndex === (cbDestinations.count - 1))
 
-                FilePathArea {
+                FileInputArea {
                     id: textField_path
                     anchors.left: parent.left
                     anchors.right: parent.right

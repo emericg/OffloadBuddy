@@ -59,9 +59,11 @@
         <file alias="RangeSliderArrow.qml">components_generic/RangeSliderArrow.qml</file>
         <file alias="SimpleShadow.qml">components_generic/SimpleShadow.qml</file>
         <file alias="SliderValueSolid.qml">components_generic/SliderValueSolid.qml</file>
-        <file alias="FilePathArea.qml">components_generic/FilePathArea.qml</file>
+        <file alias="FileInputArea.qml">components_generic/FileInputArea.qml</file>
+        <file alias="FolderInputArea.qml">components_generic/FolderInputArea.qml</file>
 
         <file alias="ButtonThemed.qml">components_themed/ButtonThemed.qml</file>
+        <file alias="RoundButtonThemed.qml">components_themed/RoundButtonThemed.qml</file>
         <file alias="CheckBoxThemed.qml">components_themed/CheckBoxThemed.qml</file>
         <file alias="ComboBoxThemed.qml">components_themed/ComboBoxThemed.qml</file>
         <file alias="MiddleSliderThemed.qml">components_themed/MiddleSliderThemed.qml</file>

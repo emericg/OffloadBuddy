@@ -8,7 +8,7 @@ TextField {
     implicitWidth: 128
     implicitHeight: Theme.componentHeight
 
-    property string colorText: Theme.colorComponentContent
+    property string colorText: Theme.colorComponentText
     property string colorPlaceholderText: Theme.colorSubText
     property string colorBorder: Theme.colorComponentBorder
     property string colorBackground: Theme.colorComponentBackground

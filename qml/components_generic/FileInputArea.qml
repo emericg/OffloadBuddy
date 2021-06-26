@@ -49,7 +49,7 @@ TextField {
         width: folderArea.width - x
 
         color: Theme.colorSubText
-        verticalAlignment: "AlignVCenter"
+        verticalAlignment: Text.AlignVCenter
 
         onEditingFinished: {
             pathChanged(folderArea.text + fileArea.text + "." + extensionArea.text)
@@ -65,7 +65,7 @@ TextField {
 
         text: "."
         color: Theme.colorSubText
-        verticalAlignment: "AlignVCenter"
+        verticalAlignment: Text.AlignVCenter
     }
     Text {
         id: extensionArea
@@ -74,7 +74,7 @@ TextField {
         anchors.leftMargin: 1
         anchors.bottom: parent.bottom
         color: Theme.colorSubText
-        verticalAlignment: "AlignVCenter"
+        verticalAlignment: Text.AlignVCenter
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -87,7 +87,7 @@ TextField {
         anchors.rightMargin: 2
         anchors.verticalCenter: parent.verticalCenter
 
-        embedded: true
+        //embedded: true
         text: qsTr("change")
         onClicked: {
             fileDialogChange.folder =  "file:///" + textField_path.text
