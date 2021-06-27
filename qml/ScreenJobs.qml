@@ -1,6 +1,5 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
-import QtQuick.Dialogs 1.3
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsString.js" as UtilsString
@@ -41,15 +40,15 @@ Item {
             color: Theme.colorHeaderContent
         }
 
-        ButtonImageThemed {
+        ButtonWireframeImage {
             id: buttonClear
-            width: 256
             anchors.right: parent.right
-            anchors.rightMargin: 12
+            anchors.rightMargin: 16
             anchors.verticalCenter: parent.verticalCenter
 
+            fullColor: true
             text: qsTr("Clear finished jobs")
-            source: "qrc:/assets/icons_material/baseline-close-24px.svg"
+            source: "qrc:/assets/icons_material/baseline-backspace-24px.svg"
             onClicked: jobManager.clearFinishedJobs()
         }
 
@@ -90,20 +89,13 @@ Item {
 
         ListView {
             id: jobsView
-            width: parent.width
+            anchors.fill: parent
+            anchors.margins: 16
+            spacing: 16
+
             interactive: false
             model: jobManager.jobsList
             delegate: ItemJob { job: modelData; width: jobsView.width; }
-
-            spacing: 16
-            anchors.top: parent.top
-            anchors.topMargin: 16
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 16
-            anchors.left: parent.left
-            anchors.leftMargin: 16
-            anchors.right: parent.right
-            anchors.rightMargin: 16
         }
     }
 }

@@ -179,7 +179,7 @@ bool FileScanner::scanFilesystemFile(const QString &file_path, ofb_file *f, ofb_
             f->name = fi.baseName();
             f->extension = fi.suffix().toLower();
             f->size = static_cast<uint64_t>(fi.size());
-#if (QT_VERSION_MINOR >= 10)
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 10, 0))
             f->creation_date = fi.birthTime();
 #else
             f->creation_date = fi.created();

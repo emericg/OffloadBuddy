@@ -162,8 +162,8 @@ Item {
 
                     text: qsTr("Metric")
 
-                    Component.onCompleted: { checked =  (settingsManager.appUnits === 0); }
-                    onCheckedChanged: { if (checked === true) { settingsManager.appUnits = 0 }; }
+                    checked: (settingsManager.appUnits === 0)
+                    onClicked: settingsManager.appUnits = 0
                 }
 
                 RadioButtonThemed {
@@ -172,8 +172,8 @@ Item {
 
                     text: qsTr("Imperial")
 
-                    Component.onCompleted: { checked =  (settingsManager.appUnits === 1); }
-                    onCheckedChanged: { if (checked === true) { settingsManager.appUnits = 1 }; }
+                    checked: (settingsManager.appUnits === 1)
+                    onClicked: settingsManager.appUnits = 1
                 }
             }
 
@@ -337,8 +337,8 @@ Item {
 
                     text: qsTr("Ignore LRVs and THM files")
 
-                    checked: settingsManager.ignorejunk
-                    onClicked: settingsManager.ignorejunk = checked
+                    checked: settingsManager.ignoreJunk
+                    onClicked: settingsManager.ignoreJunk = checked
                 }
 
                 CheckBoxThemed {
@@ -348,8 +348,8 @@ Item {
 
                     text: qsTr("Ignore HD audio files")
 
-                    checked: settingsManager.ignorehdaudio
-                    onClicked: settingsManager.ignorehdaudio = checked
+                    checked: settingsManager.ignoreHdAudio
+                    onClicked: settingsManager.ignoreHdAudio = checked
                 }
             }
 
@@ -364,8 +364,8 @@ Item {
 
                     text: qsTr("Automatically delete offloaded media")
 
-                    checked: settingsManager.autodelete
-                    onClicked: settingsManager.autodelete = checked
+                    checked: settingsManager.autoDelete
+                    onClicked: settingsManager.autoDelete = checked
                 }
 
                 CheckBoxThemed {
@@ -376,19 +376,19 @@ Item {
                     text: qsTr("Automatically merge video chapters")
                     enabled: false
 
-                    checked: settingsManager.automerge
-                    onClicked: settingsManager.automerge = checked
+                    checked: settingsManager.autoMerge
+                    onClicked: settingsManager.autoMerge = checked
                 }
 
                 CheckBoxThemed {
-                    id: checkAutoMetadata
+                    id: checkAutoTelemetry
                     width: 350
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Automatically extract telemetry")
 
-                    checked: settingsManager.autometadata
-                    onClicked: settingsManager.autometadata = checked
+                    checked: settingsManager.autoTelemetry
+                    onClicked: settingsManager.autoTelemetry = checked
                 }
             }
 
@@ -398,11 +398,12 @@ Item {
 
                 CheckBoxThemed {
                     id: checkMoveToTrash
-                    width: 350
+                    width: 450
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: qsTr("Move to trash instead of delete")
+                    text: qsTr("Move files to trash instead of deleting them")
 
+                    visible: jobManager.hasMoveToTrash()
                     checked: settingsManager.moveToTrash
                     onClicked: settingsManager.moveToTrash = checked
                 }

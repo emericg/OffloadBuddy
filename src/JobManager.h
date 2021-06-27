@@ -35,6 +35,7 @@
 #include <QVariant>
 #include <QThread>
 #include <QDesktopServices>
+#include <QQmlApplicationEngine>
 
 class MediaLibrary;
 class JobWorkerAsync;
@@ -42,37 +43,52 @@ class JobWorkerSync;
 
 /* ************************************************************************** */
 
-typedef enum JobType
+class JobUtils: public QObject
 {
-    JOB_INVALID = 0,
+    Q_OBJECT
 
-    JOB_FORMAT,
-    JOB_DELETE,
+public:
+    static void registerQML()
+    {
+        qRegisterMetaType<JobUtils::JobType>("JobUtils::JobType");
+        qRegisterMetaType<JobUtils::JobState>("JobUtils::JobState");
 
-    JOB_OFFLOAD,
-    JOB_MOVE,
-    JOB_COPY,
-    JOB_MERGE,
+        qmlRegisterType<JobUtils>("JobUtils", 1, 0, "JobUtils");
+    }
 
-    JOB_CLIP,
-    JOB_ENCODE,
-    JOB_TELEMETRY,
+    enum JobType
+    {
+        JOB_INVALID = 0,
 
-    JOB_FIRMWARE_DOWNLOAD,
-    JOB_FIRMWARE_UPLOAD,
+        JOB_FORMAT,
+        JOB_DELETE,
 
-} JobType;
+        JOB_OFFLOAD,
+        JOB_MOVE,
 
-typedef enum JobState
-{
-    JOB_STATE_QUEUED = 0,
-    JOB_STATE_WORKING,
-    JOB_STATE_PAUSED,
+        JOB_CLIP,
+        JOB_ENCODE,
+        JOB_TELEMETRY,
 
-    JOB_STATE_DONE = 8,
-    JOB_STATE_ERRORED
+        JOB_FIRMWARE_DOWNLOAD,
+        JOB_FIRMWARE_UPLOAD,
+    };
+    Q_ENUM(JobType)
 
-} JobState;
+    enum JobState
+    {
+        JOB_STATE_QUEUED = 0,
+        JOB_STATE_WORKING,
+        JOB_STATE_PAUSED,
+
+        JOB_STATE_DONE = 8,
+        JOB_STATE_ERRORED
+
+    };
+    Q_ENUM(JobState)
+};
+
+/* ************************************************************************** */
 
 typedef struct JobDestination
 {
@@ -131,6 +147,8 @@ typedef struct JobSettingsEncode
 
 } JobSettingsEncode;
 
+/* ************************************************************************** */
+
 typedef struct JobElement
 {
     Shot *parent_shots = nullptr;
@@ -143,7 +161,8 @@ typedef struct JobElement
 typedef struct Job
 {
     int id = -1;
-    JobType type = JOB_INVALID;
+    JobUtils::JobType type = JobUtils::JOB_INVALID;
+    JobUtils::JobState state = JobUtils::JOB_STATE_QUEUED;
 
     JobSettingsDelete settings_delete;
     JobSettingsOffload settings_offload;
@@ -151,8 +170,6 @@ typedef struct Job
     JobSettingsEncode settings_encode;
 
     std::vector<JobElement *> elements;
-
-    JobState state = JOB_STATE_QUEUED;
     int totalFiles = 0;
     int64_t totalSize = 0;
 
@@ -161,21 +178,28 @@ typedef struct Job
 /* ************************************************************************** */
 
 /*!
- * \brief The JobTracker class
+ * \brief The JobTracker class, used by the UI to display jobs and their status
  */
 class JobTracker: public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString name READ getName NOTIFY jobUpdated)
-    Q_PROPERTY(QString type READ getTypeString NOTIFY jobUpdated)
+    Q_PROPERTY(QString name READ getName CONSTANT)
+    Q_PROPERTY(QStringList files READ getFiles CONSTANT)
+    Q_PROPERTY(QString destination READ getDestination CONSTANT)
+    Q_PROPERTY(QString typeStr READ getTypeString CONSTANT)
+    Q_PROPERTY(int type READ getType CONSTANT)
     Q_PROPERTY(int state READ getState NOTIFY jobUpdated)
+    Q_PROPERTY(bool running READ isRunning NOTIFY jobUpdated)
     Q_PROPERTY(float progress READ getProgress NOTIFY jobUpdated)
 
     QString m_name;
-    JobType m_type;
-    JobState m_state = JOB_STATE_QUEUED;
+    QStringList m_files;
+    JobUtils::JobType m_type;
+
+    JobUtils::JobState m_state = JobUtils::JOB_STATE_QUEUED;
     float m_percent = 0.0;
+    qint64 m_eta;
 
     bool m_autoDelete = false;
 
@@ -189,40 +213,27 @@ Q_SIGNALS:
     void jobUpdated();
 
 public:
-    JobTracker(int job_id, int job_type) { m_job_id = job_id; m_type = static_cast<JobType>(job_type); }
+    JobTracker(int job_id, int job_type) { m_job_id = job_id; m_type = static_cast<JobUtils::JobType>(job_type); }
     ~JobTracker() {}
 
     int getId() { return m_job_id; }
-    JobType getType() { return m_type; }
-    QString getTypeString()
-    {
-        if (m_type == JOB_FORMAT)
-            return tr("FORMAT");
-        else if (m_type == JOB_DELETE)
-            return tr("DELETION");
-        else if (m_type == JOB_OFFLOAD)
-            return tr("OFFLOADING");
-        else if (m_type == JOB_MOVE)
-            return tr("MOVE");
-        else if (m_type == JOB_COPY)
-            return tr("COPYING");
-        else if (m_type == JOB_MERGE)
-            return tr("MERGING");
-        else if (m_type == JOB_CLIP)
-            return tr("CLIP");
-        else if (m_type == JOB_ENCODE)
-            return tr("ENCODING");
-        else if (m_type == JOB_TELEMETRY)
-            return tr("TELEMETRY EXTRACTION");
-        else if (m_type == JOB_FIRMWARE_DOWNLOAD)
-            return tr("DOWNLOADING");
-        else if (m_type == JOB_FIRMWARE_UPLOAD)
-            return tr("FIRMWARE");
-        else
-            return tr("UNKNOWN");
+    JobUtils::JobType getType() { return m_type; }
+    QString getTypeString() {
+        if (m_type == JobUtils::JOB_FORMAT) return tr("FORMAT");
+        else if (m_type == JobUtils::JOB_DELETE) return tr("DELETION");
+        else if (m_type == JobUtils::JOB_OFFLOAD) return tr("OFFLOADING");
+        else if (m_type == JobUtils::JOB_MOVE) return tr("MOVE");
+        else if (m_type == JobUtils::JOB_CLIP) return tr("CLIP");
+        else if (m_type == JobUtils::JOB_ENCODE) return tr("ENCODING");
+        else if (m_type == JobUtils::JOB_TELEMETRY) return tr("TELEMETRY EXTRACTION");
+        else if (m_type == JobUtils::JOB_FIRMWARE_DOWNLOAD) return tr("DOWNLOADING");
+        else if (m_type == JobUtils::JOB_FIRMWARE_UPLOAD) return tr("FIRMWARE");
+        else return tr("UNKNOWN");
     }
     void setName(const QString &name) { m_name = name; }
     QString getName() { return m_name; }
+
+    QStringList getFiles() { return m_files; }
 
     void setDevice(Device *d) { m_source_device = d; }
     Device *getDevice() const { return m_source_device; }
@@ -232,23 +243,23 @@ public:
     //void setProvider(ShotProvider *sp) { m_shot_provider = sp; }
     //ShotProvider *getProvider() const { return m_shot_provider; }
 
-    void setDestination(QString dest) { m_destination = dest; }
+    void setDestination(QString dest) { if (m_type != JobUtils::JOB_DELETE) m_destination = dest; }
     QString getDestination() const { return m_destination; }
 
     void setAutoDelete(bool d) { m_autoDelete = d; }
     bool getAutoDelete() const { return m_autoDelete; }
 
-    void setState(int state) { m_state = static_cast<JobState>(state); Q_EMIT jobUpdated(); }
+    void setState(int state) { m_state = static_cast<JobUtils::JobState>(state); Q_EMIT jobUpdated(); }
     int getState() { return m_state; }
+
+    int isRunning() const { return (m_state & JobUtils::JOB_STATE_WORKING); }
 
     void setProgress(float p) { m_percent = p; Q_EMIT jobUpdated(); }
     float getProgress() { return m_percent / 100.f; }
 
-    Q_INVOKABLE void openDestination() const
-    {
+    Q_INVOKABLE void openDestination() const {
         QFileInfo d(m_destination);
-        if (!m_destination.isEmpty() && d.exists())
-        {
+        if (!m_destination.isEmpty() && d.exists()) {
             QDesktopServices::openUrl(QUrl::fromLocalFile(m_destination));
         }
     }
@@ -272,7 +283,7 @@ class JobManager: public QObject
 
     // instant jobs (deletion...)
     JobWorkerSync *m_job_instant = nullptr;
-    // per device disk jobs (copy/merge...)
+    // disk jobs (copy/merge...) (PER DEVICE)
     QHash<QString, JobWorkerSync *> m_job_disk;
     // CPU jobs (reencodes, stabs...)
     JobWorkerAsync *m_job_cpu = nullptr;
@@ -298,38 +309,50 @@ Q_SIGNALS:
 
 public:
     static JobManager *getInstance();
+
     void attachLibrary(MediaLibrary *l);
     void cleanup();
 
-    bool addJob(JobType type, Device *dev, MediaLibrary *lib, Shot *shot,
+    bool addJob(JobUtils::JobType type, Device *dev, MediaLibrary *lib, Shot *shot,
                 MediaDirectory *md = nullptr, JobDestination *dst = nullptr,
                 JobSettingsDelete *sett_delete = nullptr,
                 JobSettingsOffload *sett_offload = nullptr,
                 JobSettingsTelemetry *sett_telemetry = nullptr,
                 JobSettingsEncode *sett_encode = nullptr);
-    bool addJobs(JobType type, Device *dev, MediaLibrary *lib, QList<Shot *> list,
+    bool addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib, QList<Shot *> &list,
                  MediaDirectory *md = nullptr, JobDestination *dst = nullptr,
                  JobSettingsDelete *sett_delete = nullptr,
                  JobSettingsOffload *sett_offload = nullptr,
                  JobSettingsTelemetry *sett_telemetry = nullptr,
                  JobSettingsEncode *sett_encode = nullptr);
 
-    QVariant getTrackedJobs() const { if (m_trackedJobs.size() > 0) { return QVariant::fromValue(m_trackedJobs); } return QVariant(); }
-    int getTrackedJobsCount() const { return m_trackedJobs.size(); }
     int getWorkingJobsCount() const { return m_workingJobs; }
+    int getTrackedJobsCount() const { return m_trackedJobs.size(); }
+    QVariant getTrackedJobs() const {
+        if (m_trackedJobs.size() > 0) {
+            return QVariant::fromValue(m_trackedJobs);
+        }
+        return QVariant();
+    }
+
+    Q_INVOKABLE bool hasMoveToTrash() const {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+        return true;
+#endif
+        return false;
+    }
 
     Q_INVOKABLE void clearFinishedJobs();
 
-    Q_INVOKABLE bool fileExists(const QString &path) const
-    {
+    Q_INVOKABLE bool fileExists(const QString &path) const {
         QFileInfo f(path);
         if (path.isEmpty() || f.exists())
         {
             return true;
         }
-
         return false;
     }
+
 public slots:
     void jobStarted(int);
     void jobProgress(int, float);

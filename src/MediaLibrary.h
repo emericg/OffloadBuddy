@@ -73,11 +73,11 @@ public:
     Q_INVOKABLE QStringList getSelectedFilesPaths(const QVariant &indexes);
 
     // Submit jobs
-    Q_INVOKABLE void deleteSelected(const QString &shot_uuid, const QVariant &settings);
-    Q_INVOKABLE void deleteSelection(const QVariant &uuids, const QVariant &settings);
-
     Q_INVOKABLE void moveSelected(const QString &shot_uuid, const QVariant &settings);
     Q_INVOKABLE void moveSelection(const QVariant &uuids, const QVariant &settings);
+
+    Q_INVOKABLE void deleteSelected(const QString &shot_uuid, const QVariant &settings);
+    Q_INVOKABLE void deleteSelection(const QVariant &uuids, const QVariant &settings);
 
     Q_INVOKABLE void reencodeSelected(const QString &shot_uuid, const QVariant &settings);
     Q_INVOKABLE void reencodeSelection(const QVariant &uuids, const QVariant &settings);

@@ -64,7 +64,7 @@ Rectangle {
                     popupOffload.shots = mediaLibrary.getSelectedShotsNames(mediaGrid.selectionList)
                     popupOffload.openSelection(mediaLibrary)
                 } else if (appContent.state === "device") {
-                    popupOffload.uuids = mediaLibrary.getSelectedShotsUuids(mediaGrid.selectionList)
+                    popupOffload.uuids = currentDevice.getSelectedShotsUuids(mediaGrid.selectionList)
                     popupOffload.shots = currentDevice.getSelectedShotsNames(mediaGrid.selectionList)
                     popupOffload.openSelection(currentDevice)
                 }

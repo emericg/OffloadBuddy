@@ -196,7 +196,7 @@ QString JobManager::getandmakeDestination(Shot *s, Device *d, MediaDirectory *md
 
 /* ************************************************************************** */
 
-bool JobManager::addJob(JobType type, Device *dev, MediaLibrary *lib, Shot *shot,
+bool JobManager::addJob(JobUtils::JobType type, Device *dev, MediaLibrary *lib, Shot *shot,
                         MediaDirectory *md, JobDestination *dst,
                         JobSettingsDelete *sett_delete,
                         JobSettingsOffload *sett_offload,
@@ -215,8 +215,8 @@ bool JobManager::addJob(JobType type, Device *dev, MediaLibrary *lib, Shot *shot
                    sett_delete, sett_offload, sett_telemetry, sett_encode);
 }
 
-bool JobManager::addJobs(JobType type, Device *dev, MediaLibrary *lib,
-                         QList<Shot *> list,
+bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
+                         QList<Shot *> &list,
                          MediaDirectory *md, JobDestination *dst,
                          JobSettingsDelete *sett_delete,
                          JobSettingsOffload *sett_offload,
@@ -225,33 +225,53 @@ bool JobManager::addJobs(JobType type, Device *dev, MediaLibrary *lib,
 {
     bool status = false;
 
-    if (type == 0)
-        return status;
+    if (type == 0) return status;
+    if (list.empty()) return status;
 
-    if (list.empty())
-        return status;
+    // GET SETTINGS ////////////////////////////////////////////////////////////
 
     SettingsManager *sm = SettingsManager::getInstance();
     bool getPreviews = !sm->getIgnoreJunk();
     bool getHdAudio = !sm->getIgnoreHdAudio();
     bool autoDelete = sm->getAutoDelete();
+    bool extractTelemetry = sm->getAutoTelemetry();
+    bool mergeChapters = sm->getAutoMerge();
+    bool moveToTrash = sm->getMoveToTrash();
 
-    // CREATE JOB //////////////////////////////////////////////////////////////
-
-    // FUSION hack
-    if (type == JOB_COPY && (dev && dev->getModel().contains("Fusion", Qt::CaseInsensitive)))
+    if (type == JobUtils::JOB_OFFLOAD)
     {
-        // Fusion Studio needs every files from a shot to work
+        if (sett_offload)
+        {
+            getPreviews = !sett_offload->ignoreJunk;
+            getHdAudio = !sett_offload->ignoreAudio;
+            extractTelemetry = sett_offload->extractTelemetry;
+            mergeChapters = sett_offload->mergeChapters;
+            autoDelete = sett_offload->autoDelete;
+        }
+
+        // Fusion Studio needs every files from a Fusion shot in order to work
+        if (dev && dev->getModel().contains("Fusion", Qt::CaseInsensitive))
+        {
+            getPreviews = true;
+            getHdAudio = true;
+        }
+    }
+
+    // Delete everything, MP4, LRVs...
+    if (type == JobUtils::JOB_DELETE)
+    {
+        if (sett_delete)
+        {
+            moveToTrash = sett_delete->moveToTrash;
+        }
+
         getPreviews = true;
         getHdAudio = true;
     }
 
-    if (type == JOB_DELETE)
-    {
-        // Delete everything, MP4, LRVs...
-        getPreviews = true;
-        getHdAudio = true;
-    }
+    // GET DESTINATION /////////////////////////////////////////////////////////
+
+    Q_UNUSED(dst) // TODO
 
     // CREATE JOB //////////////////////////////////////////////////////////////
 
@@ -264,21 +284,28 @@ bool JobManager::addJobs(JobType type, Device *dev, MediaLibrary *lib,
     if (sett_telemetry) job->settings_telemetry = *sett_telemetry;
     if (sett_encode) job->settings_encode = *sett_encode;
 
-    for (auto shot: list)
+    for (Shot *shot: list)
     {
-        JobElement *je = new JobElement;
-        je->destination_dir = getandmakeDestination(shot, dev, md);
-        je->parent_shots = shot;
-        QList <ofb_file *> files = shot->getFiles(getPreviews, getHdAudio);
-        for (auto f: qAsConst(files))
+        if (shot)
         {
-            je->files.push_back(*f);
-            job->totalSize += f->size;
-            job->totalFiles++;
-        }
-        job->elements.push_back(je);
+            JobElement *je = new JobElement;
+            je->destination_dir = getandmakeDestination(shot, dev, md);
+            je->parent_shots = shot;
+            QList <ofb_file *> files = shot->getFiles(getPreviews, getHdAudio);
+            for (auto f: qAsConst(files))
+            {
+                je->files.push_back(*f);
+                job->totalSize += f->size;
+                job->totalFiles++;
+            }
+            job->elements.push_back(je);
 
-        shot->setState(Shared::SHOT_STATE_QUEUED);
+            shot->setState(Shared::SHOT_STATE_QUEUED);
+        }
+        else
+        {
+            qWarning() << "JobManager : INVALID SHOT";
+        }
     }
 
     JobTracker *tracker = new JobTracker(job->id, job->type);
@@ -292,13 +319,12 @@ bool JobManager::addJobs(JobType type, Device *dev, MediaLibrary *lib,
 
     // DISPATCH JOB ////////////////////////////////////////////////////////////
 
-    if (type == JOB_ENCODE)
+    if (type == JobUtils::JOB_ENCODE)
     {
         // ffmpeg worker
         if (m_job_cpu == nullptr)
         {
             qDebug() << "Starting an async worker";
-
             m_job_cpu = new JobWorkerAsync();
 
             connect(m_job_cpu, SIGNAL(jobStarted(int)), this, SLOT(jobStarted(int)));
@@ -321,25 +347,49 @@ bool JobManager::addJobs(JobType type, Device *dev, MediaLibrary *lib,
         // Regular worker
         JobWorkerSync *m_selected_worker = nullptr;
 
-        if (type == JOB_DELETE || type == JOB_FORMAT)
+        if (type == JobUtils::JOB_DELETE || type == JobUtils::JOB_FORMAT)
         {
-            m_selected_worker = m_job_instant; // TODO
+            m_selected_worker = m_job_instant;
+
+            if (m_selected_worker == nullptr)
+            {
+                qDebug() << "Starting a sync worker";
+                m_selected_worker = new JobWorkerSync();
+                m_selected_worker->thread = new QThread();
+
+                if (m_selected_worker->thread && m_selected_worker)
+                {
+                    m_selected_worker->moveToThread(m_selected_worker->thread);
+
+                    connect(m_selected_worker, SIGNAL(startWorking()), m_selected_worker, SLOT(work()));
+
+                    connect(m_selected_worker, SIGNAL(jobProgress(int,float)), this, SLOT(jobProgress(int,float)));
+                    connect(m_selected_worker, SIGNAL(jobStarted(int)), this, SLOT(jobStarted(int)));
+                    connect(m_selected_worker, SIGNAL(jobFinished(int,int)), this, SLOT(jobFinished(int,int)));
+                    connect(m_selected_worker, SIGNAL(shotStarted(int,Shot*)), this, SLOT(shotStarted(int,Shot*)));
+                    connect(m_selected_worker, SIGNAL(shotFinished(int,Shot*)), this, SLOT(shotFinished(int,Shot*)));
+                    connect(m_selected_worker, SIGNAL(fileProduced(QString)), this, SLOT(newFile(QString)));
+
+                    m_selected_worker->thread->start();
+                    status = true;
+                }
+
+                m_job_instant = m_selected_worker;
+            }
         }
-        else if (type == JOB_FIRMWARE_DOWNLOAD)
+        else if (type == JobUtils::JOB_FIRMWARE_DOWNLOAD)
         {
             m_selected_worker = m_job_web; // TODO
         }
-        else if (type == JOB_TELEMETRY || type == JOB_FIRMWARE_UPLOAD ||
-                 type == JOB_CLIP ||
-                 type == JOB_OFFLOAD || type == JOB_MOVE ||
-                 type == JOB_COPY || type == JOB_MERGE)
+        else if (type == JobUtils::JOB_TELEMETRY || type == JobUtils::JOB_FIRMWARE_UPLOAD ||
+                 type == JobUtils::JOB_CLIP ||
+                 type == JobUtils::JOB_OFFLOAD || type == JobUtils::JOB_MOVE)
         {
             m_selected_worker = m_job_disk[dev->getUuid()];
 
             if (m_selected_worker == nullptr)
             {
                 qDebug() << "Starting a sync worker";
-
                 m_selected_worker = new JobWorkerSync();
                 m_selected_worker->thread = new QThread();
 
@@ -388,7 +438,7 @@ void JobManager::clearFinishedJobs()
     for (auto jj: qAsConst(m_trackedJobs))
     {
         JobTracker *j = qobject_cast<JobTracker *>(jj);
-        if (j && j->getState() >= JOB_STATE_DONE)
+        if (j && j->getState() >= JobUtils::JOB_STATE_DONE)
         {
             m_trackedJobs.removeOne(jj);
         }
@@ -419,7 +469,7 @@ void JobManager::jobStarted(int jobId)
         JobTracker *j = qobject_cast<JobTracker *>(jj);
         if (j && j->getId() == jobId)
         {
-            j->setState(JOB_STATE_WORKING);
+            j->setState(JobUtils::JOB_STATE_WORKING);
 
             m_workingJobs++;
             emit trackedJobsUpdated();
@@ -436,7 +486,7 @@ void JobManager::jobFinished(int jobId, int jobState)
         {
             j->setState(jobState);
 
-            if (jobState == JOB_STATE_DONE)
+            if (jobState == JobUtils::JOB_STATE_DONE)
                 j->setProgress(100.0);
 
             m_workingJobs--;
@@ -459,7 +509,7 @@ void JobManager::shotStarted(int jobId, Shot *shot)
         if (j && j->getId() == jobId)
         {
             j->setName(shot->getName());
-            if (j->getType() == JOB_ENCODE)
+            if (j->getType() == JobUtils::JOB_ENCODE)
                 shot->setState(Shared::SHOT_STATE_ENCODING);
             else
                 shot->setState(Shared::SHOT_STATE_OFFLOADING);
@@ -480,7 +530,7 @@ void JobManager::shotFinished(int jobId, Shot *shot)
         JobTracker *j = qobject_cast<JobTracker *>(jj);
         if (j && j->getId() == jobId)
         {
-            if (j->getType() == JOB_DELETE)
+            if (j->getType() == JobUtils::JOB_DELETE)
             {
                 Device *d = j->getDevice();
                 if (d) d->deleteShot(shot);
@@ -493,14 +543,13 @@ void JobManager::shotFinished(int jobId, Shot *shot)
             else
             {
                 switch (j->getType()) {
-                case JOB_OFFLOAD:
-                case JOB_COPY:
-                case JOB_MERGE:
+                case JobUtils::JOB_OFFLOAD:
+                case JobUtils::JOB_MOVE:
                     shot->setState(Shared::SHOT_STATE_OFFLOADED);
                     break;
 
-                case JOB_CLIP:
-                case JOB_ENCODE:
+                case JobUtils::JOB_CLIP:
+                case JobUtils::JOB_ENCODE:
                     shot->setState(Shared::SHOT_STATE_ENCODED);
                     break;
 
@@ -509,14 +558,14 @@ void JobManager::shotFinished(int jobId, Shot *shot)
                     break;
                 }
 
-                if (j->getAutoDelete() &&
-                    (j->getType() == JOB_COPY || j->getType() == JOB_MERGE))
+                if (j->getType() == JobUtils::JOB_OFFLOAD && j->getAutoDelete())
                 {
-                    addJob(JOB_DELETE, j->getDevice(), j->getLibrary(), shot);
+                    addJob(JobUtils::JOB_DELETE, j->getDevice(), j->getLibrary(), shot);
                 }
-
-                // TODO create new shot
-                // TODO add new shot to media library
+                if (j->getType() == JobUtils::JOB_MOVE)
+                {
+                    //addJob(JobUtils::JOB_DELETE, j->getDevice(), j->getLibrary(), shot);
+                }
             }
         }
     }

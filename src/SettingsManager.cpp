@@ -91,8 +91,8 @@ bool SettingsManager::readSettings()
         if (settings.contains("global/autoMerge"))
             m_autoMerge = settings.value("global/autoMerge").toBool();
 
-        if (settings.contains("global/autoMetadata"))
-            m_autoTelemetry = settings.value("global/autoMetadata").toBool();
+        if (settings.contains("global/autoTelemetry"))
+            m_autoTelemetry = settings.value("global/autoTelemetry").toBool();
 
         if (settings.contains("global/autoDelete"))
             m_autoDelete = settings.value("global/autoDelete").toBool();
@@ -139,7 +139,7 @@ bool SettingsManager::writeSettings()
         settings.setValue("global/appUnits", m_appUnits);
         settings.setValue("global/appLanguage", m_appLanguage);
         settings.setValue("global/autoMerge", m_autoMerge);
-        settings.setValue("global/autoMetadata", m_autoTelemetry);
+        settings.setValue("global/autoTelemetry", m_autoTelemetry);
         settings.setValue("global/autoDelete", m_autoDelete);
         settings.setValue("global/ignoreJunk", m_ignoreJunk);
         settings.setValue("global/ignoreHdAudio", m_ignoreHdAudio);
@@ -228,13 +228,13 @@ void SettingsManager::setAutoMerge(bool value)
     }
 }
 
-void SettingsManager::setAutoMetadata(bool value)
+void SettingsManager::setAutoTelemetry(bool value)
 {
     if (m_autoTelemetry != value)
     {
         m_autoTelemetry = value;
         writeSettings();
-        Q_EMIT autoMetadataChanged();
+        Q_EMIT autoTelemetryChanged();
     }
 }
 void SettingsManager::setAutoDelete(bool value)

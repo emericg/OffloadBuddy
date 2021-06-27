@@ -91,7 +91,7 @@ void JobWorkerSync::work()
                 emit shotStarted(current_job->id, element->parent_shots);
 
                 // HANDLE DELETION /////////////////////////////////////////////
-                if (current_job->type == JOB_DELETE)
+                if (current_job->type == JobUtils::JOB_DELETE)
                 {
                     for (auto const &file: element->files)
                     {
@@ -100,9 +100,16 @@ void JobWorkerSync::work()
                         if (!file.filesystemPath.isEmpty())
                         {
                             //qDebug() << "JobWorkerSync  >  deleting:" << file.filesystemPath;
+                            bool status = false;
 
-                            //if (QFile::moveToTrash(file.filesystemPath)) // Qt 5.15
-                            if (QFile::remove(file.filesystemPath))
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+                            if (current_job->settings_delete.moveToTrash)
+                                status = QFile::moveToTrash(file.filesystemPath); // Qt 5.15
+                            else
+#endif
+                                status = QFile::remove(file.filesystemPath);
+
+                            if (status)
                             {
                                 stuff_done++;
                             }
@@ -135,8 +142,8 @@ void JobWorkerSync::work()
                     //qDebug() << "progress: " << progress << "(" << current_job->totalFiles << "/" << stuff_done << ")";
                 }
 
-                // HANDLE COPY /////////////////////////////////////////////////
-                if (current_job->type == JOB_COPY)
+                // HANDLE OFFLOADS /////////////////////////////////////////////
+                if (current_job->type == JobUtils::JOB_OFFLOAD || current_job->type == JobUtils::JOB_MOVE)
                 {
                     for (auto const &file: element->files)
                     {
@@ -207,7 +214,7 @@ void JobWorkerSync::work()
 #endif // ENABLE_LIBMTP
                     }
 
-                    progress = ((stuff_done) / static_cast<float>(current_job->totalSize)) * 100.f;
+                    progress = (stuff_done / static_cast<float>(current_job->totalSize)) * 100.f;
                     //qDebug() << "progress: " << progress << "(" << current_job->totalSize << "/" << stuff_done << ")";
                 }
 
@@ -215,7 +222,7 @@ void JobWorkerSync::work()
                 emit jobProgress(current_job->id, progress);
             }
 
-            emit jobFinished(current_job->id, JOB_STATE_DONE);
+            emit jobFinished(current_job->id, JobUtils::JOB_STATE_DONE);
             delete current_job;
         }
         m_jobsMutex.lock();

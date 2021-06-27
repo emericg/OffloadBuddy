@@ -556,9 +556,9 @@ void JobWorkerAsync::processFinished()
     {
         qDebug() << "JobWorkerAsync::processFinished()";
 
-        JobState js = JOB_STATE_DONE;
+        JobUtils::JobState js = JobUtils::JOB_STATE_DONE;
         if (m_childProcess->exitStatus() == QProcess::CrashExit)
-            js = JOB_STATE_ERRORED;
+            js = JobUtils::JOB_STATE_ERRORED;
 
         if (m_ffmpegcurrent->job &&
             m_ffmpegcurrent->job->elements.size() > m_ffmpegcurrent->job_element_index)

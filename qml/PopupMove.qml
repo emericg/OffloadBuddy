@@ -55,6 +55,7 @@ Popup {
         popupMode = 2
         recapEnabled = true
         recapOpened = false
+        files = []
         mediaProvider = provider
         currentShot = null
 

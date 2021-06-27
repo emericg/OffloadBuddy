@@ -181,8 +181,10 @@ Item {
 
             text: "SHOT NAME"
             color: Theme.colorHeaderContent
+            fontSizeMode: Text.HorizontalFit
             font.bold: true
             font.pixelSize: Theme.fontSizeHeader
+            minimumPixelSize: 22
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight
         }
@@ -432,7 +434,6 @@ Item {
             PropertyChanges { target: contentDetails; visible: false; }
             PropertyChanges { target: contentTelemetry; visible: false; }
         },
-
         State {
             name: "details"
             PropertyChanges { target: contentOverview; visible: false; }

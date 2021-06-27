@@ -38,11 +38,11 @@ Popup {
 
     function openSingle(provider, shot) {
         popupMode = 1
+        recapEnabled = false
+        recapOpened = false
         uuids = []
         shots = []
         files = []
-        recapEnabled = false
-        recapOpened = false
         mediaProvider = provider
         currentShot = shot
 
@@ -55,6 +55,7 @@ Popup {
         popupMode = 2
         recapEnabled = true
         recapOpened = false
+        files = []
         mediaProvider = provider
         currentShot = null
 

@@ -765,10 +765,9 @@ Item {
             //snapMode: GridView.FlowTopToBottom
             focus: (appContent.state === "device" && screenLibrary.state === "stateMediaGrid")
 
+            Component.onCompleted: initGridViewSettings()
             onCountChanged: updateGridViewSettings()
             onWidthChanged: computeCellSize()
-
-            Component.onCompleted: initGridViewSettings()
 
             Connections {
                 target: settingsManager

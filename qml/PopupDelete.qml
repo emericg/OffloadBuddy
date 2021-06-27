@@ -279,6 +279,10 @@ Popup {
                         mediaProvider.deleteAll(settingsDeletion)
                     }
 
+                    // If deletion happen from media detail screen, go back
+                    if (appContent.state === "library" && screenLibrary.state === "stateMediaDetails") screenLibrary.state = "stateMediaGrid"
+                    else if (appContent.state === "device" && screenDevice.state === "stateMediaDetails") screenDevice.state = "stateMediaGrid"
+
                     popupDelete.close()
                 }
             }

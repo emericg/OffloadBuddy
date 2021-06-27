@@ -39,21 +39,21 @@ Popup {
 
     Component.onCompleted: {
         // set default settings
-        switchIgnoreJunk.checked = settingsManager.ignorejunk
-        switchIgnoreAudio.checked = settingsManager.ignorehdaudio
-        switchMerge.checked = settingsManager.automerge
-        switchTelemetry.checked = settingsManager.autometadata
-        switchDelete.checked = settingsManager.autodelete
+        switchIgnoreJunk.checked = settingsManager.ignoreJunk
+        switchIgnoreAudio.checked = settingsManager.ignoreHdAudio
+        switchMerge.checked = settingsManager.autoMerge
+        switchTelemetry.checked = settingsManager.autoTelemetry
+        switchDelete.checked = settingsManager.autoDelete
     }
 
     Connections {
         // keep default settings up to date
         target: settingsManager
-        onIgnoreJunkChanged: switchIgnoreJunk.checked = settingsManager.ignorejunk
-        onIgnoreHdAudioChanged: switchIgnoreAudio.checked = settingsManager.ignorehdaudio
-        onAutoMergeChanged: switchMerge.checked = settingsManager.automerge
-        onAutoMetadataChanged: switchTelemetry.checked = settingsManager.autometadata
-        onAutoDeleteChanged: switchDelete.checked = settingsManager.autodelete
+        onIgnoreJunkChanged: switchIgnoreJunk.checked = settingsManager.ignoreJunk
+        onIgnoreHdAudioChanged: switchIgnoreAudio.checked = settingsManager.ignoreHdAudio
+        onAutoMergeChanged: switchMerge.checked = settingsManager.autoMerge
+        onAutoTelemetryChanged: switchTelemetry.checked = settingsManager.autoTelemetry
+        onAutoDeleteChanged: switchDelete.checked = settingsManager.autoDelete
     }
 
     ////////
@@ -79,6 +79,7 @@ Popup {
         popupMode = 2
         recapEnabled = true
         recapOpened = false
+        files = []
         mediaProvider = provider
         currentShot = null
 
@@ -242,7 +243,7 @@ Popup {
                         anchors.verticalCenter: parent.verticalCenter
 
                         enabled: true
-                        checked: settingsManager.ignorejunk
+                        checked: settingsManager.ignoreJunk
                         text: qsTr("Ignore LRVs and THM files")
                     }
 
@@ -251,7 +252,7 @@ Popup {
                         anchors.verticalCenter: parent.verticalCenter
 
                         enabled: true
-                        checked: settingsManager.ignorehdaudio
+                        checked: settingsManager.ignoreHdAudio
                         text: qsTr("Ignore HD Audio files")
                     }
                 }
@@ -269,7 +270,7 @@ Popup {
                         anchors.verticalCenter: parent.verticalCenter
 
                         enabled: false
-                        checked: settingsManager.autometadata
+                        checked: settingsManager.autoTelemetry
                         text: qsTr("Extract telemetry along with each shot")
                     }
                 }
@@ -287,7 +288,7 @@ Popup {
                         anchors.verticalCenter: parent.verticalCenter
 
                         enabled: false
-                        checked: settingsManager.automerge
+                        checked: settingsManager.autoMerge
                         text: qsTr("Merge chaptered files together")
                     }
                 }
@@ -305,7 +306,7 @@ Popup {
                         anchors.verticalCenter: parent.verticalCenter
 
                         enabled: true
-                        checked: settingsManager.autodelete
+                        checked: settingsManager.autoDelete
                         text: qsTr("Delete offloaded files from device memory")
                     }
                 }

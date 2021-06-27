@@ -52,11 +52,11 @@ class SettingsManager: public QObject
     Q_PROPERTY(uint thumbQuality READ getThumbQuality WRITE setThumbQuality NOTIFY thumbQualityChanged)
     Q_PROPERTY(uint thumbFormat READ getThumbFormat WRITE setThumbFormat NOTIFY thumbFormatChanged)
     Q_PROPERTY(uint thumbSize READ getThumbSize WRITE setThumbSize NOTIFY thumbSizeChanged)
-    Q_PROPERTY(bool automerge READ getAutoMerge WRITE setAutoMerge NOTIFY autoMergeChanged)
-    Q_PROPERTY(bool autometadata READ getAutoMetadata WRITE setAutoMetadata NOTIFY autoMetadataChanged)
-    Q_PROPERTY(bool autodelete READ getAutoDelete WRITE setAutoDelete NOTIFY autoDeleteChanged)
-    Q_PROPERTY(bool ignorejunk READ getIgnoreJunk WRITE setIgnoreJunk NOTIFY ignoreJunkChanged)
-    Q_PROPERTY(bool ignorehdaudio READ getIgnoreHdAudio WRITE setIgnoreHdAudio NOTIFY ignoreHdAudioChanged)
+    Q_PROPERTY(bool autoMerge READ getAutoMerge WRITE setAutoMerge NOTIFY autoMergeChanged)
+    Q_PROPERTY(bool autoTelemetry READ getAutoTelemetry WRITE setAutoTelemetry NOTIFY autoTelemetryChanged)
+    Q_PROPERTY(bool autoDelete READ getAutoDelete WRITE setAutoDelete NOTIFY autoDeleteChanged)
+    Q_PROPERTY(bool ignoreJunk READ getIgnoreJunk WRITE setIgnoreJunk NOTIFY ignoreJunkChanged)
+    Q_PROPERTY(bool ignoreHdAudio READ getIgnoreHdAudio WRITE setIgnoreHdAudio NOTIFY ignoreHdAudioChanged)
     Q_PROPERTY(bool moveToTrash READ getMoveToTrash WRITE setMoveToTrash NOTIFY moveToTrashChanged)
     Q_PROPERTY(bool mtpFullScan READ getMtpFullScan WRITE setMtpFullScan NOTIFY mtpFullScanChanged)
 
@@ -100,7 +100,7 @@ Q_SIGNALS:
     void appUnitsChanged();
     void appLanguageChanged();
     void autoMergeChanged();
-    void autoMetadataChanged();
+    void autoTelemetryChanged();
     void autoDeleteChanged();
     void ignoreJunkChanged();
     void ignoreHdAudioChanged();
@@ -135,8 +135,8 @@ public:
     bool getAutoMerge() const { return m_autoMerge; }
     void setAutoMerge(bool value);
 
-    bool getAutoMetadata() const { return m_autoTelemetry; }
-    void setAutoMetadata(bool value);
+    bool getAutoTelemetry() const { return m_autoTelemetry; }
+    void setAutoTelemetry(bool value);
 
     bool getAutoDelete() const { return m_autoDelete; }
     void setAutoDelete(bool value);

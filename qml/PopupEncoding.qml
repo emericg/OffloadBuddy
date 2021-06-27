@@ -56,6 +56,7 @@ Popup {
         popupMode = 2
         recapEnabled = true
         recapOpened = false
+        files = []
         mediaProvider = provider
         currentShot = null
 
@@ -403,7 +404,7 @@ Popup {
                         text: qsTr("COPY")
                         visible: clipCanBeCopied
                         onVisibleChanged: if (!visible) checked = false
-                        onCheckedChanged: changeCodec()
+                        onClicked: changeCodec()
                     }
                     RadioButtonThemed {
                         id: rbH264
@@ -411,21 +412,21 @@ Popup {
                         text: "H.264"
                         enabled: !cbCOPY.checked
                         checked: true
-                        onCheckedChanged: changeCodec()
+                        onClicked: changeCodec()
                     }
                     RadioButtonThemed {
                         id: rbH265
                         anchors.verticalCenter: parent.verticalCenter
                         text: "H.265"
                         enabled: !cbCOPY.checked
-                        onCheckedChanged: changeCodec()
+                        onClicked: changeCodec()
                     }
                     RadioButtonThemed {
                         id: rbVP9
                         anchors.verticalCenter: parent.verticalCenter
                         text: "VP9"
                         enabled: !cbCOPY.checked
-                        onCheckedChanged: changeCodec()
+                        onClicked: changeCodec()
                     }
                     RadioButtonThemed {
                         id: rbAV1
@@ -433,7 +434,7 @@ Popup {
                         text: "AV1"
                         enabled: !cbCOPY.checked
                         visible: false
-                        onCheckedChanged: changeCodec()
+                        onClicked: changeCodec()
                     }
                     RadioButtonThemed {
                         id: rbProRes
@@ -441,14 +442,14 @@ Popup {
                         text: "ProRes"
                         enabled: !cbCOPY.checked
                         visible: false
-                        onCheckedChanged: changeCodec()
+                        onClicked: changeCodec()
                     }
                     RadioButtonThemed {
                         id: rbGIF
                         anchors.verticalCenter: parent.verticalCenter
                         enabled: !cbCOPY.checked && clipIsShort
                         text: clipIsShort ? "GIF" : "GIF (video too long)"
-                        onCheckedChanged: changeCodec()
+                        onClicked: changeCodec()
                     }
                 }
             }
@@ -482,34 +483,34 @@ Popup {
                         id: rbPNG
                         anchors.verticalCenter: parent.verticalCenter
                         text: "PNG"
-                        onCheckedChanged: changeCodec()
+                        onClicked: changeCodec()
                     }
                     RadioButtonThemed {
                         id: rbJPEG
                         anchors.verticalCenter: parent.verticalCenter
                         text: "JPEG"
                         checked: true
-                        onCheckedChanged: changeCodec()
+                        onClicked: changeCodec()
                     }
                     RadioButtonThemed {
                         id: rbWEBP
                         anchors.verticalCenter: parent.verticalCenter
                         text: "WebP"
-                        onCheckedChanged: changeCodec()
+                        onClicked: changeCodec()
                     }
                     RadioButtonThemed {
                         id: rbAVIF
                         anchors.verticalCenter: parent.verticalCenter
                         text: "AVIF"
                         visible: false
-                        onCheckedChanged: changeCodec()
+                        onClicked: changeCodec()
                     }
                     RadioButtonThemed {
                         id: rbHEIF
                         anchors.verticalCenter: parent.verticalCenter
                         text: "HEIF"
                         visible: false
-                        onCheckedChanged: changeCodec()
+                        onClicked: changeCodec()
                     }
                 }
             }
