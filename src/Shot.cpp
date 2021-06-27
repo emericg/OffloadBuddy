@@ -399,7 +399,7 @@ QImage Shot::getPreviewMtp()
             {
                 retcode =  LIBMTP_Get_Representative_Sample(mtp_device, mtp_object_id, fsd);
 
-                if (img.loadFromData((const uchar *)(fsd->data), fsd->size))
+                if (retcode == 0 && img.loadFromData((const uchar *)(fsd->data), fsd->size))
                 {
                     status = true;
                 }

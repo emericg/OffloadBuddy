@@ -40,12 +40,17 @@
 #endif
 
 #include <QtGlobal>
-#include <QTranslator>
 #include <QLibraryInfo>
+#include <QTranslator>
 #include <QIcon>
+#include <QQuickWindow>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-#include <QQuickWindow>
+
+#if !defined(QT_NO_DEBUG) && !defined(NDEBUG)
+#include <QQmlDebuggingEnabler>
+QQmlDebuggingEnabler enabler;
+#endif
 
 /* ************************************************************************** */
 

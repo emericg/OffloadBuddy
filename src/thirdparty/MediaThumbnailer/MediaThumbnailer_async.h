@@ -24,7 +24,7 @@
 
 #include "ThumbnailerBackend.h"
 
-#include <QQuickAsyncImageProvider>
+#include <QQuickImageProvider>
 
 class QQmlApplicationEngine;
 
