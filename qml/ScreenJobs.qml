@@ -49,6 +49,7 @@ Item {
             fullColor: true
             text: qsTr("Clear finished jobs")
             source: "qrc:/assets/icons_material/baseline-backspace-24px.svg"
+            sourceRightToLeft: true
             onClicked: jobManager.clearFinishedJobs()
         }
 

@@ -97,7 +97,6 @@ Item {
             ////////
 
             TextArea {
-                id: textArea1
                 anchors.topMargin: -8
                 anchors.left: parent.left
                 anchors.leftMargin: -8
@@ -150,7 +149,6 @@ Item {
             }
 
             TextArea {
-                id: textArea2
                 anchors.left: parent.left
                 anchors.leftMargin: -8
                 anchors.right: parent.right
@@ -322,71 +320,6 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
-    Item {
-        height: 32
-        anchors.left: parent.left
-        anchors.leftMargin: 32
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 24
-
-        ImageSvg {
-            id: imageGitHub
-            width: 32
-            height: 32
-            anchors.left: parent.left
-            anchors.verticalCenter: parent.verticalCenter
-
-            source: "qrc:/assets/logos/github.svg"
-            color: Theme.colorIcon
-        }
-        Text {
-            id: textGitHub
-            anchors.left: imageGitHub.right
-            anchors.leftMargin: 8
-            anchors.verticalCenter: parent.verticalCenter
-
-            text: qsTr("Visit us on <html><style type=\"text/css\"></style><a href=\"https://github.com/emericg/OffloadBuddy\">GitHub</a></html>!")
-            color: Theme.colorText
-            font.pixelSize: Theme.fontSizeContentBig
-            onLinkActivated: Qt.openUrlExternally(link)
-
-            MouseArea {
-                anchors.fill: parent
-                acceptedButtons: Qt.NoButton
-                cursorShape: parent.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
-            }
-        }
-
-        ImageSvg {
-            id: imageIssues
-            width: 32
-            height: 32
-            anchors.left: textGitHub.right
-            anchors.leftMargin: 32
-            anchors.verticalCenter: parent.verticalCenter
-
-            source: "qrc:/assets/icons_material/baseline-bug_report-24px.svg"
-            color: Theme.colorIcon
-        }
-        Text {
-            id: textIssues
-            anchors.left: imageIssues.right
-            anchors.leftMargin: 8
-            anchors.verticalCenter: parent.verticalCenter
-
-            text: qsTr("Report bugs or post feature request on our <html><style type=\"text/css\"></style><a href=\"https://github.com/emericg/OffloadBuddy/issues\">issue tracker</a></html>!")
-            color: Theme.colorText
-            font.pixelSize: Theme.fontSizeContentBig
-            onLinkActivated: Qt.openUrlExternally(link)
-
-            MouseArea {
-                anchors.fill: parent
-                acceptedButtons: Qt.NoButton
-                cursorShape: parent.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
-            }
-        }
-    }
 
     Image {
         id: imageLogo

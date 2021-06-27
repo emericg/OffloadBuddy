@@ -155,7 +155,7 @@ Rectangle {
     ItemImageButton {
         id: rectangleClear
         anchors.right: parent.right
-        anchors.rightMargin: 8
+        anchors.rightMargin: 12
         anchors.verticalCenter: parent.verticalCenter
 
         source: "qrc:/assets/icons_material/baseline-backspace-24px.svg"

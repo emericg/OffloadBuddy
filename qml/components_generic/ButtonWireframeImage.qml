@@ -27,6 +27,8 @@ Button {
     property string primaryColor: Theme.colorPrimary
     property string secondaryColor: Theme.colorComponentBackground
 
+    property bool sourceRightToLeft: false
+
     property bool hoverAnimation: isDesktop
 
     ////////////////////////////////////////////////////////////////////////////
@@ -110,7 +112,8 @@ Button {
             id: contentRow
             height: parent.height
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.horizontalCenterOffset: 0
+
+            layoutDirection: (control.sourceRightToLeft) ? Qt.RightToLeft : Qt.LeftToRight
             spacing: 8
 
             ImageSvg {

@@ -365,8 +365,8 @@ Item {
                         sourceSize: 18
                         selected: (shotsView.cellSizeTarget === 221)
                         onClicked: {
-                            shotsView.cellSizeTarget = 221;
-                            shotsView.computeCellSize();
+                            shotsView.cellSizeTarget = 221
+                            shotsView.computeCellSize()
                         }
                     }
                     ItemLilMenuButton {
@@ -374,8 +374,8 @@ Item {
                         sourceSize: 22
                         selected: (shotsView.cellSizeTarget === 279)
                         onClicked: {
-                            shotsView.cellSizeTarget = 279;
-                            shotsView.computeCellSize();
+                            shotsView.cellSizeTarget = 279
+                            shotsView.computeCellSize()
                         }
                     }
                     ItemLilMenuButton {
@@ -383,8 +383,8 @@ Item {
                         sourceSize: 26
                         selected: (shotsView.cellSizeTarget === 376)
                         onClicked: {
-                            shotsView.cellSizeTarget = 376;
-                            shotsView.computeCellSize();
+                            shotsView.cellSizeTarget = 376
+                            shotsView.computeCellSize()
                         }
                     }
                     ItemLilMenuButton {
@@ -392,8 +392,8 @@ Item {
                         sourceSize: 30
                         selected: (shotsView.cellSizeTarget === 512)
                         onClicked: {
-                            shotsView.cellSizeTarget = 512;
-                            shotsView.computeCellSize();
+                            shotsView.cellSizeTarget = 512
+                            shotsView.computeCellSize()
                         }
                     }
                 }
