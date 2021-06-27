@@ -450,7 +450,7 @@ public:
 
     QList <ofb_file *> getFiles(bool withPreviews = true, bool withHdAudio = true) const;
 
-public slots:
+public:
     unsigned getShotType() const { return m_type; }
     unsigned getFileType() const {
         if (m_type >= Shared::SHOT_VIDEO && m_type <= Shared::SHOT_VIDEO_3D)
@@ -463,7 +463,7 @@ public slots:
     unsigned getState() const { return m_state; }
     void setState(Shared::ShotState state) { m_state = state; emit stateUpdated(); }
 
-    bool isValid() const;
+    Q_INVOKABLE bool isValid() const;
 
     QString &getFolderRefString();
     QString getFolderString();
@@ -539,15 +539,15 @@ public slots:
     unsigned getHiLightCount() const { return m_hilight.size(); }
     QVariant getHiLights() const { if (m_hilight.size() > 0) { return QVariant::fromValue(m_hilight); } return QVariant(); }
 
-    unsigned getGpsPointCount() const { return m_gps.size(); }
+    Q_INVOKABLE unsigned getGpsPointCount() const { return m_gps.size(); }
 
     int getFileId() const { return m_shot_id; }
     void setFileId(int id) { m_shot_id = id; }
     int getCameraId() const { return m_camera_id; }
     void setCameraId(int id) { m_camera_id = id; }
 
-    void openFile() const;
-    void openFolder() const;
+    Q_INVOKABLE void openFile() const;
+    Q_INVOKABLE void openFolder() const;
 };
 
 /* ************************************************************************** */

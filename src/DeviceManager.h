@@ -74,6 +74,10 @@ public:
     static bool getMtpDeviceName(const QString &stringId,
                                  QString &brand, QString &model);
 
+    Q_INVOKABLE QVariant getFirstDevice() const { if (m_devices.size() > 0) { return QVariant::fromValue(m_devices.at(0)); } return QVariant(); }
+    Q_INVOKABLE QVariant getDevice(int index) const { if (index >= 0 && index < m_devices.size()) { return QVariant::fromValue(m_devices.at(index)); } return QVariant(); }
+    Q_INVOKABLE QVariant getDevices() const { if (m_devices.size() > 0) { return QVariant::fromValue(m_devices); } return QVariant(); }
+
 public slots:
     void searchDevices();
 
@@ -84,10 +88,6 @@ public slots:
 
     void removeFsDevice(const QString &path);
     void removeMtpDevice(const unsigned devBus, const unsigned devNum);
-
-    QVariant getFirstDevice() const { if (m_devices.size() > 0) { return QVariant::fromValue(m_devices.at(0)); } return QVariant(); }
-    QVariant getDevice(int index) const { if (index >= 0 && index < m_devices.size()) { return QVariant::fromValue(m_devices.at(index)); } return QVariant(); }
-    QVariant getDevices() const { if (m_devices.size() > 0) { return QVariant::fromValue(m_devices); } return QVariant(); }
 };
 
 #endif // DEVICE_MANAGER_H

@@ -194,15 +194,20 @@ class Device: public ShotProvider
     QList <StorageFilesystem *> m_filesystemStorages;
     QList <StorageMtp *> m_mtpStorages;
 
-private slots:
-    void refreshBatteryInfos();
-    void refreshStorageInfos();
-
 Q_SIGNALS:
     void deviceUpdated();
     void stateUpdated();
     void batteryUpdated();
     void storageUpdated();
+
+private slots:
+    void refreshBatteryInfos();
+    void refreshStorageInfos();
+
+public slots:
+    //
+    void workerScanningStarted(const QString &path);
+    void workerScanningFinished(const QString &path);
 
 public:
     Device(const deviceType_e type, const deviceStorage_e storage,
@@ -219,11 +224,6 @@ public:
     bool addStorages_filesystem(ofb_fs_device *device); // TODO
     bool addStorages_mtp(ofb_mtp_device *device);
 
-public slots:
-    //
-    void workerScanningStarted(const QString &path);
-    void workerScanningFinished(const QString &path);
-
     //
     int getDeviceState() const { return m_deviceState; }
     int getDeviceModel() const { return m_deviceModel; }
@@ -237,8 +237,8 @@ public slots:
     QString getUuid() const { return m_uuid; }
 
     //
-    int getStorageCount() const;
-    float getStorageLevel(const int index = 0);
+    Q_INVOKABLE int getStorageCount() const;
+    Q_INVOKABLE float getStorageLevel(const int index = 0);
 
     bool isReadOnly() const;
     int64_t getSpaceTotal();
@@ -259,27 +259,27 @@ public slots:
     float getMtpBatteryLevel(const int index = 0) const;
 
     // Get uuids/names/paths from grid indexes
-    QStringList getSelectedShotsUuids(const QVariant &indexes);
-    QStringList getSelectedShotsNames(const QVariant &indexes);
-    QStringList getSelectedFilesPaths(const QVariant &indexes);
+    Q_INVOKABLE QStringList getSelectedShotsUuids(const QVariant &indexes);
+    Q_INVOKABLE QStringList getSelectedShotsNames(const QVariant &indexes);
+    Q_INVOKABLE QStringList getSelectedFilesPaths(const QVariant &indexes);
 
     // Submit jobs
-    void offloadAll(const QVariant &settings);
-    void offloadSelected(const QString &shot_uuid, const QVariant &settings);
-    void offloadSelection(const QVariant &uuids, const QVariant &settings);
+    Q_INVOKABLE void offloadAll(const QVariant &settings);
+    Q_INVOKABLE void offloadSelected(const QString &shot_uuid, const QVariant &settings);
+    Q_INVOKABLE void offloadSelection(const QVariant &uuids, const QVariant &settings);
 
-    void deleteAll(const QVariant &settings);
-    void deleteSelected(const QString &shot_uuid, const QVariant &settings);
-    void deleteSelection(const QVariant &uuids, const QVariant &settings);
+    Q_INVOKABLE void deleteAll(const QVariant &settings);
+    Q_INVOKABLE void deleteSelected(const QString &shot_uuid, const QVariant &settings);
+    Q_INVOKABLE void deleteSelection(const QVariant &uuids, const QVariant &settings);
 
-    void moveSelected(const QString &shot_uuid, const QVariant &settings);
-    void moveSelection(const QVariant &uuids, const QVariant &settings);
+    Q_INVOKABLE void moveSelected(const QString &shot_uuid, const QVariant &settings);
+    Q_INVOKABLE void moveSelection(const QVariant &uuids, const QVariant &settings);
 
-    void reencodeSelected(const QString &shot_uuid, const QVariant &settings);
-    void reencodeSelection(const QVariant &uuids, const QVariant &settings);
+    Q_INVOKABLE void reencodeSelected(const QString &shot_uuid, const QVariant &settings);
+    Q_INVOKABLE void reencodeSelection(const QVariant &uuids, const QVariant &settings);
 
-    void extractTelemetrySelected(const QString &shot_uuid, const QVariant &settings);
-    void extractTelemetrySelection(const QVariant &uuids, const QVariant &settings);
+    Q_INVOKABLE void extractTelemetrySelected(const QString &shot_uuid, const QVariant &settings);
+    Q_INVOKABLE void extractTelemetrySelection(const QVariant &uuids, const QVariant &settings);
 };
 
 /* ************************************************************************** */

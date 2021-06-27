@@ -55,35 +55,35 @@ class MediaLibrary: public ShotProvider
 Q_SIGNALS:
     void stateUpdated();
 
+public slots:
+    void workerScanningStarted(const QString &path);
+    void workerScanningFinished(const QString &path);
+
 public:
     MediaLibrary();
     ~MediaLibrary();
 
-public slots:
     Q_INVOKABLE void searchMediaDirectories();
     Q_INVOKABLE void searchMediaDirectory(const QString &path);
     Q_INVOKABLE void cleanMediaDirectory(const QString &path);
 
-    void workerScanningStarted(const QString &path);
-    void workerScanningFinished(const QString &path);
-
     // Get uuids/names/paths from grid indexes
-    QStringList getSelectedShotsUuids(const QVariant &indexes);
-    QStringList getSelectedShotsNames(const QVariant &indexes);
-    QStringList getSelectedFilesPaths(const QVariant &indexes);
+    Q_INVOKABLE QStringList getSelectedShotsUuids(const QVariant &indexes);
+    Q_INVOKABLE QStringList getSelectedShotsNames(const QVariant &indexes);
+    Q_INVOKABLE QStringList getSelectedFilesPaths(const QVariant &indexes);
 
     // Submit jobs
-    void deleteSelected(const QString &shot_uuid, const QVariant &settings);
-    void deleteSelection(const QVariant &uuids, const QVariant &settings);
+    Q_INVOKABLE void deleteSelected(const QString &shot_uuid, const QVariant &settings);
+    Q_INVOKABLE void deleteSelection(const QVariant &uuids, const QVariant &settings);
 
-    void moveSelected(const QString &shot_uuid, const QVariant &settings);
-    void moveSelection(const QVariant &uuids, const QVariant &settings);
+    Q_INVOKABLE void moveSelected(const QString &shot_uuid, const QVariant &settings);
+    Q_INVOKABLE void moveSelection(const QVariant &uuids, const QVariant &settings);
 
-    void reencodeSelected(const QString &shot_uuid, const QVariant &settings);
-    void reencodeSelection(const QVariant &uuids, const QVariant &settings);
+    Q_INVOKABLE void reencodeSelected(const QString &shot_uuid, const QVariant &settings);
+    Q_INVOKABLE void reencodeSelection(const QVariant &uuids, const QVariant &settings);
 
-    void extractTelemetrySelected(const QString &shot_uuid, const QVariant &settings);
-    void extractTelemetrySelection(const QVariant &uuids, const QVariant &settings);
+    Q_INVOKABLE void extractTelemetrySelected(const QString &shot_uuid, const QVariant &settings);
+    Q_INVOKABLE void extractTelemetrySelection(const QVariant &uuids, const QVariant &settings);
 };
 
 /* ************************************************************************** */

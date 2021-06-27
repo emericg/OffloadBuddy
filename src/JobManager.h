@@ -314,23 +314,11 @@ public:
                  JobSettingsTelemetry *sett_telemetry = nullptr,
                  JobSettingsEncode *sett_encode = nullptr);
 
-public slots:
     QVariant getTrackedJobs() const { if (m_trackedJobs.size() > 0) { return QVariant::fromValue(m_trackedJobs); } return QVariant(); }
     int getTrackedJobsCount() const { return m_trackedJobs.size(); }
     int getWorkingJobsCount() const { return m_workingJobs; }
 
-    void clearFinishedJobs();
-
-    void jobStarted(int);
-    void jobProgress(int, float);
-    void jobFinished(int, int);
-    //void jobErrored(int, int); // TODO?
-
-    void shotStarted(int, Shot *);
-    void shotFinished(int, Shot *);
-    //void shotErrored(int, Shot *); // TODO?
-
-    void newFile(QString);
+    Q_INVOKABLE void clearFinishedJobs();
 
     Q_INVOKABLE bool fileExists(const QString &path) const
     {
@@ -342,6 +330,17 @@ public slots:
 
         return false;
     }
+public slots:
+    void jobStarted(int);
+    void jobProgress(int, float);
+    void jobFinished(int, int);
+    //void jobErrored(int, int); // TODO?
+
+    void shotStarted(int, Shot *);
+    void shotFinished(int, Shot *);
+    //void shotErrored(int, Shot *); // TODO?
+
+    void newFile(QString);
 };
 
 /* ************************************************************************** */

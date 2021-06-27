@@ -87,7 +87,6 @@ public:
     MediaDirectory(const QString &path, int content, bool primary = false, QObject *parent = nullptr);
     ~MediaDirectory();
 
-public slots:
     QString getPath() { return m_path; }
     void setPath(const QString &path);
 
