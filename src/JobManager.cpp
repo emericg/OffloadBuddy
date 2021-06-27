@@ -302,11 +302,11 @@ bool JobManager::addJobs(JobType type, Device *dev, MediaLibrary *lib,
             m_job_cpu = new JobWorkerAsync();
 
             connect(m_job_cpu, SIGNAL(jobStarted(int)), this, SLOT(jobStarted(int)));
-            connect(m_job_cpu, SIGNAL(jobProgress(int, float)), this, SLOT(jobProgress(int, float)));
-            connect(m_job_cpu, SIGNAL(jobFinished(int, int)), this, SLOT(jobFinished(int, int)));
+            connect(m_job_cpu, SIGNAL(jobProgress(int,float)), this, SLOT(jobProgress(int,float)));
+            connect(m_job_cpu, SIGNAL(jobFinished(int,int)), this, SLOT(jobFinished(int,int)));
 
-            connect(m_job_cpu, SIGNAL(shotStarted(int, Shot *)), this, SLOT(shotStarted(int, Shot *)));
-            connect(m_job_cpu, SIGNAL(shotFinished(int, Shot *)), this, SLOT(shotFinished(int, Shot *)));
+            connect(m_job_cpu, SIGNAL(shotStarted(int,Shot*)), this, SLOT(shotStarted(int,Shot*)));
+            connect(m_job_cpu, SIGNAL(shotFinished(int,Shot*)), this, SLOT(shotFinished(int,Shot*)));
             connect(m_job_cpu, SIGNAL(fileProduced(QString)), this, SLOT(newFile(QString)));
         }
 
@@ -349,11 +349,11 @@ bool JobManager::addJobs(JobType type, Device *dev, MediaLibrary *lib,
 
                     connect(m_selected_worker, SIGNAL(startWorking()), m_selected_worker, SLOT(work()));
 
-                    connect(m_selected_worker, SIGNAL(jobProgress(int, float)), this, SLOT(jobProgress(int, float)));
+                    connect(m_selected_worker, SIGNAL(jobProgress(int,float)), this, SLOT(jobProgress(int,float)));
                     connect(m_selected_worker, SIGNAL(jobStarted(int)), this, SLOT(jobStarted(int)));
-                    connect(m_selected_worker, SIGNAL(jobFinished(int, int)), this, SLOT(jobFinished(int, int)));
-                    connect(m_selected_worker, SIGNAL(shotStarted(int, Shot *)), this, SLOT(shotStarted(int, Shot *)));
-                    connect(m_selected_worker, SIGNAL(shotFinished(int, Shot *)), this, SLOT(shotFinished(int, Shot *)));
+                    connect(m_selected_worker, SIGNAL(jobFinished(int,int)), this, SLOT(jobFinished(int,int)));
+                    connect(m_selected_worker, SIGNAL(shotStarted(int,Shot*)), this, SLOT(shotStarted(int,Shot*)));
+                    connect(m_selected_worker, SIGNAL(shotFinished(int,Shot*)), this, SLOT(shotFinished(int,Shot*)));
                     connect(m_selected_worker, SIGNAL(fileProduced(QString)), this, SLOT(newFile(QString)));
 
                     m_selected_worker->thread->start();

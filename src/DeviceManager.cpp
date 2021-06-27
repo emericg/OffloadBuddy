@@ -198,13 +198,13 @@ void DeviceManager::searchDevices()
             connect(m_deviceScannerThread, SIGNAL(started()), m_deviceScanner, SLOT(searchDevices()));
             connect(this, SIGNAL(startDeviceScanning()), m_deviceScanner, SLOT(searchDevices()));
 
-            connect(m_deviceScanner, SIGNAL(fsDeviceFound(QString, gopro_device_infos *)), this, SLOT(addFsDeviceGoPro(QString, gopro_device_infos *)));
-            connect(m_deviceScanner, SIGNAL(fsDeviceFound(QString, generic_device_infos *)), this, SLOT(addFsDeviceGeneric(QString, generic_device_infos *)));
-            connect(m_deviceScanner, SIGNAL(vfsDeviceFound(ofb_vfs_device *)), this, SLOT(addVfsDevice(ofb_vfs_device *)));
-            connect(m_deviceScanner, SIGNAL(mtpDeviceFound(ofb_mtp_device *)), this, SLOT(addMtpDevice(ofb_mtp_device *)));
+            connect(m_deviceScanner, SIGNAL(fsDeviceFound(QString,gopro_device_infos*)), this, SLOT(addFsDeviceGoPro(QString,gopro_device_infos*)));
+            connect(m_deviceScanner, SIGNAL(fsDeviceFound(QString,generic_device_infos*)), this, SLOT(addFsDeviceGeneric(QString,generic_device_infos*)));
+            connect(m_deviceScanner, SIGNAL(vfsDeviceFound(ofb_vfs_device*)), this, SLOT(addVfsDevice(ofb_vfs_device*)));
+            connect(m_deviceScanner, SIGNAL(mtpDeviceFound(ofb_mtp_device*)), this, SLOT(addMtpDevice(ofb_mtp_device*)));
 
-            connect(m_deviceScanner, SIGNAL(fsDeviceRemoved(const QString &)), this, SLOT(removeFsDevice(const QString &)));
-            connect(m_deviceScanner, SIGNAL(mtpDeviceRemoved(const unsigned, const unsigned)), this, SLOT(removeMtpDevice(const unsigned, const unsigned)));
+            connect(m_deviceScanner, SIGNAL(fsDeviceRemoved(QString)), this, SLOT(removeFsDevice(QString)));
+            connect(m_deviceScanner, SIGNAL(mtpDeviceRemoved(uint,uint)), this, SLOT(removeMtpDevice(uint,uint)));
 
             connect(m_deviceScanner, SIGNAL(scanningStarted()), this, SLOT(workerScanningStarted()));
             connect(m_deviceScanner, SIGNAL(scanningFinished()), this, SLOT(workerScanningFinished()));

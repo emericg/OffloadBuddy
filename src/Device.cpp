@@ -151,7 +151,7 @@ bool Device::addStorages_mtp(ofb_mtp_device *device)
             fs->moveToThread(thread);
 
             connect(thread, SIGNAL(started()), fs, SLOT(scanMtpDevice()));
-            connect(fs, SIGNAL(fileFound(ofb_file *, ofb_shot *)), m_shotModel, SLOT(addFile(ofb_file *, ofb_shot *)));
+            connect(fs, SIGNAL(fileFound(ofb_file*,ofb_shot*)), m_shotModel, SLOT(addFile(ofb_file*,ofb_shot*)));
             connect(fs, SIGNAL(scanningStarted(QString)), this, SLOT(workerScanningStarted(QString)));
             connect(fs, SIGNAL(scanningFinished(QString)), this, SLOT(workerScanningFinished(QString)));
 
@@ -226,7 +226,7 @@ bool Device::addStorage_filesystem(const QString &path)
             fs->moveToThread(thread);
 
             connect(thread, SIGNAL(started()), fs, SLOT(scanFilesystemDCIM()));
-            connect(fs, SIGNAL(fileFound(ofb_file *, ofb_shot *)), m_shotModel, SLOT(addFile(ofb_file *, ofb_shot *)));
+            connect(fs, SIGNAL(fileFound(ofb_file*,ofb_shot*)), m_shotModel, SLOT(addFile(ofb_file*,ofb_shot*)));
             connect(fs, SIGNAL(scanningStarted(QString)), this, SLOT(workerScanningStarted(QString)));
             connect(fs, SIGNAL(scanningFinished(QString)), this, SLOT(workerScanningFinished(QString)));
 

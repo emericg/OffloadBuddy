@@ -71,7 +71,7 @@ void MediaLibrary::scanMediaDirectory(MediaDirectory *md)
                 fs->moveToThread(thread);
 
                 connect(thread, SIGNAL(started()), fs, SLOT(scanFilesystem()));
-                connect(fs, SIGNAL(fileFound(ofb_file *, ofb_shot *)), m_shotModel, SLOT(addFile(ofb_file *, ofb_shot *)));
+                connect(fs, SIGNAL(fileFound(ofb_file*,ofb_shot*)), m_shotModel, SLOT(addFile(ofb_file*,ofb_shot*)));
                 connect(fs, SIGNAL(scanningStarted(QString)), this, SLOT(workerScanningStarted(QString)));
                 connect(fs, SIGNAL(scanningFinished(QString)), this, SLOT(workerScanningFinished(QString)));
 
