@@ -625,7 +625,7 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             height: 2
-            color: Theme.colorHighcontrast
+            color: Theme.colorHighContrast
         }
     }
 

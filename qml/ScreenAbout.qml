@@ -33,10 +33,10 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
 
             text: qsTr("ABOUT") + "  OffloadBuddy"
-            verticalAlignment: Text.AlignVCenter
             font.bold: true
             font.pixelSize: Theme.fontSizeHeader
             color: Theme.colorHeaderContent
+            verticalAlignment: Text.AlignVCenter
         }
 
         Text {
@@ -45,7 +45,9 @@ Item {
             anchors.leftMargin: 24
             anchors.bottom: textHeader.bottom
             anchors.bottomMargin: 6
-            text: qsTr("v%1  /  %2  /  built %3").arg(utilsApp.appVersion()).arg(utilsApp.appBuildMode()).arg(utilsApp.appBuildDate())
+
+            text: qsTr("version %1  /  %2  /  built on %3").arg(utilsApp.appVersion()).arg(utilsApp.appBuildMode()).arg(utilsApp.appBuildDate())
+            textFormat: Text.PlainText
             font.bold: true
             font.pixelSize: Theme.fontSizeContentSmall
             color: Theme.colorHeaderContent
@@ -72,7 +74,7 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             height: 2
-            color: Theme.colorHighcontrast
+            color: Theme.colorHighContrast
         }
     }
 

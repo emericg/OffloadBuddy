@@ -207,6 +207,7 @@ Item {
         plugin: Plugin {
             //name: "mapboxgl"
             preferred: ["mapboxgl", "osm", "esri"]
+            //PluginParameter { name: "osm.mapping.highdpi_tiles"; value: "true"; }
         }
         copyrightsVisible: false
 
@@ -235,7 +236,7 @@ Item {
             anchors.fill: parent
             onWheel: {
                 if (wheel.angleDelta.y < 0) zoomOut()
-                else zoomIn()
+                else if (wheel.angleDelta.y > 0) zoomIn()
             }
         }
 
@@ -352,7 +353,7 @@ Item {
                 id: mapScaleText
                 anchors.centerIn: parent
                 text: "100m"
-                color:"#555"
+                color: "#555"
                 font.pixelSize: 12
             }
 
@@ -360,12 +361,12 @@ Item {
                 width: 2; height: 6;
                 anchors.left: parent.left
                 anchors.bottom: parent.bottom
-                color:"#555"
+                color: "#555"
             }
             Rectangle {
                 width: parent.width; height: 2;
                 anchors.bottom: parent.bottom
-                color:"#555"
+                color: "#555"
             }
             Rectangle {
                 width: 2; height: 6;
