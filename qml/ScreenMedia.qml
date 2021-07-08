@@ -116,16 +116,19 @@ Item {
         if (event.key === Qt.Key_Space) {
             if (screenMedia.shot) {
                 if (screenMedia.shot.fileType === Shared.FILE_VIDEO) {
-                    event.accepted = true;
-                    contentOverview.setPlayPause();
+                    event.accepted = true
+                    contentOverview.setPlayPause()
                 }
             }
-        } else if (event.key === Qt.Key_Backspace) {
-            event.accepted = true;
-            screenMedia.back();
+        } else if (event.key === Qt.Key_F9) {
+            event.accepted = true
+            contentOverview.toggleInfoPanel()
+        }  else if (event.key === Qt.Key_Backspace) {
+            event.accepted = true
+            screenMedia.back()
         } else if (event.key === Qt.Key_Delete) {
-            event.accepted = true;
-            contentOverview.openDeletePopup();
+            event.accepted = true
+            contentOverview.openDeletePopup()
         }
     }
 

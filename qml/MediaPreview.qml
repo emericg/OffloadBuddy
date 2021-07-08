@@ -194,7 +194,7 @@ Item {
         overlayCrop.editing = !overlayCrop.editing
     }
 
-    function toggleFullScreen() {
+    function toggleInfoPanel() {
         if (typeof shot === "undefined" || !shot) return
 
         // Check if fullscreen is necessary (preview is already maxed out)
@@ -699,7 +699,7 @@ Item {
             }
             onDoubleClicked: {
                 if (pressedButtons & Qt.LeftButton) {
-                    toggleFullScreen()
+                    toggleInfoPanel()
                 }
             }
             onEntered: { hovered = true; }
@@ -1251,7 +1251,7 @@ Item {
 
                     source: isFullScreen ? "qrc:/assets/icons_material/baseline-fullscreen_exit-24px.svg"
                                          : "qrc:/assets/icons_material/baseline-fullscreen-24px.svg"
-                    onClicked: toggleFullScreen()
+                    onClicked: toggleInfoPanel()
                 }
             }
         }

@@ -17,6 +17,7 @@ Item {
     function toggleTrim() { mediaPreview.toggleTrim() }
     function toggleTransform() { mediaPreview.toggleTransform() }
     function toggleCrop() { mediaPreview.toggleCrop() }
+    function toggleInfoPanel() { mediaPreview.toggleInfoPanel() }
 
     function updateOverview() {
         date.text = shot.date.toUTCString()
