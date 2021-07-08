@@ -24,7 +24,8 @@ Item {
         // No saved state? Initialize it!
         if (!(deviceSavedStateList[currentDevice.uuid])) {
             deviceSavedStateList[currentDevice.uuid] = ({ mainState: "stateMediaGrid",
-                                                          orderBy: 0,
+                                                          orderBy: settingsManager.deviceSortRole,
+                                                          orderByAscDesc: settingsManager.deviceSortOrder,
                                                           filterBy: 0,
                                                           thumbSize: settingsManager.thumbSize,
                                                           thumbFormat: settingsManager.thumbFormat,

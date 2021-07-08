@@ -139,12 +139,12 @@ QString JobManager::getandmakeDestination(Shot *s, Device *d, MediaDirectory *md
 
         // Destination directory and its subdirectories
 
-        if (st->getContentHierarchy() >= HIERARCHY_DATE)
+        if (st->getContentHierarchy() >= StorageUtils::HierarchyDate)
         {
             destDir += s->getDate().toString("yyyy-MM-dd");
             destDir += QDir::separator();
         }
-        if (st->getContentHierarchy() >= HIERARCHY_DATE_DEVICE)
+        if (st->getContentHierarchy() >= StorageUtils::HierarchyDateDevice)
         {
             if (d)
             {

@@ -115,6 +115,18 @@ bool SettingsManager::readSettings()
         if (settings.contains("global/moveToTrash"))
             m_moveToTrash = settings.value("global/moveToTrash").toBool();
 
+        if (settings.contains("global/librarySortRole"))
+            m_librarySortRole = settings.value("global/librarySortRole").toUInt();
+
+        if (settings.contains("global/librarySortOrder"))
+            m_librarySortOrder = settings.value("global/librarySortOrder").toUInt();
+
+        if (settings.contains("global/deviceOrderBy"))
+            m_deviceSortRole = settings.value("global/deviceOrderBy").toUInt();
+
+        if (settings.contains("global/deviceOrderByDirection"))
+            m_deviceSortOrder = settings.value("global/deviceOrderByDirection").toUInt();
+
         status = true;
     }
     else
@@ -147,6 +159,10 @@ bool SettingsManager::writeSettings()
         settings.setValue("global/thumbFormat", m_thumbFormat);
         settings.setValue("global/thumbSize", m_thumbSize);
         settings.setValue("global/moveToTrash", m_moveToTrash);
+        settings.setValue("global/libraryOrderBy", m_librarySortRole);
+        settings.setValue("global/libraryOrderByDirection", m_librarySortOrder);
+        settings.setValue("global/deviceOrderBy", m_deviceSortRole);
+        settings.setValue("global/deviceOrderByDirection", m_deviceSortOrder);
 
         if (settings.status() == QSettings::NoError)
         {
@@ -312,5 +328,47 @@ void SettingsManager::setMtpFullScan(bool value)
     if (m_mtpFullScan != value)
     {
         m_mtpFullScan = value;
+        writeSettings();
+        Q_EMIT mtpFullScanChanged();
+    }
+}
+
+void SettingsManager::setLibrarySortRole(unsigned value)
+{
+    if (m_librarySortRole != value)
+    {
+        m_librarySortRole = value;
+        writeSettings();
+        Q_EMIT librarySortChanged();
+    }
+}
+
+void SettingsManager::setLibrarySortOrder(unsigned value)
+{
+    if (m_librarySortOrder != value)
+    {
+        m_librarySortOrder = value;
+        writeSettings();
+        Q_EMIT librarySortChanged();
+    }
+}
+
+void SettingsManager::setDeviceSortRole(unsigned value)
+{
+    if (m_deviceSortRole != value)
+    {
+        m_deviceSortRole = value;
+        writeSettings();
+        Q_EMIT deviceSortChanged();
+    }
+}
+
+void SettingsManager::setDeviceSortOrder(unsigned value)
+{
+    if (m_deviceSortOrder != value)
+    {
+        m_deviceSortOrder = value;
+        writeSettings();
+        Q_EMIT deviceSortChanged();
     }
 }

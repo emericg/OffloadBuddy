@@ -22,22 +22,17 @@
 #define UTILS_ENUMS_H
 /* ************************************************************************** */
 
-typedef enum contentTypes_e
+typedef enum deviceType_e
 {
-    CONTENT_ALL = 0,
-    CONTENT_VIDEOS,
-    CONTENT_PICTURES,
+    DEVICE_UNKNOWN = 0,
 
-} contentTypes_e;
+    DEVICE_COMPUTER,
+    DEVICE_NETWORK,
+    DEVICE_SMARTPHONE,
+    DEVICE_CAMERA,
+    DEVICE_ACTIONCAM,
 
-typedef enum contentHierarchy_e
-{
-    HIERARCHY_DATE = 0,
-    HIERARCHY_DATE_DEVICE,
-
-} contentHierarchy_e;
-
-/* ************************************************************************** */
+} deviceType_e;
 
 typedef enum deviceStorage_e
 {
@@ -53,18 +48,6 @@ typedef enum deviceState_e
     DEVICE_STATE_SCANNING = 1,
 
 } deviceState_e;
-
-typedef enum deviceType_e
-{
-    DEVICE_UNKNOWN = 0,
-
-    DEVICE_COMPUTER,
-    DEVICE_NETWORK,
-    DEVICE_SMARTPHONE,
-    DEVICE_CAMERA,
-    DEVICE_ACTIONCAM,
-
-} deviceType_e;
 
 typedef enum deviceModel_e
 {
@@ -167,14 +150,6 @@ namespace Shared
         SHOT_PICTURE_NIGHTLAPSE,
     };
     Q_ENUM_NS(ShotType)
-
-    enum StorageType
-    {
-        STORAGE_FILESYSTEM = 0,
-        STORAGE_VIRTUAL_FILESYSTEM = 1,
-        STORAGE_MTP = 2,
-    };
-    Q_ENUM_NS(StorageType)
 
     enum ShotState
     {

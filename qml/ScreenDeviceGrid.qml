@@ -395,9 +395,11 @@ Item {
                     ListElement { text: qsTr("Date"); }
                     ListElement { text: qsTr("Duration"); }
                     ListElement { text: qsTr("Shot type"); }
-                    //ListElement { text: qsTr("GPS location"); }
                     ListElement { text: qsTr("Name"); }
                     ListElement { text: qsTr("Folder"); }
+                    //ListElement { text: qsTr("Size"); }
+                    //ListElement { text: qsTr("GPS location"); }
+                    //ListElement { text: qsTr("Camera"); }
                 }
 
                 property bool cbinit: false
@@ -407,18 +409,26 @@ Item {
                         shotsView.currentIndex = -1
                         actionMenu.visible = false
 
-                        if (currentIndex == 0)
+                        var currentName = cbShotsOrderby.get(currentIndex).text
+                        if (currentName === qsTr("Date")) {
+                            settingsManager.deviceSortRole = 0 // SettingsUtils.OrderByDate
                             currentDevice.orderByDate()
-                        else if (currentIndex == 1)
+                        } else if (currentName === qsTr("Duration")) {
+                            settingsManager.deviceSortRole = 1 // SettingsUtils.OrderByDuration
                             currentDevice.orderByDuration()
-                        else if (currentIndex == 2)
+                        } else if (currentName === qsTr("Shot type")) {
+                            settingsManager.deviceSortRole = 2 // SettingsUtils.OrderByShotType
                             currentDevice.orderByShotType()
-                        else if (currentIndex == 3)
+                        } else if (currentName === qsTr("Name")) {
+                            settingsManager.deviceSortRole = 3 // SettingsUtils.OrderByName
                             currentDevice.orderByName()
-                        else if (currentIndex == 4)
+                        } else if (currentName === qsTr("Folder")) {
+                            settingsManager.deviceSortRole = 4 // SettingsUtils.OrderByFilePath
                             currentDevice.orderByPath()
+                        }
                     } else {
                         cbinit = true
+                        currentIndex = settingsManager.deviceOrderBy
                     }
 
                     displayText = qsTr("Order by:") + " " + cbShotsOrderby.get(currentIndex).text
@@ -433,20 +443,18 @@ Item {
                     width: parent.height
                     height: parent.height
 
-                    rotation: ascDesc ? 180 : 0
+                    rotation: settingsManager.deviceSortOrder ? 0 : 180
                     iconColor: Theme.colorComponentContent
                     highlightMode: "color"
                     highlightColor: Theme.colorSubText
                     source: "qrc:/assets/icons_material/baseline-filter_list-24px.svg"
 
-                    property bool ascDesc: false
-
                     onClicked: {
-                        if (ascDesc) {
-                            ascDesc = false
+                        if (settingsManager.deviceSortOrder === 0) {
+                            settingsManager.deviceSortOrder = 1
                             currentDevice.orderByDesc()
                         } else {
-                            ascDesc = true
+                            settingsManager.deviceSortOrder = 0
                             currentDevice.orderByAsc()
                         }
                     }

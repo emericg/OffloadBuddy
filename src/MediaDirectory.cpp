@@ -20,6 +20,7 @@
  */
 
 #include "MediaDirectory.h"
+#include "StorageManager.h"
 #include "Shot.h"
 
 #include <limits>
@@ -56,7 +57,7 @@ MediaDirectory::MediaDirectory(QObject *parent)
     if (path_dir.exists())
     {
         setPath(path);
-        setContent(CONTENT_ALL);
+        setContent(StorageUtils::ContentAll);
         m_enabled = true;
         m_primary = true;
 
@@ -188,9 +189,9 @@ bool MediaDirectory::isAvailableFor(unsigned shotType, int64_t shotSize)
     {
         if (shotSize < getSpaceAvailable())
         {
-            if ((shotType == Shared::SHOT_UNKNOWN && m_content_type == CONTENT_ALL) ||
-                (shotType < Shared::SHOT_PICTURE && (m_content_type == CONTENT_VIDEOS || m_content_type == CONTENT_ALL)) ||
-                (shotType >= Shared::SHOT_PICTURE && (m_content_type == CONTENT_PICTURES || m_content_type == CONTENT_ALL)))
+            if ((shotType == Shared::SHOT_UNKNOWN && m_content_type == StorageUtils::ContentAll) ||
+                (shotType < Shared::SHOT_PICTURE && (m_content_type == StorageUtils::ContentAll || m_content_type == StorageUtils::ContentVideo)) ||
+                (shotType >= Shared::SHOT_PICTURE && (m_content_type == StorageUtils::ContentAll || m_content_type == StorageUtils::ContentPictures)))
             {
                 available = true;
             }

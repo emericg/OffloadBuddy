@@ -24,6 +24,7 @@
 #include "FileScanner.h"
 #include "JobManager.h"
 #include "StorageManager.h"
+#include "SettingsManager.h"
 
 #include <QMap>
 #include <QJSValue>
@@ -54,7 +55,7 @@ Device::Device(const deviceType_e type, const deviceStorage_e storage,
     m_uuid = QUuid::createUuid().toString();
 
     connect(&m_updateStorageTimer, &QTimer::timeout, this, &Device::refreshStorageInfos);
-    m_updateStorageTimer.setInterval(10 * 1000);
+    m_updateStorageTimer.setInterval(15 * 1000);
     m_updateStorageTimer.start();
 
     if (m_deviceStorage == STORAGE_MTP)
@@ -62,6 +63,46 @@ Device::Device(const deviceType_e type, const deviceStorage_e storage,
         connect(&m_updateBatteryTimer, &QTimer::timeout, this, &Device::refreshBatteryInfos);
         m_updateBatteryTimer.setInterval(60 * 1000);
         m_updateBatteryTimer.start();
+    }
+
+    if (m_shotFilter)
+    {
+        SettingsManager *st = SettingsManager::getInstance();
+        int sortRoleSettings = st->getDeviceSortRole();
+        int sortRole = ShotModel::DateRole;
+
+        switch (sortRoleSettings)
+        {
+            case SettingsUtils::OrderByCamera:
+                sortRole = ShotModel::CameraRole;
+                break;
+            case SettingsUtils::OrderByGps:
+                sortRole = ShotModel::GpsRole;
+                break;
+            case SettingsUtils::OrderBySize:
+                sortRole = ShotModel::SizeRole;
+                break;
+            case SettingsUtils::OrderByFilePath:
+                sortRole = ShotModel::PathRole;
+                break;
+            case SettingsUtils::OrderByName:
+                sortRole = ShotModel::NameRole;
+                break;
+            case SettingsUtils::OrderByShotType:
+                sortRole = ShotModel::ShotTypeRole;
+                break;
+            case SettingsUtils::OrderByDuration:
+                sortRole = ShotModel::DurationRole;
+                break;
+            default:
+            case SettingsUtils::OrderByDate:
+                sortRole = ShotModel::DateRole;
+                break;
+        }
+
+        m_sortOrder = (Qt::SortOrder)st->getDeviceSortOrder();
+        m_shotFilter->setSortRole(sortRole);
+        m_shotFilter->sort(0, m_sortOrder);
     }
 }
 
@@ -257,6 +298,13 @@ void Device::workerScanningFinished(const QString &path)
 {
     //qDebug() << "> Device::workerScanningFinished(" << path << ")";
     Q_UNUSED(path)
+
+    // Update sort
+    if (m_shotFilter)
+    {
+        m_shotFilter->sort(0, m_sortOrder);
+        m_shotFilter->invalidate();
+    }
 
     m_deviceState = DEVICE_STATE_IDLE;
     emit stateUpdated();

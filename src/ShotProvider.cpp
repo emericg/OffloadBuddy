@@ -31,8 +31,6 @@ ShotProvider::ShotProvider()
     if (m_shotFilter)
     {
         m_shotFilter->setSourceModel(m_shotModel);
-        m_shotFilter->setSortRole(ShotModel::DateRole);
-        m_shotFilter->sort(0, m_sortOrder);
     }
 }
 

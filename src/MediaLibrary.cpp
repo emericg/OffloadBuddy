@@ -23,8 +23,8 @@
 #include "MediaDirectory.h"
 #include "FileScanner.h"
 #include "JobManager.h"
-#include "SettingsManager.h"
 #include "StorageManager.h"
+#include "SettingsManager.h"
 
 #include <QMap>
 #include <QJSValue>
@@ -43,6 +43,46 @@ MediaLibrary::MediaLibrary()
     {
         connect(sm, SIGNAL(directoryAdded(QString)), this, SLOT(searchMediaDirectory(QString)));
         connect(sm, SIGNAL(directoryRemoved(QString)), this, SLOT(cleanMediaDirectory(QString)));
+    }
+
+    if (m_shotFilter)
+    {
+        SettingsManager *st = SettingsManager::getInstance();
+        int sortRoleSettings = st->getLibrarySortRole();
+        int sortRole = ShotModel::DateRole;
+
+        switch (sortRoleSettings)
+        {
+            case SettingsUtils::OrderByCamera:
+                sortRole = ShotModel::CameraRole;
+                break;
+            case SettingsUtils::OrderByGps:
+                sortRole = ShotModel::GpsRole;
+                break;
+            case SettingsUtils::OrderBySize:
+                sortRole = ShotModel::SizeRole;
+                break;
+            case SettingsUtils::OrderByFilePath:
+                sortRole = ShotModel::PathRole;
+                break;
+            case SettingsUtils::OrderByName:
+                sortRole = ShotModel::NameRole;
+                break;
+            case SettingsUtils::OrderByShotType:
+                sortRole = ShotModel::ShotTypeRole;
+                break;
+            case SettingsUtils::OrderByDuration:
+                sortRole = ShotModel::DurationRole;
+                break;
+            default:
+            case SettingsUtils::OrderByDate:
+                sortRole = ShotModel::DateRole;
+                break;
+        }
+
+        m_sortOrder = (Qt::SortOrder)st->getLibrarySortOrder();
+        m_shotFilter->setSortRole(sortRole);
+        m_shotFilter->sort(0, m_sortOrder);
     }
 }
 
@@ -191,6 +231,13 @@ void MediaLibrary::workerScanningFinished(const QString &path)
                 dd->setScanning(false);
             }
         }
+    }
+
+    // Update sort
+    if (m_shotFilter)
+    {
+        m_shotFilter->sort(0, m_sortOrder);
+        m_shotFilter->invalidate();
     }
 
     m_libraryScan--;

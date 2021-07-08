@@ -30,6 +30,25 @@
 
 /* ************************************************************************** */
 
+namespace SettingsUtils
+{
+    Q_NAMESPACE
+
+    enum OrderBy
+    {
+        OrderByDate = 0,
+        OrderByDuration,
+        OrderByShotType,
+        OrderByName,
+        OrderByFilePath,
+        OrderBySize,
+        OrderByGps,
+        OrderByCamera,
+    };
+
+    Q_ENUM_NS(OrderBy)
+}
+
 /*!
  * \brief The SettingsManager class
  *
@@ -60,6 +79,11 @@ class SettingsManager: public QObject
     Q_PROPERTY(bool moveToTrash READ getMoveToTrash WRITE setMoveToTrash NOTIFY moveToTrashChanged)
     Q_PROPERTY(bool mtpFullScan READ getMtpFullScan WRITE setMtpFullScan NOTIFY mtpFullScanChanged)
 
+    Q_PROPERTY(uint librarySortRole READ getLibrarySortRole WRITE setLibrarySortRole NOTIFY librarySortChanged)
+    Q_PROPERTY(uint librarySortOrder READ getLibrarySortOrder WRITE setLibrarySortOrder NOTIFY librarySortChanged)
+    Q_PROPERTY(uint deviceOrderBy READ getDeviceSortRole WRITE setDeviceSortRole NOTIFY deviceSortChanged)
+    Q_PROPERTY(uint deviceOrderByDirection READ getDeviceSortOrder WRITE setDeviceSortOrder NOTIFY deviceSortChanged)
+
     // Application window
     QSize m_appSize;
     QSize m_appPosition;
@@ -83,6 +107,10 @@ class SettingsManager: public QObject
     unsigned m_thumbSize = 2;
     bool m_moveToTrash = false;
     bool m_mtpFullScan = false;
+    unsigned m_librarySortRole = SettingsUtils::OrderByDate;
+    unsigned m_librarySortOrder = 0;
+    unsigned m_deviceSortRole = SettingsUtils::OrderByDate;
+    unsigned m_deviceSortOrder = 0;
 
     // Singleton
     static SettingsManager *instance;
@@ -109,6 +137,8 @@ Q_SIGNALS:
     void thumbSizeChanged();
     void moveToTrashChanged();
     void mtpFullScanChanged();
+    void librarySortChanged();
+    void deviceSortChanged();
 
 public:
     static SettingsManager *getInstance();
@@ -161,6 +191,18 @@ public:
 
     bool getMtpFullScan() const { return m_mtpFullScan; }
     void setMtpFullScan(bool value);
+
+    unsigned getLibrarySortRole() const { return m_librarySortRole; }
+    void setLibrarySortRole(unsigned order);
+
+    unsigned getLibrarySortOrder() const { return m_librarySortOrder; }
+    void setLibrarySortOrder(unsigned order);
+
+    unsigned getDeviceSortRole() const { return m_deviceSortRole; }
+    void setDeviceSortRole(unsigned order);
+
+    unsigned getDeviceSortOrder() const { return m_deviceSortOrder; }
+    void setDeviceSortOrder(unsigned order);
 };
 
 /* ************************************************************************** */

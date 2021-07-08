@@ -35,6 +35,47 @@ class QStorageInfo;
 
 /* ************************************************************************** */
 
+namespace StorageUtils
+{
+    Q_NAMESPACE
+
+    enum StorageType
+    {
+        StorageUnknown = 0,
+        StorageFilesystem,
+        StorageVirtualFilesystem,
+        StorageNetworkFilesystem,
+        StorageMtp,
+    };
+
+    enum StorageContent
+    {
+        ContentAll = 0,
+        ContentAudio,
+        ContentVideo,
+        ContentPictures,
+    };
+
+    enum StorageHierarchy
+    {
+        HierarchyDate = 0,
+        HierarchyDateDevice,
+    };
+
+    enum DeviceType
+    {
+        DeviceUnknown = 0,
+        DeviceActionCamera,
+        DeviceCamera,
+        DeviceMobile,
+        DeviceComputer,
+    };
+
+    Q_ENUM_NS(StorageType)
+    Q_ENUM_NS(StorageContent)
+    Q_ENUM_NS(StorageHierarchy)
+}
+
 /*!
  * \brief The StorageManager class
  */
