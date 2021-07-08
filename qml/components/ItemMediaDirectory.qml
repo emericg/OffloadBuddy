@@ -228,8 +228,8 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 text: qsTr("Enabled")
 
-                checked: directory.directoryEnabled
-                onClicked: directory.directoryEnabled = checked
+                checked: directory.enabled
+                onClicked: directory.enabled = checked
             }
 
             Text {

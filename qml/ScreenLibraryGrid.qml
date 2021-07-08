@@ -176,8 +176,10 @@ Item {
                 cbMediaDirectories.append( { text: qsTr("ALL media directories") } );
 
                 for (var child in storageManager.directoriesList) {
-                    if (storageManager.directoriesList[child].available)
+                    if (storageManager.directoriesList[child].available &&
+                        storageManager.directoriesList[child].enabled) {
                         cbMediaDirectories.append( { "text": storageManager.directoriesList[child].directoryPath } )
+                    }
                 }
             }
 

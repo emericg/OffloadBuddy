@@ -93,6 +93,8 @@ bool StorageManager::readSettings()
                 emit directoriesUpdated();
 
                 connect(d, SIGNAL(saveData()), this, SLOT(directoryModified()));
+                connect(d, SIGNAL(enabledUpdated()), this, SIGNAL(directoriesUpdated()));
+                connect(d, SIGNAL(availableUpdated()), this, SIGNAL(directoriesUpdated()));
             }
         }
 
@@ -198,6 +200,8 @@ void StorageManager::createDefaultDirectory()
         emit directoriesUpdated();
 
         connect(d, SIGNAL(saveData()), this, SLOT(directoryModified()));
+        connect(d, SIGNAL(enabledUpdated()), this, SIGNAL(directoriesUpdated()));
+        connect(d, SIGNAL(availableUpdated()), this, SIGNAL(directoriesUpdated()));
         directoryModified();
     }
 /*
@@ -239,6 +243,8 @@ void StorageManager::addDirectory(const QString &path)
             emit directoriesUpdated();
 
             connect(dd, SIGNAL(saveData()), this, SLOT(directoryModified()));
+            connect(dd, SIGNAL(enabledUpdated()), this, SIGNAL(directoriesUpdated()));
+            connect(dd, SIGNAL(availableUpdated()), this, SIGNAL(directoriesUpdated()));
             directoryModified();
         }
     }

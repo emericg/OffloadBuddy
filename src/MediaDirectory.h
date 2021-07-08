@@ -46,10 +46,10 @@ class MediaDirectory: public QObject
     Q_PROPERTY(QString directoryPath READ getPath WRITE setPath NOTIFY directoryUpdated)
     Q_PROPERTY(int directoryContent READ getContent WRITE setContent NOTIFY directoryUpdated)
     Q_PROPERTY(int directoryHierarchy READ getHierarchy WRITE setHierarchy NOTIFY directoryUpdated)
-    Q_PROPERTY(bool directoryEnabled READ isEnabled WRITE setEnabled NOTIFY enabledUpdated)
 
-    Q_PROPERTY(bool primary READ isPrimary NOTIFY primaryUpdated)
+    Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledUpdated)
     Q_PROPERTY(bool available READ isAvailable NOTIFY availableUpdated)
+    Q_PROPERTY(bool primary READ isPrimary NOTIFY primaryUpdated)
     Q_PROPERTY(bool scanning READ isScanning NOTIFY scanningUpdated)
     Q_PROPERTY(bool readOnly READ isReadOnly NOTIFY storageUpdated)
     Q_PROPERTY(bool largeFileSupport READ hasLFS NOTIFY storageUpdated)
