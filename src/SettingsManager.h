@@ -81,8 +81,8 @@ class SettingsManager: public QObject
 
     Q_PROPERTY(uint librarySortRole READ getLibrarySortRole WRITE setLibrarySortRole NOTIFY librarySortChanged)
     Q_PROPERTY(uint librarySortOrder READ getLibrarySortOrder WRITE setLibrarySortOrder NOTIFY librarySortChanged)
-    Q_PROPERTY(uint deviceOrderBy READ getDeviceSortRole WRITE setDeviceSortRole NOTIFY deviceSortChanged)
-    Q_PROPERTY(uint deviceOrderByDirection READ getDeviceSortOrder WRITE setDeviceSortOrder NOTIFY deviceSortChanged)
+    Q_PROPERTY(uint deviceSortRole READ getDeviceSortRole WRITE setDeviceSortRole NOTIFY deviceSortChanged)
+    Q_PROPERTY(uint deviceSortOrder READ getDeviceSortOrder WRITE setDeviceSortOrder NOTIFY deviceSortChanged)
 
     // Application window
     QSize m_appSize;
@@ -97,20 +97,20 @@ class SettingsManager: public QObject
     QString m_appLanguage = "auto";
 
     // Application specific
+    unsigned m_thumbQuality = 1;
+    unsigned m_thumbFormat = 3;
+    unsigned m_thumbSize = 3;
     bool m_ignoreJunk = true;
     bool m_ignoreHdAudio = true;
     bool m_autoMerge = false;
     bool m_autoTelemetry = false;
     bool m_autoDelete = false;
-    unsigned m_thumbQuality = 1;
-    unsigned m_thumbFormat = 2;
-    unsigned m_thumbSize = 2;
     bool m_moveToTrash = false;
     bool m_mtpFullScan = false;
     unsigned m_librarySortRole = SettingsUtils::OrderByDate;
-    unsigned m_librarySortOrder = 0;
+    unsigned m_librarySortOrder = 1;
     unsigned m_deviceSortRole = SettingsUtils::OrderByDate;
-    unsigned m_deviceSortOrder = 0;
+    unsigned m_deviceSortOrder = 1;
 
     // Singleton
     static SettingsManager *instance;

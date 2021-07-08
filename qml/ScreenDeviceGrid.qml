@@ -428,7 +428,7 @@ Item {
                         }
                     } else {
                         cbinit = true
-                        currentIndex = settingsManager.deviceOrderBy
+                        currentIndex = settingsManager.deviceSortRole
                     }
 
                     displayText = qsTr("Order by:") + " " + cbShotsOrderby.get(currentIndex).text

@@ -121,11 +121,11 @@ bool SettingsManager::readSettings()
         if (settings.contains("global/librarySortOrder"))
             m_librarySortOrder = settings.value("global/librarySortOrder").toUInt();
 
-        if (settings.contains("global/deviceOrderBy"))
-            m_deviceSortRole = settings.value("global/deviceOrderBy").toUInt();
+        if (settings.contains("global/deviceSortRole"))
+            m_deviceSortRole = settings.value("global/deviceSortRole").toUInt();
 
-        if (settings.contains("global/deviceOrderByDirection"))
-            m_deviceSortOrder = settings.value("global/deviceOrderByDirection").toUInt();
+        if (settings.contains("global/deviceSortOrder"))
+            m_deviceSortOrder = settings.value("global/deviceSortOrder").toUInt();
 
         status = true;
     }
@@ -159,10 +159,10 @@ bool SettingsManager::writeSettings()
         settings.setValue("global/thumbFormat", m_thumbFormat);
         settings.setValue("global/thumbSize", m_thumbSize);
         settings.setValue("global/moveToTrash", m_moveToTrash);
-        settings.setValue("global/libraryOrderBy", m_librarySortRole);
-        settings.setValue("global/libraryOrderByDirection", m_librarySortOrder);
-        settings.setValue("global/deviceOrderBy", m_deviceSortRole);
-        settings.setValue("global/deviceOrderByDirection", m_deviceSortOrder);
+        settings.setValue("global/librarySortRole", m_librarySortRole);
+        settings.setValue("global/librarySortOrder", m_librarySortOrder);
+        settings.setValue("global/deviceSortRole", m_deviceSortRole);
+        settings.setValue("global/deviceSortOrder", m_deviceSortOrder);
 
         if (settings.status() == QSettings::NoError)
         {
