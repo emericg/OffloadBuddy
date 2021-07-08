@@ -22,6 +22,8 @@
 #include "MediaDirectory.h"
 #include "Shot.h"
 
+#include <limits>
+
 #include <QStandardPaths>
 #include <QStorageInfo>
 #include <QDir>
@@ -47,22 +49,20 @@ MediaDirectory::MediaDirectory(QObject *parent)
     QString path = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation);
     if (!path.endsWith('/')) path += '/';
     path += "OffloadBuddy/";
-    QDir path_dir(path);
 
-    if (!path_dir.exists())
-    {
-        path_dir.mkpath(path);
-    }
+    QDir path_dir(path);
+    if (!path_dir.exists()) path_dir.mkpath(path);
 
     if (path_dir.exists())
     {
         setPath(path);
         setContent(CONTENT_ALL);
+        m_enabled = true;
         m_primary = true;
 
-        m_refreshTimer.setInterval(MEDIA_DIRECTORIES_REFRESH_INTERVAL * 1000);
-        connect(&m_refreshTimer, &QTimer::timeout, this, &MediaDirectory::refreshMediaDirectory);
-        m_refreshTimer.start();
+        m_storage_refreshTimer.setInterval(MEDIA_DIRECTORIES_REFRESH_INTERVAL * 1000);
+        connect(&m_storage_refreshTimer, &QTimer::timeout, this, &MediaDirectory::refreshMediaDirectory);
+        m_storage_refreshTimer.start();
     }
 }
 
@@ -72,16 +72,20 @@ MediaDirectory::MediaDirectory(QObject *parent)
  * Do not check if the path exists, we are allow to save paths that have been
  * disconnected since (ex: removable media).
  */
-MediaDirectory::MediaDirectory(const QString &path, int content, bool primary, QObject *parent)
+MediaDirectory::MediaDirectory(const QString &path, int content, int hierarchy,
+                               bool enabled, bool primary, QObject *parent)
     : QObject(parent)
 {
     setPath(path);
-    setContent(content);
+
+    m_content_type = content;
+    m_content_hierarchy = hierarchy;
+    m_enabled = enabled;
     m_primary = primary;
 
-    m_refreshTimer.setInterval(MEDIA_DIRECTORIES_REFRESH_INTERVAL * 1000);
-    connect(&m_refreshTimer, &QTimer::timeout, this, &MediaDirectory::refreshMediaDirectory);
-    m_refreshTimer.start();
+    m_storage_refreshTimer.setInterval(MEDIA_DIRECTORIES_REFRESH_INTERVAL * 1000);
+    connect(&m_storage_refreshTimer, &QTimer::timeout, this, &MediaDirectory::refreshMediaDirectory);
+    m_storage_refreshTimer.start();
 }
 
 MediaDirectory::~MediaDirectory()
@@ -105,33 +109,72 @@ MediaDirectory::~MediaDirectory()
  */
 void MediaDirectory::setPath(const QString &path)
 {
-    m_path = path;
-
-    // Make sure the path is terminated with a separator.
-    if (!m_path.endsWith('/')) m_path += '/';
-
-    emit directoryUpdated();
-
-    if (m_storage)
+    if (m_path != path)
     {
-        delete m_storage;
-        m_storage = nullptr;
-    }
+        m_path = path;
 
-    refreshMediaDirectory();
+        // Make sure the path is terminated with a separator.
+        if (!m_path.endsWith('/')) m_path += '/';
+
+        emit directoryUpdated();
+        emit saveData();
+
+        if (m_storage)
+        {
+            delete m_storage;
+            m_storage = nullptr;
+        }
+        refreshMediaDirectory();
+    }
 }
 
 void MediaDirectory::setContent(int content)
 {
-    m_content_type = content;
+    if (m_content_type != content)
+    {
+        m_content_type = content;
+        emit directoryUpdated();
+        emit saveData();
+    }
+}
+
+void MediaDirectory::setHierarchy(int hierarchy)
+{
+    if (m_content_hierarchy != hierarchy)
+    {
+        m_content_hierarchy = hierarchy;
+        emit directoryUpdated();
+        emit saveData();
+    }
 }
 
 void MediaDirectory::setEnabled(bool enabled)
 {
-    if (enabled != m_enabled)
+    if (m_enabled != enabled)
     {
         m_enabled = enabled;
         emit enabledUpdated();
+        emit saveData();
+    }
+}
+
+void MediaDirectory::setPrimary(bool primary)
+{
+    if (m_primary != primary)
+    {
+        m_primary = primary;
+        emit primaryUpdated();
+        emit saveData();
+    }
+}
+
+void MediaDirectory::setScanning(bool scanning)
+{
+    if (scanning != m_scanning)
+    {
+        m_scanning = scanning;
+        emit scanningUpdated();
+        emit saveData();
     }
 }
 
@@ -141,7 +184,7 @@ bool MediaDirectory::isAvailableFor(unsigned shotType, int64_t shotSize)
 
     refreshMediaDirectory();
 
-    if (m_available && m_storage /*&& !m_storage->isReadOnly()*/)
+    if (m_available && m_storage && !m_storage->isReadOnly())
     {
         if (shotSize < getSpaceAvailable())
         {
@@ -151,25 +194,22 @@ bool MediaDirectory::isAvailableFor(unsigned shotType, int64_t shotSize)
             {
                 available = true;
             }
+
+            if (!m_storage_lfs && shotSize > std::numeric_limits<long long>::max())
+            {
+                available = false;
+            }
         }
     }
 
     return available;
 }
 
-void MediaDirectory::setScanning(bool scanning)
-{
-    if (scanning != m_scanning)
-    {
-        m_scanning = scanning;
-        emit scanningUpdated();
-    }
-}
-
 /* ************************************************************************** */
 
 void MediaDirectory::refreshMediaDirectory()
 {
+    // We have a storage object
     if (m_storage)
     {
         // If there was a storage available, but it disappeared since, delete it
@@ -186,12 +226,14 @@ void MediaDirectory::refreshMediaDirectory()
         }
     }
 
-    // Otherwise, try to recreate one
+    // We don't have a storage object, try to create one
     if (!m_storage)
     {
         m_storage = new QStorageInfo(m_path);
+        emit storageUpdated();
     }
 
+    // Now update the 'm_available' state
     if (m_storage && m_storage->isValid() && m_storage->isReady())
     {
         //qDebug() << "refreshMediaDirectory(" << m_storage->rootPath() << ")";
@@ -200,6 +242,7 @@ void MediaDirectory::refreshMediaDirectory()
             m_storage->fileSystemType() == "fat16" ||
             m_storage->fileSystemType() == "fat32")
         {
+            // this storage only support 4GiB files
             m_storage_lfs = false;
             emit storageUpdated();
         }
@@ -219,7 +262,7 @@ void MediaDirectory::refreshMediaDirectory()
             QFile::Permissions e = fi.permissions();
             if (!e.testFlag(QFileDevice::WriteUser))
             {
-                qDebug() << "QFile::Permissions error:" << e << (unsigned)e;
+                qWarning() << "QFile::Permissions error:" << e << (unsigned)e;
                 m_available = false;
                 emit availableUpdated();
             }
@@ -240,10 +283,9 @@ void MediaDirectory::refreshMediaDirectory()
     }
     else
     {
-        //qDebug() << "MediaDirectory(" << m_path << ") is not available: invalid";
-
         if (m_available == true)
         {
+            qWarning() << "MediaDirectory(" << m_path << ") is not available: invalid or not ready";
             m_available = false;
             emit availableUpdated();
         }
@@ -276,14 +318,6 @@ int64_t MediaDirectory::getSpaceUsed()
     return 0;
 }
 
-double MediaDirectory::getSpaceUsed_percent()
-{
-    if (m_storage)
-        return static_cast<double>(getSpaceUsed()) / static_cast<double>(m_storage->bytesTotal());
-
-    return 0.0;
-}
-
 int64_t MediaDirectory::getSpaceAvailable()
 {
     if (m_storage)
@@ -296,6 +330,14 @@ int64_t MediaDirectory::getSpaceAvailable_withrefresh()
 {
     refreshMediaDirectory();
     return getSpaceAvailable();
+}
+
+double MediaDirectory::getStorageLevel()
+{
+    if (m_storage)
+        return static_cast<double>(getSpaceUsed()) / static_cast<double>(m_storage->bytesTotal());
+
+    return 0.0;
 }
 
 /* ************************************************************************** */

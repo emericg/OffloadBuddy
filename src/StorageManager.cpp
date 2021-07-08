@@ -72,15 +72,27 @@ bool StorageManager::readSettings()
         for (int i = 1; i <= max_media_directories; i++)
         {
             QString p = "MediaDirectories/" + QString::number(i) + "/path";
-            QString t = "MediaDirectories/" + QString::number(i) + "/content";
+            QString e = "MediaDirectories/" + QString::number(i) + "/enabled";
+            QString c = "MediaDirectories/" + QString::number(i) + "/content";
+            QString h = "MediaDirectories/" + QString::number(i) + "/hierarchy";
 
-            if (settings.contains(p) && settings.contains(t))
+            bool ee = true;
+            int cc = 0;
+            int hh = 0;
+            if (settings.contains(e)) ee = settings.value(e).toBool();
+            if (settings.contains(c)) cc = settings.value(c).toInt();
+            if (settings.contains(h)) hh = settings.value(h).toInt();
+
+            if (settings.contains(p))
             {
                 QString pp = settings.value(p).toString();
-                int tt = settings.value(t).toInt();
 
-                MediaDirectory *d = new MediaDirectory(pp, tt, false, this);
+                MediaDirectory *d = new MediaDirectory(pp, cc, hh, ee, false, this);
                 m_mediaDirectories.push_back(d);
+                emit directoryAdded(d->getPath());
+                emit directoriesUpdated();
+
+                connect(d, SIGNAL(saveData()), this, SLOT(directoryModified()));
             }
         }
 
@@ -88,8 +100,6 @@ bool StorageManager::readSettings()
         {
             //createDefaultDirectory();
         }
-
-        emit directoriesUpdated();
 
         status = true;
     }
@@ -118,18 +128,26 @@ bool StorageManager::writeSettings()
             if (dd)
             {
                 QString p = "MediaDirectories/" + QString::number(i) + "/path";
-                QString t = "MediaDirectories/" + QString::number(i) + "/content";
+                QString e = "MediaDirectories/" + QString::number(i) + "/enabled";
+                QString c = "MediaDirectories/" + QString::number(i) + "/content";
+                QString h = "MediaDirectories/" + QString::number(i) + "/hierarchy";
                 settings.setValue(p, dd->getPath());
-                settings.setValue(t, dd->getContent());
+                settings.setValue(e, dd->isEnabled());
+                settings.setValue(c, dd->getContent());
+                settings.setValue(h, dd->getHierarchy());
                 i++;
             }
         }
         for (; i <= max_media_directories; i++)
         {
             QString p = "MediaDirectories/" + QString::number(i) + "/path";
-            QString t = "MediaDirectories/" + QString::number(i) + "/content";
+            QString e = "MediaDirectories/" + QString::number(i) + "/enabled";
+            QString c = "MediaDirectories/" + QString::number(i) + "/content";
+            QString h = "MediaDirectories/" + QString::number(i) + "/hierarchy";
             settings.remove(p);
-            settings.remove(t);
+            settings.remove(e);
+            settings.remove(c);
+            settings.remove(h);
         }
 
         if (settings.status() == QSettings::NoError)
@@ -162,6 +180,37 @@ void StorageManager::setContentHierarchy(unsigned value)
     }
 }
 
+void StorageManager::directoryModified()
+{
+    writeSettings();
+}
+
+/* ************************************************************************** */
+
+void StorageManager::createDefaultDirectory()
+{
+    // Create a default entry
+    MediaDirectory *d = new MediaDirectory(this);
+    if (d)
+    {
+        m_mediaDirectories.push_back(d);
+        emit directoryAdded(d->getPath());
+        emit directoriesUpdated();
+
+        connect(d, SIGNAL(saveData()), this, SLOT(directoryModified()));
+        directoryModified();
+    }
+/*
+    // Create a default entries
+    QString pathV = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + "/GoPro";
+    QString pathP = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/GoPro";
+    MediaDirectory *dv = new MediaDirectory(pathV, 1);
+    m_mediaDirectories.push_back(dv);
+    MediaDirectory *dp = new MediaDirectory(pathP, 2);
+    m_mediaDirectories.push_back(dp);
+*/
+}
+
 void StorageManager::addDirectory(const QString &path)
 {
     if (!path.isEmpty())
@@ -182,13 +231,14 @@ void StorageManager::addDirectory(const QString &path)
         }
 
         // Add
-        MediaDirectory *dd = new MediaDirectory(path, 0, false, this);
-        //if (dd->isAvailable())
+        MediaDirectory *dd = new MediaDirectory(path, 0, 0, true, false, this);
+        if (dd)
         {
             m_mediaDirectories.push_back(dd);
             emit directoryAdded(dd->getPath());
             emit directoriesUpdated();
 
+            connect(dd, SIGNAL(saveData()), this, SLOT(directoryModified()));
             directoryModified();
         }
     }
@@ -217,31 +267,6 @@ void StorageManager::removeDirectory(const QString &path)
     {
         //createDefaultDirectory();
     }
-}
-
-void StorageManager::directoryModified()
-{
-    writeSettings();
-}
-
-void StorageManager::createDefaultDirectory()
-{
-    // Create a default entry
-    MediaDirectory *d = new MediaDirectory(this);
-    if (d)
-    {
-        m_mediaDirectories.push_back(d);
-        writeSettings();
-    }
-/*
-    // Create a default entries
-    QString pathV = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + "/GoPro";
-    QString pathP = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/GoPro";
-    MediaDirectory *dv = new MediaDirectory(pathV, 1);
-    m_mediaDirectories.push_back(dv);
-    MediaDirectory *dp = new MediaDirectory(pathP, 2);
-    m_mediaDirectories.push_back(dp);
-*/
 }
 
 /* ************************************************************************** */

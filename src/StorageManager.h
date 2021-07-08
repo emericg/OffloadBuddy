@@ -43,6 +43,7 @@ class StorageManager: public QObject
     Q_OBJECT
 
     Q_PROPERTY(uint contentHierarchy READ getContentHierarchy WRITE setContentHierarchy NOTIFY contentHierarchyChanged)
+    Q_PROPERTY(uint directoriesCount READ getDirectoriesCount NOTIFY directoriesUpdated)
     Q_PROPERTY(QVariant directoriesList READ getDirectories NOTIFY directoriesUpdated)
 
     // Media directories
@@ -64,20 +65,23 @@ Q_SIGNALS:
     void directoryAdded(const QString &);
     void directoryRemoved(const QString &);
 
+public slots:
+    void directoryModified();
+
 public:
     static StorageManager *getInstance();
 
+    void createDefaultDirectory();
+
     QVariant getDirectories() const { if (m_mediaDirectories.size() > 0) { return QVariant::fromValue(m_mediaDirectories); } return QVariant(); }
+    unsigned getDirectoriesCount() const { return m_mediaDirectories.size(); }
     const QList <QObject *> *getDirectoriesList() const { return &m_mediaDirectories; }
 
     unsigned getContentHierarchy() const { return m_contentHierarchy; }
     void setContentHierarchy(unsigned value);
 
-public slots:
-    void addDirectory(const QString &path);
-    void removeDirectory(const QString &path);
-    void directoryModified();
-    void createDefaultDirectory();
+    Q_INVOKABLE void addDirectory(const QString &path);
+    Q_INVOKABLE void removeDirectory(const QString &path);
 };
 
 /* ************************************************************************** */

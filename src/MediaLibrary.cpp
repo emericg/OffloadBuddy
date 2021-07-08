@@ -99,9 +99,10 @@ void MediaLibrary::searchMediaDirectory(const QString &path)
         for (auto d: *mediaDirectories)
         {
             MediaDirectory *dd = qobject_cast<MediaDirectory*>(d);
-            if (dd && dd->getPath() == path)
+            if (dd && dd->getPath() == path && dd->isEnabled())
             {
                 scanMediaDirectory(dd);
+                return;
             }
         }
     }
@@ -120,7 +121,10 @@ void MediaLibrary::searchMediaDirectories()
         for (auto d: *mediaDirectories)
         {
             MediaDirectory *dd = qobject_cast<MediaDirectory*>(d);
-            scanMediaDirectory(dd);
+            if (dd && dd->isEnabled())
+            {
+                scanMediaDirectory(dd);
+            }
         }
     }
 }

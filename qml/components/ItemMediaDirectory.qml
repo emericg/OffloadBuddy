@@ -10,17 +10,14 @@ Item {
     id: itemMediaDirectory
     implicitWidth: 800
     implicitHeight: 48
-    width: parent.width
-    height: 48
 
     property var directory: null
-    property bool confirmation: false
 
     ////////////////
 
     FolderInputArea {
         id: textField_path
-        width: (itemMediaDirectory.width < 720) ? 512 : 640
+        width: (itemMediaDirectory.width < 720) ? 640 : 720
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
 
@@ -28,7 +25,6 @@ Item {
 
         onPathChanged: {
             directory.directoryPath = path
-            storageManager.directoryModified()
             focus = false
         }
 
@@ -39,7 +35,7 @@ Item {
             spacing: 0
 
             ItemImageButtonTooltip {
-                id: button_w
+                id: button_ro
                 width: 32
                 height: 32
                 anchors.verticalCenter: parent.verticalCenter
@@ -47,13 +43,24 @@ Item {
                 highlightMode: "color"
                 visible: directory.readOnly
                 iconColor: Theme.colorWarning
-                //source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
                 source: "qrc:/assets/icons_material/outline-https-24px.svg"
-                onClicked: {
-                    utilsApp.openWith(directory.directoryPath)
-                }
 
                 tooltipText: "Storage is read only"
+                tooltipPosition: "left"
+            }
+
+            ItemImageButtonTooltip {
+                id: button_lfs
+                width: 32
+                height: 32
+                anchors.verticalCenter: parent.verticalCenter
+
+                highlightMode: "color"
+                visible: !directory.largeFileSupport
+                iconColor: Theme.colorWarning
+                source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
+
+                tooltipText: "Storage is 4 GiB limited"
                 tooltipPosition: "left"
             }
 
@@ -110,7 +117,7 @@ Item {
     }
 
     ////////////////
-
+/*
     ComboBoxThemed {
         id: comboBox_content
         width: 180
@@ -134,28 +141,31 @@ Item {
         onCurrentIndexChanged: {
             if (cbinit) {
                 directory.directoryContent = currentIndex
-                storageManager.directoryModified()
             } else {
                 cbinit = true;
             }
         }
     }
-
+*/
     ////////////////
 
     Item {
-        height: parent.height
-        anchors.left: comboBox_content.right
+        id: menus
+        anchors.top: parent.top
+        anchors.left: textField_path.right
         anchors.leftMargin: 16
-        anchors.right: rectangleDelete.left
+        anchors.right: rowButtons.left
         anchors.rightMargin: 12
+        anchors.bottom: parent.bottom
+
+        property int memusmode: 0
 
         // this
         Column {
             anchors.verticalCenter: parent.verticalCenter
             width: parent.width
             spacing: 4
-            visible: directory.available && !itemMediaDirectory.confirmation
+            visible: (menus.memusmode === 0 && directory.available)
 
             Text {
                 id: deviceSpaceText
@@ -176,12 +186,12 @@ Item {
             }
         }
 
-        // or that
+        // or this
         Row {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
             spacing: 8
-            visible: !directory.available && !itemMediaDirectory.confirmation
+            visible: (menus.memusmode === 0 && !directory.available)
 
             ImageSvg {
                 id: imageError
@@ -206,22 +216,98 @@ Item {
                 verticalAlignment: Text.AlignVCenter
             }
         }
+
+        // or even that
+        Row {
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: 8
+            visible: (menus.memusmode === 1)
+
+            CheckBoxThemed {
+                id: checkBox_enabled
+                anchors.verticalCenter: parent.verticalCenter
+                text: qsTr("Enabled")
+
+                checked: directory.directoryEnabled
+                onClicked: directory.directoryEnabled = checked
+            }
+
+            Text {
+                id: textContent2
+                anchors.verticalCenter: parent.verticalCenter
+
+                text: qsTr("Content")
+                font.pixelSize: Theme.fontSizeComponent
+                color: Theme.colorText
+            }
+
+            ComboBoxThemed {
+                id: comboBox_content2
+                width: 180
+                height: 32
+                anchors.verticalCenter: parent.verticalCenter
+
+                font.pixelSize: Theme.fontSizeContentSmall
+
+                model: ListModel {
+                    id: cbItemsContent2
+                    ListElement { text: qsTr("all media"); }
+                    ListElement { text: qsTr("videos"); }
+                    ListElement { text: qsTr("pictures"); }
+                }
+                Component.onCompleted: {
+                    currentIndex = directory.directoryContent;
+                    if (currentIndex === -1) { currentIndex = 0 }
+                }
+                property bool cbinit: false
+                onCurrentIndexChanged: {
+                    if (cbinit) {
+                        directory.directoryContent = currentIndex
+                    } else {
+                        cbinit = true;
+                    }
+                }
+            }
+
+            ////////
+
+            Text {
+                id: textMediaHierarchy2
+                anchors.verticalCenter: parent.verticalCenter
+
+                text: qsTr("Hierarchy")
+                font.pixelSize: Theme.fontSizeComponent
+                color: Theme.colorText
+            }
+
+            ComboBoxThemed {
+                id: comboBoxContentHierarchy2
+                width: 256
+                height: 32
+                anchors.verticalCenter: parent.verticalCenter
+
+                model: ListModel {
+                    id: cbItemsContentHierarchy
+                    ListElement { text: qsTr("/ date / FILES"); }
+                    ListElement { text: qsTr("/ date / device / FILES"); }
+                }
+
+                Component.onCompleted: {
+                    currentIndex = storageManager.contentHierarchy;
+                    if (currentIndex === -1) { currentIndex = 0 }
+                }
+                property bool cbinit: false
+                onCurrentIndexChanged: {
+                    if (cbinit)
+                        storageManager.contentHierarchy = currentIndex;
+                    else
+                        cbinit = true;
+                }
+            }
+        }
     }
 
     ////////////////
-
-    ItemImageButton {
-        id: rectangleDelete
-        anchors.right: parent.right
-        anchors.verticalCenter: parent.verticalCenter
-
-        visible: !itemMediaDirectory.confirmation
-        iconColor: Theme.colorSubText
-        highlightMode: "color"
-        highlightColor: Theme.colorError
-        source: "qrc:/assets/icons_material/baseline-delete-24px.svg"
-        onClicked: itemMediaDirectory.confirmation = true
-    }
 
     Row {
         id: rowConfirmation
@@ -233,7 +319,7 @@ Item {
 
         spacing: 12
         layoutDirection: Qt.RightToLeft
-        visible: (itemMediaDirectory.confirmation)
+        visible: (menus.memusmode === 3)
 
         ButtonWireframe {
             height: 32
@@ -241,7 +327,7 @@ Item {
             text: qsTr("NO")
             fullColor: true
             primaryColor: Theme.colorSubText
-            onClicked: itemMediaDirectory.confirmation = false
+            onClicked: menus.memusmode = 0
         }
         ButtonWireframe {
             height: 32
@@ -262,6 +348,46 @@ Item {
             color: Theme.colorSubText
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
+        }
+    }
+
+    ////////////////
+
+    Row {
+        id: rowButtons
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
+
+        visible: (menus.memusmode !== 3)
+
+        ItemImageButton {
+            id: rectangleSettings
+            anchors.verticalCenter: parent.verticalCenter
+
+            imgSize: 32
+            iconColor: Theme.colorSubText
+            highlightMode: "color"
+            highlightColor: Theme.colorPrimary
+            source: "qrc:/assets/icons_material/baseline-settings_applications-24px.svg"
+            onClicked: {
+                if (menus.memusmode !== 1) menus.memusmode = 1
+                else menus.memusmode = 0
+            }
+        }
+
+        ItemImageButton {
+            id: rectangleDelete
+            anchors.verticalCenter: parent.verticalCenter
+
+            imgSize: 32
+            iconColor: Theme.colorSubText
+            highlightMode: "color"
+            highlightColor: Theme.colorError
+            source: "qrc:/assets/icons_material/baseline-delete-24px.svg"
+            onClicked: {
+                if (menus.memusmode !== 3) menus.memusmode = 3
+                else menus.memusmode = 0
+            }
         }
     }
 }

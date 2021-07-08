@@ -411,107 +411,153 @@ Item {
 
             ////////
 
-            Row {
-                height: 40
-                spacing: 32
-
-                Text {
-                    id: textMediaHierarchy
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    text: qsTr("Media hierarchy")
-
-                    font.pixelSize: Theme.fontSizeComponent
-                    color: Theme.colorText
-                }
-
-                ComboBoxThemed {
-                    id: comboBoxContentHierarchy
-                    width: 256
-                    height: 36
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    model: ListModel {
-                        id: cbItemsContentHierarchy
-                        ListElement { text: qsTr("/ date / FILES"); }
-                        ListElement { text: qsTr("/ date / device / FILES"); }
-                    }
-
-                    Component.onCompleted: {
-                        currentIndex = storageManager.contentHierarchy;
-                        if (currentIndex === -1) { currentIndex = 0 }
-                    }
-                    property bool cbinit: false
-                    onCurrentIndexChanged: {
-                        if (cbinit)
-                            storageManager.contentHierarchy = currentIndex;
-                        else
-                            cbinit = true;
-                    }
-                }
-            }
-
-            ////////
-
-            Column {
+            Rectangle {
                 id: rectangleMedia
-                spacing: 8
-
-                anchors.right: parent.right
-                anchors.rightMargin: 0
                 anchors.left: parent.left
-                anchors.leftMargin: 0
+                anchors.leftMargin: -24
+                anchors.right: parent.right
+                anchors.rightMargin: -24
 
-                Row {
-                    height: 40
-                    spacing: 24
+                height: columnMedia.height
+                color: storageManager.directoriesCount ? "transparent" : Theme.colorForeground
 
-                    Text {
-                        id: textMediaTitle
-                        anchors.verticalCenter: parent.verticalCenter
+                FileDialog {
+                    id: fileDialogAdd
+                    title: qsTr("Please choose a destination directory!")
+                    sidebarVisible: true
+                    selectExisting: true
+                    selectMultiple: false
+                    selectFolder: true
+                    folder: shortcuts.home
 
-                        text: qsTr("Media directories")
-                        font.pixelSize: Theme.fontSizeComponent
-                        font.bold: true
-                        color: Theme.colorText
-                    }
-
-                    ItemImageButtonTooltip {
-                        id: buttonNew
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        source: "qrc:/assets/icons_material/outline-create_new_folder-24px.svg"
-                        tooltipText: qsTr("Add a new media directory")
-                        tooltipPosition: "right"
-                        onClicked: fileDialogAdd.open()
-                    }
-
-                    FileDialog {
-                        id: fileDialogAdd
-                        title: qsTr("Please choose a destination directory!")
-                        sidebarVisible: true
-                        selectExisting: true
-                        selectMultiple: false
-                        selectFolder: true
-                        folder: shortcuts.home
-
-                        onAccepted: {
-                            storageManager.addDirectory(UtilsPath.cleanUrl(fileDialogAdd.fileUrl))
-                        }
+                    onAccepted: {
+                        storageManager.addDirectory(UtilsPath.cleanUrl(fileDialogAdd.fileUrl))
                     }
                 }
 
-                ListView {
-                    id: mediadirectoriesview
-                    width: parent.width
-                    height: storageManager.directoriesList.length * 64 // 48px for the widget and 16px for spacing
+                Column {
+                    id: columnMedia
+                    anchors.leftMargin: 24
                     anchors.left: parent.left
                     anchors.right: parent.right
+                    anchors.rightMargin: 24
 
-                    spacing: 8
-                    interactive: false
-                    model: storageManager.directoriesList
-                    delegate: ItemMediaDirectory { directory: modelData; }
+                    topPadding: 8
+                    bottomPadding: 24
+
+                    Row {
+                        height: 40
+                        spacing: 24
+
+                        Text {
+                            id: textMediaTitle
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            text: qsTr("Media directories")
+                            font.pixelSize: Theme.fontSizeComponent
+                            font.bold: true
+                            color: Theme.colorText
+                        }
+
+                        ItemImageButtonTooltip {
+                            id: buttonNew
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            source: "qrc:/assets/icons_material/outline-create_new_folder-24px.svg"
+                            tooltipText: qsTr("Add a new media directory")
+                            tooltipPosition: "right"
+                            onClicked: fileDialogAdd.open()
+                        }
+                    }
+
+                    ////
+/*
+                    Row {
+                        height: 40
+                        spacing: 32
+
+                        Text {
+                            id: textMediaHierarchy
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            text: qsTr("Media hierarchy")
+
+                            font.pixelSize: Theme.fontSizeComponent
+                            color: Theme.colorText
+                        }
+
+                        ComboBoxThemed {
+                            id: comboBoxContentHierarchy
+                            width: 256
+                            height: 36
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            model: ListModel {
+                                id: cbItemsContentHierarchy
+                                ListElement { text: qsTr("/ date / FILES"); }
+                                ListElement { text: qsTr("/ date / device / FILES"); }
+                            }
+
+                            Component.onCompleted: {
+                                currentIndex = storageManager.contentHierarchy;
+                                if (currentIndex === -1) { currentIndex = 0 }
+                            }
+                            property bool cbinit: false
+                            onCurrentIndexChanged: {
+                                if (cbinit)
+                                    storageManager.contentHierarchy = currentIndex;
+                                else
+                                    cbinit = true;
+                            }
+                        }
+                    }
+*/
+                    ////
+
+                    ListView {
+                        id: mediadirectoriesview
+                        height: storageManager.directoriesCount * 64 // 48px for the widget and 16px for spacing
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        spacing: 8
+
+                        interactive: false
+                        model: storageManager.directoriesList
+                        delegate: ItemMediaDirectory {
+                            height: 48
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            directory: modelData
+                        }
+                    }
+
+                    ////
+
+                    Column {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        spacing: 8
+
+                        visible: !storageManager.directoriesCount
+
+                        Text {
+                            id: name
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            text: qsTr("There is no media directory configured :(")
+                            font.pixelSize: Theme.fontSizeContent
+                            color: Theme.colorSubText
+                        }
+
+                        ButtonWireframeImage {
+                            height: 36
+                            anchors.horizontalCenter: parent.horizontalCenter
+
+                            fullColor: true
+                            text: qsTr("Add a new one")
+                            onClicked: fileDialogAdd.open()
+                            source: "qrc:/assets/icons_material/baseline-add-24px.svg"
+                        }
+                    }
                 }
             }
         }

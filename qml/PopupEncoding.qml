@@ -1236,7 +1236,7 @@ Popup {
 
                     property bool cbinit: false
                     onCurrentIndexChanged: {
-                        if (storageManager.directoriesList.length <= 0) return
+                        if (storageManager.directoriesCount <= 0) return
 
                         if (cbinit) {
                             if (comboBoxDestination.currentIndex === cbDestinations.count) {

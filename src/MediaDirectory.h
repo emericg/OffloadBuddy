@@ -45,47 +45,53 @@ class MediaDirectory: public QObject
 
     Q_PROPERTY(QString directoryPath READ getPath WRITE setPath NOTIFY directoryUpdated)
     Q_PROPERTY(int directoryContent READ getContent WRITE setContent NOTIFY directoryUpdated)
-    Q_PROPERTY(bool primary READ isPrimary NOTIFY directoryUpdated)
+    Q_PROPERTY(int directoryHierarchy READ getHierarchy WRITE setHierarchy NOTIFY directoryUpdated)
+    Q_PROPERTY(bool directoryEnabled READ isEnabled WRITE setEnabled NOTIFY enabledUpdated)
 
-    Q_PROPERTY(bool enabled READ isEnabled NOTIFY enabledUpdated)
+    Q_PROPERTY(bool primary READ isPrimary NOTIFY primaryUpdated)
     Q_PROPERTY(bool available READ isAvailable NOTIFY availableUpdated)
     Q_PROPERTY(bool scanning READ isScanning NOTIFY scanningUpdated)
-
     Q_PROPERTY(bool readOnly READ isReadOnly NOTIFY storageUpdated)
-    Q_PROPERTY(bool largeFileSupport READ hasLFS NOTIFY directoryUpdated)
+    Q_PROPERTY(bool largeFileSupport READ hasLFS NOTIFY storageUpdated)
 
     Q_PROPERTY(qint64 spaceTotal READ getSpaceTotal NOTIFY storageUpdated)
     Q_PROPERTY(qint64 spaceUsed READ getSpaceUsed NOTIFY storageUpdated)
-    Q_PROPERTY(double storageLevel READ getSpaceUsed_percent NOTIFY storageUpdated)
     Q_PROPERTY(qint64 spaceAvailable READ getSpaceAvailable NOTIFY storageUpdated)
+    Q_PROPERTY(double storageLevel READ getStorageLevel NOTIFY storageUpdated)
 
     QString m_path;
     int m_content_type = 0; // see Utils::ContentTypes (dSphere)
-    int m_storage_type = 0; // (not implemented)
-    bool m_primary = false;
+    int m_content_hierarchy = 0; // (not implemented)
 
-    bool m_enabled = false;
+    bool m_primary = false;
+    bool m_enabled = true;
     bool m_available = false;
     bool m_scanning = false;
 
-    QStorageInfo *m_storage = nullptr;
+    int m_storage_type = 0; // (not implemented)
     bool m_storage_lfs = true;
-    QTimer m_refreshTimer;
+    QStorageInfo *m_storage = nullptr;
+    QTimer m_storage_refreshTimer;
 
 Q_SIGNALS:
     void directoryUpdated();
-    void enabledUpdated();
     void availableUpdated();
     void scanningUpdated();
+    void primaryUpdated();
+    void enabledUpdated();
     void storageUpdated();
+    void saveData();
 
 private slots:
     void refreshMediaDirectory();
 
 public:
     MediaDirectory(QObject *parent = nullptr);
-    MediaDirectory(const QString &path, int content, bool primary = false, QObject *parent = nullptr);
+    MediaDirectory(const QString &path, int content, int hierarchy,
+                   bool enabled = true, bool primary = false, QObject *parent = nullptr);
     ~MediaDirectory();
+
+    //
 
     QString getPath() { return m_path; }
     void setPath(const QString &path);
@@ -93,7 +99,13 @@ public:
     int getContent() const { return m_content_type; }
     void setContent(int content);
 
+    int getHierarchy() const { return m_content_hierarchy; }
+    void setHierarchy(int hierarchy);
+
+    //
+
     bool isPrimary() const { return m_primary; }
+    void setPrimary(bool primary);
 
     bool isEnabled() const { return m_enabled; }
     void setEnabled(bool enabled);
@@ -104,14 +116,14 @@ public:
     bool isScanning() const { return m_scanning; }
     void setScanning(bool scanning);
 
+    bool isReadOnly();
     bool hasLFS() const { return m_storage_lfs; }
 
-    bool isReadOnly();
     int64_t getSpaceTotal();
     int64_t getSpaceUsed();
-    double getSpaceUsed_percent();
     int64_t getSpaceAvailable();
     int64_t getSpaceAvailable_withrefresh();
+    double getStorageLevel();
 };
 
 /* ************************************************************************** */
