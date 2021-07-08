@@ -74,7 +74,8 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             height: 2
-            color: Theme.colorHighContrast
+            opacity: 0.7
+            color: Theme.colorHeaderContent
         }
     }
 

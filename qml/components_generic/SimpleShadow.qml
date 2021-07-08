@@ -6,9 +6,9 @@ import ThemeEngine 1.0
 Item {
     z: -1
 
-    property string color: "#666"
     property alias radius: rect.radius
     property bool filled: true
+    property string color: "#666"
 
     Rectangle {
         id: rect
@@ -26,7 +26,7 @@ Item {
 
         cached: true
         radius: 12.0
-        samples: 25
+        samples: 25 // (radius*2 + 1)
         color: parent.color
         horizontalOffset: 0
         verticalOffset: 0

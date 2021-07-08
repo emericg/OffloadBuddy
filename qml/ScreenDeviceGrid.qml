@@ -625,7 +625,8 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             height: 2
-            color: Theme.colorHighContrast
+            opacity: 0.7
+            color: Theme.colorHeaderContent
         }
     }
 
@@ -696,9 +697,9 @@ Item {
 
                 SimpleShadow {
                     anchors.fill: parent
-                    color: Theme.colorPrimary
                     radius: parent.radius
                     filled: false
+                    color: Theme.colorPrimary
                 }
             }
         }
