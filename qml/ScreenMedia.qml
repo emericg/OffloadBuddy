@@ -197,6 +197,8 @@ Item {
             height: 28
             spacing: 16
 
+            ItemCodec { id: codecImage }
+
             ItemCodec { id: codecVideo }
 
             ItemCodec { id: codecAudio }

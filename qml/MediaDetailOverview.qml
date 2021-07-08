@@ -89,6 +89,14 @@ Item {
             timecode.text = shot.timecode
         }
 
+        if (shot.codecImage.length) {
+            codecImage.visible = true
+            codecImage.text = shot.codecImage
+            codec.text = shot.codecImage
+        } else {
+            codecImage.visible = false
+        }
+
         if (shot.codecVideo.length) {
             codecVideo.visible = true
             codecVideo.text = shot.codecVideo

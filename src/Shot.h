@@ -203,6 +203,7 @@ class Shot: public QObject
     Q_PROPERTY(unsigned transformation READ getTransformation NOTIFY shotUpdated)
     Q_PROPERTY(int rotation READ getRotation NOTIFY shotUpdated)
 
+    Q_PROPERTY(QString codecImage READ getCodecImage NOTIFY shotUpdated)
     Q_PROPERTY(QString iso READ getIso NOTIFY shotUpdated)
     Q_PROPERTY(QString focal READ getFocal NOTIFY shotUpdated)
     Q_PROPERTY(QString exposureTime READ getExposureTime NOTIFY shotUpdated)
@@ -307,6 +308,7 @@ class Shot: public QObject
     double gps_alt_egm96 = 0.0;
 
     // PICTURES metadata
+    QString icodec;
     QString focal;
     QString iso;
     QString exposure_time;
@@ -496,6 +498,7 @@ public:
     unsigned getTransformation() const { return transformation; }
     int getRotation() const { return rotation; }
 
+    QString getCodecImage() const { return icodec; }
     QString getIso() const { return iso; }
     QString getFocal() const { return focal; }
     QString getExposureTime() const { return exposure_time; }

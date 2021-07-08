@@ -695,6 +695,8 @@ bool Shot::getMetadataFromPicture(int index)
     if (m_pictures.empty()) return false;
     if (m_pictures.at(index)->filesystemPath.isEmpty()) return false;
 
+    icodec = QImageReader::imageFormat(m_pictures.at(index)->filesystemPath);
+
 #if defined(ENABLE_LIBEXIF)
 
     // Check if the file is already parsed
