@@ -695,8 +695,6 @@ bool Shot::getMetadataFromPicture(int index)
     if (m_pictures.empty()) return false;
     if (m_pictures.at(index)->filesystemPath.isEmpty()) return false;
 
-    icodec = QImageReader::imageFormat(m_pictures.at(index)->filesystemPath);
-
 #if defined(ENABLE_LIBEXIF)
 
     // Check if the file is already parsed
@@ -1014,23 +1012,19 @@ bool Shot::getMetadataFromPicture(int index)
         //qDebug() << "File not readable or no EXIF data";
     }
 
-#else // !defined(ENABLE_LIBEXIF) && !defined(ENABLE_EXIV2)
+#endif // !defined(ENABLE_LIBEXIF) && !defined(ENABLE_EXIV2)
 
-    // Gather additional infos
+    // Gather additional (icodec) or backup (geometry & orientation) infos
     QImageReader img_infos(m_pictures.at(index)->filesystemPath);
     if (img_infos.canRead())
     {
-        //qDebug() << "Backup path with QImageReader";
-
-        vcodec = img_infos.format();
+        icodec = img_infos.format();
         width = static_cast<unsigned>(img_infos.size().rwidth());
         height = static_cast<unsigned>(img_infos.size().rheight());
         transformation = img_infos.transformation();
 
         status = true;
     }
-
-#endif
 
     return status;
 }
