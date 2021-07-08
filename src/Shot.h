@@ -49,7 +49,6 @@
 
 #include <QGeoCoordinate>
 #include <QtCharts/QLineSeries>
-QT_CHARTS_USE_NAMESPACE
 
 /* ************************************************************************** */
 

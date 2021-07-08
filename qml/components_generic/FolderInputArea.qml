@@ -1,7 +1,8 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
-import QtGraphicalEffects 1.12
-import QtQuick.Dialogs 1.3
+import QtQuick.Dialogs 1.3 // Qt5
+import QtGraphicalEffects 1.12 // Qt5
+//import Qt5Compat.GraphicalEffects // Qt6
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsPath.js" as UtilsPath

@@ -107,7 +107,7 @@ MediaThumbnailerRunner::MediaThumbnailerRunner(const QString &id, const QSize &r
     {
         bool timecode_validity = false;
         timecode_pos = id.size() - timecode_pos;
-        timecode_s = id.rightRef(timecode_pos - 1).toInt(&timecode_validity);
+        timecode_s = id.right(timecode_pos - 1).toInt(&timecode_validity);
 
         // Make sure we had a timecode and not a random '@' character
         if (timecode_validity) path.chop(timecode_pos);

@@ -1,6 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
-import QtQuick.Dialogs 1.3
+import QtQuick.Dialogs 1.3 // Qt5
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsString.js" as UtilsString

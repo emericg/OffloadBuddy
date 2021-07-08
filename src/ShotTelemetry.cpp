@@ -35,6 +35,9 @@
 #include <QDesktopServices>
 #include <QDebug>
 
+#include <QtCharts>
+using namespace QtCharts;
+
 /* ************************************************************************** */
 
 bool Shot::parseGpmfSample(GpmfBuffer &buf, int &devc_count)
@@ -461,7 +464,7 @@ void Shot::parseData_triplet(GpmfBuffer &buf, GpmfKLV &klv,
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void Shot::updateSpeedsSerie(QtCharts::QLineSeries *serie, int appUnit)
+void Shot::updateSpeedsSerie(QLineSeries *serie, int appUnit)
 {
     Q_UNUSED(appUnit)
     if (!serie) return;
@@ -499,7 +502,7 @@ void Shot::updateSpeedsSerie(QtCharts::QLineSeries *serie, int appUnit)
     serie->replace(points);
 }
 
-void Shot::updateAltiSerie(QtCharts::QLineSeries *serie, int appUnit)
+void Shot::updateAltiSerie(QLineSeries *serie, int appUnit)
 {
     Q_UNUSED(appUnit)
     if (!serie) return;
@@ -537,7 +540,7 @@ void Shot::updateAltiSerie(QtCharts::QLineSeries *serie, int appUnit)
     serie->replace(points);
 }
 
-void Shot::updateAcclSeries(QtCharts::QLineSeries *x, QtCharts::QLineSeries *y, QtCharts::QLineSeries *z)
+void Shot::updateAcclSeries(QLineSeries *x, QLineSeries *y, QLineSeries *z)
 {
     if (x == nullptr || y == nullptr || z == nullptr)
         return;
@@ -567,7 +570,7 @@ void Shot::updateAcclSeries(QtCharts::QLineSeries *x, QtCharts::QLineSeries *y, 
     z->replace(pointsZ);
 }
 
-void Shot::updateGyroSeries(QtCharts::QLineSeries *x, QtCharts::QLineSeries *y, QtCharts::QLineSeries *z)
+void Shot::updateGyroSeries(QLineSeries *x, QLineSeries *y, QLineSeries *z)
 {
     if (x == nullptr || y == nullptr || z == nullptr)
         return;

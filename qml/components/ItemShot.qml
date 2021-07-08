@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
-import QtGraphicalEffects 1.12
+import QtGraphicalEffects 1.12 // Qt5
+//import Qt5Compat.GraphicalEffects // Qt6
 
 import ThemeEngine 1.0
 import com.offloadbuddy.shared 1.0
@@ -468,7 +469,7 @@ Rectangle {
 
         ////////
 
-        onClicked: {
+        onClicked: (mouse)=> {
             //console.log("ItemShot::onClicked")
             var lastIndex = shotsView.currentIndex
             shotsView.currentIndex = index
@@ -507,7 +508,7 @@ Rectangle {
             else
                 actionMenu.visible = false
         }
-        onDoubleClicked: {
+        onDoubleClicked: (mouse)=> {
             //console.log("ItemShot::onDoubleClicked")
 
             if (mouse.button === Qt.LeftButton) {

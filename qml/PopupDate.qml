@@ -163,7 +163,7 @@ Popup {
 
                             visible: (qdateFile > qdateFirst && qdateFile < qdateToday)
                             enabled: visible
-                            selected: (Qt.formatDateTime(qdate) == Qt.formatDateTime(qdateFile))
+                            selected: (qdate && Qt.formatDateTime(qdate) === Qt.formatDateTime(qdateFile))
                             background: selected
                             onClicked: loadDate(qdateFile)
                         }
@@ -224,7 +224,7 @@ Popup {
 
                         visible: (qdateMetadata > qdateFirst && qdateMetadata < qdateToday)
                         enabled: visible
-                        selected: (Qt.formatDateTime(qdate) == Qt.formatDateTime(qdateMetadata))
+                        selected: (qdate && Qt.formatDateTime(qdate) === Qt.formatDateTime(qdateMetadata))
                         background: selected
                         onClicked: loadDate(qdateMetadata)
                     }
@@ -284,7 +284,7 @@ Popup {
 
                         visible: (qdateGps > qdateFirst && qdateGps < qdateToday)
                         enabled: visible
-                        selected: (Qt.formatDateTime(qdate) == Qt.formatDateTime(qdateGps))
+                        selected: (qdate && Qt.formatDateTime(qdate) === Qt.formatDateTime(qdateGps))
                         background: selected
                         onClicked: loadDate(qdateGps)
                     }

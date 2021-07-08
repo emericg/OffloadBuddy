@@ -358,7 +358,7 @@ void FileScanner::mtpFileRec(LIBMTP_mtpdevice_t *device, uint32_t storageid, uin
                     f->name = file_name.mid(0, file_name.lastIndexOf("."));
                     f->extension = file_name.mid(file_name.lastIndexOf(".") + 1, -1).toLower();
                     f->size = mtpFile->filesize;
-                    f->creation_date = f->modification_date = QDateTime::fromTime_t(mtpFile->modificationdate);
+                    f->creation_date = f->modification_date = QDateTime::fromSecsSinceEpoch(mtpFile->modificationdate);
 
                     f->mtpDevice = device;
                     f->mtpObjectId = mtpFile->item_id;

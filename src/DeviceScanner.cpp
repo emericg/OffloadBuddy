@@ -219,17 +219,17 @@ void DeviceScanner::scanVirtualFilesystems()
                     if (subdir_device.startsWith("mtp"))
                     {
                         bool ok = false;
-                        bus = subdir_device.midRef(18,3).toInt(&ok);
+                        bus = subdir_device.mid(18,3).toInt(&ok);
                         if (!ok) bus = -1;
-                        dev = subdir_device.midRef(24,3).toInt(&ok);
+                        dev = subdir_device.mid(24,3).toInt(&ok);
                         if (!ok) dev = -1;
                     }
                     else if (subdir_device.startsWith("gphoto2"))
                     {
                         bool ok = false;
-                        bus = subdir_device.midRef(22,3).toInt(&ok);
+                        bus = subdir_device.mid(22,3).toInt(&ok);
                         if (!ok) bus = -1;
-                        dev = subdir_device.midRef(28,3).toInt(&ok);
+                        dev = subdir_device.mid(28,3).toInt(&ok);
                         if (!ok) dev = -1;
                     }
                     if (bus >= 0 && dev >= 0)
@@ -436,7 +436,7 @@ void DeviceScanner::scanMtpDevices()
                  << "] @ bus" << rawdevices[i].bus_location << ", dev" << rawdevices[i].devnum;
 */
         // Device in watch list? bail early!
-        auto currentMtpDevice = std::make_pair(rawdevices[i].bus_location, rawdevices[i].devnum);
+        std::pair <unsigned, unsigned> currentMtpDevice = std::make_pair(rawdevices[i].bus_location, rawdevices[i].devnum);
         connectedMtpDevices.push_back(currentMtpDevice);
         if (m_watchedMtpDevices.contains(currentMtpDevice))
         {

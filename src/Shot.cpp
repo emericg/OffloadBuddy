@@ -36,6 +36,9 @@
 #include <QDesktopServices>
 #include <QDebug>
 
+#include <QtCharts>
+using namespace QtCharts;
+
 /* ************************************************************************** */
 
 Shot::Shot(QObject *parent) : QObject(parent)
@@ -904,8 +907,8 @@ bool Shot::getMetadataFromPicture(int index)
                 // ex: "45, 41, 24,5662800"
                 exif_entry_get_value(entry, buf, sizeof(buf));
                 QString str = buf;
-                double deg = str.midRef(0, 2).toDouble();
-                double min = str.midRef(4, 2).toDouble();
+                double deg = str.mid(0, 2).toDouble();
+                double min = str.mid(4, 2).toDouble();
                 double sec = str.mid(8, 10).replace(',', '.').toDouble();
                 gps_lat = deg + min/60.0 + sec/3600.0;
                 gps_lat_str = str.mid(0, 2) + "° " + str.mid(4, 2) + "` " + str.mid(8, 8) + "``";
@@ -926,8 +929,8 @@ bool Shot::getMetadataFromPicture(int index)
             {
                 exif_entry_get_value(entry, buf, sizeof(buf));
                 QString str = buf;
-                double deg = str.midRef(0, 2).toDouble();
-                double min = str.midRef(4, 2).toDouble();
+                double deg = str.mid(0, 2).toDouble();
+                double min = str.mid(4, 2).toDouble();
                 double sec = str.mid(8, 10).replace(',', '.').toDouble();
                 gps_long = deg + min/60.0 + sec/3600.0;
                 gps_long_str = str.mid(0, 2) + "° " + str.mid(4, 2) + "` " + str.mid(8, 8) + "``";
@@ -1066,7 +1069,7 @@ bool Shot::getMetadataFromVideo(int index)
     MediaFile_t *media = m_videos.at(index)->media;
     if (media)
     {
-        m_date_metadata = QDateTime::fromTime_t(media->creation_time);
+        m_date_metadata = QDateTime::fromSecsSinceEpoch(media->creation_time);
 
         if (media->tracks_audio_count > 0)
         {
