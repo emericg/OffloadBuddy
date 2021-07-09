@@ -8,7 +8,7 @@ import ThemeEngine 1.0
 import "qrc:/js/UtilsPath.js" as UtilsPath
 
 TextField {
-    id: folderArea
+    id: control
     implicitWidth: 128
     implicitHeight: Theme.componentHeight
 
@@ -21,20 +21,24 @@ TextField {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    property alias folder: folderArea.text
+    property alias folder: control.text
     property alias file: fileArea.text
     property alias extension: extensionArea.text
 
-    signal pathChanged(var path)
+    property string path: folder + file + "." + extension
+    property bool isValid: (control.text.length > 0 && fileArea.text.length > 0 && extensionArea.text.length > 0)
+    //signal pathChanged(var path)
 
     placeholderText: ""
     placeholderTextColor: colorPlaceholderText
 
-    color: colorText
+    color: enabled ? colorText : colorPlaceholderText
     font.pixelSize: Theme.fontSizeComponent
 
+    onTextChanged: {
+        //
+    }
     onEditingFinished: {
-        pathChanged(folderArea.text + fileArea.text + "." + extensionArea.text)
         focus = false
     }
 
@@ -50,8 +54,8 @@ TextField {
             var f = UtilsPath.cleanUrl(fileDialogChange.fileUrl)
             if (f.slice(0, -1) !== "/") f += "/"
 
-            folderArea.text = f
-            pathChanged(folderArea.text + fileArea.text + "." + extensionArea.text)
+            control.text = f
+            pathChanged(control.text + fileArea.text + "." + extensionArea.text)
         }
     }
 
@@ -71,7 +75,7 @@ TextField {
             focusPolicy: Qt.NoFocus
 
             onClicked: {
-                fileDialogChange.folder =  "file:///" + folderArea.text
+                fileDialogChange.folder =  "file:///" + control.text
                 fileDialogChange.open()
             }
 
@@ -103,7 +107,7 @@ TextField {
             color: "transparent"
             radius: Theme.componentRadius
             border.width: 2
-            border.color: (folderArea.activeFocus || fileArea.activeFocus) ? Theme.colorPrimary : colorBorder
+            border.color: (control.activeFocus || fileArea.activeFocus) ? Theme.colorPrimary : colorBorder
         }
 
         layer.enabled: false
@@ -124,14 +128,16 @@ TextField {
         id: fileArea
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        x: folderArea.contentWidth + 12
-        width: folderArea.width - x
+        x: control.contentWidth + 10
+        width: control.width - x
 
         color: Theme.colorSubText
         verticalAlignment: Text.AlignVCenter
 
+        onTextChanged: {
+            parent.textChanged()
+        }
         onEditingFinished: {
-            pathChanged(folderArea.text + fileArea.text + "." + extensionArea.text)
             focus = false
         }
     }
@@ -140,7 +146,7 @@ TextField {
         id: dot
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        x: folderArea.contentWidth + 12 + fileArea.contentWidth + 1
+        x: control.contentWidth + 10 + fileArea.contentWidth
 
         text: "."
         color: Theme.colorSubText
@@ -152,6 +158,7 @@ TextField {
         anchors.left: dot.right
         anchors.leftMargin: 1
         anchors.bottom: parent.bottom
+
         color: Theme.colorSubText
         verticalAlignment: Text.AlignVCenter
     }

@@ -92,8 +92,11 @@ public:
 
 typedef struct JobDestination
 {
-    QString path;
-    QString name;
+    QString mediaDirectory;
+
+    QString folder;
+    QString file;
+    QString extension;
 
 } JobDestination;
 

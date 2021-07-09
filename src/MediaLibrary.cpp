@@ -342,11 +342,14 @@ void MediaLibrary::moveSelected(const QString &shot_uuid, const QVariant &settin
     // Get destination
     JobDestination dst;
     {
+        if (variantMap.contains("mediaDirectory"))
+            dst.mediaDirectory = variantMap.value("mediaDirectory").toString();
+
         if (variantMap.contains("path"))
-            dst.path = variantMap.value("path").toString();
+            dst.folder = variantMap.value("path").toString();
 
         if (variantMap.contains("file"))
-            dst.name = variantMap.value("file").toString();
+            dst.file = variantMap.value("file").toString();
     }
 
     // Submit job
@@ -378,11 +381,14 @@ void MediaLibrary::moveSelection(const QVariant &uuids, const QVariant &settings
     // Get destination
     JobDestination dst;
     {
+        if (variantMap.contains("mediaDirectory"))
+            dst.mediaDirectory = variantMap.value("mediaDirectory").toString();
+
         if (variantMap.contains("path"))
-            dst.path = variantMap.value("path").toString();
+            dst.folder = variantMap.value("path").toString();
 
         if (variantMap.contains("file"))
-            dst.name = variantMap.value("file").toString();
+            dst.file = variantMap.value("file").toString();
     }
 
     // Submit jobs
@@ -472,11 +478,14 @@ void MediaLibrary::reencodeSelected(const QString &shot_uuid, const QVariant &se
     // Get destination
     JobDestination dst;
     {
+        if (variantMap.contains("mediaDirectory"))
+            dst.mediaDirectory = variantMap.value("mediaDirectory").toString();
+
         if (variantMap.contains("path"))
-            dst.path = variantMap.value("path").toString();
+            dst.folder = variantMap.value("path").toString();
 
         if (variantMap.contains("file"))
-            dst.name = variantMap.value("file").toString();
+            dst.file = variantMap.value("file").toString();
     }
 
     // Get settings
@@ -558,11 +567,14 @@ void MediaLibrary::extractTelemetrySelected(const QString &shot_uuid, const QVar
     // Get destination
     JobDestination dst;
     {
+        if (variantMap.contains("mediaDirectory"))
+            dst.mediaDirectory = variantMap.value("mediaDirectory").toString();
+
         if (variantMap.contains("path"))
-            dst.path = variantMap.value("path").toString();
+            dst.folder = variantMap.value("path").toString();
 
         if (variantMap.contains("file"))
-            dst.name = variantMap.value("file").toString();
+            dst.file = variantMap.value("file").toString();
     }
 
     // Get settings
@@ -611,11 +623,14 @@ void MediaLibrary::extractTelemetrySelection(const QVariant &uuids, const QVaria
     // Get destination
     JobDestination dst;
     {
+        if (variantMap.contains("mediaDirectory"))
+            dst.mediaDirectory = variantMap.value("mediaDirectory").toString();
+
         if (variantMap.contains("path"))
-            dst.path = variantMap.value("path").toString();
+            dst.folder = variantMap.value("path").toString();
 
         if (variantMap.contains("file"))
-            dst.name = variantMap.value("file").toString();
+            dst.file = variantMap.value("file").toString();
     }
 
     // Get settings

@@ -45,6 +45,7 @@ Popup {
         files = []
         mediaProvider = provider
         currentShot = shot
+        rectangleDestination.setDestination()
 
         visible = true
     }
@@ -58,6 +59,7 @@ Popup {
         files = []
         mediaProvider = provider
         currentShot = null
+        rectangleDestination.setDestination()
 
         visible = true
     }
@@ -235,6 +237,8 @@ Popup {
                     }
                 }
 
+                ////////
+
                 Item {
                     id: elementTelemetry
                     height: 48
@@ -272,6 +276,8 @@ Popup {
                     }
                 }
 
+                ////////
+
                 Item {
                     id: elementAltitude
                     height: 48
@@ -302,15 +308,48 @@ Popup {
                     }
                 }
 
-                ////////////////
+                ////////
 
-                Item { width: 16; height: 16; } // spacer
+                Item { // delimiter
+                    anchors.left: parent.left
+                    anchors.leftMargin: -23
+                    anchors.right: parent.right
+                    anchors.rightMargin: -23
+                    height: 32
+
+                    Rectangle {
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: parent.width
+                        height: Theme.componentBorderWidth
+                        color: Theme.colorForeground
+                    }
+                }
+
+                ////////
 
                 Item {
                     id: rectangleDestination
                     height: 48
                     anchors.right: parent.right
                     anchors.left: parent.left
+
+                    function setDestination() {
+                        fileInput.folder = currentShot.folder
+                        fileInput.file = currentShot.name
+
+                        //if (rbGPX.checked)
+                        //    fileInput.extension = "gpx"
+                        //else if (rbIGC.checked)
+                        //    fileInput.extension = "igc"
+                        //else if (rbKML.checked)
+                        //    fileInput.extension = "kml"
+                        if (rbJSON.checked)
+                            fileInput.extension = "json"
+                        else if (rbCSV.checked)
+                            fileInput.extension = "csv"
+
+                        rectangleFileWarning.visible = jobManager.fileExists(fileInput.path)
+                    }
 
                     Text {
                         id: textDestinationTitle
@@ -341,14 +380,12 @@ Popup {
 
                         property bool cbinit: false
                         onCurrentIndexChanged: {
-                            if (currentShot) textField_path.text = currentShot.getFolderString()
+                            if (!currentShot) return
 
                             if (cbinit) {
-                                if (comboBoxDestination.currentIndex === cbDestinations.count) {
-                                    //
-                                }
+                                //
                             } else {
-                                cbinit = true;
+                                cbinit = true
                             }
                         }
                     }
@@ -359,13 +396,46 @@ Popup {
                     anchors.right: parent.right
                     anchors.left: parent.left
 
-                    visible: (comboBoxDestination.currentIndex === (cbDestinations.count - 1))
+                    //visible: (comboBoxDestination.currentIndex === 1)
+                    enabled: (comboBoxDestination.currentIndex === 1)
 
-                    FolderInputArea {
-                        id: textField_path
+                    FileInputArea {
+                        id: fileInput
                         anchors.left: parent.left
                         anchors.right: parent.right
                         anchors.verticalCenter: parent.verticalCenter
+
+                        onPathChanged: {
+                            rectangleFileWarning.visible = jobManager.fileExists(fileInput.path)
+                        }
+                    }
+                }
+
+                Row {
+                    id: rectangleFileWarning
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 48
+                    spacing: 16
+
+                    visible: false
+
+                    ImageSvg {
+                        width: 28
+                        height: 28
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        color: Theme.colorWarning
+                        source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
+                    }
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: qsTr("Warning, this file exists already and will be overwritten...")
+                        color: Theme.colorText
+                        font.bold: false
+                        font.pixelSize: Theme.fontSizeContent
+                        wrapMode: Text.WordWrap
                     }
                 }
             }
@@ -399,23 +469,36 @@ Popup {
                 fullColor: true
                 primaryColor: Theme.colorSecondary
 
+                enabled: fileInput.isValid
+
                 onClicked: {
-                    var settingsTelemetry = {}
+                    if (typeof currentShot === "undefined" || !currentShot) return
+                    if (typeof mediaProvider === "undefined" || !mediaProvider) return
 
+                    var telemetryDestination = {}
+                    var telemetrySettings = {}
+
+                    // paths
+                    telemetryDestination["folder"] = fileInput.folder
+                    telemetryDestination["file"] = fileInput.file
+                    telemetryDestination["extension"] = fileInput.extension
+
+                    // settings
                     if (rbJSON.checked)
-                        settingsTelemetry["telemetry_format"] = "JSON";
+                        telemetrySettings["telemetry_format"] = "JSON";
                     else if (rbCSV.checked)
-                        settingsTelemetry["telemetry_format"] = "CSV";
+                        telemetrySettings["telemetry_format"] = "CSV";
 
-                    settingsTelemetry["telemetry_frequency"] = 30
-                    settingsTelemetry["gps_frequency"] = 2
-                    settingsTelemetry["egm96_correction"] = switchEGM96.checked
-                    settingsTelemetry["path"] = textField_path.text
+                    telemetrySettings["telemetry_frequency"] = 30
+                    telemetrySettings["gps_frequency"] = 2
+                    telemetrySettings["egm96_correction"] = switchEGM96.checked
+                    telemetrySettings["path"] = fileInput.text
 
+                    // send job
                     if (currentShot) {
-                        currentShot.exportTelemetry(textField_path.text, 0, 30, 2, switchEGM96.checked)
+                        currentShot.exportTelemetry(fileInput.text, 0, 30, 2, switchEGM96.checked)
                     } else if (uuids.length > 0) {
-                        mediaProvider.extractTelemetrySelected(uuids, settingsTelemetry)
+                        mediaProvider.extractTelemetrySelected(uuids, telemetrySettings)
                     }
                 }
             }
@@ -428,24 +511,30 @@ Popup {
                 fullColor: true
                 primaryColor: Theme.colorPrimary
 
+                enabled: fileInput.isValid
+
                 onClicked: {
-                    var settingsTelemetry = {}
+                    if (typeof currentShot === "undefined" || !currentShot) return
+                    if (typeof mediaProvider === "undefined" || !mediaProvider) return
+
+                    var telemetryDestination = {}
+                    var telemetrySettings = {}
 
                     if (rbGPX.checked)
-                        settingsTelemetry["gps_format"] = "GPX";
+                        telemetrySettings["gps_format"] = "GPX";
                     else if (rbIGC.checked)
-                        settingsTelemetry["gps_format"] = "IGC";
+                        telemetrySettings["gps_format"] = "IGC";
                     else if (rbKML.checked)
-                        settingsTelemetry["gps_format"] = "KML";
+                        telemetrySettings["gps_format"] = "KML";
 
-                    settingsTelemetry["gps_frequency"] = 2
-                    settingsTelemetry["egm96_correction"] = switchEGM96.checked
-                    settingsTelemetry["path"] = textField_path.text
+                    telemetrySettings["gps_frequency"] = 2
+                    telemetrySettings["egm96_correction"] = switchEGM96.checked
+                    telemetrySettings["path"] = fileInput.text
 
                     if (currentShot) {
-                        currentShot.exportGps(textField_path.text, 0, 2, switchEGM96.checked)
+                        currentShot.exportGps(fileInput.text, 0, 2, switchEGM96.checked)
                     } else if (uuids.length > 0) {
-                        mediaProvider.extractTelemetrySelected(uuids, settingsTelemetry)
+                        mediaProvider.extractTelemetrySelected(uuids, telemetrySettings)
                     }
                 }
             }

@@ -46,6 +46,7 @@ Popup {
         files = []
         mediaProvider = provider
         currentShot = shot
+        rectangleDestination.setDestination()
 
         visible = true
     }
@@ -59,6 +60,7 @@ Popup {
         files = []
         mediaProvider = provider
         currentShot = null
+        rectangleDestination.setDestination()
 
         visible = true
     }
@@ -225,44 +227,44 @@ Popup {
     function changeCodec() {
         if (encodingMode === "video" || encodingMode === "timelapse") {
             if (cbCOPY.checked) {
-                //textField_path.extension = currentShot.e
+                //fileInput.extension = currentShot.e
                 text = qsTr("With this mode you can trim the duration without reencoding the video, so no quality will be lost. But you cannot apply any other transformation.")
             } else {
                 if (rbH264.checked) {
-                    textField_path.extension = "mp4"
+                    fileInput.extension = "mp4"
                     textCodecHelp.text = qsTr("The most widely used codec today. It provides the best balance of compression, speed, and excellent support for every kind devices.")
                 } else if (rbH265.checked) {
-                    textField_path.extension = "mp4"
+                    fileInput.extension = "mp4"
                     textCodecHelp.text = qsTr("The successor of H.264. It provides excellent compression, slower encoding speed, and good support with most kind of devices.")
                 } else if (rbVP9.checked) {
-                    textField_path.extension = "mkv"
+                    fileInput.extension = "mkv"
                     textCodecHelp.text = qsTr("Good balance of next gen compression, speed, and software support. Use it if you know what you are doing though.")
                 } else if (rbAV1.checked) {
-                    textField_path.extension = "mkv"
+                    fileInput.extension = "mkv"
                     textCodecHelp.text = qsTr("AV1 has the best compression for video, but is VERY slow to encode, and while software support is good, device support is still poor as of today.")
                 } else if (rbProRes.checked) {
-                    textField_path.extension = "mp4"
+                    fileInput.extension = "mp4"
                     textCodecHelp.text = qsTr("Almost lossless compression, so HUGE file size but very good quality and speed.")
                 } else if (rbGIF.checked) {
-                    textField_path.extension = "gif"
+                    fileInput.extension = "gif"
                     textCodecHelp.text = qsTr("The meme maker. Go nuts with this oO")
                 }
             }
         } else {
             if (rbPNG.checked) {
-                textField_path.extension = "png"
+                fileInput.extension = "png"
                 textCodecHelp.text = qsTr("Lossless compression for your picture. Big files, but no quality lost.")
             } else if (rbJPEG.checked) {
-                textField_path.extension = "jpg"
+                fileInput.extension = "jpg"
                 textCodecHelp.text = qsTr("The most widely used image format.")
             } else if (rbWEBP.checked) {
-                textField_path.extension = "webp"
+                fileInput.extension = "webp"
                 textCodecHelp.text = qsTr("Better compression and quality than JPEG.")
             } else if (rbAVIF.checked) {
-                textField_path.extension = "avif"
+                fileInput.extension = "avif"
                 textCodecHelp.text = qsTr("AVIF is an AV1 based image format. It has excellent compression but very poor support from various devices, web browser and other.")
             } else if (rbHEIF.checked) {
-                textField_path.extension = "heif"
+                fileInput.extension = "heif"
                 textCodecHelp.text = qsTr("HEIF is an H.265 based image format. It has excellent compression but very poor support from various devices, web browser and other.")
             } else {
                 textCodecHelp.text = ""
@@ -1190,6 +1192,12 @@ Popup {
                 anchors.left: parent.left
                 anchors.right: parent.right
 
+                function setDestination() {
+                    // TODO
+
+                    rectangleFileWarning.visible = jobManager.fileExists(fileInput.path)
+                }
+
                 Text {
                     id: textDestinationTitle
                     width: contentColumn.legendWidth
@@ -1220,23 +1228,25 @@ Popup {
 
                     function updateDestinations() {
                         cbDestinations.clear()
+                        cbDestinations.append( { "text": qsTr("Next to the video file") } )
+                        cbDestinations.append( { "text": qsTr("Select path manually") } )
 
                         for (var child in storageManager.directoriesList) {
                             if (storageManager.directoriesList[child].available &&
                                 storageManager.directoriesList[child].directoryContent !== 2)
                                 cbDestinations.append( { "text": storageManager.directoriesList[child].directoryPath } )
                         }
-                        cbDestinations.append( { "text": qsTr("Select path manually") } )
 
                         comboBoxDestination.currentIndex = 0 // TODO save value?
 
-                        var path = textField_path.folder + textField_path.file + "." + textField_path.extension
+                        var path = fileInput.folder + fileInput.file + "." + fileInput.extension
                         rectangleFileWarning.visible = jobManager.fileExists(path)
                     }
 
                     property bool cbinit: false
                     onCurrentIndexChanged: {
                         if (storageManager.directoriesCount <= 0) return
+                        if (!currentShot) return
 
                         if (cbinit) {
                             if (comboBoxDestination.currentIndex === cbDestinations.count) {
@@ -1244,8 +1254,8 @@ Popup {
                             }
 
                             if (comboBoxDestination.currentIndex < cbDestinations.count) {
-                                textField_path.folder = comboBoxDestination.displayText
-                                textField_path.file = currentShot.name + "_rencoded"
+                                fileInput.folder = comboBoxDestination.displayText
+                                fileInput.file = currentShot.name + "_rencoded"
                             }
                         } else {
                             cbinit = true
@@ -1259,19 +1269,14 @@ Popup {
                 anchors.right: parent.right
                 anchors.left: parent.left
 
-                visible: (comboBoxDestination.currentIndex === (cbDestinations.count - 1))
+                //visible: (comboBoxDestination.currentIndex === 1)
+                enabled: (comboBoxDestination.currentIndex === 1)
 
                 FileInputArea {
-                    id: textField_path
+                    id: fileInput
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
-
-                    visible: (comboBoxDestination.currentIndex === (cbDestinations.count - 1))
-
-                    onVisibleChanged: {
-                        //
-                    }
 
                     onPathChanged: {
                         rectangleFileWarning.visible = jobManager.fileExists(path)
@@ -1279,7 +1284,7 @@ Popup {
                 }
             }
 
-            Row  {
+            Row {
                 id: rectangleFileWarning
                 anchors.left: parent.left
                 anchors.right: parent.right
@@ -1337,12 +1342,26 @@ Popup {
                 source: "qrc:/assets/icons_material/baseline-memory-24px.svg"
                 fullColor: true
                 primaryColor: Theme.colorPrimary
+
+                enabled: fileInput.isValid
+
                 onClicked: {
                     if (typeof currentShot === "undefined" || !currentShot) return
                     if (typeof mediaProvider === "undefined" || !mediaProvider) return
 
+                    var encodingDestination = {}
                     var encodingParams = {}
 
+                    // paths
+                    if (comboBoxDestination.currentIndex === 0) {
+                        telemetryDestination["folder"] = fileInput.folder
+                        telemetryDestination["file"] = fileInput.file
+                        telemetryDestination["extension"] = fileInput.extension
+                    } else if (comboBoxDestination.currentIndex === 1) {
+                        //
+                    }
+
+                    // settings
                     if (encodingMode === "image") {
                         if (rbPNG.checked)
                             encodingParams["codec"] = "PNG";
@@ -1446,21 +1465,22 @@ Popup {
 
                     encodingParams["quality"] = sliderQuality.value
 
-                    encodingParams["path"] = textField_path.text
+                    encodingParams["path"] = fileInput.text
 
                     // Filters
                     if (checkBox_defisheye.checked) encodingParams["defisheye"] = checkBox_defisheye.checked
                     if (checkBox_deshake.checked) encodingParams["deshake"] = checkBox_deshake.checked
 
                     ////
-
+/*
                     if (typeof currentDevice !== "undefined")
                         mediaProvider = currentDevice;
                     else if (typeof mediaLibrary !== "undefined")
                         mediaProvider = mediaLibrary;
                     else
                         return
-
+*/
+                    // send job
                     mediaProvider.reencodeSelected(currentShot.uuid, encodingParams)
                     popupEncoding.close()
                 }
