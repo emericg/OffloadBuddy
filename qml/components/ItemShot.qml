@@ -219,10 +219,10 @@ Rectangle {
         Behavior on opacity { NumberAnimation { duration: 133 } }
 
         // extra filtering?
-        smooth: (settingsManager.thumbQuality === 2)
+        smooth: (settingsManager.thumbQuality >= 1)
         // big enough so we have good quality regarding of the thumb size
-        sourceSize.width: (sm.thumbQuality >= 1) ? 512 : 400
-        sourceSize.height: (sm.thumbQuality >= 1) ? 512 : 400
+        sourceSize.width: (sm.thumbQuality > 1) ? 512 : 400
+        sourceSize.height: (sm.thumbQuality > 1) ? 512 : 400
     }
 
     ItemImage {

@@ -137,8 +137,9 @@ void MediaThumbnailerRunner::run()
         // check size first, don't even try to thumbnail very big (>8K) pictures
         if (img_infos.size().rwidth() < 8192 && img_infos.size().rheight() < 8192)
         {
+            float ar = img_infos.size().width() / static_cast<float>(img_infos.size().height());
+            img_infos.setScaledSize(QSize(width, height/ar));
             img_infos.setAutoTransform(true);
-            img_infos.setScaledSize(QSize(width, height/2));
             decoding_status = img_infos.read(&thumb);
         }
     }
