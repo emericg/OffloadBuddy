@@ -1,6 +1,5 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
-import QtQuick.Dialogs 1.3 // Qt5
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsString.js" as UtilsString
@@ -87,18 +86,15 @@ Item {
                 highlightMode: "color"
                 visible: directory.available
                 source: "qrc:/assets/icons_material/baseline-refresh-24px.svg"
-                onClicked: {
-                    mediaLibrary.searchMediaDirectory(directory.directoryPath)
-                    refreshAnimation.start()
-                }
+                onClicked: mediaLibrary.searchMediaDirectory(directory.directoryPath)
 
                 NumberAnimation on rotation {
                     id: refreshAnimation
                     duration: 1000
                     from: 0
                     to: 360
-                    //running: directory.scanning
-                    //loops: Animation.Infinite
+                    running: directory.scanning
+                    loops: Animation.Infinite
                     alwaysRunToEnd: true
                     easing.type: Easing.Linear
                 }
@@ -116,37 +112,6 @@ Item {
         }
     }
 
-    ////////////////
-/*
-    ComboBoxThemed {
-        id: comboBox_content
-        width: 180
-        anchors.left: textField_path.right
-        anchors.leftMargin: 16
-        anchors.verticalCenter: parent.verticalCenter
-
-        font.pixelSize: Theme.fontSizeContentSmall
-
-        model: ListModel {
-            id: cbItemsContent
-            ListElement { text: qsTr("all media"); }
-            ListElement { text: qsTr("videos"); }
-            ListElement { text: qsTr("pictures"); }
-        }
-        Component.onCompleted: {
-            currentIndex = directory.directoryContent;
-            if (currentIndex === -1) { currentIndex = 0 }
-        }
-        property bool cbinit: false
-        onCurrentIndexChanged: {
-            if (cbinit) {
-                directory.directoryContent = currentIndex
-            } else {
-                cbinit = true;
-            }
-        }
-    }
-*/
     ////////////////
 
     Item {

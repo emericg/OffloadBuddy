@@ -343,7 +343,7 @@ Item {
             id: rowMenus
             anchors.top: parent.top
             anchors.right: parent.right
-            anchors.rightMargin: 40
+            anchors.rightMargin: 32
             anchors.bottom: parent.bottom
 
             ItemMenuButton {

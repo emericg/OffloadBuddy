@@ -17,7 +17,7 @@ TextField {
     property string colorBorder: Theme.colorComponentBorder
     property string colorBackground: Theme.colorComponentBackground
 
-    property alias buttonWidth: button_change.width
+    property alias buttonWidth: buttonChange.width
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -66,7 +66,7 @@ TextField {
         radius: Theme.componentRadius
 
         Button {
-            id: button_change
+            id: buttonChange
             anchors.right: parent.right
             width: contentText.contentWidth + (contentText.contentWidth / 2)
             height: Theme.componentHeight
@@ -82,7 +82,7 @@ TextField {
             background: Rectangle {
                 radius: Theme.componentRadius
                 opacity: enabled ? 1 : 0.33
-                color: button_change.down ? Theme.colorComponentDown : Theme.colorComponent
+                color: buttonChange.down ? Theme.colorComponentDown : Theme.colorComponent
             }
 
             contentItem: Text {
@@ -92,13 +92,13 @@ TextField {
 
                 text: qsTr("change")
                 textFormat: Text.PlainText
-                font: button_change.font
+                font: buttonChange.font
                 elide: Text.ElideRight
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
 
                 opacity: enabled ? 1.0 : 0.33
-                color: button_change.down ? Theme.colorComponentContent : Theme.colorComponentContent
+                color: buttonChange.down ? Theme.colorComponentContent : Theme.colorComponentContent
             }
         }
 
@@ -129,7 +129,7 @@ TextField {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         x: control.contentWidth + 10
-        width: control.width - x
+        width: control.width - buttonChange.width - x
 
         color: Theme.colorSubText
         verticalAlignment: Text.AlignVCenter

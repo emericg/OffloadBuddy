@@ -424,7 +424,7 @@ Item {
 
                 FileDialog {
                     id: fileDialogAdd
-                    title: qsTr("Please choose a destination directory!")
+                    title: qsTr("Please choose a directory!")
                     sidebarVisible: true
                     selectExisting: true
                     selectMultiple: false

@@ -35,8 +35,8 @@ TextField {
     }
 
     FileDialog {
-        id: fileDialogChange
-        title: qsTr("Please choose a destination!")
+        id: fileDialog
+        title: qsTr("Please choose a directory!")
         sidebarVisible: true
         selectExisting: true
         selectMultiple: false
