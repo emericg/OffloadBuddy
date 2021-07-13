@@ -39,10 +39,12 @@ class MediaThumbnailerRunner : public QObject, public QRunnable
 {
     Q_OBJECT
 
+    const int DEFAULT_THUMB_SIZE = 512;
+
     QString path;
     int timecode_s = 0;
-    int width = 512;
-    int height = 512;
+    int width = DEFAULT_THUMB_SIZE;
+    int height = DEFAULT_THUMB_SIZE;
 
     ThumbnailerBackend mediaThumbnailer;
 

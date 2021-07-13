@@ -49,7 +49,7 @@ protected:
 
 public:
     ThumbnailerBackend();
-    virtual ~ThumbnailerBackend() = default;
+    virtual ~ThumbnailerBackend() { delete m_backend; };
 
     virtual bool getImage(const QString &path, QImage &image,
                   const int timecode_s, const int width, const int height)

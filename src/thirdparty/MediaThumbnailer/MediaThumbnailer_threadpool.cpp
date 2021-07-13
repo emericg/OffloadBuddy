@@ -94,8 +94,8 @@ MediaThumbnailerRunner::MediaThumbnailerRunner(const QString &id, const QSize &r
 {
     QThread::currentThread()->setPriority(QThread::LowestPriority);
 
-    if (requestedSize.width() > 0) width = requestedSize.width();
-    if (requestedSize.height() > 0) height = requestedSize.height();
+    width = requestedSize.width() > 0 ? requestedSize.width() : DEFAULT_THUMB_SIZE;
+    height = requestedSize.height() > 0 ? requestedSize.height() : DEFAULT_THUMB_SIZE;
 
     // Make sure we have a regular path and not an URL
     path = id;

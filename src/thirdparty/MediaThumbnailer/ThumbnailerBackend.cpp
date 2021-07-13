@@ -20,9 +20,15 @@
 
 /* ************************************************************************** */
 
-#include "ThumbnailerBackend_gstreamer.h"
+#if defined(ENABLE_FFMPEG)
 #include "ThumbnailerBackend_ffmpeg.h"
+#endif
+#if defined(ENABLE_GSTREAMER)
+#include "ThumbnailerBackend_gstreamer.h"
+#endif
+#if defined(ENABLE_MINIVIDEO)
 #include "ThumbnailerBackend_minivideo.h"
+#endif
 
 /* ************************************************************************** */
 
@@ -30,8 +36,17 @@ ThumbnailerBackend::ThumbnailerBackend()
 {
 #if defined(ENABLE_FFMPEG)
     m_backend = new ThumbnailerBackend_ffmpeg();
-#elif defined(ENABLE_MINIVIDEO)
+    return;
+#endif
+
+#if defined(ENABLE_GSTREAMER)
+    m_backend = new ThumbnailerBackend_gstreamer();
+    return;
+#endif
+
+#if defined(ENABLE_MINIVIDEO)
     m_backend = new ThumbnailerBackend_minivideo();
+    return;
 #endif
 }
 
