@@ -1349,14 +1349,13 @@ Popup {
                     if (typeof currentShot === "undefined" || !currentShot) return
                     if (typeof mediaProvider === "undefined" || !mediaProvider) return
 
-                    var encodingDestination = {}
-                    var encodingParams = {}
+                    var encodingSettings = {}
 
-                    // paths
+                    // destination
                     if (comboBoxDestination.currentIndex === 0) {
-                        telemetryDestination["folder"] = fileInput.folder
-                        telemetryDestination["file"] = fileInput.file
-                        telemetryDestination["extension"] = fileInput.extension
+                        encodingSettings["folder"] = fileInput.folder
+                        encodingSettings["file"] = fileInput.file
+                        encodingSettings["extension"] = fileInput.extension
                     } else if (comboBoxDestination.currentIndex === 1) {
                         //
                     }
@@ -1364,112 +1363,112 @@ Popup {
                     // settings
                     if (encodingMode === "image") {
                         if (rbPNG.checked)
-                            encodingParams["codec"] = "PNG";
+                            encodingSettings["codec"] = "PNG";
                         else if (rbJPEG.checked)
-                            encodingParams["codec"] = "JPEG";
+                            encodingSettings["codec"] = "JPEG";
                         else if (rbWEBP.checked)
-                            encodingParams["codec"] = "WEBP";
+                            encodingSettings["codec"] = "WEBP";
                         else if (rbAVIF.checked)
-                            encodingParams["codec"] = "AVIF";
+                            encodingSettings["codec"] = "AVIF";
                         else if (rbHEIF.checked)
-                            encodingParams["codec"] = "HEIF";
+                            encodingSettings["codec"] = "HEIF";
                     }
 
                     if (encodingMode === "video" || encodingMode === "timelapse") {
                         if (rbH264.checked)
-                            encodingParams["codec"] = "H.264";
+                            encodingSettings["codec"] = "H.264";
                         else if (rbH265.checked)
-                            encodingParams["codec"] = "H.265";
+                            encodingSettings["codec"] = "H.265";
                         else if (rbVP9.checked)
-                            encodingParams["codec"] = "VP9";
+                            encodingSettings["codec"] = "VP9";
                         else if (rbAV1.checked)
-                            encodingParams["codec"] = "AV1";
+                            encodingSettings["codec"] = "AV1";
                         else if (rbProRes.checked)
-                            encodingParams["codec"] = "PRORES";
+                            encodingSettings["codec"] = "PRORES";
                         else if (rbGIF.checked)
-                            encodingParams["codec"] = "GIF";
+                            encodingSettings["codec"] = "GIF";
 
                         if (clipStartMs > 0 && clipDurationMs > 0) {
                             if (cbCOPY.checked)
-                                encodingParams["codec"] = "copy";
+                                encodingSettings["codec"] = "copy";
                         }
 
-                        encodingParams["speed"] = sliderSpeed.value;
+                        encodingSettings["speed"] = sliderSpeed.value;
 
                         if (selectorVideoFps.visible && selectorVideoFps.fps != Math.round(currentShot.framerate))
-                            encodingParams["fps"] = selectorVideoFps.fps;
+                            encodingSettings["fps"] = selectorVideoFps.fps;
 
                         if (selectorGifFps.visible)
-                            encodingParams["fps"] = selectorGifFps.fps;
+                            encodingSettings["fps"] = selectorGifFps.fps;
 
                         if (clipStartMs > 0)
-                            encodingParams["clipStartMs"] = clipStartMs;
+                            encodingSettings["clipStartMs"] = clipStartMs;
                         if (clipDurationMs > 0) // && (clipStartMs + clipDurationMs) < currentShot.duration)
-                            encodingParams["clipDurationMs"] = clipDurationMs;
+                            encodingSettings["clipDurationMs"] = clipDurationMs;
                     }
 
                     if (selectorGifRes.visible && selectorGifRes.res !== currentShot.height) {
-                        encodingParams["resolution"] = selectorGifRes.res;
-                        encodingParams["scale"] = "-2:" + selectorGifRes.res;
+                        encodingSettings["resolution"] = selectorGifRes.res;
+                        encodingSettings["scale"] = "-2:" + selectorGifRes.res;
                     }
                     if (selectorVideoRes.visible && selectorVideoRes.res !== currentShot.height) {
-                        encodingParams["resolution"] = selectorVideoRes.res;
-                        encodingParams["scale"] = "-2:" + selectorVideoRes.res;
+                        encodingSettings["resolution"] = selectorVideoRes.res;
+                        encodingSettings["scale"] = "-2:" + selectorVideoRes.res;
                     }
 
                     if (clipCropX > 0 || clipCropY > 0 ||
                         (clipCropW > 0 && clipCropW < currentShot.width) ||
                         (clipCropH > 0 && clipCropH < currentShot.height)) {
-                        encodingParams["crop"] = clipCropW + ":" + clipCropH + ":" + clipCropX + ":" + clipCropY
+                        encodingSettings["crop"] = clipCropW + ":" + clipCropH + ":" + clipCropX + ":" + clipCropY
 
                         var cropAR = 1.0
                         if (clipCropW > clipCropH) cropAR = clipCropW / clipCropH
                         else if (clipCropW < clipCropH) cropAR = clipCropH / clipCropW
 
-                        encodingParams["scale"] = UtilsNumber.round2((encodingParams["resolution"] * cropAR)) + ":" + encodingParams["resolution"]
+                        encodingSettings["scale"] = UtilsNumber.round2((encodingSettings["resolution"] * cropAR)) + ":" + encodingSettings["resolution"]
                     }
 
                     if (rbGIF.checked) {
                         // Make sure we feed the complex graph
-                        encodingParams["fps"] = selectorGifFps.fps;
-                        encodingParams["resolution"] = selectorGifRes.res;
-                        encodingParams["scale"] = "-2:" + selectorGifRes.res;
-                        if (clipStartMs <= 0) encodingParams["clipStartMs"] = 0;
-                        if (clipDurationMs <= 0) encodingParams["clipDurationMs"] = currentShot.duration;
+                        encodingSettings["fps"] = selectorGifFps.fps;
+                        encodingSettings["resolution"] = selectorGifRes.res;
+                        encodingSettings["scale"] = "-2:" + selectorGifRes.res;
+                        if (clipStartMs <= 0) encodingSettings["clipStartMs"] = 0;
+                        if (clipDurationMs <= 0) encodingSettings["clipDurationMs"] = currentShot.duration;
                         if (clipCropX > 0 || clipCropY > 0 ||
                             (clipCropW > 0 && clipCropW < currentShot.width) ||
                             (clipCropH > 0 && clipCropH < currentShot.height)) {
                             if (clipRotation == 0 || clipRotation == 180)
-                                encodingParams["crop"] = clipCropW + ":" + clipCropH + ":" + clipCropX + ":" + clipCropY
+                                encodingSettings["crop"] = clipCropW + ":" + clipCropH + ":" + clipCropX + ":" + clipCropY
                             else
-                                encodingParams["crop"] = clipCropH + ":" + clipCropW + ":" + clipCropX + ":" + clipCropY
+                                encodingSettings["crop"] = clipCropH + ":" + clipCropW + ":" + clipCropX + ":" + clipCropY
                         }
                         if (clipCropX <= 0 && clipCropY <= 0 && clipCropW <= 0 && clipCropH <= 0) {
                             if (clipRotation == 0 || clipRotation == 180)
-                                encodingParams["crop"] = currentShot.width + ":" + currentShot.height + ":" + 0 + ":" + 0
+                                encodingSettings["crop"] = currentShot.width + ":" + currentShot.height + ":" + 0 + ":" + 0
                             else
-                                encodingParams["crop"] = currentShot.height + ":" + currentShot.width + ":" + 0 + ":" + 0
+                                encodingSettings["crop"] = currentShot.height + ":" + currentShot.width + ":" + 0 + ":" + 0
                         }
                         // TODO // transform
 
                         // Effect
-                        if (rbGifEffectBackward.checked) encodingParams["gif_effect"] = "backward"
-                        else if (rbGifEffectBackandForth.checked) encodingParams["gif_effect"] = "forwardbackward"
-                        else if (rbGifEffectForthandBack.checked) encodingParams["gif_effect"] = "backwardforward"
+                        if (rbGifEffectBackward.checked) encodingSettings["gif_effect"] = "backward"
+                        else if (rbGifEffectBackandForth.checked) encodingSettings["gif_effect"] = "forwardbackward"
+                        else if (rbGifEffectForthandBack.checked) encodingSettings["gif_effect"] = "backwardforward"
                     }
 
                     if (timelapseFramerate.visible)
-                        encodingParams["timelapse_fps"] = timelapseFramerate.value.toFixed(0)
+                        encodingSettings["timelapse_fps"] = timelapseFramerate.value.toFixed(0)
 
-                    encodingParams["transform"] = clipTransformation_exif
+                    encodingSettings["transform"] = clipTransformation_exif
 
-                    encodingParams["quality"] = sliderQuality.value
+                    encodingSettings["quality"] = sliderQuality.value
 
-                    encodingParams["path"] = fileInput.text
+                    encodingSettings["path"] = fileInput.text
 
                     // Filters
-                    if (checkBox_defisheye.checked) encodingParams["defisheye"] = checkBox_defisheye.checked
-                    if (checkBox_deshake.checked) encodingParams["deshake"] = checkBox_deshake.checked
+                    if (checkBox_defisheye.checked) encodingSettings["defisheye"] = checkBox_defisheye.checked
+                    if (checkBox_deshake.checked) encodingSettings["deshake"] = checkBox_deshake.checked
 
                     ////
 /*
@@ -1480,8 +1479,8 @@ Popup {
                     else
                         return
 */
-                    // send job
-                    mediaProvider.reencodeSelected(currentShot.uuid, encodingParams)
+                    // dispatch job
+                    mediaProvider.reencodeSelected(currentShot.uuid, encodingSettings)
                     popupEncoding.close()
                 }
             }

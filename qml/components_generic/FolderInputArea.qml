@@ -8,7 +8,7 @@ import ThemeEngine 1.0
 import "qrc:/js/UtilsPath.js" as UtilsPath
 
 TextField {
-    id: folderArea
+    id: control
     implicitWidth: 128
     implicitHeight: Theme.componentHeight
 
@@ -21,18 +21,24 @@ TextField {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    signal pathChanged(var path)
+    property alias folder: control.text
+    property string path: control.text
+    property bool isValid: (control.text.length > 0)
 
     placeholderText: ""
     placeholderTextColor: colorPlaceholderText
 
-    color: colorText
+    color: enabled ? colorText : colorPlaceholderText
     font.pixelSize: Theme.fontSizeComponent
 
+    onTextChanged: {
+        //
+    }
     onEditingFinished: {
-        pathChanged(text)
         focus = false
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 
     FileDialog {
         id: fileDialog
@@ -43,11 +49,12 @@ TextField {
         selectFolder: true
 
         onAccepted: {
-            var f = UtilsPath.cleanUrl(fileDialogChange.fileUrl)
+            //console.log("fileDialog URL: " + fileUrl)
+
+            var f = UtilsPath.cleanUrl(fileUrl)
             if (f.slice(0, -1) !== "/") f += "/"
 
-            folderArea.text = f
-            pathChanged(folderArea.text)
+            control.text = f
         }
     }
 
@@ -67,8 +74,9 @@ TextField {
             focusPolicy: Qt.NoFocus
 
             onClicked: {
-                fileDialogChange.folder =  "file:///" + folderArea.text
-                fileDialogChange.open()
+                //fileDialog.folder =  "file:///" + control.text
+                fileDialog.folder = control.text
+                fileDialog.open()
             }
 
             background: Rectangle {
@@ -99,7 +107,7 @@ TextField {
             color: "transparent"
             radius: Theme.componentRadius
             border.width: 2
-            border.color: folderArea.activeFocus ? Theme.colorPrimary : colorBorder
+            border.color: control.activeFocus ? Theme.colorPrimary : colorBorder
         }
 
         layer.enabled: false

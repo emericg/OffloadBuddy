@@ -78,7 +78,6 @@ Popup {
     ////////////////////////////////////////////////////////////////////////////
 
     contentItem: Column {
-        spacing: 0
 
         Rectangle {
             id: titleArea
@@ -192,28 +191,30 @@ Popup {
 
                 visible: !recapOpened
 
-                Item { width: 16; height: 16; } // spacer
-
                 Item {
-                    id: rectangleDestination
-                    height: 48
+                    height: 40
                     anchors.right: parent.right
                     anchors.left: parent.left
 
                     Text {
                         id: textDestinationTitle
                         anchors.left: parent.left
-                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.bottom: parent.bottom
 
                         text: qsTr("Destination")
                         color: Theme.colorSubText
                         font.pixelSize: 16
                     }
+                }
+
+                Item {
+                    height: 48
+                    anchors.right: parent.right
+                    anchors.left: parent.left
 
                     ComboBoxThemed {
                         id: comboBoxDestination
-                        anchors.left: textDestinationTitle.right
-                        anchors.leftMargin: 16
+                        anchors.left: parent.left
                         anchors.right: parent.right
                         anchors.verticalCenter: parent.verticalCenter
                         height: 36
@@ -227,6 +228,8 @@ Popup {
                             onDirectoriesUpdated: comboBoxDestination.updateDestinations()
                         }
 
+                        property string selectedDestination: ""
+
                         function updateDestinations() {
                             cbDestinations.clear()
 
@@ -237,33 +240,29 @@ Popup {
                             }
                             cbDestinations.append( { "text": qsTr("Select path manually") } )
 
-                            comboBoxDestination.currentIndex = 0 // TODO save value?
+                            // TODO save value instead of reset?
+                            comboBoxDestination.currentIndex = 0
                         }
 
-                        property bool cbinit: false
                         onCurrentIndexChanged: {
                             if (storageManager.directoriesCount <= 0) return
 
-                            if (comboBoxDestination.currentIndex < cbDestinations.count)
-                                textField_path.text = comboBoxDestination.displayText
-
-                            if (cbinit) {
-                                if (comboBoxDestination.currentIndex === cbDestinations.count) {
-                                    //
-                                }
-                            } else {
-                                cbinit = true;
+                            if (comboBoxDestination.currentIndex < cbDestinations.count) {
+                                folderInput.text = comboBoxDestination.currentText
+                                selectedDestination = comboBoxDestination.currentText
                             }
                         }
+
+                        displayText: currentText + jobManager.getDestinationHierarchy(currentShot, currentText)
                     }
                 }
 
                 FolderInputArea {
-                    id: textField_path
+                    id: folderInput
                     anchors.left: parent.left
                     anchors.right: parent.right
 
-                    visible: (comboBoxDestination.currentIndex === (cbDestinations.count - 1))
+                    visible: (comboBoxDestination.currentIndex === (cbDestinations.count-1))
                 }
             }
         }
@@ -297,13 +296,22 @@ Popup {
                 primaryColor: Theme.colorPrimary
 
                 onClicked: {
-                    var settingsMove = {}
-                    settingsMove["path"] = textField_path.text
+                    if (typeof currentShot === "undefined" || !currentShot) return
+                    if (typeof mediaProvider === "undefined" || !mediaProvider) return
 
+                    var moveSettings = {}
+
+                    // destination
+                    if (folderInput.visible)
+                        moveSettings["folder"] = folderInput.text
+                    else
+                        moveSettings["mediaDirectory"] = folderInput.text
+
+                    // dispatch job
                     if (currentShot) {
-                        mediaProvider.moveSelected(currentShot.uuid, settingsMove)
+                        mediaProvider.moveSelected(currentShot.uuid, moveSettings)
                     } else if (uuids.length > 0) {
-                        mediaProvider.moveSelection(uuids, settingsMove)
+                        mediaProvider.moveSelection(uuids, moveSettings)
                     }
 
                     popupMove.close()

@@ -79,8 +79,8 @@ MediaDirectory::MediaDirectory(const QString &path, int content, int hierarchy,
 {
     setPath(path);
 
-    m_content_type = content;
-    m_content_hierarchy = hierarchy;
+    m_content = content;
+    m_hierarchy = hierarchy;
     m_enabled = enabled;
     m_primary = primary;
 
@@ -131,9 +131,9 @@ void MediaDirectory::setPath(const QString &path)
 
 void MediaDirectory::setContent(int content)
 {
-    if (m_content_type != content)
+    if (m_content != content)
     {
-        m_content_type = content;
+        m_content = content;
         emit directoryUpdated();
         emit saveData();
     }
@@ -141,9 +141,9 @@ void MediaDirectory::setContent(int content)
 
 void MediaDirectory::setHierarchy(int hierarchy)
 {
-    if (m_content_hierarchy != hierarchy)
+    if (m_hierarchy != hierarchy)
     {
-        m_content_hierarchy = hierarchy;
+        m_hierarchy = hierarchy;
         emit directoryUpdated();
         emit saveData();
     }
@@ -189,9 +189,9 @@ bool MediaDirectory::isAvailableFor(unsigned shotType, int64_t shotSize)
     {
         if (shotSize < getSpaceAvailable())
         {
-            if ((shotType == Shared::SHOT_UNKNOWN && m_content_type == StorageUtils::ContentAll) ||
-                (shotType < Shared::SHOT_PICTURE && (m_content_type == StorageUtils::ContentAll || m_content_type == StorageUtils::ContentVideo)) ||
-                (shotType >= Shared::SHOT_PICTURE && (m_content_type == StorageUtils::ContentAll || m_content_type == StorageUtils::ContentPictures)))
+            if ((shotType == Shared::SHOT_UNKNOWN && m_content == StorageUtils::ContentAll) ||
+                (shotType < Shared::SHOT_PICTURE && (m_content == StorageUtils::ContentAll || m_content == StorageUtils::ContentVideo)) ||
+                (shotType >= Shared::SHOT_PICTURE && (m_content == StorageUtils::ContentAll || m_content == StorageUtils::ContentPictures)))
             {
                 available = true;
             }

@@ -83,7 +83,6 @@ public:
 
         JOB_STATE_DONE = 8,
         JOB_STATE_ERRORED
-
     };
     Q_ENUM(JobState)
 };
@@ -337,6 +336,8 @@ public:
         }
         return QVariant();
     }
+
+    Q_INVOKABLE QString getDestinationHierarchy(Shot *s, const QString &path);
 
     Q_INVOKABLE bool hasMoveToTrash() const {
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))

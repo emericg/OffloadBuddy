@@ -253,20 +253,21 @@ Item {
 
                 model: ListModel {
                     id: cbItemsContentHierarchy
-                    ListElement { text: qsTr("/ date / FILES"); }
-                    ListElement { text: qsTr("/ date / device / FILES"); }
+                    ListElement { text: qsTr("/ SHOT / FILES"); }
+                    ListElement { text: qsTr("/ date / SHOT / FILES"); }
+                    ListElement { text: qsTr("/ date / device / SHOT / FILES"); }
                 }
 
                 Component.onCompleted: {
-                    currentIndex = storageManager.contentHierarchy;
+                    currentIndex = directory.directoryHierarchy
                     if (currentIndex === -1) { currentIndex = 0 }
                 }
                 property bool cbinit: false
                 onCurrentIndexChanged: {
                     if (cbinit)
-                        storageManager.contentHierarchy = currentIndex;
+                        directory.directoryHierarchy = currentIndex
                     else
-                        cbinit = true;
+                        cbinit = true
                 }
             }
         }

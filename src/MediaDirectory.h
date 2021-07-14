@@ -23,6 +23,8 @@
 #define MEDIA_DIRECTORY_H
 /* ************************************************************************** */
 
+#include "StorageManager.h"
+
 #include <QObject>
 #include <QVariant>
 #include <QString>
@@ -60,15 +62,15 @@ class MediaDirectory: public QObject
     Q_PROPERTY(double storageLevel READ getStorageLevel NOTIFY storageUpdated)
 
     QString m_path;
-    int m_content_type = 0; // see Utils::ContentTypes (dSphere)
-    int m_content_hierarchy = 0; // (not implemented)
+    int m_content = 0;                  // see StorageUtils::ContentAll
+    int m_hierarchy = 0;                // see StorageUtils::HierarchyDate
 
     bool m_primary = false;
     bool m_enabled = true;
     bool m_available = false;
     bool m_scanning = false;
 
-    int m_storage_type = 0; // (not implemented)
+    int m_storage_type = 0;             // (not implemented)
     bool m_storage_lfs = true;
     QStorageInfo *m_storage = nullptr;
     QTimer m_storage_refreshTimer;
@@ -96,10 +98,10 @@ public:
     QString getPath() { return m_path; }
     void setPath(const QString &path);
 
-    int getContent() const { return m_content_type; }
+    int getContent() const { return m_content; }
     void setContent(int content);
 
-    int getHierarchy() const { return m_content_hierarchy; }
+    int getHierarchy() const { return m_hierarchy; }
     void setHierarchy(int hierarchy);
 
     //

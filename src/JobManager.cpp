@@ -194,6 +194,61 @@ QString JobManager::getandmakeDestination(Shot *s, Device *d, MediaDirectory *md
     return destDir;
 }
 
+QString JobManager::getDestinationHierarchy(Shot *s, const QString &path)
+{
+    QString hierarchyString;
+
+    if (!path.isEmpty())
+    {
+        StorageManager *sm = StorageManager::getInstance();
+
+        const QList <QObject *> *mdl = sm->getDirectoriesList();
+
+        for (auto md: *mdl)
+        {
+            MediaDirectory *md_current = qobject_cast<MediaDirectory*>(md);
+
+            if (md_current && md_current->getPath() == path)
+            {
+                int h = md_current->getHierarchy();
+                if (h == StorageUtils::HierarchyNone)
+                {
+                    hierarchyString = " SHOT / FILES";
+                }
+                else if (h == StorageUtils::HierarchyDate)
+                {
+                    if (s)
+                    {
+                        hierarchyString += s->getDate().toString("yyyy-MM-dd");
+                        hierarchyString += QDir::separator();
+                    }
+                    else
+                    {
+                        hierarchyString = " date / SHOT / FILES";
+                    }
+                }
+                else if (h == StorageUtils::HierarchyDateDevice)
+                {
+                    if (s)
+                    {
+                        hierarchyString += s->getDate().toString("yyyy-MM-dd");
+                        hierarchyString += QDir::separator();
+                        hierarchyString += s->getCameraSource();
+                        hierarchyString += QDir::separator();
+                    }
+                    else
+                    {
+                        hierarchyString = " date / device / SHOT / FILES";
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    return hierarchyString;
+}
+
 /* ************************************************************************** */
 
 bool JobManager::addJob(JobUtils::JobType type, Device *dev, MediaLibrary *lib, Shot *shot,

@@ -27,7 +27,6 @@ TextField {
 
     property string path: folder + file + "." + extension
     property bool isValid: (control.text.length > 0 && fileArea.text.length > 0 && extensionArea.text.length > 0)
-    //signal pathChanged(var path)
 
     placeholderText: ""
     placeholderTextColor: colorPlaceholderText
@@ -42,20 +41,23 @@ TextField {
         focus = false
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+
     FileDialog {
-        id: fileDialogChange
-        title: qsTr("Please choose a destination!")
+        id: fileDialog
+        title: qsTr("Please choose a file!")
         sidebarVisible: true
         selectExisting: true
         selectMultiple: false
         selectFolder: true
 
         onAccepted: {
-            var f = UtilsPath.cleanUrl(fileDialogChange.fileUrl)
+            //console.log("fileDialog URL: " + fileUrl)
+
+            var f = UtilsPath.cleanUrl(fileUrl)
             if (f.slice(0, -1) !== "/") f += "/"
 
             control.text = f
-            pathChanged(control.text + fileArea.text + "." + extensionArea.text)
         }
     }
 
@@ -75,8 +77,9 @@ TextField {
             focusPolicy: Qt.NoFocus
 
             onClicked: {
-                fileDialogChange.folder =  "file:///" + control.text
-                fileDialogChange.open()
+                //fileDialog.folder =  "file:///" + control.text
+                fileDialog.folder = control.text
+                fileDialog.open()
             }
 
             background: Rectangle {

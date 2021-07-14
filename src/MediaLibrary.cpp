@@ -345,11 +345,14 @@ void MediaLibrary::moveSelected(const QString &shot_uuid, const QVariant &settin
         if (variantMap.contains("mediaDirectory"))
             dst.mediaDirectory = variantMap.value("mediaDirectory").toString();
 
-        if (variantMap.contains("path"))
-            dst.folder = variantMap.value("path").toString();
+        if (variantMap.contains("folder"))
+            dst.folder = variantMap.value("folder").toString();
 
         if (variantMap.contains("file"))
             dst.file = variantMap.value("file").toString();
+
+        if (variantMap.contains("extension"))
+            dst.file = variantMap.value("extension").toString();
     }
 
     // Submit job
@@ -384,11 +387,14 @@ void MediaLibrary::moveSelection(const QVariant &uuids, const QVariant &settings
         if (variantMap.contains("mediaDirectory"))
             dst.mediaDirectory = variantMap.value("mediaDirectory").toString();
 
-        if (variantMap.contains("path"))
-            dst.folder = variantMap.value("path").toString();
+        if (variantMap.contains("folder"))
+            dst.folder = variantMap.value("folder").toString();
 
         if (variantMap.contains("file"))
             dst.file = variantMap.value("file").toString();
+
+        if (variantMap.contains("extension"))
+            dst.file = variantMap.value("extension").toString();
     }
 
     // Submit jobs
@@ -481,11 +487,14 @@ void MediaLibrary::reencodeSelected(const QString &shot_uuid, const QVariant &se
         if (variantMap.contains("mediaDirectory"))
             dst.mediaDirectory = variantMap.value("mediaDirectory").toString();
 
-        if (variantMap.contains("path"))
-            dst.folder = variantMap.value("path").toString();
+        if (variantMap.contains("folder"))
+            dst.folder = variantMap.value("folder").toString();
 
         if (variantMap.contains("file"))
             dst.file = variantMap.value("file").toString();
+
+        if (variantMap.contains("extension"))
+            dst.file = variantMap.value("extension").toString();
     }
 
     // Get settings
@@ -570,11 +579,14 @@ void MediaLibrary::extractTelemetrySelected(const QString &shot_uuid, const QVar
         if (variantMap.contains("mediaDirectory"))
             dst.mediaDirectory = variantMap.value("mediaDirectory").toString();
 
-        if (variantMap.contains("path"))
-            dst.folder = variantMap.value("path").toString();
+        if (variantMap.contains("folder"))
+            dst.folder = variantMap.value("folder").toString();
 
         if (variantMap.contains("file"))
             dst.file = variantMap.value("file").toString();
+
+        if (variantMap.contains("extension"))
+            dst.file = variantMap.value("extension").toString();
     }
 
     // Get settings
@@ -626,11 +638,14 @@ void MediaLibrary::extractTelemetrySelection(const QVariant &uuids, const QVaria
         if (variantMap.contains("mediaDirectory"))
             dst.mediaDirectory = variantMap.value("mediaDirectory").toString();
 
-        if (variantMap.contains("path"))
-            dst.folder = variantMap.value("path").toString();
+        if (variantMap.contains("folder"))
+            dst.folder = variantMap.value("folder").toString();
 
         if (variantMap.contains("file"))
             dst.file = variantMap.value("file").toString();
+
+        if (variantMap.contains("extension"))
+            dst.file = variantMap.value("extension").toString();
     }
 
     // Get settings

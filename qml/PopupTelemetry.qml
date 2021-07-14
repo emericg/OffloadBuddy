@@ -44,7 +44,7 @@ Popup {
         files = []
         mediaProvider = provider
         currentShot = shot
-        rectangleDestination.setDestination()
+        itemDestination.resetDestination()
 
         visible = true
     }
@@ -58,7 +58,7 @@ Popup {
         files = []
         mediaProvider = provider
         currentShot = null
-        rectangleDestination.setDestination()
+        itemDestination.resetDestination()
 
         visible = true
     }
@@ -80,7 +80,6 @@ Popup {
     ////////////////////////////////////////////////////////////////////////////
 
     contentItem: Column {
-        spacing: 0
 
         Rectangle {
             id: titleArea
@@ -222,16 +221,19 @@ Popup {
                             id: rbGPX
                             text: "GPX"
                             checked: true
+                            onClicked: itemDestination.lastExtension = itemDestination.gpsExtension = "gpx"
                         }
                         RadioButtonThemed {
                             id: rbIGC
                             text: "IGC"
                             enabled: false
+                            onClicked: itemDestination.lastExtension = itemDestination.gpsExtension = "igc"
                         }
                         RadioButtonThemed {
                             id: rbKML
                             text: "KML"
                             enabled: false
+                            onClicked: itemDestination.lastExtension = itemDestination.gpsExtension = "kml"
                         }
                     }
                 }
@@ -266,11 +268,13 @@ Popup {
                             id: rbJSON
                             text: "JSON"
                             checked: true
+                            onClicked: itemDestination.lastExtension = itemDestination.telemetryExtension = "json"
                         }
                         RadioButtonThemed {
                             id: rbCSV
                             text: "CSV"
                             enabled: false
+                            onClicked: itemDestination.lastExtension = itemDestination.telemetryExtension = "csv"
                         }
                     }
                 }
@@ -327,44 +331,43 @@ Popup {
                 ////////
 
                 Item {
-                    id: rectangleDestination
-                    height: 48
+                    height: 24
                     anchors.right: parent.right
                     anchors.left: parent.left
 
-                    function setDestination() {
-                        fileInput.folder = currentShot.folder
-                        fileInput.file = currentShot.name
-
-                        //if (rbGPX.checked)
-                        //    fileInput.extension = "gpx"
-                        //else if (rbIGC.checked)
-                        //    fileInput.extension = "igc"
-                        //else if (rbKML.checked)
-                        //    fileInput.extension = "kml"
-                        if (rbJSON.checked)
-                            fileInput.extension = "json"
-                        else if (rbCSV.checked)
-                            fileInput.extension = "csv"
-
-                        rectangleFileWarning.visible = jobManager.fileExists(fileInput.path)
-                    }
-
                     Text {
                         id: textDestinationTitle
-                        width: 128
                         anchors.left: parent.left
-                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.bottom: parent.bottom
+                        //anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("Destination")
                         color: Theme.colorSubText
                         font.pixelSize: 16
                     }
+                }
+
+                Item {
+                    id: itemDestination
+                    height: 48
+                    anchors.right: parent.right
+                    anchors.left: parent.left
+
+                    property string gpsExtension: "gpx"
+                    property string telemetryExtension: "json"
+                    property string lastExtension: "json"
+
+                    function resetDestination() {
+                        if (typeof currentShot === "undefined" || !currentShot) return
+
+                        fileInput.folder = currentShot.folder
+                        fileInput.file = currentShot.name
+                        rectangleFileWarning.visible = jobManager.fileExists(fileInput.path)
+                    }
 
                     ComboBoxThemed {
                         id: comboBoxDestination
-                        anchors.left: textDestinationTitle.right
-                        anchors.leftMargin: 16
+                        anchors.left: parent.left
                         anchors.right: parent.right
                         anchors.verticalCenter: parent.verticalCenter
                         height: 36
@@ -377,15 +380,8 @@ Popup {
 
                         model: cbDestinations
 
-                        property bool cbinit: false
                         onCurrentIndexChanged: {
-                            if (!currentShot) return
-
-                            if (cbinit) {
-                                //
-                            } else {
-                                cbinit = true
-                            }
+                            if (currentIndex === 0) itemDestination.resetDestination()
                         }
                     }
                 }
@@ -403,6 +399,10 @@ Popup {
                         anchors.left: parent.left
                         anchors.right: parent.right
                         anchors.verticalCenter: parent.verticalCenter
+
+                        folder: currentShot.folder
+                        file: currentShot.name
+                        extension: itemDestination.lastExtension
 
                         onPathChanged: {
                             rectangleFileWarning.visible = jobManager.fileExists(fileInput.path)
@@ -474,13 +474,7 @@ Popup {
                     if (typeof currentShot === "undefined" || !currentShot) return
                     if (typeof mediaProvider === "undefined" || !mediaProvider) return
 
-                    var telemetryDestination = {}
                     var telemetrySettings = {}
-
-                    // paths
-                    telemetryDestination["folder"] = fileInput.folder
-                    telemetryDestination["file"] = fileInput.file
-                    telemetryDestination["extension"] = fileInput.extension
 
                     // settings
                     if (rbJSON.checked)
@@ -493,7 +487,12 @@ Popup {
                     telemetrySettings["egm96_correction"] = switchEGM96.checked
                     telemetrySettings["path"] = fileInput.text
 
-                    // send job
+                    // destination
+                    telemetrySettings["folder"] = fileInput.folder
+                    telemetrySettings["file"] = fileInput.file
+                    telemetrySettings["extension"] = fileInput.extension
+
+                    // dispatch job
                     if (currentShot) {
                         currentShot.exportTelemetry(fileInput.text, 0, 30, 2, switchEGM96.checked)
                     } else if (uuids.length > 0) {
@@ -516,9 +515,9 @@ Popup {
                     if (typeof currentShot === "undefined" || !currentShot) return
                     if (typeof mediaProvider === "undefined" || !mediaProvider) return
 
-                    var telemetryDestination = {}
                     var telemetrySettings = {}
 
+                    // settings
                     if (rbGPX.checked)
                         telemetrySettings["gps_format"] = "GPX";
                     else if (rbIGC.checked)
@@ -528,8 +527,13 @@ Popup {
 
                     telemetrySettings["gps_frequency"] = 2
                     telemetrySettings["egm96_correction"] = switchEGM96.checked
-                    telemetrySettings["path"] = fileInput.text
 
+                    // destination
+                    telemetrySettings["folder"] = fileInput.folder
+                    telemetrySettings["file"] = fileInput.file
+                    telemetrySettings["extension"] = fileInput.extension
+
+                    // dispatch job
                     if (currentShot) {
                         currentShot.exportGps(fileInput.text, 0, 2, switchEGM96.checked)
                     } else if (uuids.length > 0) {

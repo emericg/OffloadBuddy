@@ -58,7 +58,8 @@ namespace StorageUtils
 
     enum StorageHierarchy
     {
-        HierarchyDate = 0,
+        HierarchyNone = 0,
+        HierarchyDate,
         HierarchyDateDevice,
     };
 
