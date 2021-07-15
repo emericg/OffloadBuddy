@@ -46,7 +46,6 @@ Popup {
         files = []
         mediaProvider = provider
         currentShot = shot
-        rectangleDestination.setDestination()
 
         visible = true
     }
@@ -60,7 +59,6 @@ Popup {
         files = []
         mediaProvider = provider
         currentShot = null
-        rectangleDestination.setDestination()
 
         visible = true
     }
@@ -1146,7 +1144,6 @@ Popup {
                     id: titleWarning
                     width: contentColumn.legendWidth
                     anchors.left: parent.left
-                    anchors.leftMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Be aware")
@@ -1161,9 +1158,9 @@ Popup {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("GPS and telemetry tracks will not be caried to the reencoded file. You can export them separately if you want.")
-                    font.pixelSize: 16
+                    font.pixelSize: 14
                     wrapMode: Text.WordWrap
-                    color: Theme.colorText
+                    color: Theme.colorSubText
                 }
             }
 
@@ -1187,32 +1184,29 @@ Popup {
             ////////
 
             Item {
-                id: rectangleDestination
-                height: 48
+                height: 24
                 anchors.left: parent.left
                 anchors.right: parent.right
 
-                function setDestination() {
-                    // TODO
-
-                    rectangleFileWarning.visible = jobManager.fileExists(fileInput.path)
-                }
-
                 Text {
                     id: textDestinationTitle
-                    width: contentColumn.legendWidth
                     anchors.left: parent.left
-                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.bottom: parent.bottom
 
                     text: qsTr("Destination")
                     color: Theme.colorSubText
                     font.pixelSize: 16
                 }
+            }
 
-                ComboBoxThemed {
+            Item {
+                height: 48
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                ComboBoxFolder {
                     id: comboBoxDestination
-                    anchors.left: textDestinationTitle.right
-                    anchors.leftMargin: 16
+                    anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
                     height: 36
@@ -1229,18 +1223,16 @@ Popup {
                     function updateDestinations() {
                         cbDestinations.clear()
                         cbDestinations.append( { "text": qsTr("Next to the video file") } )
-                        cbDestinations.append( { "text": qsTr("Select path manually") } )
 
                         for (var child in storageManager.directoriesList) {
                             if (storageManager.directoriesList[child].available &&
                                 storageManager.directoriesList[child].directoryContent !== 2)
                                 cbDestinations.append( { "text": storageManager.directoriesList[child].directoryPath } )
                         }
+                        cbDestinations.append( { "text": qsTr("Select path manually") } )
 
-                        comboBoxDestination.currentIndex = 0 // TODO save value?
-
-                        var path = fileInput.folder + fileInput.file + "." + fileInput.extension
-                        rectangleFileWarning.visible = jobManager.fileExists(path)
+                        // TODO save value instead of reset?
+                        comboBoxDestination.currentIndex = 0
                     }
 
                     property bool cbinit: false
@@ -1248,29 +1240,37 @@ Popup {
                         if (storageManager.directoriesCount <= 0) return
                         if (!currentShot) return
 
-                        if (cbinit) {
-                            if (comboBoxDestination.currentIndex === cbDestinations.count) {
-                                //
-                            }
+                        var selectedDestination = comboBoxDestination.textAt(comboBoxDestination.currentIndex)
+                        var previousDestination = comboBoxDestination.currentText
+                        if (previousDestination === qsTr("Next to the video file")) previousDestination = currentShot.folder
 
-                            if (comboBoxDestination.currentIndex < cbDestinations.count) {
-                                fileInput.folder = comboBoxDestination.displayText
+                        if (cbinit) {
+                            if (comboBoxDestination.currentIndex === 0) {
+                                fileInput.folder = currentShot.folder + jobManager.getDestinationHierarchy(currentShot, selectedDestination)
+                                fileInput.file = currentShot.name + "_rencoded"
+                            } else if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
+                                fileInput.folder = previousDestination + jobManager.getDestinationHierarchy(currentShot, previousDestination)
+                                fileInput.file = currentShot.name + "_rencoded"
+                            } else if (comboBoxDestination.currentIndex < cbDestinations.count) {
+                                fileInput.folder = selectedDestination + jobManager.getDestinationHierarchy(currentShot, selectedDestination)
                                 fileInput.file = currentShot.name + "_rencoded"
                             }
                         } else {
                             cbinit = true
                         }
                     }
+
+                    folders: jobManager.getDestinationHierarchyDisplay(currentShot, currentText)
                 }
             }
 
             Item {
                 height: 48
-                anchors.right: parent.right
                 anchors.left: parent.left
+                anchors.right: parent.right
 
-                //visible: (comboBoxDestination.currentIndex === 1)
-                enabled: (comboBoxDestination.currentIndex === 1)
+                //visible: (comboBoxDestination.currentIndex === (cbDestinations.count-1))
+                enabled: (comboBoxDestination.currentIndex === (cbDestinations.count-1))
 
                 FileInputArea {
                     id: fileInput
@@ -1279,7 +1279,7 @@ Popup {
                     anchors.verticalCenter: parent.verticalCenter
 
                     onPathChanged: {
-                        rectangleFileWarning.visible = jobManager.fileExists(path)
+                        rectangleFileWarning.visible = jobManager.fileExists(fileInput.path)
                     }
                 }
             }
@@ -1349,138 +1349,137 @@ Popup {
                     if (typeof currentShot === "undefined" || !currentShot) return
                     if (typeof mediaProvider === "undefined" || !mediaProvider) return
 
-                    var encodingSettings = {}
+                    var settingsEncoding = {}
 
                     // destination
                     if (comboBoxDestination.currentIndex === 0) {
-                        encodingSettings["folder"] = fileInput.folder
-                        encodingSettings["file"] = fileInput.file
-                        encodingSettings["extension"] = fileInput.extension
-                    } else if (comboBoxDestination.currentIndex === 1) {
-                        //
+                        settingsEncoding["folder"] = currentShot.folder
+                        settingsEncoding["file"] = fileInput.file
+                        settingsEncoding["extension"] = fileInput.extension
+                    } else if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
+                        settingsEncoding["folder"] = fileInput.folder
+                        settingsEncoding["file"] = fileInput.file
+                        settingsEncoding["extension"] = fileInput.extension
+                    } else {
+                        settingsEncoding["mediaDirectory"] = comboBoxDestination.currentText
                     }
 
                     // settings
                     if (encodingMode === "image") {
                         if (rbPNG.checked)
-                            encodingSettings["codec"] = "PNG";
+                            settingsEncoding["codec"] = "PNG";
                         else if (rbJPEG.checked)
-                            encodingSettings["codec"] = "JPEG";
+                            settingsEncoding["codec"] = "JPEG";
                         else if (rbWEBP.checked)
-                            encodingSettings["codec"] = "WEBP";
+                            settingsEncoding["codec"] = "WEBP";
                         else if (rbAVIF.checked)
-                            encodingSettings["codec"] = "AVIF";
+                            settingsEncoding["codec"] = "AVIF";
                         else if (rbHEIF.checked)
-                            encodingSettings["codec"] = "HEIF";
+                            settingsEncoding["codec"] = "HEIF";
                     }
 
                     if (encodingMode === "video" || encodingMode === "timelapse") {
                         if (rbH264.checked)
-                            encodingSettings["codec"] = "H.264";
+                            settingsEncoding["codec"] = "H.264";
                         else if (rbH265.checked)
-                            encodingSettings["codec"] = "H.265";
+                            settingsEncoding["codec"] = "H.265";
                         else if (rbVP9.checked)
-                            encodingSettings["codec"] = "VP9";
+                            settingsEncoding["codec"] = "VP9";
                         else if (rbAV1.checked)
-                            encodingSettings["codec"] = "AV1";
+                            settingsEncoding["codec"] = "AV1";
                         else if (rbProRes.checked)
-                            encodingSettings["codec"] = "PRORES";
+                            settingsEncoding["codec"] = "PRORES";
                         else if (rbGIF.checked)
-                            encodingSettings["codec"] = "GIF";
+                            settingsEncoding["codec"] = "GIF";
 
                         if (clipStartMs > 0 && clipDurationMs > 0) {
                             if (cbCOPY.checked)
-                                encodingSettings["codec"] = "copy";
+                                settingsEncoding["codec"] = "copy";
                         }
 
-                        encodingSettings["speed"] = sliderSpeed.value;
+                        settingsEncoding["speed"] = sliderSpeed.value;
 
                         if (selectorVideoFps.visible && selectorVideoFps.fps != Math.round(currentShot.framerate))
-                            encodingSettings["fps"] = selectorVideoFps.fps;
+                            settingsEncoding["fps"] = selectorVideoFps.fps;
 
                         if (selectorGifFps.visible)
-                            encodingSettings["fps"] = selectorGifFps.fps;
+                            settingsEncoding["fps"] = selectorGifFps.fps;
 
                         if (clipStartMs > 0)
-                            encodingSettings["clipStartMs"] = clipStartMs;
+                            settingsEncoding["clipStartMs"] = clipStartMs;
                         if (clipDurationMs > 0) // && (clipStartMs + clipDurationMs) < currentShot.duration)
-                            encodingSettings["clipDurationMs"] = clipDurationMs;
+                            settingsEncoding["clipDurationMs"] = clipDurationMs;
                     }
 
                     if (selectorGifRes.visible && selectorGifRes.res !== currentShot.height) {
-                        encodingSettings["resolution"] = selectorGifRes.res;
-                        encodingSettings["scale"] = "-2:" + selectorGifRes.res;
+                        settingsEncoding["resolution"] = selectorGifRes.res;
+                        settingsEncoding["scale"] = "-2:" + selectorGifRes.res;
                     }
                     if (selectorVideoRes.visible && selectorVideoRes.res !== currentShot.height) {
-                        encodingSettings["resolution"] = selectorVideoRes.res;
-                        encodingSettings["scale"] = "-2:" + selectorVideoRes.res;
+                        settingsEncoding["resolution"] = selectorVideoRes.res;
+                        settingsEncoding["scale"] = "-2:" + selectorVideoRes.res;
                     }
 
                     if (clipCropX > 0 || clipCropY > 0 ||
                         (clipCropW > 0 && clipCropW < currentShot.width) ||
                         (clipCropH > 0 && clipCropH < currentShot.height)) {
-                        encodingSettings["crop"] = clipCropW + ":" + clipCropH + ":" + clipCropX + ":" + clipCropY
+                        settingsEncoding["crop"] = clipCropW + ":" + clipCropH + ":" + clipCropX + ":" + clipCropY
 
                         var cropAR = 1.0
                         if (clipCropW > clipCropH) cropAR = clipCropW / clipCropH
                         else if (clipCropW < clipCropH) cropAR = clipCropH / clipCropW
 
-                        encodingSettings["scale"] = UtilsNumber.round2((encodingSettings["resolution"] * cropAR)) + ":" + encodingSettings["resolution"]
+                        settingsEncoding["scale"] = UtilsNumber.round2((settingsEncoding["resolution"] * cropAR)) + ":" + settingsEncoding["resolution"]
                     }
 
                     if (rbGIF.checked) {
                         // Make sure we feed the complex graph
-                        encodingSettings["fps"] = selectorGifFps.fps;
-                        encodingSettings["resolution"] = selectorGifRes.res;
-                        encodingSettings["scale"] = "-2:" + selectorGifRes.res;
-                        if (clipStartMs <= 0) encodingSettings["clipStartMs"] = 0;
-                        if (clipDurationMs <= 0) encodingSettings["clipDurationMs"] = currentShot.duration;
+                        settingsEncoding["fps"] = selectorGifFps.fps;
+                        settingsEncoding["resolution"] = selectorGifRes.res;
+                        settingsEncoding["scale"] = "-2:" + selectorGifRes.res;
+                        if (clipStartMs <= 0) settingsEncoding["clipStartMs"] = 0;
+                        if (clipDurationMs <= 0) settingsEncoding["clipDurationMs"] = currentShot.duration;
                         if (clipCropX > 0 || clipCropY > 0 ||
                             (clipCropW > 0 && clipCropW < currentShot.width) ||
                             (clipCropH > 0 && clipCropH < currentShot.height)) {
                             if (clipRotation == 0 || clipRotation == 180)
-                                encodingSettings["crop"] = clipCropW + ":" + clipCropH + ":" + clipCropX + ":" + clipCropY
+                                settingsEncoding["crop"] = clipCropW + ":" + clipCropH + ":" + clipCropX + ":" + clipCropY
                             else
-                                encodingSettings["crop"] = clipCropH + ":" + clipCropW + ":" + clipCropX + ":" + clipCropY
+                                settingsEncoding["crop"] = clipCropH + ":" + clipCropW + ":" + clipCropX + ":" + clipCropY
                         }
                         if (clipCropX <= 0 && clipCropY <= 0 && clipCropW <= 0 && clipCropH <= 0) {
                             if (clipRotation == 0 || clipRotation == 180)
-                                encodingSettings["crop"] = currentShot.width + ":" + currentShot.height + ":" + 0 + ":" + 0
+                                settingsEncoding["crop"] = currentShot.width + ":" + currentShot.height + ":" + 0 + ":" + 0
                             else
-                                encodingSettings["crop"] = currentShot.height + ":" + currentShot.width + ":" + 0 + ":" + 0
+                                settingsEncoding["crop"] = currentShot.height + ":" + currentShot.width + ":" + 0 + ":" + 0
                         }
                         // TODO // transform
 
                         // Effect
-                        if (rbGifEffectBackward.checked) encodingSettings["gif_effect"] = "backward"
-                        else if (rbGifEffectBackandForth.checked) encodingSettings["gif_effect"] = "forwardbackward"
-                        else if (rbGifEffectForthandBack.checked) encodingSettings["gif_effect"] = "backwardforward"
+                        if (rbGifEffectBackward.checked) settingsEncoding["gif_effect"] = "backward"
+                        else if (rbGifEffectBackandForth.checked) settingsEncoding["gif_effect"] = "forwardbackward"
+                        else if (rbGifEffectForthandBack.checked) settingsEncoding["gif_effect"] = "backwardforward"
                     }
 
                     if (timelapseFramerate.visible)
-                        encodingSettings["timelapse_fps"] = timelapseFramerate.value.toFixed(0)
+                        settingsEncoding["timelapse_fps"] = timelapseFramerate.value.toFixed(0)
 
-                    encodingSettings["transform"] = clipTransformation_exif
+                    settingsEncoding["transform"] = clipTransformation_exif
 
-                    encodingSettings["quality"] = sliderQuality.value
+                    settingsEncoding["quality"] = sliderQuality.value
 
-                    encodingSettings["path"] = fileInput.text
+                    settingsEncoding["path"] = fileInput.text
 
                     // Filters
-                    if (checkBox_defisheye.checked) encodingSettings["defisheye"] = checkBox_defisheye.checked
-                    if (checkBox_deshake.checked) encodingSettings["deshake"] = checkBox_deshake.checked
+                    if (checkBox_defisheye.checked) settingsEncoding["defisheye"] = checkBox_defisheye.checked
+                    if (checkBox_deshake.checked) settingsEncoding["deshake"] = checkBox_deshake.checked
 
-                    ////
-/*
-                    if (typeof currentDevice !== "undefined")
-                        mediaProvider = currentDevice;
-                    else if (typeof mediaLibrary !== "undefined")
-                        mediaProvider = mediaLibrary;
-                    else
-                        return
-*/
                     // dispatch job
-                    mediaProvider.reencodeSelected(currentShot.uuid, encodingSettings)
+                    if (currentShot) {
+                        mediaProvider.reencodeSelected(currentShot.uuid, settingsEncoding)
+                    } else if (uuids.length > 0) {
+                        //mediaProvider.reencodeSelection(uuids, settingsEncoding)
+                    }
                     popupEncoding.close()
                 }
             }

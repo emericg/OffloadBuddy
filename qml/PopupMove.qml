@@ -212,7 +212,7 @@ Popup {
                     anchors.right: parent.right
                     anchors.left: parent.left
 
-                    ComboBoxThemed {
+                    ComboBoxFolder {
                         id: comboBoxDestination
                         anchors.left: parent.left
                         anchors.right: parent.right
@@ -228,8 +228,6 @@ Popup {
                             onDirectoriesUpdated: comboBoxDestination.updateDestinations()
                         }
 
-                        property string selectedDestination: ""
-
                         function updateDestinations() {
                             cbDestinations.clear()
 
@@ -244,16 +242,23 @@ Popup {
                             comboBoxDestination.currentIndex = 0
                         }
 
+                        property bool cbinit: false
                         onCurrentIndexChanged: {
                             if (storageManager.directoriesCount <= 0) return
 
-                            if (comboBoxDestination.currentIndex < cbDestinations.count) {
-                                folderInput.text = comboBoxDestination.currentText
-                                selectedDestination = comboBoxDestination.currentText
+                            var previousDestination = comboBoxDestination.currentText
+                            var selectedDestination = comboBoxDestination.textAt(comboBoxDestination.currentIndex)
+
+                            if (cbinit) {
+                                if (comboBoxDestination.currentIndex < cbDestinations.count) {
+                                    folderInput.text = previousDestination
+                                }
+                            } else {
+                                cbinit = true
                             }
                         }
 
-                        displayText: currentText + jobManager.getDestinationHierarchy(currentShot, currentText)
+                        folders: jobManager.getDestinationHierarchyDisplay(currentShot, currentText)
                     }
                 }
 
@@ -299,21 +304,20 @@ Popup {
                     if (typeof currentShot === "undefined" || !currentShot) return
                     if (typeof mediaProvider === "undefined" || !mediaProvider) return
 
-                    var moveSettings = {}
+                    var settingsMove = {}
 
                     // destination
                     if (folderInput.visible)
-                        moveSettings["folder"] = folderInput.text
+                        settingsMove["folder"] = folderInput.text
                     else
-                        moveSettings["mediaDirectory"] = folderInput.text
+                        settingsMove["mediaDirectory"] = folderInput.text
 
                     // dispatch job
                     if (currentShot) {
-                        mediaProvider.moveSelected(currentShot.uuid, moveSettings)
+                        mediaProvider.moveSelected(currentShot.uuid, settingsMove)
                     } else if (uuids.length > 0) {
-                        mediaProvider.moveSelection(uuids, moveSettings)
+                        mediaProvider.moveSelection(uuids, settingsMove)
                     }
-
                     popupMove.close()
                 }
             }

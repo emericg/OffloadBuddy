@@ -17,7 +17,7 @@ TextField {
     property string colorBorder: Theme.colorComponentBorder
     property string colorBackground: Theme.colorComponentBackground
 
-    property alias buttonWidth: buttonChange.width
+    property int buttonWidth: (buttonChange.visible ? buttonChange.width : 0)
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -73,8 +73,9 @@ TextField {
             width: contentText.contentWidth + (contentText.contentWidth / 2)
             height: Theme.componentHeight
 
-            font.pixelSize: Theme.fontSizeComponent
+            visible: control.enabled
             focusPolicy: Qt.NoFocus
+            font.pixelSize: Theme.fontSizeComponent
 
             onClicked: {
                 //fileDialog.folder =  "file:///" + control.text
@@ -84,7 +85,7 @@ TextField {
 
             background: Rectangle {
                 radius: Theme.componentRadius
-                opacity: enabled ? 1 : 0.33
+                //opacity: enabled ? 1 : 0.33
                 color: buttonChange.down ? Theme.colorComponentDown : Theme.colorComponent
             }
 
@@ -100,7 +101,7 @@ TextField {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
 
-                opacity: enabled ? 1.0 : 0.33
+                //opacity: enabled ? 1.0 : 0.33
                 color: buttonChange.down ? Theme.colorComponentContent : Theme.colorComponentContent
             }
         }
@@ -131,9 +132,12 @@ TextField {
         id: fileArea
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        x: control.contentWidth + 10
-        width: control.width - buttonChange.width - x
 
+        x: control.leftPadding + control.contentWidth
+        width: control.width - control.buttonWidth - x - 12
+
+        clip: true
+        autoScroll: false
         color: Theme.colorSubText
         verticalAlignment: Text.AlignVCenter
 
@@ -149,7 +153,9 @@ TextField {
         id: dot
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        x: control.contentWidth + 10 + fileArea.contentWidth
+
+        x: control.leftPadding + control.contentWidth + fileArea.contentWidth
+        visible: x < control.width
 
         text: "."
         color: Theme.colorSubText
@@ -159,9 +165,9 @@ TextField {
         id: extensionArea
         anchors.top: parent.top
         anchors.left: dot.right
-        anchors.leftMargin: 1
         anchors.bottom: parent.bottom
 
+        visible: dot.visible
         color: Theme.colorSubText
         verticalAlignment: Text.AlignVCenter
     }

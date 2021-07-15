@@ -337,6 +337,7 @@ public:
         return QVariant();
     }
 
+    Q_INVOKABLE QString getDestinationHierarchyDisplay(Shot *s, const QString &path);
     Q_INVOKABLE QString getDestinationHierarchy(Shot *s, const QString &path);
 
     Q_INVOKABLE bool hasMoveToTrash() const {

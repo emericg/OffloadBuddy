@@ -284,10 +284,8 @@ Popup {
                 Item {
                     id: elementAltitude
                     height: 48
-                    anchors.right: parent.right
-                    anchors.rightMargin: 0
                     anchors.left: parent.left
-                    anchors.leftMargin: 0
+                    anchors.right: parent.right
 
                     Text {
                         id: titleAltitude
@@ -332,8 +330,8 @@ Popup {
 
                 Item {
                     height: 24
-                    anchors.right: parent.right
                     anchors.left: parent.left
+                    anchors.right: parent.right
 
                     Text {
                         id: textDestinationTitle
@@ -350,8 +348,8 @@ Popup {
                 Item {
                     id: itemDestination
                     height: 48
-                    anchors.right: parent.right
                     anchors.left: parent.left
+                    anchors.right: parent.right
 
                     property string gpsExtension: "gpx"
                     property string telemetryExtension: "json"
@@ -377,9 +375,9 @@ Popup {
                             ListElement { text: qsTr("Next to the video file"); }
                             ListElement { text: qsTr("Select path manually"); }
                         }
-
                         model: cbDestinations
 
+                        property bool cbinit: false
                         onCurrentIndexChanged: {
                             if (currentIndex === 0) itemDestination.resetDestination()
                         }
@@ -388,11 +386,11 @@ Popup {
 
                 Item {
                     height: 48
-                    anchors.right: parent.right
                     anchors.left: parent.left
+                    anchors.right: parent.right
 
-                    //visible: (comboBoxDestination.currentIndex === 1)
-                    enabled: (comboBoxDestination.currentIndex === 1)
+                    //visible: (comboBoxDestination.currentIndex === (cbDestinations.count-1))
+                    enabled: (comboBoxDestination.currentIndex === (cbDestinations.count-1))
 
                     FileInputArea {
                         id: fileInput
@@ -474,29 +472,29 @@ Popup {
                     if (typeof currentShot === "undefined" || !currentShot) return
                     if (typeof mediaProvider === "undefined" || !mediaProvider) return
 
-                    var telemetrySettings = {}
+                    var settingsTelemetry = {}
 
                     // settings
                     if (rbJSON.checked)
-                        telemetrySettings["telemetry_format"] = "JSON";
+                        settingsTelemetry["telemetry_format"] = "JSON";
                     else if (rbCSV.checked)
-                        telemetrySettings["telemetry_format"] = "CSV";
+                        settingsTelemetry["telemetry_format"] = "CSV";
 
-                    telemetrySettings["telemetry_frequency"] = 30
-                    telemetrySettings["gps_frequency"] = 2
-                    telemetrySettings["egm96_correction"] = switchEGM96.checked
-                    telemetrySettings["path"] = fileInput.text
+                    settingsTelemetry["telemetry_frequency"] = 30
+                    settingsTelemetry["gps_frequency"] = 2
+                    settingsTelemetry["egm96_correction"] = switchEGM96.checked
+                    settingsTelemetry["path"] = fileInput.text
 
                     // destination
-                    telemetrySettings["folder"] = fileInput.folder
-                    telemetrySettings["file"] = fileInput.file
-                    telemetrySettings["extension"] = fileInput.extension
+                    settingsTelemetry["folder"] = fileInput.folder
+                    settingsTelemetry["file"] = fileInput.file
+                    settingsTelemetry["extension"] = fileInput.extension
 
                     // dispatch job
                     if (currentShot) {
                         currentShot.exportTelemetry(fileInput.text, 0, 30, 2, switchEGM96.checked)
                     } else if (uuids.length > 0) {
-                        mediaProvider.extractTelemetrySelected(uuids, telemetrySettings)
+                        mediaProvider.extractTelemetrySelected(uuids, settingsTelemetry)
                     }
                 }
             }
@@ -515,29 +513,30 @@ Popup {
                     if (typeof currentShot === "undefined" || !currentShot) return
                     if (typeof mediaProvider === "undefined" || !mediaProvider) return
 
-                    var telemetrySettings = {}
+                    var settingsTelemetry = {}
 
                     // settings
                     if (rbGPX.checked)
-                        telemetrySettings["gps_format"] = "GPX";
+                        settingsTelemetry["gps_format"] = "GPX";
                     else if (rbIGC.checked)
-                        telemetrySettings["gps_format"] = "IGC";
+                        settingsTelemetry["gps_format"] = "IGC";
                     else if (rbKML.checked)
-                        telemetrySettings["gps_format"] = "KML";
+                        settingsTelemetry["gps_format"] = "KML";
 
-                    telemetrySettings["gps_frequency"] = 2
-                    telemetrySettings["egm96_correction"] = switchEGM96.checked
+                    settingsTelemetry["gps_frequency"] = 2
+                    settingsTelemetry["egm96_correction"] = switchEGM96.checked
 
                     // destination
-                    telemetrySettings["folder"] = fileInput.folder
-                    telemetrySettings["file"] = fileInput.file
-                    telemetrySettings["extension"] = fileInput.extension
+                    settingsTelemetry["folder"] = fileInput.folder
+                    settingsTelemetry["file"] = fileInput.file
+                    settingsTelemetry["extension"] = fileInput.extension
 
                     // dispatch job
                     if (currentShot) {
                         currentShot.exportGps(fileInput.text, 0, 2, switchEGM96.checked)
+                        //mediaProvider.extractTelemetrySelected(uuids, settingsTelemetry)
                     } else if (uuids.length > 0) {
-                        mediaProvider.extractTelemetrySelected(uuids, telemetrySettings)
+                        mediaProvider.extractTelemetrySelection(uuids, settingsTelemetry)
                     }
                 }
             }

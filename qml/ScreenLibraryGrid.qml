@@ -525,7 +525,7 @@ Item {
                 popupMove.uuids = mediaLibrary.getSelectedShotsUuids(indexes)
                 popupMove.shots = mediaLibrary.getSelectedShotsNames(indexes)
                 popupMove.files = mediaLibrary.getSelectedFilesPaths(indexes)
-                popupMove.openSelection(mediaLibrary)
+                popupMove.openSingle(mediaLibrary, selectedItem.shot)
             }
             if (index === 3) {
                 popupEncoding.uuids = mediaLibrary.getSelectedShotsUuids(indexes)

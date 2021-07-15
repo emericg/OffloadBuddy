@@ -733,7 +733,7 @@ Item {
                 popupOffload.uuids = currentDevice.getSelectedShotsUuids(indexes)
                 popupOffload.shots = currentDevice.getSelectedShotsNames(indexes)
                 popupOffload.files = currentDevice.getSelectedFilesPaths(indexes)
-                popupOffload.openSelection(currentDevice)
+                popupOffload.openSingle(currentDevice, selectedItem.shot)
             }
             if (index === 3) {
                 popupEncoding.uuids = currentDevice.getSelectedShotsUuids(indexes)

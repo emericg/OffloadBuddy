@@ -36,8 +36,12 @@
         <file alias="ItemMediaDirectory.qml">components/ItemMediaDirectory.qml</file>
         <file alias="SliderPlayer.qml">components/SliderPlayer.qml</file>
         <file alias="RangeSliderPlayer.qml">components/RangeSliderPlayer.qml</file>
+        <file alias="PlayerControls.qml">components/PlayerControls.qml</file>
         <file alias="SidebarWidget.qml">components/SidebarWidget.qml</file>
         <file alias="ResizeWidget.qml">components/ResizeWidget.qml</file>
+        <file alias="FileInputArea.qml">components/FileInputArea.qml</file>
+        <file alias="FolderInputArea.qml">components/FolderInputArea.qml</file>
+        <file alias="ComboBoxFolder.qml">components/ComboBoxFolder.qml</file>
 
         <file alias="CsdMac.qml">components_generic/CsdMac.qml</file>
         <file alias="CsdWindows.qml">components_generic/CsdWindows.qml</file>
@@ -59,8 +63,6 @@
         <file alias="RangeSliderArrow.qml">components_generic/RangeSliderArrow.qml</file>
         <file alias="SimpleShadow.qml">components_generic/SimpleShadow.qml</file>
         <file alias="SliderValueSolid.qml">components_generic/SliderValueSolid.qml</file>
-        <file alias="FileInputArea.qml">components_generic/FileInputArea.qml</file>
-        <file alias="FolderInputArea.qml">components_generic/FolderInputArea.qml</file>
 
         <file alias="ButtonThemed.qml">components_themed/ButtonThemed.qml</file>
         <file alias="RoundButtonThemed.qml">components_themed/RoundButtonThemed.qml</file>

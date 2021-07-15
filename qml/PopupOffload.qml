@@ -115,7 +115,6 @@ Popup {
     ////////////////////////////////////////////////////////////////////////////
 
     contentItem: Column {
-        spacing: 0
 
         Rectangle {
             id: titleArea
@@ -310,29 +309,49 @@ Popup {
                     }
                 }
 
-                Item { width: 16; height: 16; } // spacer
+                ////////
+
+                Item { // delimiter
+                    anchors.left: parent.left
+                    anchors.leftMargin: -23
+                    anchors.right: parent.right
+                    anchors.rightMargin: -23
+                    height: 32
+
+                    Rectangle {
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: parent.width
+                        height: Theme.componentBorderWidth
+                        color: Theme.colorForeground
+                    }
+                }
+
+                ////////
 
                 Item {
-                    id: rectangleDestination
-                    height: 48
-                    anchors.right: parent.right
+                    height: 24
                     anchors.left: parent.left
+                    anchors.right: parent.right
 
                     Text {
                         id: textDestinationTitle
-                        width: 128
                         anchors.left: parent.left
-                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.bottom: parent.bottom
 
                         text: qsTr("Destination")
                         color: Theme.colorSubText
                         font.pixelSize: 16
                     }
+                }
 
-                    ComboBoxThemed {
+                Item {
+                    height: 48
+                    anchors.right: parent.right
+                    anchors.left: parent.left
+
+                    ComboBoxFolder {
                         id: comboBoxDestination
-                        anchors.left: textDestinationTitle.right
-                        anchors.leftMargin: 16
+                        anchors.left: parent.left
                         anchors.right: parent.right
                         anchors.verticalCenter: parent.verticalCenter
                         height: 36
@@ -356,29 +375,38 @@ Popup {
                             }
                             cbDestinations.append( { "text": qsTr("Select path manually") } )
 
-                            comboBoxDestination.currentIndex = 0 // TODO save value?
+                            // TODO save value instead of reset?
+                            comboBoxDestination.currentIndex = 0
                         }
 
                         property bool cbinit: false
                         onCurrentIndexChanged: {
                             if (storageManager.directoriesCount <= 0) return
 
-                            if (comboBoxDestination.currentIndex < cbDestinations.count)
-                                textField_path.text = comboBoxDestination.displayText
+                            var previousDestination = comboBoxDestination.currentText
+                            var selectedDestination = comboBoxDestination.textAt(comboBoxDestination.currentIndex)
 
                             if (cbinit) {
+                                if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
+                                    folderInput.folder = previousDestination
+                                } else {
+                                    folderInput.folder = selectedDestination
+                                }
+
                                 if (comboBoxDestination.currentIndex === cbDestinations.count) {
                                     //
                                 }
                             } else {
-                                cbinit = true;
+                                cbinit = true
                             }
                         }
+
+                        folders: jobManager.getDestinationHierarchyDisplay(currentShot, currentText)
                     }
                 }
 
                 FolderInputArea {
-                    id: textField_path
+                    id: folderInput
                     anchors.left: parent.left
                     anchors.right: parent.right
 
@@ -416,14 +444,25 @@ Popup {
                 primaryColor: Theme.colorPrimary
 
                 onClicked: {
+                    if (typeof mediaProvider === "undefined" || !mediaProvider) return
+
                     var settingsOffload = {}
+
+                    // settings
                     settingsOffload["ignoreJunk"] = switchIgnoreJunk.checked
                     settingsOffload["ignoreAudio"] = switchIgnoreAudio.checked
                     settingsOffload["extractTelemetry"] = switchTelemetry.checked
                     settingsOffload["mergeChapters"] = switchMerge.checked
                     settingsOffload["autoDelete"] = switchDelete.checked
-                    settingsOffload["path"] = textField_path.text
 
+                    // destination
+                    if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
+                        settingsOffload["folder"] = folderInput.folder
+                    } else {
+                        settingsOffload["mediaDirectory"] = comboBoxDestination.currentText
+                    }
+
+                    // dispatch job
                     if (currentShot) {
                         mediaProvider.offloadSelected(currentShot.uuid, settingsOffload)
                     } else if (uuids.length > 0) {
@@ -431,7 +470,6 @@ Popup {
                     } else if (popupMode === 3) {
                         mediaProvider.offloadAll(settingsOffload)
                     }
-
                     popupOffload.close()
                 }
             }
