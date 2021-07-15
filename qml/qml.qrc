@@ -36,7 +36,6 @@
         <file alias="ItemMediaDirectory.qml">components/ItemMediaDirectory.qml</file>
         <file alias="SliderPlayer.qml">components/SliderPlayer.qml</file>
         <file alias="RangeSliderPlayer.qml">components/RangeSliderPlayer.qml</file>
-        <file alias="PlayerControls.qml">components/PlayerControls.qml</file>
         <file alias="SidebarWidget.qml">components/SidebarWidget.qml</file>
         <file alias="ResizeWidget.qml">components/ResizeWidget.qml</file>
         <file alias="FileInputArea.qml">components/FileInputArea.qml</file>
