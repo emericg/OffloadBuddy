@@ -751,8 +751,7 @@ void Device::offloadSelected(const QString &shot_uuid, const QVariant &settings)
     // Submit job
     JobManager *jm = JobManager::getInstance();
     if (jm && shot) jm->addJob(JobUtils::JOB_OFFLOAD, this, nullptr, shot,
-                               nullptr, &dst,
-                               nullptr, &set);
+                               &dst, nullptr, &set);
 }
 
 /* ************************************************************************** */
@@ -812,8 +811,7 @@ void Device::offloadSelection(const QVariant &uuids, const QVariant &settings)
     // Submit jobs
     JobManager *jm = JobManager::getInstance();
     if (jm && !list.empty()) jm->addJobs(JobUtils::JOB_OFFLOAD, this, nullptr, list,
-                                         nullptr, &dst,
-                                         nullptr, &set);
+                                         &dst, nullptr, &set);
 }
 
 /* ************************************************************************** */
@@ -869,8 +867,7 @@ void Device::offloadAll(const QVariant &settings)
     // Submit jobs
     JobManager *jm = JobManager::getInstance();
     if (jm && !shots.empty()) jm->addJobs(JobUtils::JOB_OFFLOAD, this, nullptr, shots,
-                                          nullptr, &dst,
-                                          nullptr, &set);
+                                          &dst, nullptr, &set);
 }
 
 /* ************************************************************************** */
@@ -898,8 +895,7 @@ void Device::deleteSelected(const QString &shot_uuid, const QVariant &settings)
     // Submit job
     JobManager *jm = JobManager::getInstance();
     if (jm && shot) jm->addJob(JobUtils::JOB_DELETE, this, nullptr, shot,
-                               nullptr, nullptr,
-                               &set, nullptr, nullptr, nullptr);
+                               nullptr, &set, nullptr, nullptr, nullptr);
 }
 
 /* ************************************************************************** */
@@ -931,8 +927,7 @@ void Device::deleteSelection(const QVariant &uuids, const QVariant &settings)
     // Submit jobs
     JobManager *jm = JobManager::getInstance();
     if (jm && !list.empty()) jm->addJobs(JobUtils::JOB_DELETE, this, nullptr, list,
-                                         nullptr, nullptr,
-                                         &set, nullptr, nullptr, nullptr);
+                                         nullptr, &set, nullptr, nullptr, nullptr);
 }
 
 /* ************************************************************************** */
@@ -960,8 +955,7 @@ void Device::deleteAll(const QVariant &settings)
     // Submit jobs
     JobManager *jm = JobManager::getInstance();
     if (jm && !shots.empty()) jm->addJobs(JobUtils::JOB_DELETE, this, nullptr, shots,
-                                          nullptr, nullptr,
-                                          &set, nullptr, nullptr, nullptr);
+                                          nullptr, &set, nullptr, nullptr, nullptr);
 }
 
 /* ************************************************************************** */
@@ -1044,8 +1038,7 @@ void Device::reencodeSelected(const QString &shot_uuid, const QVariant &settings
     // Submit job
     JobManager *jm = JobManager::getInstance();
     if (jm && shot) jm->addJob(JobUtils::JOB_ENCODE, this, nullptr, shot,
-                               nullptr, &dst,
-                               nullptr, nullptr, nullptr, &set);
+                               &dst, nullptr, nullptr, nullptr, &set);
 }
 
 /* ************************************************************************** */
@@ -1109,8 +1102,7 @@ void Device::extractTelemetrySelected(const QString &shot_uuid, const QVariant &
     // Submit job
     JobManager *jm = JobManager::getInstance();
     if (jm && shot) jm->addJob(JobUtils::JOB_TELEMETRY, this, nullptr, shot,
-                               nullptr, &dst,
-                               nullptr, nullptr, &set, nullptr);
+                               &dst, nullptr, nullptr, &set, nullptr);
 }
 
 void Device::extractTelemetrySelection(const QVariant &uuids, const QVariant &settings)
@@ -1168,8 +1160,7 @@ void Device::extractTelemetrySelection(const QVariant &uuids, const QVariant &se
     // Submit jobs
     JobManager *jm = JobManager::getInstance();
     if (jm && !list.empty()) jm->addJobs(JobUtils::JOB_TELEMETRY, this, nullptr, list,
-                                         nullptr, &dst,
-                                         nullptr, nullptr, &set, nullptr);
+                                         &dst, nullptr, nullptr, &set, nullptr);
 }
 
 /* ************************************************************************** */

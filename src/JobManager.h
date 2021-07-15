@@ -155,6 +155,7 @@ typedef struct JobElement
 {
     Shot *parent_shots = nullptr;
     QString destination_dir;
+    QString destination_file;
 
     std::vector <ofb_file> files;
 
@@ -316,13 +317,13 @@ public:
     void cleanup();
 
     bool addJob(JobUtils::JobType type, Device *dev, MediaLibrary *lib, Shot *shot,
-                MediaDirectory *md = nullptr, JobDestination *dst = nullptr,
+                JobDestination *dst = nullptr,
                 JobSettingsDelete *sett_delete = nullptr,
                 JobSettingsOffload *sett_offload = nullptr,
                 JobSettingsTelemetry *sett_telemetry = nullptr,
                 JobSettingsEncode *sett_encode = nullptr);
     bool addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib, QList<Shot *> &list,
-                 MediaDirectory *md = nullptr, JobDestination *dst = nullptr,
+                 JobDestination *dst = nullptr,
                  JobSettingsDelete *sett_delete = nullptr,
                  JobSettingsOffload *sett_offload = nullptr,
                  JobSettingsTelemetry *sett_telemetry = nullptr,

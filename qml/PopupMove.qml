@@ -307,10 +307,11 @@ Popup {
                     var settingsMove = {}
 
                     // destination
-                    if (folderInput.visible)
-                        settingsMove["folder"] = folderInput.text
-                    else
-                        settingsMove["mediaDirectory"] = folderInput.text
+                    if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
+                        settingsMove["folder"] = folderInput.folder
+                    } else {
+                        settingsMove["mediaDirectory"] = comboBoxDestination.currentText
+                    }
 
                     // dispatch job
                     if (currentShot) {

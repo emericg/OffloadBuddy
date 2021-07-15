@@ -91,6 +91,7 @@ void JobWorkerSync::work()
                 emit shotStarted(current_job->id, element->parent_shots);
 
                 // HANDLE DELETION /////////////////////////////////////////////
+
                 if (current_job->type == JobUtils::JOB_DELETE)
                 {
                     for (auto const &file: element->files)
@@ -143,7 +144,7 @@ void JobWorkerSync::work()
                 }
 
                 // HANDLE OFFLOADS /////////////////////////////////////////////
-                if (current_job->type == JobUtils::JOB_OFFLOAD || current_job->type == JobUtils::JOB_MOVE)
+
                 {
                     for (auto const &file: element->files)
                     {

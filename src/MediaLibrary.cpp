@@ -358,8 +358,7 @@ void MediaLibrary::moveSelected(const QString &shot_uuid, const QVariant &settin
     // Submit job
     JobManager *jm = JobManager::getInstance();
     if (jm && shot) jm->addJob(JobUtils::JOB_MOVE, nullptr, this, shot,
-                               nullptr, &dst,
-                               nullptr, nullptr, nullptr, nullptr);
+                               &dst, nullptr, nullptr, nullptr, nullptr);
 }
 
 /* ************************************************************************** */
@@ -400,8 +399,7 @@ void MediaLibrary::moveSelection(const QVariant &uuids, const QVariant &settings
     // Submit jobs
     JobManager *jm = JobManager::getInstance();
     if (jm && !list.empty()) jm->addJobs(JobUtils::JOB_MOVE, nullptr, this, list,
-                                         nullptr, &dst,
-                                         nullptr, nullptr, nullptr, nullptr);
+                                         &dst, nullptr, nullptr, nullptr, nullptr);
 }
 
 /* ************************************************************************** */
@@ -429,8 +427,7 @@ void MediaLibrary::deleteSelected(const QString &shot_uuid, const QVariant &sett
     // Submit job
     JobManager *jm = JobManager::getInstance();
     if (jm && shot) jm->addJob(JobUtils::JOB_DELETE, nullptr, this, shot,
-                               nullptr, nullptr,
-                               &set, nullptr, nullptr, nullptr);
+                               nullptr, &set, nullptr, nullptr, nullptr);
 }
 
 /* ************************************************************************** */
@@ -462,8 +459,7 @@ void MediaLibrary::deleteSelection(const QVariant &uuids, const QVariant &settin
     // Submit jobs
     JobManager *jm = JobManager::getInstance();
     if (jm && !list.empty()) jm->addJobs(JobUtils::JOB_DELETE, nullptr, this, list,
-                                         nullptr, nullptr,
-                                         &set, nullptr, nullptr, nullptr);
+                                         nullptr, &set, nullptr, nullptr, nullptr);
 }
 
 /* ************************************************************************** */
@@ -546,8 +542,7 @@ void MediaLibrary::reencodeSelected(const QString &shot_uuid, const QVariant &se
     // Submit job
     JobManager *jm = JobManager::getInstance();
     if (jm && shot) jm->addJob(JobUtils::JOB_ENCODE, nullptr, this, shot,
-                               nullptr, &dst,
-                               nullptr, nullptr, nullptr, &set);
+                               &dst, nullptr, nullptr, nullptr, &set);
 }
 
 /* ************************************************************************** */
@@ -611,8 +606,7 @@ void MediaLibrary::extractTelemetrySelected(const QString &shot_uuid, const QVar
     // Submit job
     JobManager *jm = JobManager::getInstance();
     if (jm && shot) jm->addJob(JobUtils::JOB_TELEMETRY, nullptr, this, shot,
-                               nullptr, &dst,
-                               nullptr, nullptr, &set, nullptr);
+                               &dst, nullptr, nullptr, &set, nullptr);
 }
 
 void MediaLibrary::extractTelemetrySelection(const QVariant &uuids, const QVariant &settings)
@@ -670,8 +664,7 @@ void MediaLibrary::extractTelemetrySelection(const QVariant &uuids, const QVaria
     // Submit jobs
     JobManager *jm = JobManager::getInstance();
     if (jm && !list.empty()) jm->addJobs(JobUtils::JOB_TELEMETRY, nullptr, this, list,
-                                         nullptr, &dst,
-                                         nullptr, nullptr, &set, nullptr);
+                                         &dst, nullptr, nullptr, &set, nullptr);
 }
 
 /* ************************************************************************** */

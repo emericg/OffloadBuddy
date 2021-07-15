@@ -104,18 +104,16 @@ MediaDirectory *JobManager::getAutoDestination(Shot *s)
 
 QString JobManager::getAutoDestinationString(Shot *s)
 {
-    QString dest;
-
     if (s)
     {
         MediaDirectory *md = getAutoDestination(s);
         if (md)
         {
-            dest = md->getPath();
+            return md->getPath();
         }
     }
 
-    return dest;
+    return QString();
 }
 
 QString JobManager::getandmakeDestination(Shot *s, Device *d, MediaDirectory *md)
@@ -304,9 +302,11 @@ QString JobManager::getDestinationHierarchy(Shot *s, const QString &path)
 }
 
 /* ************************************************************************** */
+/* ************************************************************************** */
 
-bool JobManager::addJob(JobUtils::JobType type, Device *dev, MediaLibrary *lib, Shot *shot,
-                        MediaDirectory *md, JobDestination *dst,
+bool JobManager::addJob(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
+                        Shot *shot,
+                        JobDestination *dst,
                         JobSettingsDelete *sett_delete,
                         JobSettingsOffload *sett_offload,
                         JobSettingsTelemetry *sett_telemetry,
@@ -320,13 +320,12 @@ bool JobManager::addJob(JobUtils::JobType type, Device *dev, MediaLibrary *lib, 
     list.push_back(shot);
 
     return addJobs(type, dev, lib, list,
-                   md, dst,
-                   sett_delete, sett_offload, sett_telemetry, sett_encode);
+                   dst, sett_delete, sett_offload, sett_telemetry, sett_encode);
 }
 
 bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
                          QList<Shot *> &list,
-                         MediaDirectory *md, JobDestination *dst,
+                         JobDestination *dst,
                          JobSettingsDelete *sett_delete,
                          JobSettingsOffload *sett_offload,
                          JobSettingsTelemetry *sett_telemetry,
@@ -380,7 +379,35 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
 
     // GET DESTINATION /////////////////////////////////////////////////////////
 
-    Q_UNUSED(dst) // TODO
+    MediaDirectory *md = nullptr;
+    QString dstFolder;
+    QString dstFile;
+
+    if (dst)
+    {
+        if (!dst->mediaDirectory.isEmpty())
+        {
+            StorageManager *stm = StorageManager::getInstance();
+            const QList <QObject *> *mdl = stm->getDirectoriesList();
+            for (auto mds: *mdl)
+            {
+                MediaDirectory *md_current = qobject_cast<MediaDirectory*>(mds);
+                if (md_current && md_current->getPath() == dst->mediaDirectory)
+                {
+                    md = md_current;
+                    break;
+                }
+            }
+        }
+        if (!dst->folder.isEmpty())
+        {
+            dstFolder = dst->folder;
+        }
+        if (!dst->file.isEmpty())
+        {
+            dstFile = dst->file;
+        }
+    }
 
     // CREATE JOB //////////////////////////////////////////////////////////////
 
@@ -398,7 +425,9 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
         if (shot)
         {
             JobElement *je = new JobElement;
-            je->destination_dir = getandmakeDestination(shot, dev, md);
+            if (md) je->destination_dir = getandmakeDestination(shot, dev, md);
+            else je->destination_dir = dstFolder;
+            je->destination_file = dstFile;
             je->parent_shots = shot;
             QList <ofb_file *> files = shot->getFiles(getPreviews, getHdAudio);
             for (auto f: qAsConst(files))
@@ -494,7 +523,8 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
                  type == JobUtils::JOB_CLIP ||
                  type == JobUtils::JOB_OFFLOAD || type == JobUtils::JOB_MOVE)
         {
-            m_selected_worker = m_job_disk[dev->getUuid()];
+            if (dev) m_selected_worker = m_job_disk[dev->getUuid()];
+            else m_selected_worker = m_job_disk["hdd"];
 
             if (m_selected_worker == nullptr)
             {
@@ -519,7 +549,8 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
                     status = true;
                 }
 
-                m_job_disk.insert(dev->getUuid(), m_selected_worker);
+                if (dev) m_job_disk.insert(dev->getUuid(), m_selected_worker);
+                else m_job_disk.insert("hdd", m_selected_worker);
             }
         }
         else
