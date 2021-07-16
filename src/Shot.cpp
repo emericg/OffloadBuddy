@@ -134,8 +134,8 @@ void Shot::addFile(ofb_file *file)
             }
             else
             {
-                qWarning() << "Shot::addFile(" << file->extension << ") UNKNOWN FORMAT";
-                delete file;
+                //qDebug() << "Shot::addFile(" << file->extension << ") UNKNOWN FORMAT";
+                m_others.push_back(file);
             }
         }
         else
@@ -179,8 +179,8 @@ void Shot::addFile(ofb_file *file)
             }
             else
             {
-                qWarning() << "Shot::addFile(" << file->extension << ") UNKNOWN FORMAT";
-                delete file;
+                //qDebug() << "Shot::addFile(" << file->extension << ") UNKNOWN FORMAT";
+                m_others.push_back(file);
             }
         }
     }
@@ -497,7 +497,7 @@ QVariant Shot::getShotFiles()
     return QVariant();
 }
 
-QList <ofb_file *> Shot::getFiles(bool withPreviews, bool withHdAudio) const
+QList <ofb_file *> Shot::getFiles(bool withPreviews, bool withHdAudio, bool withOthers) const
 {
     QList <ofb_file *> list;
 
@@ -518,11 +518,11 @@ QList <ofb_file *> Shot::getFiles(bool withPreviews, bool withHdAudio) const
         for (auto f: m_videos_hdAudio)
         list += f;
     }
-    //if (withOthers)
-    //{
-    //    for (auto f: m_others)
-    //    list += f;
-    //}
+    if (withOthers)
+    {
+        for (auto f: m_others)
+        list += f;
+    }
 
     return list;
 }
@@ -558,6 +558,22 @@ QString & Shot::getFolderRefString()
         else if (!m_videos.empty())
         {
             m_folder = m_videos.at(0)->filesystemPath;
+        }
+        else if (!m_videos_previews.empty())
+        {
+            m_folder = m_videos_previews.at(0)->filesystemPath;
+        }
+        else if (!m_videos_thumbnails.empty())
+        {
+            m_folder = m_videos_thumbnails.at(0)->filesystemPath;
+        }
+        else if (!m_videos_hdAudio.empty())
+        {
+            m_folder = m_videos_hdAudio.at(0)->filesystemPath;
+        }
+        else if (!m_others.empty())
+        {
+            m_folder = m_others.at(0)->filesystemPath;
         }
 
         QDir p(m_folder);

@@ -368,7 +368,9 @@ void FileScanner::mtpFileRec(LIBMTP_mtpdevice_t *device, uint32_t storageid, uin
                 ofb_shot *s = new ofb_shot;
                 bool shotStatus = getGoProShotInfos(*f, *s);
                 if (!shotStatus)
+                {
                     shotStatus = getGenericShotInfos(*f, *s);
+                }
 
                 // Send the file back to the UI
                 if (shotStatus)

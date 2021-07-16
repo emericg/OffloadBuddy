@@ -429,7 +429,7 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
             else je->destination_dir = dstFolder;
             je->destination_file = dstFile;
             je->parent_shots = shot;
-            QList <ofb_file *> files = shot->getFiles(getPreviews, getHdAudio);
+            QList <ofb_file *> files = shot->getFiles(getPreviews, getHdAudio, true);
             for (auto f: qAsConst(files))
             {
                 je->files.push_back(*f);

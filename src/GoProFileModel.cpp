@@ -56,7 +56,7 @@ bool parseGoProVersionFile(const QString &path, gopro_device_infos &infos)
                     //qDebug() << "key:" << key << " / value:" << value;
 
                     if (key == "info version")
-                        if (value != "1.0" && value != "1.1" &&  value != "2.0")
+                        if (value != "1.0" && value != "1.1" && value != "2.0")
                             qWarning() << "SD Card version.txt is unsupported!";
 
                     if (key == "firmware version")
@@ -96,12 +96,12 @@ bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot)
 
     if (file.name.size() != 8)
     {
-        //qWarning() << "-" << file.name << ": filename is not 8 chars... Probably not a GoPro file...";
+        //qDebug() << "-" << file.name << ": filename is not 8 chars... Probably not a GoPro file...";
         return false;
     }
     if (!file.name.startsWith("G"))
     {
-        //qWarning() << "-" << file.name << ": filename doesn't start by 'G'... Probably not a GoPro file...";
+        //qDebug() << "-" << file.name << ": filename doesn't start by 'G'... Probably not a GoPro file...";
         return false;
     }
 

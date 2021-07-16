@@ -449,7 +449,7 @@ public:
 
     void addFile(ofb_file *file);
 
-    QList <ofb_file *> getFiles(bool withPreviews = true, bool withHdAudio = true) const;
+    QList <ofb_file *> getFiles(bool withPreviews = true, bool withHdAudio = true, bool withOthers = true) const;
 
 public:
     unsigned getShotType() const { return m_type; }
