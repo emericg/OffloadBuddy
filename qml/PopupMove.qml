@@ -24,9 +24,10 @@ Popup {
     property bool recapEnabled: true
     property bool recapOpened: false
 
-    property var uuids: []
-    property var shots: []
-    property var files: []
+    property var shots_uuids: []
+    property var shots_names: []
+    property var shots_files: []
+    //property var shots: [] // TODO actual shot pointers
 
     property var mediaProvider: null
     property var currentShot: null
@@ -37,28 +38,28 @@ Popup {
 
     function openSingle(provider, shot) {
         popupMode = 1
-        recapEnabled = false
-        recapOpened = false
-        uuids = []
-        shots = []
-        files = []
         mediaProvider = provider
         currentShot = shot
-
         visible = true
     }
 
     function openSelection(provider) {
-        if (uuids.length === 0 || shots.length === 0) return
+        if (shots_uuids.length === 0 || shots_names.length === 0 || shots_files.length === 0) return
 
         popupMode = 2
         recapEnabled = true
-        recapOpened = false
-        files = []
         mediaProvider = provider
-        currentShot = null
-
         visible = true
+    }
+
+    onClosed: {
+        recapEnabled = false
+        recapOpened = false
+        shots_uuids = []
+        shots_names = []
+        shots_files = []
+        mediaProvider = null
+        currentShot = null
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -121,7 +122,7 @@ Popup {
 
             z: 1
             height: 48
-            visible: shots.length
+            visible: shots_names.length
             color: Theme.colorForeground
 
             Text {
@@ -131,7 +132,7 @@ Popup {
                 anchors.rightMargin: 48+16+16
                 anchors.verticalCenter: parent.verticalCenter
 
-                text: qsTr("%n shot(s) selected", "", shots.length)
+                text: qsTr("%n shot(s) selected", "", shots_names.length) + " / " + qsTr("%n file(s) selected", "", shots_files.length)
                 color: Theme.colorText
                 font.pixelSize: Theme.fontSizeContent
             }
@@ -167,7 +168,7 @@ Popup {
 
                 visible: recapOpened
 
-                model: shots
+                model: shots_files
                 delegate: Text {
                     anchors.left: parent.left
                     anchors.right: parent.right
@@ -190,6 +191,43 @@ Popup {
                 bottomPadding: 16
 
                 visible: !recapOpened
+
+                Item {
+                    anchors.right: parent.right
+                    anchors.left: parent.left
+
+                    visible: currentShot.fileCount
+                    height: 32
+
+                    Text {
+                        id: textSourceTitle
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        text: qsTr("File(s)", "", currentShot.fileCount)
+                        color: Theme.colorSubText
+                        font.pixelSize: 16
+                    }
+                }
+
+                ListView {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+
+                    clip: true
+                    visible: currentShot.fileCount
+                    height: Math.min(64, currentShot.fileCount*16)
+
+                    model: currentShot.filesList
+                    delegate: Text {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        text: modelData
+                        font.pixelSize: 14
+                        elide: Text.ElideLeft
+                        color: Theme.colorText
+                    }
+                }
 
                 Item {
                     height: 40
@@ -316,8 +354,8 @@ Popup {
                     // dispatch job
                     if (currentShot) {
                         mediaProvider.moveSelected(currentShot.uuid, settingsMove)
-                    } else if (uuids.length > 0) {
-                        mediaProvider.moveSelection(uuids, settingsMove)
+                    } else if (shots_uuids.length > 0) {
+                        mediaProvider.moveSelection(shots_uuids, settingsMove)
                     }
                     popupMove.close()
                 }

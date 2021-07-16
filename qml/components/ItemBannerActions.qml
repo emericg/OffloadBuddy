@@ -31,41 +31,23 @@ Rectangle {
             id: buttonMove
             anchors.verticalCenter: parent.verticalCenter
 
-            visible: (appContent.state === "library")
             fullColor: true
             primaryColor: Theme.colorActionbarHighlight
 
-            text: qsTr("Move")
+            text: (appContent.state === "library") ? qsTr("Move") : qsTr("Offload")
             source: "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
             onClicked: {
                 if (appContent.state === "library") {
-                    popupMove.uuids = mediaLibrary.getSelectedShotsUuids(mediaGrid.selectionList)
-                    popupMove.shots = mediaLibrary.getSelectedShotsNames(mediaGrid.selectionList)
+                    // move
+                    popupMove.shots_uuids = mediaLibrary.getSelectedShotsUuids(mediaGrid.selectionList)
+                    popupMove.shots_names = mediaLibrary.getSelectedShotsNames(mediaGrid.selectionList)
+                    popupMove.shots_files = mediaLibrary.getSelectedShotsFilepaths(mediaGrid.selectionList)
                     popupMove.openSelection(mediaLibrary)
                 } else if (appContent.state === "device") {
-                    // no move possible, use offload
-                }
-            }
-        }
-
-        ButtonWireframeImage {
-            id: buttonOffload
-            anchors.verticalCenter: parent.verticalCenter
-
-            visible: (appContent.state === "device")
-            fullColor: true
-            primaryColor: Theme.colorActionbarHighlight
-
-            text: qsTr("Offload")
-            source: "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
-            onClicked: {
-                if (appContent.state === "library") {
-                    popupOffload.uuids = mediaLibrary.getSelectedShotsUuids(mediaGrid.selectionList)
-                    popupOffload.shots = mediaLibrary.getSelectedShotsNames(mediaGrid.selectionList)
-                    popupOffload.openSelection(mediaLibrary)
-                } else if (appContent.state === "device") {
-                    popupOffload.uuids = currentDevice.getSelectedShotsUuids(mediaGrid.selectionList)
-                    popupOffload.shots = currentDevice.getSelectedShotsNames(mediaGrid.selectionList)
+                    // offload
+                    popupOffload.shots_uuids = currentDevice.getSelectedShotsUuids(mediaGrid.selectionList)
+                    popupOffload.shots_names = currentDevice.getSelectedShotsNames(mediaGrid.selectionList)
+                    popupOffload.shots_files = currentDevice.getSelectedShotsFilepaths(mediaGrid.selectionList)
                     popupOffload.openSelection(currentDevice)
                 }
             }
@@ -102,12 +84,12 @@ Rectangle {
             source: "qrc:/assets/icons_material/baseline-insert_chart_outlined-24px.svg"
             onClicked: {
                 if (appContent.state === "library") {
-                    popupTelemetry.uuids = mediaLibrary.getSelectedShotsUuids(mediaGrid.selectionList)
-                    popupTelemetry.shots = mediaLibrary.getSelectedShotsNames(mediaGrid.selectionList)
+                    popupTelemetry.shots_uuids = mediaLibrary.getSelectedShotsUuids(mediaGrid.selectionList)
+                    popupTelemetry.shots_names = mediaLibrary.getSelectedShotsNames(mediaGrid.selectionList)
                     popupTelemetry.openSelection(mediaLibrary)
                 } else if (appContent.state === "device") {
-                    popupTelemetry.uuids = currentDevice.getSelectedShotsUuids(mediaGrid.selectionList)
-                    popupTelemetry.shots = currentDevice.getSelectedShotsNames(mediaGrid.selectionList)
+                    popupTelemetry.shots_uuids = currentDevice.getSelectedShotsUuids(mediaGrid.selectionList)
+                    popupTelemetry.shots_names = currentDevice.getSelectedShotsNames(mediaGrid.selectionList)
                     popupTelemetry.openSelection(currentDevice)
                 }
             }
@@ -124,14 +106,14 @@ Rectangle {
             source: "qrc:/assets/icons_material/baseline-delete-24px.svg"
             onClicked: {
                 if (appContent.state === "library") {
-                    popupDelete.uuids = mediaLibrary.getSelectedShotsUuids(mediaGrid.selectionList)
-                    popupDelete.shots = mediaLibrary.getSelectedShotsNames(mediaGrid.selectionList)
-                    popupDelete.files = mediaLibrary.getSelectedFilesPaths(mediaGrid.selectionList)
+                    popupDelete.shots_uuids = mediaLibrary.getSelectedShotsUuids(mediaGrid.selectionList)
+                    popupDelete.shots_names = mediaLibrary.getSelectedShotsNames(mediaGrid.selectionList)
+                    popupDelete.shots_files = mediaLibrary.getSelectedShotsFilepaths(mediaGrid.selectionList)
                     popupDelete.openSelection(mediaLibrary)
                 } else if (appContent.state === "device") {
-                    popupDelete.uuids = currentDevice.getSelectedShotsUuids(mediaGrid.selectionList)
-                    popupDelete.shots = currentDevice.getSelectedShotsNames(mediaGrid.selectionList)
-                    popupDelete.files = currentDevice.getSelectedFilesPaths(mediaGrid.selectionList)
+                    popupDelete.shots_uuids = currentDevice.getSelectedShotsUuids(mediaGrid.selectionList)
+                    popupDelete.shots_names = currentDevice.getSelectedShotsNames(mediaGrid.selectionList)
+                    popupDelete.shots_files = currentDevice.getSelectedShotsFilepaths(mediaGrid.selectionList)
                     popupDelete.openSelection(currentDevice)
                 }
             }

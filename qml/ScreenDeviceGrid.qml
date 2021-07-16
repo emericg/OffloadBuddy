@@ -730,15 +730,12 @@ Item {
             }
 
             if (index === 1) {
-                popupOffload.uuids = currentDevice.getSelectedShotsUuids(indexes)
-                popupOffload.shots = currentDevice.getSelectedShotsNames(indexes)
-                popupOffload.files = currentDevice.getSelectedFilesPaths(indexes)
-                popupOffload.openSingle(currentDevice, selectedItem.shot)
+                popupMove.openSingle(currentDevice, selectedItem.shot)
             }
             if (index === 3) {
-                popupEncoding.uuids = currentDevice.getSelectedShotsUuids(indexes)
-                popupEncoding.shots = currentDevice.getSelectedShotsNames(indexes)
-                popupEncoding.files = currentDevice.getSelectedFilesPaths(indexes)
+                popupEncoding.shots_uuids = currentDevice.getSelectedShotsUuids(indexes)
+                popupEncoding.shots_names = currentDevice.getSelectedShotsNames(indexes)
+                popupEncoding.shots_files = currentDevice.getSelectedShotsFilepaths(indexes)
                 popupEncoding.updateEncodePanel(selectedItem.shot)
                 popupEncoding.openSingle(currentDevice, selectedItem.shot)
             }
@@ -749,9 +746,9 @@ Item {
                 shotsView.currentItem.shot.openFolder()
             }
             if (index === 16) {
-                popupDelete.uuids = currentDevice.getSelectedShotsUuids(indexes)
-                popupDelete.shots = currentDevice.getSelectedShotsNames(indexes)
-                popupDelete.files = currentDevice.getSelectedFilesPaths(indexes)
+                popupDelete.shots_uuids = currentDevice.getSelectedShotsUuids(indexes)
+                popupDelete.shots_names = currentDevice.getSelectedShotsNames(indexes)
+                popupDelete.shots_files = currentDevice.getSelectedShotsFilepaths(indexes)
                 popupDelete.openSelection(currentDevice)
             }
 
@@ -903,9 +900,9 @@ Item {
                     } else {
                         indexes.push(shotsView.currentIndex)
                     }
-                    popupDelete.uuids = currentDevice.getSelectedShotsUuids(indexes)
-                    popupDelete.shots = currentDevice.getSelectedShotsNames(indexes)
-                    popupDelete.files = currentDevice.getSelectedFilesPaths(indexes)
+                    popupDelete.shots_uuids = currentDevice.getSelectedShotsUuids(indexes)
+                    popupDelete.shots_names = currentDevice.getSelectedShotsNames(indexes)
+                    popupDelete.shots_files = currentDevice.getSelectedShotsFilepaths(indexes)
                     popupDelete.openSelection(currentDevice)
                 }
             }

@@ -261,7 +261,7 @@ public:
     // Get uuids/names/paths from grid indexes
     Q_INVOKABLE QStringList getSelectedShotsUuids(const QVariant &indexes);
     Q_INVOKABLE QStringList getSelectedShotsNames(const QVariant &indexes);
-    Q_INVOKABLE QStringList getSelectedFilesPaths(const QVariant &indexes);
+    Q_INVOKABLE QStringList getSelectedShotsFilepaths(const QVariant &indexes);
 
     // Submit jobs
     Q_INVOKABLE void offloadSelected(const QString &shot_uuid, const QVariant &settings);

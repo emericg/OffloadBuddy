@@ -24,9 +24,10 @@ Popup {
     property bool recapEnabled: true
     property bool recapOpened: false
 
-    property var uuids: []
-    property var shots: []
-    property var files: []
+    property var shots_uuids: []
+    property var shots_names: []
+    property var shots_files: []
+    //property var shots: [] // TODO actual shot pointers
 
     property var mediaProvider: null
     property var currentShot: null
@@ -37,30 +38,31 @@ Popup {
 
     function openSingle(provider, shot) {
         popupMode = 1
-        recapEnabled = false
-        recapOpened = false
-        uuids = []
-        shots = []
-        files = []
         mediaProvider = provider
         currentShot = shot
-        itemDestination.resetDestination()
 
         visible = true
     }
 
     function openSelection(provider) {
-        if (uuids.length === 0 || shots.length === 0) return
+        if (shots_uuids.length === 0 || shots_names.length === 0) return
 
         popupMode = 2
         recapEnabled = true
-        recapOpened = false
-        files = []
         mediaProvider = provider
-        currentShot = null
-        itemDestination.resetDestination()
 
         visible = true
+    }
+
+    onClosed: {
+        recapEnabled = false
+        recapOpened = false
+        shots_uuids = []
+        shots_names = []
+        shots_files = []
+        mediaProvider = null
+        currentShot = null
+        itemDestination.resetDestination()
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -123,7 +125,7 @@ Popup {
 
             z: 1
             height: 48
-            visible: shots.length
+            visible: shots_names.length
             color: Theme.colorForeground
 
             Text {
@@ -133,7 +135,7 @@ Popup {
                 anchors.rightMargin: 48+16+16
                 anchors.verticalCenter: parent.verticalCenter
 
-                text: qsTr("%n shot(s) selected", "", shots.length)
+                text: qsTr("%n shot(s) selected", "", shots_names.length)
                 color: Theme.colorText
                 font.pixelSize: Theme.fontSizeContent
             }
@@ -169,7 +171,7 @@ Popup {
 
                 visible: recapOpened
 
-                model: shots
+                model: shots_names
                 delegate: Text {
                     anchors.left: parent.left
                     anchors.right: parent.right
@@ -356,11 +358,12 @@ Popup {
                     property string lastExtension: "json"
 
                     function resetDestination() {
-                        if (typeof currentShot === "undefined" || !currentShot) return
-
-                        fileInput.folder = currentShot.folder
-                        fileInput.file = currentShot.name
-                        rectangleFileWarning.visible = jobManager.fileExists(fileInput.path)
+                        if (typeof currentShot === "undefined" || !currentShot) {
+                            folderInput.folder = utilsApp.getStandardPath_string("")
+                        } else {
+                            fileInput.folder = currentShot.folder
+                            fileInput.file = currentShot.name
+                        }
                     }
 
                     ComboBoxThemed {
@@ -389,7 +392,28 @@ Popup {
                     anchors.left: parent.left
                     anchors.right: parent.right
 
-                    //visible: (comboBoxDestination.currentIndex === (cbDestinations.count-1))
+                    visible: (popupMode === 2 && comboBoxDestination.currentIndex === (cbDestinations.count-1))
+
+                    FolderInputArea {
+                        id: folderInput
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        folder: currentShot.folder
+
+                        onPathChanged: {
+                            //
+                        }
+                    }
+                }
+
+                Item {
+                    height: 48
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+
+                    visible: (popupMode === 1)
                     enabled: (comboBoxDestination.currentIndex === (cbDestinations.count-1))
 
                     FileInputArea {
@@ -466,7 +490,7 @@ Popup {
                 fullColor: true
                 primaryColor: Theme.colorSecondary
 
-                enabled: fileInput.isValid
+                enabled: (popupMode === 1 && fileInput.isValid) || (popupMode === 2 && folderInput.isValid)
 
                 onClicked: {
                     if (typeof currentShot === "undefined" || !currentShot) return
@@ -483,18 +507,21 @@ Popup {
                     settingsTelemetry["telemetry_frequency"] = 30
                     settingsTelemetry["gps_frequency"] = 2
                     settingsTelemetry["egm96_correction"] = switchEGM96.checked
-                    settingsTelemetry["path"] = fileInput.text
 
                     // destination
-                    settingsTelemetry["folder"] = fileInput.folder
-                    settingsTelemetry["file"] = fileInput.file
-                    settingsTelemetry["extension"] = fileInput.extension
+                    if (popupMode === 1) {
+                        settingsTelemetry["folder"] = fileInput.folder
+                        settingsTelemetry["file"] = fileInput.file
+                        settingsTelemetry["extension"] = fileInput.extension
+                    } else if (popupMode === 2) {
+                        settingsTelemetry["folder"] = folderInput.folder
+                    }
 
                     // dispatch job
                     if (currentShot) {
                         currentShot.exportTelemetry(fileInput.text, 0, 30, 2, switchEGM96.checked)
-                    } else if (uuids.length > 0) {
-                        mediaProvider.extractTelemetrySelected(uuids, settingsTelemetry)
+                    } else if (shots_uuids.length > 0) {
+                        mediaProvider.extractTelemetrySelected(shots_uuids, settingsTelemetry)
                     }
                 }
             }
@@ -507,7 +534,7 @@ Popup {
                 fullColor: true
                 primaryColor: Theme.colorPrimary
 
-                enabled: fileInput.isValid
+                enabled: (popupMode === 1 && fileInput.isValid) || (popupMode === 2 && folderInput.isValid)
 
                 onClicked: {
                     if (typeof currentShot === "undefined" || !currentShot) return
@@ -527,16 +554,20 @@ Popup {
                     settingsTelemetry["egm96_correction"] = switchEGM96.checked
 
                     // destination
-                    settingsTelemetry["folder"] = fileInput.folder
-                    settingsTelemetry["file"] = fileInput.file
-                    settingsTelemetry["extension"] = fileInput.extension
+                    if (popupMode === 1) {
+                        settingsTelemetry["folder"] = fileInput.folder
+                        settingsTelemetry["file"] = fileInput.file
+                        settingsTelemetry["extension"] = fileInput.extension
+                    } else if (popupMode === 2) {
+                        settingsTelemetry["folder"] = folderInput.folder
+                    }
 
                     // dispatch job
                     if (currentShot) {
                         currentShot.exportGps(fileInput.text, 0, 2, switchEGM96.checked)
-                        //mediaProvider.extractTelemetrySelected(uuids, settingsTelemetry)
-                    } else if (uuids.length > 0) {
-                        mediaProvider.extractTelemetrySelection(uuids, settingsTelemetry)
+                        //mediaProvider.extractTelemetrySelected(shots_uuids, settingsTelemetry)
+                    } else if (shots_uuids.length > 0) {
+                        mediaProvider.extractTelemetrySelection(shots_uuids, settingsTelemetry)
                     }
                 }
             }

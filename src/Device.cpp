@@ -675,9 +675,9 @@ QStringList Device::getSelectedShotsNames(const QVariant &indexes)
 
 /* ************************************************************************** */
 
-QStringList Device::getSelectedFilesPaths(const QVariant &indexes)
+QStringList Device::getSelectedShotsFilepaths(const QVariant &indexes)
 {
-    //qDebug() << "Device::getSelectedFilesPaths(" << indexes << ")";
+    //qDebug() << "Device::getSelectedShotsFilepaths(" << indexes << ")";
     QStringList selectedPaths;
 
     // indexes from qml gridview (after filtering)

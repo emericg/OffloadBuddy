@@ -499,6 +499,7 @@ Rectangle {
                 } else {
                     mediaGrid.deselectFile(index);
                 }
+                actionMenu.visible = false
                 return;
             }
 

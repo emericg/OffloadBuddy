@@ -199,6 +199,11 @@ void JobWorkerSync::work()
                                         stuff_done += fi_src.size();
                                         emit fileProduced(destFile);
                                     }
+                                    else
+                                    {
+                                        // TODO handle errors
+                                        qWarning() << "Couldn't rename file: " << destFile;
+                                    }
                                 }
 
                                 if (!success)
@@ -213,7 +218,7 @@ void JobWorkerSync::work()
                                     else
                                     {
                                         // TODO handle errors
-                                        qDebug() << "Couldn't copy file: " << destFile;
+                                        qWarning() << "Couldn't copy file: " << destFile;
                                     }
                                 }
                             }

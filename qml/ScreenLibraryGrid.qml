@@ -522,15 +522,12 @@ Item {
             }
 
             if (index === 2) {
-                popupMove.uuids = mediaLibrary.getSelectedShotsUuids(indexes)
-                popupMove.shots = mediaLibrary.getSelectedShotsNames(indexes)
-                popupMove.files = mediaLibrary.getSelectedFilesPaths(indexes)
                 popupMove.openSingle(mediaLibrary, selectedItem.shot)
             }
             if (index === 3) {
-                popupEncoding.uuids = mediaLibrary.getSelectedShotsUuids(indexes)
-                popupEncoding.shots = mediaLibrary.getSelectedShotsNames(indexes)
-                popupEncoding.files = mediaLibrary.getSelectedFilesPaths(indexes)
+                popupEncoding.shots_uuids = mediaLibrary.getSelectedShotsUuids(indexes)
+                popupEncoding.shots_names = mediaLibrary.getSelectedShotsNames(indexes)
+                popupEncoding.shots_files = mediaLibrary.getSelectedShotsFilepaths(indexes)
                 popupEncoding.updateEncodePanel(selectedItem.shot)
                 popupEncoding.openSingle(mediaLibrary, selectedItem.shot)
             }
@@ -541,9 +538,9 @@ Item {
                 selectedItem.shot.openFolder()
             }
             if (index === 16) {
-                popupDelete.uuids = mediaLibrary.getSelectedShotsUuids(indexes)
-                popupDelete.shots = mediaLibrary.getSelectedShotsNames(indexes)
-                popupDelete.files = mediaLibrary.getSelectedFilesPaths(indexes)
+                popupDelete.shots_uuids = mediaLibrary.getSelectedShotsUuids(indexes)
+                popupDelete.shots_names = mediaLibrary.getSelectedShotsNames(indexes)
+                popupDelete.shots_files = mediaLibrary.getSelectedShotsFilepaths(indexes)
                 popupDelete.openSelection(mediaLibrary)
             }
 
@@ -681,9 +678,9 @@ Item {
                     } else {
                         indexes.push(shotsView.currentIndex)
                     }
-                    popupDelete.uuids = mediaLibrary.getSelectedShotsUuids(indexes)
-                    popupDelete.shots = mediaLibrary.getSelectedShotsNames(indexes)
-                    popupDelete.files = mediaLibrary.getSelectedFilesPaths(indexes)
+                    popupDelete.shots_uuids = mediaLibrary.getSelectedShotsUuids(indexes)
+                    popupDelete.shots_names = mediaLibrary.getSelectedShotsNames(indexes)
+                    popupDelete.shots_files = mediaLibrary.getSelectedShotsFilepaths(indexes)
                     popupDelete.openSelection(mediaLibrary)
                 }
             }

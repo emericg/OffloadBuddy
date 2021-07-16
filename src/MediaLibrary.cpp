@@ -313,9 +313,9 @@ QStringList MediaLibrary::getSelectedShotsNames(const QVariant &indexes)
 
 /* ************************************************************************** */
 
-QStringList MediaLibrary::getSelectedFilesPaths(const QVariant &indexes)
+QStringList MediaLibrary::getSelectedShotsFilepaths(const QVariant &indexes)
 {
-    //qDebug() << "MediaLibrary::getSelectedFilesPaths(" << indexes << ")";
+    //qDebug() << "MediaLibrary::getSelectedShotsFilepaths(" << indexes << ")";
     QStringList selectedPaths;
 
     // indexes from qml gridview (after filtering)

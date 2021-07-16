@@ -22,9 +22,10 @@ Popup {
     property bool recapEnabled: true
     property bool recapOpened: false
 
-    property var uuids: []
-    property var shots: []
-    property var files: []
+    property var shots_uuids: []
+    property var shots_names: []
+    property var shots_files: []
+    //property var shots: [] // TODO actual shot pointers
 
     property var mediaProvider: null
     property var currentShot: null
@@ -35,46 +36,44 @@ Popup {
 
     function openSingle(provider, shot) {
         popupMode = 1
-        recapEnabled = false
-        recapOpened = false
-        uuids = []
-        shots = []
-        files = []
         mediaProvider = provider
         currentShot = shot
 
-        textArea.text = qsTr("Are you sure you want to delete current shot?")
+        if (currentShot.fileCount > 1)
+            textArea.text = qsTr("Are you sure you want to delete the current shot and its files?")
+        else
+            textArea.text = qsTr("Are you sure you want to delete the current shot?")
+
         visible = true
     }
 
     function openSelection(provider) {
-        if (uuids.length === 0 || shots.length === 0 || files.length === 0) return
+        if (shots_uuids.length === 0 || shots_names.length === 0 || shots_files.length === 0) return
 
         popupMode = 2
         recapEnabled = true
-        recapOpened = false
         mediaProvider = provider
-        currentShot = null
+        textArea.text = qsTr("Are you sure you want to delete selected shot(s)?", "", shots_names.length)
 
-        if (shots.length > 1)
-            textArea.text = qsTr("Are you sure you want to delete selected shots?")
-        else
-            textArea.text = qsTr("Are you sure you want to delete selected shot?")
         visible = true
     }
 
     function openAll(provider) {
         popupMode = 3
+        mediaProvider = provider
+        textArea.text = qsTr("Are you sure you want to delete ALL of the files from this device?")
+
+        visible = true
+    }
+
+    onClosed: {
         recapEnabled = false
         recapOpened = false
-        uuids = []
-        shots = []
-        files = []
-        mediaProvider = provider
+        shots_uuids = []
+        shots_names = []
+        shots_files = []
+        mediaProvider = null
         currentShot = null
-
-        textArea.text = qsTr("Are you sure you want to delete ALL of the files from this device?")
-        visible = true
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -138,7 +137,7 @@ Popup {
 
             z: 1
             height: 48
-            visible: files.length
+            visible: shots_files.length
             color: Theme.colorForeground
 
             Text {
@@ -148,7 +147,7 @@ Popup {
                 anchors.rightMargin: 48+16+16
                 anchors.verticalCenter: parent.verticalCenter
 
-                text: qsTr("%n shot(s) selected", "", shots.length) + " / " + qsTr("%n file(s) selected", "", files.length)
+                text: qsTr("%n shot(s) selected", "", shots_names.length) + " / " + qsTr("%n file(s) selected", "", shots_files.length)
                 color: Theme.colorText
                 font.pixelSize: Theme.fontSizeContent
             }
@@ -170,7 +169,7 @@ Popup {
 
         Item {
             id: contentArea
-            height: (files.length > 0) ? 160 : 96
+            height: (shots_files.length > 0) ? 160 : 96
             anchors.left: parent.left
             anchors.right: parent.right
 
@@ -183,7 +182,7 @@ Popup {
 
                 visible: recapOpened
 
-                model: files
+                model: shots_files
                 delegate: Text {
                     anchors.left: parent.left
                     anchors.right: parent.right
@@ -222,11 +221,11 @@ Popup {
                 anchors.leftMargin: 24
                 anchors.right: parent.right
                 anchors.rightMargin: 24
-                anchors.bottom: parent.bottom
 
                 visible: !recapOpened
+                height: Math.min(64, currentShot.fileCount*16)
 
-                model: files
+                model: currentShot.filesList
                 delegate: Text {
                     anchors.left: parent.left
                     anchors.right: parent.right
@@ -272,9 +271,9 @@ Popup {
 
                     if (currentShot) {
                         mediaProvider.deleteSelected(currentShot.uuid, settingsDeletion)
-                        //mediaProvider.deleteSelected(uuids[0], settingsDeletion)
-                    } else if (uuids.length > 0) {
-                        mediaProvider.deleteSelection(uuids, settingsDeletion)
+                        //mediaProvider.deleteSelected(shots_uuids[0], settingsDeletion)
+                    } else if (shots_uuids.length > 0) {
+                        mediaProvider.deleteSelection(shots_uuids, settingsDeletion)
                     } else if (popupMode === 3) {
                         mediaProvider.deleteAll(settingsDeletion)
                     }

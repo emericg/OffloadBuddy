@@ -24,9 +24,10 @@ Popup {
     property bool recapEnabled: true
     property bool recapOpened: false
 
-    property var uuids: []
-    property var shots: []
-    property var files: []
+    property var shots_uuids: []
+    property var shots_names: []
+    property var shots_files: []
+    //property var shots: [] // TODO actual shot pointers
 
     property var mediaProvider: null
     property var currentShot: null
@@ -61,11 +62,6 @@ Popup {
 
     function openSingle(provider, shot) {
         popupMode = 1
-        recapEnabled = false
-        recapOpened = false
-        uuids = []
-        shots = []
-        files = []
         mediaProvider = provider
         currentShot = shot
 
@@ -73,14 +69,11 @@ Popup {
     }
 
     function openSelection(provider) {
-        if (uuids.length === 0 || shots.length === 0) return
+        if (shots_uuids.length === 0 || shots_names.length === 0) return
 
         popupMode = 2
         recapEnabled = true
-        recapOpened = false
-        files = []
         mediaProvider = provider
-        currentShot = null
 
         visible = true
     }
@@ -88,14 +81,19 @@ Popup {
     function openAll(provider) {
         popupMode = 3
         recapEnabled = true
-        recapOpened = false
-        uuids = []
-        shots = []
-        files = []
         mediaProvider = provider
-        currentShot = null
 
         visible = true
+    }
+
+    onClosed: {
+        recapEnabled = false
+        recapOpened = false
+        shots_uuids = []
+        shots_names = []
+        shots_files = []
+        mediaProvider = null
+        currentShot = null
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -158,7 +156,7 @@ Popup {
 
             z: 1
             height: 48
-            visible: shots.length
+            visible: shots_names.length
             color: Theme.colorForeground
 
             Text {
@@ -168,7 +166,7 @@ Popup {
                 anchors.rightMargin: 48+16+16
                 anchors.verticalCenter: parent.verticalCenter
 
-                text: qsTr("%n shot(s) selected", "", shots.length)
+                text: qsTr("%n shot(s) selected", "", shots_names.length)
                 color: Theme.colorText
                 font.pixelSize: Theme.fontSizeContent
             }
@@ -204,7 +202,7 @@ Popup {
 
                 visible: recapOpened
 
-                model: shots
+                model: shots_names
                 delegate: Text {
                     anchors.left: parent.left
                     anchors.right: parent.right
@@ -465,8 +463,8 @@ Popup {
                     // dispatch job
                     if (currentShot) {
                         mediaProvider.offloadSelected(currentShot.uuid, settingsOffload)
-                    } else if (uuids.length > 0) {
-                        mediaProvider.offloadSelection(uuids, settingsOffload)
+                    } else if (shots_uuids.length > 0) {
+                        mediaProvider.offloadSelection(shots_uuids, settingsOffload)
                     } else if (popupMode === 3) {
                         mediaProvider.offloadAll(settingsOffload)
                     }
