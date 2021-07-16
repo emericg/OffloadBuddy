@@ -43,7 +43,31 @@ JobWorkerSync::JobWorkerSync()
 
 JobWorkerSync::~JobWorkerSync()
 {
-    delete thread;
+    if (m_thread) m_thread->terminate();
+}
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+bool JobWorkerSync::start()
+{
+    m_thread = new QThread();
+    if (m_thread)
+    {
+        connect(m_thread, &QThread::finished, m_thread, &QObject::deleteLater);
+        moveToThread(m_thread);
+        m_thread->start();
+
+        return true;
+    }
+
+    return false;
+}
+
+bool JobWorkerSync::stop()
+{
+    if (m_thread) m_thread->terminate();
+    return true;
 }
 
 /* ************************************************************************** */
@@ -53,7 +77,7 @@ void JobWorkerSync::queueWork(Job *job)
 {
     qDebug() << ">> JobWorkerSync::queueWork()";
 
-    QMutexLocker locker(& m_jobsMutex);
+    QMutexLocker locker(&m_jobsMutex);
     m_jobs.enqueue(job);
 
     qDebug() << "<< JobWorkerSync::queueWork()";
@@ -63,10 +87,9 @@ bool JobWorkerSync::isWorking()
 {
     qDebug() << ">> JobWorkerSync::isWorking()";
 
-    QMutexLocker locker(& m_jobsMutex);
+    QMutexLocker locker(&m_jobsMutex);
     return m_working;
 }
-
 
 void JobWorkerSync::work()
 {
@@ -101,8 +124,8 @@ void JobWorkerSync::work()
                         if (!file.filesystemPath.isEmpty())
                         {
                             //qDebug() << "JobWorkerSync  >  deleting:" << file.filesystemPath;
-                            bool status = false;
 
+                            bool status = false;
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
                             if (current_job->settings_delete.moveToTrash)
                                 status = QFile::moveToTrash(file.filesystemPath); // Qt 5.15
@@ -145,6 +168,8 @@ void JobWorkerSync::work()
 
                 // HANDLE OFFLOADS /////////////////////////////////////////////
 
+                if (current_job->type == JobUtils::JOB_MOVE ||
+                    current_job->type == JobUtils::JOB_OFFLOAD)
                 {
                     for (auto const &file: element->files)
                     {
@@ -160,18 +185,36 @@ void JobWorkerSync::work()
                             if (!fi_dst.exists() ||
                                 (fi_dst.exists() && fi_dst.size() != fi_src.size()))
                             {
-                                bool success = QFile::copy(file.filesystemPath, destFile);
-                                if (success)
-                                {
-                                    //qDebug() << "COPIED: " << destFile;
-                                    stuff_done += fi_src.size();
+                                bool success = false;
 
-                                    emit fileProduced(destFile);
-                                }
-                                else
+                                if (QStorageInfo(fi_src.dir()).rootPath() == QStorageInfo(fi_dst.dir()).rootPath())
                                 {
-                                    // TODO handle errors
-                                    qDebug() << "Couldn't copy file: " << destFile;
+                                    // Source and dest are on the same filesystem
+                                    // attempting a simple rename instead of copy
+
+                                    success = QFile::rename(file.filesystemPath, destFile);
+                                    if (success)
+                                    {
+                                        //qDebug() << "RENAMED: " << destFile;
+                                        stuff_done += fi_src.size();
+                                        emit fileProduced(destFile);
+                                    }
+                                }
+
+                                if (!success)
+                                {
+                                    success = QFile::copy(file.filesystemPath, destFile);
+                                    if (success)
+                                    {
+                                        //qDebug() << "COPIED: " << destFile;
+                                        stuff_done += fi_src.size();
+                                        emit fileProduced(destFile);
+                                    }
+                                    else
+                                    {
+                                        // TODO handle errors
+                                        qDebug() << "Couldn't copy file: " << destFile;
+                                    }
                                 }
                             }
                             else
@@ -202,7 +245,6 @@ void JobWorkerSync::work()
                                 {
                                     //qDebug() << "COPIED: " << destFile;
                                     stuff_done += file.size;
-
                                     emit fileProduced(destFile);
                                 }
                             }

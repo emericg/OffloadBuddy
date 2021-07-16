@@ -100,7 +100,7 @@ void MediaLibrary::scanMediaDirectory(MediaDirectory *md)
     {
         if (m_shotModel)
         {
-            //qDebug() << "scanMediaDirectory() with MediaDirectory path:" << md->getPath();
+            //qDebug() << "MediaLibrary::scanMediaDirectory(" << md->getPath() << ")";
 
             QThread *thread = new QThread();
             FileScanner *fs = new FileScanner();
@@ -130,7 +130,7 @@ void MediaLibrary::scanMediaDirectory(MediaDirectory *md)
 
 void MediaLibrary::searchMediaDirectory(const QString &path)
 {
-    //qDebug() << "searchMediaDirectory() with path:" << path;
+    //qDebug() << "MediaLibrary::searchMediaDirectory(" << path << ")";
 
     StorageManager *sm = StorageManager::getInstance();
     if (sm)
@@ -152,7 +152,7 @@ void MediaLibrary::searchMediaDirectory(const QString &path)
 
 void MediaLibrary::searchMediaDirectories()
 {
-    //qDebug() << "searchMediaDirectories()";
+    //qDebug() << "MediaLibrary::searchMediaDirectories()";
 
     StorageManager *sm = StorageManager::getInstance();
     if (sm)
@@ -173,7 +173,7 @@ void MediaLibrary::searchMediaDirectories()
 
 void MediaLibrary::cleanMediaDirectory(const QString &path)
 {
-    //qDebug() << "cleanMediaDirectory() with path:" << path;
+    //qDebug() << "MediaLibrary::cleanMediaDirectory(" << path << ")";
     Q_UNUSED(path)
 
     if (m_shotModel)
@@ -184,6 +184,18 @@ void MediaLibrary::cleanMediaDirectory(const QString &path)
 
             // TODO...
         }
+    }
+}
+
+/* ************************************************************************** */
+
+void MediaLibrary::invalidate()
+{
+    //qDebug() << "MediaLibrary::invalidate()";
+
+    if (m_shotFilter)
+    {
+        m_shotFilter->invalidate();
     }
 }
 

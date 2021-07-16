@@ -57,7 +57,10 @@ Shot::~Shot()
     for (auto picture: qAsConst(m_pictures))
     {
         if (picture->ed)
-            exif_data_unref(picture->ed);
+        {
+           exif_data_unref(picture->ed);
+           picture->ed = nullptr;
+        }
     }
     qDeleteAll(m_pictures);
     m_pictures.clear();
@@ -705,9 +708,9 @@ bool Shot::getMetadataFromPicture(int index)
         m_pictures.at(index)->ed = exif_data_new_from_file(m_pictures.at(index)->filesystemPath.toLocal8Bit());
     }
 
-    ExifData *ed = m_pictures.at(index)->ed;
-    if (ed)
+    if (m_pictures.at(index)->ed)
     {
+        ExifData *ed = m_pictures.at(index)->ed;
         hasEXIF = true;
 
         // EXIF ////////////////////////////////////////////////////////////////
@@ -988,7 +991,8 @@ bool Shot::getMetadataFromPicture(int index)
             //qDebug() << "WE HAVE MAKERNOTEs";
         }
 
-        exif_data_unref(ed);
+        exif_data_unref(m_pictures.at(index)->ed);
+        m_pictures.at(index)->ed = nullptr;
 
         status = true;
     }

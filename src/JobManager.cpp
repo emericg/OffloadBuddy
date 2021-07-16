@@ -493,24 +493,17 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
             {
                 qDebug() << "Starting a sync worker";
                 m_selected_worker = new JobWorkerSync();
-                m_selected_worker->thread = new QThread();
+                m_selected_worker->start();
 
-                if (m_selected_worker->thread && m_selected_worker)
-                {
-                    m_selected_worker->moveToThread(m_selected_worker->thread);
+                connect(m_selected_worker, SIGNAL(startWorking()), m_selected_worker, SLOT(work()));
+                connect(m_selected_worker, SIGNAL(jobProgress(int,float)), this, SLOT(jobProgress(int,float)));
+                connect(m_selected_worker, SIGNAL(jobStarted(int)), this, SLOT(jobStarted(int)));
+                connect(m_selected_worker, SIGNAL(jobFinished(int,int)), this, SLOT(jobFinished(int,int)));
+                connect(m_selected_worker, SIGNAL(shotStarted(int,Shot*)), this, SLOT(shotStarted(int,Shot*)));
+                connect(m_selected_worker, SIGNAL(shotFinished(int,Shot*)), this, SLOT(shotFinished(int,Shot*)));
+                connect(m_selected_worker, SIGNAL(fileProduced(QString)), this, SLOT(newFile(QString)));
 
-                    connect(m_selected_worker, SIGNAL(startWorking()), m_selected_worker, SLOT(work()));
-
-                    connect(m_selected_worker, SIGNAL(jobProgress(int,float)), this, SLOT(jobProgress(int,float)));
-                    connect(m_selected_worker, SIGNAL(jobStarted(int)), this, SLOT(jobStarted(int)));
-                    connect(m_selected_worker, SIGNAL(jobFinished(int,int)), this, SLOT(jobFinished(int,int)));
-                    connect(m_selected_worker, SIGNAL(shotStarted(int,Shot*)), this, SLOT(shotStarted(int,Shot*)));
-                    connect(m_selected_worker, SIGNAL(shotFinished(int,Shot*)), this, SLOT(shotFinished(int,Shot*)));
-                    connect(m_selected_worker, SIGNAL(fileProduced(QString)), this, SLOT(newFile(QString)));
-
-                    m_selected_worker->thread->start();
-                    status = true;
-                }
+                status = true;
 
                 m_job_instant = m_selected_worker;
             }
@@ -530,24 +523,17 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
             {
                 qDebug() << "Starting a sync worker";
                 m_selected_worker = new JobWorkerSync();
-                m_selected_worker->thread = new QThread();
+                m_selected_worker->start();
 
-                if (m_selected_worker->thread && m_selected_worker)
-                {
-                    m_selected_worker->moveToThread(m_selected_worker->thread);
+                connect(m_selected_worker, SIGNAL(startWorking()), m_selected_worker, SLOT(work()));
+                connect(m_selected_worker, SIGNAL(jobProgress(int,float)), this, SLOT(jobProgress(int,float)));
+                connect(m_selected_worker, SIGNAL(jobStarted(int)), this, SLOT(jobStarted(int)));
+                connect(m_selected_worker, SIGNAL(jobFinished(int,int)), this, SLOT(jobFinished(int,int)));
+                connect(m_selected_worker, SIGNAL(shotStarted(int,Shot*)), this, SLOT(shotStarted(int,Shot*)));
+                connect(m_selected_worker, SIGNAL(shotFinished(int,Shot*)), this, SLOT(shotFinished(int,Shot*)));
+                connect(m_selected_worker, SIGNAL(fileProduced(QString)), this, SLOT(newFile(QString)));
 
-                    connect(m_selected_worker, SIGNAL(startWorking()), m_selected_worker, SLOT(work()));
-
-                    connect(m_selected_worker, SIGNAL(jobProgress(int,float)), this, SLOT(jobProgress(int,float)));
-                    connect(m_selected_worker, SIGNAL(jobStarted(int)), this, SLOT(jobStarted(int)));
-                    connect(m_selected_worker, SIGNAL(jobFinished(int,int)), this, SLOT(jobFinished(int,int)));
-                    connect(m_selected_worker, SIGNAL(shotStarted(int,Shot*)), this, SLOT(shotStarted(int,Shot*)));
-                    connect(m_selected_worker, SIGNAL(shotFinished(int,Shot*)), this, SLOT(shotFinished(int,Shot*)));
-                    connect(m_selected_worker, SIGNAL(fileProduced(QString)), this, SLOT(newFile(QString)));
-
-                    m_selected_worker->thread->start();
-                    status = true;
-                }
+                status = true;
 
                 if (dev) m_job_disk.insert(dev->getUuid(), m_selected_worker);
                 else m_job_disk.insert("hdd", m_selected_worker);
@@ -682,10 +668,17 @@ void JobManager::shotFinished(int jobId, Shot *shot)
             }
             else
             {
-                switch (j->getType()) {
+                switch (j->getType())
+                {
                 case JobUtils::JOB_OFFLOAD:
+                    if (j->getAutoDelete())
+                        addJob(JobUtils::JOB_DELETE, j->getDevice(), j->getLibrary(), shot);
+                    else
+                        shot->setState(Shared::SHOT_STATE_OFFLOADED);
+                    break;
+
                 case JobUtils::JOB_MOVE:
-                    shot->setState(Shared::SHOT_STATE_OFFLOADED);
+                    addJob(JobUtils::JOB_DELETE, j->getDevice(), j->getLibrary(), shot);
                     break;
 
                 case JobUtils::JOB_CLIP:
@@ -696,15 +689,6 @@ void JobManager::shotFinished(int jobId, Shot *shot)
                 default:
                     shot->setState(Shared::SHOT_STATE_DONE);
                     break;
-                }
-
-                if (j->getType() == JobUtils::JOB_OFFLOAD && j->getAutoDelete())
-                {
-                    addJob(JobUtils::JOB_DELETE, j->getDevice(), j->getLibrary(), shot);
-                }
-                if (j->getType() == JobUtils::JOB_MOVE)
-                {
-                    //addJob(JobUtils::JOB_DELETE, j->getDevice(), j->getLibrary(), shot);
                 }
             }
         }
@@ -721,6 +705,7 @@ void JobManager::newFile(QString path)
         if (FileScanner::scanFilesystemFile(path, f, s))
         {
             m_library->getShotModel()->addFile(f, s);
+            m_library->invalidate();
         }
         else
         {

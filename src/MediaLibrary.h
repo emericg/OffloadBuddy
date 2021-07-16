@@ -63,6 +63,8 @@ public:
     MediaLibrary();
     ~MediaLibrary();
 
+    void invalidate();
+
     Q_INVOKABLE void searchMediaDirectories();
     Q_INVOKABLE void searchMediaDirectory(const QString &path);
     Q_INVOKABLE void cleanMediaDirectory(const QString &path);

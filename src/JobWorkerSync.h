@@ -44,12 +44,14 @@ class JobWorkerSync: public QObject
     QQueue <Job *> m_jobs;
     QMutex m_jobsMutex;
 
+    QThread *m_thread = nullptr;
+
 public:
     JobWorkerSync();
     ~JobWorkerSync();
 
-    QThread *thread = nullptr;
-
+    bool start();
+    bool stop();
     bool isWorking();
 
 public slots:
