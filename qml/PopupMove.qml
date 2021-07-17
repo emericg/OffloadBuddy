@@ -339,7 +339,6 @@ Popup {
                 primaryColor: Theme.colorPrimary
 
                 onClicked: {
-                    if (typeof currentShot === "undefined" || !currentShot) return
                     if (typeof mediaProvider === "undefined" || !mediaProvider) return
 
                     var settingsMove = {}
