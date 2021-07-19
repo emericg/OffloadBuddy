@@ -19,7 +19,7 @@ Popup {
     ////////
 
     property int popupMode: 0
-    property bool recapEnabled: true
+    property bool recapEnabled: false
     property bool recapOpened: false
 
     property var shots_uuids: []
@@ -137,7 +137,7 @@ Popup {
 
             z: 1
             height: 48
-            visible: shots_files.length
+            visible: (recapEnabled && shots_files.length)
             color: Theme.colorForeground
 
             Text {

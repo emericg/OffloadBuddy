@@ -23,7 +23,7 @@ Popup {
     ////////
 
     property int popupMode: 0
-    property bool recapEnabled: true
+    property bool recapEnabled: false
     property bool recapOpened: false
 
     property var shots_uuids: []
@@ -47,7 +47,7 @@ Popup {
     }
 
     function openSelection(provider) {
-        if (shots_uuids.length === 0 || shots_names.length === 0) return
+        if (shots_uuids.length === 0 || shots_names.length === 0 || shots_files.length === 0) return
 
         popupMode = 2
         recapEnabled = true
@@ -66,7 +66,7 @@ Popup {
         currentShot = null
     }
 
-    ////////
+    ////////////////////////////////////////////////////////////////////////////
 
     property string encodingMode: ""
 
@@ -338,7 +338,7 @@ Popup {
 
             z: 1
             height: 48
-            visible: shots_names.length
+            visible: (recapEnabled && shots_files.length)
             color: Theme.colorForeground
 
             Text {

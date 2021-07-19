@@ -32,8 +32,9 @@ Rectangle {
         shotMove.visible = move
         shotOffload.visible = offload
         shotEncode.visible = encode
-        telemetryGPMF.visible = gpmf
-        telemetryGPS.visible = gps
+        telemetry.visible = (gpmf || gps)
+        telemetryGPMF.visible = false
+        telemetryGPS.visible = false
         openFile.visible = file
         openFolder.visible = folder
         removeSelected.visible = remove
@@ -85,16 +86,23 @@ Rectangle {
             color: Theme.colorSeparator
         }
         ActionButton {
-            id: telemetryGPMF
+            id: telemetry
             index: 8
             button_text: qsTr("Extract telemetry")
             button_source: "qrc:/assets/icons_material/baseline-insert_chart_outlined-24px.svg"
             onButtonClicked: menuSelected(index)
         }
         ActionButton {
-            id: telemetryGPS
+            id: telemetryGPMF
             index: 9
-            button_text: qsTr("Extract GPX trace")
+            button_text: qsTr("Extract telemetry")
+            button_source: "qrc:/assets/icons_material/baseline-insert_chart_outlined-24px.svg"
+            onButtonClicked: menuSelected(index)
+        }
+        ActionButton {
+            id: telemetryGPS
+            index: 10
+            button_text: qsTr("Extract GPS trace")
             button_source: "qrc:/assets/icons_material/baseline-map-24px.svg"
             onButtonClicked: menuSelected(index)
         }

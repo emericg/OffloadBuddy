@@ -508,8 +508,7 @@ Item {
         ActionMenu {
             id: actionMenu
             z: 7
-
-            onMenuSelected: { rectangleLibraryGrid.actionMenuTriggered(index) }
+            onMenuSelected: rectangleLibraryGrid.actionMenuTriggered(index)
         }
         function actionMenuTriggered(index) {
             //console.log("actionMenuTriggered(" + index + ") selected shot: '" + shotsView.currentItem.shot.name + "'")
@@ -530,6 +529,9 @@ Item {
                 popupEncoding.shots_files = mediaLibrary.getSelectedShotsFilepaths(indexes)
                 popupEncoding.updateEncodePanel(selectedItem.shot)
                 popupEncoding.openSingle(mediaLibrary, selectedItem.shot)
+            }
+            if (index === 8) {
+                popupTelemetry.openSingle(mediaLibrary, selectedItem.shot)
             }
             if (index === 12) {
                 selectedItem.shot.openFile()

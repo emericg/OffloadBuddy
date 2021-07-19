@@ -739,6 +739,9 @@ Item {
                 popupEncoding.updateEncodePanel(selectedItem.shot)
                 popupEncoding.openSingle(currentDevice, selectedItem.shot)
             }
+            if (index === 8) {
+                popupTelemetry.openSingle(currentDevice, selectedItem.shot)
+            }
             if (index === 12) {
                 shotsView.currentItem.shot.openFile()
             }
