@@ -1138,10 +1138,12 @@ bool Shot::getMetadataFromVideo(int index)
 
                     // Now the purpose of the following code is to get accurate
                     // date from the GPS, but in case of chaptered videos, we may
-                    // have that date already, so don't run this code twice
+                    // have that date already, so don't run this code twice (it's slow)
                     if (!m_date_gps.isValid())
                     {
-                        for (unsigned sp_index = 0; sp_index < gpmf_sample_count; sp_index++)
+                        // We start at the last GPMF sample, we have more chance
+                        // to have a GPS lock than at the begining of the video
+                        for (unsigned sp_index = gpmf_sample_count-1; sp_index > 0; sp_index--)
                         {
                             MediaSample_t *sp = minivideo_get_sample(media, t, sp_index);
 
@@ -1150,13 +1152,13 @@ bool Shot::getMetadataFromVideo(int index)
                             {
                                 if (parseGpmfSampleFast(buf, devc_count))
                                 {
-                                    // we have GPS datetime
                                     minivideo_destroy_sample(&sp);
-                                    break;
+                                    break; // we have GPS datetime
                                 }
                             }
 
                             minivideo_destroy_sample(&sp);
+                            break; // if we don't find a GPS sample immediately, we bail
                         }
                     }
                 }
