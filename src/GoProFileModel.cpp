@@ -112,7 +112,8 @@ bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot)
             // Single Photo
             shot.shot_type = Shared::SHOT_PICTURE;
         }
-        else if (file.extension == "mp4")
+        else if (file.extension == "mp4" || file.extension == "lrv" ||
+                 file.extension == "thm"  || file.extension == "wav")
         {
             // Single Video
             shot.shot_type = Shared::SHOT_VIDEO;
