@@ -330,12 +330,12 @@ class Shot: public QObject
     // GoPro shot metadata
     unsigned protune = 0;
     unsigned cam_raw = 0;
-    unsigned broadcast_range;
-    unsigned video_mode_fov;
-    unsigned lens_type;
+    unsigned broadcast_range = 0;
+    unsigned video_mode_fov = 0;
+    unsigned lens_type = 0;
     unsigned lowlight = 0;
     unsigned superview = 0;
-    unsigned sharpening;
+    unsigned sharpening = 0;
     bool eis = 0;
     unsigned media_type = 0;
     QList <int64_t> m_hilight;
@@ -360,7 +360,7 @@ class Shot: public QObject
 
     std::vector <std::pair<float, float>> m_gps;
     std::vector <std::pair<std::string, unsigned>> m_gps_params;
-    float m_gps_altitude_offset = 0;
+    float m_gps_altitude_offset = 0.f;
     std::vector <float> m_alti;
     std::vector <float> m_speed;
 
@@ -392,9 +392,9 @@ class Shot: public QObject
     bool hasGpmf() { return hasGPMF; }
     Q_PROPERTY(bool hasGPMF READ hasGpmf NOTIFY metadataUpdated)
 
-    float minAlti;
-    float maxAlti;
-    float avgAlti;
+    float minAlti = 0.f;
+    float maxAlti = 0.f;
+    float avgAlti = 0.f;
     float getMinAlti() { return minAlti; }
     float getMaxAlti() { return maxAlti; }
     float getAvgAlti() { return avgAlti; }
@@ -402,9 +402,9 @@ class Shot: public QObject
     Q_PROPERTY(float maxAlti READ getMaxAlti NOTIFY metadataUpdated)
     Q_PROPERTY(float avgAlti READ getAvgAlti NOTIFY metadataUpdated)
 
-    float minSpeed;
-    float maxSpeed;
-    float avgSpeed;
+    float minSpeed = 0.f;
+    float maxSpeed = 0.f;
+    float avgSpeed = 0.f;
     float getMinSpeed() { return minSpeed; }
     float getMaxSpeed() { return maxSpeed; }
     float getAvgSpeed() { return avgSpeed; }
