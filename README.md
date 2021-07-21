@@ -4,26 +4,27 @@ OffloadBuddy
 [![Build Status](https://github.com/emericg/OffloadBuddy/workflows/build/badge.svg)](https://github.com/emericg/OffloadBuddy/actions)
 [![License: GPL v3](https://img.shields.io/badge/license-GPL%20v3-blue.svg?style=flat-square)](http://www.gnu.org/licenses/gpl-3.0)
 
-OffloadBuddy is a multimedia offloading software with a few tricks up his sleeve!
-It's designed to remove the hassle of handling and transferring the many videos and pictures files from your devices like action cameras, regular cameras and smartphones...
+OffloadBuddy is a multimedia offloading software with a few tricks up his sleeve!  
+It's designed to remove the hassle of handling and transferring the many videos and pictures files from your devices like action cameras, regular cameras and smartphones...  
 
-Works on Linux, macOS and Windows!
+> Works on Linux, macOS and Windows!
 
 ### Features:
 
-- [x] Import data from SD cards, mass storage or MTP devices (Linux & macOS)
+- [x] Import data from SD cards, mass storage or MTP devices
   - [x] Organize and sort your media library
   - [x] Copy, merge or reencode media
-  - [ ] Change wrong dates (WIP)
+  - [x] Preview videos, photos and timelapses
   - [x] Show and export GoPro telemetry & GPS traces
+  - [ ] Change wrong dates (WIP)
 - [x] Media transcoding
   - [x] Create short video clips (and GIFs) from your videos!
   - [x] Create videos from timelapses
   - [x] Create timelapse from videos
   - [x] Extract photos/screenshots from videos
 - [x] Apply filters to transcoded media
-  - [x] Reframe media
-  - [x] Cip duration
+  - [x] Reframe media, change aspect ratio
+  - [x] Clip duration
   - [x] Rotate media (WIP)
   - [ ] Defisheye media (WIP)
   - [ ] Stabilize videos
@@ -46,8 +47,8 @@ Works on Linux, macOS and Windows!
 
 ### Dependencies
 
-You will need a C++14 capable compiler and Qt 5.12+ (with QtMultimedia, QtLocation and QtCharts)
-On Windows, the contribs builds fine with MSVC 2017.
+You will need a C++14 capable compiler and Qt 5.12+ (with QtMultimedia, QtLocation and QtCharts).  
+On Windows, the contribs builds fine with MSVC 2017.  
 
 Build OffloadBuddy:
 - Qt (5.12+)  
@@ -62,7 +63,7 @@ Optional dependencies:
 Build dependencies:
 - python 3  
 - cmake  
-- and a couple others (see contribs/contribs.py)
+- and a couple others (see contribs/contribs.py)  
 
 ### Building OffloadBuddy
 
