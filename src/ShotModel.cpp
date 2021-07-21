@@ -100,7 +100,12 @@ void ShotModel::addFile(ofb_file *f, ofb_shot *s)
         }
     }
 
-    if (!shot)
+    if (shot)
+    {
+        //qDebug() << "Adding file:" << f->name << "to an existing shot";
+        shot->addFile(f);
+    }
+    else
     {
         //qDebug() << "File:" << f->name << "is from a new shot";
         shot = new Shot(s->shot_type, this);
@@ -108,20 +113,19 @@ void ShotModel::addFile(ofb_file *f, ofb_shot *s)
         {
             shot->setFileId(s->shot_id);
             shot->setCameraId(s->camera_id);
+            shot->addFile(f);
             addShot(shot);
         }
         else
         {
             delete f;
+            f = nullptr;
         }
     }
 
-    if (shot)
+    // update content stats
+    if (f)
     {
-        //qDebug() << "Adding file:" << f->name << "to an existing shot";
-        shot->addFile(f);
-
-        // update content stats
         m_fileCount++;
         m_diskSpace += f->size;
         Q_EMIT statsUpdated();
@@ -347,13 +351,15 @@ QVariant ShotModel::data(const QModelIndex & index, int role) const
             return QVariant::fromValue(shot);
         if (role == PathRole)
         {
-            if (shot->getFiles().empty())
+            if (shot->getFolderRefString().isEmpty())
             {
                 qWarning() << "shot" << shot->getName() << "has no files (?)";
                 return QVariant();
             }
-
-            return shot->getFiles().at(0)->filesystemPath;
+            else
+            {
+                return shot->getFolderRefString() + shot->getNameRefString();
+            }
         }
 
         // If we made it here...

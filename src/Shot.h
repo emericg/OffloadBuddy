@@ -468,11 +468,13 @@ public:
 
     Q_INVOKABLE void getMetadata() { getMetadataFromVideo(); }
 
-    QString &getFolderRefString();
     QString getFolderString();
     QString getFilesString() const;
     QStringList getFilesStringList() const;
     QVariant getShotFiles();
+
+    const QString &getFolderRefString();
+    const QString &getNameRefString() const { return m_shot_name; }
 
     QString getUuid() const { return m_uuid; }
 

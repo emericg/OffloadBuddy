@@ -298,14 +298,16 @@ void Device::workerScanningFinished(const QString &path)
 {
     //qDebug() << "> Device::workerScanningFinished(" << path << ")";
     Q_UNUSED(path)
-
+/*
     // Update sort
+    // This may still be needed for things like timelapses, where Shots are
+    // not yet complete when they are added to the ShotModel
     if (m_shotFilter)
     {
         m_shotFilter->sort(0, m_sortOrder);
         m_shotFilter->invalidate();
     }
-
+*/
     m_deviceState = DEVICE_STATE_IDLE;
     emit stateUpdated();
 }

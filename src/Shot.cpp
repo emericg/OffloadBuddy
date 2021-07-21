@@ -547,7 +547,7 @@ QStringList Shot::getFilesStringList() const
     return list;
 }
 
-QString & Shot::getFolderRefString()
+const QString & Shot::getFolderRefString()
 {
     if (m_folder.isEmpty())
     {
@@ -576,12 +576,15 @@ QString & Shot::getFolderRefString()
             m_folder = m_others.at(0)->filesystemPath;
         }
 
-        QDir p(m_folder);
-        p.cdUp();
-        m_folder = p.absolutePath();
+        if (!m_folder.isEmpty())
+        {
+            QDir p(m_folder);
+            p.cdUp();
+            m_folder = p.absolutePath();
 
-        // Make sure the path is terminated with a separator.
-        if (!m_folder.endsWith('/')) m_folder += '/';
+            // Make sure the path is terminated with a separator.
+            if (!m_folder.endsWith('/')) m_folder += '/';
+        }
     }
 
     return m_folder;
@@ -678,15 +681,18 @@ void Shot::openFolder() const
         folder = m_videos.at(0)->filesystemPath;
     }
 
-    QDir p(folder);
-    p.cdUp();
-    folder = p.absolutePath();
-
-    QFileInfo d(folder);
-    if (!folder.isEmpty() && d.exists())
+    if (!folder.isEmpty())
     {
-        //qDebug() << "Shot::openFolder()" << folder;
-        QDesktopServices::openUrl(QUrl::fromLocalFile(folder));
+        QDir p(folder);
+        p.cdUp();
+        folder = p.absolutePath();
+
+        QFileInfo d(folder);
+        if (!folder.isEmpty() && d.exists())
+        {
+            //qDebug() << "Shot::openFolder()" << folder;
+            QDesktopServices::openUrl(QUrl::fromLocalFile(folder));
+        }
     }
 }
 
