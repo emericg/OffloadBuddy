@@ -1,7 +1,8 @@
 OffloadBuddy
 ============
 
-[![Build Status](https://github.com/emericg/OffloadBuddy/workflows/build/badge.svg)](https://github.com/emericg/OffloadBuddy/actions)
+[![GitHub action](https://img.shields.io/github/workflow/status/emericg/OffloadBuddy/CI%20builds.svg?style=flat-square)](https://github.com/emericg/OffloadBuddy/actions)
+[![GitHub issues](https://img.shields.io/github/issues/emericg/OffloadBuddy.svg?style=flat-square)](https://github.com/emericg/OffloadBuddy/issues)
 [![License: GPL v3](https://img.shields.io/badge/license-GPL%20v3-blue.svg?style=flat-square)](http://www.gnu.org/licenses/gpl-3.0)
 
 OffloadBuddy is a multimedia offloading software with a few tricks up his sleeve!  
@@ -37,15 +38,18 @@ It's designed to remove the hassle of handling and transferring the many videos 
 
 ### Screenshots!
 
-![GUI1](https://i.imgur.com/LRKR1UW.jpg)
-![GUI2](https://i.imgur.com/pAsn76s.jpg)
-![GUI3](https://i.imgur.com/mlbIdCa.jpg)
-![GUI3](https://i.imgur.com/frkN44D.jpg)
-
+![overview](https://i.imgur.com/4CAhcYb.jpg)
+![offload](https://i.imgur.com/9g9Shls.jpg)
+![video1](https://i.imgur.com/9IN5NDZ.jpg)
+![telemetry](https://i.imgur.com/RN2OPy0.jpg)
+![timelapse](https://i.imgur.com/Pt4rz2H.jpg)
+![video3](https://i.imgur.com/4avHEnI.jpg)
+![resize](https://i.imgur.com/HCs2vKH.jpg)
+![clip](https://i.imgur.com/0euEyaN.jpg)
 
 ## Documentation
 
-### Dependencies
+#### Dependencies
 
 You will need a C++14 capable compiler and Qt 5.12+ (with QtMultimedia, QtLocation and QtCharts).  
 On Windows, the contribs builds fine with MSVC 2017.  
@@ -65,7 +69,7 @@ Build dependencies:
 - cmake  
 - and a couple others (see contribs/contribs.py)  
 
-### Building OffloadBuddy
+#### Building OffloadBuddy
 
 Build dependencies using the 'contribs' script (optional):
 ```bash
@@ -80,26 +84,7 @@ $ qmake DEFINES+=USE_CONTRIBS CONFIG+=release
 $ make
 ```
 
-
-## Get involved!
-
-### Developers
-
-You can browse the code on the GitHub page, submit patches and pull requests! Your help would be greatly appreciated ;-)
-
-### Users
-
-You can help us find and report bugs, suggest new features, help with translation, documentation and more! Visit the Issues section of the GitHub page to start!
-
-
-## License
-
-OffloadBuddy is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.  
-Read the [LICENSE](LICENSE) file or [consult the license on the FSF website](https://www.gnu.org/licenses/gpl-3.0.txt) directly.
-
-> Emeric Grange <emeric.grange@gmail.com>
-
-### Third party projects used by OffloadBuddy
+## Third party projects used by OffloadBuddy
 
 * Qt [website](https://www.qt.io) ([LGPL 3](https://www.gnu.org/licenses/lgpl-3.0.txt))
 * MiniVideo [website](https://github.com/emericg/MiniVideo) ([LGPL 3](https://www.gnu.org/licenses/lgpl-3.0.txt))
@@ -108,3 +93,20 @@ Read the [LICENSE](LICENSE) file or [consult the license on the FSF website](htt
 * libmtp [website](http://libmtp.sourceforge.net/) ([LGPL 2.1](https://www.gnu.org/licenses/lgpl-2.1.txt))
 * SingleApplication [website](https://github.com/itay-grudev/SingleApplication) ([MIT](https://opensource.org/licenses/MIT))
 * Graphical resources: [assets/COPYING](assets/COPYING)
+
+## Get involved!
+
+#### Developers
+
+You can browse the code on the GitHub page, submit patches and pull requests! Your help would be greatly appreciated ;-)
+
+#### Users
+
+You can help us find and report bugs, suggest new features, help with translation, documentation and more! Visit the Issues section of the GitHub page to start!
+
+## License
+
+OffloadBuddy is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.  
+Read the [LICENSE](LICENSE) file or [consult the license on the FSF website](https://www.gnu.org/licenses/gpl-3.0.txt) directly.
+
+> Emeric Grange <emeric.grange@gmail.com>
