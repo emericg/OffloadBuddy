@@ -10,7 +10,7 @@ Unicode True
 !define COMPANYNAME                  "Emeric Grange"
 !define DESCRIPTION                  "A multimedia offloading software with a few tricks up its sleeve!"
 !define VERSIONMAJOR                 0
-!define VERSIONMINOR                 6
+!define VERSIONMINOR                 7
 !define VERSIONBUILD                 0
 !define MUI_ABORTWARNING
 !define INSTALL_DIR                  "$PROGRAMFILES64\${APPNAME}"
@@ -55,10 +55,10 @@ Section "${APPNAME} (required)" SecDummy
   SectionIn RO
   SetOutPath "${INSTALL_DIR}"
   File /r "${APPNAME}\*"
-  
+
   ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
   IntFmt $0 "0x%08X" $0
-  
+
   DeleteRegKey HKCU "Software\${COMPANYNAME}\${APPNAME}"
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}"
 
