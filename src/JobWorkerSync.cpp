@@ -111,59 +111,31 @@ void JobWorkerSync::work()
 
             for (auto element: current_job->elements)
             {
-                emit shotStarted(current_job->id, element->parent_shots);
+                emit shotStarted(current_job->id, element->parent_shot);
+                int element_status = 1;
 
-                // HANDLE DELETION /////////////////////////////////////////////
+                // HANDLE TELEMETRY ////////////////////////////////////////////
 
-                if (current_job->type == JobUtils::JOB_DELETE)
+                if (current_job->type == JobUtils::JOB_TELEMETRY)
                 {
-                    for (auto const &file: element->files)
+                    if (element->parent_shot)
                     {
-                        // TODO check if device is RO?
+                        element->parent_shot->parseTelemetry();
 
-                        if (!file.filesystemPath.isEmpty())
+                        if (!current_job->settings_telemetry.gps_format.isEmpty())
                         {
-                            //qDebug() << "JobWorkerSync  >  deleting:" << file.filesystemPath;
-
-                            bool status = false;
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
-                            if (current_job->settings_delete.moveToTrash)
-                                status = QFile::moveToTrash(file.filesystemPath); // Qt 5.15
-                            else
-#endif
-                                status = QFile::remove(file.filesystemPath);
-
-                            if (status)
-                            {
-                                stuff_done++;
-                            }
-                            else
-                            {
-                                // TODO handle errors
-                                qDebug() << "Couldn't delete file: " << file.filesystemPath;
-                            }
+                            element->parent_shot->exportGps(element->destination_dir, 0,
+                                                    current_job->settings_telemetry.gps_frequency,
+                                                    current_job->settings_telemetry.EGM96);
                         }
-#ifdef ENABLE_LIBMTP
-                        else if (file.mtpDevice && file.mtpObjectId)
+                        if (!current_job->settings_telemetry.telemetry_format.isEmpty())
                         {
-                            //qDebug() << "JobWorkerSync  >  deleting:" << file.name;
-
-                            int err = LIBMTP_Delete_Object(file.mtpDevice, file.mtpObjectId);
-                            if (err)
-                            {
-                                // TODO handle errors
-                                qDebug() << "Couldn't delete file: " << file.name;
-                            }
-                            else
-                            {
-                                stuff_done++;
-                            }
+                            element->parent_shot->exportTelemetry(element->destination_dir, 0,
+                                                    current_job->settings_telemetry.telemetry_frequency,
+                                                    current_job->settings_telemetry.gps_frequency,
+                                                    current_job->settings_telemetry.EGM96);
                         }
-#endif // ENABLE_LIBMTP
                     }
-
-                    progress = ((stuff_done) / static_cast<float>(current_job->totalFiles)) * 100.f;
-                    //qDebug() << "progress: " << progress << "(" << current_job->totalFiles << "/" << stuff_done << ")";
                 }
 
                 // HANDLE OFFLOADS /////////////////////////////////////////////
@@ -221,11 +193,14 @@ void JobWorkerSync::work()
                                         qWarning() << "Couldn't copy file: " << destFile;
                                     }
                                 }
+
+                                if (!success) element_status = 0;
                             }
                             else
                             {
                                 //qDebug() << "No need to copy file: " << destFile;
                                 stuff_done += fi_src.size();
+                                element_status = 0;
                             }
                         }
 #ifdef ENABLE_LIBMTP
@@ -266,7 +241,62 @@ void JobWorkerSync::work()
                     //qDebug() << "progress: " << progress << "(" << current_job->totalSize << "/" << stuff_done << ")";
                 }
 
-                emit shotFinished(current_job->id, element->parent_shots);
+                // HANDLE DELETION /////////////////////////////////////////////
+
+                if (current_job->type == JobUtils::JOB_DELETE)
+                {
+                    for (auto const &file: element->files)
+                    {
+                        // TODO check if device is RO?
+
+                        if (!file.filesystemPath.isEmpty())
+                        {
+                            //qDebug() << "JobWorkerSync  >  deleting:" << file.filesystemPath;
+
+                            bool status = false;
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+                            if (current_job->settings_delete.moveToTrash)
+                                status = QFile::moveToTrash(file.filesystemPath); // Qt 5.15
+                            else
+#endif
+                                status = QFile::remove(file.filesystemPath);
+
+                            if (status)
+                            {
+                                stuff_done++;
+                            }
+                            else
+                            {
+                                // TODO handle errors
+                                qDebug() << "Couldn't delete file: " << file.filesystemPath;
+                            }
+                        }
+#ifdef ENABLE_LIBMTP
+                        else if (file.mtpDevice && file.mtpObjectId)
+                        {
+                            //qDebug() << "JobWorkerSync  >  deleting:" << file.name;
+
+                            int err = LIBMTP_Delete_Object(file.mtpDevice, file.mtpObjectId);
+                            if (err)
+                            {
+                                // TODO handle errors
+                                qDebug() << "Couldn't delete file: " << file.name;
+                            }
+                            else
+                            {
+                                stuff_done++;
+                            }
+                        }
+#endif // ENABLE_LIBMTP
+                    }
+
+                    progress = ((stuff_done) / static_cast<float>(current_job->totalFiles)) * 100.f;
+                    //qDebug() << "progress: " << progress << "(" << current_job->totalFiles << "/" << stuff_done << ")";
+                }
+
+                // Status
+
+                emit shotFinished(current_job->id, element_status, element->parent_shot);
                 emit jobProgress(current_job->id, progress);
             }
 

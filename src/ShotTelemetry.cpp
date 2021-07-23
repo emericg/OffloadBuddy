@@ -626,6 +626,8 @@ bool Shot::exportTelemetry(const QString &path, int format, int accl_frequency, 
     //qDebug() << "Shot::exportTelemetry('" << path << "', " << accl_frequency << ", " << gps_frequency << ", " << egm96_correction << ")";
     bool status = false;
 
+    Q_UNUSED(format) // TODO
+
     if (hasGPMF && gpmf_parsed)
     {
         QString dirpath = path;
@@ -732,6 +734,8 @@ bool Shot::exportGps(const QString &path, int format, int gps_frequency, bool eg
 {
     //qDebug() << "Shot::exportGps('" << path << "', " << gps_frequency << ")";
     bool status = false;
+
+    Q_UNUSED(format) // TODO
 
     if (hasGPS && gpmf_parsed)
     {

@@ -157,7 +157,7 @@ void JobWorkerAsync::queueWork(Job *job)
         for (unsigned i = 0; i < job->elements.size(); i++)
         {
             JobElement *element = job->elements.at(i);
-            if (element->parent_shots->getShotType() <= Shared::SHOT_PICTURE &&
+            if (element->parent_shot->getShotType() <= Shared::SHOT_PICTURE &&
                 element->files.size() != 1)
             {
                 qDebug() << "This async job element got" << element->files.size() << "file(s), should not happen...";
@@ -192,7 +192,7 @@ void JobWorkerAsync::queueWork(Job *job)
 
             //// INPUTS
 
-            if (element->parent_shots->getShotType() > Shared::SHOT_PICTURE)
+            if (element->parent_shot->getShotType() > Shared::SHOT_PICTURE)
             {
                 // timelapse to video
                 ptiwrap->arguments << "-r" << QString::number(job->settings_encode.timelapse_fps);
@@ -424,7 +424,7 @@ void JobWorkerAsync::queueWork(Job *job)
                     // Timelapse
                     if (job->settings_encode.timelapse_fps > 0)
                     {
-                        if (element->parent_shots->getShotType() < Shared::SHOT_PICTURE)
+                        if (element->parent_shot->getShotType() < Shared::SHOT_PICTURE)
                         {
                             // video to video timelapse
                             if (!video_filters.isEmpty()) video_filters += ",";
@@ -546,7 +546,7 @@ void JobWorkerAsync::processStarted()
         qDebug() << "JobWorkerAsync::processStarted()";
 
         emit jobStarted(m_ffmpegcurrent->job->id);
-        emit shotStarted(m_ffmpegcurrent->job->id, m_ffmpegcurrent->job->elements.at(m_ffmpegcurrent->job_element_index)->parent_shots);
+        emit shotStarted(m_ffmpegcurrent->job->id, m_ffmpegcurrent->job->elements.at(m_ffmpegcurrent->job_element_index)->parent_shot);
     }
 }
 
@@ -564,7 +564,7 @@ void JobWorkerAsync::processFinished()
             m_ffmpegcurrent->job->elements.size() > m_ffmpegcurrent->job_element_index)
         {
             emit fileProduced(m_ffmpegcurrent->destFile);
-            emit shotFinished(m_ffmpegcurrent->job->id, m_ffmpegcurrent->job->elements.at(m_ffmpegcurrent->job_element_index)->parent_shots);
+            emit shotFinished(m_ffmpegcurrent->job->id, 0, m_ffmpegcurrent->job->elements.at(m_ffmpegcurrent->job_element_index)->parent_shot);
             emit jobFinished(m_ffmpegcurrent->job->id, js);
         }
 

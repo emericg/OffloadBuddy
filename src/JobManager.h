@@ -153,7 +153,7 @@ typedef struct JobSettingsEncode
 
 typedef struct JobElement
 {
-    Shot *parent_shots = nullptr;
+    Shot *parent_shot = nullptr;
     QString destination_dir;
     QString destination_file;
 
@@ -366,8 +366,8 @@ public slots:
     //void jobErrored(int, int); // TODO?
 
     void shotStarted(int, Shot *);
-    void shotFinished(int, Shot *);
-    //void shotErrored(int, Shot *); // TODO?
+    void shotFinished(int, int, Shot *);
+    //void shotErrored(int, int, Shot *); // TODO?
 
     void newFile(QString);
 };

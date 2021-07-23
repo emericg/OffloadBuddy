@@ -466,7 +466,8 @@ public:
 
     Q_INVOKABLE bool isValid() const;
 
-    Q_INVOKABLE void getMetadata() { getMetadataFromVideo(); }
+    Q_INVOKABLE void parseMetadata() { getMetadataFromVideo(); }
+    Q_INVOKABLE void parseTelemetry() { getMetadataFromVideoGPMF(); }
 
     QString getFolderString();
     QString getFilesString() const;

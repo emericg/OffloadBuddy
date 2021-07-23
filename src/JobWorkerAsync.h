@@ -88,7 +88,7 @@ signals:
     void jobErrored();
 
     void shotStarted(int, Shot *);
-    void shotFinished(int, Shot *);
+    void shotFinished(int, int, Shot *);
 
     void fileProduced(QString);
 };

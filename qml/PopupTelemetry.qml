@@ -537,7 +537,6 @@ Popup {
                 enabled: (popupMode === 1 && fileInput.isValid) || (popupMode === 2 && folderInput.isValid)
 
                 onClicked: {
-                    if (typeof currentShot === "undefined" || !currentShot) return
                     if (typeof mediaProvider === "undefined" || !mediaProvider) return
 
                     var settingsTelemetry = {}
