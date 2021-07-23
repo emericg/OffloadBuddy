@@ -120,34 +120,47 @@ Item {
         anchors.left: textField_path.right
         anchors.leftMargin: 16
         anchors.right: rowButtons.left
-        anchors.rightMargin: 12
+        anchors.rightMargin: 16
         anchors.bottom: parent.bottom
 
         property int memusmode: 0
 
         // this
-        Column {
-            anchors.verticalCenter: parent.verticalCenter
+        Row {
             width: parent.width
-            spacing: 4
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: 8
             visible: (menus.memusmode === 0 && directory.available)
 
-            Text {
-                id: deviceSpaceText
-                width: parent.width
+            CheckBoxThemed {
+                id: checkBox_enabled2
+                anchors.verticalCenter: parent.verticalCenter
 
-                visible: (deviceSpaceText.width > 400)
-                color: Theme.colorText
-                text: UtilsString.bytesToString_short(directory.spaceUsed) + qsTr(" used / ") +
-                      UtilsString.bytesToString_short(directory.spaceAvailable) + qsTr(" available / ") +
-                      UtilsString.bytesToString_short(directory.spaceTotal) + qsTr(" total")
+                checked: directory.enabled
+                onClicked: directory.enabled = checked
             }
-            ProgressBarThemed {
-                id: progressBar
-                height: 8
-                width: parent.width
+            Column {
+                anchors.verticalCenter: parent.verticalCenter
+                width: parent.width - checkBox_enabled2.width
+                spacing: 4
 
-                value: directory.storageLevel
+                Text {
+                    id: deviceSpaceText
+                    width: parent.width
+
+                    visible: (deviceSpaceText.width > 400)
+                    color: Theme.colorText
+                    text: UtilsString.bytesToString_short(directory.spaceUsed) + qsTr(" used / ") +
+                          UtilsString.bytesToString_short(directory.spaceAvailable) + qsTr(" available / ") +
+                          UtilsString.bytesToString_short(directory.spaceTotal) + qsTr(" total")
+                }
+                ProgressBarThemed {
+                    id: progressBar
+                    height: 8
+                    width: parent.width
+
+                    value: directory.storageLevel
+                }
             }
         }
 
@@ -322,6 +335,7 @@ Item {
     Row {
         id: rowButtons
         anchors.right: parent.right
+        anchors.rightMargin: -8
         anchors.verticalCenter: parent.verticalCenter
 
         visible: (menus.memusmode !== 3)
