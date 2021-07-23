@@ -259,7 +259,7 @@ Item {
             id: mapTrace
             visible: false
             line.width: 3
-            line.color: Theme.colorPrimary
+            line.color: Theme.colorSecondary
         }
 
         ////////

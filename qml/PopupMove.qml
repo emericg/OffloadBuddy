@@ -196,7 +196,7 @@ Popup {
                     anchors.right: parent.right
                     anchors.left: parent.left
 
-                    visible: currentShot.fileCount
+                    visible: !recapEnabled && currentShot.fileCount
                     height: 32
 
                     Text {
@@ -215,7 +215,7 @@ Popup {
                     anchors.right: parent.right
 
                     clip: true
-                    visible: currentShot.fileCount
+                    visible: !recapEnabled && currentShot.fileCount
                     height: Math.min(64, currentShot.fileCount*16)
 
                     model: currentShot.filesList

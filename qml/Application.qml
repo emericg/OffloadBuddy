@@ -266,19 +266,19 @@ ApplicationWindow {
                     onActiveChanged: if (active) {
                         var grabSize = 32
 
-                        const p = windowHandler2.centroid.position;
-                        let e = 0;
-                        if (p.x < grabSize) e |= Qt.LeftEdge;
-                        if (p.x >= width - grabSize) e |= Qt.RightEdge;
-                        if (p.y < grabSize) e |= Qt.TopEdge;
-                        if (p.y >= height - grabSize) e |= Qt.BottomEdge;
+                        const p = windowHandler2.centroid.position
+                        let e = 0
+                        if (p.x < grabSize) e |= Qt.LeftEdge
+                        if (p.x >= width - grabSize) e |= Qt.RightEdge
+                        if (p.y < grabSize) e |= Qt.TopEdge
+                        if (p.y >= height - grabSize) e |= Qt.BottomEdge
 
                         if (e) {
                             if (!appWindow.startSystemResize(e)) {
                                 // your fallback code for setting window.width/height manually
                             }
                         } else {
-                            appWindow.startSystemMove();
+                            appWindow.startSystemMove()
                         }
                     }
                 }
