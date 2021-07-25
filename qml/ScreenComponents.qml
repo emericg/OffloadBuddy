@@ -660,18 +660,18 @@ Item {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 spacing: 24
-                /*
+
                 SliderArrow {
                     anchors.verticalCenter: parent.verticalCenter
                     value: 0.75
                     stepSize: 0.1
-                }*/
+                }/*
                 RangeSliderArrow {
                     anchors.verticalCenter: parent.verticalCenter
                     second.value: 0.75
                     first.value: 0.25
                     stepSize: 0.1
-                }
+                }*/
             }
         }
 

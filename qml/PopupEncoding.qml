@@ -558,7 +558,7 @@ Popup {
                     color: Theme.colorSubText
                 }
 
-                SliderThemed {
+                SliderArrow {
                     id: sliderQuality
                     anchors.left: textQuality.right
                     anchors.leftMargin: 16
@@ -592,7 +592,7 @@ Popup {
                     color: Theme.colorSubText
                 }
 
-                SliderThemed {
+                SliderArrow {
                     id: sliderSpeed
                     anchors.right: parent.right
                     anchors.rightMargin: 0

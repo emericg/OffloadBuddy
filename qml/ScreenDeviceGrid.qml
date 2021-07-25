@@ -719,7 +719,7 @@ Item {
             }
 
             if (index === 1) {
-                popupMove.openSingle(currentDevice, selectedItem.shot)
+                popupOffload.openSingle(currentDevice, selectedItem.shot)
             }
             if (index === 3) {
                 popupEncoding.shots_uuids = currentDevice.getSelectedShotsUuids(indexes)
