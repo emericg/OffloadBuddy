@@ -54,10 +54,6 @@ Device::Device(const deviceType_e type, const deviceStorage_e storage,
 
     m_uuid = QUuid::createUuid().toString();
 
-    connect(&m_updateStorageTimer, &QTimer::timeout, this, &Device::refreshStorageInfos);
-    m_updateStorageTimer.setInterval(15 * 1000);
-    m_updateStorageTimer.start();
-
     if (m_deviceStorage == STORAGE_MTP)
     {
         connect(&m_updateBatteryTimer, &QTimer::timeout, this, &Device::refreshBatteryInfos);
@@ -108,13 +104,10 @@ Device::Device(const deviceType_e type, const deviceStorage_e storage,
 
 Device::~Device()
 {
-    qDeleteAll(m_filesystemStorages);
-    m_filesystemStorages.clear();
+    qDeleteAll(m_mediaStorages);
+    m_mediaStorages.clear();
 
 #ifdef ENABLE_LIBMTP
-    qDeleteAll(m_mtpStorages);
-    m_mtpStorages.clear();
-
     qDeleteAll(m_mtpDevices);
     m_mtpDevices.clear();
 #endif // ENABLE_LIBMTP
@@ -136,26 +129,13 @@ bool Device::isValid()
     if (m_brand.isEmpty() && m_model.isEmpty())
         status = false;
 
-    if (m_filesystemStorages.empty() && m_mtpStorages.empty())
+    if (m_mediaStorages.empty())
         status = false;
 
     return status;
 }
 
 /* ************************************************************************** */
-/* ************************************************************************** */
-
-bool Device::addStorages_filesystem(ofb_fs_device *device)
-{
-    //qDebug() << "addStorages_filesystem" << device->storages.size();
-    bool status = false;
-
-    if (!device)
-        return status;
-
-    return status;
-}
-
 /* ************************************************************************** */
 
 bool Device::addStorages_mtp(ofb_mtp_device *device)
@@ -178,9 +158,14 @@ bool Device::addStorages_mtp(ofb_mtp_device *device)
     // Storage
     for (auto st: qAsConst(device->storages))
     {
-        m_mtpStorages.push_back(st);
-        emit storageUpdated();
-        status = true;
+        MediaStorage *storage = new MediaStorage(device->device, st->m_storage, false, this);
+        if (storage)
+        {
+            m_mediaStorages.push_back(storage);
+            status = true;
+
+            emit storageUpdated();
+        }
 
         // Start initial scan
         QThread *thread = new QThread();
@@ -216,42 +201,13 @@ bool Device::addStorage_filesystem(const QString &path)
 
     if (!path.isEmpty())
     {
-        StorageFilesystem *storage = new StorageFilesystem;
+        MediaStorage *storage = new MediaStorage(path, false, this);
         if (storage)
         {
-            storage->m_path = path;
-            storage->m_storage.setPath(path);
+            m_mediaStorages.push_back(storage);
+            status = true;
 
-            if (storage->m_storage.isValid() && storage->m_storage.isReady())
-            {
-                // Basic checks // need at least 8 MB
-                if (!storage->m_storage.isReadOnly() && storage->m_storage.bytesAvailable() > 8*1024*1024)
-                {
-#if defined(Q_OS_LINUX)
-/*
-                    // Advanced permission checks
-                    QFileInfo fi(storage->m_path);
-                    QFile::Permissions  e = fi.permissions();
-                    if (!e.testFlag(QFileDevice::WriteUser))
-                    {
-                        qDebug() << "PERMS error on device:" << e << (unsigned)e;
-                    }
-*/
-#endif // defined(Q_OS_LINUX)
-                }
-
-                m_filesystemStorages.push_back(storage);
-                m_deviceStorage = STORAGE_FILESYSTEM;
-                status = true;
-
-                emit storageUpdated();
-            }
-            else
-            {
-                qDebug() << "* device storage invalid? '" << storage->m_storage.displayName() << "'";
-                delete storage;
-                storage = nullptr;
-            }
+            emit storageUpdated();
         }
     }
 
@@ -319,23 +275,10 @@ QString Device::getPath(const int index) const
 {
     if (index >= 0)
     {
-        if (!m_filesystemStorages.empty())
+        if (m_mediaStorages.size() > index)
         {
-            if (m_filesystemStorages.size() > index)
-            {
-                return m_filesystemStorages.at(index)->m_path;
-            }
+            return static_cast<MediaStorage *>(m_mediaStorages.at(index))->getDevicePath();
         }
-#ifdef ENABLE_LIBMTP
-        if (!m_mtpStorages.empty())
-        {
-            if (m_mtpStorages.size() > index)
-            {
-                // TODO
-                //return m_devicestorage.at(index)->m_path;
-            }
-        }
-#endif // ENABLE_LIBMTP
     }
 
     return QString();
@@ -345,18 +288,13 @@ QStringList Device::getPathList() const
 {
     QStringList paths;
 
-    for (auto st: m_filesystemStorages)
+    for (auto st: m_mediaStorages)
     {
-        if (st) paths += st->m_path;
+        if (st)
+        {
+            paths += static_cast<MediaStorage *>(st)->getDevicePath();
+        }
     }
-#ifdef ENABLE_LIBMTP
-/*
-    for (auto st: m_mtpStorages)
-    {
-        if (st) st->m_storage->VolumeIdentifier;
-    }
-*/
-#endif // ENABLE_LIBMTP
 
     return paths;
 }
@@ -467,31 +405,13 @@ void Device::refreshStorageInfos()
 {
     //qDebug() << "refreshStorageInfos(" << m_storage->rootPath() << ")";
 
-    for (auto storage: qAsConst(m_filesystemStorages))
+    for (auto st: qAsConst(m_mediaStorages))
     {
-        if (storage &&
-            storage->m_storage.isValid() && storage->m_storage.isReady())
+        if (st)
         {
-            storage->m_storage.refresh();
-
-            // Check if writable and some space is available
-            if (!storage->m_storage.isReadOnly() &&
-                storage->m_storage.bytesAvailable() > 8*1024*1024)
-            {
-                //
-            }
+            static_cast<MediaStorage *>(st)->refreshMediaStorage();
         }
     }
-
-#ifdef ENABLE_LIBMTP
-    for (auto storage: qAsConst(m_mtpStorages))
-    {
-        if (storage)
-        {
-            // TODO? or space related values kept up to date by the lib?
-        }
-    }
-#endif // ENABLE_LIBMTP
 
     emit storageUpdated();
 }
@@ -501,45 +421,23 @@ void Device::refreshStorageInfos()
 
 int Device::getStorageCount() const
 {
-    int count = m_filesystemStorages.size();
-
-#ifdef ENABLE_LIBMTP
-    count += m_mtpStorages.size();
-#endif
-
-    return count;
+    return m_mediaStorages.count();
 }
 
 float Device::getStorageLevel(const int index)
 {
     float level = 0;
 
-    if (index == 0)
     {
-        if (getSpaceTotal() > 0)
-            level = static_cast<float>(getSpaceUsed()) / static_cast<float>(getSpaceTotal());
-    }
-    else
-    {
-        int64_t su = 0, sf = 0;
-        int i = (index - 1);
+        int64_t su = 0, st = 0;
 
-        if (m_filesystemStorages.size() > i)
+        if (m_mediaStorages.size() > index)
         {
-            auto st = m_filesystemStorages.at(i);
-            su += (st->m_storage.bytesTotal() - st->m_storage.bytesAvailable());
-            sf += st->m_storage.bytesTotal();
+            su += static_cast<MediaStorage *>(m_mediaStorages.at(index))->getSpaceUsed();
+            st += static_cast<MediaStorage *>(m_mediaStorages.at(index))->getSpaceTotal();
         }
-#ifdef ENABLE_LIBMTP
-        else if (m_mtpStorages.size() > i)
-        {
-            auto st = m_mtpStorages.at(i);
-            su += st->m_storage->MaxCapacity - st->m_storage->FreeSpaceInBytes;
-            sf += st->m_storage->MaxCapacity;
-        }
-#endif // ENABLE_LIBMTP
 
-        level = static_cast<float>(su) / static_cast<float>(sf);
+        level = static_cast<float>(su) / static_cast<float>(st);
     }
 
     return level;
@@ -548,11 +446,12 @@ float Device::getStorageLevel(const int index)
 bool Device::isReadOnly() const
 {
     bool ro = false;
-
-    for (auto st: m_filesystemStorages)
+    for (auto st: qAsConst(m_mediaStorages))
     {
         if (st)
-            ro |= st->m_storage.isReadOnly();
+        {
+            ro |= static_cast<MediaStorage *>(st)->isReadOnly();
+        }
     }
 
     return ro;
@@ -562,18 +461,13 @@ int64_t Device::getSpaceTotal()
 {
     int64_t s = 0;
 
-    for (auto st: qAsConst(m_filesystemStorages))
+    for (auto st: qAsConst(m_mediaStorages))
     {
         if (st)
-            s += st->m_storage.bytesTotal();
+        {
+            s += static_cast<MediaStorage *>(st)->getSpaceTotal();
+        }
     }
-#ifdef ENABLE_LIBMTP
-    for (auto st: qAsConst(m_mtpStorages))
-    {
-        if (st)
-            s += st->m_storage->MaxCapacity;
-    }
-#endif // ENABLE_LIBMTP
 
     return s;
 }
@@ -582,18 +476,13 @@ int64_t Device::getSpaceUsed()
 {
     int64_t s = 0;
 
-    for (auto st: qAsConst(m_filesystemStorages))
+    for (auto st: qAsConst(m_mediaStorages))
     {
         if (st)
-            s += (st->m_storage.bytesTotal() - st->m_storage.bytesAvailable());
+        {
+            s += static_cast<MediaStorage *>(st)->getSpaceUsed();
+        }
     }
-#ifdef ENABLE_LIBMTP
-    for (auto st: qAsConst(m_mtpStorages))
-    {
-        if (st)
-            s += st->m_storage->MaxCapacity - st->m_storage->FreeSpaceInBytes;
-    }
-#endif // ENABLE_LIBMTP
 
     return s;
 }
@@ -602,26 +491,31 @@ int64_t Device::getSpaceAvailable()
 {
     int64_t s = 0;
 
-    for (auto st: qAsConst(m_filesystemStorages))
+    for (auto st: qAsConst(m_mediaStorages))
     {
         if (st)
-            s += st->m_storage.bytesAvailable();
+        {
+            s += static_cast<MediaStorage *>(st)->getSpaceAvailable();
+        }
     }
-#ifdef ENABLE_LIBMTP
-    for (auto st: qAsConst(m_mtpStorages))
-    {
-        if (st)
-            s += st->m_storage->FreeSpaceInBytes;
-    }
-#endif // ENABLE_LIBMTP
 
     return s;
 }
 
 int64_t Device::getSpaceAvailable_withrefresh()
 {
-    refreshStorageInfos();
-    return getSpaceAvailable();
+    int64_t s = 0;
+
+    for (auto st: qAsConst(m_mediaStorages))
+    {
+        if (st)
+        {
+            static_cast<MediaStorage *>(st)->refreshMediaStorage();
+            s += static_cast<MediaStorage *>(st)->getSpaceAvailable();
+        }
+    }
+
+    return s;
 }
 
 /* ************************************************************************** */

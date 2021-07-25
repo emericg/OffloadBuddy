@@ -153,18 +153,6 @@ Item {
     function updateStorage() {
         if (typeof currentDevice === "undefined" || !currentDevice) return
         //console.log("ScreenDeviceGrid.updateStorage() storageLevel: " + currentDevice.storageLevel)
-
-        if (currentDevice.spaceTotal > 0) {
-            if (currentDevice.getStorageCount() === 1) {
-                deviceSpaceBar0.value = currentDevice.storageLevel
-                deviceSpaceBar0.vsu = currentDevice.spaceUsed
-                deviceSpaceBar0.vst = currentDevice.spaceTotal
-
-            } else if (currentDevice.getStorageCount() > 1) {
-                deviceSpaceBar0.value = currentDevice.getStorageLevel(2)
-                deviceSpaceBar1.value = currentDevice.getStorageLevel(1)
-            }
-        }
     }
 
     function initGridViewSettings() {
@@ -343,29 +331,30 @@ Item {
                 font.pixelSize: Theme.fontSizeContentSmall
             }
 */
-            DataBarSpace {
-                id: deviceSpaceBar0
+            Repeater {
+                model: currentDevice.storageList
                 width: 256
-                height: 12
 
-                visible: currentDevice.getStorageCount() > 0
-                value: currentDevice.storageLevel
-                valueMin: 0
-                valueMax: 100
-            }
-            DataBarSpace {
-                id: deviceSpaceBar1
-                width: 256
-                height: 12
-
-                visible: currentDevice.getStorageCount() > 1
-                value: currentDevice.storageLevel
-                valueMin: 0
-                valueMax: 100
+                delegate: DataBarSpace {
+                    width: 256
+                    height: 12
+/*
+                    value: modelData.storageLevel
+                    valueMin: 0
+                    valueMax: 100
+                    vsu: modelData.spaceUsed
+                    vst: modelData.spaceTotal
+*/
+                    value: modelData.spaceUsed
+                    valueMin: 0
+                    valueMax: modelData.spaceTotal
+                    vsu: modelData.spaceUsed
+                    vst: modelData.spaceTotal
+                }
             }
 
             DataBarPower {
-                id: deviceBatteryBar0
+                id: deviceBatteryBar
                 width: 256
                 height: 12
 

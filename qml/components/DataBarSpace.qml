@@ -13,7 +13,7 @@ Item {
 
     property bool animated: true
 
-    property string colorText: Theme.colorText
+    property string colorText: Theme.colorSubText
     property string colorForeground: Theme.colorPrimary
     property string colorBackground: Theme.colorForeground
 
@@ -22,6 +22,8 @@ Item {
     property real valueMax: 100
     property real vsu: 0
     property real vst: 0
+
+    property real valueP: UtilsNumber.normalize(value, valueMin, valueMax)
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -46,9 +48,9 @@ Item {
             anchors.verticalCenterOffset: 1
 
             text: UtilsString.bytesToString_short(vst)
-            color: "white"
-            font.bold: true
-            font.pixelSize: 10 // Theme.fontSizeContentVerySmall
+            color: dataBarSpace.colorText
+            font.bold: false
+            font.pixelSize: 10
         }
 
         Rectangle {
@@ -59,38 +61,28 @@ Item {
 
             radius: dataBarSpace.height/2
             color: {
-                if (value > 90) return Theme.colorError
-                else if (value > 75) return Theme.colorWarning
-                else return colorForeground
+                if (valueP > 90) return Theme.colorError
+                else if (valueP > 75) return Theme.colorWarning
+                else return dataBarSpace.colorForeground
             }
 
             width: {
-                var res = UtilsNumber.normalize(value, valueMin, valueMax) * item_bg.width
+                var res = valueP * item_bg.width
                 if (res > item_bg.width) res = item_bg.width
                 return res
             }
             Behavior on width { NumberAnimation { duration: animated ? 333 : 0 } }
 
             Text {
-                anchors.right: parent.right
-                anchors.rightMargin: 6
+                anchors.horizontalCenter: parent.right
+                anchors.horizontalCenterOffset: (contentWidth+12 < item_data.width) ? -contentWidth/1.75 : contentWidth/1.75
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.verticalCenterOffset: 1
 
                 text: UtilsString.bytesToString_short(vsu)
-                color: "white"
-                font.bold: true
-                font.pixelSize: 10 // Theme.fontSizeContentVerySmall
-
-                onTextChanged: {
-                    if (contentWidth > item_data.width) {
-                        color = Theme.colorSubText
-                        anchors.rightMargin = - contentWidth - 6
-                    } else {
-                        color = "white"
-                        anchors.rightMargin = 6
-                    }
-                }
+                color: (contentWidth+12 < item_data.width) ? "white" : dataBarSpace.colorText
+                font.bold: false
+                font.pixelSize: 10
             }
         }
     }

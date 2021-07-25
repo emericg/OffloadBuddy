@@ -23,15 +23,13 @@
 #define DEVICE_H
 /* ************************************************************************** */
 
+#include "DeviceUtils.h"
 #include "ShotProvider.h"
+#include "MediaStorage.h"
 #include "utils/utils_enums.h"
 
 #ifdef ENABLE_LIBMTP
 #include <libmtp.h>
-#ifndef LIBMTP_FILES_AND_FOLDERS_ROOT
-// Hack for older versions of libmtp (<=1.10?)
-#define LIBMTP_FILES_AND_FOLDERS_ROOT 0xffffffff
-#endif
 #else
 typedef void LIBMTP_mtpdevice_t;
 typedef void LIBMTP_devicestorage_t;
@@ -41,103 +39,8 @@ typedef void LIBMTP_devicestorage_t;
 #include <QVariant>
 #include <QList>
 #include <QStringList>
-
-#include <QStorageInfo>
 #include <QTimer>
-
-/* ************************************************************************** */
-
-typedef struct generic_device_infos
-{
-    deviceType_e device_type;
-    QString device_brand;
-    QString device_model;
-
-} generic_device_infos;
-
-typedef struct gopro_device_infos
-{
-    deviceStorage_e device_type;
-
-    // Fields from version.txt "info_version 1.0"
-    QString camera_type;            // ex: "HERO6 Black", "FUSION", "Hero3-Black Edition", "HD2"
-    QString firmware_version;       // ex: "HD6.01.02.01.00"
-
-    // Fields from version.txt "info_version 1.1"
-    QString wifi_mac;               // ex: "0441693db024"
-    QString wifi_version;           // ex: "3.4.2.9"
-    QString wifi_bootloader_version;// ex: "0.2.2"
-
-    // Fields from version.txt "info_version 2.0"
-    QString camera_serial_number;   // ex: "C3221324521518"
-
-} gopro_device_infos;
-
-/* ************************************************************************** */
-
-class StorageFilesystem
-{
-public:
-    QString m_path;
-    QStorageInfo m_storage;
-    bool m_writable = false;
-};
-
-class StorageMtp
-{
-public:
-    unsigned m_dcim_id = 0;
-    LIBMTP_mtpdevice_t *m_device = nullptr;
-    LIBMTP_devicestorage_t *m_storage = nullptr;
-    bool m_writable = false;
-};
-
-/* ************************************************************************** */
-
-struct ofb_fs_device
-{
-    QString brand = "Unknown";
-    QString model = "device";
-    QString stringId;
-    QString serial;
-    QString firmware;
-
-    QStringList paths;
-    QList <StorageFilesystem *> storages;
-};
-
-struct ofb_vfs_device
-{
-    QString brand = "Unknown";
-    QString model = "device";
-    QString stringId;
-    QString serial;
-    QString firmware;
-
-    uint32_t devBus = 0;
-    uint32_t devNum = 0;
-
-    QStringList paths;
-    QList <StorageFilesystem *> storages;
-};
-
-struct ofb_mtp_device
-{
-    QString brand = "Unknown";
-    QString model = "device";
-    QString stringId;
-    QString serial;
-    QString firmware;
-
-    uint32_t devBus = 0;
-    uint32_t devNum = 0;
-
-    float battery = 0.0;
-
-    LIBMTP_mtpdevice_t *device = nullptr;
-
-    QList <StorageMtp *> storages;
-};
+#include <QStorageInfo>
 
 /* ************************************************************************** */
 
@@ -166,6 +69,9 @@ class Device: public ShotProvider
     Q_PROPERTY(float batteryLevel READ getMtpBatteryLevel NOTIFY batteryUpdated)
     Q_PROPERTY(float storageLevel READ getStorageLevel NOTIFY storageUpdated)
 
+    Q_PROPERTY(uint storageCount READ getStoragesCount NOTIFY storageUpdated)
+    Q_PROPERTY(QVariant storageList READ getStorages NOTIFY storageUpdated)
+
     Q_PROPERTY(bool readOnly READ isReadOnly NOTIFY storageUpdated)
     Q_PROPERTY(qint64 spaceTotal READ getSpaceTotal NOTIFY storageUpdated)
     Q_PROPERTY(qint64 spaceUsed READ getSpaceUsed NOTIFY storageUpdated)
@@ -190,9 +96,7 @@ class Device: public ShotProvider
     QTimer m_updateBatteryTimer;
 
     // Storage(s)
-    QTimer m_updateStorageTimer;
-    QList <StorageFilesystem *> m_filesystemStorages;
-    QList <StorageMtp *> m_mtpStorages;
+    QList <QObject *> m_mediaStorages;
 
 Q_SIGNALS:
     void deviceUpdated();
@@ -205,7 +109,6 @@ private slots:
     void refreshStorageInfos();
 
 public slots:
-    //
     void workerScanningStarted(const QString &path);
     void workerScanningFinished(const QString &path);
 
@@ -215,14 +118,10 @@ public:
            const QString &serial, const QString &version);
     ~Device();
 
-    void setName(const QString &name);
     bool isValid();
 
-    bool addStorage_filesystem(const QString &path);
-    bool addStorage_mtp(LIBMTP_mtpdevice_t *m_mtpDevice); // TODO
-
-    bool addStorages_filesystem(ofb_fs_device *device); // TODO
-    bool addStorages_mtp(ofb_mtp_device *device);
+    void setName(const QString &name);
+    QString getUuid() const { return m_uuid; }
 
     //
     int getDeviceState() const { return m_deviceState; }
@@ -234,9 +133,17 @@ public:
     QString getSerial() const { return m_serial; }
     QString getFirmware() const { return m_firmware; }
 
-    QString getUuid() const { return m_uuid; }
+    // Storage
+    QVariant getStorages() const { if (m_mediaStorages.size() > 0) { return QVariant::fromValue(m_mediaStorages); } return QVariant(); }
+    unsigned getStoragesCount() const { return m_mediaStorages.size(); }
+    const QList <QObject *> *getDirectoriesList() const { return &m_mediaStorages; }
 
-    //
+    bool addStorage_filesystem(const QString &path);
+    bool addStorage_mtp(LIBMTP_mtpdevice_t *m_mtpDevice); // TODO
+
+    bool addStorages_filesystem(ofb_fs_device *device); // TODO
+    bool addStorages_mtp(ofb_mtp_device *device);
+
     Q_INVOKABLE int getStorageCount() const;
     Q_INVOKABLE float getStorageLevel(const int index = 0);
 
@@ -258,7 +165,7 @@ public:
     int getMtpBatteryCount() const;
     float getMtpBatteryLevel(const int index = 0) const;
 
-    // Get uuids/names/paths from grid indexes
+    // Get UUIDs/names/paths from grid indexes
     Q_INVOKABLE QStringList getSelectedShotsUuids(const QVariant &indexes);
     Q_INVOKABLE QStringList getSelectedShotsNames(const QVariant &indexes);
     Q_INVOKABLE QStringList getSelectedShotsFilepaths(const QVariant &indexes);
