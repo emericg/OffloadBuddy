@@ -31,6 +31,9 @@
 
 #ifdef ENABLE_LIBMTP
 #include <libmtp.h>
+#else
+typedef void LIBMTP_mtpdevice_t;
+typedef void LIBMTP_devicestorage_t;
 #endif // ENABLE_LIBMTP
 
 class QStorageInfo;
