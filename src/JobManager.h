@@ -27,12 +27,12 @@
 #include "Device.h"
 #include "Shot.h"
 
-
 #include <QObject>
 #include <QUrl>
 #include <QList>
 #include <QHash>
 #include <QVariant>
+#include <QDateTime>
 #include <QThread>
 #include <QDesktopServices>
 #include <QQmlApplicationEngine>
@@ -196,21 +196,26 @@ class JobTracker: public QObject
     Q_PROPERTY(bool running READ isRunning NOTIFY jobUpdated)
     Q_PROPERTY(float progress READ getProgress NOTIFY jobUpdated)
 
+    JobUtils::JobType m_type;
+    int m_job_id = -1;
+
     QString m_name;
     QStringList m_files;
-    JobUtils::JobType m_type;
 
-    JobUtils::JobState m_state = JobUtils::JOB_STATE_QUEUED;
-    float m_percent = 0.0;
-    qint64 m_eta;
-
-    bool m_autoDelete = false;
-
-    int m_job_id = -1;
     Device *m_source_device = nullptr;
     MediaLibrary *m_source_library = nullptr;
     //ShotProvider *m_shot_provider = nullptr;
     QString m_destination;
+
+    // settings
+    bool m_autoDelete = false;
+
+    // tracking
+    JobUtils::JobState m_state = JobUtils::JOB_STATE_QUEUED;
+    float m_percent = 0.0;
+    QDateTime m_start;
+    QDateTime m_stop;
+    QDateTime m_eta;
 
 Q_SIGNALS:
     void jobUpdated();
@@ -233,9 +238,11 @@ public:
         else if (m_type == JobUtils::JOB_FIRMWARE_UPLOAD) return tr("FIRMWARE");
         else return tr("UNKNOWN");
     }
+
     void setName(const QString &name) { m_name = name; }
     QString getName() { return m_name; }
 
+    void setFiles(QStringList &fl) { m_files = fl; }
     QStringList getFiles() { return m_files; }
 
     void setDevice(Device *d) { m_source_device = d; }

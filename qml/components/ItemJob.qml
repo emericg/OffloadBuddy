@@ -9,11 +9,15 @@ Rectangle {
     implicitWidth: 640
     implicitHeight: 48
 
+    height: 48 + (expanded ? jobline2.height : 0)
+    Behavior on height { NumberAnimation { duration: 133 } }
+
     radius: Theme.componentRadius
     color: Theme.colorForeground
+    clip: true
 
     property var job: null
-    property bool expended: false
+    property bool expanded: false
 
     signal pauseClicked()
     signal stopClicked()
@@ -48,7 +52,13 @@ Rectangle {
 
     ////////////////////////////////////////////////////////////////////////////
 
+    MouseArea {
+        anchors.fill: parent
+        onClicked: expanded = !expanded
+    }
+
     Item {
+        id: jobline1
         height: 48
         anchors.left: parent.left
         anchors.right: parent.right
@@ -82,7 +92,13 @@ Rectangle {
                 loops: Animation.Infinite
 
                 onStopped: imageStatus.y = 0
-                NumberAnimation { target: imageStatus; property: "y"; from: -40; to: 40; duration: 1000; }
+                NumberAnimation {
+                    target: imageStatus;
+                    property: "y";
+                    from: -40;
+                    to: 40;
+                    duration: 1000;
+                }
             }
         }
 
@@ -165,6 +181,57 @@ Rectangle {
                 highlightMode: "color"
                 source: "qrc:/assets/icons_material/baseline-folder_open-24px.svg"
                 onClicked: job.openDestination()
+            }
+        }
+    }
+
+    Item {
+        id: jobline2
+        anchors.top: jobline1.bottom
+        anchors.left: parent.left
+        anchors.leftMargin: 12
+        anchors.right: parent.right
+        anchors.rightMargin: 12
+
+        height: Math.min(320, joblinecolumn.height)
+        visible: expanded
+
+        Column {
+            id: joblinecolumn
+            anchors.left: parent.left
+            anchors.right: parent.right
+
+            spacing: 8
+            bottomPadding: 8
+
+            Row {
+                spacing: 4
+                visible: job.destination
+
+                Text {
+                    text: qsTr("Destination:")
+                    color: Theme.colorText
+                }
+                Text {
+                    text: job.destination
+                    color: Theme.colorSubText
+                }
+            }
+
+            Row {
+                spacing: 8
+
+                Text {
+                    text: qsTr("Source(s):")
+                    color: Theme.colorText
+                }
+                Repeater {
+                    model: job.files
+                    Text {
+                        text: modelData
+                        color: Theme.colorSubText
+                    }
+                }
             }
         }
     }

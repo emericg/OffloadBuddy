@@ -197,6 +197,8 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
     if (sett_telemetry) job->settings_telemetry = *sett_telemetry;
     if (sett_encode) job->settings_encode = *sett_encode;
 
+    QStringList ssll;
+
     for (Shot *shot: list)
     {
         if (shot)
@@ -206,6 +208,7 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
             else je->destination_dir = dstFolder;
             je->destination_file = dstFile;
             je->parent_shot = shot;
+            ssll += shot->getFilesStringList();
             QList <ofb_file *> files = shot->getFiles(getPreviews, getHdAudio, true);
             for (auto f: qAsConst(files))
             {
@@ -227,8 +230,16 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
     tracker->setDevice(dev);
     tracker->setLibrary(lib);
     tracker->setAutoDelete(autoDelete);
+    if (list.size() > 0)
+    {
+        QString tempname = list.at(0)->getName();
+        tracker->setName(tempname);
+    }
     if (!job->elements.empty())
+    {
         tracker->setDestination(job->elements.front()->destination_dir);
+        tracker->setFiles(ssll);
+    }
     m_trackedJobs.push_back(tracker);
     emit trackedJobsUpdated();
 
