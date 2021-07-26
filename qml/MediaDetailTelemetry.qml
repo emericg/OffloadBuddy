@@ -280,6 +280,7 @@ Item {
                 backgroundColor: Theme.colorHeader
                 iconColor: Theme.colorHeaderContent
                 highlightMode: "color"
+                highlightColor: Theme.colorBackground
 
                 source: map.fullscreen ? "qrc:/assets/icons_material/baseline-fullscreen_exit-24px.svg"
                                        : "qrc:/assets/icons_material/baseline-fullscreen-24px.svg"
@@ -295,6 +296,7 @@ Item {
                 backgroundColor: Theme.colorHeader
                 iconColor: Theme.colorHeaderContent
                 highlightMode: "color"
+                highlightColor: Theme.colorBackground
 
                 selected: map.moove
                 onClicked: map.moove = !map.moove
@@ -318,6 +320,7 @@ Item {
                 backgroundColor: Theme.colorHeader
                 iconColor: Theme.colorHeaderContent
                 highlightMode: "color"
+                highlightColor: Theme.colorBackground
 
                 source: "qrc:/assets/icons_material/baseline-zoom_out-24px.svg"
                 onClicked: zoomOut()
@@ -332,6 +335,7 @@ Item {
                 backgroundColor: Theme.colorHeader
                 iconColor: Theme.colorHeaderContent
                 highlightMode: "color"
+                highlightColor: Theme.colorBackground
 
                 source: "qrc:/assets/icons_material/baseline-zoom_in-24px.svg"
                 onClicked: zoomIn()

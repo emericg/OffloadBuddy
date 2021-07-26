@@ -515,19 +515,16 @@ Item {
 */
                     ////
 
-                    ListView {
+                    Repeater {
                         id: mediadirectoriesview
-                        height: storageManager.directoriesCount * 64 // 48px for the widget and 16px for spacing
                         anchors.left: parent.left
                         anchors.right: parent.right
-                        spacing: 8
 
-                        interactive: false
                         model: storageManager.directoriesList
                         delegate: ItemMediaDirectory {
-                            height: 48
                             anchors.left: parent.left
                             anchors.right: parent.right
+                            height: 52
                             directory: modelData
                         }
                     }
