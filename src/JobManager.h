@@ -82,7 +82,8 @@ public:
         JOB_STATE_PAUSED,
 
         JOB_STATE_DONE = 8,
-        JOB_STATE_ERRORED
+        JOB_STATE_ERRORED,
+        JOB_STATE_ABORTED
     };
     Q_ENUM(JobState)
 };
@@ -187,14 +188,20 @@ class JobTracker: public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString name READ getName CONSTANT)
+    Q_PROPERTY(QString name READ getName NOTIFY jobUpdated)
     Q_PROPERTY(QStringList files READ getFiles CONSTANT)
     Q_PROPERTY(QString destination READ getDestination CONSTANT)
     Q_PROPERTY(QString typeStr READ getTypeString CONSTANT)
+    Q_PROPERTY(int id READ getId CONSTANT)
     Q_PROPERTY(int type READ getType CONSTANT)
     Q_PROPERTY(int state READ getState NOTIFY jobUpdated)
     Q_PROPERTY(bool running READ isRunning NOTIFY jobUpdated)
     Q_PROPERTY(float progress READ getProgress NOTIFY jobUpdated)
+
+    Q_PROPERTY(int elapsed READ getElapsed NOTIFY jobUpdated)
+    Q_PROPERTY(int eta READ getETA NOTIFY jobUpdated)
+    Q_PROPERTY(QDateTime startDate READ getStartDate NOTIFY jobUpdated)
+    Q_PROPERTY(QDateTime stopDate READ getStopDate NOTIFY jobUpdated)
 
     JobUtils::JobType m_type;
     int m_job_id = -1;
@@ -239,11 +246,11 @@ public:
         else return tr("UNKNOWN");
     }
 
-    void setName(const QString &name) { m_name = name; }
-    QString getName() { return m_name; }
+    void setName(const QString &name) { m_name = name; Q_EMIT jobUpdated(); }
+    QString getName() const { return m_name; }
 
     void setFiles(QStringList &fl) { m_files = fl; }
-    QStringList getFiles() { return m_files; }
+    QStringList getFiles() const { return m_files; }
 
     void setDevice(Device *d) { m_source_device = d; }
     Device *getDevice() const { return m_source_device; }
@@ -259,13 +266,23 @@ public:
     void setAutoDelete(bool d) { m_autoDelete = d; }
     bool getAutoDelete() const { return m_autoDelete; }
 
-    void setState(int state) { m_state = static_cast<JobUtils::JobState>(state); Q_EMIT jobUpdated(); }
-    int getState() { return m_state; }
-
     int isRunning() const { return (m_state & JobUtils::JOB_STATE_WORKING); }
+
+    void setState(int state) {
+        m_state = static_cast<JobUtils::JobState>(state);
+        if (m_state == JobUtils::JOB_STATE_WORKING) m_start = QDateTime::currentDateTime();
+        if (m_state >= JobUtils::JOB_STATE_DONE) m_stop = QDateTime::currentDateTime();
+        Q_EMIT jobUpdated();
+    }
+    int getState() { return m_state; }
 
     void setProgress(float p) { m_percent = p; Q_EMIT jobUpdated(); }
     float getProgress() { return m_percent / 100.f; }
+
+    int getETA() { return -1; }
+    int getElapsed() { return QDateTime::currentSecsSinceEpoch() - m_start.toSecsSinceEpoch(); }
+    QDateTime getStartDate() { return m_start; }
+    QDateTime getStopDate() { return m_stop; }
 
     Q_INVOKABLE void openDestination() const {
         QFileInfo d(m_destination);
@@ -354,6 +371,10 @@ public:
 #endif
         return false;
     }
+
+    Q_INVOKABLE void playPauseJob(int jobId);
+
+    Q_INVOKABLE void stopJob(int jobId);
 
     Q_INVOKABLE void clearFinishedJobs();
 

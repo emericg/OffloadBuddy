@@ -68,7 +68,34 @@ Rectangle {
                 if (appContent.state === "library") {
                     // TODO
                 } else if (appContent.state === "device") {
-                    // no merge possible on devices
+                    // no merge possible directly on a device
+                }
+            }
+        }
+
+        ButtonWireframeImage {
+            id: buttonEncode
+            anchors.verticalCenter: parent.verticalCenter
+
+            enabled: false
+            fullColor: true
+            primaryColor: Theme.colorActionbarHighlight
+
+            text: qsTr("Encoding")
+            source: "qrc:/assets/icons_material/baseline-memory-24px.svg"
+            onClicked: {
+                if (appContent.state === "library") {
+                    popupEncoding.shots_uuids = mediaLibrary.getSelectedShotsUuids(mediaGrid.selectionList)
+                    popupEncoding.shots_names = mediaLibrary.getSelectedShotsNames(mediaGrid.selectionList)
+                    popupEncoding.shots_files = mediaLibrary.getSelectedShotsFilepaths(mediaGrid.selectionList)
+                    popupEncoding.updateEncodePanel()
+                    popupEncoding.openSelection(mediaLibrary)
+                } else if (appContent.state === "device") {
+                    popupEncoding.shots_uuids = currentDevice.getSelectedShotsUuids(mediaGrid.selectionList)
+                    popupEncoding.shots_names = currentDevice.getSelectedShotsNames(mediaGrid.selectionList)
+                    popupEncoding.shots_files = currentDevice.getSelectedShotsFilepaths(mediaGrid.selectionList)
+                    popupEncoding.updateEncodePanel()
+                    popupEncoding.openSelection(currentDevice)
                 }
             }
         }

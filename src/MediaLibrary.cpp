@@ -564,7 +564,86 @@ void MediaLibrary::reencodeSelected(const QString &shot_uuid, const QVariant &se
 void MediaLibrary::reencodeSelection(const QVariant &uuids, const QVariant &settings)
 {
     qDebug() << "MediaLibrary::reencodeSelection(" << uuids << ")";
-    Q_UNUSED(settings)
+
+    QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
+    if (static_cast<QMetaType::Type>(variant.type()) != QMetaType::QVariantMap) return;
+    QVariantMap variantMap = variant.toMap();
+    //qDebug() << "> variantMap " << variantMap;
+
+    // Get shots
+    QList<Shot *> list;
+    const QStringList selectedUuids = qvariant_cast<QStringList>(uuids);
+    for (const auto &u: selectedUuids)
+    {
+        list.push_back(m_shotModel->getShotWithUuid(u));
+    }
+
+    // Get destination
+    JobDestination dst;
+    {
+        if (variantMap.contains("mediaDirectory"))
+            dst.mediaDirectory = variantMap.value("mediaDirectory").toString();
+
+        if (variantMap.contains("folder"))
+            dst.folder = variantMap.value("folder").toString();
+
+        if (variantMap.contains("file"))
+            dst.file = variantMap.value("file").toString();
+
+        if (variantMap.contains("extension"))
+            dst.file = variantMap.value("extension").toString();
+    }
+
+    // Get settings
+    JobSettingsEncode set;
+    {
+        if (variantMap.contains("codec"))
+            set.codec = variantMap.value("codec").toString();
+
+        if (variantMap.contains("quality"))
+            set.encoding_quality = variantMap.value("quality").toInt();
+        if (variantMap.contains("speed"))
+            set.encoding_speed = variantMap.value("speed").toInt();
+
+        if (variantMap.contains("resolution"))
+            set.resolution = variantMap.value("resolution").toInt();
+
+        if (variantMap.contains("scale"))
+            set.scale = variantMap.value("scale").toString();
+
+        if (variantMap.contains("transform"))
+            set.transform = variantMap.value("transform").toInt();
+
+        if (variantMap.contains("crop"))
+            set.crop = variantMap.value("crop").toString();
+
+        if (variantMap.contains("fps"))
+            set.fps = variantMap.value("fps").toFloat();
+
+        if (variantMap.contains("gif_effect"))
+            set.gif_effect = variantMap.value("gif_effect").toString();
+
+        if (variantMap.contains("timelapse_fps"))
+            set.timelapse_fps = variantMap.value("timelapse_fps").toInt();
+
+        if (variantMap.contains("defisheye"))
+            set.defisheye = variantMap.value("defisheye").toString();
+        if (variantMap.contains("deshake"))
+            set.deshake = variantMap.value("deshake").toBool();
+
+        if (variantMap.contains("screenshot"))
+            set.screenshot = variantMap.value("screenshot").toBool();
+
+        if (variantMap.contains("clipStartMs"))
+            set.startMs = variantMap.value("clipStartMs").toInt();
+        if (variantMap.contains("clipDurationMs"))
+            set.durationMs = variantMap.value("clipDurationMs").toInt();
+    }
+
+    // Submit jobs
+    JobManager *jm = JobManager::getInstance();
+    if (jm && !list.empty()) jm->addJobs(JobUtils::JOB_ENCODE, nullptr, this, list,
+                                         &dst, nullptr, nullptr, nullptr, &set);
 }
 
 /* ************************************************************************** */

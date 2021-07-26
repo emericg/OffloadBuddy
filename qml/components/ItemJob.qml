@@ -25,7 +25,6 @@ Rectangle {
     ////////////////////////////////////////////////////////////////////////////
 
     Component.onCompleted: updateJobStatus()
-
     Connections {
         target: job
         onJobUpdated: updateJobStatus()
@@ -33,7 +32,7 @@ Rectangle {
 
     function updateJobStatus() {
         if (job.state === 0) {
-            imageStatus.source = "qrc:/assets/icons_material/baseline-done-24px.svg"
+            imageStatus.source = "qrc:/assets/icons_material/baseline-schedule-24px.svg"
         } else if (job.state === 1) {
             if (job.typeStr === qsTr("ENCODING"))
                 imageStatus.source = "qrc:/assets/icons_material/baseline-memory-24px.svg"
@@ -43,9 +42,15 @@ Rectangle {
                 imageStatus.source = "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
         } else if (job.state === 2) {
             imageStatus.source = "qrc:/assets/icons_material/baseline-pause-24px.svg"
-        } else if (job.state === 8) {
+        }
+
+        if (encodeAnimation.running || offloadAnimation.running) return
+
+        if (job.state === 8) {
             imageStatus.source = "qrc:/assets/icons_material/baseline-done-24px.svg"
         } else if (job.state === 9) {
+            imageStatus.source = "qrc:/assets/icons_material/baseline-error-24px.svg"
+        } else if (job.state === 10) {
             imageStatus.source = "qrc:/assets/icons_material/baseline-error-24px.svg"
         }
     }
@@ -61,91 +66,133 @@ Rectangle {
         id: jobline1
         height: 48
         anchors.left: parent.left
+        anchors.leftMargin: 12
         anchors.right: parent.right
+        anchors.rightMargin: 12
 
-        ImageSvg {
-            id: imageStatus
-            width: 32
-            height: 32
-            anchors.left: parent.left
-            anchors.leftMargin: 12
+        Row {
+            id: rowTexts
             anchors.verticalCenter: parent.verticalCenter
+            spacing: 12
 
-            source: "qrc:/assets/icons_material/baseline-schedule-24px.svg"
-            color: Theme.colorIcon
+            ImageSvg {
+                id: imageStatus
+                width: 32
+                height: 32
+                anchors.verticalCenter: parent.verticalCenter
 
-            NumberAnimation on rotation {
-                id: encodeAnimation
-                running: (job.state === 1 && job.typeStr === qsTr("ENCODING"))
-                alwaysRunToEnd: true
-                loops: Animation.Infinite
+                source: "qrc:/assets/icons_material/baseline-schedule-24px.svg"
+                color: Theme.colorIcon
 
-                duration: 2000
-                from: 0
-                to: 360
+                NumberAnimation on rotation {
+                    id: encodeAnimation
+                    running: (job.state === 1 && job.typeStr === qsTr("ENCODING"))
+                    loops: Animation.Infinite
+                    alwaysRunToEnd: true
+                    onFinished: updateJobStatus()
+
+                    duration: 2000
+                    from: 0
+                    to: 360
+                }
+
+                SequentialAnimation {
+                    id: offloadAnimation
+                    running: (job.state === 1 && job.typeStr === qsTr("OFFLOADING"))
+                    loops: Animation.Infinite
+                    alwaysRunToEnd: true
+                    onFinished: updateJobStatus()
+
+                    onStopped: imageStatus.y = 0
+                    NumberAnimation {
+                        target: imageStatus
+                        property: "y"
+                        from: -40
+                        to: 40
+                        duration: 1000
+                    }
+                }
             }
 
-            SequentialAnimation {
-                id: offloadAnimation
-                running: (job.state === 1 && job.typeStr === qsTr("OFFLOADING"))
-                alwaysRunToEnd: true
-                loops: Animation.Infinite
+            Text {
+                id: jobType
+                height: 40
+                anchors.verticalCenter: parent.verticalCenter
 
-                onStopped: imageStatus.y = 0
-                NumberAnimation {
-                    target: imageStatus;
-                    property: "y";
-                    from: -40;
-                    to: 40;
-                    duration: 1000;
+                text: job.typeStr
+                color: Theme.colorText
+                font.bold: true
+                verticalAlignment: Text.AlignVCenter
+                font.pixelSize: 14
+            }
+
+            Text {
+                id: jobName
+                height: 40
+                anchors.verticalCenter: parent.verticalCenter
+
+                text: job.name
+                font.pixelSize: 14
+                color: Theme.colorText
+                verticalAlignment: Text.AlignVCenter
+            }
+
+            Text {
+                id: jobDuration
+                width: 32
+                anchors.verticalCenter: parent.verticalCenter
+
+                visible: job.elapsed > 0
+                font.pixelSize: 14
+                color: Theme.colorSubText
+                horizontalAlignment: Text.AlignHCenter
+
+                Timer {
+                    running: job.running && job.elapsed > 0
+                    interval: 666
+                    onTriggered: parent.text = job.elapsed + qsTr("s", "short for second")
                 }
             }
         }
 
-        Text {
-            id: jobType
-            height: 40
-            anchors.left: imageStatus.right
-            anchors.leftMargin: 12
-            anchors.verticalCenter: parent.verticalCenter
-
-            text: job.typeStr
-            color: Theme.colorText
-            font.bold: true
-            verticalAlignment: Text.AlignVCenter
-            font.pixelSize: 14
-        }
-
-        Text {
-            id: jobName
-            height: 40
-            anchors.left: jobType.right
-            anchors.leftMargin: 8
-            anchors.verticalCenter: parent.verticalCenter
-
-            text: job.name
-            font.pixelSize: 14
-            color: Theme.colorText
-            verticalAlignment: Text.AlignVCenter
-        }
+        ////////////////
 
         ProgressBarThemed {
             id: progressBar
-            height: 12
+            anchors.left: rowTexts.right
+            anchors.leftMargin: 12
             anchors.right: rowButtons.left
-            anchors.rightMargin: 8
-            anchors.left: jobName.right
-            anchors.leftMargin: 8
+            anchors.rightMargin: 12
             anchors.verticalCenter: parent.verticalCenter
+
+            height: 12
             value: job.progress
+            colorBackground: Theme.colorBackground
         }
+
+        ////////////////
 
         Row {
             id: rowButtons
             height: 40
-            anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
-            anchors.rightMargin: 12
+            anchors.verticalCenter: parent.verticalCenter
+
+            Text {
+                id: jobETA
+                width: 32
+                anchors.verticalCenter: parent.verticalCenter
+
+                color: Theme.colorSubText
+                visible: job.eta > 0
+                horizontalAlignment: Text.AlignHCenter
+
+                Timer {
+                    running: job.running && job.eta > 0
+                    interval: 666
+                    onTriggered: parent.text = job.eta + qsTr("s", "short for second")
+                }
+            }
 /*
             ItemImageButton {
                 id: rectanglePlayPause
@@ -153,10 +200,13 @@ Rectangle {
                 height: 40
                 anchors.verticalCenter: parent.verticalCenter
 
-                visible: (job.state === 1 || job.state === 2) // running
+                visible: ((Qt.platform.os === "linux" || Qt.platform.os === "osx") &&
+                          (job.state === 1 || job.state === 2)) // running
+
                 highlightMode: "color"
-                source: "qrc:/assets/icons_material/baseline-pause_circle_outline-24px.svg"
-                onClicked: job.setPlayPause()
+                source: job.state === 1 ? "qrc:/assets/icons_material/baseline-pause_circle_outline-24px.svg" :
+                                          "qrc:/assets/icons_material/baseline-play_circle_outline-24px.svg"
+                onClicked: jobManager.playPauseJob(job.id)
             }
 
             ItemImageButton {
@@ -165,10 +215,12 @@ Rectangle {
                 height: 40
                 anchors.verticalCenter: parent.verticalCenter
 
-                visible: (job.state === 1 || job.state === 2) // running
+                visible: ((Qt.platform.os === "linux" || Qt.platform.os === "osx") &&
+                          (job.state === 1 || job.state === 2)) // running
+
                 highlightMode: "color"
                 source: "qrc:/assets/icons_material/baseline-cancel-24px.svg"
-                onClicked: jobManager.stopJob(job.name)
+                onClicked: jobManager.stopJob(job.id)
             }
 */
             ItemImageButton {
@@ -184,6 +236,8 @@ Rectangle {
             }
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 
     Item {
         id: jobline2
@@ -205,7 +259,53 @@ Rectangle {
             bottomPadding: 8
 
             Row {
-                spacing: 4
+                spacing: 24
+
+                Row {
+                    visible: false
+                    spacing: 8
+
+                    Text {
+                        text: qsTr("Status:")
+                        color: Theme.colorText
+                    }
+                    Text {
+                        text: job.state
+                        color: Theme.colorSubText
+                    }
+                }
+
+                Row {
+                    visible: job.state >= 1
+                    spacing: 8
+
+                    Text {
+                        text: qsTr("Started:")
+                        color: Theme.colorText
+                    }
+                    Text {
+                        text: job.startDate.toLocaleTimeString("hh:ss")
+                        color: Theme.colorSubText
+                    }
+                }
+
+                Row {
+                    visible: job.state >= 8
+                    spacing: 8
+
+                    Text {
+                        text: qsTr("Stopped:")
+                        color: Theme.colorText
+                    }
+                    Text {
+                        text: job.stopDate.toLocaleTimeString("hh:ss")
+                        color: Theme.colorSubText
+                    }
+                }
+            }
+
+            Row {
+                spacing: 8
                 visible: job.destination
 
                 Text {

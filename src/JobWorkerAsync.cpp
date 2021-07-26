@@ -30,7 +30,7 @@
 #include <QDir>
 #include <QDebug>
 
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_LINUX) || defined(Q_OS_MACOS)
 #include <signal.h>
 #endif
 
@@ -97,6 +97,7 @@ QString getFFmpegDurationStringEscaped(const int64_t duration_ms)
 }
 
 /* ************************************************************************** */
+/* ************************************************************************** */
 
 JobWorkerAsync::JobWorkerAsync()
 {
@@ -119,13 +120,23 @@ JobWorkerAsync::~JobWorkerAsync()
 
 void JobWorkerAsync::jobPlayPause()
 {
-    if (m_childProcess)
+#if defined(Q_OS_LINUX) || defined(Q_OS_MACOS)
+
+    if (m_childProcess && m_ffmpegcurrent && m_ffmpegcurrent->job)
     {
-#ifdef Q_OS_LINUX
-        //kill(m_childProcess->pid(), SIGSTOP); // suspend
-        //kill(m_childProcess->pid(), SIGCONT); // resume
-#endif
+        if (m_ffmpegcurrent->job->state == JobUtils::JOB_STATE_WORKING)
+        {
+            kill(m_childProcess->processId(), SIGSTOP); // suspend
+            m_ffmpegcurrent->job->state = JobUtils::JOB_STATE_PAUSED;
+        }
+        else if (m_ffmpegcurrent->job->state == JobUtils::JOB_STATE_PAUSED)
+        {
+            kill(m_childProcess->processId(), SIGCONT); // resume
+            m_ffmpegcurrent->job->state = JobUtils::JOB_STATE_WORKING;
+        }
     }
+
+#endif // Q_OS_LINUX || Q_OS_MACOS
 }
 
 void JobWorkerAsync::jobAbort()
@@ -134,14 +145,14 @@ void JobWorkerAsync::jobAbort()
 
     if (m_childProcess)
     {
-        //m_childProcess->write("q\n");
-        //if (!m_childProcess->waitForFinished(4000))
+        m_childProcess->write("q\n");
+        //m_childProcess->kill();
+
+        m_ffmpegcurrent->job->state = JobUtils::JOB_STATE_ABORTED;
+
+        if (!m_childProcess->waitForFinished(4000))
         {
-            m_childProcess->kill();
-            if (!m_childProcess->waitForFinished(4000))
-            {
-                qDebug() << "jobAbort() current process won't die...";
-            }
+            qDebug() << "jobAbort() current process won't die...";
         }
     }
 }
@@ -544,6 +555,7 @@ void JobWorkerAsync::processStarted()
     if (m_childProcess && m_ffmpegcurrent)
     {
         qDebug() << "JobWorkerAsync::processStarted()";
+        m_ffmpegcurrent->job->state = JobUtils::JOB_STATE_WORKING;
 
         emit jobStarted(m_ffmpegcurrent->job->id);
         emit shotStarted(m_ffmpegcurrent->job->id, m_ffmpegcurrent->job->elements.at(m_ffmpegcurrent->job_element_index)->parent_shot);
@@ -554,11 +566,27 @@ void JobWorkerAsync::processFinished()
 {
     if (m_childProcess && m_ffmpegcurrent)
     {
-        qDebug() << "JobWorkerAsync::processFinished()";
+        JobUtils::JobState js = JobUtils::JOB_STATE_ERRORED;
+        int exitStatus = m_childProcess->exitStatus();
+        int exitCode = m_childProcess->exitCode();
 
-        JobUtils::JobState js = JobUtils::JOB_STATE_DONE;
-        if (m_childProcess->exitStatus() == QProcess::CrashExit)
+        qDebug() << "JobWorkerAsync::processFinished(" << exitStatus << "/" << exitCode << ")";
+
+        if (exitStatus == QProcess::NormalExit)
+        {
+            if (exitCode == 0)
+            {
+                js = JobUtils::JOB_STATE_DONE;
+            }
+            else
+            {
+                js = JobUtils::JOB_STATE_ERRORED;
+            }
+        }
+        else if (exitStatus == QProcess::CrashExit)
+        {
             js = JobUtils::JOB_STATE_ERRORED;
+        }
 
         if (m_ffmpegcurrent->job &&
             m_ffmpegcurrent->job->elements.size() > m_ffmpegcurrent->job_element_index)
@@ -581,6 +609,8 @@ void JobWorkerAsync::processFinished()
 
     work();
 }
+
+/* ************************************************************************** */
 
 void JobWorkerAsync::processOutput()
 {

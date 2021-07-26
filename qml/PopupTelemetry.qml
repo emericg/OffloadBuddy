@@ -159,15 +159,15 @@ Popup {
             id: contentArea
             height: columnTelemetry.height
             anchors.left: parent.left
+            anchors.leftMargin: 24
             anchors.right: parent.right
+            anchors.rightMargin: 24
 
             ////////
 
             ListView {
                 id: listArea
                 anchors.fill: parent
-                anchors.leftMargin: 24
-                anchors.rightMargin: 24
 
                 visible: recapOpened
 
@@ -187,9 +187,7 @@ Popup {
             Column {
                 id: columnTelemetry
                 anchors.left: parent.left
-                anchors.leftMargin: 24
                 anchors.right: parent.right
-                anchors.rightMargin: 24
                 topPadding: 16
                 bottomPadding: 16
 

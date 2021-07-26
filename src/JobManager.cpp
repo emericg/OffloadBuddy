@@ -363,6 +363,19 @@ void JobManager::clearFinishedJobs()
 
 /* ************************************************************************** */
 
+void JobManager::playPauseJob(int jobId)
+{
+    //
+}
+
+void JobManager::stopJob(int jobId)
+{
+    //
+}
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+
 void JobManager::jobProgress(int jobId, float progress)
 {
     for (auto jj: qAsConst(m_trackedJobs))
@@ -483,6 +496,8 @@ void JobManager::shotFinished(int jobId, int status, Shot *shot)
         }
     }
 }
+
+/* ************************************************************************** */
 
 void JobManager::newFile(QString path)
 {
