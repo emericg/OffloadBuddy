@@ -608,13 +608,13 @@ Popup {
                             anchors.left: textQuality.right
                             anchors.leftMargin: 16
                             anchors.right: parent.right
-                            anchors.rightMargin: 0
                             anchors.verticalCenter: parent.verticalCenter
-                            anchors.verticalCenterOffset: 0
+
+                            wheelEnabled: true
+                            stepSize: 1
 
                             from: -2
                             to: 2
-                            stepSize: 1
                             value: 0
                         }
                     }
@@ -639,14 +639,14 @@ Popup {
 
                         SliderArrow {
                             id: sliderSpeed
-                            anchors.right: parent.right
-                            anchors.rightMargin: 0
-                            wheelEnabled: true
                             anchors.left: textSpeed.right
                             anchors.leftMargin: 16
+                            anchors.right: parent.right
                             anchors.verticalCenter: parent.verticalCenter
 
+                            wheelEnabled: true
                             stepSize: 1
+
                             from: 2
                             to: 0
                             value: 1
@@ -1303,15 +1303,22 @@ Popup {
                                 if (previousDestination === qsTr("Next to the video file")) previousDestination = currentShot.folder
 
                                 if (cbinit) {
-                                    if (comboBoxDestination.currentIndex === 0 && currentShot) {
-                                        fileInput.folder = currentShot.folder + jobManager.getDestinationHierarchy(currentShot, selectedDestination)
-                                    } else if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
-                                        fileInput.folder = previousDestination + jobManager.getDestinationHierarchy(currentShot, previousDestination)
-                                    } else if (comboBoxDestination.currentIndex < cbDestinations.count) {
-                                        fileInput.folder = selectedDestination + jobManager.getDestinationHierarchy(currentShot, selectedDestination)
+                                    if (currentShot) {
+                                        if (comboBoxDestination.currentIndex === 0) {
+                                            fileInput.folder = currentShot.folder + jobManager.getDestinationHierarchy(currentShot, selectedDestination)
+                                        } else if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
+                                            fileInput.folder = previousDestination + jobManager.getDestinationHierarchy(currentShot, previousDestination)
+                                        } else if (comboBoxDestination.currentIndex < cbDestinations.count) {
+                                            fileInput.folder = selectedDestination + jobManager.getDestinationHierarchy(currentShot, selectedDestination)
+                                        }
+                                        fileInput.file = currentShot.name + "_rencoded"
+                                    } else {
+                                        if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
+                                            folderInput.folder = previousDestination
+                                        } else if (comboBoxDestination.currentIndex < cbDestinations.count) {
+                                            folderInput.folder = selectedDestination
+                                        }
                                     }
-
-                                    if (currentShot) fileInput.file = currentShot.name + "_rencoded"
                                 } else {
                                     cbinit = true
                                 }
@@ -1326,7 +1333,7 @@ Popup {
                         anchors.left: parent.left
                         anchors.right: parent.right
 
-                        //visible: (comboBoxDestination.currentIndex === (cbDestinations.count-1))
+                        visible: (popupMode === 1)
                         enabled: (comboBoxDestination.currentIndex === (cbDestinations.count-1))
 
                         FileInputArea {
@@ -1338,6 +1345,22 @@ Popup {
                             onPathChanged: {
                                 rectangleFileWarning.visible = jobManager.fileExists(fileInput.path)
                             }
+                        }
+                    }
+
+                    Item {
+                        height: 48
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+
+                        visible: (popupMode === 2) && (comboBoxDestination.currentIndex === (cbDestinations.count-1))
+                        enabled: (comboBoxDestination.currentIndex === (cbDestinations.count-1))
+
+                        FolderInputArea {
+                            id: folderInput
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.verticalCenter: parent.verticalCenter
                         }
                     }
 
@@ -1369,7 +1392,6 @@ Popup {
                         }
                     }
                 }
-
             }
         }
 
@@ -1412,16 +1434,24 @@ Popup {
                     var settingsEncoding = {}
 
                     // destination
-                    if (comboBoxDestination.currentIndex === 0) {
-                        settingsEncoding["folder"] = currentShot.folder
-                        settingsEncoding["file"] = fileInput.file
-                        settingsEncoding["extension"] = fileInput.extension
-                    } else if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
-                        settingsEncoding["folder"] = fileInput.folder
-                        settingsEncoding["file"] = fileInput.file
-                        settingsEncoding["extension"] = fileInput.extension
-                    } else {
-                        settingsEncoding["mediaDirectory"] = comboBoxDestination.currentText
+                    if (popupMode === 1) {
+                        if (comboBoxDestination.currentIndex === 0) {
+                            settingsEncoding["folder"] = currentShot.folder
+                            settingsEncoding["file"] = fileInput.file
+                            settingsEncoding["extension"] = fileInput.extension
+                        } else if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
+                            settingsEncoding["folder"] = fileInput.folder
+                            settingsEncoding["file"] = fileInput.file
+                            settingsEncoding["extension"] = fileInput.extension
+                        } else {
+                            settingsEncoding["mediaDirectory"] = comboBoxDestination.currentText
+                        }
+                    } else if (popupMode === 2) {
+                        if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
+                           settingsEncoding["folder"] = folderInput.folder
+                       } else {
+                           settingsEncoding["mediaDirectory"] = comboBoxDestination.currentText
+                       }
                     }
 
                     // settings

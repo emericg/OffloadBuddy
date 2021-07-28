@@ -12,14 +12,12 @@
         <file>icons_material/baseline-av_timer-24px.svg</file>
         <file>icons_material/baseline-backspace-24px.svg</file>
         <file>icons_material/baseline-broken_image-24px.svg</file>
-        <file>icons_material/baseline-bug_report-24px.svg</file>
         <file>icons_material/baseline-burst_mode-24px.svg</file>
         <file>icons_material/baseline-camera-24px.svg</file>
         <file>icons_material/baseline-cancel-24px.svg</file>
         <file>icons_material/baseline-center_focus-24px.svg</file>
         <file>icons_material/baseline-center_focus_strong-24px.svg</file>
         <file>icons_material/baseline-center_focus_weak-24px.svg</file>
-        <file>icons_material/baseline-check_circle_outline-24px.svg</file>
         <file>icons_material/baseline-close-24px.svg</file>
         <file>icons_material/baseline-crop-24px.svg</file>
         <file>icons_material/baseline-data_usage-24px.svg</file>
@@ -53,11 +51,9 @@
         <file>icons_material/baseline-navigate_next-24px.svg</file>
         <file>icons_material/baseline-open_with-24px.svg</file>
         <file>icons_material/baseline-pause-24px.svg</file>
-        <file>icons_material/baseline-pause_circle_outline-24px.svg</file>
         <file>icons_material/baseline-photo-24px.svg</file>
         <file>icons_material/baseline-photo_library-24px.svg</file>
         <file>icons_material/baseline-play_arrow-24px.svg</file>
-        <file>icons_material/baseline-play_circle_outline-24px.svg</file>
         <file>icons_material/baseline-refresh-24px.svg</file>
         <file>icons_material/baseline-rotate_90_degrees_ccw-24px.svg</file>
         <file>icons_material/baseline-rotate_left-24px.svg</file>
@@ -82,13 +78,18 @@
         <file>icons_material/baseline-zoom_out-24px.svg</file>
         <file>icons_material/outline-camera-24px.svg</file>
         <file>icons_material/outline-camera_alt-24px.svg</file>
+        <file>icons_material/outline-cancel_circle-24px.svg</file>
+        <file>icons_material/outline-check_circle-24px.svg</file>
         <file>icons_material/outline-create_new_folder-24px.svg</file>
         <file>icons_material/outline-folder-24px.svg</file>
         <file>icons_material/outline-https-24px.svg</file>
         <file>icons_material/outline-local_movies-24px.svg</file>
+        <file>icons_material/outline-pause_circle-24px.svg</file>
+        <file>icons_material/outline-play_circle-24px.svg</file>
         <file>icons_material/outline-power-24px.svg</file>
         <file>icons_material/outline-sd_card-24px.svg</file>
         <file>icons_material/outline-speed-24px.svg</file>
+        <file>icons_material/outline-stop_circle-24px.svg</file>
     </qresource>
     <qresource prefix="/menus">
         <file alias="selector_arrow.svg">menus/selector_arrow.svg</file>

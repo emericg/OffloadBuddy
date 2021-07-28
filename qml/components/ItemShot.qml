@@ -43,7 +43,7 @@ Rectangle {
                    shot.state === Shared.SHOT_STATE_OFFLOADED ||
                    shot.state === Shared.SHOT_STATE_ENCODED) {
             icon_state.visible = false
-            image_overlay.source = "qrc:/assets/icons_material/baseline-check_circle_outline-24px.svg"
+            image_overlay.source = "qrc:/assets/icons_material/outline-check_circle-24px.svg"
             overlayWorkDone.visible = true
             offloadAnimation.stop()
             encodeAnimation.stop()
@@ -403,7 +403,7 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
 
-            source: "qrc:/assets/icons_material/baseline-check_circle_outline-24px.svg"
+            source: "qrc:/assets/icons_material/outline-check_circle-24px.svg"
             color: "white"
         }
     }

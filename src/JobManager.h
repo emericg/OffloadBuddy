@@ -188,20 +188,28 @@ class JobTracker: public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(int id READ getId CONSTANT)
     Q_PROPERTY(QString name READ getName NOTIFY jobUpdated)
+
+    Q_PROPERTY(int type READ getType CONSTANT)
+    Q_PROPERTY(QString typeStr READ getTypeString CONSTANT)
+    Q_PROPERTY(int state READ getState NOTIFY jobUpdated)
+    Q_PROPERTY(QString stateStr READ getStateString NOTIFY jobUpdated)
+
     Q_PROPERTY(QStringList files READ getFiles CONSTANT)
     Q_PROPERTY(QString destination READ getDestination CONSTANT)
-    Q_PROPERTY(QString typeStr READ getTypeString CONSTANT)
-    Q_PROPERTY(int id READ getId CONSTANT)
-    Q_PROPERTY(int type READ getType CONSTANT)
-    Q_PROPERTY(int state READ getState NOTIFY jobUpdated)
-    Q_PROPERTY(bool running READ isRunning NOTIFY jobUpdated)
-    Q_PROPERTY(float progress READ getProgress NOTIFY jobUpdated)
 
-    Q_PROPERTY(int elapsed READ getElapsed NOTIFY jobUpdated)
-    Q_PROPERTY(int eta READ getETA NOTIFY jobUpdated)
+    Q_PROPERTY(bool running READ isRunning NOTIFY jobUpdated)
+    Q_PROPERTY(bool paused READ isPaused NOTIFY jobUpdated)
+
+    Q_PROPERTY(float progress READ getProgress NOTIFY jobUpdated)
+    Q_PROPERTY(int elementsIndex READ getElementsIndex NOTIFY jobUpdated)
+    Q_PROPERTY(int elementsTotal READ getElementsTotal NOTIFY jobUpdated)
+
     Q_PROPERTY(QDateTime startDate READ getStartDate NOTIFY jobUpdated)
     Q_PROPERTY(QDateTime stopDate READ getStopDate NOTIFY jobUpdated)
+    Q_PROPERTY(int elapsed READ getElapsed NOTIFY jobUpdated)
+    Q_PROPERTY(int eta READ getETA NOTIFY jobUpdated)
 
     JobUtils::JobType m_type;
     int m_job_id = -1;
@@ -220,6 +228,10 @@ class JobTracker: public QObject
     // tracking
     JobUtils::JobState m_state = JobUtils::JOB_STATE_QUEUED;
     float m_percent = 0.0;
+
+    int m_elements_index = 0;
+    int m_elements_total = 0;
+
     QDateTime m_start;
     QDateTime m_stop;
     QDateTime m_eta;
@@ -232,6 +244,7 @@ public:
     ~JobTracker() {}
 
     int getId() { return m_job_id; }
+
     JobUtils::JobType getType() { return m_type; }
     QString getTypeString() {
         if (m_type == JobUtils::JOB_FORMAT) return tr("FORMAT");
@@ -243,6 +256,23 @@ public:
         else if (m_type == JobUtils::JOB_TELEMETRY) return tr("TELEMETRY EXTRACTION");
         else if (m_type == JobUtils::JOB_FIRMWARE_DOWNLOAD) return tr("DOWNLOADING");
         else if (m_type == JobUtils::JOB_FIRMWARE_UPLOAD) return tr("FIRMWARE");
+        else return tr("UNKNOWN");
+    }
+
+    void setState(int state) {
+        m_state = static_cast<JobUtils::JobState>(state);
+        if (m_state == JobUtils::JOB_STATE_WORKING) m_start = QDateTime::currentDateTime();
+        if (m_state >= JobUtils::JOB_STATE_DONE) m_stop = QDateTime::currentDateTime();
+        Q_EMIT jobUpdated();
+    }
+    int getState() { return m_state; }
+    QString getStateString() {
+        if (m_state == JobUtils::JOB_STATE_QUEUED) return tr("QUEUED");
+        else if (m_state == JobUtils::JOB_STATE_WORKING) return tr("WORKING");
+        else if (m_state == JobUtils::JOB_STATE_PAUSED) return tr("PAUSED");
+        else if (m_state == JobUtils::JOB_STATE_DONE) return tr("DONE");
+        else if (m_state == JobUtils::JOB_STATE_ERRORED) return tr("ERRORED");
+        else if (m_state == JobUtils::JOB_STATE_ABORTED) return tr("ABORTED");
         else return tr("UNKNOWN");
     }
 
@@ -267,14 +297,12 @@ public:
     bool getAutoDelete() const { return m_autoDelete; }
 
     int isRunning() const { return (m_state & JobUtils::JOB_STATE_WORKING); }
+    int isPaused() const { return (m_state & JobUtils::JOB_STATE_PAUSED); }
 
-    void setState(int state) {
-        m_state = static_cast<JobUtils::JobState>(state);
-        if (m_state == JobUtils::JOB_STATE_WORKING) m_start = QDateTime::currentDateTime();
-        if (m_state >= JobUtils::JOB_STATE_DONE) m_stop = QDateTime::currentDateTime();
-        Q_EMIT jobUpdated();
-    }
-    int getState() { return m_state; }
+    void setElementsTotal(int e) { m_elements_total = e; Q_EMIT jobUpdated(); }
+    int getElementsTotal() { return m_elements_total; }
+    void setElementsIndex(int i) { m_elements_index = i; Q_EMIT jobUpdated(); }
+    int getElementsIndex() { return m_elements_index; }
 
     void setProgress(float p) { m_percent = p; Q_EMIT jobUpdated(); }
     float getProgress() { return m_percent / 100.f; }

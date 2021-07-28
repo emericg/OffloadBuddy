@@ -390,7 +390,7 @@ Popup {
                     anchors.left: parent.left
                     anchors.right: parent.right
 
-                    visible: (popupMode === 2 && comboBoxDestination.currentIndex === (cbDestinations.count-1))
+                    visible: (popupMode === 2) && (comboBoxDestination.currentIndex === (cbDestinations.count-1))
 
                     FolderInputArea {
                         id: folderInput

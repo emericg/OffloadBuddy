@@ -204,8 +204,8 @@ Rectangle {
                           (job.state === 1 || job.state === 2)) // running
 
                 highlightMode: "color"
-                source: job.state === 1 ? "qrc:/assets/icons_material/baseline-pause_circle_outline-24px.svg" :
-                                          "qrc:/assets/icons_material/baseline-play_circle_outline-24px.svg"
+                source: job.state === 1 ? "qrc:/assets/icons_material/outline-pause_circle-24px.svg" :
+                                          "qrc:/assets/icons_material/outline-play_circle-24px.svg"
                 onClicked: jobManager.playPauseJob(job.id)
             }
 
@@ -219,7 +219,7 @@ Rectangle {
                           (job.state === 1 || job.state === 2)) // running
 
                 highlightMode: "color"
-                source: "qrc:/assets/icons_material/baseline-cancel-24px.svg"
+                source: "qrc:/assets/icons_material/outline-cancel_circle-24px.svg"
                 onClicked: jobManager.stopJob(job.id)
             }
 */
