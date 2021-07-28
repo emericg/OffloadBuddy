@@ -60,6 +60,7 @@ SOURCES  += src/main.cpp \
             src/Device.cpp \
             src/FileScanner.cpp \
             src/ItemImage.cpp \
+            src/Job.cpp \
             src/Shot.cpp \
             src/ShotTelemetry.cpp \
             src/ShotModel.cpp \
@@ -74,11 +75,13 @@ SOURCES  += src/main.cpp \
             src/utils/utils_screen.cpp \
             src/utils/utils_language.cpp \
             src/utils/utils_ffmpeg.cpp \
-            src/utils/utils_sysinfo.cpp \
-            src/utils/utils_maths.cpp
+            src/utils/utils_maths.cpp \
+            src/utils/utils_sysinfo.cpp
 
 HEADERS  += src/SettingsManager.h \
             src/JobManager.h \
+            src/Job.h \
+            src/JobUtils.h \
             src/JobWorkerAsync.h \
             src/JobWorkerSync.h \
             src/StorageManager.h \
@@ -92,6 +95,7 @@ HEADERS  += src/SettingsManager.h \
             src/FileScanner.h \
             src/ItemImage.h \
             src/Shot.h \
+            src/ShotUtils.h \
             src/ShotModel.h \
             src/ShotFilter.h \
             src/ShotProvider.h \
@@ -105,8 +109,7 @@ HEADERS  += src/SettingsManager.h \
             src/utils/utils_language.h \
             src/utils/utils_ffmpeg.h \
             src/utils/utils_maths.h \
-            src/utils/utils_sysinfo.h \
-            src/utils/utils_enums.h
+            src/utils/utils_sysinfo.h
 
 RESOURCES   += qml/qml.qrc \
                i18n/i18n.qrc \

@@ -24,8 +24,10 @@
 #include "DeviceManager.h"
 #include "JobManager.h"
 #include "MediaLibrary.h"
-#include "MediaThumbnailer.h"
+
+#include "ShotUtils.h"
 #include "ItemImage.h"
+#include "MediaThumbnailer.h"
 
 #include "utils/utils_app.h"
 #include "utils/utils_screen.h"
@@ -140,11 +142,11 @@ int main(int argc, char *argv[])
 
     // Init OffloadBuddy components
     SettingsManager *sm = SettingsManager::getInstance();
-    StorageManager *mdm = StorageManager::getInstance();
+    StorageManager *st = StorageManager::getInstance();
     MediaLibrary *ml = new MediaLibrary;
     DeviceManager *dm = new DeviceManager;
     JobManager *jm = JobManager::getInstance();
-    if (!sm || !ml || !dm || !jm)
+    if (!sm || !st || !ml || !dm || !jm)
     {
         qWarning() << "Cannot init OffloadBuddy components!";
         return EXIT_FAILURE;
@@ -177,18 +179,20 @@ int main(int argc, char *argv[])
     qmlRegisterSingletonType(QUrl("qrc:/qml/ThemeEngine.qml"), "ThemeEngine", 1, 0, "Theme");
 
     qmlRegisterUncreatableMetaObject(
-        Shared::staticMetaObject,
-        "com.offloadbuddy.shared", 1, 0,
-        "Shared",             // name in QML (does not have to match C++ name)
+        SettingsUtils::staticMetaObject,
+        "SettingsUtils", 1, 0,
+        "SettingsUtils",             // name in QML (does not have to match C++ name)
         "Error: only enums"); // error in case someone tries to create a MyNamespace object
 
-    qmlRegisterType<ItemImage>("com.offloadbuddy.shared", 1, 0, "ItemImage");
+    ShotUtils::registerQML();
+    JobUtils::registerQML();
+    ItemImage::registerQml();
 
     // Then we start the UI
     QQmlApplicationEngine engine;
     QQmlContext *engine_context = engine.rootContext();
     engine_context->setContextProperty("settingsManager", sm);
-    engine_context->setContextProperty("storageManager", mdm);
+    engine_context->setContextProperty("storageManager", st);
     engine_context->setContextProperty("deviceManager", dm);
     engine_context->setContextProperty("jobManager", jm);
     engine_context->setContextProperty("mediaLibrary", ml);

@@ -124,15 +124,15 @@ void JobWorkerAsync::jobPlayPause()
 
     if (m_childProcess && m_ffmpegcurrent && m_ffmpegcurrent->job)
     {
-        if (m_ffmpegcurrent->job->state == JobUtils::JOB_STATE_WORKING)
+        if (m_ffmpegcurrent->job->getState() == JobUtils::JOB_STATE_WORKING)
         {
             kill(m_childProcess->processId(), SIGSTOP); // suspend
-            m_ffmpegcurrent->job->state = JobUtils::JOB_STATE_PAUSED;
+            m_ffmpegcurrent->job->setState(JobUtils::JOB_STATE_PAUSED);
         }
-        else if (m_ffmpegcurrent->job->state == JobUtils::JOB_STATE_PAUSED)
+        else if (m_ffmpegcurrent->job->getState() == JobUtils::JOB_STATE_PAUSED)
         {
             kill(m_childProcess->processId(), SIGCONT); // resume
-            m_ffmpegcurrent->job->state = JobUtils::JOB_STATE_WORKING;
+            m_ffmpegcurrent->job->setState(JobUtils::JOB_STATE_WORKING);
         }
     }
 
@@ -148,7 +148,7 @@ void JobWorkerAsync::jobAbort()
         m_childProcess->write("q\n");
         //m_childProcess->kill();
 
-        m_ffmpegcurrent->job->state = JobUtils::JOB_STATE_ABORTED;
+        m_ffmpegcurrent->job->setState(JobUtils::JOB_STATE_ABORTED);
 
         if (!m_childProcess->waitForFinished(4000))
         {
@@ -159,7 +159,7 @@ void JobWorkerAsync::jobAbort()
 
 /* ************************************************************************** */
 
-void JobWorkerAsync::queueWork(Job *job)
+void JobWorkerAsync::queueWork(JobTracker *job)
 {
     qDebug() << ">> JobWorkerAsync::queueWork()";
 
@@ -168,7 +168,7 @@ void JobWorkerAsync::queueWork(Job *job)
         for (unsigned i = 0; i < job->elements.size(); i++)
         {
             JobElement *element = job->elements.at(i);
-            if (element->parent_shot->getShotType() <= Shared::SHOT_PICTURE &&
+            if (element->parent_shot->getShotType() <= ShotUtils::SHOT_PICTURE &&
                 element->files.size() != 1)
             {
                 qDebug() << "This async job element got" << element->files.size() << "file(s), should not happen...";
@@ -203,7 +203,7 @@ void JobWorkerAsync::queueWork(Job *job)
 
             //// INPUTS
 
-            if (element->parent_shot->getShotType() > Shared::SHOT_PICTURE)
+            if (element->parent_shot->getShotType() > ShotUtils::SHOT_PICTURE)
             {
                 // timelapse to video
                 ptiwrap->arguments << "-r" << QString::number(job->settings_encode.timelapse_fps);
@@ -435,7 +435,7 @@ void JobWorkerAsync::queueWork(Job *job)
                     // Timelapse
                     if (job->settings_encode.timelapse_fps > 0)
                     {
-                        if (element->parent_shot->getShotType() < Shared::SHOT_PICTURE)
+                        if (element->parent_shot->getShotType() < ShotUtils::SHOT_PICTURE)
                         {
                             // video to video timelapse
                             if (!video_filters.isEmpty()) video_filters += ",";
@@ -555,10 +555,10 @@ void JobWorkerAsync::processStarted()
     if (m_childProcess && m_ffmpegcurrent)
     {
         qDebug() << "JobWorkerAsync::processStarted()";
-        m_ffmpegcurrent->job->state = JobUtils::JOB_STATE_WORKING;
+        m_ffmpegcurrent->job->setState(JobUtils::JOB_STATE_WORKING);
 
-        emit jobStarted(m_ffmpegcurrent->job->id);
-        emit shotStarted(m_ffmpegcurrent->job->id, m_ffmpegcurrent->job->elements.at(m_ffmpegcurrent->job_element_index)->parent_shot);
+        emit jobStarted(m_ffmpegcurrent->job->getId());
+        emit shotStarted(m_ffmpegcurrent->job->getId(), m_ffmpegcurrent->job->elements.at(m_ffmpegcurrent->job_element_index)->parent_shot);
     }
 }
 
@@ -592,8 +592,8 @@ void JobWorkerAsync::processFinished()
             m_ffmpegcurrent->job->elements.size() > m_ffmpegcurrent->job_element_index)
         {
             emit fileProduced(m_ffmpegcurrent->destFile);
-            emit shotFinished(m_ffmpegcurrent->job->id, 0, m_ffmpegcurrent->job->elements.at(m_ffmpegcurrent->job_element_index)->parent_shot);
-            emit jobFinished(m_ffmpegcurrent->job->id, js);
+            emit shotFinished(m_ffmpegcurrent->job->getId(), 0, m_ffmpegcurrent->job->elements.at(m_ffmpegcurrent->job_element_index)->parent_shot);
+            emit jobFinished(m_ffmpegcurrent->job->getId(), js);
         }
 
         m_childProcess->waitForFinished();
@@ -646,7 +646,7 @@ void JobWorkerAsync::processOutput()
             progress *= 100.f;
 
             //qDebug() << "- PROGRESS:" << progress;
-            emit jobProgress(m_ffmpegcurrent->job->id, progress);
+            emit jobProgress(m_ffmpegcurrent->job->getId(), progress);
         }
     }
 }

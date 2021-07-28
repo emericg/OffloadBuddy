@@ -210,9 +210,9 @@ bool MediaStorage::isAvailableFor(unsigned shotType, int64_t shotSize)
     {
         if (shotSize < getSpaceAvailable())
         {
-            if ((shotType == Shared::SHOT_UNKNOWN && m_content == StorageUtils::ContentAll) ||
-                (shotType < Shared::SHOT_PICTURE && (m_content == StorageUtils::ContentAll || m_content == StorageUtils::ContentVideo)) ||
-                (shotType >= Shared::SHOT_PICTURE && (m_content == StorageUtils::ContentAll || m_content == StorageUtils::ContentPictures)))
+            if ((shotType == ShotUtils::SHOT_UNKNOWN && m_content == StorageUtils::ContentAll) ||
+                (shotType < ShotUtils::SHOT_PICTURE && (m_content == StorageUtils::ContentAll || m_content == StorageUtils::ContentVideo)) ||
+                (shotType >= ShotUtils::SHOT_PICTURE && (m_content == StorageUtils::ContentAll || m_content == StorageUtils::ContentPictures)))
             {
                 available = true;
             }

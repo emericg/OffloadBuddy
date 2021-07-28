@@ -45,7 +45,6 @@ namespace SettingsUtils
         OrderByGps,
         OrderByCamera,
     };
-
     Q_ENUM_NS(OrderBy)
 }
 

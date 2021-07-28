@@ -46,7 +46,7 @@ Shot::Shot(QObject *parent) : QObject(parent)
     m_uuid = QUuid::createUuid().toString();
 }
 
-Shot::Shot(Shared::ShotType type, QObject *parent) : QObject(parent)
+Shot::Shot(ShotUtils::ShotType type, QObject *parent) : QObject(parent)
 {
     m_uuid = QUuid::createUuid().toString();
     m_type = type;
@@ -243,7 +243,7 @@ QDateTime Shot::getDateGPS() const
 
 qint64 Shot::getDuration() const
 {
-    if (m_type < Shared::SHOT_PICTURE)
+    if (m_type < ShotUtils::SHOT_PICTURE)
         return m_duration;
 
     return m_pictures.size();
@@ -439,11 +439,11 @@ QImage Shot::getPreviewMtp()
 
 bool Shot::isValid() const
 {
-    if (m_type >= Shared::SHOT_VIDEO && m_type <= Shared::SHOT_VIDEO_3D)
+    if (m_type >= ShotUtils::SHOT_VIDEO && m_type <= ShotUtils::SHOT_VIDEO_3D)
     {
         if (m_videos.size() > 0) return true;
     }
-    else if (m_type >= Shared::SHOT_PICTURE && m_type <= Shared::SHOT_PICTURE_NIGHTLAPSE)
+    else if (m_type >= ShotUtils::SHOT_PICTURE && m_type <= ShotUtils::SHOT_PICTURE_NIGHTLAPSE)
     {
         if (m_pictures.size() > 0) return true;
     }

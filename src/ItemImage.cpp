@@ -33,6 +33,17 @@ ItemImage::ItemImage(QQuickItem *parent) : QQuickPaintedItem(parent)
 
 /* ************************************************************************** */
 
+bool ItemImage::registerQml()
+{
+    bool status = false;
+
+    qmlRegisterType<ItemImage>("ItemImage", 1, 0, "ItemImage");
+
+    return status;
+}
+
+/* ************************************************************************** */
+
 QImage ItemImage::image() const
 {
     return m_image;

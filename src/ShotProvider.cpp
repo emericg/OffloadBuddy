@@ -141,13 +141,13 @@ void ShotProvider::filterByType(const QString &type)
         QList <int> types;
 
         if (type == "Videos")
-            types << Shared::SHOT_VIDEO << Shared::SHOT_VIDEO_LOOPING << Shared::SHOT_VIDEO_3D;
+            types << ShotUtils::SHOT_VIDEO << ShotUtils::SHOT_VIDEO_LOOPING << ShotUtils::SHOT_VIDEO_3D;
         else if (type == "Photos")
-            types << Shared::SHOT_PICTURE << Shared::SHOT_PICTURE_BURST;
+            types << ShotUtils::SHOT_PICTURE << ShotUtils::SHOT_PICTURE_BURST;
         else if (type == "Timelapses")
-            types << Shared::SHOT_VIDEO_TIMELAPSE << Shared::SHOT_VIDEO_NIGHTLAPSE
-                  << Shared::SHOT_PICTURE_MULTI
-                  << Shared::SHOT_PICTURE_TIMELAPSE << Shared::SHOT_PICTURE_NIGHTLAPSE;
+            types << ShotUtils::SHOT_VIDEO_TIMELAPSE << ShotUtils::SHOT_VIDEO_NIGHTLAPSE
+                  << ShotUtils::SHOT_PICTURE_MULTI
+                  << ShotUtils::SHOT_PICTURE_TIMELAPSE << ShotUtils::SHOT_PICTURE_NIGHTLAPSE;
 
         m_shotFilter->setAcceptedTypes(types);
         m_shotFilter->invalidate();

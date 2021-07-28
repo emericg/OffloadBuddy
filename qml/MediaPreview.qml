@@ -4,7 +4,6 @@ import QtMultimedia 5.12 // Qt5
 //import QtMultimedia // Qt6
 
 import ThemeEngine 1.0
-import com.offloadbuddy.shared 1.0
 import "qrc:/js/UtilsNumber.js" as UtilsNumber
 import "qrc:/js/UtilsString.js" as UtilsString
 

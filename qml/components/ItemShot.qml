@@ -4,7 +4,7 @@ import QtGraphicalEffects 1.12 // Qt5
 //import Qt5Compat.GraphicalEffects // Qt6
 
 import ThemeEngine 1.0
-import com.offloadbuddy.shared 1.0
+import ShotUtils 1.0
 import "qrc:/js/UtilsMedia.js" as UtilsMedia
 import "qrc:/js/UtilsString.js" as UtilsString
 
@@ -29,19 +29,19 @@ Rectangle {
         icon_state.visible = true
         overlayWorkDone.visible = false
 
-        if (shot.state === Shared.SHOT_STATE_QUEUED) {
+        if (shot.state === ShotUtils.SHOT_STATE_QUEUED) {
             icon_state.source = "qrc:/assets/icons_material/baseline-schedule-24px.svg"
             offloadAnimation.stop()
             encodeAnimation.stop()
-        } else if (shot.state === Shared.SHOT_STATE_OFFLOADING) {
+        } else if (shot.state === ShotUtils.SHOT_STATE_OFFLOADING) {
             //icon_state.source = "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
             offloadAnimation.start()
-        } else if (shot.state === Shared.SHOT_STATE_ENCODING) {
+        } else if (shot.state === ShotUtils.SHOT_STATE_ENCODING) {
             //icon_state.source = "qrc:/assets/icons_material/baseline-memory-24px.svg"
             encodeAnimation.start()
-        } else if (shot.state === Shared.SHOT_STATE_DONE ||
-                   shot.state === Shared.SHOT_STATE_OFFLOADED ||
-                   shot.state === Shared.SHOT_STATE_ENCODED) {
+        } else if (shot.state === ShotUtils.SHOT_STATE_DONE ||
+                   shot.state === ShotUtils.SHOT_STATE_OFFLOADED ||
+                   shot.state === ShotUtils.SHOT_STATE_ENCODED) {
             icon_state.visible = false
             image_overlay.source = "qrc:/assets/icons_material/outline-check_circle-24px.svg"
             overlayWorkDone.visible = true
@@ -64,14 +64,14 @@ Rectangle {
             imageFs.source = "image://MediaThumbnailer/" + shot.previewVideo + "@" + (shot.duration/12000).toFixed()
         else if (shot.previewPhoto)
             imageFs.source = "image://MediaThumbnailer/" + shot.previewPhoto
-        else if (shotDevice && shotDevice.deviceStorage === Shared.STORAGE_MTP) {
+        else if (shotDevice && shotDevice.deviceStorage === ShotUtils.STORAGE_MTP) {
             imageMtp.enabled = true
             imageMtp.visible = true
             imageMtp.image = shot.getPreviewMtp()
         }
 
         text_left.visible = false
-        if (fileType === Shared.FILE_VIDEO) {
+        if (fileType === ShotUtils.FILE_VIDEO) {
             if (shot.transformation === 4) {
                 imageFs.rotation = 90
                 imageFs.scale = cellFormat
@@ -89,12 +89,12 @@ Rectangle {
                 icon_left.source = "qrc:/assets/icons_material/baseline-video_library-24px.svg"
             else
                 icon_left.source = "qrc:/assets/icons_material/baseline-video-24px.svg"
-        } else if (fileType === Shared.FILE_PICTURE) {
-            if (shotType === Shared.SHOT_PICTURE_BURST) {
+        } else if (fileType === ShotUtils.FILE_PICTURE) {
+            if (shotType === ShotUtils.SHOT_PICTURE_BURST) {
                 text_left.visible = true
                 text_left.text = duration
                 icon_left.source = "qrc:/assets/icons_material/baseline-burst_mode-24px.svg"
-            } else if (shotType >= Shared.SHOT_PICTURE_MULTI) {
+            } else if (shotType >= ShotUtils.SHOT_PICTURE_MULTI) {
                 text_left.visible = true
                 text_left.text = duration
                 icon_left.source = "qrc:/assets/icons_material/baseline-photo_library-24px.svg"
@@ -108,7 +108,7 @@ Rectangle {
 
     function openShot(mouse) {
         if (mouse.button === Qt.LeftButton) {
-            if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== Shared.STORAGE_MTP)) {
+            if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== ShotUtils.STORAGE_MTP)) {
                 // Show the "shot details" screen
                 actionMenu.visible = false
                 shotsView.currentIndex = index
@@ -135,14 +135,14 @@ Rectangle {
         var folder = true
         var remove = true
 
-        if (shot.fileType === Shared.FILE_VIDEO) { // all kind of videos
+        if (shot.fileType === ShotUtils.FILE_VIDEO) { // all kind of videos
             if (shot.hasGPMF)
                 telemetry_gpmf = true
             if (shot.hasGPS)
                 telemetry_gps = true
-        } else if (shot.fileType === Shared.FILE_PICTURE) { // all kind of photos
+        } else if (shot.fileType === ShotUtils.FILE_PICTURE) { // all kind of photos
             //
-            if (shot.shotType > Shared.SHOT_PICTURE) { // only multi picture
+            if (shot.shotType > ShotUtils.SHOT_PICTURE) { // only multi picture
                 //
             }
         }
@@ -150,7 +150,7 @@ Rectangle {
         if (shotDevice) {
             move = false
             offload = true
-            if (shotDevice.deviceStorage === Shared.STORAGE_MTP) {
+            if (shotDevice.deviceStorage === ShotUtils.STORAGE_MTP) {
                 file = false
                 folder = false
                 encode = false
@@ -364,7 +364,7 @@ Rectangle {
                 width: 20
                 height: 20
                 anchors.verticalCenter: parent.verticalCenter
-                visible: (shot.fileType === Shared.FILE_VIDEO && shot.hasGPS)
+                visible: (shot.fileType === ShotUtils.FILE_VIDEO && shot.hasGPS)
                 color: "white"
                 source: "qrc:/assets/icons_material/baseline-insert_chart-24px.svg"
             }
@@ -429,7 +429,7 @@ Rectangle {
             running: false
             repeat: true
             onTriggered: {
-                if (shot.fileType === Shared.FILE_VIDEO) {
+                if (shot.fileType === ShotUtils.FILE_VIDEO) {
                     var timecode_s = Math.round((shot.duration / 4000) * mouseAreaItem.thumbId)
 
                     if (++mouseAreaItem.thumbId > 3)
@@ -446,8 +446,8 @@ Rectangle {
             mouseAreaItem.isHovered = true
             shotsView.focus = true
 
-            if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== Shared.STORAGE_MTP)) {
-                if (shot.fileType === Shared.FILE_VIDEO && settingsManager.thumbQuality > 1) {
+            if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== ShotUtils.STORAGE_MTP)) {
+                if (shot.fileType === ShotUtils.FILE_VIDEO && settingsManager.thumbQuality > 1) {
                     thumbTimer.start()
                 }
             }
@@ -455,8 +455,8 @@ Rectangle {
         onExited: {
             mouseAreaItem.isHovered = false
 
-            if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== Shared.STORAGE_MTP)) {
-                if (shot.fileType === Shared.FILE_VIDEO && settingsManager.thumbQuality > 1) {
+            if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== ShotUtils.STORAGE_MTP)) {
+                if (shot.fileType === ShotUtils.FILE_VIDEO && settingsManager.thumbQuality > 1) {
                     thumbId = 1
                     thumbTimer.stop()
                     if (shot.previewVideo)

@@ -292,7 +292,7 @@ Shot *ShotModel::getShotWithPath(const QString &path)
  * for faster association, because we will just most likely use the last created
  * shot.
  */
-Shot *ShotModel::getShotAt(Shared::ShotType type, int file_id, int camera_id) const
+Shot *ShotModel::getShotAt(ShotUtils::ShotType type, int file_id, int camera_id) const
 {
     if (file_id > 0)
     {

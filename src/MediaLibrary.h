@@ -24,6 +24,7 @@
 /* ************************************************************************** */
 
 #include "ShotProvider.h"
+#include "DeviceUtils.h"
 
 #include <QObject>
 #include <QVariant>

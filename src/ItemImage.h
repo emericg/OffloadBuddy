@@ -48,6 +48,8 @@ signals:
 public:
     ItemImage(QQuickItem *parent = nullptr);
 
+    static bool registerQml();
+
     QImage image() const;
     Q_INVOKABLE void setImage(const QImage &image);
 

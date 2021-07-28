@@ -141,14 +141,14 @@ bool getGenericShotInfos(const ofb_file &file, ofb_shot &shot)
     if (file.extension == "jpg" || file.extension == "jpeg" ||
         file.extension == "png" || file.extension == "webp")
     {
-        shot.shot_type = Shared::SHOT_PICTURE;
+        shot.shot_type = ShotUtils::SHOT_PICTURE;
     }
     else if (file.extension == "mov" || file.extension == "mp4" || file.extension == "m4v" ||
              file.extension == "lrv" ||
              file.extension == "avi" ||
              file.extension == "mkv" || file.extension == "webm")
     {
-        shot.shot_type = Shared::SHOT_VIDEO;
+        shot.shot_type = ShotUtils::SHOT_VIDEO;
     }
     else
     {

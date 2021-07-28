@@ -26,7 +26,6 @@
 #include "StorageManager.h"
 #include "FileScanner.h"
 #include "MediaLibrary.h"
-#include "utils/utils_enums.h"
 
 #ifdef ENABLE_LIBMTP
 #include <libmtp.h>
@@ -188,14 +187,15 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
 
     // CREATE JOB //////////////////////////////////////////////////////////////
 
-    Job *job = new Job;
-    job->id = rand(); // TODO // Use QUuid
-    job->type = type;
+    JobTracker *tracker = new JobTracker(rand(), type, this);
+    tracker->setDevice(dev);
+    tracker->setLibrary(lib);
+    tracker->setAutoDelete(autoDelete);
 
-    if (sett_delete) job->settings_delete = *sett_delete;
-    if (sett_offload) job->settings_offload = *sett_offload;
-    if (sett_telemetry) job->settings_telemetry = *sett_telemetry;
-    if (sett_encode) job->settings_encode = *sett_encode;
+    if (sett_delete) tracker->settings_delete = *sett_delete;
+    if (sett_offload) tracker->settings_offload = *sett_offload;
+    if (sett_telemetry) tracker->settings_telemetry = *sett_telemetry;
+    if (sett_encode) tracker->settings_encode = *sett_encode;
 
     QStringList ssll;
 
@@ -213,12 +213,12 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
             for (auto f: qAsConst(files))
             {
                 je->files.push_back(*f);
-                job->totalSize += f->size;
-                job->totalFiles++;
+                tracker->totalSize += f->size;
+                tracker->totalFiles++;
             }
-            job->elements.push_back(je);
+            tracker->elements.push_back(je);
 
-            shot->setState(Shared::SHOT_STATE_QUEUED);
+            shot->setState(ShotUtils::SHOT_STATE_QUEUED);
         }
         else
         {
@@ -226,20 +226,15 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
         }
     }
 
-    JobTracker *tracker = new JobTracker(job->id, job->type);
-    tracker->setDevice(dev);
-    tracker->setLibrary(lib);
-    tracker->setAutoDelete(autoDelete);
     if (list.size() > 0)
     {
         QString tempname = list.at(0)->getName();
         tracker->setName(tempname);
-    }
-    if (!job->elements.empty())
-    {
-        tracker->setDestination(job->elements.front()->destination_dir);
+
         tracker->setFiles(ssll);
+        tracker->setDestination(tracker->elements.front()->destination_dir);
     }
+
     m_trackedJobs.push_back(tracker);
     emit trackedJobsUpdated();
 
@@ -264,7 +259,7 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
 
         if (m_job_cpu)
         {
-            m_job_cpu->queueWork(job);
+            m_job_cpu->queueWork(tracker);
             m_job_cpu->work();
         }
     }
@@ -335,7 +330,7 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
 
         if (m_selected_worker)
         {
-            m_selected_worker->queueWork(job);
+            m_selected_worker->queueWork(tracker);
             emit m_selected_worker->startWorking();
             status = true;
         }
@@ -437,9 +432,9 @@ void JobManager::shotStarted(int jobId, Shot *shot)
         {
             j->setName(shot->getName());
             if (j->getType() == JobUtils::JOB_ENCODE)
-                shot->setState(Shared::SHOT_STATE_ENCODING);
+                shot->setState(ShotUtils::SHOT_STATE_ENCODING);
             else
-                shot->setState(Shared::SHOT_STATE_OFFLOADING);
+                shot->setState(ShotUtils::SHOT_STATE_OFFLOADING);
         }
     }
 }
@@ -475,7 +470,7 @@ void JobManager::shotFinished(int jobId, int status, Shot *shot)
                     if (j->getAutoDelete())
                         addJob(JobUtils::JOB_DELETE, j->getDevice(), j->getLibrary(), shot);
                     else
-                        shot->setState(Shared::SHOT_STATE_OFFLOADED);
+                        shot->setState(ShotUtils::SHOT_STATE_OFFLOADED);
                     break;
 
                 case JobUtils::JOB_MOVE:
@@ -485,11 +480,11 @@ void JobManager::shotFinished(int jobId, int status, Shot *shot)
 
                 case JobUtils::JOB_CLIP:
                 case JobUtils::JOB_ENCODE:
-                    shot->setState(Shared::SHOT_STATE_ENCODED);
+                    shot->setState(ShotUtils::SHOT_STATE_ENCODED);
                     break;
 
                 default:
-                    shot->setState(Shared::SHOT_STATE_DONE);
+                    shot->setState(ShotUtils::SHOT_STATE_DONE);
                     break;
                 }
             }
@@ -593,7 +588,7 @@ QString JobManager::getandmakeDestination(Shot *s, Device *d, MediaDirectory *md
         }
 
         // Put chaptered videos in there own directory?
-        if (s->getShotType() < Shared::SHOT_PICTURE)
+        if (s->getShotType() < ShotUtils::SHOT_PICTURE)
         {
             if (s->getChapterCount() > 1)
             {
@@ -604,16 +599,16 @@ QString JobManager::getandmakeDestination(Shot *s, Device *d, MediaDirectory *md
         }
 
         // Put multishot in there own directory
-        if (s->getShotType() == Shared::SHOT_PICTURE_MULTI ||
-            s->getShotType() == Shared::SHOT_PICTURE_BURST ||
-            s->getShotType() == Shared::SHOT_PICTURE_TIMELAPSE ||
-            s->getShotType() == Shared::SHOT_PICTURE_NIGHTLAPSE)
+        if (s->getShotType() == ShotUtils::SHOT_PICTURE_MULTI ||
+            s->getShotType() == ShotUtils::SHOT_PICTURE_BURST ||
+            s->getShotType() == ShotUtils::SHOT_PICTURE_TIMELAPSE ||
+            s->getShotType() == ShotUtils::SHOT_PICTURE_NIGHTLAPSE)
         {
-            if (s->getShotType() == Shared::SHOT_PICTURE_BURST)
+            if (s->getShotType() == ShotUtils::SHOT_PICTURE_BURST)
                 destDir += "burst_";
-            else if (s->getShotType() == Shared::SHOT_PICTURE_TIMELAPSE)
+            else if (s->getShotType() == ShotUtils::SHOT_PICTURE_TIMELAPSE)
                 destDir += "timelapse_";
-            else if (s->getShotType() == Shared::SHOT_PICTURE_NIGHTLAPSE)
+            else if (s->getShotType() == ShotUtils::SHOT_PICTURE_NIGHTLAPSE)
                 destDir += "nightlapse_";
             else
                 destDir += "multi_";

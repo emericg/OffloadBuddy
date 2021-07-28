@@ -23,7 +23,7 @@
 #define SHOT_H
 /* ************************************************************************** */
 
-#include "utils/utils_enums.h"
+#include "ShotUtils.h"
 
 #ifdef ENABLE_LIBMTP
 #include <libmtp.h>
@@ -77,7 +77,7 @@ struct ofb_file
 
 struct ofb_shot
 {
-    Shared::ShotType shot_type = Shared::SHOT_UNKNOWN;
+    ShotUtils::ShotType shot_type = ShotUtils::SHOT_UNKNOWN;
     int shot_id = -1;
 
     int camera_id = 0;              //!< for multi camera system
@@ -250,8 +250,8 @@ class Shot: public QObject
 
     QString m_uuid;                 //!< Shot unique identifier, generated at object creation
 
-    Shared::ShotType m_type = Shared::SHOT_UNKNOWN;
-    Shared::ShotState m_state = Shared::SHOT_STATE_DEFAULT;
+    ShotUtils::ShotType m_type = ShotUtils::SHOT_UNKNOWN;
+    ShotUtils::ShotState m_state = ShotUtils::SHOT_STATE_DEFAULT;
 
     QString m_shot_name;
     int m_shot_id = -1;             //!< Shot ID (if we have a shot, not a single file)
@@ -444,7 +444,7 @@ Q_SIGNALS:
 
 public:
     Shot(QObject *parent = nullptr);
-    Shot(Shared::ShotType type, QObject *parent = nullptr);
+    Shot(ShotUtils::ShotType type, QObject *parent = nullptr);
     ~Shot();
 
     void addFile(ofb_file *file);
@@ -454,15 +454,15 @@ public:
 public:
     unsigned getShotType() const { return m_type; }
     unsigned getFileType() const {
-        if (m_type >= Shared::SHOT_VIDEO && m_type <= Shared::SHOT_VIDEO_3D)
-           return Shared::FILE_VIDEO;
-        else if (m_type >= Shared::SHOT_PICTURE && m_type <= Shared::SHOT_PICTURE_NIGHTLAPSE)
-            return Shared::FILE_PICTURE;
+        if (m_type >= ShotUtils::SHOT_VIDEO && m_type <= ShotUtils::SHOT_VIDEO_3D)
+           return ShotUtils::FILE_VIDEO;
+        else if (m_type >= ShotUtils::SHOT_PICTURE && m_type <= ShotUtils::SHOT_PICTURE_NIGHTLAPSE)
+            return ShotUtils::FILE_PICTURE;
 
-         return Shared::FILE_UNKNOWN;
+         return ShotUtils::FILE_UNKNOWN;
     }
     unsigned getState() const { return m_state; }
-    void setState(Shared::ShotState state) { m_state = state; emit stateUpdated(); }
+    void setState(ShotUtils::ShotState state) { m_state = state; emit stateUpdated(); }
 
     Q_INVOKABLE bool isValid() const;
 

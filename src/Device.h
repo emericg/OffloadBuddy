@@ -26,7 +26,6 @@
 #include "DeviceUtils.h"
 #include "ShotProvider.h"
 #include "MediaStorage.h"
-#include "utils/utils_enums.h"
 
 #ifdef ENABLE_LIBMTP
 #include <libmtp.h>

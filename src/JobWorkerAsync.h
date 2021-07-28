@@ -30,13 +30,13 @@
 
 class QProcess;
 class Shot;
-struct Job;
+class JobTracker;
 
 /* ************************************************************************** */
 
 typedef struct commandWrapper
 {
-    Job *job = nullptr;
+    JobTracker *job = nullptr;
     unsigned job_element_index = -1;
 
     QString destFile;
@@ -48,7 +48,6 @@ typedef struct commandWrapper
 
 /*!
  * \brief The JobWorkerAsync class
- * Run async job and report progress
  */
 class JobWorkerAsync: public QObject
 {
@@ -74,7 +73,7 @@ public:
     void work();
 
 public slots:
-    void queueWork(Job *job);
+    void queueWork(JobTracker *job);
 
     void jobPlayPause();
     void jobAbort();

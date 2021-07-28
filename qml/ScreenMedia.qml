@@ -2,7 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 
 import ThemeEngine 1.0
-import com.offloadbuddy.shared 1.0
+import ShotUtils 1.0
 import "qrc:/js/UtilsString.js" as UtilsString
 
 Item {
@@ -115,7 +115,7 @@ Item {
     Keys.onPressed: {
         if (event.key === Qt.Key_Space) {
             if (screenMedia.shot) {
-                if (screenMedia.shot.fileType === Shared.FILE_VIDEO) {
+                if (screenMedia.shot.fileType === ShotUtils.FILE_VIDEO) {
                     event.accepted = true
                     contentOverview.setPlayPause()
                 }
@@ -221,14 +221,14 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 4
 
-                visible: (shot && shot.fileType !== Shared.FILE_VIDEO)
+                visible: (shot && shot.fileType !== ShotUtils.FILE_VIDEO)
 
                 ItemImageButton {
                     id: buttonTrim
                     width: 40
                     height: 40
                     source: "qrc:/assets/icons_material/baseline-timer-24px.svg"
-                    visible: (shot && shot.fileType === Shared.FILE_VIDEO)
+                    visible: (shot && shot.fileType === ShotUtils.FILE_VIDEO)
                     backgroundColor: Theme.colorForeground
                     onClicked: contentOverview.toggleTrim()
                 }
@@ -381,7 +381,7 @@ Item {
                 id: menuMap
                 height: parent.height
 
-                visible: (shot && shot.fileType === Shared.FILE_PICTURE && shot.latitude !== 0.0)
+                visible: (shot && shot.fileType === ShotUtils.FILE_PICTURE && shot.latitude !== 0.0)
 
                 menuText: qsTr("Map")
                 source: "qrc:/assets/icons_material/baseline-map-24px.svg"

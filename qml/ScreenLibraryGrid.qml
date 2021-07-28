@@ -2,7 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 
 import ThemeEngine 1.0
-import com.offloadbuddy.shared 1.0
+import SettingsUtils 1.0
 import "qrc:/js/UtilsString.js" as UtilsString
 
 Item {

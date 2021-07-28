@@ -28,8 +28,10 @@
 #include <libmtp.h>
 #endif
 
-#include <QFileInfo>
+#include <QDir>
 #include <QFile>
+#include <QFileInfo>
+#include <QStorageInfo>
 #include <QThread>
 #include <QMutexLocker>
 #include <QDebug>
@@ -73,7 +75,7 @@ bool JobWorkerSync::stop()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void JobWorkerSync::queueWork(Job *job)
+void JobWorkerSync::queueWork(JobTracker *job)
 {
     qDebug() << ">> JobWorkerSync::queueWork()";
 
@@ -101,22 +103,22 @@ void JobWorkerSync::work()
     m_jobsMutex.lock();
     while (!m_jobs.isEmpty())
     {
-        Job *current_job = m_jobs.dequeue();
+        JobTracker *current_job = m_jobs.dequeue();
         m_working = true;
         m_jobsMutex.unlock();
 
         if (current_job)
         {
-            emit jobStarted(current_job->id);
+            emit jobStarted(current_job->getId());
 
             for (auto element: current_job->elements)
             {
-                emit shotStarted(current_job->id, element->parent_shot);
+                emit shotStarted(current_job->getId(), element->parent_shot);
                 int element_status = 1;
 
                 // HANDLE TELEMETRY ////////////////////////////////////////////
 
-                if (current_job->type == JobUtils::JOB_TELEMETRY)
+                if (current_job->getType() == JobUtils::JOB_TELEMETRY)
                 {
                     if (element->parent_shot)
                     {
@@ -140,8 +142,8 @@ void JobWorkerSync::work()
 
                 // HANDLE OFFLOADS /////////////////////////////////////////////
 
-                if (current_job->type == JobUtils::JOB_MOVE ||
-                    current_job->type == JobUtils::JOB_OFFLOAD)
+                if (current_job->getType() == JobUtils::JOB_MOVE ||
+                    current_job->getType() == JobUtils::JOB_OFFLOAD)
                 {
                     for (auto const &file: element->files)
                     {
@@ -243,7 +245,7 @@ void JobWorkerSync::work()
 
                 // HANDLE DELETION /////////////////////////////////////////////
 
-                if (current_job->type == JobUtils::JOB_DELETE)
+                if (current_job->getType() == JobUtils::JOB_DELETE)
                 {
                     for (auto const &file: element->files)
                     {
@@ -296,12 +298,11 @@ void JobWorkerSync::work()
 
                 // Status
 
-                emit shotFinished(current_job->id, element_status, element->parent_shot);
-                emit jobProgress(current_job->id, progress);
+                emit shotFinished(current_job->getId(), element_status, element->parent_shot);
+                emit jobProgress(current_job->getId(), progress);
             }
 
-            emit jobFinished(current_job->id, JobUtils::JOB_STATE_DONE);
-            delete current_job;
+            emit jobFinished(current_job->getId(), JobUtils::JOB_STATE_DONE);
         }
         m_jobsMutex.lock();
     }

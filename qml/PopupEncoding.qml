@@ -2,7 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 
 import ThemeEngine 1.0
-import com.offloadbuddy.shared 1.0
+import ShotUtils 1.0
 import "qrc:/js/UtilsNumber.js" as UtilsNumber
 import "qrc:/js/UtilsString.js" as UtilsString
 import "qrc:/js/UtilsPath.js" as UtilsPath
@@ -98,11 +98,11 @@ Popup {
         } else {
             currentShot = shot
 
-            if (shot.shotType === Shared.SHOT_PICTURE) {
+            if (shot.shotType === ShotUtils.SHOT_PICTURE) {
                 titleText.text = qsTr("Image encoding")
                 encodingMode = "image"
-            } else if (shot.shotType === Shared.SHOT_PICTURE_MULTI || shot.shotType === Shared.SHOT_PICTURE_BURST ||
-                       shot.shotType === Shared.SHOT_PICTURE_TIMELAPSE || shot.shotType === Shared.SHOT_PICTURE_NIGHTLAPSE) {
+            } else if (shot.shotType === ShotUtils.SHOT_PICTURE_MULTI || shot.shotType === ShotUtils.SHOT_PICTURE_BURST ||
+                       shot.shotType === ShotUtils.SHOT_PICTURE_TIMELAPSE || shot.shotType === ShotUtils.SHOT_PICTURE_NIGHTLAPSE) {
                 titleText.text = qsTr("Timelapse encoding")
                 encodingMode = "timelapse"
 
@@ -162,7 +162,7 @@ Popup {
             return
         }
 
-        if (currentShot.shotType >= Shared.SHOT_PICTURE) {
+        if (currentShot.shotType >= ShotUtils.SHOT_PICTURE) {
             clipStartMs = -1
             clipDurationMs = -1
             clipCanBeCopied = false
@@ -1189,7 +1189,7 @@ Popup {
                         anchors.left: parent.left
                         anchors.right: parent.right
 
-                        visible: (shot.fileType === Shared.FILE_VIDEO && shot.hasGPS)
+                        visible: (shot.fileType === ShotUtils.FILE_VIDEO && shot.hasGPS)
 
                         Text {
                             id: titleWarning

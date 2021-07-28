@@ -2,7 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 
 import ThemeEngine 1.0
-import com.offloadbuddy.shared 1.0
+import ShotUtils 1.0
 import "qrc:/js/UtilsMedia.js" as UtilsMedia
 import "qrc:/js/UtilsString.js" as UtilsString
 
@@ -28,7 +28,7 @@ Item {
         orientation.text = UtilsMedia.orientationQtToString(shot.transformation)
 
         // FILE_PICTURE
-        if (shot.fileType === Shared.FILE_PICTURE) {
+        if (shot.fileType === ShotUtils.FILE_PICTURE) {
             mediaPreview.setImageMode()
 
             infosVideo.visible = false
@@ -59,7 +59,7 @@ Item {
         }
 
         // FILE_VIDEO
-        if (shot.fileType === Shared.FILE_VIDEO) {
+        if (shot.fileType === ShotUtils.FILE_VIDEO) {
             mediaPreview.setVideoMode()
 
             infosPicture.visible = false

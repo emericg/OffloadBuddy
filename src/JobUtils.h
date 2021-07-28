@@ -15,61 +15,62 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * \date      2018
+ * \date      2021
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#ifndef JOB_WORKER_SYNC_H
-#define JOB_WORKER_SYNC_H
+#ifndef JOB_UTILS_H
+#define JOB_UTILS_H
 /* ************************************************************************** */
 
 #include <QObject>
-#include <QQueue>
-#include <QMutex>
+#include <QMetaType>
+#include <QQmlApplicationEngine>
 
-class QThread;
-class Shot;
-class JobTracker;
-
-/* ************************************************************************** */
-
-/*!
- * \brief The JobWorker class
- */
-class JobWorkerSync: public QObject
+class JobUtils: public QObject
 {
     Q_OBJECT
 
-    bool m_working = false;
-    QQueue <JobTracker *> m_jobs;
-    QMutex m_jobsMutex;
-
-    QThread *m_thread = nullptr;
-
 public:
-    JobWorkerSync();
-    ~JobWorkerSync();
+    static void registerQML()
+    {
+        qRegisterMetaType<JobUtils::JobType>("JobUtils::JobType");
+        qRegisterMetaType<JobUtils::JobState>("JobUtils::JobState");
 
-    bool start();
-    bool stop();
-    bool isWorking();
+        qmlRegisterType<JobUtils>("JobUtils", 1, 0, "JobUtils");
+    }
 
-public slots:
-    void queueWork(JobTracker *job);
-    void work();
+    enum JobType
+    {
+        JOB_INVALID = 0,
 
-signals:
-    void startWorking();
+        JOB_FORMAT,
+        JOB_DELETE,
 
-    void jobStarted(int);
-    void jobProgress(int, float);
-    void jobFinished(int, int);
+        JOB_OFFLOAD,
+        JOB_MOVE,
 
-    void shotStarted(int, Shot *);
-    void shotFinished(int, int, Shot *);
+        JOB_CLIP,
+        JOB_ENCODE,
+        JOB_TELEMETRY,
 
-    void fileProduced(QString);
+        JOB_FIRMWARE_DOWNLOAD,
+        JOB_FIRMWARE_UPLOAD,
+    };
+    Q_ENUM(JobType)
+
+    enum JobState
+    {
+        JOB_STATE_QUEUED = 0,
+        JOB_STATE_WORKING,
+        JOB_STATE_PAUSED,
+
+        JOB_STATE_DONE = 8,
+        JOB_STATE_ERRORED,
+        JOB_STATE_ABORTED
+    };
+    Q_ENUM(JobState)
 };
 
 /* ************************************************************************** */
-#endif // JOB_WORKER_SYNC_H
+#endif // JOB_UTILS_H
