@@ -40,6 +40,7 @@ Popup {
         popupMode = 1
         mediaProvider = provider
         currentShot = shot
+        comboBoxDestination.updateDestinations()
         visible = true
     }
 
@@ -49,6 +50,7 @@ Popup {
         popupMode = 2
         recapEnabled = true
         mediaProvider = provider
+        comboBoxDestination.updateDestinations()
         visible = true
     }
 
@@ -260,19 +262,19 @@ Popup {
                         ListModel { id: cbDestinations }
                         model: cbDestinations
 
-                        Component.onCompleted: comboBoxDestination.updateDestinations()
-                        Connections {
-                            target: storageManager
-                            onDirectoriesUpdated: comboBoxDestination.updateDestinations()
-                        }
-
                         function updateDestinations() {
                             cbDestinations.clear()
 
                             for (var child in storageManager.directoriesList) {
                                 if (storageManager.directoriesList[child].available &&
                                     storageManager.directoriesList[child].directoryContent !== 1)
-                                    cbDestinations.append( { "text": storageManager.directoriesList[child].directoryPath } )
+                                {
+                                    if (currentShot && storageManager.directoriesList[child].directoryPath.includes(currentShot.folder)) {
+                                        // ignore this one
+                                    } else {
+                                        cbDestinations.append( { "text": storageManager.directoriesList[child].directoryPath } )
+                                    }
+                                }
                             }
                             cbDestinations.append( { "text": qsTr("Select path manually") } )
 
