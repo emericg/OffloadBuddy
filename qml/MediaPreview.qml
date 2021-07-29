@@ -1211,19 +1211,19 @@ Item {
                     onClicked: {
                         if (typeof shot === "undefined" || !shot) return
 
-                        var encodingParams = {}
                         var mediaProvider
-
                         if (typeof currentDevice !== "undefined")
-                            mediaProvider = currentDevice;
+                            mediaProvider = currentDevice
                         else if (typeof mediaLibrary !== "undefined")
-                            mediaProvider = mediaLibrary;
+                            mediaProvider = mediaLibrary
                         else
                             return
 
-                        encodingParams["screenshot"] = true;
-                        encodingParams["codec"] = "JPEG";
-                        encodingParams["quality"] = 1;
+                        var encodingParams = {}
+                        encodingParams["folder"] = shot.folder
+                        encodingParams["screenshot"] = true
+                        encodingParams["codec"] = "JPEG"
+                        encodingParams["quality"] = 3
                         encodingParams["clipStartMs"] = videoPlayer.position
 
                         if (mediaPreview.cropX > 0.0 || mediaPreview.cropY > 0.0 ||

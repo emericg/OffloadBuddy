@@ -172,7 +172,7 @@ void JobWorkerAsync::queueWork(JobTracker *job)
                 element->files.size() != 1)
             {
                 qDebug() << "This async job element got" << element->files.size() << "file(s), should not happen...";
-                continue;
+                //continue;
             }
 
             commandWrapper *ptiwrap = new commandWrapper;
