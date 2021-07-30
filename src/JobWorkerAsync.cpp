@@ -146,13 +146,13 @@ void JobWorkerAsync::jobAbort()
     if (m_childProcess)
     {
         m_childProcess->write("q\n");
-        //m_childProcess->kill();
 
         m_ffmpegcurrent->job->setState(JobUtils::JOB_STATE_ABORTED);
 
-        if (!m_childProcess->waitForFinished(4000))
+        if (!m_childProcess->waitForFinished(2000))
         {
             qDebug() << "jobAbort() current process won't die...";
+            m_childProcess->kill();
         }
     }
 }
@@ -566,26 +566,29 @@ void JobWorkerAsync::processFinished()
 {
     if (m_childProcess && m_ffmpegcurrent)
     {
-        JobUtils::JobState js = JobUtils::JOB_STATE_ERRORED;
+        JobUtils::JobState js = static_cast<JobUtils::JobState>(m_ffmpegcurrent->job->getState());
+
         int exitStatus = m_childProcess->exitStatus();
         int exitCode = m_childProcess->exitCode();
-
         qDebug() << "JobWorkerAsync::processFinished(" << exitStatus << "/" << exitCode << ")";
 
-        if (exitStatus == QProcess::NormalExit)
+        if (js != JobUtils::JOB_STATE_ABORTED)
         {
-            if (exitCode == 0)
+            if (exitStatus == QProcess::NormalExit)
             {
-                js = JobUtils::JOB_STATE_DONE;
+                if (exitCode == 0)
+                {
+                    js = JobUtils::JOB_STATE_DONE;
+                }
+                else
+                {
+                    js = JobUtils::JOB_STATE_ERRORED;
+                }
             }
-            else
+            else if (exitStatus == QProcess::CrashExit)
             {
                 js = JobUtils::JOB_STATE_ERRORED;
             }
-        }
-        else if (exitStatus == QProcess::CrashExit)
-        {
-            js = JobUtils::JOB_STATE_ERRORED;
         }
 
         if (m_ffmpegcurrent->job &&

@@ -2,6 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 
 import ThemeEngine 1.0
+import JobUtils 1.0
 import "qrc:/js/UtilsString.js" as UtilsString
 
 Rectangle {
@@ -31,26 +32,26 @@ Rectangle {
     }
 
     function updateJobStatus() {
-        if (job.state === 0) {
+        if (job.state === JobUtils.JOB_STATE_QUEUED) {
             imageStatus.source = "qrc:/assets/icons_material/baseline-schedule-24px.svg"
-        } else if (job.state === 1) {
-            if (job.typeStr === qsTr("ENCODING"))
+        } else if (job.state === JobUtils.JOB_STATE_WORKING) {
+            if (job.type === JobUtils.JOB_ENCODE)
                 imageStatus.source = "qrc:/assets/icons_material/baseline-memory-24px.svg"
-            else if (job.typeStr === qsTr("OFFLOADING") || job.typeStr === qsTr("MOVE"))
+            else if (job.type === JobUtils.JOB_OFFLOAD || job.type === JobUtils.JOB_MOVE)
                 imageStatus.source = "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
             else
                 imageStatus.source = "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
-        } else if (job.state === 2) {
+        } else if (job.state === JobUtils.JOB_STATE_PAUSED) {
             imageStatus.source = "qrc:/assets/icons_material/baseline-pause-24px.svg"
         }
 
         if (encodeAnimation.running || offloadAnimation.running) return
 
-        if (job.state === 8) {
+        if (job.state === JobUtils.JOB_STATE_DONE) {
             imageStatus.source = "qrc:/assets/icons_material/baseline-done-24px.svg"
-        } else if (job.state === 9) {
+        } else if (job.state === JobUtils.JOB_STATE_ERRORED) {
             imageStatus.source = "qrc:/assets/icons_material/baseline-error-24px.svg"
-        } else if (job.state === 10) {
+        } else if (job.state === JobUtils.JOB_STATE_ABORTED) {
             imageStatus.source = "qrc:/assets/icons_material/baseline-error-24px.svg"
         }
     }
@@ -86,7 +87,8 @@ Rectangle {
 
                 NumberAnimation on rotation {
                     id: encodeAnimation
-                    running: (job.state === 1 && job.typeStr === qsTr("ENCODING"))
+                    running: (job.state === JobUtils.JOB_STATE_WORKING &&
+                              job.type === JobUtils.JOB_ENCODE)
                     loops: Animation.Infinite
                     alwaysRunToEnd: true
                     onFinished: updateJobStatus()
@@ -98,7 +100,8 @@ Rectangle {
 
                 SequentialAnimation {
                     id: offloadAnimation
-                    running: (job.state === 1 && job.typeStr === qsTr("OFFLOADING"))
+                    running: (job.state === JobUtils.JOB_STATE_WORKING &&
+                              job.type === JobUtils.JOB_OFFLOAD)
                     loops: Animation.Infinite
                     alwaysRunToEnd: true
                     onFinished: updateJobStatus()
@@ -165,7 +168,7 @@ Rectangle {
             anchors.rightMargin: 12
             anchors.verticalCenter: parent.verticalCenter
 
-            height: 12
+            height: 10
             value: job.progress
             colorBackground: Theme.colorBackground
         }
@@ -201,11 +204,11 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
 
                 visible: ((Qt.platform.os === "linux" || Qt.platform.os === "osx") &&
-                          (job.state === 1 || job.state === 2)) // running
+                          (job.state === JobUtils.JOB_STATE_WORKING || job.state === JobUtils.JOB_STATE_PAUSED)) // running
 
                 highlightMode: "color"
-                source: job.state === 1 ? "qrc:/assets/icons_material/outline-pause_circle-24px.svg" :
-                                          "qrc:/assets/icons_material/outline-play_circle-24px.svg"
+                source: job.state === JobUtils.JOB_STATE_WORKING ? "qrc:/assets/icons_material/outline-pause_circle-24px.svg"
+                                                                 : "qrc:/assets/icons_material/outline-play_circle-24px.svg"
                 onClicked: jobManager.playPauseJob(job.id)
             }
 
@@ -216,7 +219,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
 
                 visible: ((Qt.platform.os === "linux" || Qt.platform.os === "osx") &&
-                          (job.state === 1 || job.state === 2)) // running
+                          (job.state === JobUtils.JOB_STATE_WORKING || job.state === JobUtils.JOB_STATE_PAUSED)) // running
 
                 highlightMode: "color"
                 source: "qrc:/assets/icons_material/outline-cancel_circle-24px.svg"
@@ -276,7 +279,7 @@ Rectangle {
                 }
 
                 Row {
-                    visible: job.state >= 1
+                    visible: job.state >= JobUtils.JOB_STATE_WORKING
                     spacing: 8
 
                     Text {
@@ -290,7 +293,7 @@ Rectangle {
                 }
 
                 Row {
-                    visible: job.state >= 8
+                    visible: job.state >= JobUtils.JOB_STATE_DONE
                     spacing: 8
 
                     Text {

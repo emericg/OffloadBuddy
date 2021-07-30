@@ -153,9 +153,6 @@ class JobTracker: public QObject
     //ShotProvider *m_shot_provider = nullptr;
     QString m_destination;
 
-    // settings
-    bool m_autoDelete = false;
-
     // tracking
     float m_percent = 0.0;
 
@@ -171,10 +168,13 @@ Q_SIGNALS:
 
 public:
     // merging with Job
+
+    // settings
     JobSettingsDelete settings_delete;
     JobSettingsOffload settings_offload;
     JobSettingsTelemetry settings_telemetry;
     JobSettingsEncode settings_encode;
+
     std::vector<JobElement *> elements;
     int totalFiles = 0;
     int64_t totalSize = 0;
@@ -207,15 +207,13 @@ public:
     Device *getDevice() const { return m_source_device; }
     void setLibrary(MediaLibrary *ml) { m_source_library = ml; }
     MediaLibrary *getLibrary() const { return m_source_library; }
+
     // TODO unify through a ShotProvider ?
     //void setProvider(ShotProvider *sp) { m_shot_provider = sp; }
     //ShotProvider *getProvider() const { return m_shot_provider; }
 
     void setDestination(QString dest) { if (m_type != JobUtils::JOB_DELETE) m_destination = dest; }
     QString getDestination() const { return m_destination; }
-
-    void setAutoDelete(bool d) { m_autoDelete = d; }
-    bool getAutoDelete() const { return m_autoDelete; }
 
     int isRunning() const { return (m_state & JobUtils::JOB_STATE_WORKING); }
     int isPaused() const { return (m_state & JobUtils::JOB_STATE_PAUSED); }

@@ -139,7 +139,8 @@ public slots:
     void jobStarted(int);
     void jobProgress(int, float);
     void jobFinished(int, int);
-    //void jobErrored(int, int); // TODO?
+    void jobAborted(int, int); // TODO?
+    void jobErrored(int, int); // TODO?
 
     void shotStarted(int, Shot *);
     void shotFinished(int, int, Shot *);

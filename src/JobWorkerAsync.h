@@ -82,12 +82,15 @@ signals:
     void jobStarted(int);
     void jobProgress(int, float);
     void jobFinished(int, int);
+    void jobAborted(int, int);
+    void jobErrored(int, int);
 
     void jobAborted();
     void jobErrored();
 
     void shotStarted(int, Shot *);
     void shotFinished(int, int, Shot *);
+    void shotErrored(int, int, Shot *);
 
     void fileProduced(QString);
 };

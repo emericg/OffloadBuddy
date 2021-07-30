@@ -159,6 +159,11 @@ Popup {
             visible: (recapEnabled && shots_files.length)
             color: Theme.colorForeground
 
+            MouseArea {
+                anchors.fill: parent
+                onClicked: recapOpened = !recapOpened
+            }
+
             Text {
                 anchors.left: parent.left
                 anchors.leftMargin: 24

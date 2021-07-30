@@ -190,7 +190,6 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
     JobTracker *tracker = new JobTracker(rand(), type, this);
     tracker->setDevice(dev);
     tracker->setLibrary(lib);
-    tracker->setAutoDelete(autoDelete);
 
     if (sett_delete) tracker->settings_delete = *sett_delete;
     if (sett_offload) tracker->settings_offload = *sett_offload;
@@ -282,8 +281,10 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
                 connect(m_selected_worker, SIGNAL(jobProgress(int,float)), this, SLOT(jobProgress(int,float)));
                 connect(m_selected_worker, SIGNAL(jobStarted(int)), this, SLOT(jobStarted(int)));
                 connect(m_selected_worker, SIGNAL(jobFinished(int,int)), this, SLOT(jobFinished(int,int)));
+                connect(m_selected_worker, SIGNAL(jobErrored(int,int)), this, SLOT(jobErrored(int,int)));
                 connect(m_selected_worker, SIGNAL(shotStarted(int,Shot*)), this, SLOT(shotStarted(int,Shot*)));
                 connect(m_selected_worker, SIGNAL(shotFinished(int,int,Shot*)), this, SLOT(shotFinished(int,int,Shot*)));
+                //connect(m_selected_worker, SIGNAL(shotErrored(int,int,Shot*)), this, SLOT(shotErrored(int,int,Shot*)));
                 connect(m_selected_worker, SIGNAL(fileProduced(QString)), this, SLOT(newFile(QString)));
 
                 status = true;
@@ -312,8 +313,10 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
                 connect(m_selected_worker, SIGNAL(jobProgress(int,float)), this, SLOT(jobProgress(int,float)));
                 connect(m_selected_worker, SIGNAL(jobStarted(int)), this, SLOT(jobStarted(int)));
                 connect(m_selected_worker, SIGNAL(jobFinished(int,int)), this, SLOT(jobFinished(int,int)));
+                connect(m_selected_worker, SIGNAL(jobErrored(int,int)), this, SLOT(jobErrored(int,int)));
                 connect(m_selected_worker, SIGNAL(shotStarted(int,Shot*)), this, SLOT(shotStarted(int,Shot*)));
                 connect(m_selected_worker, SIGNAL(shotFinished(int,int,Shot*)), this, SLOT(shotFinished(int,int,Shot*)));
+                //connect(m_selected_worker, SIGNAL(shotErrored(int,int,Shot*)), this, SLOT(shotErrored(int,int,Shot*)));
                 connect(m_selected_worker, SIGNAL(fileProduced(QString)), this, SLOT(newFile(QString)));
 
                 status = true;
@@ -417,6 +420,18 @@ void JobManager::jobFinished(int jobId, int jobState)
     }
 }
 
+void JobManager::jobAborted(int jobId, int jobState)
+{
+    //
+}
+
+void JobManager::jobErrored(int jobId, int jobState)
+{
+    //
+}
+
+/* ************************************************************************** */
+
 void JobManager::shotStarted(int jobId, Shot *shot)
 {
     if (!shot)
@@ -467,7 +482,7 @@ void JobManager::shotFinished(int jobId, int status, Shot *shot)
                 switch (j->getType())
                 {
                 case JobUtils::JOB_OFFLOAD:
-                    if (j->getAutoDelete())
+                    if (j->settings_offload.autoDelete)
                         addJob(JobUtils::JOB_DELETE, j->getDevice(), j->getLibrary(), shot);
                     else
                         shot->setState(ShotUtils::SHOT_STATE_OFFLOADED);
