@@ -84,7 +84,7 @@ $ qmake DEFINES+=USE_CONTRIBS CONFIG+=release
 $ make
 ```
 
-## Third party projects used by OffloadBuddy
+#### Third party projects used by OffloadBuddy
 
 * Qt [website](https://www.qt.io) ([LGPL 3](https://www.gnu.org/licenses/lgpl-3.0.txt))
 * MiniVideo [website](https://github.com/emericg/MiniVideo) ([LGPL 3](https://www.gnu.org/licenses/lgpl-3.0.txt))

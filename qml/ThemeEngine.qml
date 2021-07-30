@@ -123,7 +123,7 @@ Item {
 
             // "LIGHT AND WARM"
 
-            colorHeader =               "#CBCBCB"
+            colorHeader =               "#D0D0D0"
             colorHeaderContent =        "#353637"
             colorHeaderHighlight =      ""
 
@@ -135,7 +135,7 @@ Item {
             colorActionbarContent =     "white"
             colorActionbarHighlight =   "#73AD00"
 
-            colorBackground =           "#EEE"
+            colorBackground =           "#F0F0F0"
             colorForeground =           "#E0E0E0"
 
             colorPrimary =              "#FFCA28"
