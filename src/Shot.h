@@ -166,6 +166,7 @@ class Shot: public QObject
     Q_OBJECT
 
     Q_PROPERTY(unsigned state READ getState NOTIFY stateUpdated)
+    Q_PROPERTY(bool valid READ isValid NOTIFY stateUpdated)
 
     Q_PROPERTY(unsigned shotType READ getShotType NOTIFY shotUpdated)
     Q_PROPERTY(unsigned fileType READ getFileType NOTIFY shotUpdated)

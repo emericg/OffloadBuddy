@@ -439,13 +439,18 @@ QImage Shot::getPreviewMtp()
 
 bool Shot::isValid() const
 {
-    if (m_type >= ShotUtils::SHOT_VIDEO && m_type <= ShotUtils::SHOT_VIDEO_3D)
+    if (width > 0 && height > 0)
     {
-        if (m_videos.size() > 0) return true;
-    }
-    else if (m_type >= ShotUtils::SHOT_PICTURE && m_type <= ShotUtils::SHOT_PICTURE_NIGHTLAPSE)
-    {
-        if (m_pictures.size() > 0) return true;
+        if (m_type >= ShotUtils::SHOT_VIDEO && m_type <= ShotUtils::SHOT_VIDEO_3D)
+        {
+            if (m_videos.size() > 0)
+                return true;
+        }
+        else if (m_type >= ShotUtils::SHOT_PICTURE && m_type <= ShotUtils::SHOT_PICTURE_NIGHTLAPSE)
+        {
+            if (m_pictures.size() > 0)
+                return true;
+        }
     }
 
     return false;

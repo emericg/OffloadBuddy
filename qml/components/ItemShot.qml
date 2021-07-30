@@ -5,6 +5,7 @@ import QtGraphicalEffects 1.12 // Qt5
 
 import ThemeEngine 1.0
 import ShotUtils 1.0
+import ItemImage 1.0
 import "qrc:/js/UtilsMedia.js" as UtilsMedia
 import "qrc:/js/UtilsString.js" as UtilsString
 
@@ -71,7 +72,7 @@ Rectangle {
         }
 
         text_left.visible = false
-        if (fileType === ShotUtils.FILE_VIDEO) {
+        if (shot.fileType === ShotUtils.FILE_VIDEO) {
             if (shot.transformation === 4) {
                 imageFs.rotation = 90
                 imageFs.scale = cellFormat
@@ -81,16 +82,16 @@ Rectangle {
                 imageFs.rotation = 270
                 imageFs.scale = cellFormat
             }
-            if (duration > 0) {
+            if (shot.duration > 0) {
                 text_left.visible = true
-                text_left.text = UtilsString.durationToString_ISO8601_compact_loose(duration)
+                text_left.text = UtilsString.durationToString_ISO8601_compact_loose(shot.duration)
             }
             if (shot.chapterCount > 1)
                 icon_left.source = "qrc:/assets/icons_material/baseline-video_library-24px.svg"
             else
                 icon_left.source = "qrc:/assets/icons_material/baseline-video-24px.svg"
-        } else if (fileType === ShotUtils.FILE_PICTURE) {
-            if (shotType === ShotUtils.SHOT_PICTURE_BURST) {
+        } else if (shot.fileType === ShotUtils.FILE_PICTURE) {
+            if (shot.shotType === ShotUtils.SHOT_PICTURE_BURST) {
                 text_left.visible = true
                 text_left.text = duration
                 icon_left.source = "qrc:/assets/icons_material/baseline-burst_mode-24px.svg"
@@ -108,7 +109,8 @@ Rectangle {
 
     function openShot(mouse) {
         if (mouse.button === Qt.LeftButton) {
-            if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== ShotUtils.STORAGE_MTP)) {
+            if (!shotDevice ||
+                (shotDevice && shotDevice.deviceStorage !== ShotUtils.STORAGE_MTP)) {
                 // Show the "shot details" screen
                 actionMenu.visible = false
                 shotsView.currentIndex = index
@@ -128,7 +130,7 @@ Rectangle {
     function openMenu() {
         var move = false
         var offload = false
-        var encode = true
+        var encode = shot.valid
         var telemetry_gpmf = false
         var telemetry_gps = false
         var file = true
@@ -141,7 +143,6 @@ Rectangle {
             if (shot.hasGPS)
                 telemetry_gps = true
         } else if (shot.fileType === ShotUtils.FILE_PICTURE) { // all kind of photos
-            //
             if (shot.shotType > ShotUtils.SHOT_PICTURE) { // only multi picture
                 //
             }
@@ -200,7 +201,8 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
 
         color: Theme.colorIcon
-        source: "qrc:/assets/icons_material/baseline-hourglass_empty-24px.svg"
+        source: shot.valid ? "qrc:/assets/icons_material/baseline-hourglass_empty-24px.svg"
+                           : "qrc:/assets/icons_material/baseline-broken_image-24px.svg"
     }
 
     // TODO loader between imageFs and imageMtp
@@ -480,12 +482,12 @@ Rectangle {
 
                 if (lastIndex < index) {
                     for (var i = lastIndex; i <= index; i++)
-                        mediaGrid.selectFile(i);
+                        mediaGrid.selectFile(i)
                 } else if (lastIndex >= index) {
                     for (var j = index; j <= lastIndex; j++)
-                        mediaGrid.selectFile(j);
+                        mediaGrid.selectFile(j)
                 }
-                return;
+                return
             }
 
             // multi selection (add)
@@ -495,12 +497,12 @@ Rectangle {
                 //console.log("ItemShot::onClicked::Qt.MiddleButton")
 
                 if (!shot.selected) {
-                    mediaGrid.selectFile(index);
+                    mediaGrid.selectFile(index)
                 } else {
-                    mediaGrid.deselectFile(index);
+                    mediaGrid.deselectFile(index)
                 }
                 actionMenu.visible = false
-                return;
+                return
             }
 
             // action menu
@@ -521,9 +523,9 @@ Rectangle {
 
             // multi selection
             if (!shot.selected) {
-                mediaGrid.selectFile(index);
+                mediaGrid.selectFile(index)
             } else {
-                mediaGrid.deselectFile(index);
+                mediaGrid.deselectFile(index)
             }
         }
     }
