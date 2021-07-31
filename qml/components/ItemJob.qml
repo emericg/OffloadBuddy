@@ -32,27 +32,22 @@ Rectangle {
     }
 
     function updateJobStatus() {
+
+        // status
+        //if (encodeAnimation.running || offloadAnimation.running) return
+
         if (job.state === JobUtils.JOB_STATE_QUEUED) {
             imageStatus.source = "qrc:/assets/icons_material/baseline-schedule-24px.svg"
         } else if (job.state === JobUtils.JOB_STATE_WORKING) {
-            if (job.type === JobUtils.JOB_ENCODE)
-                imageStatus.source = "qrc:/assets/icons_material/baseline-memory-24px.svg"
-            else if (job.type === JobUtils.JOB_OFFLOAD || job.type === JobUtils.JOB_MOVE)
-                imageStatus.source = "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
-            else
-                imageStatus.source = "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
+            imageStatus.source = "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
         } else if (job.state === JobUtils.JOB_STATE_PAUSED) {
             imageStatus.source = "qrc:/assets/icons_material/baseline-pause-24px.svg"
-        }
-
-        if (encodeAnimation.running || offloadAnimation.running) return
-
-        if (job.state === JobUtils.JOB_STATE_DONE) {
+        } else if (job.state === JobUtils.JOB_STATE_DONE) {
             imageStatus.source = "qrc:/assets/icons_material/baseline-done-24px.svg"
         } else if (job.state === JobUtils.JOB_STATE_ERRORED) {
             imageStatus.source = "qrc:/assets/icons_material/baseline-error-24px.svg"
         } else if (job.state === JobUtils.JOB_STATE_ABORTED) {
-            imageStatus.source = "qrc:/assets/icons_material/baseline-error-24px.svg"
+            imageStatus.source = "qrc:/assets/icons_material/baseline-cancel-24px.svg"
         }
     }
 
@@ -104,11 +99,54 @@ Rectangle {
                               job.type === JobUtils.JOB_OFFLOAD)
                     loops: Animation.Infinite
                     alwaysRunToEnd: true
-                    onFinished: updateJobStatus()
 
+                    onFinished: updateJobStatus()
                     onStopped: imageStatus.y = 0
+
                     NumberAnimation {
                         target: imageStatus
+                        property: "y"
+                        from: -40
+                        to: 40
+                        duration: 1000
+                    }
+                }
+            }
+
+            ImageSvg {
+                id: imageJob
+                width: 32
+                height: 32
+                anchors.verticalCenter: parent.verticalCenter
+
+                source: {
+                    if (job.type === JobUtils.JOB_ENCODE)
+                        return "qrc:/assets/icons_material/baseline-memory-24px.svg"
+                    else if (job.type === JobUtils.JOB_OFFLOAD || job.type === JobUtils.JOB_MOVE)
+                        return "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
+                    else
+                        return "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
+                }
+                color: Theme.colorIcon
+
+                SequentialAnimation on opacity {
+                    running: (job.state === JobUtils.JOB_STATE_WORKING &&
+                              job.type === JobUtils.JOB_ENCODE)
+                    loops: Animation.Infinite
+                    alwaysRunToEnd: true
+
+                    PropertyAnimation { to: 0.5; duration: 750; }
+                    PropertyAnimation { to: 1; duration: 750; }
+                }
+                SequentialAnimation {
+                    running: (job.state === JobUtils.JOB_STATE_WORKING &&
+                              job.type === JobUtils.JOB_OFFLOAD)
+                    loops: Animation.Infinite
+                    //alwaysRunToEnd: true
+                    onStopped: imageJob.y = 0
+
+                    NumberAnimation {
+                        target: imageJob
                         property: "y"
                         from: -40
                         to: 40
@@ -196,7 +234,7 @@ Rectangle {
                     onTriggered: parent.text = job.eta + qsTr("s", "short for second")
                 }
             }
-/*
+
             ItemImageButton {
                 id: rectanglePlayPause
                 width: 40
@@ -222,12 +260,24 @@ Rectangle {
                           (job.state === JobUtils.JOB_STATE_WORKING || job.state === JobUtils.JOB_STATE_PAUSED)) // running
 
                 highlightMode: "color"
-                source: "qrc:/assets/icons_material/outline-cancel_circle-24px.svg"
+                source: "qrc:/assets/icons_material/outline-stop_circle-24px.svg"
                 onClicked: jobManager.stopJob(job.id)
+            }
+/*
+            ItemImageButton {
+                id: rectangleOpenFile
+                width: 40
+                height: 40
+                anchors.verticalCenter: parent.verticalCenter
+
+                visible: job.destination.length
+                highlightMode: "color"
+                source: "qrc:/assets/icons_material/baseline-folder-24px.svg"
+                onClicked: job.openDestinationFile()
             }
 */
             ItemImageButton {
-                id: rectangleOpen
+                id: rectangleOpenFolder
                 width: 40
                 height: 40
                 anchors.verticalCenter: parent.verticalCenter
@@ -235,7 +285,7 @@ Rectangle {
                 visible: job.destination.length
                 highlightMode: "color"
                 source: "qrc:/assets/icons_material/baseline-folder_open-24px.svg"
-                onClicked: job.openDestination()
+                onClicked: job.openDestinationFolder()
             }
         }
     }
@@ -265,7 +315,6 @@ Rectangle {
                 spacing: 24
 
                 Row {
-                    visible: false
                     spacing: 8
 
                     Text {
@@ -273,7 +322,7 @@ Rectangle {
                         color: Theme.colorText
                     }
                     Text {
-                        text: job.state
+                        text: job.stateStr
                         color: Theme.colorSubText
                     }
                 }

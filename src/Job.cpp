@@ -67,7 +67,7 @@ QString JobTracker::getStateString() const
 
 /* ************************************************************************** */
 
-void JobTracker::openDestination() const
+void JobTracker::openDestinationFile() const
 {
     QFileInfo d(m_destination);
     if (!m_destination.isEmpty() && d.exists())
@@ -75,4 +75,14 @@ void JobTracker::openDestination() const
         QDesktopServices::openUrl(QUrl::fromLocalFile(m_destination));
     }
 }
+
+void JobTracker::openDestinationFolder() const
+{
+    QFileInfo d(m_destination);
+    if (!m_destination.isEmpty() && d.exists())
+    {
+        QDesktopServices::openUrl(QUrl::fromLocalFile(m_destination));
+    }
+}
+
 /* ************************************************************************** */

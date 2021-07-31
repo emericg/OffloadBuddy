@@ -231,7 +231,8 @@ public:
     QDateTime getStartDate() { return m_start; }
     QDateTime getStopDate() { return m_stop; }
 
-    Q_INVOKABLE void openDestination() const;
+    Q_INVOKABLE void openDestinationFile() const;
+    Q_INVOKABLE void openDestinationFolder() const;
 };
 
 /* ************************************************************************** */
