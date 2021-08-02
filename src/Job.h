@@ -93,6 +93,7 @@ typedef struct JobSettingsEncode
     bool deshake = false;
 
     bool screenshot = false;
+    bool telemetry = false;
 
     int64_t startMs = -1;
     int64_t durationMs = -1;
@@ -127,7 +128,8 @@ class JobTracker: public QObject
     Q_PROPERTY(QString stateStr READ getStateString NOTIFY jobUpdated)
 
     Q_PROPERTY(QStringList files READ getFiles CONSTANT)
-    Q_PROPERTY(QString destination READ getDestination CONSTANT)
+    Q_PROPERTY(QString destinationFile READ getDestinationFile NOTIFY jobUpdated)
+    Q_PROPERTY(QString destinationFolder READ getDestinationFolder NOTIFY jobUpdated)
 
     Q_PROPERTY(bool running READ isRunning NOTIFY jobUpdated)
     Q_PROPERTY(bool paused READ isPaused NOTIFY jobUpdated)
@@ -150,14 +152,13 @@ class JobTracker: public QObject
 
     Device *m_source_device = nullptr;
     MediaLibrary *m_source_library = nullptr;
-    //ShotProvider *m_shot_provider = nullptr;
-    QString m_destination;
+    //ShotProvider *m_shot_provider = nullptr; // TODO
+
+    QString m_destinationFile;
+    QString m_destinationFolder;
 
     // tracking
     float m_percent = 0.0;
-
-    int m_elements_index = 0;
-    int m_elements_total = 0;
 
     QDateTime m_start;
     QDateTime m_stop;
@@ -167,8 +168,6 @@ Q_SIGNALS:
     void jobUpdated();
 
 public:
-    // merging with Job
-
     // settings
     JobSettingsDelete settings_delete;
     JobSettingsOffload settings_offload;
@@ -176,6 +175,8 @@ public:
     JobSettingsEncode settings_encode;
 
     std::vector<JobElement *> elements;
+    int elements_index = 0;
+
     int totalFiles = 0;
     int64_t totalSize = 0;
 
@@ -197,11 +198,10 @@ public:
     int getState() const { return m_state; }
     QString getStateString() const;
 
-    void setName(const QString &name) { m_name = name; Q_EMIT jobUpdated(); }
-    QString getName() const { return m_name; }
+    int isRunning() const { return (m_state & JobUtils::JOB_STATE_WORKING); }
+    int isPaused() const { return (m_state & JobUtils::JOB_STATE_PAUSED); }
 
-    void setFiles(QStringList &fl) { m_files = fl; }
-    QStringList getFiles() const { return m_files; }
+    ////////
 
     void setDevice(Device *d) { m_source_device = d; }
     Device *getDevice() const { return m_source_device; }
@@ -212,16 +212,23 @@ public:
     //void setProvider(ShotProvider *sp) { m_shot_provider = sp; }
     //ShotProvider *getProvider() const { return m_shot_provider; }
 
-    void setDestination(QString dest) { if (m_type != JobUtils::JOB_DELETE) m_destination = dest; }
-    QString getDestination() const { return m_destination; }
+    ////////
 
-    int isRunning() const { return (m_state & JobUtils::JOB_STATE_WORKING); }
-    int isPaused() const { return (m_state & JobUtils::JOB_STATE_PAUSED); }
+    void setName(const QString &name) { m_name = name; Q_EMIT jobUpdated(); }
+    QString getName() const { return m_name; }
 
-    void setElementsTotal(int e) { m_elements_total = e; Q_EMIT jobUpdated(); }
-    int getElementsTotal() { return m_elements_total; }
-    void setElementsIndex(int i) { m_elements_index = i; Q_EMIT jobUpdated(); }
-    int getElementsIndex() { return m_elements_index; }
+    void setFiles(QStringList &fl) { m_files = fl; }
+    QStringList getFiles() const { return m_files; }
+
+    void setDestinationFile(QString dest) { m_destinationFile = dest; }
+    QString getDestinationFile() const { return m_destinationFile; }
+
+    void setDestinationFolder(QString dest) { if (m_type != JobUtils::JOB_DELETE) m_destinationFolder = dest; }
+    QString getDestinationFolder() const { return m_destinationFolder; }
+
+    int getElementsTotal() { return elements.size(); }
+    void setElementsIndex(int i) { elements_index = i; Q_EMIT jobUpdated(); }
+    int getElementsIndex() { return elements_index; }
 
     void setProgress(float p) { m_percent = p; Q_EMIT jobUpdated(); }
     float getProgress() { return m_percent / 100.f; }

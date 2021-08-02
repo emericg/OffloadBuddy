@@ -231,7 +231,7 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
         tracker->setName(tempname);
 
         tracker->setFiles(ssll);
-        tracker->setDestination(tracker->elements.front()->destination_dir);
+        tracker->setDestinationFolder(tracker->elements.front()->destination_dir);
     }
 
     m_trackedJobs.push_back(tracker);
@@ -363,12 +363,18 @@ void JobManager::clearFinishedJobs()
 
 void JobManager::playPauseJob(int jobId)
 {
-    //
+    if (m_job_cpu)
+    {
+        m_job_cpu->jobPlayPause();
+    }
 }
 
 void JobManager::stopJob(int jobId)
 {
-    //
+    if (m_job_cpu)
+    {
+        m_job_cpu->jobAbort();
+    }
 }
 
 /* ************************************************************************** */

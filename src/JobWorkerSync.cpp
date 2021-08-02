@@ -110,11 +110,15 @@ void JobWorkerSync::work()
         if (current_job)
         {
             emit jobStarted(current_job->getId());
+            int index = -1;
 
             for (auto element: current_job->elements)
             {
                 emit shotStarted(current_job->getId(), element->parent_shot);
                 int element_status = 1;
+
+                index++;
+                current_job->setElementsIndex(index);
 
                 // HANDLE TELEMETRY ////////////////////////////////////////////
 
@@ -138,6 +142,19 @@ void JobWorkerSync::work()
                                                     current_job->settings_telemetry.EGM96);
                         }
                     }
+                }
+
+                if (current_job->getType() == JobUtils::JOB_OFFLOAD && current_job->settings_offload.extractTelemetry)
+                {
+                    // "auto" telemetry extraction
+                    element->parent_shot->parseTelemetry();
+                    element->parent_shot->exportGps(element->destination_dir, 0,
+                                            current_job->settings_telemetry.gps_frequency,
+                                            current_job->settings_telemetry.EGM96);
+                    element->parent_shot->exportTelemetry(element->destination_dir, 0,
+                                            current_job->settings_telemetry.telemetry_frequency,
+                                            current_job->settings_telemetry.gps_frequency,
+                                            current_job->settings_telemetry.EGM96);
                 }
 
                 // HANDLE OFFLOADS /////////////////////////////////////////////

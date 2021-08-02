@@ -69,19 +69,19 @@ QString JobTracker::getStateString() const
 
 void JobTracker::openDestinationFile() const
 {
-    QFileInfo d(m_destination);
-    if (!m_destination.isEmpty() && d.exists())
+    QFileInfo d(m_destinationFile);
+    if (!m_destinationFile.isEmpty() && d.exists())
     {
-        QDesktopServices::openUrl(QUrl::fromLocalFile(m_destination));
+        QDesktopServices::openUrl(QUrl::fromLocalFile(m_destinationFile));
     }
 }
 
 void JobTracker::openDestinationFolder() const
 {
-    QFileInfo d(m_destination);
-    if (!m_destination.isEmpty() && d.exists())
+    QFileInfo d(m_destinationFolder);
+    if (!m_destinationFolder.isEmpty() && d.exists())
     {
-        QDesktopServices::openUrl(QUrl::fromLocalFile(m_destination));
+        QDesktopServices::openUrl(QUrl::fromLocalFile(m_destinationFolder));
     }
 }
 

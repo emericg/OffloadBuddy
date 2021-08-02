@@ -1189,7 +1189,7 @@ Popup {
                     ////////
 
                     Item {
-                        id: rectangleMetadataWarning
+                        id: rectangleTelemetryWarning
                         height: 48
                         anchors.left: parent.left
                         anchors.right: parent.right
@@ -1197,12 +1197,12 @@ Popup {
                         visible: (shot.fileType === ShotUtils.FILE_VIDEO && shot.hasGPS)
 
                         Text {
-                            id: titleWarning
+                            id: telemetryWarning
                             width: popupEncoding.legendWidth
                             anchors.left: parent.left
                             anchors.verticalCenter: parent.verticalCenter
 
-                            text: qsTr("Be aware")
+                            text: qsTr("Telemetry")
                             font.pixelSize: 16
                             color: Theme.colorSubText
                         }
@@ -1213,7 +1213,7 @@ Popup {
                             anchors.right: parent.right
                             anchors.verticalCenter: parent.verticalCenter
 
-                            text: qsTr("GPS and telemetry tracks will not be caried to the reencoded files. You can export them separately if you want.")
+                            text: qsTr("GPS and telemetry tracks will NOT be caried to the reencoded files. You can export them separately if you want.")
                             font.pixelSize: 14
                             wrapMode: Text.WordWrap
                             color: Theme.colorSubText
@@ -1536,6 +1536,7 @@ Popup {
                         settingsEncoding["scale"] = "-2:" + selectorGifRes.res;
                         if (clipStartMs <= 0) settingsEncoding["clipStartMs"] = 0;
                         if (clipDurationMs <= 0) settingsEncoding["clipDurationMs"] = currentShot.duration;
+                        if (currentShot.shotType > ShotUtils.SHOT_PICTURE)settingsEncoding["clipDurationMs"] = currentShot.duration*33;
                         if (clipCropX > 0 || clipCropY > 0 ||
                             (clipCropW > 0 && clipCropW < currentShot.width) ||
                             (clipCropH > 0 && clipCropH < currentShot.height)) {

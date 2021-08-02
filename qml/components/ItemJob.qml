@@ -32,10 +32,6 @@ Rectangle {
     }
 
     function updateJobStatus() {
-
-        // status
-        //if (encodeAnimation.running || offloadAnimation.running) return
-
         if (job.state === JobUtils.JOB_STATE_QUEUED) {
             imageStatus.source = "qrc:/assets/icons_material/baseline-schedule-24px.svg"
         } else if (job.state === JobUtils.JOB_STATE_WORKING) {
@@ -43,9 +39,9 @@ Rectangle {
         } else if (job.state === JobUtils.JOB_STATE_PAUSED) {
             imageStatus.source = "qrc:/assets/icons_material/baseline-pause-24px.svg"
         } else if (job.state === JobUtils.JOB_STATE_DONE) {
-            imageStatus.source = "qrc:/assets/icons_material/baseline-done-24px.svg"
+            imageStatus.source = "qrc:/assets/icons_material/outline-check_circle-24px.svg"
         } else if (job.state === JobUtils.JOB_STATE_ERRORED) {
-            imageStatus.source = "qrc:/assets/icons_material/baseline-error-24px.svg"
+            imageStatus.source = "qrc:/assets/icons_material/baseline-report-24px.svg"
         } else if (job.state === JobUtils.JOB_STATE_ABORTED) {
             imageStatus.source = "qrc:/assets/icons_material/baseline-cancel-24px.svg"
         }
@@ -67,51 +63,9 @@ Rectangle {
         anchors.rightMargin: 12
 
         Row {
-            id: rowTexts
+            id: rowStatus
             anchors.verticalCenter: parent.verticalCenter
             spacing: 12
-
-            ImageSvg {
-                id: imageStatus
-                width: 32
-                height: 32
-                anchors.verticalCenter: parent.verticalCenter
-
-                source: "qrc:/assets/icons_material/baseline-schedule-24px.svg"
-                color: Theme.colorIcon
-
-                NumberAnimation on rotation {
-                    id: encodeAnimation
-                    running: (job.state === JobUtils.JOB_STATE_WORKING &&
-                              job.type === JobUtils.JOB_ENCODE)
-                    loops: Animation.Infinite
-                    alwaysRunToEnd: true
-                    onFinished: updateJobStatus()
-
-                    duration: 2000
-                    from: 0
-                    to: 360
-                }
-
-                SequentialAnimation {
-                    id: offloadAnimation
-                    running: (job.state === JobUtils.JOB_STATE_WORKING &&
-                              job.type === JobUtils.JOB_OFFLOAD)
-                    loops: Animation.Infinite
-                    alwaysRunToEnd: true
-
-                    onFinished: updateJobStatus()
-                    onStopped: imageStatus.y = 0
-
-                    NumberAnimation {
-                        target: imageStatus
-                        property: "y"
-                        from: -40
-                        to: 40
-                        duration: 1000
-                    }
-                }
-            }
 
             ImageSvg {
                 id: imageJob
@@ -120,10 +74,16 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
 
                 source: {
-                    if (job.type === JobUtils.JOB_ENCODE)
+                    if (job.type === JobUtils.JOB_ENCODE || job.type === JobUtils.JOB_CLIP)
                         return "qrc:/assets/icons_material/baseline-memory-24px.svg"
                     else if (job.type === JobUtils.JOB_OFFLOAD || job.type === JobUtils.JOB_MOVE)
                         return "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
+                    else if (job.type === JobUtils.JOB_DELETE || job.type === JobUtils.JOB_FORMAT)
+                        return "qrc:/assets/icons_material/baseline-delete-24px.svg"
+                    else if (job.type === JobUtils.JOB_TELEMETRY)
+                        return "qrc:/assets/icons_material/baseline-insert_chart-24px.svg"
+                    else if (job.type === JobUtils.JOB_FIRMWARE_DOWNLOAD || job.type === JobUtils.JOB_FIRMWARE_UPLOAD)
+                        return "qrc:/assets/icons_material/baseline-settings_applications-24px.svg"
                     else
                         return "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
                 }
@@ -179,11 +139,23 @@ Rectangle {
             }
 
             Text {
+                id: jobElements
+                width: 32
+                anchors.verticalCenter: parent.verticalCenter
+
+                visible: (job.elementsTotal > 1)
+                text: (job.elementsIndex+1) + "/" + job.elementsTotal
+                font.pixelSize: 14
+                color: Theme.colorSubText
+                horizontalAlignment: Text.AlignHCenter
+            }
+
+            Text {
                 id: jobDuration
                 width: 32
                 anchors.verticalCenter: parent.verticalCenter
 
-                visible: job.elapsed > 0
+                visible: (job.elapsed > 0)
                 font.pixelSize: 14
                 color: Theme.colorSubText
                 horizontalAlignment: Text.AlignHCenter
@@ -200,7 +172,7 @@ Rectangle {
 
         ProgressBarThemed {
             id: progressBar
-            anchors.left: rowTexts.right
+            anchors.left: rowStatus.right
             anchors.leftMargin: 12
             anchors.right: rowButtons.left
             anchors.rightMargin: 12
@@ -219,6 +191,61 @@ Rectangle {
             anchors.right: parent.right
             anchors.verticalCenter: parent.verticalCenter
 
+            ItemImageButton {
+                id: rectangleOpenFile
+                width: 40
+                height: 40
+                anchors.verticalCenter: parent.verticalCenter
+
+                visible: job.destinationFile.length
+                highlightMode: "color"
+                source: "qrc:/assets/icons_material/baseline-folder-24px.svg"
+                onClicked: job.openDestinationFile()
+            }
+
+            ItemImageButton {
+                id: rectangleOpenFolder
+                width: 40
+                height: 40
+                anchors.verticalCenter: parent.verticalCenter
+
+                visible: job.destinationFolder.length
+                highlightMode: "color"
+                source: "qrc:/assets/icons_material/baseline-folder_open-24px.svg"
+                onClicked: job.openDestinationFolder()
+            }
+
+            ItemImageButton {
+                id: rectanglePlayPause
+                width: 40
+                height: 40
+                anchors.verticalCenter: parent.verticalCenter
+
+                visible: ((Qt.platform.os === "linux" || Qt.platform.os === "osx") &&
+                          (job.type === JobUtils.JOB_ENCODE) &&
+                          (job.state === JobUtils.JOB_STATE_WORKING || job.state === JobUtils.JOB_STATE_PAUSED)) // running
+
+                highlightMode: "color"
+                source: job.state === JobUtils.JOB_STATE_WORKING ? "qrc:/assets/icons_material/outline-pause_circle-24px.svg"
+                                                                 : "qrc:/assets/icons_material/outline-play_circle-24px.svg"
+                onClicked: jobManager.playPauseJob(job.id)
+            }
+
+            ItemImageButton {
+                id: rectangleStop
+                width: 40
+                height: 40
+                anchors.verticalCenter: parent.verticalCenter
+
+                visible: ((Qt.platform.os === "linux" || Qt.platform.os === "osx") &&
+                          (job.type === JobUtils.JOB_ENCODE) &&
+                          (job.state === JobUtils.JOB_STATE_WORKING || job.state === JobUtils.JOB_STATE_PAUSED)) // running
+
+                highlightMode: "color"
+                source: "qrc:/assets/icons_material/outline-stop_circle-24px.svg"
+                onClicked: jobManager.stopJob(job.id)
+            }
+
             Text {
                 id: jobETA
                 width: 32
@@ -235,57 +262,46 @@ Rectangle {
                 }
             }
 
-            ItemImageButton {
-                id: rectanglePlayPause
-                width: 40
-                height: 40
+            ImageSvg {
+                id: imageStatus
+                width: 32
+                height: 32
                 anchors.verticalCenter: parent.verticalCenter
 
-                visible: ((Qt.platform.os === "linux" || Qt.platform.os === "osx") &&
-                          (job.state === JobUtils.JOB_STATE_WORKING || job.state === JobUtils.JOB_STATE_PAUSED)) // running
+                source: "qrc:/assets/icons_material/baseline-schedule-24px.svg"
+                color: Theme.colorIcon
 
-                highlightMode: "color"
-                source: job.state === JobUtils.JOB_STATE_WORKING ? "qrc:/assets/icons_material/outline-pause_circle-24px.svg"
-                                                                 : "qrc:/assets/icons_material/outline-play_circle-24px.svg"
-                onClicked: jobManager.playPauseJob(job.id)
-            }
+                NumberAnimation on rotation {
+                    id: encodeAnimation
+                    running: (job.state === JobUtils.JOB_STATE_WORKING &&
+                              job.type === JobUtils.JOB_ENCODE)
+                    loops: Animation.Infinite
+                    alwaysRunToEnd: true
+                    onFinished: updateJobStatus()
 
-            ItemImageButton {
-                id: rectangleStop
-                width: 40
-                height: 40
-                anchors.verticalCenter: parent.verticalCenter
+                    duration: 2000
+                    from: 0
+                    to: 360
+                }
 
-                visible: ((Qt.platform.os === "linux" || Qt.platform.os === "osx") &&
-                          (job.state === JobUtils.JOB_STATE_WORKING || job.state === JobUtils.JOB_STATE_PAUSED)) // running
+                SequentialAnimation {
+                    id: offloadAnimation
+                    running: (job.state === JobUtils.JOB_STATE_WORKING &&
+                              job.type === JobUtils.JOB_OFFLOAD)
+                    loops: Animation.Infinite
+                    alwaysRunToEnd: true
 
-                highlightMode: "color"
-                source: "qrc:/assets/icons_material/outline-stop_circle-24px.svg"
-                onClicked: jobManager.stopJob(job.id)
-            }
-/*
-            ItemImageButton {
-                id: rectangleOpenFile
-                width: 40
-                height: 40
-                anchors.verticalCenter: parent.verticalCenter
+                    onFinished: updateJobStatus()
+                    onStopped: imageStatus.y = 0
 
-                visible: job.destination.length
-                highlightMode: "color"
-                source: "qrc:/assets/icons_material/baseline-folder-24px.svg"
-                onClicked: job.openDestinationFile()
-            }
-*/
-            ItemImageButton {
-                id: rectangleOpenFolder
-                width: 40
-                height: 40
-                anchors.verticalCenter: parent.verticalCenter
-
-                visible: job.destination.length
-                highlightMode: "color"
-                source: "qrc:/assets/icons_material/baseline-folder_open-24px.svg"
-                onClicked: job.openDestinationFolder()
+                    NumberAnimation {
+                        target: imageStatus
+                        property: "y"
+                        from: -40
+                        to: 40
+                        duration: 1000
+                    }
+                }
             }
         }
     }
@@ -358,14 +374,14 @@ Rectangle {
 
             Row {
                 spacing: 8
-                visible: job.destination
+                visible: job.destinationFolder || job.destinationFile
 
                 Text {
                     text: qsTr("Destination:")
                     color: Theme.colorText
                 }
                 Text {
-                    text: job.destination
+                    text: job.destinationFolder
                     color: Theme.colorSubText
                 }
             }

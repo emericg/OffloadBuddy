@@ -243,7 +243,6 @@ Popup {
                         id: switchIgnoreJunk
                         anchors.verticalCenter: parent.verticalCenter
 
-                        enabled: true
                         checked: settingsManager.ignoreJunk
                         text: qsTr("Ignore LRVs and THM files")
                     }
@@ -252,7 +251,6 @@ Popup {
                         id: switchIgnoreAudio
                         anchors.verticalCenter: parent.verticalCenter
 
-                        enabled: true
                         checked: settingsManager.ignoreHdAudio
                         text: qsTr("Ignore HD Audio files")
                     }
@@ -270,7 +268,6 @@ Popup {
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
 
-                        enabled: false
                         checked: settingsManager.autoTelemetry
                         text: qsTr("Extract telemetry along with each shot")
                     }
@@ -308,7 +305,7 @@ Popup {
 
                         enabled: true
                         checked: settingsManager.autoDelete
-                        text: qsTr("Delete offloaded files from device memory")
+                        text: qsTr("Delete offloaded files from device storage")
                     }
                 }
 

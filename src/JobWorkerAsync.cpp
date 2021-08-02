@@ -175,9 +175,23 @@ void JobWorkerAsync::queueWork(JobTracker *job)
                 //continue;
             }
 
+            if (job->settings_encode.telemetry)
+            {
+                // "auto" telemetry extraction
+                element->parent_shot->parseTelemetry();
+                element->parent_shot->exportGps(element->destination_dir, 0,
+                                                job->settings_telemetry.gps_frequency,
+                                                job->settings_telemetry.EGM96);
+                element->parent_shot->exportTelemetry(element->destination_dir, 0,
+                                                      job->settings_telemetry.telemetry_frequency,
+                                                      job->settings_telemetry.gps_frequency,
+                                                      job->settings_telemetry.EGM96);
+            }
+
             commandWrapper *ptiwrap = new commandWrapper;
 
             ptiwrap->job = job;
+            ptiwrap->job->setElementsIndex(i);
             ptiwrap->job_element_index = i;
 
             QString name_suffix = (job->settings_encode.codec == "copy") ? "_clipped" : "_reencoded";
@@ -189,10 +203,11 @@ void JobWorkerAsync::queueWork(JobTracker *job)
 
             UtilsApp *app = UtilsApp::getInstance();
             ptiwrap->command = app->getAppPath() + "/ffmpeg";
+
             // No ffmpeg bundled? Just try to use ffmpeg from the system...
             if (!QFileInfo::exists(ptiwrap->command)) ptiwrap->command = "ffmpeg";
-#ifdef Q_OS_WIN
-            // Windows?
+
+#if defined(Q_OS_WIN)
             ptiwrap->command += ".exe";
 #endif
 
@@ -594,7 +609,9 @@ void JobWorkerAsync::processFinished()
         if (m_ffmpegcurrent->job &&
             m_ffmpegcurrent->job->elements.size() > m_ffmpegcurrent->job_element_index)
         {
-            emit fileProduced(m_ffmpegcurrent->destFile);
+            m_ffmpegcurrent->job->setDestinationFile(m_ffmpegcurrent->destFile);
+
+            emit fileProduced(m_ffmpegcurrent->job->getDestinationFile());
             emit shotFinished(m_ffmpegcurrent->job->getId(), 0, m_ffmpegcurrent->job->elements.at(m_ffmpegcurrent->job_element_index)->parent_shot);
             emit jobFinished(m_ffmpegcurrent->job->getId(), js);
         }
