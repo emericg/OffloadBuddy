@@ -137,7 +137,11 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
 
                 checked: directory.enabled
-                onClicked: directory.enabled = checked
+                onClicked: {
+                    directory.enabled = checked
+                    if (checked) storageManager.enableDirectory(textField_path.text)
+                    else storageManager.disableDirectory(textField_path.text)
+                }
             }
             Column {
                 anchors.verticalCenter: parent.verticalCenter

@@ -91,7 +91,7 @@ public slots:
     void addShot(Shot *shot);
     void removeShot(Shot *shot);
     //void removeFile(); // TODO
-    void sanetize();
+    void sanetize(const QString &path);
 };
 
 /* ************************************************************************** */

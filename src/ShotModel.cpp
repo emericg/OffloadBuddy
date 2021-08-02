@@ -50,13 +50,19 @@ ShotModel::~ShotModel()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void ShotModel::sanetize()
+void ShotModel::sanetize(const QString &path)
 {
     // Check if each files of the shot still exists
     for (auto shot: qAsConst(m_shots))
     {
-        QList <ofb_file *> files = shot->getFiles();
+        if (!path.isEmpty() && shot->getFolderString().contains(path))
+        {
+            // Remove the shot alltogether if one file is missing
+            removeShot(shot);
+            continue;
+        }
 
+        QList <ofb_file *> files = shot->getFiles();
         for (auto file: qAsConst(files))
         {
             QFile f(file->filesystemPath);
@@ -64,7 +70,7 @@ void ShotModel::sanetize()
             {
                 // Remove the shot alltogether if one file is missing
                 removeShot(shot);
-                return;
+                break;
             }
         }
     }

@@ -180,9 +180,7 @@ void MediaLibrary::cleanMediaDirectory(const QString &path)
     {
         if (m_libraryState != DEVICE_STATE_SCANNING)
         {
-            m_shotModel->sanetize();
-
-            // TODO...
+            m_shotModel->sanetize(path);
         }
     }
 }

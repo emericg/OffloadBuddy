@@ -275,4 +275,20 @@ void StorageManager::removeDirectory(const QString &path)
     }
 }
 
+void StorageManager::disableDirectory(const QString &path)
+{
+    if (!path.isEmpty())
+    {
+        emit directoryRemoved(path);
+    }
+}
+
+void StorageManager::enableDirectory(const QString &path)
+{
+    if (!path.isEmpty())
+    {
+        emit directoryAdded(path);
+    }
+}
+
 /* ************************************************************************** */

@@ -124,6 +124,8 @@ public:
 
     Q_INVOKABLE void addDirectory(const QString &path);
     Q_INVOKABLE void removeDirectory(const QString &path);
+    Q_INVOKABLE void enableDirectory(const QString &path);
+    Q_INVOKABLE void disableDirectory(const QString &path);
 };
 
 /* ************************************************************************** */
