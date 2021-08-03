@@ -155,8 +155,11 @@ Item {
     }
 
     function initGridViewSettings() {
-        if (typeof currentDevice === "undefined" || !currentDevice) return
+        actionMenu.visible = false
+        shotsView.currentIndex = -1
+        mediaGrid.exitSelectionMode()
 
+        if (typeof currentDevice === "undefined" || !currentDevice) return
         //console.log("ScreenDeviceGrid.initGridViewSettings() [device "+ currentDevice + "]
         //    (state " + currentDevice.deviceState + ") (shotcount: " + shotsView.count + ")")
 
@@ -167,6 +170,18 @@ Item {
                 imageEmpty.source = "qrc:/devices/camera.svg"
         else
             imageEmpty.source = "qrc:/devices/usb.svg"
+    }
+
+    function updateGridViewSettings() {
+        actionMenu.visible = false
+        shotsView.currentIndex = -1
+        mediaGrid.exitSelectionMode()
+
+        if (typeof currentDevice === "undefined" || !currentDevice) return
+        //console.log("ScreenDeviceGrid.updateGridViewSettings() [device "+ currentDevice + "]
+        //    (state " + currentDevice.deviceState + ") (shotcount: " + shotsView.count + ")")
+
+        updateGridState()
     }
 
     function updateGridState() {
@@ -190,28 +205,6 @@ Item {
         }
     }
 
-    function updateGridViewSettings() {
-        if (typeof currentDevice === "undefined" || !currentDevice) return
-
-        //console.log("ScreenDeviceGrid.updateGridViewSettings() [device "+ currentDevice + "]
-        //    (state " + currentDevice.deviceState + ") (shotcount: " + shotsView.count + ")")
-
-        // Grid State
-        updateGridState()
-
-        //
-        if (shotsView.count <= 0) {
-            shotsView.currentIndex = -1
-            mediaGrid.exitSelectionMode()
-        } else {
-            // Restore grid index
-            if (deviceSavedState)
-                if (deviceSavedState.selectedIndex >= 0 && deviceSavedState.selectedIndex < shotsView.count)
-                    shotsView.currentIndex = deviceSavedState.selectedIndex
-                else
-                    shotsView.currentIndex = -1
-        }
-    }
 
     // POPUPS //////////////////////////////////////////////////////////////////
 
