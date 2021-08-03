@@ -270,6 +270,7 @@ Item {
 
                 model: ListModel {
                     id: cbItemsContentHierarchy
+                    ListElement { text: qsTr("/ FILES"); }
                     ListElement { text: qsTr("/ SHOT / FILES"); }
                     ListElement { text: qsTr("/ date / SHOT / FILES"); }
                     ListElement { text: qsTr("/ date / device / SHOT / FILES"); }

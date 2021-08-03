@@ -62,15 +62,15 @@ class MediaDirectory: public QObject
     Q_PROPERTY(double storageLevel READ getStorageLevel NOTIFY storageUpdated)
 
     QString m_path;
-    int m_content = 0;                  // see StorageUtils::ContentAll
-    int m_hierarchy = 0;                // see StorageUtils::HierarchyDate
+    int m_content = 0;  // StorageUtils::ContentAll;        //!< see StorageUtils::StorageContent
+    int m_hierarchy = 2;// StorageUtils::HierarchyDateShot; //!< see StorageUtils::StorageHierarchy
 
     bool m_primary = false;
     bool m_enabled = true;
     bool m_available = false;
     bool m_scanning = false;
 
-    int m_storage_type = 0;             // (not implemented)
+    int m_storage_type = 0;                                 //!< (not implemented)
     bool m_storage_lfs = true;
     QStorageInfo *m_storage = nullptr;
     QTimer m_storage_refreshTimer;

@@ -45,7 +45,7 @@ namespace StorageUtils
         StorageFilesystem,
         StorageVirtualFilesystem,
         StorageNetworkFilesystem,
-        StorageMtp,
+        StorageMTP,
     };
 
     enum StorageContent
@@ -59,8 +59,9 @@ namespace StorageUtils
     enum StorageHierarchy
     {
         HierarchyNone = 0,
-        HierarchyDate,
-        HierarchyDateDevice,
+        HierarchyShot,
+        HierarchyDateShot,
+        HierarchyDateDeviceShot,
     };
 
     enum DeviceType

@@ -66,7 +66,7 @@ MediaStorage::MediaStorage(LIBMTP_mtpdevice_t *device, LIBMTP_devicestorage_t *s
                            bool primary, QObject *parent)
     : QObject(parent)
 {
-    m_storage_type = StorageUtils::StorageMtp;
+    m_storage_type = StorageUtils::StorageMTP;
 
     setDeviceMtp(device, storage);
 
@@ -130,7 +130,7 @@ QString MediaStorage::getDevicePath()
     }
 
 #ifdef ENABLE_LIBMTP
-    if (m_storage_type == StorageUtils::StorageMtp)
+    if (m_storage_type == StorageUtils::StorageMTP)
     {
         return m_mtp_storage->VolumeIdentifier;
     }
@@ -338,7 +338,7 @@ bool MediaStorage::isReadOnly()
     }
 
 #ifdef ENABLE_LIBMTP
-    if (m_storage_type == StorageUtils::StorageMtp)
+    if (m_storage_type == StorageUtils::StorageMTP)
     {
         // TODO
     }
@@ -356,7 +356,7 @@ int64_t MediaStorage::getSpaceTotal()
     }
 
 #ifdef ENABLE_LIBMTP
-    if (m_storage_type == StorageUtils::StorageMtp)
+    if (m_storage_type == StorageUtils::StorageMTP)
     {
         if (m_mtp_storage)
             return m_mtp_storage->MaxCapacity;
@@ -375,7 +375,7 @@ int64_t MediaStorage::getSpaceUsed()
     }
 
 #ifdef ENABLE_LIBMTP
-    if (m_storage_type == StorageUtils::StorageMtp)
+    if (m_storage_type == StorageUtils::StorageMTP)
     {
         if (m_mtp_storage)
             return (m_mtp_storage->MaxCapacity - m_mtp_storage->FreeSpaceInBytes);
@@ -394,7 +394,7 @@ int64_t MediaStorage::getSpaceAvailable()
     }
 
 #ifdef ENABLE_LIBMTP
-    if (m_storage_type == StorageUtils::StorageMtp)
+    if (m_storage_type == StorageUtils::StorageMTP)
     {
         if (m_mtp_storage)
             return m_mtp_storage->FreeSpaceInBytes;
