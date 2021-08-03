@@ -888,8 +888,13 @@ void Device::reencodeSelected(const QString &shot_uuid, const QVariant &settings
     // Get settings
     JobSettingsEncode set;
     {
-        if (variantMap.contains("codec"))
-            set.codec = variantMap.value("codec").toString();
+        if (variantMap.contains("mode"))
+            set.mode = variantMap.value("mode").toString();
+
+        if (variantMap.contains("video_codec"))
+            set.video_codec = variantMap.value("video_codec").toString();
+        if (variantMap.contains("image_codec"))
+            set.image_codec = variantMap.value("image_codec").toString();
 
         if (variantMap.contains("quality"))
             set.encoding_quality = variantMap.value("quality").toInt();
@@ -942,7 +947,12 @@ void Device::reencodeSelected(const QString &shot_uuid, const QVariant &settings
 void Device::reencodeSelection(const QVariant &uuids, const QVariant &settings)
 {
     qDebug() << "Device::reencodeSelection(" << uuids << ")";
-    Q_UNUSED(settings)
+
+    const QStringList selectedUuids = qvariant_cast<QStringList>(uuids);
+    for (const auto &u: selectedUuids)
+    {
+        reencodeSelected(u, settings);
+    }
 }
 
 /* ************************************************************************** */

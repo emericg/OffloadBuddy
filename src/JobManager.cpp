@@ -95,8 +95,8 @@ bool JobManager::addJob(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
     QList<Shot *> list;
     list.push_back(shot);
 
-    return addJobs(type, dev, lib, list,
-                   dst, sett_delete, sett_offload, sett_telemetry, sett_encode);
+    return addJobs(type, dev, lib, list, dst,
+                   sett_delete, sett_offload, sett_telemetry, sett_encode);
 }
 
 bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
@@ -117,10 +117,6 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
     SettingsManager *sm = SettingsManager::getInstance();
     bool getPreviews = !sm->getIgnoreJunk();
     bool getHdAudio = !sm->getIgnoreHdAudio();
-    bool autoDelete = sm->getAutoDelete();
-    bool extractTelemetry = sm->getAutoTelemetry();
-    bool mergeChapters = sm->getAutoMerge();
-    bool moveToTrash = sm->getMoveToTrash();
 
     if (type == JobUtils::JOB_OFFLOAD)
     {
@@ -128,14 +124,16 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
         {
             getPreviews = !sett_offload->ignoreJunk;
             getHdAudio = !sett_offload->ignoreAudio;
-            extractTelemetry = sett_offload->extractTelemetry;
-            mergeChapters = sett_offload->mergeChapters;
-            autoDelete = sett_offload->autoDelete;
         }
 
         // Fusion Studio needs every files from a Fusion shot in order to work
         if (dev && dev->getModel().contains("Fusion", Qt::CaseInsensitive))
         {
+            if (sett_offload)
+            {
+                sett_offload->ignoreJunk = false;
+                sett_offload->ignoreAudio = false;
+            }
             getPreviews = true;
             getHdAudio = true;
         }
@@ -144,11 +142,6 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
     // Delete everything, MP4, LRVs...
     if (type == JobUtils::JOB_DELETE)
     {
-        if (sett_delete)
-        {
-            moveToTrash = sett_delete->moveToTrash;
-        }
-
         getPreviews = true;
         getHdAudio = true;
     }

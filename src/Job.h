@@ -77,7 +77,11 @@ typedef struct JobSettingsTelemetry
 
 typedef struct JobSettingsEncode
 {
-    QString codec = "H.264";
+    QString mode = "";
+
+    QString video_codec = "H.264";
+    QString image_codec = "JPEG";
+
     int encoding_quality = 3;   // [1:5]
     int encoding_speed = 2;     // [1:3]
 

@@ -77,7 +77,6 @@ Rectangle {
             id: buttonEncode
             anchors.verticalCenter: parent.verticalCenter
 
-            enabled: false
             fullColor: true
             primaryColor: Theme.colorActionbarHighlight
 

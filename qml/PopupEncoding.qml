@@ -1430,13 +1430,15 @@ Popup {
                 fullColor: true
                 primaryColor: Theme.colorPrimary
 
-                enabled: fileInput.isValid
+                enabled: (encodingMode === "batch" || fileInput.isValid)
 
                 onClicked: {
-                    if (typeof currentShot === "undefined" || !currentShot) return
+                    //if (typeof currentShot === "undefined" || !currentShot) return
                     if (typeof mediaProvider === "undefined" || !mediaProvider) return
 
                     var settingsEncoding = {}
+
+                    settingsEncoding["mode"] = encodingMode
 
                     // destination
                     if (popupMode === 1) {
@@ -1453,43 +1455,43 @@ Popup {
                         }
                     } else if (popupMode === 2) {
                         if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
-                           settingsEncoding["folder"] = folderInput.folder
-                       } else {
-                           settingsEncoding["mediaDirectory"] = comboBoxDestination.currentText
-                       }
+                            settingsEncoding["folder"] = folderInput.folder
+                        } else {
+                            settingsEncoding["mediaDirectory"] = comboBoxDestination.currentText
+                        }
                     }
 
                     // settings
-                    if (encodingMode === "image") {
+                    if (encodingMode === "image" || encodingMode === "batch") {
                         if (rbPNG.checked)
-                            settingsEncoding["codec"] = "PNG";
+                            settingsEncoding["image_codec"] = "PNG";
                         else if (rbJPEG.checked)
-                            settingsEncoding["codec"] = "JPEG";
+                            settingsEncoding["image_codec"] = "JPEG";
                         else if (rbWEBP.checked)
-                            settingsEncoding["codec"] = "WEBP";
+                            settingsEncoding["image_codec"] = "WEBP";
                         else if (rbAVIF.checked)
-                            settingsEncoding["codec"] = "AVIF";
+                            settingsEncoding["image_codec"] = "AVIF";
                         else if (rbHEIF.checked)
-                            settingsEncoding["codec"] = "HEIF";
+                            settingsEncoding["image_codec"] = "HEIF";
                     }
 
-                    if (encodingMode === "video" || encodingMode === "timelapse") {
+                    if (encodingMode === "video" || encodingMode === "timelapse" || encodingMode === "batch") {
                         if (rbH264.checked)
-                            settingsEncoding["codec"] = "H.264";
+                            settingsEncoding["video_codec"] = "H.264";
                         else if (rbH265.checked)
-                            settingsEncoding["codec"] = "H.265";
+                            settingsEncoding["video_codec"] = "H.265";
                         else if (rbVP9.checked)
-                            settingsEncoding["codec"] = "VP9";
+                            settingsEncoding["video_codec"] = "VP9";
                         else if (rbAV1.checked)
-                            settingsEncoding["codec"] = "AV1";
+                            settingsEncoding["video_codec"] = "AV1";
                         else if (rbProRes.checked)
-                            settingsEncoding["codec"] = "PRORES";
+                            settingsEncoding["video_codec"] = "PRORES";
                         else if (rbGIF.checked)
-                            settingsEncoding["codec"] = "GIF";
+                            settingsEncoding["video_codec"] = "GIF";
 
                         if (clipStartMs > 0 && clipDurationMs > 0) {
                             if (cbCOPY.checked)
-                                settingsEncoding["codec"] = "copy";
+                                settingsEncoding["video_codec"] = "copy";
                         }
 
                         settingsEncoding["speed"] = sliderSpeed.value;

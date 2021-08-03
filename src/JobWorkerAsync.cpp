@@ -194,8 +194,14 @@ void JobWorkerAsync::queueWork(JobTracker *job)
             ptiwrap->job->setElementsIndex(i);
             ptiwrap->job_element_index = i;
 
-            QString name_suffix = (job->settings_encode.codec == "copy") ? "_clipped" : "_reencoded";
-            QString file_extension = "mp4";
+            QString codec = job->settings_encode.video_codec;
+            if (element->parent_shot->getShotType() == ShotUtils::SHOT_PICTURE || job->settings_encode.screenshot == true)
+            {
+                codec = job->settings_encode.image_codec;
+            }
+
+            QString name_suffix = (codec == "copy") ? "_clipped" : "_reencoded";
+            QString file_extension = "";
             QString video_filters;
             QString audio_filters;
 
@@ -233,12 +239,12 @@ void JobWorkerAsync::queueWork(JobTracker *job)
 
             //// CODECS
 
-            if (job->settings_encode.codec == "copy")
+            if (codec == "copy")
             {
                 ptiwrap->arguments << "-codec" << "copy";
             }
 
-            if (job->settings_encode.codec == "H.264")
+            if (codec == "H.264")
             {
                 file_extension = "mp4";
 
@@ -263,7 +269,7 @@ void JobWorkerAsync::queueWork(JobTracker *job)
                 ptiwrap->arguments << "-c:a" << "copy";
             }
 
-            if (job->settings_encode.codec == "H.265")
+            if (codec == "H.265")
             {
                 file_extension = "mp4";
 
@@ -284,7 +290,7 @@ void JobWorkerAsync::queueWork(JobTracker *job)
                 ptiwrap->arguments << "-c:a" << "copy";
             }
 
-            if (job->settings_encode.codec == "VP9")
+            if (codec == "VP9")
             {
                 file_extension = "mkv";
 
@@ -300,23 +306,23 @@ void JobWorkerAsync::queueWork(JobTracker *job)
                 ptiwrap->arguments << "-b:a" << "70K";
             }
 
-            if (job->settings_encode.codec == "GIF")
+            if (codec == "GIF")
             {
                 file_extension = "gif";
             }
 
-            if (job->settings_encode.codec == "PNG")
+            if (codec == "PNG")
             {
                 file_extension = "png";
             }
-            if (job->settings_encode.codec == "JPEG")
+            if (codec == "JPEG")
             {
                 file_extension = "jpg";
 
                 int qscale = 5 - job->settings_encode.encoding_quality;
                 ptiwrap->arguments << "-q:v" << QString::number(qscale);
             }
-            if (job->settings_encode.codec == "WEBP")
+            if (codec == "WEBP")
             {
                 file_extension = "webp";
 
@@ -328,7 +334,7 @@ void JobWorkerAsync::queueWork(JobTracker *job)
 
             //// PARAMS
 
-            if (job->settings_encode.codec == "GIF")
+            if (codec == "GIF")
             {
                 ptiwrap->arguments << "-r" << QString::number(job->settings_encode.fps);
 
@@ -362,7 +368,7 @@ void JobWorkerAsync::queueWork(JobTracker *job)
             else
             {
                 // Change output framerate
-                if (job->settings_encode.fps > 0 && job->settings_encode.codec != "GIF")
+                if (job->settings_encode.fps > 0 && codec != "GIF")
                 {
                     ptiwrap->arguments << "-r" << QString::number(job->settings_encode.fps);
                 }
@@ -384,7 +390,7 @@ void JobWorkerAsync::queueWork(JobTracker *job)
 
                 // Filters
                 {
-                    // Transformations
+                    // Transformations (from GUI)
                     if (job->settings_encode.transform > 1)
                     {
                         // job->settings_encode.transform
@@ -426,6 +432,32 @@ void JobWorkerAsync::queueWork(JobTracker *job)
 
                         if (!video_filters.isEmpty()) video_filters += ",";
                         video_filters += rf;
+                    }
+                    // Transformations (from shot)
+                    if (job->settings_encode.mode == "batch")
+                    {
+                        int transformation = element->parent_shot->getTransformation();
+                        if (transformation > 0)
+                        {
+                            QString rf = "";
+                            if (transformation == 2)
+                                rf = "hflip";
+                            else if (transformation == 3)
+                                rf = "transpose=2,transpose=2"; // 180°
+                            else if (transformation == 4)
+                                rf = "vflip";
+                            else if (transformation == 5)
+                                rf = "hflip,transpose=2";
+                            else if (transformation == 6)
+                                rf = "transpose=1"; // 90°
+                            else if (transformation == 7)
+                                rf = "hflip,transpose=1";
+                            else if (transformation == 8)
+                                rf = "transpose=2"; // 270°
+
+                            if (!video_filters.isEmpty()) video_filters += ",";
+                            video_filters += rf;
+                        }
                     }
 
                     // Crop // -filter:v "crop=out_w:out_h:x:y"
@@ -521,7 +553,8 @@ void JobWorkerAsync::queueWork(JobTracker *job)
 /*
         // Recap settings:
         qDebug() << "ENCODING SETTINGS:";
-        qDebug() << "* codec:" << job->settings_encode.codec;
+        qDebug() << "* codec (video):" << job->settings_encode.video_codec;
+        qDebug() << "* codec (image):" << job->settings_encode.image_codec;
         qDebug() << "* encoding quality:" << job->settings_encode.encoding_quality;
         qDebug() << "* encoding speed:" << job->settings_encode.encoding_speed;
         qDebug() << "* fps:" << job->settings_encode.fps;
