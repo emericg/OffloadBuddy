@@ -226,10 +226,19 @@ Popup {
 
         if (currentShot && (x > 0.0 || y > 0.0 || width < 1.0 || height < 1.0)) {
             rectangleCrop.visible = true
-            clipCropX = Math.round(currentShot.width * x)
-            clipCropY = Math.round(currentShot.height * y)
-            clipCropW = Math.round(currentShot.width * width)
-            clipCropH = Math.round(currentShot.height * height)
+
+            if (clipRotation == 0 || clipRotation == 180) {
+                clipCropX = Math.round(currentShot.width * x)
+                clipCropY = Math.round(currentShot.height * y)
+                clipCropW = Math.round(currentShot.width * width)
+                clipCropH = Math.round(currentShot.height * height)
+            } else if (clipRotation == 90 || clipRotation == 270) {
+                clipCropX = Math.round(currentShot.height * x)
+                clipCropY = Math.round(currentShot.width * y)
+                clipCropW = Math.round(currentShot.height * width)
+                clipCropH = Math.round(currentShot.width * height)
+            }
+
             textField_cropCoord.text = clipCropX + ":" + clipCropY
             textField_cropSize.text = clipCropW + "x" + clipCropH
         } else {
@@ -1539,20 +1548,14 @@ Popup {
                         if (clipStartMs <= 0) settingsEncoding["clipStartMs"] = 0;
                         if (clipDurationMs <= 0) settingsEncoding["clipDurationMs"] = currentShot.duration;
                         if (currentShot.shotType > ShotUtils.SHOT_PICTURE)settingsEncoding["clipDurationMs"] = currentShot.duration*33;
-                        if (clipCropX > 0 || clipCropY > 0 ||
-                            (clipCropW > 0 && clipCropW < currentShot.width) ||
-                            (clipCropH > 0 && clipCropH < currentShot.height)) {
-                            if (clipRotation == 0 || clipRotation == 180)
-                                settingsEncoding["crop"] = clipCropW + ":" + clipCropH + ":" + clipCropX + ":" + clipCropY
-                            else
-                                settingsEncoding["crop"] = clipCropH + ":" + clipCropW + ":" + clipCropX + ":" + clipCropY
-                        }
+
                         if (clipCropX <= 0 && clipCropY <= 0 && clipCropW <= 0 && clipCropH <= 0) {
                             if (clipRotation == 0 || clipRotation == 180)
                                 settingsEncoding["crop"] = currentShot.width + ":" + currentShot.height + ":" + 0 + ":" + 0
                             else
                                 settingsEncoding["crop"] = currentShot.height + ":" + currentShot.width + ":" + 0 + ":" + 0
                         }
+
                         // TODO // transform
 
                         // Effect

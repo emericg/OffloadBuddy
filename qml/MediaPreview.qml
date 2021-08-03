@@ -887,7 +887,7 @@ Item {
         Item {
             id: mediaControls
             height: 40
-            visible: (videoOutput.visible /*&& mouseArea.hovered*/)
+            visible: (videoOutput.visible && !overlayCrop.editing)
 
             anchors.right: parent.right
             anchors.rightMargin: 0

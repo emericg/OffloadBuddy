@@ -26,7 +26,7 @@ Item {
     property bool projectARlock: true
     property string grid: "rulesofthree"
 
-    visible: editing || gismo.fx > 0.0 || gismo.fy > 0.0 || gismo.fwidth < 1.0 || gismo.fheight < 1.0
+    visible: (resizeWidget.editing || gismo.fx > 0.0 || gismo.fy > 0.0 || gismo.fwidth < 1.0 || gismo.fheight < 1.0)
 
     function load() {
         editing = false
@@ -47,6 +47,14 @@ Item {
         gismo.saveCoord()
 
         // Save values to project
+        mediaArea.cropX = gismo.fx
+        mediaArea.cropY = gismo.fy
+        mediaArea.cropW = gismo.fwidth
+        mediaArea.cropH = gismo.fheight
+    }
+    function reset() {
+        resizeWidget.editing = false
+        gismo.resetCoord()
         mediaArea.cropX = gismo.fx
         mediaArea.cropY = gismo.fy
         mediaArea.cropW = gismo.fwidth
@@ -122,6 +130,20 @@ Item {
 
             //console.log("saveCoord() > fx : " + fx.toFixed(2) + " > fy "+ fy.toFixed(2) +
             //            " > fwidth "+ fwidth.toFixed(2) + " > fheight "+ fheight.toFixed(2))
+        }
+
+        function resetCoord() {
+            fx = 0.0
+            fy = 0.0
+            fcx = 0.5
+            fcy = 0.5
+            fwidth = 1.0
+            fheight = 1.0
+
+            gismo.x = 0
+            gismo.y = 0
+            gismo.width = resizeWidget.width
+            gismo.height = resizeWidget.height
         }
 
         function restoreCoord() {
@@ -423,22 +445,40 @@ Item {
             }
         }
 
-        ItemImageButton {
-            id: buttonValidate
-            width: 32; height: 32;
+
+        Row {
             anchors.right: parent.right
             anchors.rightMargin: 8
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 8
+            spacing: 8
 
-            visible: resizeWidget.editing
-            background: true
-            backgroundColor: "#222222"
-            highlightMode: "color"
-            iconColor: highlighted ? Theme.colorPrimary : "white"
+            ItemImageButton {
+                id: buttonReset
+                width: 32; height: 32;
 
-            source: "qrc:/assets/icons_material/baseline-done-24px.svg"
-            onClicked: resizeWidget.editing = false
+                visible: resizeWidget.editing
+                background: true
+                backgroundColor: "#222222"
+                highlightMode: "color"
+                iconColor: highlighted ? Theme.colorPrimary : "white"
+
+                source: "qrc:/assets/icons_material/baseline-close-24px.svg"
+                onClicked: resizeWidget.reset()
+            }
+            ItemImageButton {
+                id: buttonValidate
+                width: 32; height: 32;
+
+                visible: resizeWidget.editing
+                background: true
+                backgroundColor: "#222222"
+                highlightMode: "color"
+                iconColor: highlighted ? Theme.colorPrimary : "white"
+
+                source: "qrc:/assets/icons_material/baseline-done-24px.svg"
+                onClicked: resizeWidget.editing = false
+            }
         }
 
         ////////////////
