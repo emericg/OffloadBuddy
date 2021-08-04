@@ -189,42 +189,32 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
     if (sett_telemetry) tracker->settings_telemetry = *sett_telemetry;
     if (sett_encode) tracker->settings_encode = *sett_encode;
 
-    QStringList ssll;
-
     for (Shot *shot: list)
     {
         if (shot)
         {
             JobElement *je = new JobElement;
+            je->parent_shot = shot;
+            je->destination_file = dstFile;
             if (md) je->destination_dir = getandmakeDestination(shot, dev, md);
             else je->destination_dir = dstFolder;
-            je->destination_file = dstFile;
-            je->parent_shot = shot;
-            ssll += shot->getFilesStringList();
+
             QList <ofb_file *> files = shot->getFiles(getPreviews, getHdAudio, true);
             for (auto f: qAsConst(files))
             {
                 je->files.push_back(*f);
-                tracker->totalSize += f->size;
-                tracker->totalFiles++;
             }
-            tracker->elements.push_back(je);
+
+            tracker->addElement(je);
 
             shot->setState(ShotUtils::SHOT_STATE_QUEUED);
         }
-        else
-        {
-            qWarning() << "JobManager : INVALID SHOT";
-        }
     }
 
-    if (list.size() > 0)
+    if (tracker->getElementsCount() > 0)
     {
-        QString tempname = list.at(0)->getName();
-        tracker->setName(tempname);
-
-        tracker->setFiles(ssll);
-        tracker->setDestinationFolder(tracker->elements.front()->destination_dir);
+        tracker->setName(tracker->getElement(0)->parent_shot->getName());
+        tracker->setDestinationFolder(tracker->getElement(0)->destination_dir);
     }
 
     m_trackedJobs.push_back(tracker);
@@ -728,7 +718,7 @@ QString JobManager::getDestinationHierarchy(Shot *s, const QString &path)
                 int h = md_current->getHierarchy();
                 if (h == StorageUtils::HierarchyNone)
                 {
-                    hierarchyString += QDir::separator();
+                    //
                 }
                 else if (h == StorageUtils::HierarchyShot)
                 {

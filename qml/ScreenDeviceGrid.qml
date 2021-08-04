@@ -580,7 +580,7 @@ Item {
             primaryColor: Theme.colorPrimary
 
             text: qsTr("Offload content")
-            onClicked: popupOffload.openAll()
+            onClicked: popupOffload.openAll(currentDevice)
         }
 
         ButtonWireframe {

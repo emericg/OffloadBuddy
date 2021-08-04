@@ -112,7 +112,6 @@ Popup {
                 timelapseFramerate.from = 1
                 timelapseFramerate.to = 60
                 timelapseFramerate.value = 15
-
             } else {
                 titleText.text = qsTr("Video encoding")
                 encodingMode = "video"

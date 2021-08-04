@@ -96,8 +96,7 @@ typedef struct JobSettingsEncode
     QString defisheye;
     bool deshake = false;
 
-    bool screenshot = false;
-    bool telemetry = false;
+    bool extractTelemetry = true;
 
     int64_t startMs = -1;
     int64_t durationMs = -1;
@@ -109,10 +108,10 @@ typedef struct JobSettingsEncode
 typedef struct JobElement
 {
     Shot *parent_shot = nullptr;
+    std::vector <ofb_file> files;
+
     QString destination_dir;
     QString destination_file;
-
-    std::vector <ofb_file> files;
 
 } JobElement;
 
@@ -124,28 +123,27 @@ class JobTracker: public QObject
     Q_OBJECT
 
     Q_PROPERTY(int id READ getId CONSTANT)
-    Q_PROPERTY(QString name READ getName NOTIFY jobUpdated)
-
     Q_PROPERTY(int type READ getType CONSTANT)
     Q_PROPERTY(QString typeStr READ getTypeString CONSTANT)
-    Q_PROPERTY(int state READ getState NOTIFY jobUpdated)
-    Q_PROPERTY(QString stateStr READ getStateString NOTIFY jobUpdated)
 
     Q_PROPERTY(QStringList files READ getFiles CONSTANT)
     Q_PROPERTY(QString destinationFile READ getDestinationFile NOTIFY jobUpdated)
     Q_PROPERTY(QString destinationFolder READ getDestinationFolder NOTIFY jobUpdated)
 
-    Q_PROPERTY(bool running READ isRunning NOTIFY jobUpdated)
-    Q_PROPERTY(bool paused READ isPaused NOTIFY jobUpdated)
+    Q_PROPERTY(QString name READ getName NOTIFY jobStateUpdated)
+    Q_PROPERTY(int state READ getState NOTIFY jobStateUpdated)
+    Q_PROPERTY(QString stateStr READ getStateString NOTIFY jobStateUpdated)
+    Q_PROPERTY(bool running READ isRunning NOTIFY jobStateUpdated)
+    Q_PROPERTY(bool paused READ isPaused NOTIFY jobStateUpdated)
 
-    Q_PROPERTY(float progress READ getProgress NOTIFY jobUpdated)
-    Q_PROPERTY(int elementsIndex READ getElementsIndex NOTIFY jobUpdated)
-    Q_PROPERTY(int elementsTotal READ getElementsTotal NOTIFY jobUpdated)
+    Q_PROPERTY(float progress READ getProgress NOTIFY jobProgressUpdated)
+    Q_PROPERTY(int elementsIndex READ getElementsIndex NOTIFY jobProgressUpdated)
+    Q_PROPERTY(int elementsCount READ getElementsCount NOTIFY jobProgressUpdated)
 
-    Q_PROPERTY(QDateTime startDate READ getStartDate NOTIFY jobUpdated)
-    Q_PROPERTY(QDateTime stopDate READ getStopDate NOTIFY jobUpdated)
-    Q_PROPERTY(int elapsed READ getElapsed NOTIFY jobUpdated)
-    Q_PROPERTY(int eta READ getETA NOTIFY jobUpdated)
+    Q_PROPERTY(int elapsed READ getElapsed NOTIFY jobProgressUpdated)
+    Q_PROPERTY(int eta READ getETA NOTIFY jobProgressUpdated)
+    Q_PROPERTY(QDateTime startDate READ getStartDate NOTIFY jobProgressUpdated)
+    Q_PROPERTY(QDateTime stopDate READ getStopDate NOTIFY jobProgressUpdated)
 
     int m_id = -1;
     JobUtils::JobType m_type;
@@ -161,15 +159,19 @@ class JobTracker: public QObject
     QString m_destinationFile;
     QString m_destinationFolder;
 
+    // job element(s)
+    std::vector<JobElement *> elements;
+    int elements_index = 0;
+
     // tracking
     float m_percent = 0.0;
+
+    int totalFiles = 0;
+    int64_t totalSize = 0;
 
     QDateTime m_start;
     QDateTime m_stop;
     QDateTime m_eta;
-
-Q_SIGNALS:
-    void jobUpdated();
 
 public:
     // settings
@@ -178,11 +180,10 @@ public:
     JobSettingsTelemetry settings_telemetry;
     JobSettingsEncode settings_encode;
 
-    std::vector<JobElement *> elements;
-    int elements_index = 0;
-
-    int totalFiles = 0;
-    int64_t totalSize = 0;
+Q_SIGNALS:
+    void jobUpdated();
+    void jobStateUpdated();
+    void jobProgressUpdated();
 
 public:
     JobTracker(int job_id, int job_type, QObject *parent);
@@ -197,7 +198,7 @@ public:
         m_state = static_cast<JobUtils::JobState>(state);
         if (m_state == JobUtils::JOB_STATE_WORKING) m_start = QDateTime::currentDateTime();
         if (m_state >= JobUtils::JOB_STATE_DONE) m_stop = QDateTime::currentDateTime();
-        Q_EMIT jobUpdated();
+        Q_EMIT jobStateUpdated();
     }
     int getState() const { return m_state; }
     QString getStateString() const;
@@ -218,27 +219,41 @@ public:
 
     ////////
 
-    void setName(const QString &name) { m_name = name; Q_EMIT jobUpdated(); }
+    void setName(const QString &name) { m_name = name; Q_EMIT jobStateUpdated(); }
     QString getName() const { return m_name; }
 
     void setFiles(QStringList &fl) { m_files = fl; }
     QStringList getFiles() const { return m_files; }
 
-    void setDestinationFile(QString dest) { m_destinationFile = dest; }
+    void setDestinationFile(QString dest) { m_destinationFile = dest; Q_EMIT jobUpdated(); }
     QString getDestinationFile() const { return m_destinationFile; }
 
-    void setDestinationFolder(QString dest) { if (m_type != JobUtils::JOB_DELETE) m_destinationFolder = dest; }
+    void setDestinationFolder(QString dest) { if (m_type != JobUtils::JOB_DELETE) m_destinationFolder = dest; Q_EMIT jobUpdated(); }
     QString getDestinationFolder() const { return m_destinationFolder; }
 
-    int getElementsTotal() { return elements.size(); }
-    void setElementsIndex(int i) { elements_index = i; Q_EMIT jobUpdated(); }
-    int getElementsIndex() { return elements_index; }
+    void addElement(JobElement *je);
+    std::vector<JobElement *> &getElements() { return elements; }
+    JobElement *getElement(int index) { return elements.at(index); }
 
-    void setProgress(float p) { m_percent = p; Q_EMIT jobUpdated(); }
+    int getElementsCount() { return elements.size(); }
+    int getElementsIndex() { return elements_index; }
+    void setElementsIndex(int index) { elements_index = index; Q_EMIT jobProgressUpdated(); }
+
+    int getFilesCount() { return totalFiles; }
+    int getFilesSize() { return totalSize; }
+
+    void setProgress(float p) { m_percent = p; Q_EMIT jobProgressUpdated(); }
     float getProgress() { return m_percent / 100.f; }
 
     int getETA() { return -1; }
-    int getElapsed() { return QDateTime::currentSecsSinceEpoch() - m_start.toSecsSinceEpoch(); }
+    int getElapsed() {
+        if (m_start.isValid() && m_stop.isValid())
+            return m_stop.toSecsSinceEpoch() - m_start.toSecsSinceEpoch();
+        else if (m_start.isValid())
+            return QDateTime::currentSecsSinceEpoch() - m_start.toSecsSinceEpoch();
+        else
+            return -1;
+    }
     QDateTime getStartDate() { return m_start; }
     QDateTime getStopDate() { return m_stop; }
 

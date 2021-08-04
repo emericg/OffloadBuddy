@@ -28,7 +28,7 @@ Rectangle {
     Component.onCompleted: updateJobStatus()
     Connections {
         target: job
-        onJobUpdated: updateJobStatus()
+        onJobStateUpdated: updateJobStatus()
     }
 
     function updateJobStatus() {
@@ -95,22 +95,22 @@ Rectangle {
                     loops: Animation.Infinite
                     alwaysRunToEnd: true
 
-                    PropertyAnimation { to: 0.5; duration: 750; }
-                    PropertyAnimation { to: 1; duration: 750; }
+                    PropertyAnimation { to: 0.66; duration: 666; }
+                    PropertyAnimation { to: 1; duration: 666; }
                 }
                 SequentialAnimation {
                     running: (job.state === JobUtils.JOB_STATE_WORKING &&
                               job.type === JobUtils.JOB_OFFLOAD)
                     loops: Animation.Infinite
                     //alwaysRunToEnd: true
-                    onStopped: imageJob.y = 0
 
                     NumberAnimation {
                         target: imageJob
                         property: "y"
+                        duration: 1000
                         from: -40
                         to: 40
-                        duration: 1000
+                        onStopped: imageJob.y = 0
                     }
                 }
             }
@@ -143,8 +143,8 @@ Rectangle {
                 width: 32
                 anchors.verticalCenter: parent.verticalCenter
 
-                visible: (job.elementsTotal > 1)
-                text: (job.elementsIndex+1) + "/" + job.elementsTotal
+                visible: (job.elementsCount > 1)
+                text: (job.elementsIndex+1) + "/" + job.elementsCount
                 font.pixelSize: 14
                 color: Theme.colorSubText
                 horizontalAlignment: Text.AlignHCenter
@@ -161,7 +161,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
 
                 Timer {
-                    running: job.running && job.elapsed > 0
+                    running: (job.running && job.elapsed > 0)
                     interval: 666
                     onTriggered: parent.text = job.elapsed + qsTr("s", "short for second")
                 }
@@ -197,7 +197,7 @@ Rectangle {
                 height: 40
                 anchors.verticalCenter: parent.verticalCenter
 
-                visible: job.destinationFile.length
+                visible: (job.destinationFile.length && job.state === JobUtils.JOB_STATE_DONE)
                 highlightMode: "color"
                 source: "qrc:/assets/icons_material/baseline-folder-24px.svg"
                 onClicked: job.openDestinationFile()
@@ -209,7 +209,7 @@ Rectangle {
                 height: 40
                 anchors.verticalCenter: parent.verticalCenter
 
-                visible: job.destinationFolder.length
+                visible: (job.destinationFolder.length && job.state >= JobUtils.JOB_STATE_DONE)
                 highlightMode: "color"
                 source: "qrc:/assets/icons_material/baseline-folder_open-24px.svg"
                 onClicked: job.openDestinationFolder()
@@ -262,6 +262,8 @@ Rectangle {
                 }
             }
 
+            Item { width: 8; height: 8; } // separator
+
             ImageSvg {
                 id: imageStatus
                 width: 32
@@ -273,26 +275,25 @@ Rectangle {
 
                 NumberAnimation on rotation {
                     id: encodeAnimation
-                    running: (job.state === JobUtils.JOB_STATE_WORKING &&
-                              job.type === JobUtils.JOB_ENCODE)
-                    loops: Animation.Infinite
-                    alwaysRunToEnd: true
-                    onFinished: updateJobStatus()
 
-                    duration: 2000
                     from: 0
                     to: 360
+                    duration: 2000
+                    loops: Animation.Infinite
+                    alwaysRunToEnd: true
+
+                    running: (job.state === JobUtils.JOB_STATE_WORKING &&
+                              job.type === JobUtils.JOB_ENCODE)
                 }
 
                 SequentialAnimation {
                     id: offloadAnimation
-                    running: (job.state === JobUtils.JOB_STATE_WORKING &&
-                              job.type === JobUtils.JOB_OFFLOAD)
                     loops: Animation.Infinite
                     alwaysRunToEnd: true
 
-                    onFinished: updateJobStatus()
-                    onStopped: imageStatus.y = 0
+                    running: (job.state === JobUtils.JOB_STATE_WORKING &&
+                              job.type === JobUtils.JOB_OFFLOAD)
+                    onFinished: imageStatus.y = 0
 
                     NumberAnimation {
                         target: imageStatus

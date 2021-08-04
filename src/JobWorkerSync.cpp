@@ -112,7 +112,7 @@ void JobWorkerSync::work()
             emit jobStarted(current_job->getId());
             int index = -1;
 
-            for (auto element: current_job->elements)
+            for (auto element: current_job->getElements())
             {
                 emit shotStarted(current_job->getId(), element->parent_shot);
                 int element_status = 1;
@@ -256,7 +256,7 @@ void JobWorkerSync::work()
 #endif // ENABLE_LIBMTP
                     }
 
-                    progress = (stuff_done / static_cast<float>(current_job->totalSize)) * 100.f;
+                    progress = (stuff_done / static_cast<float>(current_job->getFilesSize())) * 100.f;
                     //qDebug() << "progress: " << progress << "(" << current_job->totalSize << "/" << stuff_done << ")";
                 }
 
@@ -309,7 +309,7 @@ void JobWorkerSync::work()
 #endif // ENABLE_LIBMTP
                     }
 
-                    progress = ((stuff_done) / static_cast<float>(current_job->totalFiles)) * 100.f;
+                    progress = ((stuff_done) / static_cast<float>(current_job->getFilesCount())) * 100.f;
                     //qDebug() << "progress: " << progress << "(" << current_job->totalFiles << "/" << stuff_done << ")";
                 }
 

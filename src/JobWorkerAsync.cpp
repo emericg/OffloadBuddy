@@ -165,9 +165,9 @@ void JobWorkerAsync::queueWork(JobTracker *job)
 
     if (job)
     {
-        for (unsigned i = 0; i < job->elements.size(); i++)
+        for (unsigned i = 0; i < job->getElementsCount(); i++)
         {
-            JobElement *element = job->elements.at(i);
+            JobElement *element = job->getElement(i);
             if (element->parent_shot->getShotType() <= ShotUtils::SHOT_PICTURE &&
                 element->files.size() != 1)
             {
@@ -175,7 +175,7 @@ void JobWorkerAsync::queueWork(JobTracker *job)
                 //continue;
             }
 
-            if (job->settings_encode.telemetry)
+            if (job->settings_encode.extractTelemetry)
             {
                 // "auto" telemetry extraction
                 element->parent_shot->parseTelemetry();
@@ -195,7 +195,7 @@ void JobWorkerAsync::queueWork(JobTracker *job)
             ptiwrap->job_element_index = i;
 
             QString codec = job->settings_encode.video_codec;
-            if (element->parent_shot->getShotType() == ShotUtils::SHOT_PICTURE || job->settings_encode.screenshot == true)
+            if (element->parent_shot->getShotType() == ShotUtils::SHOT_PICTURE || job->settings_encode.mode == "screenshot")
             {
                 codec = job->settings_encode.image_codec;
             }
@@ -381,7 +381,7 @@ void JobWorkerAsync::queueWork(JobTracker *job)
                 }
 
                 // Screenshot?
-                if (job->settings_encode.screenshot)
+                if (job->settings_encode.mode == "screenshot")
                 {
                     ptiwrap->arguments << "-ss" << getFFmpegDurationString(job->settings_encode.startMs);
                     ptiwrap->arguments << "-frames:v" << "1";
@@ -572,12 +572,12 @@ void JobWorkerAsync::queueWork(JobTracker *job)
 
 void JobWorkerAsync::work()
 {
-    qDebug() << ">> JobWorkerAsync::work()";
-
     if (m_childProcess == nullptr)
     {
         if (!m_ffmpegjobs.isEmpty())
         {
+            qDebug() << ">> JobWorkerAsync::work()";
+
             m_ffmpegcurrent = m_ffmpegjobs.dequeue();
             if (m_ffmpegcurrent)
             {
@@ -589,10 +589,10 @@ void JobWorkerAsync::work()
 
                 m_childProcess->start(m_ffmpegcurrent->command, m_ffmpegcurrent->arguments);
             }
+
+            qDebug() << "<< JobWorkerAsync::work()";
         }
     }
-
-    qDebug() << "<< JobWorkerAsync::work()";
 }
 
 /* ************************************************************************** */
@@ -606,7 +606,7 @@ void JobWorkerAsync::processStarted()
         m_ffmpegcurrent->job->setState(JobUtils::JOB_STATE_WORKING);
 
         emit jobStarted(m_ffmpegcurrent->job->getId());
-        emit shotStarted(m_ffmpegcurrent->job->getId(), m_ffmpegcurrent->job->elements.at(m_ffmpegcurrent->job_element_index)->parent_shot);
+        emit shotStarted(m_ffmpegcurrent->job->getId(), m_ffmpegcurrent->job->getElement(m_ffmpegcurrent->job_element_index)->parent_shot);
     }
 }
 
@@ -640,12 +640,12 @@ void JobWorkerAsync::processFinished()
         }
 
         if (m_ffmpegcurrent->job &&
-            m_ffmpegcurrent->job->elements.size() > m_ffmpegcurrent->job_element_index)
+            m_ffmpegcurrent->job->getElementsCount() > m_ffmpegcurrent->job_element_index)
         {
             m_ffmpegcurrent->job->setDestinationFile(m_ffmpegcurrent->destFile);
 
             emit fileProduced(m_ffmpegcurrent->job->getDestinationFile());
-            emit shotFinished(m_ffmpegcurrent->job->getId(), 0, m_ffmpegcurrent->job->elements.at(m_ffmpegcurrent->job_element_index)->parent_shot);
+            emit shotFinished(m_ffmpegcurrent->job->getId(), 0, m_ffmpegcurrent->job->getElement(m_ffmpegcurrent->job_element_index)->parent_shot);
             emit jobFinished(m_ffmpegcurrent->job->getId(), js);
         }
 

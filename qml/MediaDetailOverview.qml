@@ -40,7 +40,9 @@ Item {
                 labelDuration.visible = false
             }
 
-            if (shot.iso.length === 0 && shot.focal.length === 0 && shot.exposure.length === 0) {
+            if ((!shot.iso || (shot.iso && shot.iso.length === 0)) &&
+                (!shot.focal || (shot.focal && shot.focal.length === 0)) &&
+                (!shot.exposure || (shot.exposure && shot.exposure.length === 0))) {
                 infosPicture.visible = false
             } else {
                 infosPicture.visible = true

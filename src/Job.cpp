@@ -67,6 +67,23 @@ QString JobTracker::getStateString() const
 
 /* ************************************************************************** */
 
+void JobTracker::addElement(JobElement *je)
+{
+    if (je)
+    {
+        for (const auto &f: je->files)
+        {
+            m_files += f.filesystemPath;
+            totalSize += f.size;
+            totalFiles++;
+        }
+
+        elements.push_back(je);
+    }
+}
+
+/* ************************************************************************** */
+
 void JobTracker::openDestinationFile() const
 {
     QFileInfo d(m_destinationFile);

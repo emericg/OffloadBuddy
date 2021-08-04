@@ -927,9 +927,6 @@ void Device::reencodeSelected(const QString &shot_uuid, const QVariant &settings
         if (variantMap.contains("deshake"))
             set.deshake = variantMap.value("deshake").toBool();
 
-        if (variantMap.contains("screenshot"))
-            set.screenshot = variantMap.value("screenshot").toBool();
-
         if (variantMap.contains("clipStartMs"))
             set.startMs = variantMap.value("clipStartMs").toInt();
         if (variantMap.contains("clipDurationMs"))

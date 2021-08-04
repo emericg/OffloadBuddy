@@ -1220,8 +1220,8 @@ Item {
                             return
 
                         var encodingParams = {}
+                        encodingParams["mode"] = "screenshot"
                         encodingParams["folder"] = shot.folder
-                        encodingParams["screenshot"] = true
                         encodingParams["image_codec"] = "JPEG"
                         encodingParams["quality"] = 3
                         encodingParams["clipStartMs"] = videoPlayer.position
