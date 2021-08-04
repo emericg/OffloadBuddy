@@ -163,16 +163,20 @@ void ShotModel::removeShot(Shot *shot)
 {
     if (shot)
     {
-        // update content stats
-        m_fileCount -= shot->getFileCount();
-        m_diskSpace -= shot->getFullSize();
-        Q_EMIT statsUpdated();
+        int id = m_shots.indexOf(shot);
+        if (id >= 0 && id < m_shots.size())
+        {
+            // update content stats
+            m_fileCount -= shot->getFileCount();
+            m_diskSpace -= shot->getFullSize();
+            Q_EMIT statsUpdated();
 
-        // remove
-        beginRemoveRows(QModelIndex(), m_shots.indexOf(shot), m_shots.indexOf(shot));
-        m_shots.removeOne(shot);
-        delete shot;
-        endRemoveRows();
+            // remove
+            beginRemoveRows(QModelIndex(), id, id);
+            m_shots.removeAt(id);
+            delete shot;
+            endRemoveRows();
+        }
     }
 }
 
