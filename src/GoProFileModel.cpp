@@ -113,7 +113,8 @@ bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot)
             shot.shot_type = ShotUtils::SHOT_PICTURE;
         }
         else if (file.extension == "mp4" || file.extension == "lrv" ||
-                 file.extension == "thm"  || file.extension == "wav")
+                 file.extension == "thm"  || file.extension == "wav" ||
+                 file.extension == "gpx"  || file.extension == "json")
         {
             // Single Video
             shot.shot_type = ShotUtils::SHOT_VIDEO;
@@ -128,7 +129,8 @@ bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot)
             shot.shot_type = ShotUtils::SHOT_PICTURE;
         }
         else if (file.extension == "mp4" || file.extension == "lrv" ||
-                 file.extension == "thm"  || file.extension == "wav")
+                 file.extension == "thm"  || file.extension == "wav" ||
+                 file.extension == "gpx"  || file.extension == "json")
         {
             shot.shot_type = ShotUtils::SHOT_VIDEO;
         }
@@ -165,7 +167,8 @@ bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot)
             shot.shot_type = ShotUtils::SHOT_PICTURE_MULTI;
         }
         else if (file.extension == "mp4" || file.extension == "lrv" ||
-                 file.extension == "thm"  || file.extension == "wav")
+                 file.extension == "thm"  || file.extension == "wav" ||
+                 file.extension == "gpx"  || file.extension == "json")
         {
             shot.shot_type = ShotUtils::SHOT_VIDEO;
         }
@@ -181,7 +184,8 @@ bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot)
             shot.shot_type = ShotUtils::SHOT_PICTURE_MULTI;
         }
         else if (file.extension == "mp4" || file.extension == "lrv" ||
-                 file.extension == "thm"  || file.extension == "wav")
+                 file.extension == "thm"  || file.extension == "wav" ||
+                 file.extension == "gpx"  || file.extension == "json")
         {
             // Looping Video
             shot.shot_type = ShotUtils::SHOT_VIDEO;

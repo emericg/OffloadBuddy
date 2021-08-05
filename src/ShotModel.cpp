@@ -80,7 +80,7 @@ void ShotModel::sanetize(const QString &path)
 
 void ShotModel::addFile(ofb_file *f, ofb_shot *s)
 {
-    //qDebug() << "ShotModel::addFile()" << f->filesystemPath;
+    //qDebug() << "ShotModel::addFile()" << f->filesystemPath << ">" << s->shot_type << s->shot_id << s->camera_id;
 
     Shot *shot = nullptr;
 
@@ -108,12 +108,12 @@ void ShotModel::addFile(ofb_file *f, ofb_shot *s)
 
     if (shot)
     {
-        //qDebug() << "Adding file:" << f->name << "to an existing shot";
+        //qDebug() << "Adding file:" << f->name << f->extension << "to an existing shot";
         shot->addFile(f);
     }
     else
     {
-        //qDebug() << "File:" << f->name << "is from a new shot";
+        //qDebug() << "File:" << f->name << f->extension << "is from a new shot";
         shot = new Shot(s->shot_type, this);
         if (shot)
         {
@@ -296,7 +296,7 @@ Shot *ShotModel::getShotWithPath(const QString &path)
  * \param type
  * \param file_id
  * \param camera_id
- * \return
+ * \return Pointer to an existing shot
  *
  * This function is used to associate new files to existing shots. We go backward
  * for faster association, because we will just most likely use the last created

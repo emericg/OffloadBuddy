@@ -43,8 +43,10 @@ public:
     enum FileType
     {
         FILE_UNKNOWN = 0,
+        FILE_AUDIO = 4,
         FILE_VIDEO = 8,
         FILE_PICTURE = 16,
+        FILE_METADATA = 32,
     };
     Q_ENUM(FileType)
 
