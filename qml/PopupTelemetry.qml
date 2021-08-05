@@ -309,7 +309,6 @@ Popup {
                         anchors.verticalCenter: parent.verticalCenter
 
                         checked: true
-                        enabled: false
                         text: qsTr("EGM96 correction")
                     }
                 }

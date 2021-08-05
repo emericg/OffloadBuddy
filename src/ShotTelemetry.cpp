@@ -360,7 +360,7 @@ void Shot::parseData_gps5(GpmfBuffer &buf, GpmfKLV &klv,
         }
 
         // Update altitude offset?
-        if (m_gps.size() < 1/* && gps_fix == 3*/)
+        if (m_gps.size() < 1) // && gps_fix == 3)
         {
             m_gps_altitude_offset = egm96_compute_altitude_offset(gps_coord.first, gps_coord.second);
         }
@@ -697,7 +697,9 @@ bool Shot::exportTelemetry(const QString &path, int format, int accl_frequency, 
                 // Altimeter
                 exportStream << "\n  \"altimeter\": { \"frequency\": " << QString::number(gps_frequency) << ", \"unit\": \"m\", \"data\": [\n  ";
                 for (unsigned i = 0; i < m_alti.size(); i += gps_rate) {
-                    exportStream << m_alti.at(i) << ",";
+                    float alti = m_alti.at(i);
+                    if (!egm96_correction) alti += m_gps_altitude_offset;
+                    exportStream << alti << ",";
                 } exportStream << "\n  ]},";
 
                 // Speedometer
@@ -780,7 +782,10 @@ bool Shot::exportGps(const QString &path, int format, int gps_frequency, bool eg
             {
                 exportStream << "\n  <trkpt lat=\"" + QString::number(m_gps.at(i).first, 'f', 12) +"\" lon=\"" + QString::number(m_gps.at(i).second, 'f', 12) + "\">";
 
-                exportStream << "<ele>" + QString::number(m_alti.at(i), 'f', 1) + "</ele>";
+                float alti = m_alti.at(i);
+                if (!egm96_correction) alti += m_gps_altitude_offset;
+
+                exportStream << "<ele>" + QString::number(alti, 'f', 1) + "</ele>";
                 exportStream << "<time>" + QString::fromStdString(m_gps_params.at(i).first) + "</time>";
 
                 if (m_gps_params.at(i).second == 3) exportStream << "<fix>3d</fix>";
