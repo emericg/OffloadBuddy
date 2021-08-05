@@ -31,6 +31,7 @@
         <file alias="DataBarSpace.qml">components/DataBarSpace.qml</file>
         <file alias="ItemBannerActions.qml">components/ItemBannerActions.qml</file>
         <file alias="ItemBannerMessage.qml">components/ItemBannerMessage.qml</file>
+        <file alias="ItemBannerJob.qml">components/ItemBannerJob.qml</file>
         <file alias="ItemJob.qml">components/ItemJob.qml</file>
         <file alias="ItemShot.qml">components/ItemShot.qml</file>
         <file alias="ItemMediaDirectory.qml">components/ItemMediaDirectory.qml</file>

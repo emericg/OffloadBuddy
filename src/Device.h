@@ -26,6 +26,7 @@
 #include "DeviceUtils.h"
 #include "ShotProvider.h"
 #include "MediaStorage.h"
+#include "Job.h"
 
 #ifdef ENABLE_LIBMTP
 #include <libmtp.h>
@@ -76,6 +77,9 @@ class Device: public ShotProvider
     Q_PROPERTY(qint64 spaceUsed READ getSpaceUsed NOTIFY storageUpdated)
     Q_PROPERTY(qint64 spaceAvailable READ getSpaceAvailable NOTIFY storageUpdated)
 
+    Q_PROPERTY(int jobsCount READ getJobsCount NOTIFY jobsUpdated)
+    Q_PROPERTY(QVariant jobsList READ getJobs NOTIFY jobsUpdated)
+
     deviceType_e m_deviceType = DEVICE_UNKNOWN;
     deviceModel_e m_deviceModel = MODEL_UNKNOWN;
     deviceStorage_e m_deviceStorage = STORAGE_FILESYSTEM;
@@ -97,11 +101,15 @@ class Device: public ShotProvider
     // Storage(s)
     QList <QObject *> m_mediaStorages;
 
+    // Jobs
+    QList <QObject *> m_trackedJobs;
+
 Q_SIGNALS:
     void deviceUpdated();
     void stateUpdated();
     void batteryUpdated();
     void storageUpdated();
+    void jobsUpdated();
 
 private slots:
     void refreshBatteryInfos();
@@ -183,6 +191,12 @@ public:
 
     Q_INVOKABLE void extractTelemetrySelected(const QString &shot_uuid, const QVariant &settings);
     Q_INVOKABLE void extractTelemetrySelection(const QVariant &uuids, const QVariant &settings);
+
+    // Track jobs
+    void addJob(JobTracker *j);
+    void removeJob(JobTracker *j);
+    int getJobsCount() const { return m_trackedJobs.size(); }
+    QVariant getJobs() const;
 };
 
 /* ************************************************************************** */

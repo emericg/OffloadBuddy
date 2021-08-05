@@ -220,6 +220,8 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
     m_trackedJobs.push_back(tracker);
     emit trackedJobsUpdated();
 
+    if (dev) dev->addJob(tracker);
+
     // DISPATCH JOB ////////////////////////////////////////////////////////////
 
     if (type == JobUtils::JOB_ENCODE)
@@ -335,7 +337,12 @@ void JobManager::clearFinishedJobs()
         JobTracker *j = qobject_cast<JobTracker *>(jj);
         if (j && j->getState() >= JobUtils::JOB_STATE_DONE)
         {
+            Device *d = j->getDevice();
+            if (d) d->removeJob(j);
+
             m_trackedJobs.removeOne(jj);
+
+            delete j;
         }
     }
 
@@ -402,6 +409,9 @@ void JobManager::jobFinished(int jobId, int jobState)
 
             if (jobState == JobUtils::JOB_STATE_DONE)
                 j->setProgress(100.0);
+
+            Device *d = j->getDevice();
+            if (d) d->removeJob(j);
 
             m_workingJobs--;
             emit trackedJobsUpdated();

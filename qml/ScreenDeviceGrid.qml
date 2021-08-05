@@ -636,6 +636,11 @@ Item {
         ItemBannerMessage {
             id: bannerMessage
         }
+
+        ItemBannerJob {
+            id: bannerJob
+            height: (currentDevice.jobsCount) ? 48 : 0
+        }
     }
 
     // CONTENT /////////////////////////////////////////////////////////////////

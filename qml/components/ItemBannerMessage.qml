@@ -21,12 +21,8 @@ Rectangle {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    Component.onCompleted: {
-        bannerMessage.close()
-    }
-
     function openMessage(message) {
-        bannerMessage.height = 56
+        bannerMessage.height = 48
         bannerText.text = message
     }
 

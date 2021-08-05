@@ -1068,3 +1068,35 @@ void Device::extractTelemetrySelection(const QVariant &uuids, const QVariant &se
 
 /* ************************************************************************** */
 /* ************************************************************************** */
+
+// Track jobs
+void Device::addJob(JobTracker *j)
+{
+    if (j)
+    {
+        if (j->getType() == JobUtils::JOB_OFFLOAD || j->getType() == JobUtils::JOB_ENCODE)
+        {
+            m_trackedJobs.push_back(j);
+            Q_EMIT jobsUpdated();
+        }
+    }
+}
+
+void Device::removeJob(JobTracker *j)
+{
+    m_trackedJobs.removeOne(j);
+    Q_EMIT jobsUpdated();
+}
+
+QVariant Device::getJobs() const
+{
+    if (m_trackedJobs.size() > 0)
+    {
+        return QVariant::fromValue(m_trackedJobs);
+    }
+
+    return QVariant();
+}
+
+/* ************************************************************************** */
+/* ************************************************************************** */
