@@ -284,7 +284,7 @@ class Shot: public QObject
 
     // Dates
     QDateTime m_date_file;          //!< File creation
-    QDateTime m_date_file_m;        //!< File modification
+    QDateTime m_date_file_m;        //!< File last modification
     QDateTime m_date_metadata;
     QDateTime m_date_gps;
     QDateTime m_date_user;          //!< Set by the user
@@ -466,6 +466,7 @@ public:
     void setState(ShotUtils::ShotState state) { m_state = state; emit stateUpdated(); }
 
     Q_INVOKABLE bool isValid() const;
+    Q_INVOKABLE bool isGoPro() const;
 
     Q_INVOKABLE void parseMetadata() { getMetadataFromVideo(); }
     Q_INVOKABLE void parseTelemetry() { getMetadataFromVideoGPMF(); }

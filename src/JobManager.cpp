@@ -60,6 +60,8 @@ JobManager::~JobManager()
     cleanup(); // singleton destructor is never called anyway...
 }
 
+/* ************************************************************************** */
+
 void JobManager::cleanup()
 {
     delete m_job_instant;
@@ -481,7 +483,7 @@ void JobManager::shotFinished(int jobId, int status, Shot *shot)
                 switch (j->getType())
                 {
                 case JobUtils::JOB_OFFLOAD:
-                    if (j->settings_offload.autoDelete)
+                    if (status > 0 && j->settings_offload.autoDelete)
                         addJob(JobUtils::JOB_DELETE, j->getDevice(), j->getLibrary(), shot);
                     else
                         shot->setState(ShotUtils::SHOT_STATE_OFFLOADED);
@@ -536,9 +538,7 @@ MediaDirectory *JobManager::getAutoDestination(Shot *s)
     MediaDirectory *md_selected = nullptr;
 
     StorageManager *sm = StorageManager::getInstance();
-    const QList <QObject *> *mdl = sm->getDirectoriesList();
-
-    for (auto md: *mdl)
+    for (auto md: *sm->getDirectoriesList())
     {
         MediaDirectory *md_current = qobject_cast<MediaDirectory*>(md);
         if (md_current &&
@@ -568,40 +568,55 @@ QString JobManager::getAutoDestinationString(Shot *s)
 
 QString JobManager::getandmakeDestination(Shot *s, Device *d, MediaDirectory *md)
 {
-    StorageManager *st = StorageManager::getInstance();
-
-    // HANDLE DESTINATION DIRECTORY ////////////////////////////////////////////
-
     QString destDir;
 
-    if (s && st)
+    if (s)
     {
         if (md)
         {
+            // Destination directory
             destDir = md->getPath();
+
+            // Destination subdirectories
+            if (s->isGoPro())
+            {
+                if (md->getHierarchy() == StorageUtils::HierarchyNone)
+                {
+                    //
+                }
+                else if (md->getHierarchy() == StorageUtils::HierarchyShot)
+                {
+                    destDir += s->getName();
+                    destDir += QDir::separator();
+                }
+                else if (md->getHierarchy() == StorageUtils::HierarchyDateShot)
+                {
+                    destDir += s->getDate().toString("yyyy-MM-dd");
+                    destDir += QDir::separator();
+                    destDir += s->getName();
+                    destDir += QDir::separator();
+                }
+                else if (md->getHierarchy() >= StorageUtils::HierarchyDateDeviceShot)
+                {
+                    destDir += s->getDate().toString("yyyy-MM-dd");
+                    destDir += QDir::separator();
+                    if (d)
+                    {
+                        destDir += d->getModel();
+                        destDir += QDir::separator();
+                    }
+                    destDir += s->getName();
+                    destDir += QDir::separator();
+                }
+            }
         }
         else
         {
+            // Default destination directory
             destDir = getAutoDestinationString(s);
         }
 
-        // Destination directory and its subdirectories
-
-        if (st->getContentHierarchy() >= StorageUtils::HierarchyDateShot)
-        {
-            destDir += s->getDate().toString("yyyy-MM-dd");
-            destDir += QDir::separator();
-        }
-        if (st->getContentHierarchy() >= StorageUtils::HierarchyDateDeviceShot)
-        {
-            if (d)
-            {
-                destDir += d->getModel();
-                destDir += QDir::separator();
-            }
-        }
-
-        // Put chaptered videos in there own directory?
+        // Put chaptered videos in there own subdirectory
         if (s->getShotType() < ShotUtils::SHOT_PICTURE)
         {
             if (s->getChapterCount() > 1)
@@ -611,12 +626,8 @@ QString JobManager::getandmakeDestination(Shot *s, Device *d, MediaDirectory *md
                 destDir += QDir::separator();
             }
         }
-
-        // Put multishot in there own directory
-        if (s->getShotType() == ShotUtils::SHOT_PICTURE_MULTI ||
-            s->getShotType() == ShotUtils::SHOT_PICTURE_BURST ||
-            s->getShotType() == ShotUtils::SHOT_PICTURE_TIMELAPSE ||
-            s->getShotType() == ShotUtils::SHOT_PICTURE_NIGHTLAPSE)
+        // Put multishot in there own subdirectory
+        if (s->getShotType() > ShotUtils::SHOT_PICTURE)
         {
             if (s->getShotType() == ShotUtils::SHOT_PICTURE_BURST)
                 destDir += "burst_";
@@ -631,16 +642,19 @@ QString JobManager::getandmakeDestination(Shot *s, Device *d, MediaDirectory *md
             destDir += QDir::separator();
         }
 
+        // Check destDir
         QDir dd(destDir);
         if (!(dd.exists() || dd.mkpath(destDir)))
         {
-            qDebug() << "DEST DIR IS NOT OK! ABORT!";
+            qWarning() << "Destination directory cannot be created! ABORT!";
             destDir.clear();
         }
     }
 
     return destDir;
 }
+
+/* ************************************************************************** */
 
 QString JobManager::getDestinationHierarchyDisplay(Shot *s, const QString &path)
 {
@@ -759,4 +773,5 @@ QString JobManager::getDestinationHierarchy(Shot *s, const QString &path)
     return hierarchyString;
 }
 
+/* ************************************************************************** */
 /* ************************************************************************** */

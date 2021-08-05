@@ -219,11 +219,16 @@ QDateTime Shot::getDate() const
     if (m_camera_source.contains("HERO9")) firstpossibledate = QDateTime(QDate(2020, 1, 1), QTime(0, 0));
 
     if (m_date_gps.isValid())
+    {
         return m_date_gps;
+    }
     if (m_date_metadata.isValid())
     {
-        if (m_date_metadata > firstpossibledate && m_date_metadata < QDateTime::currentDateTime())
+        if (m_date_metadata > firstpossibledate &&
+            m_date_metadata < QDateTime::currentDateTime())
+        {
             return m_date_metadata;
+        }
     }
 
     return m_date_file;
@@ -454,6 +459,11 @@ bool Shot::isValid() const
     }
 
     return false;
+}
+
+bool Shot::isGoPro() const
+{
+    return (m_shot_name.length() == 8 && m_shot_name.at(0) == "G");
 }
 
 /* ************************************************************************** */

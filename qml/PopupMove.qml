@@ -272,6 +272,7 @@ Popup {
 
                             for (var child in storageManager.directoriesList) {
                                 if (storageManager.directoriesList[child].available &&
+                                    storageManager.directoriesList[child].enabled &&
                                     storageManager.directoriesList[child].directoryContent !== 1)
                                 {
                                     if (currentShot && storageManager.directoriesList[child].directoryPath.includes(currentShot.folder)) {

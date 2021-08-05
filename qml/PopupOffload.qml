@@ -370,6 +370,7 @@ Popup {
 
                             for (var child in storageManager.directoriesList) {
                                 if (storageManager.directoriesList[child].available &&
+                                    storageManager.directoriesList[child].enabled &&
                                     storageManager.directoriesList[child].directoryContent !== 1)
                                     cbDestinations.append( { "text": storageManager.directoriesList[child].directoryPath } )
                             }
