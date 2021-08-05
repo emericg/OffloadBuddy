@@ -28,28 +28,41 @@ Rectangle {
         bannerJob.height = 0
     }
 
+    property int jobrunning: -1
+
+    function checkRunning() {
+        bannerJob.jobrunning = 0
+        for (var i = 0; i < currentDevice.jobsCount; i++) {
+            if (rp.itemAt(i).visible) bannerJob.jobrunning++
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////
 
     Column {
+        id: jobColumn
         anchors.left: parent.left
         anchors.leftMargin: 16
         anchors.right: rectangleClose.left
         anchors.rightMargin: 16
         anchors.verticalCenter: parent.verticalCenter
-/*
+
         Text {
-            text: qsTr("(%1 job(s) in queue)").arg(currentDevice.jobsCount)
-            font.pixelSize: Theme.fontSizeContent
+            visible: (bannerJob.jobrunning === 0)
+            text: qsTr("%1 job(s) queued...").arg(currentDevice.jobsCount)
+            font.pixelSize: 0
             color: Theme.colorActionbarContent
         }
-*/
+
         Repeater {
+            id: rp
             model: currentDevice.jobsList
             Row {
                 height: 16
                 spacing: 16
 
                 visible: modelData.running
+                onVisibleChanged: bannerJob.checkRunning()
 
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
