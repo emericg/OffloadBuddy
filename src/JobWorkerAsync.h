@@ -26,6 +26,8 @@
 #include <QObject>
 #include <QString>
 #include <QTime>
+#include <QTemporaryFile>
+
 #include <QQueue>
 
 class QProcess;
@@ -34,17 +36,18 @@ class JobTracker;
 
 /* ************************************************************************** */
 
-typedef struct commandWrapper
+typedef struct CommandWrapper
 {
     JobTracker *job = nullptr;
-    unsigned job_element_index = -1;
+    int job_element_index = -1;
 
+    QTemporaryFile mergeFile;
     QString destFile;
 
     QString command;
     QStringList arguments;
 
-} commandWrapper;
+} CommandWrapper;
 
 /*!
  * \brief The JobWorkerAsync class
@@ -53,13 +56,16 @@ class JobWorkerAsync: public QObject
 {
     Q_OBJECT
 
-    QQueue <commandWrapper *> m_ffmpegjobs;
-    commandWrapper *m_ffmpegcurrent = nullptr;
+    QQueue <CommandWrapper *> m_ffmpegjobs;
+    CommandWrapper *m_ffmpegcurrent = nullptr;
 
     QProcess *m_childProcess = nullptr;
 
     QTime m_duration;
     QTime m_progress;
+
+    void queueWork_encode(JobTracker *job);
+    void queueWork_merge(JobTracker *job);
 
 private slots:
     void processStarted();

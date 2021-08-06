@@ -44,11 +44,9 @@ public:
     {
         JOB_INVALID = 0,
 
-        JOB_FORMAT,
-        JOB_DELETE,
-
         JOB_OFFLOAD,
         JOB_MOVE,
+        JOB_MERGE,
 
         JOB_CLIP,
         JOB_ENCODE,
@@ -56,6 +54,9 @@ public:
 
         JOB_FIRMWARE_DOWNLOAD,
         JOB_FIRMWARE_UPLOAD,
+
+        JOB_DELETE,
+        JOB_FORMAT
     };
     Q_ENUM(JobType)
 

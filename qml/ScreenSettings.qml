@@ -375,7 +375,6 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Automatically merge video chapters")
-                    enabled: false
 
                     checked: settingsManager.autoMerge
                     onClicked: settingsManager.autoMerge = checked

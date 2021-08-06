@@ -285,7 +285,6 @@ Popup {
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
 
-                        enabled: false
                         checked: settingsManager.autoMerge
                         text: qsTr("Merge chaptered files together")
                     }
@@ -303,7 +302,6 @@ Popup {
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
 
-                        enabled: true
                         checked: settingsManager.autoDelete
                         text: qsTr("Delete offloaded files from device storage")
                     }

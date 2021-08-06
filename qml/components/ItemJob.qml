@@ -78,6 +78,8 @@ Rectangle {
                         return "qrc:/assets/icons_material/baseline-memory-24px.svg"
                     else if (job.type === JobUtils.JOB_OFFLOAD || job.type === JobUtils.JOB_MOVE)
                         return "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
+                    else if (job.type === JobUtils.JOB_MERGE)
+                        return "qrc:/assets/icons_material/baseline-merge_type-24px.svg"
                     else if (job.type === JobUtils.JOB_DELETE || job.type === JobUtils.JOB_FORMAT)
                         return "qrc:/assets/icons_material/baseline-delete-24px.svg"
                     else if (job.type === JobUtils.JOB_TELEMETRY)

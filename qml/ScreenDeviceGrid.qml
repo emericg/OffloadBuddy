@@ -718,7 +718,7 @@ Item {
             if (index === 1) {
                 popupOffload.openSingle(currentDevice, selectedItem.shot)
             }
-            if (index === 3) {
+            if (index === 4) {
                 popupEncoding.shots_uuids = currentDevice.getSelectedShotsUuids(indexes)
                 popupEncoding.shots_names = currentDevice.getSelectedShotsNames(indexes)
                 popupEncoding.shots_files = currentDevice.getSelectedShotsFilepaths(indexes)

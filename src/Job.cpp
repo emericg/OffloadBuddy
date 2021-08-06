@@ -42,15 +42,18 @@ JobTracker::~JobTracker()
 
 QString JobTracker::getTypeString() const
 {
-    if (m_type == JobUtils::JOB_FORMAT) return tr("FORMAT");
-    else if (m_type == JobUtils::JOB_DELETE) return tr("DELETION");
-    else if (m_type == JobUtils::JOB_OFFLOAD) return tr("OFFLOADING");
+    if (m_type == JobUtils::JOB_OFFLOAD) return tr("OFFLOADING");
     else if (m_type == JobUtils::JOB_MOVE) return tr("MOVE");
+    else if (m_type == JobUtils::JOB_MERGE) return tr("MERGE");
     else if (m_type == JobUtils::JOB_CLIP) return tr("CLIP");
     else if (m_type == JobUtils::JOB_ENCODE) return tr("ENCODING");
     else if (m_type == JobUtils::JOB_TELEMETRY) return tr("TELEMETRY EXTRACTION");
     else if (m_type == JobUtils::JOB_FIRMWARE_DOWNLOAD) return tr("DOWNLOADING");
     else if (m_type == JobUtils::JOB_FIRMWARE_UPLOAD) return tr("FIRMWARE");
+
+    else if (m_type == JobUtils::JOB_DELETE) return tr("DELETION");
+    else if (m_type == JobUtils::JOB_FORMAT) return tr("FORMAT");
+
     else return tr("UNKNOWN");
 }
 

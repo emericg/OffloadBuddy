@@ -108,7 +108,7 @@ JobWorkerAsync::~JobWorkerAsync()
 {
     while (!m_ffmpegjobs.isEmpty())
     {
-        commandWrapper *wrap = m_ffmpegjobs.dequeue();
+        CommandWrapper *wrap = m_ffmpegjobs.dequeue();
         delete wrap;
     }
 
@@ -165,7 +165,105 @@ void JobWorkerAsync::queueWork(JobTracker *job)
 
     if (job)
     {
-        for (unsigned i = 0; i < job->getElementsCount(); i++)
+        if (job->getType() == JobUtils::JOB_ENCODE)
+        {
+            queueWork_encode(job);
+        }
+        else if (job->getType() == JobUtils::JOB_MERGE)
+        {
+            queueWork_merge(job);
+        }
+    }
+}
+
+void JobWorkerAsync::queueWork_merge(JobTracker *job)
+{
+    qDebug() << ">> JobWorkerAsync::queueWork_merge()";
+
+    if (job)
+    {
+        for (int i = 0; i < job->getElementsCount(); i++)
+        {
+            JobElement *element = job->getElement(i);
+
+            // telemetry extraction ////////////////////////////////////////////
+
+            element->parent_shot->parseTelemetry();
+            element->parent_shot->exportGps(element->destination_dir, 0,
+                                            job->settings_telemetry.gps_frequency,
+                                            job->settings_telemetry.EGM96);
+            element->parent_shot->exportTelemetry(element->destination_dir, 0,
+                                                  job->settings_telemetry.telemetry_frequency,
+                                                  job->settings_telemetry.gps_frequency,
+                                                  job->settings_telemetry.EGM96);
+
+            // ffmpeg job //////////////////////////////////////////////////////
+
+            CommandWrapper *ptiwrap = new CommandWrapper;
+            ptiwrap->job = job;
+            ptiwrap->job->setElementsIndex(i);
+            ptiwrap->job_element_index = i;
+
+            UtilsApp *app = UtilsApp::getInstance();
+            ptiwrap->command = app->getAppPath() + "/ffmpeg";
+
+            // No ffmpeg bundled? Just try to use ffmpeg from the system...
+            if (!QFileInfo::exists(ptiwrap->command)) ptiwrap->command = "ffmpeg";
+
+#if defined(Q_OS_WIN)
+            ptiwrap->command += ".exe";
+#endif
+
+            // ffmpeg arguments ////////////////////////////////////////////////
+
+            // Create merge file
+            if (ptiwrap->mergeFile.open())
+            {
+                QTextStream exportStream(&ptiwrap->mergeFile);
+
+                for (unsigned i = 0; i < element->files.size(); i++)
+                {
+                    exportStream << "file '" << element->files.at(i).filesystemPath << "'\n";
+                }
+
+                ptiwrap->mergeFile.close();
+            }
+
+            // Create job
+            ptiwrap->arguments << "-f" << "concat";
+            ptiwrap->arguments << "-safe" << "0";
+            ptiwrap->arguments << "-i" << ptiwrap->mergeFile.fileName();
+            ptiwrap->arguments << "-c" << "copy";
+            ptiwrap->arguments << "-y";
+
+            QString name_suffix = "_merged";
+            QString file_extension = "mp4";
+
+            ptiwrap->destFile = element->destination_dir + element->files.front().name + name_suffix + "." + file_extension;
+            ptiwrap->arguments << ptiwrap->destFile;
+
+            // Dispatch job
+            m_ffmpegjobs.push_back(ptiwrap);
+
+            // Recap ///////////////////////////////////////////////////////////
+/*
+            // Recap encoding arguments:
+            qDebug() << "MERGE JOB:";
+            qDebug() << ">" << ptiwrap->mergeFile.fileName();
+            qDebug() << ">" << ptiwrap->command;
+            qDebug() << ">" << ptiwrap->arguments;
+*/
+        }
+    }
+}
+
+void JobWorkerAsync::queueWork_encode(JobTracker *job)
+{
+    qDebug() << ">> JobWorkerAsync::queueWork_encode()";
+
+    if (job)
+    {
+        for (int i = 0; i < job->getElementsCount(); i++)
         {
             JobElement *element = job->getElement(i);
             if (element->parent_shot->getShotType() <= ShotUtils::SHOT_PICTURE &&
@@ -174,6 +272,8 @@ void JobWorkerAsync::queueWork(JobTracker *job)
                 qDebug() << "This async job element got" << element->files.size() << "file(s), should not happen...";
                 //continue;
             }
+
+            // telemetry extraction ////////////////////////////////////////////
 
             if (job->settings_encode.extractTelemetry)
             {
@@ -188,8 +288,9 @@ void JobWorkerAsync::queueWork(JobTracker *job)
                                                       job->settings_telemetry.EGM96);
             }
 
-            commandWrapper *ptiwrap = new commandWrapper;
+            // ffmpeg job ////////////////////////=/////////////////////////////
 
+            CommandWrapper *ptiwrap = new CommandWrapper;
             ptiwrap->job = job;
             ptiwrap->job->setElementsIndex(i);
             ptiwrap->job_element_index = i;
@@ -543,7 +644,10 @@ void JobWorkerAsync::queueWork(JobTracker *job)
             ptiwrap->destFile = element->destination_dir + element->files.front().name + name_suffix + "." + file_extension;
             ptiwrap->arguments << ptiwrap->destFile;
 
+            // Dispatch job
             m_ffmpegjobs.push_back(ptiwrap);
+
+            // Recap ///////////////////////////////////////////////////////////
 
             // Recap encoding arguments:
             qDebug() << "ENCODING JOB:";
@@ -605,8 +709,8 @@ void JobWorkerAsync::processStarted()
         qDebug() << "JobWorkerAsync::processStarted()";
         m_ffmpegcurrent->job->setState(JobUtils::JOB_STATE_WORKING);
 
-        emit jobStarted(m_ffmpegcurrent->job->getId());
-        emit shotStarted(m_ffmpegcurrent->job->getId(), m_ffmpegcurrent->job->getElement(m_ffmpegcurrent->job_element_index)->parent_shot);
+        Q_EMIT jobStarted(m_ffmpegcurrent->job->getId());
+        Q_EMIT shotStarted(m_ffmpegcurrent->job->getId(), m_ffmpegcurrent->job->getElement(m_ffmpegcurrent->job_element_index)->parent_shot);
     }
 }
 
@@ -644,9 +748,9 @@ void JobWorkerAsync::processFinished()
         {
             m_ffmpegcurrent->job->setDestinationFile(m_ffmpegcurrent->destFile);
 
-            emit fileProduced(m_ffmpegcurrent->job->getDestinationFile());
-            emit shotFinished(m_ffmpegcurrent->job->getId(), 0, m_ffmpegcurrent->job->getElement(m_ffmpegcurrent->job_element_index)->parent_shot);
-            emit jobFinished(m_ffmpegcurrent->job->getId(), js);
+            Q_EMIT fileProduced(m_ffmpegcurrent->job->getDestinationFile());
+            Q_EMIT shotFinished(m_ffmpegcurrent->job->getId(), 0, m_ffmpegcurrent->job->getElement(m_ffmpegcurrent->job_element_index)->parent_shot);
+            Q_EMIT jobFinished(m_ffmpegcurrent->job->getId(), js);
         }
 
         m_childProcess->waitForFinished();
@@ -682,6 +786,13 @@ void JobWorkerAsync::processOutput()
                 m_duration = QTime::fromString(duration_qstr, "hh:mm:ss.z");
                 //qDebug() << "> duration (qstr:" << duration_qstr << ") [qtime:" << m_duration;
             }
+            else
+            {
+                if (m_ffmpegcurrent && m_ffmpegcurrent->job)
+                {
+                    m_duration = QTime(0,0,0).addMSecs(m_ffmpegcurrent->job->getElement(m_ffmpegcurrent->job_element_index)->parent_shot->getDuration());
+                }
+            }
         }
         else
         {
@@ -697,9 +808,12 @@ void JobWorkerAsync::processOutput()
         {
             float progress = QTime(0, 0, 0).msecsTo(m_progress) / static_cast<float>(QTime(0, 0, 0).msecsTo(m_duration));
             progress *= 100.f;
-
             //qDebug() << "- PROGRESS:" << progress;
-            emit jobProgress(m_ffmpegcurrent->job->getId(), progress);
+
+            if (m_ffmpegcurrent && m_ffmpegcurrent->job)
+            {
+                Q_EMIT jobProgress(m_ffmpegcurrent->job->getId(), progress);
+            }
         }
     }
 }

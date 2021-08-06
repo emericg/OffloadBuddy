@@ -523,7 +523,7 @@ Item {
             if (index === 2) {
                 popupMove.openSingle(mediaLibrary, selectedItem.shot)
             }
-            if (index === 3) {
+            if (index === 4) {
                 popupEncoding.shots_uuids = mediaLibrary.getSelectedShotsUuids(indexes)
                 popupEncoding.shots_names = mediaLibrary.getSelectedShotsNames(indexes)
                 popupEncoding.shots_files = mediaLibrary.getSelectedShotsFilepaths(indexes)

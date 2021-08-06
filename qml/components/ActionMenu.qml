@@ -28,9 +28,10 @@ Rectangle {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    function setMenuButtons(move, offload, encode, gpmf, gps, file, folder, remove) {
-        shotMove.visible = move
+    function setMenuButtons(offload, move, merge, encode, gpmf, gps, file, folder, remove) {
         shotOffload.visible = offload
+        shotMove.visible = move
+        shotMerge.visible = merge
         shotEncode.visible = encode
         telemetry.visible = (gpmf || gps)
         telemetryGPMF.visible = false
@@ -68,8 +69,15 @@ Rectangle {
             onButtonClicked: menuSelected(index)
         }
         ActionButton {
-            id: shotEncode
+            id: shotMerge
             index: 3
+            button_text: qsTr("Merge files")
+            button_source: "qrc:/assets/icons_material/baseline-merge_type-24px.svg"
+            onButtonClicked: menuSelected(index)
+        }
+        ActionButton {
+            id: shotEncode
+            index: 4
             button_text: qsTr("Encode")
             button_source: "qrc:/assets/icons_material/baseline-memory-24px.svg"
             onButtonClicked: menuSelected(index)

@@ -226,7 +226,7 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
 
     // DISPATCH JOB ////////////////////////////////////////////////////////////
 
-    if (type == JobUtils::JOB_ENCODE)
+    if (type == JobUtils::JOB_ENCODE || type == JobUtils::JOB_MERGE)
     {
         // ffmpeg worker
         if (m_job_cpu == nullptr)

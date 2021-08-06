@@ -646,8 +646,16 @@ void Device::offloadSelected(const QString &shot_uuid, const QVariant &settings)
 
     // Submit job
     JobManager *jm = JobManager::getInstance();
-    if (jm && shot) jm->addJob(JobUtils::JOB_OFFLOAD, this, nullptr, shot,
-                               &dst, nullptr, &set);
+    if (set.mergeChapters && shot->getChapterCount() > 1)
+    {
+        if (jm && shot) jm->addJob(JobUtils::JOB_MERGE, this, nullptr, shot,
+                                   &dst, nullptr, &set);
+    }
+    else
+    {
+        if (jm && shot) jm->addJob(JobUtils::JOB_OFFLOAD, this, nullptr, shot,
+                                   &dst, nullptr, &set);
+    }
 }
 
 /* ************************************************************************** */
@@ -661,14 +669,6 @@ void Device::offloadSelection(const QVariant &uuids, const QVariant &settings)
     QVariantMap variantMap = variant.toMap();
     //qDebug() << "> variantMap " << variantMap;
 
-    // Get shots
-    QList<Shot *> list;
-    const QStringList selectedUuids = qvariant_cast<QStringList>(uuids);
-    for (const auto &u: selectedUuids)
-    {
-        list.push_back(m_shotModel->getShotWithUuid(u));
-    }
-
     // Get destination
     JobDestination dst;
     {
@@ -704,10 +704,39 @@ void Device::offloadSelection(const QVariant &uuids, const QVariant &settings)
             set.autoDelete = variantMap.value("autoDelete").toBool();
     }
 
+    // Get shots
+    QList <Shot *> list_merge;
+    QList <Shot *> list_offload;
+    const QStringList selectedUuids = qvariant_cast<QStringList>(uuids);
+    for (const auto &u: selectedUuids)
+    {
+        Shot *s = m_shotModel->getShotWithUuid(u);
+        if (set.mergeChapters && s->getChapterCount() > 1)
+        {
+            list_merge.push_back(s);
+        }
+        else
+        {
+            list_offload.push_back(s);
+        }
+    }
+
+
     // Submit jobs
     JobManager *jm = JobManager::getInstance();
-    if (jm && !list.empty()) jm->addJobs(JobUtils::JOB_OFFLOAD, this, nullptr, list,
-                                         &dst, nullptr, &set);
+    if (jm)
+    {
+        if (!list_merge.empty())
+        {
+            jm->addJobs(JobUtils::JOB_MERGE, this, nullptr, list_merge,
+                        &dst, nullptr, &set);
+        }
+        if (!list_offload.empty())
+        {
+            jm->addJobs(JobUtils::JOB_OFFLOAD, this, nullptr, list_offload,
+                        &dst, nullptr, &set);
+        }
+    }
 }
 
 /* ************************************************************************** */
@@ -721,10 +750,6 @@ void Device::offloadAll(const QVariant &settings)
     QVariantMap variantMap = variant.toMap();
     //qDebug() << "> variantMap " << variantMap;
 
-    // Get shots
-    QList<Shot *> shots;
-    m_shotModel->getShots(shots);
-
     // Get destination
     JobDestination dst;
     {
@@ -760,10 +785,39 @@ void Device::offloadAll(const QVariant &settings)
             set.autoDelete = variantMap.value("autoDelete").toBool();
     }
 
+    // Get shots
+    QList <Shot *> shots;
+    m_shotModel->getShots(shots);
+
+    QList <Shot *> list_merge;
+    QList <Shot *> list_offload;
+    for (const auto &s: qAsConst(shots))
+    {
+        if (set.mergeChapters && s->getChapterCount() > 1)
+        {
+            list_merge.push_back(s);
+        }
+        else
+        {
+            list_offload.push_back(s);
+        }
+    }
+
     // Submit jobs
     JobManager *jm = JobManager::getInstance();
-    if (jm && !shots.empty()) jm->addJobs(JobUtils::JOB_OFFLOAD, this, nullptr, shots,
-                                          &dst, nullptr, &set);
+    if (jm)
+    {
+        if (!list_merge.empty())
+        {
+            jm->addJobs(JobUtils::JOB_MERGE, this, nullptr, list_merge,
+                        &dst, nullptr, &set);
+        }
+        if (!list_offload.empty())
+        {
+            jm->addJobs(JobUtils::JOB_OFFLOAD, this, nullptr, list_offload,
+                        &dst, nullptr, &set);
+        }
+    }
 }
 
 /* ************************************************************************** */
