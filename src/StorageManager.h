@@ -109,6 +109,7 @@ Q_SIGNALS:
     void directoryRemoved(const QString &);
 
 public slots:
+    void directoryAvailabilityModified(const QString &, bool);
     void directoryModified();
 
 public:
@@ -125,8 +126,6 @@ public:
 
     Q_INVOKABLE void addDirectory(const QString &path);
     Q_INVOKABLE void removeDirectory(const QString &path);
-    Q_INVOKABLE void enableDirectory(const QString &path);
-    Q_INVOKABLE void disableDirectory(const QString &path);
 };
 
 /* ************************************************************************** */

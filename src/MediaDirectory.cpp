@@ -117,8 +117,8 @@ void MediaDirectory::setPath(const QString &path)
         // Make sure the path is terminated with a separator.
         if (!m_path.endsWith('/')) m_path += '/';
 
-        emit directoryUpdated();
-        emit saveData();
+        Q_EMIT directoryUpdated(m_path);
+        Q_EMIT saveData();
 
         if (m_storage)
         {
@@ -134,8 +134,8 @@ void MediaDirectory::setContent(int content)
     if (m_content != content)
     {
         m_content = content;
-        emit directoryUpdated();
-        emit saveData();
+        Q_EMIT directoryUpdated(m_path);
+        Q_EMIT saveData();
     }
 }
 
@@ -144,8 +144,8 @@ void MediaDirectory::setHierarchy(int hierarchy)
     if (m_hierarchy != hierarchy)
     {
         m_hierarchy = hierarchy;
-        emit directoryUpdated();
-        emit saveData();
+        Q_EMIT directoryUpdated(m_path);
+        Q_EMIT saveData();
     }
 }
 
@@ -154,8 +154,8 @@ void MediaDirectory::setEnabled(bool enabled)
     if (m_enabled != enabled)
     {
         m_enabled = enabled;
-        emit enabledUpdated();
-        emit saveData();
+        Q_EMIT enabledUpdated(m_path, m_enabled);
+        Q_EMIT saveData();
     }
 }
 
@@ -164,8 +164,8 @@ void MediaDirectory::setPrimary(bool primary)
     if (m_primary != primary)
     {
         m_primary = primary;
-        emit primaryUpdated();
-        emit saveData();
+        Q_EMIT primaryUpdated(m_path);
+        Q_EMIT saveData();
     }
 }
 
@@ -174,8 +174,8 @@ void MediaDirectory::setScanning(bool scanning)
     if (scanning != m_scanning)
     {
         m_scanning = scanning;
-        emit scanningUpdated();
-        emit saveData();
+        Q_EMIT scanningUpdated(m_path);
+        Q_EMIT saveData();
     }
 }
 
@@ -223,7 +223,7 @@ void MediaDirectory::refreshMediaDirectory()
         {
             // If there is a storage available, refresh it
             m_storage->refresh();
-            emit storageUpdated();
+            Q_EMIT storageUpdated();
         }
     }
 
@@ -231,7 +231,7 @@ void MediaDirectory::refreshMediaDirectory()
     if (!m_storage)
     {
         m_storage = new QStorageInfo(m_path);
-        emit storageUpdated();
+        Q_EMIT storageUpdated();
     }
 
     // Now update the 'm_available' state
@@ -245,13 +245,13 @@ void MediaDirectory::refreshMediaDirectory()
         {
             // this storage only support 4GiB files
             m_storage_lfs = false;
-            emit storageUpdated();
+            Q_EMIT storageUpdated();
         }
 
         if (m_available == false)
         {
             m_available = true;
-            emit availableUpdated();
+            Q_EMIT availableUpdated(m_path, m_available);
         }
 /*
         // Basic checks // need at least 8 MB
@@ -265,20 +265,20 @@ void MediaDirectory::refreshMediaDirectory()
             {
                 qWarning() << "QFile::Permissions error:" << e << (unsigned)e;
                 m_available = false;
-                emit availableUpdated();
+                Q_EMIT availableUpdated();
             }
             else
 #endif // defined(Q_OS_LINUX)
             {
                 m_available = true;
-                emit availableUpdated();
+                Q_EMIT availableUpdated();
             }
         }
         else
         {
             qDebug() << "MediaDirectory(" << m_path << ") is not available: read only or full";
             m_available = false;
-            emit availableUpdated();
+            Q_EMIT availableUpdated();
         }
 */
     }
@@ -288,7 +288,7 @@ void MediaDirectory::refreshMediaDirectory()
         {
             qWarning() << "MediaDirectory(" << m_path << ") is not available: invalid or not ready";
             m_available = false;
-            emit availableUpdated();
+            Q_EMIT availableUpdated(m_path, m_available);
         }
     }
 }

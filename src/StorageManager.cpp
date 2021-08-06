@@ -89,12 +89,12 @@ bool StorageManager::readSettings()
 
                 MediaDirectory *d = new MediaDirectory(pp, cc, hh, ee, false, this);
                 m_mediaDirectories.push_back(d);
-                emit directoryAdded(d->getPath());
-                emit directoriesUpdated();
+                Q_EMIT directoryAdded(d->getPath());
+                Q_EMIT directoriesUpdated();
 
                 connect(d, SIGNAL(saveData()), this, SLOT(directoryModified()));
-                connect(d, SIGNAL(enabledUpdated()), this, SIGNAL(directoriesUpdated()));
-                connect(d, SIGNAL(availableUpdated()), this, SIGNAL(directoriesUpdated()));
+                connect(d, SIGNAL(enabledUpdated(QString,bool)), this, SLOT(directoryAvailabilityModified(QString,bool)));
+                connect(d, SIGNAL(availableUpdated(QString,bool)), this, SLOT(directoryAvailabilityModified(QString,bool)));
             }
         }
 
@@ -182,6 +182,23 @@ void StorageManager::setContentHierarchy(unsigned value)
     }
 }
 
+void StorageManager::directoryAvailabilityModified(const QString &path, bool state)
+{
+    if (!path.isEmpty())
+    {
+        if (state)
+        {
+            Q_EMIT directoryAdded(path);
+        }
+        else
+        {
+            Q_EMIT directoryRemoved(path);
+        }
+
+        Q_EMIT directoriesUpdated();
+    }
+}
+
 void StorageManager::directoryModified()
 {
     writeSettings();
@@ -196,12 +213,12 @@ void StorageManager::createDefaultDirectory()
     if (d)
     {
         m_mediaDirectories.push_back(d);
-        emit directoryAdded(d->getPath());
-        emit directoriesUpdated();
+        Q_EMIT directoryAdded(d->getPath());
+        Q_EMIT directoriesUpdated();
 
         connect(d, SIGNAL(saveData()), this, SLOT(directoryModified()));
-        connect(d, SIGNAL(enabledUpdated()), this, SIGNAL(directoriesUpdated()));
-        connect(d, SIGNAL(availableUpdated()), this, SIGNAL(directoriesUpdated()));
+        connect(d, SIGNAL(enabledUpdated(QString)), this, SLOT(directoryAvailabilityModified(QString)));
+        connect(d, SIGNAL(availableUpdated(QString)), this, SLOT(directoryAvailabilityModified(QString)));
         directoryModified();
     }
 /*
@@ -239,12 +256,12 @@ void StorageManager::addDirectory(const QString &path)
         if (dd)
         {
             m_mediaDirectories.push_back(dd);
-            emit directoryAdded(dd->getPath());
-            emit directoriesUpdated();
+            Q_EMIT directoryAdded(dd->getPath());
+            Q_EMIT directoriesUpdated();
 
             connect(dd, SIGNAL(saveData()), this, SLOT(directoryModified()));
-            connect(dd, SIGNAL(enabledUpdated()), this, SIGNAL(directoriesUpdated()));
-            connect(dd, SIGNAL(availableUpdated()), this, SIGNAL(directoriesUpdated()));
+            connect(dd, SIGNAL(enabledUpdated(QString)), this, SLOT(directoryAvailabilityModified(QString)));
+            connect(dd, SIGNAL(availableUpdated(QString)), this, SLOT(directoryAvailabilityModified(QString)));
             directoryModified();
         }
     }
@@ -260,8 +277,8 @@ void StorageManager::removeDirectory(const QString &path)
             if (dd && dd->getPath() == path)
             {
                 m_mediaDirectories.removeOne(d);
-                emit directoryRemoved(dd->getPath());
-                emit directoriesUpdated();
+                Q_EMIT directoryRemoved(dd->getPath());
+                Q_EMIT directoriesUpdated();
 
                 directoryModified();
                 break;
@@ -272,22 +289,6 @@ void StorageManager::removeDirectory(const QString &path)
     if (m_mediaDirectories.isEmpty())
     {
         //createDefaultDirectory();
-    }
-}
-
-void StorageManager::disableDirectory(const QString &path)
-{
-    if (!path.isEmpty())
-    {
-        emit directoryRemoved(path);
-    }
-}
-
-void StorageManager::enableDirectory(const QString &path)
-{
-    if (!path.isEmpty())
-    {
-        emit directoryAdded(path);
     }
 }
 

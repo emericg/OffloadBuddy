@@ -110,8 +110,8 @@ void MediaStorage::setDevicePath(const QString &path)
         // Make sure the path is terminated with a separator.
         if (!m_fs_path.endsWith('/')) m_fs_path += '/';
 
-        emit directoryUpdated();
-        emit saveData();
+        Q_EMIT directoryUpdated();
+        Q_EMIT saveData();
 
         if (m_fs_storage)
         {
@@ -155,8 +155,8 @@ void MediaStorage::setContent(int content)
     if (m_content != content)
     {
         m_content = content;
-        emit directoryUpdated();
-        emit saveData();
+        Q_EMIT directoryUpdated();
+        Q_EMIT saveData();
     }
 }
 
@@ -165,8 +165,8 @@ void MediaStorage::setHierarchy(int hierarchy)
     if (m_hierarchy != hierarchy)
     {
         m_hierarchy = hierarchy;
-        emit directoryUpdated();
-        emit saveData();
+        Q_EMIT directoryUpdated();
+        Q_EMIT saveData();
     }
 }
 
@@ -175,8 +175,8 @@ void MediaStorage::setEnabled(bool enabled)
     if (m_enabled != enabled)
     {
         m_enabled = enabled;
-        emit enabledUpdated();
-        emit saveData();
+        Q_EMIT enabledUpdated();
+        Q_EMIT saveData();
     }
 }
 
@@ -185,8 +185,8 @@ void MediaStorage::setPrimary(bool primary)
     if (m_primary != primary)
     {
         m_primary = primary;
-        emit primaryUpdated();
-        emit saveData();
+        Q_EMIT primaryUpdated();
+        Q_EMIT saveData();
     }
 }
 
@@ -195,8 +195,8 @@ void MediaStorage::setScanning(bool scanning)
     if (scanning != m_scanning)
     {
         m_scanning = scanning;
-        emit scanningUpdated();
-        emit saveData();
+        Q_EMIT scanningUpdated();
+        Q_EMIT saveData();
     }
 }
 
@@ -257,7 +257,7 @@ void MediaStorage::refreshMediaStorage_fs()
         {
             // If there is a storage available, refresh it
             m_fs_storage->refresh();
-            emit storageUpdated();
+            Q_EMIT storageUpdated();
         }
     }
 
@@ -265,7 +265,7 @@ void MediaStorage::refreshMediaStorage_fs()
     if (!m_fs_storage)
     {
         m_fs_storage = new QStorageInfo(m_fs_path);
-        emit storageUpdated();
+        Q_EMIT storageUpdated();
     }
 
     // Now update the 'm_available' state
@@ -279,13 +279,13 @@ void MediaStorage::refreshMediaStorage_fs()
         {
             // this storage only support 4GiB files
             m_storage_lfs = false;
-            emit storageUpdated();
+            Q_EMIT storageUpdated();
         }
 
         if (m_available == false)
         {
             m_available = true;
-            emit availableUpdated();
+            Q_EMIT availableUpdated();
         }
 /*
         // Basic checks // need at least 8 MB
@@ -299,20 +299,20 @@ void MediaStorage::refreshMediaStorage_fs()
             {
                 qWarning() << "QFile::Permissions error:" << e << (unsigned)e;
                 m_available = false;
-                emit availableUpdated();
+                Q_EMIT availableUpdated();
             }
             else
 #endif // defined(Q_OS_LINUX)
             {
                 m_available = true;
-                emit availableUpdated();
+                Q_EMIT availableUpdated();
             }
         }
         else
         {
             qDebug() << "MediaStorage(" << m_path << ") is not available: read only or full";
             m_available = false;
-            emit availableUpdated();
+            Q_EMIT availableUpdated();
         }
 */
     }
@@ -322,7 +322,7 @@ void MediaStorage::refreshMediaStorage_fs()
         {
             qWarning() << "MediaStorage(" << m_fs_path << ") is not available: invalid or not ready";
             m_available = false;
-            emit availableUpdated();
+            Q_EMIT availableUpdated();
         }
     }
 }

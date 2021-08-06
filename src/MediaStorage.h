@@ -53,34 +53,33 @@ class MediaStorage: public QObject
     Q_PROPERTY(int directoryContent READ getContent WRITE setContent NOTIFY directoryUpdated)
     Q_PROPERTY(int directoryHierarchy READ getHierarchy WRITE setHierarchy NOTIFY directoryUpdated)
 
-    Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledUpdated)
     Q_PROPERTY(bool available READ isAvailable NOTIFY availableUpdated)
-    Q_PROPERTY(bool primary READ isPrimary NOTIFY primaryUpdated)
+    Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledUpdated)
+    Q_PROPERTY(bool primary READ isPrimary WRITE setPrimary NOTIFY primaryUpdated)
     Q_PROPERTY(bool scanning READ isScanning NOTIFY scanningUpdated)
+
     Q_PROPERTY(bool readOnly READ isReadOnly NOTIFY storageUpdated)
     Q_PROPERTY(bool largeFileSupport READ hasLFS NOTIFY storageUpdated)
-
     Q_PROPERTY(qint64 spaceTotal READ getSpaceTotal NOTIFY storageUpdated)
     Q_PROPERTY(qint64 spaceUsed READ getSpaceUsed NOTIFY storageUpdated)
     Q_PROPERTY(qint64 spaceAvailable READ getSpaceAvailable NOTIFY storageUpdated)
     Q_PROPERTY(double storageLevel READ getStorageLevel NOTIFY storageUpdated)
 
-    int m_content = 0;                  // see StorageUtils::StorageContent
-    int m_hierarchy = 0;                // see StorageUtils::StorageHierarchy
+    int m_content = 0;                  //!< see StorageUtils::StorageContent
+    int m_hierarchy = 0;                //!< see StorageUtils::StorageHierarchy
 
-    bool m_primary = false;
-    bool m_enabled = true;
     bool m_available = false;
+    bool m_enabled = true;
+    bool m_primary = false;
     bool m_scanning = false;
 
-    int m_storage_type = 0;             // see StorageUtils::StorageType
+    int m_storage_type = 0;             //!< see StorageUtils::StorageType
     bool m_storage_lfs = true;
-
-    QTimer m_storage_refreshTimer;
 
     // Filesystem storage
     QString m_fs_path;
     QStorageInfo *m_fs_storage = nullptr;
+    QTimer m_storage_refreshTimer;
 
     // MTP storage
     unsigned m_dcim_id = 0;
@@ -116,6 +115,9 @@ public:
     QString getDevicePath();
     void setDevicePath(const QString &path);
 
+    bool isScanning() const { return m_scanning; }
+    void setScanning(bool scanning);
+
     //
 
     int getContent() const { return m_content; }
@@ -123,8 +125,6 @@ public:
 
     int getHierarchy() const { return m_hierarchy; }
     void setHierarchy(int hierarchy);
-
-    //
 
     bool isPrimary() const { return m_primary; }
     void setPrimary(bool primary);
@@ -135,8 +135,7 @@ public:
     bool isAvailable() const { return m_available; }
     bool isAvailableFor(unsigned shotType, int64_t shotSize);
 
-    bool isScanning() const { return m_scanning; }
-    void setScanning(bool scanning);
+    //
 
     bool isReadOnly();
     bool hasLFS() const { return m_storage_lfs; }

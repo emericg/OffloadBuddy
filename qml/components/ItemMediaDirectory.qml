@@ -137,11 +137,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
 
                 checked: directory.enabled
-                onClicked: {
-                    directory.enabled = checked
-                    if (checked) storageManager.enableDirectory(textField_path.text)
-                    else storageManager.disableDirectory(textField_path.text)
-                }
+                onClicked: directory.enabled = checked
             }
             Column {
                 anchors.verticalCenter: parent.verticalCenter
@@ -160,8 +156,8 @@ Item {
                 }
                 ProgressBarThemed {
                     id: progressBar
-                    height: 8
                     width: parent.width
+                    height: 8
 
                     value: directory.storageLevel
                 }
