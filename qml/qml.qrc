@@ -17,6 +17,7 @@
         <file>PopupExit.qml</file>
         <file>PopupOffload.qml</file>
         <file>PopupMove.qml</file>
+        <file>PopupMerge.qml</file>
         <file>PopupTelemetry.qml</file>
         <file>MediaDetailOverview.qml</file>
         <file>MediaDetailDetails.qml</file>

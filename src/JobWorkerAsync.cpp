@@ -790,6 +790,7 @@ void JobWorkerAsync::processOutput()
             {
                 if (m_ffmpegcurrent && m_ffmpegcurrent->job)
                 {
+                    // fallback, use duration from the shot
                     m_duration = QTime(0,0,0).addMSecs(m_ffmpegcurrent->job->getElement(m_ffmpegcurrent->job_element_index)->parent_shot->getDuration());
                 }
             }

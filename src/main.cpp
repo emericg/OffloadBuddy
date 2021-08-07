@@ -178,11 +178,15 @@ int main(int argc, char *argv[])
 
     qmlRegisterSingletonType(QUrl("qrc:/qml/ThemeEngine.qml"), "ThemeEngine", 1, 0, "Theme");
 
-    qmlRegisterUncreatableMetaObject(
-        SettingsUtils::staticMetaObject,
-        "SettingsUtils", 1, 0,
-        "SettingsUtils",             // name in QML (does not have to match C++ name)
-        "Error: only enums"); // error in case someone tries to create a MyNamespace object
+    qmlRegisterUncreatableMetaObject(SettingsUtils::staticMetaObject,
+                                     "SettingsUtils", 1, 0,
+                                     "SettingsUtils", // name in QML (does not have to match C++ name)
+                                     "Error: only enums");
+
+    qmlRegisterUncreatableMetaObject(StorageUtils::staticMetaObject,
+                                     "StorageUtils", 1, 0,
+                                     "StorageUtils", // name in QML (does not have to match C++ name)
+                                     "Error: only enums");
 
     ShotUtils::registerQML();
     JobUtils::registerQML();

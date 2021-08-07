@@ -3,6 +3,7 @@ import QtQuick.Controls 2.12
 
 import ThemeEngine 1.0
 import ShotUtils 1.0
+import StorageUtils 1.0
 import "qrc:/js/UtilsNumber.js" as UtilsNumber
 import "qrc:/js/UtilsString.js" as UtilsString
 import "qrc:/js/UtilsPath.js" as UtilsPath
@@ -1299,8 +1300,9 @@ Popup {
                                 for (var child in storageManager.directoriesList) {
                                     if (storageManager.directoriesList[child].available &&
                                         storageManager.directoriesList[child].enabled &&
-                                        storageManager.directoriesList[child].directoryContent !== 2)
+                                        storageManager.directoriesList[child].directoryContent !== StorageUtils.ContentAudio) {
                                         cbDestinations.append( { "text": storageManager.directoriesList[child].directoryPath } )
+                                    }
                                 }
                                 cbDestinations.append( { "text": qsTr("Select path manually") } )
 
@@ -1316,25 +1318,21 @@ Popup {
                                 var previousDestination = comboBoxDestination.currentText
                                 if (previousDestination === qsTr("Next to the video file")) previousDestination = currentShot.folder
 
-                                if (cbinit) {
-                                    if (currentShot) {
-                                        if (comboBoxDestination.currentIndex === 0) {
-                                            fileInput.folder = currentShot.folder + jobManager.getDestinationHierarchy(currentShot, selectedDestination)
-                                        } else if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
-                                            fileInput.folder = previousDestination + jobManager.getDestinationHierarchy(currentShot, previousDestination)
-                                        } else if (comboBoxDestination.currentIndex < cbDestinations.count) {
-                                            fileInput.folder = selectedDestination + jobManager.getDestinationHierarchy(currentShot, selectedDestination)
-                                        }
-                                        fileInput.file = currentShot.name + "_reencoded"
-                                    } else {
-                                        if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
-                                            folderInput.folder = previousDestination
-                                        } else if (comboBoxDestination.currentIndex < cbDestinations.count) {
-                                            folderInput.folder = selectedDestination
-                                        }
+                                if (currentShot) {
+                                    if (comboBoxDestination.currentIndex === 0) {
+                                        fileInput.folder = currentShot.folder + jobManager.getDestinationHierarchy(currentShot, selectedDestination)
+                                    } else if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
+                                        fileInput.folder = previousDestination + jobManager.getDestinationHierarchy(currentShot, previousDestination)
+                                    } else if (comboBoxDestination.currentIndex < cbDestinations.count) {
+                                        fileInput.folder = selectedDestination + jobManager.getDestinationHierarchy(currentShot, selectedDestination)
                                     }
+                                    fileInput.file = currentShot.name + "_reencoded"
                                 } else {
-                                    cbinit = true
+                                    if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
+                                        folderInput.folder = previousDestination
+                                    } else if (comboBoxDestination.currentIndex < cbDestinations.count) {
+                                        folderInput.folder = selectedDestination
+                                    }
                                 }
                             }
 
@@ -1442,7 +1440,6 @@ Popup {
                 enabled: (encodingMode === "batch" || fileInput.isValid)
 
                 onClicked: {
-                    //if (typeof currentShot === "undefined" || !currentShot) return
                     if (typeof mediaProvider === "undefined" || !mediaProvider) return
 
                     var settingsEncoding = {}
@@ -1541,7 +1538,7 @@ Popup {
                     }
 
                     if (rbGIF.checked) {
-                        // Make sure we feed the complex graph
+                        // make sure we feed the complex graph
                         settingsEncoding["fps"] = selectorGifFps.fps;
                         settingsEncoding["resolution"] = selectorGifRes.res;
                         settingsEncoding["scale"] = "-2:" + selectorGifRes.res;
@@ -1558,7 +1555,7 @@ Popup {
 
                         // TODO // transform
 
-                        // Effect
+                        // effects
                         if (rbGifEffectBackward.checked) settingsEncoding["gif_effect"] = "backward"
                         else if (rbGifEffectBackandForth.checked) settingsEncoding["gif_effect"] = "forwardbackward"
                         else if (rbGifEffectForthandBack.checked) settingsEncoding["gif_effect"] = "backwardforward"
@@ -1573,14 +1570,14 @@ Popup {
 
                     settingsEncoding["path"] = fileInput.text
 
-                    // Filters
+                    // filters
                     if (checkBox_defisheye.checked) settingsEncoding["defisheye"] = checkBox_defisheye.checked
                     if (checkBox_deshake.checked) settingsEncoding["deshake"] = checkBox_deshake.checked
 
                     // dispatch job
                     if (currentShot) {
                         mediaProvider.reencodeSelected(currentShot.uuid, settingsEncoding)
-                    } else if (shots_uuids.length > 0) {
+                    } else if (mediaProvider && shots_uuids.length > 0) {
                         mediaProvider.reencodeSelection(shots_uuids, settingsEncoding)
                     }
                     popupEncoding.close()

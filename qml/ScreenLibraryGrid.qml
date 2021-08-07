@@ -79,6 +79,8 @@ Item {
 
     PopupMove { id: popupMove }
 
+    PopupMerge { id: popupMerge }
+
     PopupEncoding { id: popupEncoding }
 
     PopupTelemetry { id: popupTelemetry }
@@ -522,6 +524,9 @@ Item {
 
             if (index === 2) {
                 popupMove.openSingle(mediaLibrary, selectedItem.shot)
+            }
+            if (index === 3) {
+                popupMerge.openSingle(mediaLibrary, selectedItem.shot)
             }
             if (index === 4) {
                 popupEncoding.shots_uuids = mediaLibrary.getSelectedShotsUuids(indexes)

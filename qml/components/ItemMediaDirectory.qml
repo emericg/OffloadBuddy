@@ -2,6 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 
 import ThemeEngine 1.0
+import StorageUtils 1.0
 import "qrc:/js/UtilsString.js" as UtilsString
 import "qrc:/js/UtilsPath.js" as UtilsPath
 
@@ -230,12 +231,13 @@ Item {
                 model: ListModel {
                     id: cbItemsContent2
                     ListElement { text: qsTr("all media"); }
+                    ListElement { text: qsTr("audio"); }
                     ListElement { text: qsTr("videos"); }
                     ListElement { text: qsTr("pictures"); }
                 }
                 Component.onCompleted: {
-                    currentIndex = directory.directoryContent;
-                    if (currentIndex === -1) { currentIndex = 0 }
+                    currentIndex = directory.directoryContent
+                    if (currentIndex === -1) currentIndex = 0
                 }
                 property bool cbinit: false
                 onCurrentIndexChanged: {
@@ -274,7 +276,7 @@ Item {
 
                 Component.onCompleted: {
                     currentIndex = directory.directoryHierarchy
-                    if (currentIndex === -1) { currentIndex = 0 }
+                    if (currentIndex === -1) currentIndex = 0
                 }
                 property bool cbinit: false
                 onCurrentIndexChanged: {

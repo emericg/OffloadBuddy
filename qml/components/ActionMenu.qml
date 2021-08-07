@@ -71,7 +71,7 @@ Rectangle {
         ActionButton {
             id: shotMerge
             index: 3
-            button_text: qsTr("Merge files")
+            button_text: qsTr("Merge chapters")
             button_source: "qrc:/assets/icons_material/baseline-merge_type-24px.svg"
             onButtonClicked: menuSelected(index)
         }

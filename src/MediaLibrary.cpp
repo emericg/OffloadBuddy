@@ -417,6 +417,84 @@ void MediaLibrary::moveSelection(const QVariant &uuids, const QVariant &settings
 /* ************************************************************************** */
 /* ************************************************************************** */
 
+void MediaLibrary::mergeSelected(const QString &shot_uuid, const QVariant &settings)
+{
+    qDebug() << "MediaLibrary::mergeSelected(" << shot_uuid << ")";
+
+    QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
+    if (static_cast<QMetaType::Type>(variant.type()) != QMetaType::QVariantMap) return;
+    QVariantMap variantMap = variant.toMap();
+    //qDebug() << "> variantMap " << variantMap;
+
+    // Get shot
+    Shot *shot = m_shotModel->getShotWithUuid(shot_uuid);
+
+    // Get destination
+    JobDestination dst;
+    {
+        if (variantMap.contains("mediaDirectory"))
+            dst.mediaDirectory = variantMap.value("mediaDirectory").toString();
+
+        if (variantMap.contains("folder"))
+            dst.folder = variantMap.value("folder").toString();
+
+        if (variantMap.contains("file"))
+            dst.file = variantMap.value("file").toString();
+
+        if (variantMap.contains("extension"))
+            dst.file = variantMap.value("extension").toString();
+    }
+
+    // Submit job
+    JobManager *jm = JobManager::getInstance();
+    if (jm && shot) jm->addJob(JobUtils::JOB_MERGE, nullptr, this, shot,
+                               &dst, nullptr, nullptr, nullptr, nullptr);
+}
+
+/* ************************************************************************** */
+
+void MediaLibrary::mergeSelection(const QVariant &uuids, const QVariant &settings)
+{
+    qDebug() << "MediaLibrary::mergeSelection(" << uuids << ")";
+
+    QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
+    if (static_cast<QMetaType::Type>(variant.type()) != QMetaType::QVariantMap) return;
+    QVariantMap variantMap = variant.toMap();
+    //qDebug() << "> variantMap " << variantMap;
+
+    // Get shots
+    QList<Shot *> list;
+    const QStringList selectedUuids = qvariant_cast<QStringList>(uuids);
+    for (const auto &u: selectedUuids)
+    {
+        list.push_back(m_shotModel->getShotWithUuid(u));
+    }
+
+    // Get destination
+    JobDestination dst;
+    {
+        if (variantMap.contains("mediaDirectory"))
+            dst.mediaDirectory = variantMap.value("mediaDirectory").toString();
+
+        if (variantMap.contains("folder"))
+            dst.folder = variantMap.value("folder").toString();
+
+        if (variantMap.contains("file"))
+            dst.file = variantMap.value("file").toString();
+
+        if (variantMap.contains("extension"))
+            dst.file = variantMap.value("extension").toString();
+    }
+
+    // Submit jobs
+    JobManager *jm = JobManager::getInstance();
+    if (jm && !list.empty()) jm->addJobs(JobUtils::JOB_MERGE, nullptr, this, list,
+                                         &dst, nullptr, nullptr, nullptr, nullptr);
+}
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+
 void MediaLibrary::deleteSelected(const QString &shot_uuid, const QVariant &settings)
 {
     qDebug() << "MediaLibrary::deleteSelected(" << shot_uuid << ")";

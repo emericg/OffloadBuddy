@@ -28,7 +28,7 @@ Rectangle {
         spacing: 16
 
         ButtonWireframeImage {
-            id: buttonMove
+            id: buttonMoveOffload
             anchors.verticalCenter: parent.verticalCenter
 
             fullColor: true
@@ -54,6 +54,28 @@ Rectangle {
         }
 
         ButtonWireframeImage {
+            id: buttonMergeChapters
+            anchors.verticalCenter: parent.verticalCenter
+            visible: (appContent.state === "library")
+
+            fullColor: true
+            primaryColor: Theme.colorActionbarHighlight
+
+            text: qsTr("Merge chapters")
+            source: "qrc:/assets/icons_material/baseline-merge_type-24px.svg"
+            onClicked: {
+                if (appContent.state === "library") {
+                    popupMerge.shots_uuids = mediaLibrary.getSelectedShotsUuids(mediaGrid.selectionList)
+                    popupMerge.shots_names = mediaLibrary.getSelectedShotsNames(mediaGrid.selectionList)
+                    popupMerge.shots_files = mediaLibrary.getSelectedShotsFilepaths(mediaGrid.selectionList)
+                    popupMerge.openSelection(mediaLibrary)
+                } else if (appContent.state === "device") {
+                    // no merge possible directly on a device
+                }
+            }
+        }
+
+        ButtonWireframeImage {
             id: buttonMergeShots
             anchors.verticalCenter: parent.verticalCenter
             visible: (appContent.state !== "device" && mediaGrid.selectionCount >= 2 && mediaGrid.selectionCount <= 4)
@@ -62,7 +84,7 @@ Rectangle {
             fullColor: true
             primaryColor: Theme.colorActionbarHighlight
 
-            text: qsTr("Merge shots together")
+            text: qsTr("Merge shots")
             source: "qrc:/assets/icons_material/baseline-merge_type-24px.svg"
             onClicked: {
                 if (appContent.state === "library") {

@@ -143,8 +143,8 @@ Rectangle {
                 telemetry_gpmf = true
             if (shot.hasGPS)
                 telemetry_gps = true
-            if (shot.chapterCount > 1)
-                merge = false // chaptered video
+            if (shot.chapterCount > 1 && !shotDevice)
+                merge = true // chaptered video
         } else if (shot.fileType === ShotUtils.FILE_PICTURE) { // all kind of photos
             if (shot.shotType > ShotUtils.SHOT_PICTURE) { // only multi picture
                 //

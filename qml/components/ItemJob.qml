@@ -285,7 +285,7 @@ Rectangle {
                     alwaysRunToEnd: true
 
                     running: (job.state === JobUtils.JOB_STATE_WORKING &&
-                              job.type === JobUtils.JOB_ENCODE)
+                              job.type !== JobUtils.JOB_OFFLOAD)
                 }
 
                 SequentialAnimation {

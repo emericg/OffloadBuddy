@@ -47,6 +47,7 @@ namespace StorageUtils
         StorageNetworkFilesystem,
         StorageMTP,
     };
+    Q_ENUM_NS(StorageType)
 
     enum StorageContent
     {
@@ -55,6 +56,7 @@ namespace StorageUtils
         ContentVideo,
         ContentPictures,
     };
+    Q_ENUM_NS(StorageContent)
 
     enum StorageHierarchy
     {
@@ -63,6 +65,7 @@ namespace StorageUtils
         HierarchyDateShot,
         HierarchyDateDeviceShot,
     };
+    Q_ENUM_NS(StorageHierarchy)
 
     enum DeviceType
     {
@@ -72,10 +75,7 @@ namespace StorageUtils
         DeviceMobile,
         DeviceComputer,
     };
-
-    Q_ENUM_NS(StorageType)
-    Q_ENUM_NS(StorageContent)
-    Q_ENUM_NS(StorageHierarchy)
+    Q_ENUM_NS(DeviceType)
 }
 
 /*!

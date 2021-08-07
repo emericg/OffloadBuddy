@@ -7,7 +7,7 @@ import "qrc:/js/UtilsString.js" as UtilsString
 import "qrc:/js/UtilsPath.js" as UtilsPath
 
 Popup {
-    id: popupMove
+    id: popupMerge
     x: (appWindow.width / 2) - (width / 2) - (appSidebar.width / 2)
     y: (appWindow.height / 2) - (height / 2)
     width: 720
@@ -32,6 +32,14 @@ Popup {
 
     property var mediaProvider: null
     property var currentShot: null
+
+    ////////
+
+    Connections {
+        // keep default settings up to date
+        target: settingsManager
+        onAutoDeleteChanged: switchDelete.checked = settingsManager.autoDelete
+    }
 
     ////////
 
@@ -109,7 +117,7 @@ Popup {
                 anchors.leftMargin: 24
                 anchors.verticalCenter: parent.verticalCenter
 
-                text: qsTr("Move")
+                text: qsTr("Merge chaptered files")
                 font.pixelSize: Theme.fontSizeTitle
                 font.bold: true
                 color: "white"
@@ -164,7 +172,7 @@ Popup {
 
         Item {
             id: contentArea
-            height: columnMove.height
+            height: columnMerge.height
             anchors.left: parent.left
             anchors.right: parent.right
 
@@ -192,7 +200,7 @@ Popup {
             ////////
 
             Column {
-                id: columnMove
+                id: columnMerge
                 anchors.left: parent.left
                 anchors.leftMargin: 24
                 anchors.right: parent.right
@@ -202,6 +210,20 @@ Popup {
 
                 visible: !recapOpened
 
+                Item {
+                    height: 48
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+
+                    SwitchThemedDesktop {
+                        id: switchDelete
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        checked: settingsManager.autoDelete
+                        text: qsTr("Delete original chapters after merge")
+                    }
+                }
                 Item {
                     anchors.right: parent.right
                     anchors.left: parent.left
@@ -214,28 +236,29 @@ Popup {
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
 
-                        text: qsTr("File(s)", "", currentShot.fileCount)
+                        text: qsTr("Chapters", "", currentShot.fileCount)
                         color: Theme.colorSubText
                         font.pixelSize: 16
                     }
                 }
 
-                ListView {
+                Column {
                     anchors.left: parent.left
                     anchors.right: parent.right
 
-                    clip: true
                     visible: !recapEnabled && currentShot.fileCount
-                    height: Math.min(64, currentShot.fileCount*16)
 
-                    model: currentShot.filesList
-                    delegate: Text {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        text: modelData
-                        font.pixelSize: 14
-                        elide: Text.ElideLeft
-                        color: Theme.colorText
+                    Repeater {
+                        model: currentShot.filesList
+                        delegate: Text {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+
+                            text: modelData
+                            font.pixelSize: 14
+                            elide: Text.ElideLeft
+                            color: Theme.colorText
+                        }
                     }
                 }
 
@@ -273,16 +296,14 @@ Popup {
                         function updateDestinations() {
                             cbDestinations.clear()
 
+                            if (currentShot)
+                                cbDestinations.append( { "text": qsTr("Next to the video file") } )
+
                             for (var child in storageManager.directoriesList) {
                                 if (storageManager.directoriesList[child].available &&
                                     storageManager.directoriesList[child].enabled &&
-                                    storageManager.directoriesList[child].directoryContent !== StorageUtils.ContentAudio)
-                                {
-                                    if (currentShot && storageManager.directoriesList[child].directoryPath.includes(currentShot.folder)) {
-                                        // ignore this one
-                                    } else {
-                                        cbDestinations.append( { "text": storageManager.directoriesList[child].directoryPath } )
-                                    }
+                                    storageManager.directoriesList[child].directoryContent !== StorageUtils.ContentAudio) {
+                                    cbDestinations.append( { "text": storageManager.directoriesList[child].directoryPath } )
                                 }
                             }
                             cbDestinations.append( { "text": qsTr("Select path manually") } )
@@ -295,15 +316,25 @@ Popup {
                         onCurrentIndexChanged: {
                             if (storageManager.directoriesCount <= 0) return
 
-                            var previousDestination = comboBoxDestination.currentText
                             var selectedDestination = comboBoxDestination.textAt(comboBoxDestination.currentIndex)
+                            var previousDestination = comboBoxDestination.currentText
+                            if (previousDestination === qsTr("Next to the video file")) previousDestination = currentShot.folder
 
-                            if (cbinit) {
-                                if (comboBoxDestination.currentIndex < cbDestinations.count) {
-                                    folderInput.text = previousDestination
+                            if (currentShot) {
+                                if (comboBoxDestination.currentIndex === 0) {
+                                    fileInput.folder = currentShot.folder + jobManager.getDestinationHierarchy(currentShot, selectedDestination)
+                                } else if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
+                                    fileInput.folder = previousDestination + jobManager.getDestinationHierarchy(currentShot, previousDestination)
+                                } else if (comboBoxDestination.currentIndex < cbDestinations.count) {
+                                    fileInput.folder = selectedDestination + jobManager.getDestinationHierarchy(currentShot, selectedDestination)
                                 }
+                                fileInput.file = currentShot.name + "_merged"
                             } else {
-                                cbinit = true
+                                if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
+                                    folderInput.folder = previousDestination
+                                } else if (comboBoxDestination.currentIndex < cbDestinations.count) {
+                                    folderInput.folder = selectedDestination
+                                }
                             }
                         }
 
@@ -316,7 +347,50 @@ Popup {
                     anchors.left: parent.left
                     anchors.right: parent.right
 
-                    visible: (comboBoxDestination.currentIndex === (cbDestinations.count-1))
+                    visible: (popupMode === 2) && (comboBoxDestination.currentIndex === (cbDestinations.count-1))
+                    enabled: (comboBoxDestination.currentIndex === (cbDestinations.count-1))
+                }
+
+                FileInputArea {
+                    id: fileInput
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+
+                    visible: (popupMode === 1)
+                    enabled: (comboBoxDestination.currentIndex === (cbDestinations.count-1))
+
+                    extension: "mp4"
+                    onPathChanged: {
+                        rectangleFileWarning.visible = jobManager.fileExists(fileInput.path)
+                    }
+                }
+
+                Row {
+                    id: rectangleFileWarning
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 48
+                    spacing: 16
+
+                    visible: false
+
+                    ImageSvg {
+                        width: 28
+                        height: 28
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        color: Theme.colorWarning
+                        source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
+                    }
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: qsTr("Warning, this file exists already and will be overwritten...")
+                        color: Theme.colorText
+                        font.bold: false
+                        font.pixelSize: Theme.fontSizeContent
+                        wrapMode: Text.WordWrap
+                    }
                 }
             }
         }
@@ -338,36 +412,53 @@ Popup {
                 text: qsTr("Cancel")
                 fullColor: true
                 primaryColor: Theme.colorGrey
-                onClicked: popupMove.close()
+                onClicked: popupMerge.close()
             }
             ButtonWireframeImage {
                 id: buttonOffload
                 anchors.verticalCenter: parent.verticalCenter
 
-                text: qsTr("Move")
-                source: "qrc:/assets/icons_material/baseline-archive-24px.svg"
+                text: qsTr("Merge")
+                source: "qrc:/assets/icons_material/baseline-merge_type-24px.svg"
                 fullColor: true
                 primaryColor: Theme.colorPrimary
 
                 onClicked: {
                     if (typeof mediaProvider === "undefined" || !mediaProvider) return
 
-                    var settingsMove = {}
+                    var settingsMerge = {}
 
                     // destination
-                    if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
-                        settingsMove["folder"] = folderInput.folder
-                    } else {
-                        settingsMove["mediaDirectory"] = comboBoxDestination.currentText
+                    if (popupMode === 1) {
+                        if (comboBoxDestination.currentIndex === 0) {
+                            settingsMerge["folder"] = currentShot.folder
+                            settingsMerge["file"] = fileInput.file
+                            settingsMerge["extension"] = fileInput.extension
+                        } else if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
+                            settingsMerge["folder"] = fileInput.folder
+                            settingsMerge["file"] = fileInput.file
+                            settingsMerge["extension"] = fileInput.extension
+                        } else {
+                            settingsMerge["mediaDirectory"] = comboBoxDestination.currentText
+                        }
+                    } else if (popupMode === 2) {
+                        if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
+                            settingsMerge["folder"] = folderInput.folder
+                        } else {
+                            settingsMerge["mediaDirectory"] = comboBoxDestination.currentText
+                        }
                     }
+
+                    // settings
+                    settingsMerge["autoDelete"] = switchDelete.checked
 
                     // dispatch job
                     if (currentShot) {
-                        mediaProvider.moveSelected(currentShot.uuid, settingsMove)
-                    } else if (shots_uuids.length > 0) {
-                        mediaProvider.moveSelection(shots_uuids, settingsMove)
+                        mediaProvider.mergeSelected(currentShot.uuid, settingsMerge)
+                    } else if (mediaProvider && shots_uuids.length > 0) {
+                        mediaProvider.mergeSelection(shots_uuids, settingsMerge)
                     }
-                    popupMove.close()
+                    popupMerge.close()
                 }
             }
         }

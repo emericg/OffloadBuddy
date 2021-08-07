@@ -2,6 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 
 import ThemeEngine 1.0
+import StorageUtils 1.0
 import "qrc:/js/UtilsString.js" as UtilsString
 import "qrc:/js/UtilsPath.js" as UtilsPath
 
@@ -36,15 +37,6 @@ Popup {
 
     property bool isGoPro: true
     property bool isReadOnly: false
-
-    Component.onCompleted: {
-        // set default settings
-        switchIgnoreJunk.checked = settingsManager.ignoreJunk
-        switchIgnoreAudio.checked = settingsManager.ignoreHdAudio
-        switchMerge.checked = settingsManager.autoMerge
-        switchTelemetry.checked = settingsManager.autoTelemetry
-        switchDelete.checked = settingsManager.autoDelete
-    }
 
     Connections {
         // keep default settings up to date
@@ -369,7 +361,7 @@ Popup {
                             for (var child in storageManager.directoriesList) {
                                 if (storageManager.directoriesList[child].available &&
                                     storageManager.directoriesList[child].enabled &&
-                                    storageManager.directoriesList[child].directoryContent !== 1)
+                                    storageManager.directoriesList[child].directoryContent !== StorageUtils.ContentAudio)
                                     cbDestinations.append( { "text": storageManager.directoriesList[child].directoryPath } )
                             }
                             cbDestinations.append( { "text": qsTr("Select path manually") } )

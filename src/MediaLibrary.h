@@ -79,6 +79,9 @@ public:
     Q_INVOKABLE void moveSelected(const QString &shot_uuid, const QVariant &settings);
     Q_INVOKABLE void moveSelection(const QVariant &uuids, const QVariant &settings);
 
+    Q_INVOKABLE void mergeSelected(const QString &shot_uuid, const QVariant &settings);
+    Q_INVOKABLE void mergeSelection(const QVariant &uuids, const QVariant &settings);
+
     Q_INVOKABLE void deleteSelected(const QString &shot_uuid, const QVariant &settings);
     Q_INVOKABLE void deleteSelection(const QVariant &uuids, const QVariant &settings);
 
