@@ -19,8 +19,8 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#ifndef DEVICE_SCANNER
-#define DEVICE_SCANNER
+#ifndef DEVICE_SCANNER_H
+#define DEVICE_SCANNER_H
 /* ************************************************************************** */
 
 #include "Shot.h"
@@ -74,4 +74,4 @@ signals:
 };
 
 /* ************************************************************************** */
-#endif // DEVICE_SCANNER
+#endif // DEVICE_SCANNER_H

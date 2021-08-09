@@ -452,7 +452,6 @@ public:
 
     QList <ofb_file *> getFiles(bool withPreviews = true, bool withHdAudio = true, bool withOthers = true) const;
 
-public:
     unsigned getShotType() const { return m_type; }
     unsigned getFileType() const {
         if (m_type >= ShotUtils::SHOT_VIDEO && m_type <= ShotUtils::SHOT_VIDEO_3D)

@@ -66,8 +66,8 @@ bool StorageManager::readSettings()
 
     if (settings.status() == QSettings::NoError)
     {
-        if (settings.contains("global/contentHierarchy"))
-            m_contentHierarchy = settings.value("global/contentHierarchy").toUInt();
+        if (settings.contains("MediaDirectories/contentHierarchy"))
+            m_contentHierarchy = settings.value("MediaDirectories/contentHierarchy").toUInt();
 
         for (int i = 1; i <= max_media_directories; i++)
         {
@@ -121,7 +121,7 @@ bool StorageManager::writeSettings()
 
     if (settings.isWritable())
     {
-        settings.setValue("global/contentHierarchy", m_contentHierarchy);
+        settings.setValue("MediaDirectories/contentHierarchy", m_contentHierarchy);
 
         int i = 1;
         for (auto d: qAsConst(m_mediaDirectories))
@@ -237,8 +237,7 @@ void StorageManager::addDirectory(const QString &path)
     if (!path.isEmpty())
     {
         QString checkpath = path;
-        if (!checkpath.endsWith('/'))
-            checkpath += '/';
+        if (!checkpath.endsWith('/')) checkpath += '/';
 
         // Check if already in the list?
         for (auto d: qAsConst(m_mediaDirectories))
@@ -246,22 +245,27 @@ void StorageManager::addDirectory(const QString &path)
             MediaDirectory *dd = qobject_cast<MediaDirectory*>(d);
             if (dd && dd->getPath() == checkpath)
             {
-                qDebug() << "addDirectory(" << path << ") is already in the list";
+                qDebug() << "addDirectory(" << path << ") is already in the MediaDirectory list";
+                return;
+            }
+            if (dd && path.contains(dd->getPath()))
+            {
+                qDebug() << "addDirectory(" << path << ") is already contained inside an existing MediaDirectory";
                 return;
             }
         }
 
         // Add
-        MediaDirectory *dd = new MediaDirectory(path, 0, 0, true, false, this);
-        if (dd)
+        MediaDirectory *newDir = new MediaDirectory(path, 0, 0, true, false, this);
+        if (newDir)
         {
-            m_mediaDirectories.push_back(dd);
-            Q_EMIT directoryAdded(dd->getPath());
+            m_mediaDirectories.push_back(newDir);
+            Q_EMIT directoryAdded(newDir->getPath());
             Q_EMIT directoriesUpdated();
 
-            connect(dd, SIGNAL(saveData()), this, SLOT(directoryModified()));
-            connect(dd, SIGNAL(enabledUpdated(QString)), this, SLOT(directoryAvailabilityModified(QString)));
-            connect(dd, SIGNAL(availableUpdated(QString)), this, SLOT(directoryAvailabilityModified(QString)));
+            connect(newDir, SIGNAL(saveData()), this, SLOT(directoryModified()));
+            connect(newDir, SIGNAL(enabledUpdated(QString)), this, SLOT(directoryAvailabilityModified(QString)));
+            connect(newDir, SIGNAL(availableUpdated(QString)), this, SLOT(directoryAvailabilityModified(QString)));
             directoryModified();
         }
     }

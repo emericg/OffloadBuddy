@@ -94,13 +94,14 @@ class StorageManager: public QObject
     unsigned m_contentHierarchy = 0;
     QList <QObject *> m_mediaDirectories;
 
+    // Saved settings
+    bool readSettings();
+    bool writeSettings();
+
     // Singleton
     static StorageManager *instance;
     StorageManager();
     ~StorageManager();
-
-    bool readSettings();
-    bool writeSettings();
 
 Q_SIGNALS:
     void contentHierarchyChanged();

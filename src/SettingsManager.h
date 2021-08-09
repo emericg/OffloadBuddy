@@ -111,13 +111,14 @@ class SettingsManager: public QObject
     unsigned m_deviceSortRole = SettingsUtils::OrderByDate;
     unsigned m_deviceSortOrder = 1;
 
+    // Saved settings
+    bool readSettings();
+    bool writeSettings();
+
     // Singleton
     static SettingsManager *instance;
     SettingsManager();
     ~SettingsManager();
-
-    bool readSettings();
-    bool writeSettings();
 
 Q_SIGNALS:
     void initialSizeChanged();
