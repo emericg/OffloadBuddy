@@ -3,7 +3,7 @@
 echo "> OffloadBuddy packager (Windows x86_64)"
 
 export APP_NAME="OffloadBuddy";
-export APP_VERSION=0.7;
+export APP_VERSION=0.8;
 export GIT_VERSION=$(git rev-parse --short HEAD);
 
 ## CHECKS ######################################################################

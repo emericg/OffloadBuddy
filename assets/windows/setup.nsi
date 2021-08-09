@@ -10,7 +10,7 @@ Unicode True
 !define COMPANYNAME                  "Emeric Grange"
 !define DESCRIPTION                  "A multimedia offloading software with a few tricks up its sleeve!"
 !define VERSIONMAJOR                 0
-!define VERSIONMINOR                 7
+!define VERSIONMINOR                 8
 !define VERSIONBUILD                 0
 !define MUI_ABORTWARNING
 !define INSTALL_DIR                  "$PROGRAMFILES64\${APPNAME}"
