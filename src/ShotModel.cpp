@@ -20,6 +20,7 @@
  */
 
 #include "ShotModel.h"
+#include "ShotUtils.h"
 
 #include <QDir>
 #include <QFile>
@@ -43,6 +44,9 @@ ShotModel::ShotModel(const ShotModel &other, QObject *parent)
 
 ShotModel::~ShotModel()
 {
+    qDeleteAll(m_statstracks);
+    m_statstracks.clear();
+
     qDeleteAll(m_shots);
     m_shots.clear();
 }
@@ -74,6 +78,106 @@ void ShotModel::sanetize(const QString &path)
             }
         }
     }
+}
+
+/* ************************************************************************** */
+
+void ShotModel::computeStats()
+{
+    int audio_file = 0;
+    qint64 audio_space = 0;
+    int video_file = 0;
+    qint64 video_space = 0;
+    int picture_file = 0;
+    qint64 picture_space = 0;
+    int telemetry_file = 0;
+    qint64 telemetry_space = 0;
+    int other_file = 0;
+    qint64 other_space = 0;
+
+    for (auto shot: qAsConst(m_shots))
+    {
+/*
+        // (1) Compute stats by shot type
+        if (shot->getShotType() < ShotUtils::SHOT_PICTURE)
+        {
+            video_file += shot->getFileCount();
+            video_space += shot->getFullSize();
+        }
+        else
+        {
+            picture_file += shot->getFileCount();
+            picture_space += shot->getFullSize();
+        }
+*/
+        // (2) Compute stats by shot files type
+        QList <ofb_file *> files = shot->getFiles();
+        for (auto file: qAsConst(files))
+        {
+            if (file->extension == "wav")
+            {
+                audio_file++;
+                audio_space += file->size;
+            }
+            else if (file->extension == "mp4" || file->extension == "m4v" || file->extension == "mov" ||
+                     file->extension == "mkv" || file->extension == "webm")
+            {
+                video_file++;
+                video_space += file->size;
+            }
+            else if (file->extension == "jpg" || file->extension == "jpeg" ||
+                     file->extension == "png" || file->extension == "gpr" ||
+                     file->extension == "webp")
+            {
+                picture_file++;
+                picture_space += file->size;
+            }
+            else if (file->extension == "json" || file->extension == "gpx")
+            {
+                telemetry_file++;
+                telemetry_space += file->size;
+            }
+            else
+            {
+                other_file++;
+                other_space += file->size;
+            }
+        }
+    }
+
+    qDeleteAll(m_statstracks);
+    m_statstracks.clear();
+
+    m_fileCount = audio_file + video_file + picture_file + telemetry_file + other_file;
+    m_diskSpace = audio_space + video_space + picture_space + telemetry_space + other_space;
+
+    if (audio_file)
+    {
+        ShotModelStatsTrack *t = new ShotModelStatsTrack(ShotUtils::FILE_AUDIO, audio_file, m_fileCount, audio_space, m_diskSpace);
+        m_statstracks.push_back(t);
+    }
+    if (video_file)
+    {
+        ShotModelStatsTrack *t = new ShotModelStatsTrack(ShotUtils::FILE_VIDEO, video_file, m_fileCount, video_space, m_diskSpace);
+        m_statstracks.push_back(t);
+    }
+    if (picture_file)
+    {
+        ShotModelStatsTrack *t = new ShotModelStatsTrack(ShotUtils::FILE_PICTURE, picture_file, m_fileCount, picture_space, m_diskSpace);
+        m_statstracks.push_back(t);
+    }
+    if (telemetry_file)
+    {
+        ShotModelStatsTrack *t = new ShotModelStatsTrack(ShotUtils::FILE_METADATA, telemetry_file, m_fileCount, telemetry_space, m_diskSpace);
+        m_statstracks.push_back(t);
+    }
+    if (other_file)
+    {
+        ShotModelStatsTrack *t = new ShotModelStatsTrack(ShotUtils::FILE_UNKNOWN, other_file, m_fileCount, other_space, m_diskSpace);
+        m_statstracks.push_back(t);
+    }
+
+    Q_EMIT statsAdvUpdated();
 }
 
 /* ************************************************************************** */

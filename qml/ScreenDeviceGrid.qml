@@ -258,16 +258,18 @@ Item {
                 anchors.rightMargin: -16
                 anchors.bottom: parent.bottom
                 layoutDirection: Qt.RightToLeft
-/*
+
                 ItemImageButton {
                     id: deviceSettings
                     height: 28
                     btnSize: 28
                     imgSize: 24
                     background: true
+                    visible: true
                     source: "qrc:/assets/icons_material/baseline-memory-24px.svg"
+                    onClicked: screenDeviceInfos.loadScreen()
                 }
-*/
+
                 ItemImageButtonTooltip {
                     id: deviceRO
                     height: 28

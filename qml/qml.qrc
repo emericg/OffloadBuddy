@@ -4,8 +4,10 @@
         <file>Sidebar.qml</file>
         <file>ScreenLibrary.qml</file>
         <file>ScreenLibraryGrid.qml</file>
+        <file>ScreenLibraryInfos.qml</file>
         <file>ScreenDevice.qml</file>
         <file>ScreenDeviceGrid.qml</file>
+        <file>ScreenDeviceInfos.qml</file>
         <file>ScreenMedia.qml</file>
         <file>ScreenJobs.qml</file>
         <file>ScreenSettings.qml</file>
@@ -15,6 +17,7 @@
         <file>PopupDelete.qml</file>
         <file>PopupEncoding.qml</file>
         <file>PopupExit.qml</file>
+        <file>PopupFirmware.qml</file>
         <file>PopupOffload.qml</file>
         <file>PopupMove.qml</file>
         <file>PopupMerge.qml</file>
@@ -30,6 +33,8 @@
         <file alias="ActionButton.qml">components/ActionButton.qml</file>
         <file alias="DataBarPower.qml">components/DataBarPower.qml</file>
         <file alias="DataBarSpace.qml">components/DataBarSpace.qml</file>
+        <file alias="DataBarStorage.qml">components/DataBarStorage.qml</file>
+        <file alias="DataBarStorageStats.qml">components/DataBarStorageStats.qml</file>
         <file alias="ItemBannerActions.qml">components/ItemBannerActions.qml</file>
         <file alias="ItemBannerMessage.qml">components/ItemBannerMessage.qml</file>
         <file alias="ItemBannerJob.qml">components/ItemBannerJob.qml</file>

@@ -53,7 +53,7 @@ Item {
     Shortcut {
         sequence: StandardKey.Back
         onActivated: {
-            if (screenDevice.state === "stateMediaDetails")
+            if (screenDevice.state === "stateMediaDetails" || screenDevice.state === "stateDeviceInfos")
                 screenMedia.back()
         }
     }
@@ -74,7 +74,7 @@ Item {
 
         onClicked: {
             if (mouse.button === Qt.BackButton) {
-                if (screenDevice.state === "stateMediaDetails")
+                if (screenDevice.state === "stateMediaDetails" || screenDevice.state === "stateDeviceInfos")
                     screenMedia.back()
             } else if (mouse.button === Qt.ForwardButton) {
                 if (screenDevice.state === "stateMediaGrid")
@@ -92,6 +92,10 @@ Item {
         id: screenMedia
         startedFrom: "device"
     }
+    ScreenDeviceInfos {
+        anchors.fill: parent
+        id: screenDeviceInfos
+    }
 
     // STATES //////////////////////////////////////////////////////////////////
 
@@ -99,27 +103,21 @@ Item {
     states: [
         State {
             name: "stateMediaGrid"
-
-            PropertyChanges {
-                target: screenDeviceGrid
-                visible: true
-            }
-            PropertyChanges {
-                target: screenMedia
-                visible: false
-            }
+            PropertyChanges { target: screenDeviceGrid; visible: true; }
+            PropertyChanges { target: screenMedia; visible: false; }
+            PropertyChanges { target: screenDeviceInfos; visible: false; }
         },
         State {
             name: "stateMediaDetails"
-
-            PropertyChanges {
-                target: screenDeviceGrid
-                visible: false
-            }
-            PropertyChanges {
-                target: screenMedia
-                visible: true
-            }
+            PropertyChanges { target: screenDeviceGrid; visible: false; }
+            PropertyChanges { target: screenMedia; visible: true; }
+            PropertyChanges { target: screenDeviceInfos; visible: false; }
+        },
+        State {
+            name: "stateDeviceInfos"
+            PropertyChanges { target: screenDeviceGrid; visible: false; }
+            PropertyChanges { target: screenMedia; visible: false; }
+            PropertyChanges { target: screenDeviceInfos; visible: true; }
         }
     ]
 }

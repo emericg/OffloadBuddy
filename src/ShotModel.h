@@ -32,6 +32,44 @@
 
 /* ************************************************************************** */
 
+class ShotModelStatsTrack: public QObject
+{
+    Q_OBJECT
+
+    Q_PROPERTY(int trackType READ getTrackType CONSTANT)
+    Q_PROPERTY(int fileCount READ getFileCount CONSTANT)
+    Q_PROPERTY(float filePercent READ getFilePercent CONSTANT)
+    Q_PROPERTY(qint64 spaceUsed READ getSpaceUsed CONSTANT)
+    Q_PROPERTY(float spacePercent READ getSpacePercent CONSTANT)
+
+    int m_trackType;
+
+    int m_file_count = 0;
+    float m_file_percentage = 0.f;
+
+    qint64 m_space_used = 0;
+    float m_space_percentage = 0.f;
+
+    int getTrackType() const { return m_trackType; }
+    int getFileCount() const { return m_file_count; }
+    float getFilePercent() const { return m_file_percentage; }
+    qint64 getSpaceUsed() const { return m_space_used; }
+    float getSpacePercent() const { return m_space_percentage; }
+
+public:
+    ShotModelStatsTrack(int t, int fc, int fc_total, qint64 sp, qint64 sp_total) {
+        m_trackType = t;
+        m_file_count = fc;
+        m_file_percentage = fc / static_cast<float>(fc_total);
+        m_space_used = sp;
+        m_space_percentage = sp / static_cast<float>(sp_total);
+    }
+
+    ~ShotModelStatsTrack() = default;
+};
+
+/* ************************************************************************** */
+
 class ShotModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -49,8 +87,13 @@ class ShotModel : public QAbstractListModel
     int getShotCount() const { return m_shots.size(); }
     int getFileCount() const { return m_fileCount; }
 
+    Q_PROPERTY(QVariant statsTracks READ getStatsTracks NOTIFY statsAdvUpdated)
+    QList <QObject *> m_statstracks;
+    Q_INVOKABLE QVariant getStatsTracks() const { if (m_statstracks.size() > 0) { return QVariant::fromValue(m_statstracks); } return QVariant(); }
+
 Q_SIGNALS:
     void statsUpdated();
+    void statsAdvUpdated();
 
 protected:
     QHash<int, QByteArray> roleNames() const;
@@ -86,12 +129,15 @@ public:
     Shot *getShotWithName(const QString &name);
     Shot *getShotWithPath(const QString &path);
 
-public slots:
-    void addFile(ofb_file *f, ofb_shot *s);
     void addShot(Shot *shot);
     void removeShot(Shot *shot);
     //void removeFile(); // TODO
     void sanetize(const QString &path);
+
+    Q_INVOKABLE void computeStats();
+
+public slots:
+    void addFile(ofb_file *f, ofb_shot *s);
 };
 
 /* ************************************************************************** */
