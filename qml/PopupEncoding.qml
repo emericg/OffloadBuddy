@@ -449,7 +449,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("Video codec")
-                            font.pixelSize: 16
+                            font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
 
@@ -530,7 +530,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("Image format")
-                            font.pixelSize: 16
+                            font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
 
@@ -613,7 +613,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("Quality index")
-                            font.pixelSize: 16
+                            font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
 
@@ -647,7 +647,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("Speed index")
-                            font.pixelSize: 16
+                            font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
 
@@ -683,7 +683,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("Definition")
-                            font.pixelSize: 16
+                            font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
 
@@ -796,7 +796,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("Framerate")
-                            font.pixelSize: 16
+                            font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
 
@@ -892,7 +892,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("Timelapse")
-                            font.pixelSize: 16
+                            font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
 
@@ -934,7 +934,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("Orientation")
-                            font.pixelSize: 16
+                            font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
 
@@ -997,7 +997,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("Trim duration")
-                            font.pixelSize: 16
+                            font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
 
@@ -1060,7 +1060,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("Crop area")
-                            font.pixelSize: 16
+                            font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
 
@@ -1123,7 +1123,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("GIF effect")
-                            font.pixelSize: 16
+                            font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
 
@@ -1170,7 +1170,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("Apply filters")
-                            font.pixelSize: 16
+                            font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
 
@@ -1212,7 +1212,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("Telemetry")
-                            font.pixelSize: 16
+                            font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
 
@@ -1266,7 +1266,7 @@ Popup {
 
                             text: qsTr("Destination")
                             color: Theme.colorSubText
-                            font.pixelSize: 16
+                            font.pixelSize: Theme.fontSizeContent
                         }
                     }
 

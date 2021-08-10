@@ -238,7 +238,7 @@ Popup {
 
                         text: qsTr("Chapters", "", currentShot.fileCount)
                         color: Theme.colorSubText
-                        font.pixelSize: 16
+                        font.pixelSize: Theme.fontSizeContent
                     }
                 }
 
@@ -274,7 +274,7 @@ Popup {
 
                         text: qsTr("Destination")
                         color: Theme.colorSubText
-                        font.pixelSize: 16
+                        font.pixelSize: Theme.fontSizeContent
                     }
                 }
 
@@ -415,7 +415,7 @@ Popup {
                 onClicked: popupMerge.close()
             }
             ButtonWireframeImage {
-                id: buttonOffload
+                id: buttonMerge
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Merge")

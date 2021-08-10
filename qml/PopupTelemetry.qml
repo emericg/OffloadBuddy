@@ -210,7 +210,7 @@ Popup {
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("GPS trace")
-                        font.pixelSize: 16
+                        font.pixelSize: Theme.fontSizeContent
                         color: Theme.colorSubText
                     }
 
@@ -257,7 +257,7 @@ Popup {
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("Telemetry")
-                        font.pixelSize: 16
+                        font.pixelSize: Theme.fontSizeContent
                         color: Theme.colorSubText
                     }
 
@@ -298,7 +298,7 @@ Popup {
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("Altitude")
-                        font.pixelSize: 16
+                        font.pixelSize: Theme.fontSizeContent
                         color: Theme.colorSubText
                     }
 
@@ -345,7 +345,7 @@ Popup {
 
                         text: qsTr("Destination")
                         color: Theme.colorSubText
-                        font.pixelSize: 16
+                        font.pixelSize: Theme.fontSizeContent
                     }
                 }
 

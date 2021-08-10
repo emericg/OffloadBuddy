@@ -216,7 +216,7 @@ Popup {
 
                         text: qsTr("File(s)", "", currentShot.fileCount)
                         color: Theme.colorSubText
-                        font.pixelSize: 16
+                        font.pixelSize: Theme.fontSizeContent
                     }
                 }
 
@@ -251,7 +251,7 @@ Popup {
 
                         text: qsTr("Destination")
                         color: Theme.colorSubText
-                        font.pixelSize: 16
+                        font.pixelSize: Theme.fontSizeContent
                     }
                 }
 
@@ -341,7 +341,7 @@ Popup {
                 onClicked: popupMove.close()
             }
             ButtonWireframeImage {
-                id: buttonOffload
+                id: buttonMove
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Move")

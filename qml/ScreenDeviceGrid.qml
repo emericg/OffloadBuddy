@@ -205,7 +205,6 @@ Item {
         }
     }
 
-
     // POPUPS //////////////////////////////////////////////////////////////////
 
     PopupOffload { id: popupOffload }
@@ -275,12 +274,12 @@ Item {
                     btnSize: 28
                     imgSize: 24
                     background: true
+                    visible: currentDevice.readOnly
+
                     source: "qrc:/assets/icons_material/outline-https-24px.svg"
                     iconColor: Theme.colorWarning
                     tooltipText: "Read Only storage"
                     tooltipPosition: "left"
-
-                    visible: currentDevice.readOnly
                 }
             }
         }
@@ -313,16 +312,7 @@ Item {
                 color: Theme.colorHeaderContent
                 font.pixelSize: Theme.fontSizeContentSmall
             }
-/*
-            Text {
-                anchors.right: parent.right
-                visible: currentDevice.deviceType > 3
 
-                text: qsTr("serial") + " " + currentDevice.serial
-                color: Theme.colorHeaderContent
-                font.pixelSize: Theme.fontSizeContentSmall
-            }
-*/
             Repeater {
                 model: currentDevice.storageList
                 width: 256
@@ -330,13 +320,7 @@ Item {
                 delegate: DataBarSpace {
                     width: 256
                     height: 12
-/*
-                    value: modelData.storageLevel
-                    valueMin: 0
-                    valueMax: 100
-                    vsu: modelData.spaceUsed
-                    vst: modelData.spaceTotal
-*/
+
                     value: modelData.spaceUsed
                     valueMin: 0
                     valueMax: modelData.spaceTotal

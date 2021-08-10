@@ -309,7 +309,7 @@ Popup {
                 Text {
                     id: elementYear
                     text: qsTr("Year")
-                    font.pixelSize: 16
+                    font.pixelSize: Theme.fontSizeContent
                     color: Theme.colorSubText
                 }
 
@@ -330,7 +330,7 @@ Popup {
                 Text {
                     id: elementMonth
                     text: qsTr("Month")
-                    font.pixelSize: 16
+                    font.pixelSize: Theme.fontSizeContent
                     color: Theme.colorSubText
                 }
 
@@ -349,7 +349,7 @@ Popup {
                 Text {
                     id: elementDay
                     text: qsTr("Day")
-                    font.pixelSize: 16
+                    font.pixelSize: Theme.fontSizeContent
                     color: Theme.colorSubText
                 }
 
@@ -377,7 +377,7 @@ Popup {
                 Text {
                     id: elementHours
                     text: qsTr("Hours")
-                    font.pixelSize: 16
+                    font.pixelSize: Theme.fontSizeContent
                     color: Theme.colorSubText
                 }
 
@@ -396,7 +396,7 @@ Popup {
                 Text {
                     id: elementMinutes
                     text: qsTr("Minutes")
-                    font.pixelSize: 16
+                    font.pixelSize: Theme.fontSizeContent
                     color: Theme.colorSubText
                 }
 

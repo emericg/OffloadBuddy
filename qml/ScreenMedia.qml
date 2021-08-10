@@ -151,6 +151,8 @@ Item {
             target: null
         }
 
+        ////////////////
+
         ItemImageButton {
             id: buttonBack
             width: 48
