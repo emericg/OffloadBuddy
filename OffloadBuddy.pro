@@ -48,6 +48,7 @@ include(src/thirdparty/MediaThumbnailer/MediaThumbnailer.pri)
 
 SOURCES  += src/main.cpp \
             src/SettingsManager.cpp \
+            src/FirmwareManager.cpp \
             src/JobManager.cpp \
             src/JobWorkerAsync.cpp \
             src/JobWorkerSync.cpp \
@@ -79,6 +80,7 @@ SOURCES  += src/main.cpp \
             src/utils/utils_sysinfo.cpp
 
 HEADERS  += src/SettingsManager.h \
+            src/FirmwareManager.h \
             src/JobManager.h \
             src/Job.h \
             src/JobUtils.h \
@@ -109,7 +111,8 @@ HEADERS  += src/SettingsManager.h \
             src/utils/utils_language.h \
             src/utils/utils_ffmpeg.h \
             src/utils/utils_maths.h \
-            src/utils/utils_sysinfo.h
+            src/utils/utils_sysinfo.h \
+            src/utils/utils_versionchecker.h
 
 RESOURCES   += qml/qml.qrc \
                i18n/i18n.qrc \

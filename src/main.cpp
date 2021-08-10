@@ -22,6 +22,7 @@
 #include "SettingsManager.h"
 #include "StorageManager.h"
 #include "DeviceManager.h"
+#include "FirmwareManager.h"
 #include "JobManager.h"
 #include "MediaLibrary.h"
 
@@ -143,14 +144,16 @@ int main(int argc, char *argv[])
     // Init OffloadBuddy components
     SettingsManager *sm = SettingsManager::getInstance();
     StorageManager *st = StorageManager::getInstance();
+    FirmwareManager *fm = FirmwareManager::getInstance();
     MediaLibrary *ml = new MediaLibrary;
     DeviceManager *dm = new DeviceManager;
     JobManager *jm = JobManager::getInstance();
-    if (!sm || !st || !ml || !dm || !jm)
+    if (!sm || !st || !fm || !ml || !dm || !jm)
     {
         qWarning() << "Cannot init OffloadBuddy components!";
         return EXIT_FAILURE;
     }
+    fm->loadCatalogs();
     jm->attachLibrary(ml);
     atexit(exithandler); // will stop running job on exit
 
@@ -198,6 +201,7 @@ int main(int argc, char *argv[])
     engine_context->setContextProperty("settingsManager", sm);
     engine_context->setContextProperty("storageManager", st);
     engine_context->setContextProperty("deviceManager", dm);
+    engine_context->setContextProperty("firmwareManager", fm);
     engine_context->setContextProperty("jobManager", jm);
     engine_context->setContextProperty("mediaLibrary", ml);
     engine_context->setContextProperty("utilsApp", utilsApp);
