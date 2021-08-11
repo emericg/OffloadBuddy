@@ -4,7 +4,6 @@
         <file>Sidebar.qml</file>
         <file>ScreenLibrary.qml</file>
         <file>ScreenLibraryGrid.qml</file>
-        <file>ScreenLibraryInfos.qml</file>
         <file>ScreenDevice.qml</file>
         <file>ScreenDeviceGrid.qml</file>
         <file>ScreenDeviceInfos.qml</file>

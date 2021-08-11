@@ -26,7 +26,7 @@ It's designed to remove the hassle of handling and transferring the many videos 
 - [x] Apply filters to transcoded media
   - [x] Reframe media, change aspect ratio
   - [x] Clip duration
-  - [x] Rotate media (WIP)
+  - [x] Rotate media
   - [ ] Defisheye media (WIP)
   - [ ] Stabilize videos
 - [x] Telemetry handling
@@ -34,7 +34,7 @@ It's designed to remove the hassle of handling and transferring the many videos 
   - [x] Visualize telemetry with graphs
   - [x] Visualize GPS trace on maps
   - [ ] Video overlay
-- [ ] GoPro firmware updates
+- [ ] GoPro firmware updates (WIP)
 
 ### Screenshots!
 
