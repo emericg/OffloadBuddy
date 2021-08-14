@@ -145,8 +145,8 @@ int main(int argc, char *argv[])
     SettingsManager *sm = SettingsManager::getInstance();
     StorageManager *st = StorageManager::getInstance();
     FirmwareManager *fm = FirmwareManager::getInstance();
+    DeviceManager *dm = DeviceManager::getInstance();
     MediaLibrary *ml = new MediaLibrary;
-    DeviceManager *dm = new DeviceManager;
     JobManager *jm = JobManager::getInstance();
     if (!sm || !st || !fm || !ml || !dm || !jm)
     {

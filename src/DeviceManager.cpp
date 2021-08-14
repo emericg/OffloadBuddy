@@ -36,6 +36,18 @@
 
 /* ************************************************************************** */
 
+DeviceManager *DeviceManager::instance = nullptr;
+
+DeviceManager *DeviceManager::getInstance()
+{
+    if (instance == nullptr)
+    {
+        instance = new DeviceManager();
+    }
+
+    return instance;
+}
+
 DeviceManager::DeviceManager()
 {
 #ifdef ENABLE_LIBMTP

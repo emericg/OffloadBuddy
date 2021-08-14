@@ -55,6 +55,11 @@ class DeviceManager: public QObject
     QThread *m_deviceScannerThread = nullptr;
     QTimer m_deviceScannerTimer;
 
+    // Singleton
+    static DeviceManager *instance;
+    DeviceManager();
+    ~DeviceManager();
+
 Q_SIGNALS:
     void devicesAdded();
     void deviceListUpdated();
@@ -66,8 +71,7 @@ private slots:
     void workerScanningFinished();
 
 public:
-    DeviceManager();
-    ~DeviceManager();
+    static DeviceManager *getInstance();
 
     static bool getMtpDeviceName(const uint32_t busNum, const uint32_t devNum,
                                  QString &brand, QString &model);
