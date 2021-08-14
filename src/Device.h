@@ -192,6 +192,8 @@ public:
     Q_INVOKABLE void extractTelemetrySelected(const QString &shot_uuid, const QVariant &settings);
     Q_INVOKABLE void extractTelemetrySelection(const QVariant &uuids, const QVariant &settings);
 
+    Q_INVOKABLE void firmwareUpdate();
+
     // Track jobs
     void addJob(JobTracker *j);
     void removeJob(JobTracker *j);

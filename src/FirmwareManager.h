@@ -31,6 +31,8 @@
 
 class QNetworkAccessManager;
 class QNetworkReply;
+class QFile;
+class Device;
 
 /* ************************************************************************** */
 
@@ -54,6 +56,8 @@ class FirmwareManager: public QObject
     QJsonDocument m_catalogInsta_json;
 
     QNetworkAccessManager *m_nwManager = nullptr;
+    QNetworkReply *firmwareReply = nullptr;
+    QFile *firmwareFile = nullptr;
 
     bool hasGpFw() const { return false; }
 
@@ -74,16 +78,24 @@ private slots:
     void errorHttp();
     void errorSSL();
 
+    void firmwareReplied();
+    void firmwareFinished();
+    void firmwareProgress(qint64, qint64);
+
 public:
     static FirmwareManager *getInstance();
 
     void loadCatalogs();
     void updateCatalogs();
 
-    Q_INVOKABLE bool hasUpdate(const QString &name, const QString &version);
-    Q_INVOKABLE QString lastUpdate(const QString &name);
-    Q_INVOKABLE QDateTime lastDate(const QString &name);
-    Q_INVOKABLE QString lastReleaseNotes(const QString &name);
+    void downloadFirmware(Device *device);
+    void cancelFirmware(Device *device);
+
+    Q_INVOKABLE bool hasUpdate(const QString &cameraName, const QString &version);
+    Q_INVOKABLE QString lastUpdate(const QString &cameraName);
+    Q_INVOKABLE QDateTime lastDate(const QString &cameraName);
+    Q_INVOKABLE QString lastReleaseNotes(const QString &cameraName);
+    Q_INVOKABLE QString lastUrl(const QString &cameraName);
 };
 
 /* ************************************************************************** */

@@ -1123,6 +1123,18 @@ void Device::extractTelemetrySelection(const QVariant &uuids, const QVariant &se
 /* ************************************************************************** */
 /* ************************************************************************** */
 
+void Device::firmwareUpdate()
+{
+    qDebug() << "Device::firmwareUpdate(" << m_uuid << ")";
+
+    // Submit job
+    JobManager *jm = JobManager::getInstance();
+    if (jm) jm->addJob(JobUtils::JOB_FIRMWARE_UPDATE, this, nullptr, nullptr);
+}
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+
 // Track jobs
 void Device::addJob(JobTracker *j)
 {

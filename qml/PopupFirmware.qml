@@ -257,8 +257,7 @@ Popup {
                 onClicked: {
                     if (typeof currentDevice === "undefined" || !currentDevice) return
 
-                    // TODO
-
+                    currentDevice.firmwareUpdate()
                     popupFirmware.close()
                 }
             }

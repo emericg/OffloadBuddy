@@ -20,6 +20,7 @@
  */
 
 #include "FirmwareManager.h"
+#include "Device.h"
 #include "utils/utils_versionchecker.h"
 
 #include <QFile>
@@ -131,7 +132,7 @@ void FirmwareManager::loadCatalogs()
     if (m_catalogGoPro_lastupdate.isValid() &&
         QDateTime::currentDateTime().daysTo(m_catalogGoPro_lastupdate) < 7)
     {
-        QFile file(path + "catalog_gopro.json");
+        QFile file(path + "gopro_firmwares.json");
         if (file.open(QIODevice::ReadOnly))
         {
             m_catalogGoPro_data.clear();
@@ -163,11 +164,11 @@ void FirmwareManager::updateCatalogs()
     if (!m_nwManager)
     {
         m_nwManager = new QNetworkAccessManager(this);
-        connect(m_nwManager, &QNetworkAccessManager::finished, this, &FirmwareManager::catalogsUpdated);
     }
 
     if (m_nwManager)
     {
+        connect(m_nwManager, &QNetworkAccessManager::finished, this, &FirmwareManager::catalogsUpdated);
         m_nwManager->get(QNetworkRequest(QUrl(m_catalogGoPro_url)));
     }
 }
@@ -189,7 +190,7 @@ void FirmwareManager::catalogsUpdated(QNetworkReply *reply)
         // Write
         QString path = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
         if (!path.endsWith('/')) path += '/';
-        QFile jsonFile(path + "catalog_gopro.json");
+        QFile jsonFile(path + "gopro_firmwares.json");
         if (jsonFile.open(QIODevice::WriteOnly))
         {
             jsonFile.write(m_catalogGoPro_json.toJson());
@@ -213,6 +214,109 @@ void FirmwareManager::errorHttp()
 void FirmwareManager::errorSSL()
 {
     qWarning() << "FirmwareManager::errorSSL()";
+}
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+void FirmwareManager::downloadFirmware(Device *d)
+{
+    if (d)
+    {
+        QUrl url = lastUrl(d->getModel());
+        qDebug() << "FirmwareManager::downloadFirmware(" << url << ")";
+
+        QString folderPath = d->getPath();
+        QString fileName = folderPath + "/UPDATE.zip";
+
+        if (QFile::exists(fileName)) QFile::remove(fileName);
+
+        firmwareFile = new QFile(fileName);
+        if (!firmwareFile->open(QIODevice::WriteOnly))
+        {
+            qWarning() <<  "Unable to save the file" << fileName;
+
+            delete firmwareFile;
+            firmwareFile = nullptr;
+            return;
+        }
+
+        //////////////////////////
+
+        if (!m_nwManager)
+        {
+            m_nwManager = new QNetworkAccessManager(this);
+        }
+
+        if (m_nwManager)
+        {
+            firmwareReply = m_nwManager->get(QNetworkRequest(url));
+
+            connect(firmwareReply, SIGNAL(readyRead()), this, SLOT(firmwareReplied()));
+            connect(firmwareReply, SIGNAL(downloadProgress(qint64,qint64)),
+                    this, SLOT(firmwareProgress(qint64,qint64)));
+            connect(firmwareReply, SIGNAL(finished()), this, SLOT(firmwareFinished()));
+        }
+    }
+}
+
+void FirmwareManager::cancelFirmware(Device *device)
+{
+    if (device && firmwareReply)
+    {
+        firmwareReply->abort();
+    }
+}
+
+/* ************************************************************************** */
+
+void FirmwareManager::firmwareReplied()
+{
+    if (firmwareReply && firmwareFile)
+    {
+        firmwareFile->write(firmwareReply->readAll());
+    }
+}
+
+void FirmwareManager::firmwareFinished()
+{
+/*
+    // download canceled
+    //if (httpRequestAborted)
+    {
+        if (firmwareFile)
+        {
+            firmwareFile->close();
+            firmwareFile->remove();
+            delete firmwareFile;
+            firmwareFile = nullptr;
+        }
+    }
+*/
+    // download finished normally
+    firmwareFile->flush();
+    firmwareFile->close();
+/*
+    // handle redirection url?
+    QVariant redirectionTarget = firmwareReply->attribute(QNetworkRequest::RedirectionTargetAttribute);
+    if (firmwareReply->error())
+    {
+        //
+    }
+    else if (!redirectionTarget.isNull())
+    {
+        QUrl newUrl = url.resolved(redirectionTarget.toUrl());
+    }
+*/
+    firmwareReply->deleteLater();
+    firmwareReply = nullptr;
+    delete firmwareFile;
+    firmwareFile = nullptr;
+}
+
+void FirmwareManager::firmwareProgress(qint64 bytesRead, qint64 totalBytes)
+{
+    qDebug() << "FirmwareManager::firmwareProgress(" << bytesRead << "/" << totalBytes << ")";
 }
 
 /* ************************************************************************** */
@@ -288,6 +392,23 @@ QString FirmwareManager::lastReleaseNotes(const QString &name)
         if (name == obj["name"].toString())
         {
             return obj["release_html"].toString().section("</p>", 1, -1);
+        }
+    }
+
+    return QString();
+}
+
+QString FirmwareManager::lastUrl(const QString &name)
+{
+    QJsonObject jsonObject = m_catalogGoPro_json.object();
+    QJsonArray jsonArray = jsonObject["cameras"].toArray();
+
+    foreach (const QJsonValue &value, jsonArray)
+    {
+        QJsonObject obj = value.toObject();
+        if (name == obj["name"].toString())
+        {
+            return obj["url"].toString();
         }
     }
 
