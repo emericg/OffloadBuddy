@@ -19,7 +19,7 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#include "JobWorkerAsync.h"
+#include "JobWorkerFFmpeg.h"
 #include "JobManager.h"
 #include "Shot.h"
 #include "utils/utils_app.h"
@@ -99,12 +99,12 @@ QString getFFmpegDurationStringEscaped(const int64_t duration_ms)
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-JobWorkerAsync::JobWorkerAsync()
+JobWorkerFFmpeg::JobWorkerFFmpeg()
 {
     //
 }
 
-JobWorkerAsync::~JobWorkerAsync()
+JobWorkerFFmpeg::~JobWorkerFFmpeg()
 {
     while (!m_ffmpegjobs.isEmpty())
     {
@@ -118,7 +118,7 @@ JobWorkerAsync::~JobWorkerAsync()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void JobWorkerAsync::jobPlayPause()
+void JobWorkerFFmpeg::jobPlayPause()
 {
 #if defined(Q_OS_LINUX) || defined(Q_OS_MACOS)
 
@@ -139,9 +139,9 @@ void JobWorkerAsync::jobPlayPause()
 #endif // Q_OS_LINUX || Q_OS_MACOS
 }
 
-void JobWorkerAsync::jobAbort()
+void JobWorkerFFmpeg::jobAbort()
 {
-    qDebug() << ">> JobWorkerAsync::jobAbort()";
+    qDebug() << ">> JobWorkerFFmpeg::jobAbort()";
 
     if (m_childProcess)
     {
@@ -159,9 +159,9 @@ void JobWorkerAsync::jobAbort()
 
 /* ************************************************************************** */
 
-void JobWorkerAsync::queueWork(JobTracker *job)
+void JobWorkerFFmpeg::queueWork(JobTracker *job)
 {
-    qDebug() << ">> JobWorkerAsync::queueWork()";
+    qDebug() << ">> JobWorkerFFmpeg::queueWork()";
 
     if (job)
     {
@@ -176,9 +176,9 @@ void JobWorkerAsync::queueWork(JobTracker *job)
     }
 }
 
-void JobWorkerAsync::queueWork_merge(JobTracker *job)
+void JobWorkerFFmpeg::queueWork_merge(JobTracker *job)
 {
-    qDebug() << ">> JobWorkerAsync::queueWork_merge()";
+    qDebug() << ">> JobWorkerFFmpeg::queueWork_merge()";
 
     if (job)
     {
@@ -257,9 +257,9 @@ void JobWorkerAsync::queueWork_merge(JobTracker *job)
     }
 }
 
-void JobWorkerAsync::queueWork_encode(JobTracker *job)
+void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
 {
-    qDebug() << ">> JobWorkerAsync::queueWork_encode()";
+    qDebug() << ">> JobWorkerFFmpeg::queueWork_encode()";
 
     if (job)
     {
@@ -671,16 +671,16 @@ void JobWorkerAsync::queueWork_encode(JobTracker *job)
 */
     }
 
-    qDebug() << "<< JobWorkerAsync::queueWork()";
+    qDebug() << "<< JobWorkerFFmpeg::queueWork()";
 }
 
-void JobWorkerAsync::work()
+void JobWorkerFFmpeg::work()
 {
     if (m_childProcess == nullptr)
     {
         if (!m_ffmpegjobs.isEmpty())
         {
-            qDebug() << ">> JobWorkerAsync::work()";
+            qDebug() << ">> JobWorkerFFmpeg::work()";
 
             m_ffmpegcurrent = m_ffmpegjobs.dequeue();
             if (m_ffmpegcurrent)
@@ -688,13 +688,13 @@ void JobWorkerAsync::work()
                 m_childProcess = new QProcess();
                 connect(m_childProcess, SIGNAL(started()), this, SLOT(processStarted()));
                 connect(m_childProcess, SIGNAL(finished(int)), this, SLOT(processFinished()));
-                connect(m_childProcess, &QProcess::readyReadStandardOutput, this, &JobWorkerAsync::processOutput);
-                connect(m_childProcess, &QProcess::readyReadStandardError, this, &JobWorkerAsync::processOutput);
+                connect(m_childProcess, &QProcess::readyReadStandardOutput, this, &JobWorkerFFmpeg::processOutput);
+                connect(m_childProcess, &QProcess::readyReadStandardError, this, &JobWorkerFFmpeg::processOutput);
 
                 m_childProcess->start(m_ffmpegcurrent->command, m_ffmpegcurrent->arguments);
             }
 
-            qDebug() << "<< JobWorkerAsync::work()";
+            qDebug() << "<< JobWorkerFFmpeg::work()";
         }
     }
 }
@@ -702,11 +702,11 @@ void JobWorkerAsync::work()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void JobWorkerAsync::processStarted()
+void JobWorkerFFmpeg::processStarted()
 {
     if (m_childProcess && m_ffmpegcurrent)
     {
-        qDebug() << "JobWorkerAsync::processStarted()";
+        qDebug() << "JobWorkerFFmpeg::processStarted()";
         m_ffmpegcurrent->job->setState(JobUtils::JOB_STATE_WORKING);
 
         Q_EMIT jobStarted(m_ffmpegcurrent->job->getId());
@@ -714,7 +714,7 @@ void JobWorkerAsync::processStarted()
     }
 }
 
-void JobWorkerAsync::processFinished()
+void JobWorkerFFmpeg::processFinished()
 {
     if (m_childProcess && m_ffmpegcurrent)
     {
@@ -722,7 +722,7 @@ void JobWorkerAsync::processFinished()
 
         int exitStatus = m_childProcess->exitStatus();
         int exitCode = m_childProcess->exitCode();
-        qDebug() << "JobWorkerAsync::processFinished(" << exitStatus << "/" << exitCode << ")";
+        qDebug() << "JobWorkerFFmpeg::processFinished(" << exitStatus << "/" << exitCode << ")";
 
         if (js != JobUtils::JOB_STATE_ABORTED)
         {
@@ -769,14 +769,14 @@ void JobWorkerAsync::processFinished()
 
 /* ************************************************************************** */
 
-void JobWorkerAsync::processOutput()
+void JobWorkerFFmpeg::processOutput()
 {
     if (m_childProcess)
     {
         m_childProcess->waitForBytesWritten(128);
         QString txt(m_childProcess->readAllStandardError());
 
-        //qDebug() << "JobWorkerAsync::processOutput()" << txt;
+        //qDebug() << "JobWorkerFFmpeg::processOutput()" << txt;
 
         if (m_duration.isNull() || !m_duration.isValid())
         {

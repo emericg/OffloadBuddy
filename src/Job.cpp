@@ -48,8 +48,7 @@ QString JobTracker::getTypeString() const
     else if (m_type == JobUtils::JOB_CLIP) return tr("CLIP");
     else if (m_type == JobUtils::JOB_ENCODE) return tr("ENCODING");
     else if (m_type == JobUtils::JOB_TELEMETRY) return tr("TELEMETRY EXTRACTION");
-    else if (m_type == JobUtils::JOB_FIRMWARE_DOWNLOAD) return tr("DOWNLOADING");
-    else if (m_type == JobUtils::JOB_FIRMWARE_UPLOAD) return tr("FIRMWARE");
+    else if (m_type == JobUtils::JOB_FIRMWARE_UPDATE) return tr("FIRMWARE UPDATE");
 
     else if (m_type == JobUtils::JOB_DELETE) return tr("DELETION");
     else if (m_type == JobUtils::JOB_FORMAT) return tr("FORMAT");

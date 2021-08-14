@@ -19,80 +19,59 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#ifndef JOB_WORKER_ASYNC_H
-#define JOB_WORKER_ASYNC_H
+#ifndef JOB_WORKER_THREAD_H
+#define JOB_WORKER_THREAD_H
 /* ************************************************************************** */
 
 #include <QObject>
-#include <QString>
-#include <QTime>
-#include <QTemporaryFile>
-
 #include <QQueue>
+#include <QMutex>
 
-class QProcess;
+class QThread;
 class Shot;
 class JobTracker;
+class JobElement;
+class JobSettingsTelemetry;
 
 /* ************************************************************************** */
 
-typedef struct CommandWrapper
-{
-    JobTracker *job = nullptr;
-    int job_element_index = -1;
-
-    QTemporaryFile mergeFile;
-    QString destFile;
-
-    QString command;
-    QStringList arguments;
-
-} CommandWrapper;
-
 /*!
- * \brief The JobWorkerAsync class
+ * \brief The JobWorker thread class
  */
-class JobWorkerAsync: public QObject
+class JobWorkerThread: public QObject
 {
     Q_OBJECT
 
-    QQueue <CommandWrapper *> m_ffmpegjobs;
-    CommandWrapper *m_ffmpegcurrent = nullptr;
+    bool m_working = false;
+    QQueue <JobTracker *> m_jobs;
+    QMutex m_jobsMutex;
 
-    QProcess *m_childProcess = nullptr;
+    QThread *m_thread = nullptr;
 
-    QTime m_duration;
-    QTime m_progress;
-
-    void queueWork_encode(JobTracker *job);
-    void queueWork_merge(JobTracker *job);
-
-private slots:
-    void processStarted();
-    void processFinished();
-    void processOutput();
+    void work_telemetry(JobElement *element, JobSettingsTelemetry *settings);
+    void work_offload();
+    void work_delete();
 
 public:
-    JobWorkerAsync();
-    ~JobWorkerAsync();
+    JobWorkerThread();
+    ~JobWorkerThread();
 
-    void work();
+    bool start();
+    bool stop();
+    bool isWorking();
 
 public slots:
     void queueWork(JobTracker *job);
-
-    void jobPlayPause();
-    void jobAbort();
+    void work();
 
 signals:
+    void startWorking();
+
     void jobStarted(int);
     void jobProgress(int, float);
     void jobFinished(int, int);
     void jobAborted(int, int);
     void jobErrored(int, int);
-
-    void jobAborted();
-    void jobErrored();
 
     void shotStarted(int, Shot *);
     void shotFinished(int, int, Shot *);
@@ -102,4 +81,4 @@ signals:
 };
 
 /* ************************************************************************** */
-#endif // JOB_WORKER_ASYNC_H
+#endif // JOB_WORKER_THREAD_H

@@ -50,7 +50,8 @@ SOURCES  += src/main.cpp \
             src/SettingsManager.cpp \
             src/FirmwareManager.cpp \
             src/JobManager.cpp \
-            src/JobWorkerAsync.cpp \
+            src/JobWorkerFFmpeg.cpp \
+            src/JobWorkerThread.cpp \
             src/JobWorkerSync.cpp \
             src/StorageManager.cpp \
             src/MediaStorage.cpp \
@@ -84,7 +85,8 @@ HEADERS  += src/SettingsManager.h \
             src/JobManager.h \
             src/Job.h \
             src/JobUtils.h \
-            src/JobWorkerAsync.h \
+            src/JobWorkerFFmpeg.h \
+            src/JobWorkerThread.h \
             src/JobWorkerSync.h \
             src/StorageManager.h \
             src/MediaStorage.h \

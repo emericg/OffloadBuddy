@@ -84,7 +84,7 @@ Rectangle {
                         return "qrc:/assets/icons_material/baseline-delete-24px.svg"
                     else if (job.type === JobUtils.JOB_TELEMETRY)
                         return "qrc:/assets/icons_material/baseline-insert_chart-24px.svg"
-                    else if (job.type === JobUtils.JOB_FIRMWARE_DOWNLOAD || job.type === JobUtils.JOB_FIRMWARE_UPLOAD)
+                    else if (job.type === JobUtils.JOB_FIRMWARE_UPDATE)
                         return "qrc:/assets/icons_material/baseline-settings_applications-24px.svg"
                     else
                         return "qrc:/assets/icons_material/baseline-autorenew-24px.svg"

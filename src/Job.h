@@ -34,8 +34,6 @@
 class Shot;
 class Device;
 class MediaLibrary;
-class JobWorkerAsync;
-class JobWorkerSync;
 
 /* ************************************************************************** */
 

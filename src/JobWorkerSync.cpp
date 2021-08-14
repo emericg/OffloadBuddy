@@ -22,6 +22,7 @@
 #include "JobWorkerSync.h"
 #include "JobManager.h"
 #include "SettingsManager.h"
+#include "FirmwareManager.h"
 #include "Shot.h"
 
 #ifdef ENABLE_LIBMTP
@@ -112,6 +113,17 @@ void JobWorkerSync::work()
             emit jobStarted(current_job->getId());
             int index = -1;
 
+            // HANDLE FIRMWARE UPDATE //////////////////////////////////////////
+
+            if (current_job->getDevice())
+            {
+                FirmwareManager *fwm = FirmwareManager::getInstance();
+                if (fwm)
+                {
+                    fwm->downloadFirmware(current_job->getDevice());
+                }
+            }
+/*
             for (auto element: current_job->getElements())
             {
                 emit shotStarted(current_job->getId(), element->parent_shot);
@@ -120,205 +132,16 @@ void JobWorkerSync::work()
                 index++;
                 current_job->setElementsIndex(index);
 
-                // HANDLE TELEMETRY ////////////////////////////////////////////
+                // HANDLE SHOTS ////////////////////////////////////////////////
 
-                if (current_job->getType() == JobUtils::JOB_TELEMETRY)
-                {
-                    if (element->parent_shot)
-                    {
-                        element->parent_shot->parseTelemetry();
-
-                        if (!current_job->settings_telemetry.gps_format.isEmpty())
-                        {
-                            element->parent_shot->exportGps(element->destination_dir, 0,
-                                                    current_job->settings_telemetry.gps_frequency,
-                                                    current_job->settings_telemetry.EGM96);
-                        }
-                        if (!current_job->settings_telemetry.telemetry_format.isEmpty())
-                        {
-                            element->parent_shot->exportTelemetry(element->destination_dir, 0,
-                                                    current_job->settings_telemetry.telemetry_frequency,
-                                                    current_job->settings_telemetry.gps_frequency,
-                                                    current_job->settings_telemetry.EGM96);
-                        }
-                    }
-                }
-
-                if (current_job->getType() == JobUtils::JOB_OFFLOAD && current_job->settings_offload.extractTelemetry)
-                {
-                    // "auto" telemetry extraction
-                    element->parent_shot->parseTelemetry();
-                    element->parent_shot->exportGps(element->destination_dir, 0,
-                                            current_job->settings_telemetry.gps_frequency,
-                                            current_job->settings_telemetry.EGM96);
-                    element->parent_shot->exportTelemetry(element->destination_dir, 0,
-                                            current_job->settings_telemetry.telemetry_frequency,
-                                            current_job->settings_telemetry.gps_frequency,
-                                            current_job->settings_telemetry.EGM96);
-                }
-
-                // HANDLE OFFLOADS /////////////////////////////////////////////
-
-                if (current_job->getType() == JobUtils::JOB_MOVE ||
-                    current_job->getType() == JobUtils::JOB_OFFLOAD)
-                {
-                    for (auto const &file: element->files)
-                    {
-                        if (!file.filesystemPath.isEmpty())
-                        {
-                            //qDebug() << "JobWorkerSync  >  FS copying:" << file->filesystemPath;
-                            //qDebug() << "       to  > " << element->destination_dir;
-
-                            QFileInfo fi_src(file.filesystemPath);
-                            QString destFile = element->destination_dir + fi_src.baseName() + "." + fi_src.suffix();
-                            QFileInfo fi_dst(destFile);
-
-                            if (!fi_dst.exists() ||
-                                (fi_dst.exists() && fi_dst.size() != fi_src.size()))
-                            {
-                                bool success = false;
-
-                                if (QStorageInfo(fi_src.dir()).rootPath() == QStorageInfo(fi_dst.dir()).rootPath())
-                                {
-                                    // Source and dest are on the same filesystem
-                                    // attempting a simple rename instead of copy
-
-                                    success = QFile::rename(file.filesystemPath, destFile);
-                                    if (success)
-                                    {
-                                        //qDebug() << "RENAMED: " << destFile;
-                                        stuff_done += fi_src.size();
-                                        emit fileProduced(destFile);
-                                    }
-                                    else
-                                    {
-                                        // TODO handle errors
-                                        qWarning() << "Couldn't rename file: " << destFile;
-                                    }
-                                }
-
-                                if (!success)
-                                {
-                                    success = QFile::copy(file.filesystemPath, destFile);
-                                    if (success)
-                                    {
-                                        //qDebug() << "COPIED: " << destFile;
-                                        stuff_done += fi_src.size();
-                                        emit fileProduced(destFile);
-                                    }
-                                    else
-                                    {
-                                        // TODO handle errors
-                                        qWarning() << "Couldn't copy file: " << destFile;
-                                    }
-                                }
-
-                                if (!success) element_status = 0;
-                            }
-                            else
-                            {
-                                //qDebug() << "No need to copy file: " << destFile;
-                                stuff_done += fi_src.size();
-                                element_status = 0;
-                            }
-                        }
-#ifdef ENABLE_LIBMTP
-                        else if (file.mtpDevice && file.mtpObjectId)
-                        {
-                            //qDebug() << "JobWorkerSync  >  MTP copying:" << file->mtpObjectId;
-                            //qDebug() << "       to  > " << element->destination_dir;
-
-                            QString destFile = element->destination_dir + file.name + "." + file.extension;
-                            QFileInfo fi_dst(destFile);
-
-                            if (!fi_dst.exists() ||
-                                (fi_dst.exists() && fi_dst.size() != static_cast<qint64>(file.size)))
-                            {
-                                int err = LIBMTP_Get_File_To_File(file.mtpDevice, file.mtpObjectId, destFile.toLocal8Bit(), nullptr, nullptr);
-                                if (err)
-                                {
-                                    // TODO handle errors
-                                    qDebug() << "Couldn't copy file: " << destFile;
-                                }
-                                else
-                                {
-                                    //qDebug() << "COPIED: " << destFile;
-                                    stuff_done += file.size;
-                                    emit fileProduced(destFile);
-                                }
-                            }
-                            else
-                            {
-                                qDebug() << "No need to copy file: " << destFile;
-                                stuff_done += file.size;
-                            }
-                        }
-#endif // ENABLE_LIBMTP
-                    }
-
-                    progress = (stuff_done / static_cast<float>(current_job->getFilesSize())) * 100.f;
-                    //qDebug() << "progress: " << progress << "(" << current_job->totalSize << "/" << stuff_done << ")";
-                }
-
-                // HANDLE DELETION /////////////////////////////////////////////
-
-                if (current_job->getType() == JobUtils::JOB_DELETE)
-                {
-                    for (auto const &file: element->files)
-                    {
-                        // TODO check if device is RO?
-
-                        if (!file.filesystemPath.isEmpty())
-                        {
-                            //qDebug() << "JobWorkerSync  >  deleting:" << file.filesystemPath;
-
-                            bool status = false;
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
-                            if (current_job->settings_delete.moveToTrash)
-                                status = QFile::moveToTrash(file.filesystemPath); // Qt 5.15
-                            else
-#endif
-                                status = QFile::remove(file.filesystemPath);
-
-                            if (status)
-                            {
-                                stuff_done++;
-                            }
-                            else
-                            {
-                                // TODO handle errors
-                                qDebug() << "Couldn't delete file: " << file.filesystemPath;
-                            }
-                        }
-#ifdef ENABLE_LIBMTP
-                        else if (file.mtpDevice && file.mtpObjectId)
-                        {
-                            //qDebug() << "JobWorkerSync  >  deleting:" << file.name;
-
-                            int err = LIBMTP_Delete_Object(file.mtpDevice, file.mtpObjectId);
-                            if (err)
-                            {
-                                // TODO handle errors
-                                qDebug() << "Couldn't delete file: " << file.name;
-                            }
-                            else
-                            {
-                                stuff_done++;
-                            }
-                        }
-#endif // ENABLE_LIBMTP
-                    }
-
-                    progress = ((stuff_done) / static_cast<float>(current_job->getFilesCount())) * 100.f;
-                    //qDebug() << "progress: " << progress << "(" << current_job->totalFiles << "/" << stuff_done << ")";
-                }
+                // TODO // so far we have no need for sync jobs on shots
 
                 // Status
 
                 emit shotFinished(current_job->getId(), element_status, element->parent_shot);
                 emit jobProgress(current_job->getId(), progress);
             }
-
+*/
             emit jobFinished(current_job->getId(), JobUtils::JOB_STATE_DONE);
         }
         m_jobsMutex.lock();

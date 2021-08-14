@@ -37,7 +37,8 @@ class Shot;
 class Device;
 class MediaLibrary;
 class MediaDirectory;
-class JobWorkerAsync;
+class JobWorkerFFmpeg;
+class JobWorkerThread;
 class JobWorkerSync;
 
 /* ************************************************************************** */
@@ -57,11 +58,11 @@ class JobManager: public QObject
     int m_workingJobs = 0;
 
     // instant jobs (deletion...)
-    JobWorkerSync *m_job_instant = nullptr;
+    JobWorkerThread *m_job_instant = nullptr;
     // disk jobs (copy/merge...) (PER DEVICE)
-    QHash<QString, JobWorkerSync *> m_job_disk;
+    QHash<QString, JobWorkerThread *> m_job_disk;
     // CPU jobs (reencodes, stabs...)
-    JobWorkerAsync *m_job_cpu = nullptr;
+    JobWorkerFFmpeg *m_job_cpu = nullptr;
     // web downloads jobs
     JobWorkerSync *m_job_web = nullptr;
 

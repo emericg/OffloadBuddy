@@ -52,8 +52,7 @@ public:
         JOB_ENCODE,
         JOB_TELEMETRY,
 
-        JOB_FIRMWARE_DOWNLOAD,
-        JOB_FIRMWARE_UPLOAD,
+        JOB_FIRMWARE_UPDATE,
 
         JOB_DELETE,
         JOB_FORMAT

@@ -20,7 +20,8 @@
  */
 
 #include "JobManager.h"
-#include "JobWorkerAsync.h"
+#include "JobWorkerFFmpeg.h"
+#include "JobWorkerThread.h"
 #include "JobWorkerSync.h"
 #include "SettingsManager.h"
 #include "StorageManager.h"
@@ -92,7 +93,7 @@ bool JobManager::addJob(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
 {
     bool status = false;
 
-    if (type == 0 || (dev == nullptr && lib == nullptr) || !shot) return status;
+    if (type == 0 || (dev == nullptr && lib == nullptr)) return status;
 
     QList<Shot *> list;
     list.push_back(shot);
@@ -112,7 +113,7 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
     bool status = false;
 
     if (type == 0) return status;
-    if (list.empty()) return status;
+    if (list.empty() && type != JobUtils::JOB_FIRMWARE_UPDATE) return status;
 
     // GET SETTINGS ////////////////////////////////////////////////////////////
 
@@ -226,13 +227,13 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
 
     // DISPATCH JOB ////////////////////////////////////////////////////////////
 
-    if (type == JobUtils::JOB_ENCODE || type == JobUtils::JOB_MERGE)
+    if (type == JobUtils::JOB_ENCODE || type == JobUtils::JOB_MERGE || type == JobUtils::JOB_CLIP)
     {
         // ffmpeg worker
         if (m_job_cpu == nullptr)
         {
-            qDebug() << "Starting an async worker";
-            m_job_cpu = new JobWorkerAsync();
+            qDebug() << "Starting an FFMPEG worker";
+            m_job_cpu = new JobWorkerFFmpeg();
 
             connect(m_job_cpu, SIGNAL(jobStarted(int)), this, SLOT(jobStarted(int)));
             connect(m_job_cpu, SIGNAL(jobProgress(int,float)), this, SLOT(jobProgress(int,float)));
@@ -249,10 +250,36 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
             m_job_cpu->work();
         }
     }
+    else if (type == JobUtils::JOB_FIRMWARE_UPDATE)
+    {
+        // sync worker
+        if (m_job_web == nullptr)
+        {
+            qDebug() << "Starting a SYNC worker";
+            m_job_web = new JobWorkerSync();
+            m_job_web->start();
+
+            connect(m_job_web, SIGNAL(startWorking()), m_job_web, SLOT(work()));
+            connect(m_job_web, SIGNAL(jobProgress(int,float)), this, SLOT(jobProgress(int,float)));
+            connect(m_job_web, SIGNAL(jobStarted(int)), this, SLOT(jobStarted(int)));
+            connect(m_job_web, SIGNAL(jobFinished(int,int)), this, SLOT(jobFinished(int,int)));
+            connect(m_job_web, SIGNAL(jobErrored(int,int)), this, SLOT(jobErrored(int,int)));
+            connect(m_job_web, SIGNAL(shotStarted(int,Shot*)), this, SLOT(shotStarted(int,Shot*)));
+            connect(m_job_web, SIGNAL(shotFinished(int,int,Shot*)), this, SLOT(shotFinished(int,int,Shot*)));
+            //connect(m_selected_worker, SIGNAL(shotErrored(int,int,Shot*)), this, SLOT(shotErrored(int,int,Shot*)));
+            connect(m_job_web, SIGNAL(fileProduced(QString)), this, SLOT(newFile(QString)));
+        }
+
+        if (m_job_web)
+        {
+            m_job_web->queueWork(tracker);
+            m_job_web->work();
+        }
+    }
     else
     {
         // Regular worker
-        JobWorkerSync *m_selected_worker = nullptr;
+        JobWorkerThread *m_selected_worker = nullptr;
 
         if (type == JobUtils::JOB_DELETE || type == JobUtils::JOB_FORMAT)
         {
@@ -260,8 +287,8 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
 
             if (m_selected_worker == nullptr)
             {
-                qDebug() << "Starting a sync worker";
-                m_selected_worker = new JobWorkerSync();
+                qDebug() << "Starting a THREAD worker";
+                m_selected_worker = new JobWorkerThread();
                 m_selected_worker->start();
 
                 connect(m_selected_worker, SIGNAL(startWorking()), m_selected_worker, SLOT(work()));
@@ -279,13 +306,7 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
                 m_job_instant = m_selected_worker;
             }
         }
-        else if (type == JobUtils::JOB_FIRMWARE_DOWNLOAD)
-        {
-            m_selected_worker = m_job_web; // TODO
-        }
-        else if (type == JobUtils::JOB_TELEMETRY || type == JobUtils::JOB_FIRMWARE_UPLOAD ||
-                 type == JobUtils::JOB_CLIP ||
-                 type == JobUtils::JOB_OFFLOAD || type == JobUtils::JOB_MOVE)
+        else if (type == JobUtils::JOB_OFFLOAD || type == JobUtils::JOB_MOVE || type == JobUtils::JOB_TELEMETRY)
         {
             if (dev) m_selected_worker = m_job_disk[dev->getUuid()];
             else m_selected_worker = m_job_disk["hdd"];
@@ -293,7 +314,7 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
             if (m_selected_worker == nullptr)
             {
                 qDebug() << "Starting a sync worker";
-                m_selected_worker = new JobWorkerSync();
+                m_selected_worker = new JobWorkerThread();
                 m_selected_worker->start();
 
                 connect(m_selected_worker, SIGNAL(startWorking()), m_selected_worker, SLOT(work()));
@@ -497,6 +518,9 @@ void JobManager::shotFinished(int jobId, int status, Shot *shot)
                 case JobUtils::JOB_CLIP:
                 case JobUtils::JOB_ENCODE:
                     shot->setState(ShotUtils::SHOT_STATE_ENCODED);
+                    break;
+
+                case JobUtils::JOB_FIRMWARE_UPDATE:
                     break;
 
                 default:
