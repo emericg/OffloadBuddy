@@ -106,48 +106,52 @@ JobWorkerFFmpeg::JobWorkerFFmpeg()
 
 JobWorkerFFmpeg::~JobWorkerFFmpeg()
 {
-    while (!m_ffmpegjobs.isEmpty())
+    while (!m_ffmpegJobs.isEmpty())
     {
-        CommandWrapper *wrap = m_ffmpegjobs.dequeue();
+        CommandWrapper *wrap = m_ffmpegJobs.dequeue();
         delete wrap;
     }
 
-    jobAbort();
+    abortWork();
 }
 
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void JobWorkerFFmpeg::jobPlayPause()
+void JobWorkerFFmpeg::playPauseWork()
 {
 #if defined(Q_OS_LINUX) || defined(Q_OS_MACOS)
 
-    if (m_childProcess && m_ffmpegcurrent && m_ffmpegcurrent->job)
+    if (m_childProcess && m_ffmpegCurrent && m_ffmpegCurrent->job)
     {
-        if (m_ffmpegcurrent->job->getState() == JobUtils::JOB_STATE_WORKING)
+        qDebug() << ">> JobWorkerFFmpeg::playPauseWork()";
+
+        if (m_ffmpegCurrent->job->getState() == JobUtils::JOB_STATE_WORKING)
         {
             kill(m_childProcess->processId(), SIGSTOP); // suspend
-            m_ffmpegcurrent->job->setState(JobUtils::JOB_STATE_PAUSED);
+            m_ffmpegCurrent->job->setState(JobUtils::JOB_STATE_PAUSED);
         }
-        else if (m_ffmpegcurrent->job->getState() == JobUtils::JOB_STATE_PAUSED)
+        else if (m_ffmpegCurrent->job->getState() == JobUtils::JOB_STATE_PAUSED)
         {
             kill(m_childProcess->processId(), SIGCONT); // resume
-            m_ffmpegcurrent->job->setState(JobUtils::JOB_STATE_WORKING);
+            m_ffmpegCurrent->job->setState(JobUtils::JOB_STATE_WORKING);
         }
     }
 
 #endif // Q_OS_LINUX || Q_OS_MACOS
 }
 
-void JobWorkerFFmpeg::jobAbort()
+/* ************************************************************************** */
+
+void JobWorkerFFmpeg::abortWork()
 {
-    qDebug() << ">> JobWorkerFFmpeg::jobAbort()";
+    qDebug() << ">> JobWorkerFFmpeg::abortWork()";
 
     if (m_childProcess)
     {
         m_childProcess->write("q\n");
 
-        m_ffmpegcurrent->job->setState(JobUtils::JOB_STATE_ABORTED);
+        m_ffmpegCurrent->job->setState(JobUtils::JOB_STATE_ABORTED);
 
         if (!m_childProcess->waitForFinished(2000))
         {
@@ -157,6 +161,7 @@ void JobWorkerFFmpeg::jobAbort()
     }
 }
 
+/* ************************************************************************** */
 /* ************************************************************************** */
 
 void JobWorkerFFmpeg::queueWork(JobTracker *job)
@@ -175,6 +180,8 @@ void JobWorkerFFmpeg::queueWork(JobTracker *job)
         }
     }
 }
+
+/* ************************************************************************** */
 
 void JobWorkerFFmpeg::queueWork_merge(JobTracker *job)
 {
@@ -243,7 +250,7 @@ void JobWorkerFFmpeg::queueWork_merge(JobTracker *job)
             ptiwrap->arguments << ptiwrap->destFile;
 
             // Dispatch job
-            m_ffmpegjobs.push_back(ptiwrap);
+            m_ffmpegJobs.push_back(ptiwrap);
 
             // Recap ///////////////////////////////////////////////////////////
 /*
@@ -256,6 +263,8 @@ void JobWorkerFFmpeg::queueWork_merge(JobTracker *job)
         }
     }
 }
+
+/* ************************************************************************** */
 
 void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
 {
@@ -645,7 +654,7 @@ void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
             ptiwrap->arguments << ptiwrap->destFile;
 
             // Dispatch job
-            m_ffmpegjobs.push_back(ptiwrap);
+            m_ffmpegJobs.push_back(ptiwrap);
 
             // Recap ///////////////////////////////////////////////////////////
 
@@ -674,28 +683,44 @@ void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
     qDebug() << "<< JobWorkerFFmpeg::queueWork()";
 }
 
+/* ************************************************************************** */
+
+int JobWorkerFFmpeg::getCurrentJobId()
+{
+    if (m_ffmpegCurrent)
+    {
+        return m_ffmpegCurrent->job->getId();
+    }
+
+    return -1;
+}
+
+bool JobWorkerFFmpeg::isWorking()
+{
+    return (m_childProcess && m_ffmpegCurrent);
+}
+
+/* ************************************************************************** */
+
 void JobWorkerFFmpeg::work()
 {
-    if (m_childProcess == nullptr)
+    if (m_childProcess == nullptr && !m_ffmpegJobs.isEmpty())
     {
-        if (!m_ffmpegjobs.isEmpty())
+        qDebug() << ">> JobWorkerFFmpeg::work()";
+
+        m_ffmpegCurrent = m_ffmpegJobs.dequeue();
+        if (m_ffmpegCurrent)
         {
-            qDebug() << ">> JobWorkerFFmpeg::work()";
+            m_childProcess = new QProcess();
+            connect(m_childProcess, SIGNAL(started()), this, SLOT(processStarted()));
+            connect(m_childProcess, SIGNAL(finished(int)), this, SLOT(processFinished()));
+            connect(m_childProcess, &QProcess::readyReadStandardOutput, this, &JobWorkerFFmpeg::processOutput);
+            connect(m_childProcess, &QProcess::readyReadStandardError, this, &JobWorkerFFmpeg::processOutput);
 
-            m_ffmpegcurrent = m_ffmpegjobs.dequeue();
-            if (m_ffmpegcurrent)
-            {
-                m_childProcess = new QProcess();
-                connect(m_childProcess, SIGNAL(started()), this, SLOT(processStarted()));
-                connect(m_childProcess, SIGNAL(finished(int)), this, SLOT(processFinished()));
-                connect(m_childProcess, &QProcess::readyReadStandardOutput, this, &JobWorkerFFmpeg::processOutput);
-                connect(m_childProcess, &QProcess::readyReadStandardError, this, &JobWorkerFFmpeg::processOutput);
-
-                m_childProcess->start(m_ffmpegcurrent->command, m_ffmpegcurrent->arguments);
-            }
-
-            qDebug() << "<< JobWorkerFFmpeg::work()";
+            m_childProcess->start(m_ffmpegCurrent->command, m_ffmpegCurrent->arguments);
         }
+
+        qDebug() << "<< JobWorkerFFmpeg::work()";
     }
 }
 
@@ -704,21 +729,23 @@ void JobWorkerFFmpeg::work()
 
 void JobWorkerFFmpeg::processStarted()
 {
-    if (m_childProcess && m_ffmpegcurrent)
+    if (m_childProcess && m_ffmpegCurrent)
     {
         qDebug() << "JobWorkerFFmpeg::processStarted()";
-        m_ffmpegcurrent->job->setState(JobUtils::JOB_STATE_WORKING);
+        m_ffmpegCurrent->job->setState(JobUtils::JOB_STATE_WORKING);
 
-        Q_EMIT jobStarted(m_ffmpegcurrent->job->getId());
-        Q_EMIT shotStarted(m_ffmpegcurrent->job->getId(), m_ffmpegcurrent->job->getElement(m_ffmpegcurrent->job_element_index)->parent_shot);
+        Q_EMIT jobStarted(m_ffmpegCurrent->job->getId());
+        Q_EMIT shotStarted(m_ffmpegCurrent->job->getId(), m_ffmpegCurrent->job->getElement(m_ffmpegCurrent->job_element_index)->parent_shot);
     }
 }
 
+/* ************************************************************************** */
+
 void JobWorkerFFmpeg::processFinished()
 {
-    if (m_childProcess && m_ffmpegcurrent)
+    if (m_childProcess && m_ffmpegCurrent)
     {
-        JobUtils::JobState js = static_cast<JobUtils::JobState>(m_ffmpegcurrent->job->getState());
+        JobUtils::JobState js = static_cast<JobUtils::JobState>(m_ffmpegCurrent->job->getState());
 
         int exitStatus = m_childProcess->exitStatus();
         int exitCode = m_childProcess->exitCode();
@@ -743,28 +770,27 @@ void JobWorkerFFmpeg::processFinished()
             }
         }
 
-        if (m_ffmpegcurrent->job &&
-            m_ffmpegcurrent->job->getElementsCount() > m_ffmpegcurrent->job_element_index)
+        if (m_ffmpegCurrent->job &&
+            m_ffmpegCurrent->job->getElementsCount() > m_ffmpegCurrent->job_element_index)
         {
-            m_ffmpegcurrent->job->setDestinationFile(m_ffmpegcurrent->destFile);
+            m_ffmpegCurrent->job->setDestinationFile(m_ffmpegCurrent->destFile);
 
-            Q_EMIT fileProduced(m_ffmpegcurrent->job->getDestinationFile());
-            Q_EMIT shotFinished(m_ffmpegcurrent->job->getId(), 0, m_ffmpegcurrent->job->getElement(m_ffmpegcurrent->job_element_index)->parent_shot);
-            Q_EMIT jobFinished(m_ffmpegcurrent->job->getId(), js);
+            Q_EMIT fileProduced(m_ffmpegCurrent->job->getDestinationFile());
+            Q_EMIT shotFinished(m_ffmpegCurrent->job->getId(), 0, m_ffmpegCurrent->job->getElement(m_ffmpegCurrent->job_element_index)->parent_shot);
+            Q_EMIT jobFinished(m_ffmpegCurrent->job->getId(), js);
         }
 
         m_childProcess->waitForFinished();
         m_childProcess->deleteLater();
-        //delete m_childProcess;
         m_childProcess = nullptr;
         m_duration = QTime();
         m_progress = QTime();
 
-        delete m_ffmpegcurrent;
-        m_ffmpegcurrent = nullptr;
+        delete m_ffmpegCurrent;
+        m_ffmpegCurrent = nullptr;
     }
 
-    work();
+    work(); // next job?
 }
 
 /* ************************************************************************** */
@@ -788,10 +814,10 @@ void JobWorkerFFmpeg::processOutput()
             }
             else
             {
-                if (m_ffmpegcurrent && m_ffmpegcurrent->job)
+                if (m_ffmpegCurrent && m_ffmpegCurrent->job)
                 {
                     // fallback, use duration from the shot
-                    m_duration = QTime(0,0,0).addMSecs(m_ffmpegcurrent->job->getElement(m_ffmpegcurrent->job_element_index)->parent_shot->getDuration());
+                    m_duration = QTime(0,0,0).addMSecs(m_ffmpegCurrent->job->getElement(m_ffmpegCurrent->job_element_index)->parent_shot->getDuration());
                 }
             }
         }
@@ -811,9 +837,9 @@ void JobWorkerFFmpeg::processOutput()
             progress *= 100.f;
             //qDebug() << "- PROGRESS:" << progress;
 
-            if (m_ffmpegcurrent && m_ffmpegcurrent->job)
+            if (m_ffmpegCurrent && m_ffmpegCurrent->job)
             {
-                Q_EMIT jobProgress(m_ffmpegcurrent->job->getId(), progress);
+                Q_EMIT jobProgress(m_ffmpegCurrent->job->getId(), progress);
             }
         }
     }

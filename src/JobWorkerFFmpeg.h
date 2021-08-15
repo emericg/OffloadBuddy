@@ -49,6 +49,8 @@ typedef struct CommandWrapper
 
 } CommandWrapper;
 
+/* ************************************************************************** */
+
 /*!
  * \brief The JobWorkerFFmpeg class
  */
@@ -56,8 +58,8 @@ class JobWorkerFFmpeg: public QObject
 {
     Q_OBJECT
 
-    QQueue <CommandWrapper *> m_ffmpegjobs;
-    CommandWrapper *m_ffmpegcurrent = nullptr;
+    QQueue <CommandWrapper *> m_ffmpegJobs;
+    CommandWrapper *m_ffmpegCurrent = nullptr;
 
     QProcess *m_childProcess = nullptr;
 
@@ -77,12 +79,13 @@ public:
     ~JobWorkerFFmpeg();
 
     void work();
+    bool isWorking();
+    int getCurrentJobId();
 
 public slots:
     void queueWork(JobTracker *job);
-
-    void jobPlayPause();
-    void jobAbort();
+    void playPauseWork();
+    void abortWork();
 
 signals:
     void jobStarted(int);
@@ -90,9 +93,6 @@ signals:
     void jobFinished(int, int);
     void jobAborted(int, int);
     void jobErrored(int, int);
-
-    void jobAborted();
-    void jobErrored();
 
     void shotStarted(int, Shot *);
     void shotFinished(int, int, Shot *);

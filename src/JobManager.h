@@ -39,7 +39,7 @@ class MediaLibrary;
 class MediaDirectory;
 class JobWorkerFFmpeg;
 class JobWorkerThread;
-class JobWorkerSync;
+class JobWorkerASync;
 
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ class JobManager: public QObject
     // CPU jobs (reencodes, stabs...)
     JobWorkerFFmpeg *m_job_cpu = nullptr;
     // web downloads jobs
-    JobWorkerSync *m_job_web = nullptr;
+    JobWorkerASync *m_job_web = nullptr;
 
     MediaDirectory *getAutoDestination(Shot *s);
     QString getAutoDestinationString(Shot *s);

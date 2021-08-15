@@ -44,18 +44,20 @@ public:
     {
         JOB_INVALID = 0,
 
-        JOB_OFFLOAD,
+        // Jobs working on shots
+        JOB_OFFLOAD = 1,
         JOB_MOVE,
         JOB_MERGE,
 
-        JOB_CLIP,
+        JOB_CLIP = 8,
         JOB_ENCODE,
         JOB_TELEMETRY,
 
-        JOB_FIRMWARE_UPDATE,
+        JOB_DELETE = 15,
 
-        JOB_DELETE,
-        JOB_FORMAT
+        // Jobs working on devices
+        JOB_FIRMWARE_UPDATE = 16,
+        JOB_FORMAT = 32
     };
     Q_ENUM(JobType)
 

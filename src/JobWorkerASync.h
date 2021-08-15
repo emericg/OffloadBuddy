@@ -34,33 +34,34 @@ class JobTracker;
 /* ************************************************************************** */
 
 /*!
- * \brief The JobWorker class
+ * \brief The JobWorkerASync class
  */
-class JobWorkerSync: public QObject
+class JobWorkerASync: public QObject
 {
     Q_OBJECT
 
-    bool m_working = false;
     QQueue <JobTracker *> m_jobs;
-    QMutex m_jobsMutex;
+    JobTracker *m_jobCurrent = nullptr;
 
-    QThread *m_thread = nullptr;
+private slots:
+    void asyncJobStarted();
+    void asyncJobFinished();
+    void asyncJobProgress(float);
 
 public:
-    JobWorkerSync();
-    ~JobWorkerSync();
+    JobWorkerASync();
+    ~JobWorkerASync();
 
-    bool start();
-    bool stop();
+    void work();
     bool isWorking();
+    int getCurrentJobId();
 
 public slots:
     void queueWork(JobTracker *job);
-    void work();
+    void playPauseWork();
+    void abortWork();
 
 signals:
-    void startWorking();
-
     void jobStarted(int);
     void jobProgress(int, float);
     void jobFinished(int, int);

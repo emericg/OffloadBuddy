@@ -43,7 +43,7 @@ class FirmwareManager: public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(bool hasGpFw READ hasGpFw NOTIFY gpfwUpdated)
+    Q_PROPERTY(bool hasGpFw READ hasGpFw NOTIFY firmwareCatalogUpdated)
 
     const QString m_catalogGoPro_url = "https://api.gopro.com/firmware/v2/catalog";
     QDateTime m_catalogGoPro_lastupdate;
@@ -71,7 +71,12 @@ class FirmwareManager: public QObject
     ~FirmwareManager();
 
 Q_SIGNALS:
-    void gpfwUpdated();
+    void firmwareCatalogUpdated();
+
+    void fwDlStarted();
+    void fwDlProgress(float progress);
+    void fwDlErrored();
+    void fwDlFinished();
 
 private slots:
     void catalogsUpdated(QNetworkReply *reply);

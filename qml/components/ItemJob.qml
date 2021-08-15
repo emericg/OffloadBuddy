@@ -240,7 +240,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
 
                 visible: ((Qt.platform.os === "linux" || Qt.platform.os === "osx") &&
-                          (job.type === JobUtils.JOB_ENCODE) &&
+                          (job.type === JobUtils.JOB_ENCODE || job.type === JobUtils.JOB_FIRMWARE_UPDATE) &&
                           (job.state === JobUtils.JOB_STATE_WORKING || job.state === JobUtils.JOB_STATE_PAUSED)) // running
 
                 highlightMode: "color"

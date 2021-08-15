@@ -22,7 +22,7 @@
 #include "JobManager.h"
 #include "JobWorkerFFmpeg.h"
 #include "JobWorkerThread.h"
-#include "JobWorkerSync.h"
+#include "JobWorkerASync.h"
 #include "SettingsManager.h"
 #include "StorageManager.h"
 #include "FileScanner.h"
@@ -252,14 +252,12 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
     }
     else if (type == JobUtils::JOB_FIRMWARE_UPDATE)
     {
-        // sync worker
+        // async worker
         if (m_job_web == nullptr)
         {
-            qDebug() << "Starting a SYNC worker";
-            m_job_web = new JobWorkerSync();
-            m_job_web->start();
+            qDebug() << "Starting an ASYNC worker";
+            m_job_web = new JobWorkerASync();
 
-            connect(m_job_web, SIGNAL(startWorking()), m_job_web, SLOT(work()));
             connect(m_job_web, SIGNAL(jobProgress(int,float)), this, SLOT(jobProgress(int,float)));
             connect(m_job_web, SIGNAL(jobStarted(int)), this, SLOT(jobStarted(int)));
             connect(m_job_web, SIGNAL(jobFinished(int,int)), this, SLOT(jobFinished(int,int)));
@@ -376,17 +374,25 @@ void JobManager::clearFinishedJobs()
 
 void JobManager::playPauseJob(int jobId)
 {
-    if (m_job_cpu)
+    if (m_job_cpu && m_job_cpu->getCurrentJobId() == jobId)
     {
-        m_job_cpu->jobPlayPause();
+        m_job_cpu->playPauseWork();
+    }
+    if (m_job_web && m_job_web->getCurrentJobId() == jobId)
+    {
+        m_job_web->playPauseWork();
     }
 }
 
 void JobManager::stopJob(int jobId)
 {
-    if (m_job_cpu)
+    if (m_job_cpu && m_job_cpu->getCurrentJobId() == jobId)
     {
-        m_job_cpu->jobAbort();
+        m_job_cpu->abortWork();
+    }
+    if (m_job_web && m_job_web->getCurrentJobId() == jobId)
+    {
+        m_job_web->abortWork();
     }
 }
 

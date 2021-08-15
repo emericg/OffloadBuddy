@@ -292,10 +292,13 @@ void FirmwareManager::firmwareFinished()
             firmwareFile = nullptr;
         }
     }
+    Q_EMIT fwDlErrored();
 */
     // download finished normally
     firmwareFile->flush();
     firmwareFile->close();
+
+    Q_EMIT fwDlFinished();
 /*
     // handle redirection url?
     QVariant redirectionTarget = firmwareReply->attribute(QNetworkRequest::RedirectionTargetAttribute);
@@ -310,13 +313,22 @@ void FirmwareManager::firmwareFinished()
 */
     firmwareReply->deleteLater();
     firmwareReply = nullptr;
+
     delete firmwareFile;
     firmwareFile = nullptr;
 }
 
 void FirmwareManager::firmwareProgress(qint64 bytesRead, qint64 totalBytes)
 {
-    qDebug() << "FirmwareManager::firmwareProgress(" << bytesRead << "/" << totalBytes << ")";
+    //qDebug() << "FirmwareManager::firmwareProgress(" << bytesRead << "/" << totalBytes << ")";
+
+    float progress = -1.f;
+    if (totalBytes > 0)
+    {
+        progress = bytesRead / static_cast<float>(totalBytes);
+        progress *= 100.f;
+    }
+    Q_EMIT fwDlProgress(progress);
 }
 
 /* ************************************************************************** */
