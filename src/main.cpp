@@ -211,7 +211,7 @@ int main(int argc, char *argv[])
     engine_context->setContextProperty("mediaLibrary", ml);
     engine_context->setContextProperty("utilsApp", utilsApp);
 
-    MediaThumbnailer_threadpool *tmb = new MediaThumbnailer_threadpool();
+    MediaThumbnailer_threadpool *tmb = new MediaThumbnailer_threadpool(utilsSysinfo->getCoreCount_physical() / 2);
     tmb->registerQml(&engine);
 
     // Load the main view

@@ -264,8 +264,8 @@ void StorageManager::addDirectory(const QString &path)
             Q_EMIT directoriesUpdated();
 
             connect(newDir, SIGNAL(saveData()), this, SLOT(directoryModified()));
-            connect(newDir, SIGNAL(enabledUpdated(QString)), this, SLOT(directoryAvailabilityModified(QString)));
-            connect(newDir, SIGNAL(availableUpdated(QString)), this, SLOT(directoryAvailabilityModified(QString)));
+            connect(newDir, SIGNAL(enabledUpdated(QString,bool)), this, SLOT(directoryAvailabilityModified(QString,bool)));
+            connect(newDir, SIGNAL(availableUpdated(QString,bool)), this, SLOT(directoryAvailabilityModified(QString,bool)));
             directoryModified();
         }
     }

@@ -76,8 +76,10 @@ void FileScanner::scanFilesystemDirectory(const QString &dir_path)
 {
     //qDebug() << "  * Scanning subdir:" << dir_path;
 
-    QDir dir(dir_path);
-    for (const auto &subelement_name : dir.entryList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot))
+    const QDir dir(dir_path);
+    const QStringList &dir_list = dir.entryList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
+
+    for (const auto &subelement_name : dir_list)
     {
         //qDebug() << "  * Scanning subelement:" << subelement_name;
 
@@ -85,12 +87,14 @@ void FileScanner::scanFilesystemDirectory(const QString &dir_path)
         if (!subelement_path.endsWith('/')) subelement_path += '/';
         subelement_path += subelement_name;
 
-        if (m_abort_scan)
-            return;
+        if (m_abort_scan) return;
 
         QFileInfo fi(subelement_path);
         if (fi.isDir())
         {
+            if (subelement_name == "@eaDir") continue;
+            if (subelement_name == "@__thumb") continue;
+
             scanFilesystemDirectory(subelement_path);
         }
         else
@@ -113,14 +117,20 @@ void FileScanner::scanFilesystemDirectory(const QString &dir_path)
                     // Try to get shot infos, if applicable
                     ofb_shot *s = new ofb_shot;
                     bool shotStatus = getGoProShotInfos(*f, *s);
-                    if (!shotStatus)
+                    if (shotStatus)
+                    {
+                        f->isShot = true;
+                    }
+                    else
+                    {
                         shotStatus = getGenericShotInfos(*f, *s);
+                    }
 
                     // Pre-parse metadata on scanning thread
                     if (shotStatus)
                     {
                         if (f->extension == "mp4" || f->extension == "m4v" || f->extension == "mov" ||
-                            f->extension == "mkv" || f->extension == "webm")
+                            f->extension == "mkv" || f->extension == "webm" || f->extension == "avi")
                         {
                             int minivideo_retcode = minivideo_open(f->filesystemPath.toLocal8Bit(), &f->media);
                             if (minivideo_retcode == 1)
@@ -137,14 +147,16 @@ void FileScanner::scanFilesystemDirectory(const QString &dir_path)
                                 qDebug() << "minivideo_open() failed with retcode: " << minivideo_retcode;
                             }
                         }
-/*
-                        // Disabled for now, so we don't parse 10k files from a timelapse before they have been associated with a shot
-                        else if (f->extension == "jpg" ||
-                                 f->extension == "jpeg")
+                        else if (f->extension == "jpg" || f->extension == "jpeg")
                         {
-                            f->ed = exif_data_new_from_file(f->filesystemPath.toLocal8Bit());
+                            // Only for regular files, not coming from action cams,
+                            // so we don't parse 10k files from a timelapse before
+                            // they have been associated with a shot
+                            if (!f->isShot)
+                            {
+                                f->ed = exif_data_new_from_file(f->filesystemPath.toLocal8Bit());
+                            }
                         }
-*/
                     }
 
                     // Send the file back to the UI
@@ -188,8 +200,14 @@ bool FileScanner::scanFilesystemFile(const QString &file_path, ofb_file *f, ofb_
 
             // Try to get shot infos, if applicable
             shotStatus = getGoProShotInfos(*f, *s);
-            if (!shotStatus)
+            if (shotStatus)
+            {
+                f->isShot = true;
+            }
+            else
+            {
                 shotStatus = getGenericShotInfos(*f, *s);
+            }
 
             // This function is not run on the scanning thread, so pre-parsing
             // metadata here doesn't really make sense
@@ -367,14 +385,20 @@ void FileScanner::mtpFileRec(LIBMTP_mtpdevice_t *device, uint32_t storageid, uin
                 // Try to get shot infos, if applicable
                 ofb_shot *s = new ofb_shot;
                 bool shotStatus = getGoProShotInfos(*f, *s);
-                if (!shotStatus)
+                if (shotStatus)
+                {
+                    f->isShot = true;
+                }
+                else
                 {
                     shotStatus = getGenericShotInfos(*f, *s);
                 }
 
                 // Send the file back to the UI
                 if (shotStatus)
+                {
                     emit fileFound(f, s);
+                }
                 else
                 {
                     delete f;

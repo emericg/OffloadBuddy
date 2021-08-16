@@ -83,7 +83,7 @@ void UtilsSysinfo::getCoreInfos()
     // Get logical core count (using C++11)
     m_coreCount_logical = std::thread::hardware_concurrency();
 
-    // Default value for physical count
+    // Default value for physical count == logical count
     m_coreCount_physical = m_coreCount_logical;
 
 #if defined(ENABLE_LIBCPUID)
@@ -101,6 +101,13 @@ void UtilsSysinfo::getCoreInfos()
             }
         }
     }
+#else
+
+#if defined(Q_OS_LINUX) || defined(Q_OS_MACOS) || defined(Q_OS_WINDOWS)
+    // Desktop OS? Assume HyperThreaded CPU...
+    m_coreCount_physical /= 2;
+#endif
+
 #endif
 }
 

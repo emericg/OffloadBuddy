@@ -188,25 +188,31 @@ void ShotModel::addFile(ofb_file *f, ofb_shot *s)
 
     Shot *shot = nullptr;
 
-    if (s->shot_id > 0)
+    if (f->isShot)
     {
-        shot = getShotAt(s->shot_type, s->shot_id, s->camera_id);
+        // If we think this file may be from a shot, look for its parent shot
 
-        // We make sure files are in the same folder
-        // Useful when shot IDs are looping (same ID, but different camera/year/whatever...)
-        if (shot && f->filesystemPath.contains(shot->getFolderRefString()) == false)
+        if (s->shot_id > 0)
         {
-            shot = nullptr;
+            // Search using shot ID
+            shot = getShotAt(s->shot_type, s->shot_id, s->camera_id);
+
+            // We make sure files are in the same folder
+            // Useful when shot IDs are looping (same ID, but different camera/year/whatever...)
+            if (shot && f->filesystemPath.contains(shot->getFolderRefString()) == false)
+            {
+                shot = nullptr;
+            }
         }
-    }
 
-    if (!shot)
-    {
-        shot = getShotWithPath(f->filesystemPath);
-        if (shot)
+        if (!shot)
         {
-            delete s;
-            return;
+            shot = getShotWithPath(f->filesystemPath);
+            if (shot)
+            {
+                delete s;
+                return;
+            }
         }
     }
 

@@ -208,7 +208,7 @@ bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot)
         return false;
     }
 
-    shot.file_number = file.name.mid(4, 4).toInt();
+    shot.file_number = file.name.midRef(4, 4).toInt();
     shot.shot_id = (shot.shot_type == ShotUtils::SHOT_VIDEO) ? shot.file_number : shot.group_number;
 /*
     qDebug() << "* FILE:" << file.name;

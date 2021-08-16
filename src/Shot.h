@@ -54,23 +54,30 @@
 
 struct ofb_file
 {
-    // Generic infos
+    // Generic file infos
     QString name;                   //!< File base name only, no extension
     QString extension;              //!< Extension only, lowercase, no dot or anything
     uint64_t size = 0;              //!< Size in bytes
     QDateTime creation_date;
     QDateTime modification_date;
 
-    // File
+    // helpers
+    bool isShot = false;
+    bool isAudio = false;
+    bool isVideo = false;
+    bool isPicture = false;
+
+    // Filesystem
     QString filesystemPath;         //!< Absolute file path, if available
     QString directory;              //!< Directory, if available
 
 #ifdef ENABLE_LIBMTP
+    // MTP IDs
     LIBMTP_mtpdevice_t *mtpDevice = nullptr;
     uint32_t mtpObjectId = 0;
 #endif
 
-    // Metadata
+    // Metadata structures (if parsing is done on the scanning thread)
     MediaFile_t *media = nullptr;
     ExifData *ed = nullptr;
 };
@@ -450,7 +457,7 @@ public:
 
     void addFile(ofb_file *file);
 
-    QList <ofb_file *> getFiles(bool withPreviews = true, bool withHdAudio = true, bool withOthers = true) const;
+    const QList <ofb_file *> getFiles(bool withPreviews = true, bool withHdAudio = true, bool withOthers = true) const;
 
     unsigned getShotType() const { return m_type; }
     unsigned getFileType() const {
