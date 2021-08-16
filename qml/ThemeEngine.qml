@@ -127,7 +127,7 @@ Item {
             colorHeaderContent =        "#353637"
             colorHeaderHighlight =      ""
 
-            colorSidebar =              "#2E2E2E"
+            colorSidebar =              "#3A3A3A"
             colorSidebarContent =       "white"
             colorSidebarHighlight =     ""
 
@@ -135,8 +135,8 @@ Item {
             colorActionbarContent =     "white"
             colorActionbarHighlight =   "#73AD00"
 
-            colorBackground =           "#F0F0F0"
-            colorForeground =           "#E0E0E0"
+            colorBackground =           "#F4F4F4"
+            colorForeground =           "#E5E5E5"
 
             colorPrimary =              "#FFCA28"
             colorSecondary =            "#FFDD28"

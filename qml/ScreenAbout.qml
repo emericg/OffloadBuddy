@@ -95,61 +95,99 @@ Item {
             anchors.topMargin: 24
             anchors.leftMargin: 24
             anchors.rightMargin: 24
-            spacing: 16
+            spacing: 24
 
             ////////
 
-            TextArea {
-                anchors.topMargin: -8
-                anchors.left: parent.left
-                anchors.leftMargin: -8
-                anchors.right: parent.right
-                anchors.rightMargin: -8
-
-                readOnly: true
-                wrapMode: Text.WordWrap
-                font.pixelSize: Theme.fontSizeContentBig
-                color: Theme.colorText
-                text: qsTr("OffloadBuddy is a multimedia offloading software with a few tricks up his sleeve!\n" +
-                           "It's designed to remove the hassle of handling and transferring the many videos and pictures file from your devices like action cameras, regular cameras and smartphones...")
-            }
-
-            Item {
-                id: buttonArea
-                height: 40
+            Row {
                 anchors.left: parent.left
                 anchors.right: parent.right
+                spacing: 24
 
-                ButtonWireframeImage {
-                    id: button1
-                    width: 180
-                    anchors.left: parent.left
-                    anchors.leftMargin: 0
+                Image {
+                    //id: imageLogo
+                    width: 220
+                    height: 160
+
+                    fillMode: Image.PreserveAspectCrop
+                    source: "qrc:/appicons/offloadbuddy.svg"
+                }
+
+                Column {
                     anchors.verticalCenter: parent.verticalCenter
+                    width: parent.width - 220 - 24
+                    spacing: 16
 
-                    primaryColor: Theme.colorPrimary
+                    TextArea {
+                        width: parent.width
+                        //anchors.margins: -8
+                        leftPadding: 0
 
-                    text: qsTr("Website")
-                    imgSize: 32
-                    source: "qrc:/assets/icons_material/baseline-link-24px.svg"
-                    onClicked: Qt.openUrlExternally("https://emeric.io/OffloadBuddy")
-                }
+                        readOnly: true
+                        wrapMode: Text.WordWrap
+                        font.pixelSize: Theme.fontSizeContentBig
+                        color: Theme.colorText
+                        text: qsTr("OffloadBuddy is a multimedia offloading software with a few tricks up his sleeve!\n" +
+                                   "It's designed to remove the hassle of handling and transferring the many videos and pictures file from your devices like action cameras, regular cameras and smartphones...")
+                    }
 
-                ButtonWireframeImage {
-                    id: button2
-                    width: 180
-                    anchors.left: button1.right
-                    anchors.leftMargin: 24
-                    anchors.verticalCenter: button1.verticalCenter
+                    Row {
+                        id: buttonArea
+                        height: 40
+                        spacing: 24
 
-                    primaryColor: Theme.colorPrimary
+                        ButtonWireframeImage {
+                            width: 180
+                            anchors.verticalCenter: parent.verticalCenter
 
-                    text: qsTr("Issue tracker")
-                    imgSize: 24
-                    source: "qrc:/assets/logos/github.svg"
-                    onClicked: Qt.openUrlExternally("https://www.github.com/emericg/OffloadBuddy")
+                            fullColor: false
+                            primaryColor: Theme.colorPrimary
+
+                            text: qsTr("Website")
+                            imgSize: 32
+                            source: "qrc:/assets/icons_material/baseline-link-24px.svg"
+                            onClicked: Qt.openUrlExternally("https://emeric.io/OffloadBuddy")
+                        }
+
+                        ButtonWireframeImage {
+                            width: 180
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            fullColor: false
+                            primaryColor: Theme.colorPrimary
+
+                            text: qsTr("Bug report")
+                            source: "qrc:/assets/icons_material/baseline-bug_report-24px.svg"
+                            onClicked: Qt.openUrlExternally("https://www.github.com/emericg/OffloadBuddy/issues")
+                        }
+
+                        ButtonWireframeImage {
+                            width: 180
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            fullColor: false
+                            primaryColor: Theme.colorPrimary
+
+                            text: qsTr("Discussions")
+                            source: "qrc:/assets/icons_material/baseline-question_answer-24px.svg"
+                            onClicked: Qt.openUrlExternally("https://www.github.com/emericg/OffloadBuddy/discussions")
+                        }
+                    }
                 }
             }
+
+            ////////
+
+            Rectangle {
+                anchors.left: parent.left
+                anchors.leftMargin: -24
+                anchors.right: parent.right
+                anchors.rightMargin: -24
+                color: Theme.colorSeparator
+                height: 1
+            }
+
+            ////////
 
             TextArea {
                 anchors.left: parent.left
@@ -167,7 +205,18 @@ Item {
                            "✔ GoPro firmware updates")
             }
 
-            Item { width: 16; height: 16; } // spacer
+            ////////
+
+            Rectangle {
+                anchors.left: parent.left
+                anchors.leftMargin: -24
+                anchors.right: parent.right
+                anchors.rightMargin: -24
+                color: Theme.colorSeparator
+                height: 1
+            }
+
+            ////////
 
             Column {
                 id: sectionOSS
@@ -319,21 +368,19 @@ Item {
                     }
                 }
             }
+
+            ////////
+
+            Rectangle {
+                anchors.left: parent.left
+                anchors.leftMargin: -24
+                anchors.right: parent.right
+                anchors.rightMargin: -24
+                color: Theme.colorSeparator
+                height: 1
+            }
+
+            ////////
         }
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-
-    Image {
-        id: imageLogo
-        width: 220
-        height: 160
-        anchors.right: parent.right
-        anchors.rightMargin: 32
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 32
-
-        fillMode: Image.PreserveAspectCrop
-        source: "qrc:/appicons/offloadbuddy.svg"
     }
 }

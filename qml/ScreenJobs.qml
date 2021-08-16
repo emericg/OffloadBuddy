@@ -33,7 +33,7 @@ Item {
             anchors.leftMargin: 16
             anchors.verticalCenter: parent.verticalCenter
 
-            text: qsTr("RUNNING JOBS")
+            text: qsTr("JOBS QUEUE")
             verticalAlignment: Text.AlignVCenter
             font.bold: true
             font.pixelSize: Theme.fontSizeHeader

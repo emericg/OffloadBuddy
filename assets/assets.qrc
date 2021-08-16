@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/assets">
-        <file>logos/github.svg</file>
         <file>others/gps_marker.svg</file>
         <file>others/navigate_before_big.svg</file>
 
@@ -12,6 +11,7 @@
         <file>icons_material/baseline-av_timer-24px.svg</file>
         <file>icons_material/baseline-backspace-24px.svg</file>
         <file>icons_material/baseline-broken_image-24px.svg</file>
+        <file>icons_material/baseline-bug_report-24px.svg</file>
         <file>icons_material/baseline-burst_mode-24px.svg</file>
         <file>icons_material/baseline-camera-24px.svg</file>
         <file>icons_material/baseline-cancel-24px.svg</file>
@@ -54,6 +54,7 @@
         <file>icons_material/baseline-photo-24px.svg</file>
         <file>icons_material/baseline-photo_library-24px.svg</file>
         <file>icons_material/baseline-play_arrow-24px.svg</file>
+        <file>icons_material/baseline-question_answer-24px.svg</file>
         <file>icons_material/baseline-refresh-24px.svg</file>
         <file>icons_material/baseline-report-24px.svg</file>
         <file>icons_material/baseline-rotate_90_degrees_ccw-24px.svg</file>
