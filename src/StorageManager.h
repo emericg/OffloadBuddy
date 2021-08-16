@@ -23,6 +23,7 @@
 #define STORAGE_MANAGER_H
 /* ************************************************************************** */
 
+#include "StorageUtils.h"
 #include "MediaDirectory.h"
 
 #include <QObject>
@@ -34,49 +35,6 @@
 class QStorageInfo;
 
 /* ************************************************************************** */
-
-namespace StorageUtils
-{
-    Q_NAMESPACE
-
-    enum StorageType
-    {
-        StorageUnknown = 0,
-        StorageFilesystem,
-        StorageVirtualFilesystem,
-        StorageNetworkFilesystem,
-        StorageMTP,
-    };
-    Q_ENUM_NS(StorageType)
-
-    enum StorageContent
-    {
-        ContentAll = 0,
-        ContentAudio,
-        ContentVideo,
-        ContentPictures,
-    };
-    Q_ENUM_NS(StorageContent)
-
-    enum StorageHierarchy
-    {
-        HierarchyNone = 0,
-        HierarchyShot,
-        HierarchyDateShot,
-        HierarchyDateDeviceShot,
-    };
-    Q_ENUM_NS(StorageHierarchy)
-
-    enum DeviceType
-    {
-        DeviceUnknown = 0,
-        DeviceActionCamera,
-        DeviceCamera,
-        DeviceMobile,
-        DeviceComputer,
-    };
-    Q_ENUM_NS(DeviceType)
-}
 
 /*!
  * \brief The StorageManager class

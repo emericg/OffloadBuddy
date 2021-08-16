@@ -2,6 +2,9 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 
 import ThemeEngine 1.0
+import DeviceUtils 1.0
+import StorageUtils 1.0
+import SettingsUtils 1.0
 import "qrc:/js/UtilsString.js" as UtilsString
 import "qrc:/js/UtilsDeviceCamera.js" as UtilsDevice
 
@@ -109,9 +112,7 @@ Item {
         shotsView.setThumbFormat()
 
         // Banner // TODO reopen ONLY if needed
-        if (currentDevice.deviceStorage === 1) { // VFS
-            bannerMessage.openMessage(qsTr("Previews are not available (yet) with MTP devices..."))
-        } else if (currentDevice.deviceStorage === 2) { // MTP
+        if (currentDevice.deviceStorage === StorageUtils.StorageMTP) { // MTP
             bannerMessage.openMessage(qsTr("Metadata are not available from MTP devices. Offload media first, or plug SD cards directly."))
         } else {
             bannerMessage.close()
@@ -163,13 +164,14 @@ Item {
         //console.log("ScreenDeviceGrid.initGridViewSettings() [device "+ currentDevice + "]
         //    (state " + currentDevice.deviceState + ") (shotcount: " + shotsView.count + ")")
 
-        if (currentDevice && currentDevice.deviceStorage === 0)
-            if (currentDevice.deviceType === 2)
+        if (currentDevice && currentDevice.deviceStorage === StorageUtils.StorageFilesystem) {
+            if (currentDevice.deviceType === DeviceUtils.DeviceActionCamera)
                 imageEmpty.source = "qrc:/devices/card.svg"
             else
                 imageEmpty.source = "qrc:/devices/camera.svg"
-        else
+        } else {
             imageEmpty.source = "qrc:/devices/usb.svg"
+        }
     }
 
     function updateGridViewSettings() {
@@ -308,7 +310,7 @@ Item {
             Text {
                 id: deviceFirmware
                 anchors.right: parent.right
-                visible: currentDevice.deviceType > 3
+                visible: (currentDevice.deviceType > 3)
 
                 text: qsTr("firmware") + " " + currentDevice.firmware
                 color: Theme.colorHeaderContent
@@ -336,7 +338,7 @@ Item {
                 width: 256
                 height: 12
 
-                visible: currentDevice.batteryLevel > 0
+                visible: (currentDevice.batteryLevel > 0)
                 value: currentDevice.batteryLevel
                 valueMin: 0
                 valueMax: 100
@@ -378,19 +380,19 @@ Item {
 
                         var currentName = cbShotsOrderby.get(currentIndex).text
                         if (currentName === qsTr("Date")) {
-                            settingsManager.deviceSortRole = 0 // SettingsUtils.OrderByDate
+                            settingsManager.deviceSortRole = SettingsUtils.OrderByDate
                             currentDevice.orderByDate()
                         } else if (currentName === qsTr("Duration")) {
-                            settingsManager.deviceSortRole = 1 // SettingsUtils.OrderByDuration
+                            settingsManager.deviceSortRole = SettingsUtils.OrderByDuration
                             currentDevice.orderByDuration()
                         } else if (currentName === qsTr("Shot type")) {
-                            settingsManager.deviceSortRole = 2 // SettingsUtils.OrderByShotType
+                            settingsManager.deviceSortRole = SettingsUtils.OrderByShotType
                             currentDevice.orderByShotType()
                         } else if (currentName === qsTr("Name")) {
-                            settingsManager.deviceSortRole = 3 // SettingsUtils.OrderByName
+                            settingsManager.deviceSortRole = SettingsUtils.OrderByName
                             currentDevice.orderByName()
                         } else if (currentName === qsTr("Folder")) {
-                            settingsManager.deviceSortRole = 4 // SettingsUtils.OrderByFilePath
+                            settingsManager.deviceSortRole = SettingsUtils.OrderByFilePath
                             currentDevice.orderByPath()
                         }
                     } else {
@@ -417,11 +419,11 @@ Item {
                     source: "qrc:/assets/icons_material/baseline-filter_list-24px.svg"
 
                     onClicked: {
-                        if (settingsManager.deviceSortOrder === 0) {
-                            settingsManager.deviceSortOrder = 1
+                        if (settingsManager.deviceSortOrder === Qt.AscendingOrder) {
+                            settingsManager.deviceSortOrder = Qt.DescendingOrder
                             currentDevice.orderByDesc()
                         } else {
-                            settingsManager.deviceSortOrder = 0
+                            settingsManager.deviceSortOrder = Qt.AscendingOrder
                             currentDevice.orderByAsc()
                         }
                     }

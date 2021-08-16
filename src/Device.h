@@ -24,8 +24,9 @@
 /* ************************************************************************** */
 
 #include "DeviceUtils.h"
+#include "DeviceStorage.h"
+#include "StorageUtils.h"
 #include "ShotProvider.h"
-#include "MediaStorage.h"
 #include "Job.h"
 
 #ifdef ENABLE_LIBMTP
@@ -80,10 +81,10 @@ class Device: public ShotProvider
     Q_PROPERTY(int jobsCount READ getJobsCount NOTIFY jobsUpdated)
     Q_PROPERTY(QVariant jobsList READ getJobs NOTIFY jobsUpdated)
 
-    deviceType_e m_deviceType = DEVICE_UNKNOWN;
-    deviceModel_e m_deviceModel = MODEL_UNKNOWN;
-    deviceStorage_e m_deviceStorage = STORAGE_FILESYSTEM;
-    deviceState_e m_deviceState = DEVICE_STATE_IDLE;
+    DeviceUtils::DeviceType m_deviceType = DeviceUtils::DeviceUnknown;
+    DeviceUtils::DeviceModel m_deviceModel = DeviceUtils::ModelUnknown;
+    DeviceUtils::DeviceState m_deviceState = DeviceUtils::DeviceStateIdle;
+    StorageUtils::StorageType m_deviceStorage = StorageUtils::StorageUnknown;
 
     QString m_uuid;             //!< Device unique identifier, generated at object creation
 
@@ -120,7 +121,7 @@ public slots:
     void workerScanningFinished(const QString &path);
 
 public:
-    Device(const deviceType_e type, const deviceStorage_e storage,
+    Device(const DeviceUtils::DeviceType type, const StorageUtils::StorageType storage,
            const QString &brand, const QString &model,
            const QString &serial, const QString &version);
     ~Device();
@@ -130,7 +131,7 @@ public:
     void setName(const QString &name);
     QString getUuid() const { return m_uuid; }
 
-    //
+    // Device
     int getDeviceState() const { return m_deviceState; }
     int getDeviceModel() const { return m_deviceModel; }
     int getDeviceType() const { return m_deviceType; }

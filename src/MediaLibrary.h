@@ -46,7 +46,7 @@ class MediaLibrary: public ShotProvider
 
     Q_PROPERTY(int libraryState READ getLibraryState NOTIFY stateUpdated)
 
-    deviceState_e m_libraryState = DEVICE_STATE_IDLE;
+    DeviceUtils::DeviceState m_libraryState = DeviceUtils::DeviceStateIdle;
     int m_libraryScan = 0;
 
     void scanMediaDirectory(MediaDirectory *md);

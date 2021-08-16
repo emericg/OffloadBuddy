@@ -74,6 +74,7 @@ MediaLibrary::MediaLibrary()
             case SettingsUtils::OrderByDuration:
                 sortRole = ShotModel::DurationRole;
                 break;
+
             default:
             case SettingsUtils::OrderByDate:
                 sortRole = ShotModel::DateRole;
@@ -178,7 +179,7 @@ void MediaLibrary::cleanMediaDirectory(const QString &path)
 
     if (m_shotModel)
     {
-        if (m_libraryState != DEVICE_STATE_SCANNING)
+        if (m_libraryState != DeviceUtils::DeviceStateScanning)
         {
             m_shotModel->sanetize(path);
         }
@@ -221,7 +222,7 @@ void MediaLibrary::workerScanningStarted(const QString &path)
     if (m_libraryScan < 0) m_libraryScan = 0;
     m_libraryScan++;
 
-    m_libraryState = DEVICE_STATE_SCANNING;
+    m_libraryState = DeviceUtils::DeviceStateScanning;
     emit stateUpdated();
 }
 
@@ -255,7 +256,7 @@ void MediaLibrary::workerScanningFinished(const QString &path)
     m_libraryScan--;
     if (m_libraryScan <= 0)
     {
-        m_libraryState = DEVICE_STATE_IDLE;
+        m_libraryState = DeviceUtils::DeviceStateIdle;
         emit stateUpdated();
     }
 }

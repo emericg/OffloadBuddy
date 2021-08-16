@@ -23,6 +23,8 @@
 #define MEDIA_DIRECTORY_H
 /* ************************************************************************** */
 
+#include "StorageUtils.h"
+
 #include <QObject>
 #include <QVariant>
 #include <QString>

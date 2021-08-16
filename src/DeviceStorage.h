@@ -19,9 +19,11 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#ifndef MEDIA_STORAGE_H
-#define MEDIA_STORAGE_H
+#ifndef DEVICE_STORAGE_H
+#define DEVICE_STORAGE_H
 /* ************************************************************************** */
+
+#include "StorageUtils.h"
 
 #include <QObject>
 #include <QVariant>
@@ -41,11 +43,11 @@ class QStorageInfo;
 /* ************************************************************************** */
 
 /*!
- * \brief The MediaStorage class
+ * \brief The DeviceStorage class
  *
  * Media storage for physical devices (cameras and stuff).
  */
-class MediaStorage: public QObject
+class DeviceStorage: public QObject
 {
     Q_OBJECT
 
@@ -102,11 +104,11 @@ public slots:
     void refreshMediaStorage();
 
 public:
-    MediaStorage(const QString &path,
-                 bool primary = false, QObject *parent = nullptr);
-    MediaStorage(LIBMTP_mtpdevice_t *device, LIBMTP_devicestorage_t *storage,
-                 bool primary = false, QObject *parent = nullptr);
-    ~MediaStorage();
+    DeviceStorage(const QString &path,
+                  bool primary = false, QObject *parent = nullptr);
+    DeviceStorage(LIBMTP_mtpdevice_t *device, LIBMTP_devicestorage_t *storage,
+                  bool primary = false, QObject *parent = nullptr);
+    ~DeviceStorage();
 
     //
 
@@ -148,4 +150,4 @@ public:
 };
 
 /* ************************************************************************** */
-#endif // MEDIA_STORAGE_H
+#endif // DEVICE_STORAGE_H

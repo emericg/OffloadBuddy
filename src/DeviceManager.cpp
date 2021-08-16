@@ -307,8 +307,8 @@ void DeviceManager::addFsDeviceGoPro(const QString &path, gopro_device_infos *de
         else
         {
             QString brand = "GoPro";
-            d = new Device(DEVICE_ACTIONCAM,
-                           STORAGE_FILESYSTEM,
+            d = new Device(DeviceUtils::DeviceActionCamera,
+                           StorageUtils::StorageFilesystem,
                            brand, deviceInfos->camera_type,
                            deviceInfos->camera_serial_number,
                            deviceInfos->firmware_version);
@@ -365,7 +365,7 @@ void DeviceManager::addFsDeviceGeneric(const QString &path, generic_device_infos
     if (!deviceExists)
     {
         d = new Device(deviceInfos->device_type,
-                       STORAGE_FILESYSTEM,
+                       StorageUtils::StorageFilesystem,
                        deviceInfos->device_brand,
                        deviceInfos->device_model,
                        "", "");
@@ -399,8 +399,7 @@ void DeviceManager::addFsDeviceGeneric(const QString &path, generic_device_infos
 
 void DeviceManager::addVfsDevice(ofb_vfs_device *deviceInfos)
 {
-    if (m_devices.size() >= MAX_DEVICES ||
-        !deviceInfos || deviceInfos->paths.empty())
+    if (m_devices.size() >= MAX_DEVICES || !deviceInfos || deviceInfos->paths.empty())
     {
         delete deviceInfos;
         return;
@@ -448,8 +447,8 @@ void DeviceManager::addVfsDevice(ofb_vfs_device *deviceInfos)
         }
         else
         {
-            d = new Device(DEVICE_UNKNOWN,
-                           STORAGE_VIRTUAL_FILESYSTEM,
+            d = new Device(DeviceUtils::DeviceUnknown,
+                           StorageUtils::StorageVirtualFilesystem,
                            deviceInfos->brand, deviceInfos->model,
                            deviceInfos->firmware, deviceInfos->serial);
 
@@ -478,8 +477,7 @@ void DeviceManager::addVfsDevice(ofb_vfs_device *deviceInfos)
 
 void DeviceManager::addMtpDevice(ofb_mtp_device *deviceInfos)
 {
-    if (m_devices.size() >= MAX_DEVICES ||
-        !deviceInfos || !deviceInfos->device)
+    if (m_devices.size() >= MAX_DEVICES || !deviceInfos || !deviceInfos->device)
     {
         delete deviceInfos;
         return;
@@ -524,8 +522,8 @@ void DeviceManager::addMtpDevice(ofb_mtp_device *deviceInfos)
         }
         else
         {
-            d = new Device(DEVICE_UNKNOWN,
-                           STORAGE_MTP,
+            d = new Device(DeviceUtils::DeviceUnknown,
+                           StorageUtils::StorageMTP,
                            deviceInfos->brand, deviceInfos->model,
                            deviceInfos->firmware, deviceInfos->serial);
 

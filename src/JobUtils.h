@@ -24,21 +24,10 @@
 /* ************************************************************************** */
 
 #include <QObject>
-#include <QMetaType>
-#include <QQmlApplicationEngine>
 
-class JobUtils: public QObject
+namespace JobUtils
 {
-    Q_OBJECT
-
-public:
-    static void registerQML()
-    {
-        qRegisterMetaType<JobUtils::JobType>("JobUtils::JobType");
-        qRegisterMetaType<JobUtils::JobState>("JobUtils::JobState");
-
-        qmlRegisterType<JobUtils>("JobUtils", 1, 0, "JobUtils");
-    }
+    Q_NAMESPACE
 
     enum JobType
     {
@@ -59,7 +48,7 @@ public:
         JOB_FIRMWARE_UPDATE = 16,
         JOB_FORMAT = 32
     };
-    Q_ENUM(JobType)
+    Q_ENUM_NS(JobType)
 
     enum JobState
     {
@@ -71,7 +60,7 @@ public:
         JOB_STATE_ERRORED,
         JOB_STATE_ABORTED
     };
-    Q_ENUM(JobState)
+    Q_ENUM_NS(JobState)
 };
 
 /* ************************************************************************** */

@@ -54,12 +54,12 @@ SOURCES  += src/main.cpp \
             src/JobWorkerThread.cpp \
             src/JobWorkerASync.cpp \
             src/StorageManager.cpp \
-            src/MediaStorage.cpp \
             src/MediaDirectory.cpp \
             src/MediaLibrary.cpp \
             src/DeviceScanner.cpp \
             src/DeviceManager.cpp \
             src/Device.cpp \
+            src/DeviceStorage.cpp \
             src/FileScanner.cpp \
             src/ItemImage.cpp \
             src/Job.cpp \
@@ -89,12 +89,13 @@ HEADERS  += src/SettingsManager.h \
             src/JobWorkerThread.h \
             src/JobWorkerASync.h \
             src/StorageManager.h \
-            src/MediaStorage.h \
+            src/StorageUtils.h \
             src/MediaDirectory.h \
             src/MediaLibrary.h \
             src/DeviceScanner.h \
             src/DeviceManager.h \
             src/Device.h \
+            src/DeviceStorage.h \
             src/DeviceUtils.h \
             src/FileScanner.h \
             src/ItemImage.h \

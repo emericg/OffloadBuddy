@@ -40,7 +40,7 @@
 
 /* ************************************************************************** */
 
-Device::Device(const deviceType_e type, const deviceStorage_e storage,
+Device::Device(const DeviceUtils::DeviceType type, const StorageUtils::StorageType storage,
                const QString &brand, const QString &model,
                const QString &serial, const QString &version)
 {
@@ -54,7 +54,7 @@ Device::Device(const deviceType_e type, const deviceStorage_e storage,
 
     m_uuid = QUuid::createUuid().toString();
 
-    if (m_deviceStorage == STORAGE_MTP)
+    if (m_deviceStorage == StorageUtils::StorageMTP)
     {
         connect(&m_updateBatteryTimer, &QTimer::timeout, this, &Device::refreshBatteryInfos);
         m_updateBatteryTimer.setInterval(60 * 1000);
@@ -90,6 +90,7 @@ Device::Device(const deviceType_e type, const deviceStorage_e storage,
             case SettingsUtils::OrderByDuration:
                 sortRole = ShotModel::DurationRole;
                 break;
+
             default:
             case SettingsUtils::OrderByDate:
                 sortRole = ShotModel::DateRole;
@@ -146,7 +147,7 @@ bool Device::addStorages_mtp(ofb_mtp_device *device)
     if (!device)
         return status;
 
-    m_deviceStorage = STORAGE_MTP;
+    m_deviceStorage = StorageUtils::StorageMTP;
 
     // Device
     if (!m_mtpDevices.contains(device))
@@ -158,7 +159,7 @@ bool Device::addStorages_mtp(ofb_mtp_device *device)
     // Storage
     for (auto st: qAsConst(device->storages))
     {
-        MediaStorage *storage = new MediaStorage(device->device, st->m_storage, false, this);
+        DeviceStorage *storage = new DeviceStorage(device->device, st->m_storage, false, this);
         if (storage)
         {
             m_mediaStorages.push_back(storage);
@@ -201,7 +202,7 @@ bool Device::addStorage_filesystem(const QString &path)
 
     if (!path.isEmpty())
     {
-        MediaStorage *storage = new MediaStorage(path, false, this);
+        DeviceStorage *storage = new DeviceStorage(path, false, this);
         if (storage)
         {
             m_mediaStorages.push_back(storage);
@@ -246,7 +247,7 @@ void Device::workerScanningStarted(const QString &path)
     //qDebug() << "> Device::workerScanningStarted(" << path << ")";
     Q_UNUSED(path)
 
-    m_deviceState = DEVICE_STATE_SCANNING;
+    m_deviceState = DeviceUtils::DeviceStateScanning;
     emit stateUpdated();
 }
 
@@ -264,7 +265,7 @@ void Device::workerScanningFinished(const QString &path)
         m_shotFilter->invalidate();
     }
 */
-    m_deviceState = DEVICE_STATE_IDLE;
+    m_deviceState = DeviceUtils::DeviceStateIdle;
     emit stateUpdated();
 }
 
@@ -277,7 +278,7 @@ QString Device::getPath(const int index) const
     {
         if (m_mediaStorages.size() > index)
         {
-            return static_cast<MediaStorage *>(m_mediaStorages.at(index))->getDevicePath();
+            return static_cast<DeviceStorage *>(m_mediaStorages.at(index))->getDevicePath();
         }
     }
 
@@ -292,7 +293,7 @@ QStringList Device::getPathList() const
     {
         if (st)
         {
-            paths += static_cast<MediaStorage *>(st)->getDevicePath();
+            paths += static_cast<DeviceStorage *>(st)->getDevicePath();
         }
     }
 
@@ -409,7 +410,7 @@ void Device::refreshStorageInfos()
     {
         if (st)
         {
-            static_cast<MediaStorage *>(st)->refreshMediaStorage();
+            static_cast<DeviceStorage *>(st)->refreshMediaStorage();
         }
     }
 
@@ -433,8 +434,8 @@ float Device::getStorageLevel(const int index)
 
         if (m_mediaStorages.size() > index)
         {
-            su += static_cast<MediaStorage *>(m_mediaStorages.at(index))->getSpaceUsed();
-            st += static_cast<MediaStorage *>(m_mediaStorages.at(index))->getSpaceTotal();
+            su += static_cast<DeviceStorage *>(m_mediaStorages.at(index))->getSpaceUsed();
+            st += static_cast<DeviceStorage *>(m_mediaStorages.at(index))->getSpaceTotal();
         }
 
         level = static_cast<float>(su) / static_cast<float>(st);
@@ -450,7 +451,7 @@ bool Device::isReadOnly() const
     {
         if (st)
         {
-            ro |= static_cast<MediaStorage *>(st)->isReadOnly();
+            ro |= static_cast<DeviceStorage *>(st)->isReadOnly();
         }
     }
 
@@ -465,7 +466,7 @@ int64_t Device::getSpaceTotal()
     {
         if (st)
         {
-            s += static_cast<MediaStorage *>(st)->getSpaceTotal();
+            s += static_cast<DeviceStorage *>(st)->getSpaceTotal();
         }
     }
 
@@ -480,7 +481,7 @@ int64_t Device::getSpaceUsed()
     {
         if (st)
         {
-            s += static_cast<MediaStorage *>(st)->getSpaceUsed();
+            s += static_cast<DeviceStorage *>(st)->getSpaceUsed();
         }
     }
 
@@ -495,7 +496,7 @@ int64_t Device::getSpaceAvailable()
     {
         if (st)
         {
-            s += static_cast<MediaStorage *>(st)->getSpaceAvailable();
+            s += static_cast<DeviceStorage *>(st)->getSpaceAvailable();
         }
     }
 
@@ -510,8 +511,8 @@ int64_t Device::getSpaceAvailable_withrefresh()
     {
         if (st)
         {
-            static_cast<MediaStorage *>(st)->refreshMediaStorage();
-            s += static_cast<MediaStorage *>(st)->getSpaceAvailable();
+            static_cast<DeviceStorage *>(st)->refreshMediaStorage();
+            s += static_cast<DeviceStorage *>(st)->getSpaceAvailable();
         }
     }
 

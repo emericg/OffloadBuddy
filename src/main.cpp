@@ -181,19 +181,24 @@ int main(int argc, char *argv[])
 
     qmlRegisterSingletonType(QUrl("qrc:/qml/ThemeEngine.qml"), "ThemeEngine", 1, 0, "Theme");
 
-    qmlRegisterUncreatableMetaObject(SettingsUtils::staticMetaObject,
-                                     "SettingsUtils", 1, 0,
-                                     "SettingsUtils", // name in QML (does not have to match C++ name)
-                                     "Error: only enums");
+    qmlRegisterUncreatableMetaObject(SettingsUtils::staticMetaObject, "SettingsUtils", 1, 0,
+                                     "SettingsUtils",  "Error: only enums");
 
-    qmlRegisterUncreatableMetaObject(StorageUtils::staticMetaObject,
-                                     "StorageUtils", 1, 0,
-                                     "StorageUtils", // name in QML (does not have to match C++ name)
-                                     "Error: only enums");
+    qmlRegisterUncreatableMetaObject(StorageUtils::staticMetaObject, "StorageUtils", 1, 0,
+                                     "StorageUtils", "Error: only enums");
 
-    ShotUtils::registerQML();
-    JobUtils::registerQML();
+    qmlRegisterUncreatableMetaObject(ShotUtils::staticMetaObject, "ShotUtils", 1, 0,
+                                     "ShotUtils", "Error: only enums");
+
+    qmlRegisterUncreatableMetaObject(DeviceUtils::staticMetaObject, "DeviceUtils", 1, 0,
+                                     "DeviceUtils", "Error: only enums");
+
+    qmlRegisterUncreatableMetaObject(JobUtils::staticMetaObject, "JobUtils", 1, 0,
+                                     "JobUtils", "Error: only enums");
+
     ItemImage::registerQml();
+
+    ////////////////////////////////////////////////////////////////////////////
 
     // Then we start the UI
     QQmlApplicationEngine engine;

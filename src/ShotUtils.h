@@ -24,21 +24,10 @@
 /* ************************************************************************** */
 
 #include <QObject>
-#include <QQmlApplicationEngine>
 
-class ShotUtils: public QObject
+namespace ShotUtils
 {
-    Q_OBJECT
-
-public:
-    static void registerQML()
-    {
-        qRegisterMetaType<ShotUtils::FileType>("ShotUtils::FileType");
-        qRegisterMetaType<ShotUtils::ShotType>("ShotUtils::ShotType");
-        qRegisterMetaType<ShotUtils::ShotState>("ShotUtils::ShotState");
-
-        qmlRegisterType<ShotUtils>("ShotUtils", 1, 0, "ShotUtils");
-    }
+    Q_NAMESPACE
 
     enum FileType
     {
@@ -48,7 +37,7 @@ public:
         FILE_PICTURE = 16,
         FILE_METADATA = 32,
     };
-    Q_ENUM(FileType)
+    Q_ENUM_NS(FileType)
 
     enum ShotType
     {
@@ -66,7 +55,7 @@ public:
         SHOT_PICTURE_TIMELAPSE,
         SHOT_PICTURE_NIGHTLAPSE,
     };
-    Q_ENUM(ShotType)
+    Q_ENUM_NS(ShotType)
 
     enum ShotState
     {
@@ -82,7 +71,7 @@ public:
         SHOT_STATE_DONE = 32,
         SHOT_STATE_ERRORED,
     };
-    Q_ENUM(ShotState)
+    Q_ENUM_NS(ShotState)
 };
 
 /* ************************************************************************** */

@@ -242,19 +242,19 @@ Item {
 
                         var currentName = cbShotsOrderby.get(currentIndex).text
                         if (currentName === qsTr("Date")) {
-                            settingsManager.librarySortRole = 0 // SettingsUtils.OrderByDate
+                            settingsManager.librarySortRole = SettingsUtils.OrderByDate
                             mediaLibrary.orderByDate()
                         } else if (currentName === qsTr("Duration")) {
-                            settingsManager.librarySortRole = 1 // SettingsUtils.OrderByDuration
+                            settingsManager.librarySortRole = SettingsUtils.OrderByDuration
                             mediaLibrary.orderByDuration()
                         } else if (currentName === qsTr("Shot type")) {
-                            settingsManager.librarySortRole = 2 // SettingsUtils.OrderByShotType
+                            settingsManager.librarySortRole = SettingsUtils.OrderByShotType
                             mediaLibrary.orderByShotType()
                         } else if (currentName === qsTr("Name")) {
-                            settingsManager.librarySortRole = 3 // SettingsUtils.OrderByName
+                            settingsManager.librarySortRole = SettingsUtils.OrderByName
                             mediaLibrary.orderByName()
                         } else if (currentName === qsTr("Folder")) {
-                            settingsManager.librarySortRole = 4 // SettingsUtils.OrderByFilePath
+                            settingsManager.librarySortRole = SettingsUtils.OrderByFilePath
                             mediaLibrary.orderByPath()
                         }
                     } else {
@@ -278,11 +278,11 @@ Item {
                     source: "qrc:/assets/icons_material/baseline-filter_list-24px.svg"
 
                     onClicked: {
-                        if (settingsManager.librarySortOrder === 0) {
-                            settingsManager.librarySortOrder = 1
+                        if (settingsManager.librarySortOrder === Qt.AscendingOrder) {
+                            settingsManager.librarySortOrder = Qt.DescendingOrder
                             mediaLibrary.orderByDesc()
                         } else {
-                            settingsManager.librarySortOrder = 0
+                            settingsManager.librarySortOrder = Qt.AscendingOrder
                             mediaLibrary.orderByAsc()
                         }
                     }

@@ -15,46 +15,58 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * \date      2018
+ * \date      2020
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#ifndef ITEM_IMAGE_H
-#define ITEM_IMAGE_H
+#ifndef STORAGE_UTILS_H
+#define STORAGE_UTILS_H
 /* ************************************************************************** */
 
-#include <QQuickPaintedItem>
-#include <QImage>
+#include <QObject>
 
-class QQuickItem;
-class QPainter;
-
-/* ************************************************************************** */
-
-/*!
- * \brief The ItemImage is used to draw QImage from C++ objects into QML components.
- */
-class ItemImage : public QQuickPaintedItem
+namespace StorageUtils
 {
-    Q_OBJECT
+    Q_NAMESPACE
 
-    Q_PROPERTY(QImage image READ image WRITE setImage NOTIFY imageChanged)
+    enum StorageType
+    {
+        StorageUnknown = 0,
+        StorageFilesystem,
+        StorageVirtualFilesystem,
+        StorageNetworkFilesystem,
+        StorageMTP,
+    };
+    Q_ENUM_NS(StorageType)
 
-    QImage m_image;
+    enum StorageContent
+    {
+        ContentAll = 0,
+        ContentAudio,
+        ContentVideo,
+        ContentPictures,
+    };
+    Q_ENUM_NS(StorageContent)
 
-signals:
-    void imageChanged();
+    enum StorageHierarchy
+    {
+        HierarchyNone = 0,
+        HierarchyShot,
+        HierarchyDateShot,
+        HierarchyDateDeviceShot,
+    };
+    Q_ENUM_NS(StorageHierarchy)
 
-public:
-    ItemImage(QQuickItem *parent = nullptr);
-
-    static void registerQml();
-
-    QImage image() const;
-    Q_INVOKABLE void setImage(const QImage &image);
-
-    void paint(QPainter *painter);
-};
+    enum DeviceType
+    {
+        DeviceUnknown = 0,
+        DeviceActionCamera,
+        DeviceCamera,
+        DeviceMobile,
+        DeviceComputer,
+    };
+    Q_ENUM_NS(DeviceType)
+}
 
 /* ************************************************************************** */
-#endif // ITEM_IMAGE_H
+#endif // STORAGE_UTILS_H

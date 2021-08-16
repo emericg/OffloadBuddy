@@ -19,7 +19,7 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#include "MediaStorage.h"
+#include "DeviceStorage.h"
 #include "StorageManager.h"
 #include "Shot.h"
 
@@ -37,12 +37,12 @@
 /* ************************************************************************** */
 
 /*!
- * \brief Used when creating a MediaStorage from a filesystem path.
+ * \brief Used when creating a DeviceStorage from a filesystem path.
  *
  * Do not check if the path exists, we are allow to save paths that have been
  * disconnected since (ex: removable media, disconnected network storage).
  */
-MediaStorage::MediaStorage(const QString &path, bool primary, QObject *parent)
+DeviceStorage::DeviceStorage(const QString &path, bool primary, QObject *parent)
     : QObject(parent)
 {
     m_storage_type = StorageUtils::StorageFilesystem;
@@ -55,15 +55,15 @@ MediaStorage::MediaStorage(const QString &path, bool primary, QObject *parent)
     m_primary = primary;
 
     m_storage_refreshTimer.setInterval(MEDIA_DIRECTORIES_REFRESH_INTERVAL * 1000);
-    connect(&m_storage_refreshTimer, &QTimer::timeout, this, &MediaStorage::refreshMediaStorage);
+    connect(&m_storage_refreshTimer, &QTimer::timeout, this, &DeviceStorage::refreshMediaStorage);
     m_storage_refreshTimer.start();
 }
 
 /*!
- * \brief Used when creating a MediaStorage from a MTP device.
+ * \brief Used when creating a DeviceStorage from a MTP device.
  */
-MediaStorage::MediaStorage(LIBMTP_mtpdevice_t *device, LIBMTP_devicestorage_t *storage,
-                           bool primary, QObject *parent)
+DeviceStorage::DeviceStorage(LIBMTP_mtpdevice_t *device, LIBMTP_devicestorage_t *storage,
+                             bool primary, QObject *parent)
     : QObject(parent)
 {
     m_storage_type = StorageUtils::StorageMTP;
@@ -76,11 +76,11 @@ MediaStorage::MediaStorage(LIBMTP_mtpdevice_t *device, LIBMTP_devicestorage_t *s
     m_primary = primary;
 
     m_storage_refreshTimer.setInterval(MEDIA_DIRECTORIES_REFRESH_INTERVAL * 1000);
-    connect(&m_storage_refreshTimer, &QTimer::timeout, this, &MediaStorage::refreshMediaStorage);
+    connect(&m_storage_refreshTimer, &QTimer::timeout, this, &DeviceStorage::refreshMediaStorage);
     m_storage_refreshTimer.start();
 }
 
-MediaStorage::~MediaStorage()
+DeviceStorage::~DeviceStorage()
 {
     delete m_fs_storage;
 
@@ -90,8 +90,8 @@ MediaStorage::~MediaStorage()
 /* ************************************************************************** */
 
 /*!
- * \brief MediaStorage::setDevicePath
- * \param path: The path of this MediaStorage
+ * \brief DeviceStorage::setDevicePath
+ * \param path: The path of this DeviceStorage
  *
  * We could 'force create' the directory here, but there are many cases were it
  * could lead to unintended behavior.
@@ -101,7 +101,7 @@ MediaStorage::~MediaStorage()
  * the risk to inadvertantly use another disk or just let the user know that its
  * output directory is now invalid?
  */
-void MediaStorage::setDevicePath(const QString &path)
+void DeviceStorage::setDevicePath(const QString &path)
 {
     if (m_fs_path != path)
     {
@@ -122,7 +122,7 @@ void MediaStorage::setDevicePath(const QString &path)
     }
 }
 
-QString MediaStorage::getDevicePath()
+QString DeviceStorage::getDevicePath()
 {
     if (m_storage_type == StorageUtils::StorageFilesystem)
     {
@@ -139,7 +139,7 @@ QString MediaStorage::getDevicePath()
     return QString();
 }
 
-void MediaStorage::setDeviceMtp(LIBMTP_mtpdevice_t *device, LIBMTP_devicestorage_t *storage)
+void DeviceStorage::setDeviceMtp(LIBMTP_mtpdevice_t *device, LIBMTP_devicestorage_t *storage)
 {
     if (device && storage)
     {
@@ -150,7 +150,7 @@ void MediaStorage::setDeviceMtp(LIBMTP_mtpdevice_t *device, LIBMTP_devicestorage
 
 /* ************************************************************************** */
 
-void MediaStorage::setContent(int content)
+void DeviceStorage::setContent(int content)
 {
     if (m_content != content)
     {
@@ -160,7 +160,7 @@ void MediaStorage::setContent(int content)
     }
 }
 
-void MediaStorage::setHierarchy(int hierarchy)
+void DeviceStorage::setHierarchy(int hierarchy)
 {
     if (m_hierarchy != hierarchy)
     {
@@ -170,7 +170,7 @@ void MediaStorage::setHierarchy(int hierarchy)
     }
 }
 
-void MediaStorage::setEnabled(bool enabled)
+void DeviceStorage::setEnabled(bool enabled)
 {
     if (m_enabled != enabled)
     {
@@ -180,7 +180,7 @@ void MediaStorage::setEnabled(bool enabled)
     }
 }
 
-void MediaStorage::setPrimary(bool primary)
+void DeviceStorage::setPrimary(bool primary)
 {
     if (m_primary != primary)
     {
@@ -190,7 +190,7 @@ void MediaStorage::setPrimary(bool primary)
     }
 }
 
-void MediaStorage::setScanning(bool scanning)
+void DeviceStorage::setScanning(bool scanning)
 {
     if (scanning != m_scanning)
     {
@@ -200,7 +200,7 @@ void MediaStorage::setScanning(bool scanning)
     }
 }
 
-bool MediaStorage::isAvailableFor(unsigned shotType, int64_t shotSize)
+bool DeviceStorage::isAvailableFor(unsigned shotType, int64_t shotSize)
 {
     bool available = false;
 
@@ -229,20 +229,20 @@ bool MediaStorage::isAvailableFor(unsigned shotType, int64_t shotSize)
 
 /* ************************************************************************** */
 
-void MediaStorage::refreshMediaStorage()
+void DeviceStorage::refreshMediaStorage()
 {
     refreshMediaStorage_fs();
     refreshMediaStorage_mtp();
 }
 
-void MediaStorage::refreshMediaStorage_mtp()
+void DeviceStorage::refreshMediaStorage_mtp()
 {
 #ifdef ENABLE_LIBMTP
     // TODO? or space related values kept up to date by the lib?
 #endif // ENABLE_LIBMTP
 }
 
-void MediaStorage::refreshMediaStorage_fs()
+void DeviceStorage::refreshMediaStorage_fs()
 {
     // We have a storage object
     if (m_fs_storage)
@@ -310,7 +310,7 @@ void MediaStorage::refreshMediaStorage_fs()
         }
         else
         {
-            qDebug() << "MediaStorage(" << m_path << ") is not available: read only or full";
+            qDebug() << "DeviceStorage(" << m_path << ") is not available: read only or full";
             m_available = false;
             Q_EMIT availableUpdated();
         }
@@ -320,7 +320,7 @@ void MediaStorage::refreshMediaStorage_fs()
     {
         if (m_available == true)
         {
-            qWarning() << "MediaStorage(" << m_fs_path << ") is not available: invalid or not ready";
+            qWarning() << "DeviceStorage(" << m_fs_path << ") is not available: invalid or not ready";
             m_available = false;
             Q_EMIT availableUpdated();
         }
@@ -329,7 +329,7 @@ void MediaStorage::refreshMediaStorage_fs()
 
 /* ************************************************************************** */
 
-bool MediaStorage::isReadOnly()
+bool DeviceStorage::isReadOnly()
 {
     if (m_storage_type == StorageUtils::StorageFilesystem)
     {
@@ -347,7 +347,7 @@ bool MediaStorage::isReadOnly()
     return false;
 }
 
-int64_t MediaStorage::getSpaceTotal()
+int64_t DeviceStorage::getSpaceTotal()
 {
     if (m_storage_type == StorageUtils::StorageFilesystem)
     {
@@ -366,7 +366,7 @@ int64_t MediaStorage::getSpaceTotal()
     return 0;
 }
 
-int64_t MediaStorage::getSpaceUsed()
+int64_t DeviceStorage::getSpaceUsed()
 {
     if (m_storage_type == StorageUtils::StorageFilesystem)
     {
@@ -385,7 +385,7 @@ int64_t MediaStorage::getSpaceUsed()
     return 0;
 }
 
-int64_t MediaStorage::getSpaceAvailable()
+int64_t DeviceStorage::getSpaceAvailable()
 {
     if (m_storage_type == StorageUtils::StorageFilesystem)
     {
@@ -404,13 +404,13 @@ int64_t MediaStorage::getSpaceAvailable()
     return 0;
 }
 
-int64_t MediaStorage::getSpaceAvailable_withrefresh()
+int64_t DeviceStorage::getSpaceAvailable_withrefresh()
 {
     refreshMediaStorage();
     return getSpaceAvailable();
 }
 
-double MediaStorage::getStorageLevel()
+double DeviceStorage::getStorageLevel()
 {
     if (m_storage_type == StorageUtils::StorageFilesystem)
     {

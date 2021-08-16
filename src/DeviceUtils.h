@@ -23,10 +23,12 @@
 #define DEVICE_UTILS_H
 /* ************************************************************************** */
 
+#include "StorageUtils.h"
+
+#include <QObject>
 #include <QList>
 #include <QStringList>
 #include <QStorageInfo>
-#include <QQmlApplicationEngine>
 
 #ifdef ENABLE_LIBMTP
 #include <libmtp.h>
@@ -37,106 +39,113 @@ typedef void LIBMTP_devicestorage_t;
 
 /* ************************************************************************** */
 
-typedef enum deviceType_e
+namespace DeviceUtils
 {
-    DEVICE_UNKNOWN = 0,
+    Q_NAMESPACE
 
-    DEVICE_COMPUTER,
-    DEVICE_NETWORK,
-    DEVICE_SMARTPHONE,
-    DEVICE_CAMERA,
-    DEVICE_ACTIONCAM,
+    enum DeviceType
+    {
+        DeviceUnknown = 0,
 
-} deviceType_e;
+        DeviceActionCamera,
+        DeviceCamera,
+        DeviceSmartphone,
+        DeviceComputer,
+    };
+    Q_ENUM_NS(DeviceType)
 
-typedef enum deviceStorage_e
-{
-    STORAGE_FILESYSTEM = 0,
-    STORAGE_VIRTUAL_FILESYSTEM = 1,
-    STORAGE_MTP = 2,
+    enum DeviceModel
+    {
+        ModelUnknown = 0,
 
-} deviceStorage_e;
+        DEVICE_GOPRO = 128,
+            DEVICE_HERO2,
+            DEVICE_HERO3_WHITE,
+            DEVICE_HERO3_SILVER,
+            DEVICE_HERO3_BLACK,
+            DEVICE_HERO3p_WHITE,
+            DEVICE_HERO3p_SILVER,
+            DEVICE_HERO3p_BLACK,
+            DEVICE_HERO,
+            DEVICE_HEROp,
+            DEVICE_HEROpLCD,
+            DEVICE_HERO4_SILVER,
+            DEVICE_HERO4_BLACK,
+            DEVICE_HERO4_SESSION,
+            DEVICE_HERO5_SESSION,
+            DEVICE_HERO5_WHITE,
+            DEVICE_HERO5_BLACK,
+            DEVICE_HERO6_BLACK,
+            DEVICE_HERO7_WHITE,
+            DEVICE_HERO7_SILVER,
+            DEVICE_HERO7_BLACK,
+            DEVICE_HERO9,
+            DEVICE_HERO8,
+            DEVICE_FUSION,
+            DEVICE_MAX,
 
-typedef enum deviceState_e
-{
-    DEVICE_STATE_IDLE = 0,
-    DEVICE_STATE_SCANNING = 1,
+        DEVICE_SONY = 256,
+            DEVICE_HDR_AS300R,
+            DEVICE_FDR_X1000VR,
+            DEVICE_FDR_X3000R,
 
-} deviceState_e;
+        DEVICE_GARMIN = 270,
+            DEVICE_VIRB_ELITE,
+            DEVICE_VIRB_X,
+            DEVICE_VIRB_XE,
+            DEVICE_VIRB_ULTRA30,
+            DEVICE_VIRB_360,
 
-typedef enum deviceModel_e
-{
-    MODEL_UNKNOWN = 0,
+        DEVICE_OLYMPUS = 280,
+            DEVICE_TG_TRACKER,
 
-    DEVICE_GOPRO = 128,
-        DEVICE_HERO2,
-        DEVICE_HERO3_WHITE,
-        DEVICE_HERO3_SILVER,
-        DEVICE_HERO3_BLACK,
-        DEVICE_HERO3p_WHITE,
-        DEVICE_HERO3p_SILVER,
-        DEVICE_HERO3p_BLACK,
-        DEVICE_HERO,
-        DEVICE_HEROp,
-        DEVICE_HEROpLCD,
-        DEVICE_HERO4_SILVER,
-        DEVICE_HERO4_BLACK,
-        DEVICE_HERO4_SESSION,
-        DEVICE_HERO5_SESSION,
-        DEVICE_HERO5_WHITE,
-        DEVICE_HERO5_BLACK,
-        DEVICE_HERO6_BLACK,
-        DEVICE_HERO7_WHITE,
-        DEVICE_HERO7_SILVER,
-        DEVICE_HERO7_BLACK,
-        DEVICE_HERO9,
-        DEVICE_HERO8,
-        DEVICE_FUSION,
-        DEVICE_MAX,
+        DEVICE_CONTOUR = 290,
+            DEVICE_CONTOUR_ROAM3,
+            DEVICE_CONTOUR_ROAM1600,
+            DEVICE_CONTOUR_4K,
 
-    DEVICE_SONY = 256,
-        DEVICE_HDR_AS300R,
-        DEVICE_FDR_X1000VR,
-        DEVICE_FDR_X3000R,
+        DEVICE_KODAK = 300,
+            DEVICE_PIXPRO_SP1,
+            DEVICE_PIXPRO_SPZ1,
 
-    DEVICE_GARMIN = 270,
-        DEVICE_VIRB_ELITE,
-        DEVICE_VIRB_X,
-        DEVICE_VIRB_XE,
-        DEVICE_VIRB_ULTRA30,
-        DEVICE_VIRB_360,
+        DEVICE_YI = 310,
+            DEVICE_YI_DISCOVERY_4K,
+            DEVICE_YI_LITE,
+            DEVICE_YI_4K,
+            DEVICE_YI_4Kp,
 
-    DEVICE_OLYMPUS = 280,
-        DEVICE_TG_TRACKER,
+        DEVICE_DJI = 330,
+            DEVICE_DJI_OSMO,
+            DEVICE_DJI_OSMOp,
+            DEVICE_DJI_OSMO_POCKET,
+            DEVICE_DJI_OSMO_ACTION,
+    };
+    Q_ENUM_NS(DeviceModel)
 
-    DEVICE_CONTOUR = 290,
-        DEVICE_CONTOUR_ROAM3,
-        DEVICE_CONTOUR_ROAM1600,
-        DEVICE_CONTOUR_4K,
+    enum DeviceState
+    {
+        DeviceStateIdle = 0,
+        DeviceStateScanning = 1,
+    };
+    Q_ENUM_NS(DeviceState)
 
-    DEVICE_KODAK = 300,
-        DEVICE_PIXPRO_SP1,
-        DEVICE_PIXPRO_SPZ1,
+    enum DeviceFirmwareState
+    {
+        FirmwareUnknown = 0,
 
-    DEVICE_YI = 310,
-        DEVICE_YI_DISCOVERY_4K,
-        DEVICE_YI_LITE,
-        DEVICE_YI_4K,
-        DEVICE_YI_4Kp,
-
-    DEVICE_DJI = 330,
-        DEVICE_DJI_OSMO,
-        DEVICE_DJI_OSMOp,
-        DEVICE_DJI_OSMO_POCKET,
-        DEVICE_DJI_OSMO_ACTION,
-
-} deviceModel_e;
+        FirmwareUpToDate,
+        FirmwareUpdateAvailable,
+        FirmwareUpdating,
+        FirmwareUpdateInstalled,
+    };
+    Q_ENUM_NS(DeviceFirmwareState)
+};
 
 /* ************************************************************************** */
 
 typedef struct generic_device_infos
 {
-    deviceType_e device_type;
+    DeviceUtils::DeviceType device_type;
     QString device_brand;
     QString device_model;
 
@@ -144,7 +153,7 @@ typedef struct generic_device_infos
 
 typedef struct gopro_device_infos
 {
-    deviceStorage_e device_type;
+    StorageUtils::StorageType device_type;
 
     // Fields from version.txt "info_version 1.0"
     QString camera_type;            // ex: "HERO6 Black", "FUSION", "Hero3-Black Edition", "HD2"

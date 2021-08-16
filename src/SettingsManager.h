@@ -48,6 +48,8 @@ namespace SettingsUtils
     Q_ENUM_NS(OrderBy)
 }
 
+/* ************************************************************************** */
+
 /*!
  * \brief The SettingsManager class
  *
