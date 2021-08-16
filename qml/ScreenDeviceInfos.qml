@@ -2,6 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 
 import ThemeEngine 1.0
+import DeviceUtils 1.0
 import "qrc:/js/UtilsString.js" as UtilsString
 import "qrc:/js/UtilsDeviceCamera.js" as UtilsDevice
 
@@ -258,9 +259,16 @@ Rectangle {
                 }
                 ButtonWireframeImage {
                     fullColor: true
-                    text: qsTr("Update available")
+                    text: {
+                        if (currentDevice.firmwareState === DeviceUtils.FirmwareUpToDate) return qsTr("Up to date")
+                        if (currentDevice.firmwareState === DeviceUtils.FirmwareUpdateAvailable) return qsTr("Update available")
+                        if (currentDevice.firmwareState === DeviceUtils.FirmwareUpdating) return qsTr("Updating...")
+                        if (currentDevice.firmwareState === DeviceUtils.FirmwareUpdateInstalled) return qsTr("Update installed")
+                        return ""
+                    }
                     source: "qrc:/assets/icons_material/baseline-archive-24px.svg"
-                    visible: firmwareManager.hasUpdate(currentDevice.model, currentDevice.firmware)
+
+                    visible: (currentDevice.firmwareState > 0)
                     onClicked: popupFirmware.openDevice(currentDevice)
                 }
             }

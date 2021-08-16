@@ -25,6 +25,7 @@
 #include "JobManager.h"
 #include "StorageManager.h"
 #include "SettingsManager.h"
+#include "FirmwareManager.h"
 
 #include <QMap>
 #include <QJSValue>
@@ -101,6 +102,8 @@ Device::Device(const DeviceUtils::DeviceType type, const StorageUtils::StorageTy
         m_shotFilter->setSortRole(sortRole);
         m_shotFilter->sort(0, m_sortOrder);
     }
+
+    updateFirmwareState();
 }
 
 Device::~Device()
@@ -211,6 +214,9 @@ bool Device::addStorage_filesystem(const QString &path)
             emit storageUpdated();
         }
     }
+
+    // Firmware file?
+    updateFirmwareState();
 
     // Start initial scan
     if (status)
@@ -415,6 +421,33 @@ void Device::refreshStorageInfos()
     }
 
     emit storageUpdated();
+}
+
+void Device::updateFirmwareState()
+{
+    FirmwareManager *fmgr = FirmwareManager::getInstance();
+    if (fmgr)
+    {
+        if (fmgr->hasUpdate(m_model, m_firmware))
+        {
+            m_firmwareState = DeviceUtils::FirmwareUpdateAvailable;
+
+            if (m_deviceStorage == StorageUtils::StorageFilesystem)
+            {
+                QFileInfo fw(getPath() + "UPDATE.zip");
+                if (fw.exists())
+                {
+                    m_firmwareState = DeviceUtils::FirmwareUpdateInstalled;
+                }
+            }
+        }
+        else
+        {
+            m_firmwareState = DeviceUtils::FirmwareUpToDate;
+        }
+
+        Q_EMIT deviceUpdated();
+    }
 }
 
 /* ************************************************************************** */
@@ -1146,11 +1179,22 @@ void Device::addJob(JobTracker *j)
             m_trackedJobs.push_back(j);
             Q_EMIT jobsUpdated();
         }
+        if (j->getType() == JobUtils::JOB_FIRMWARE_UPDATE)
+        {
+            m_firmwareState = DeviceUtils::FirmwareUpdating;
+            Q_EMIT deviceUpdated();
+        }
     }
 }
 
 void Device::removeJob(JobTracker *j)
 {
+    if (j->getType() == JobUtils::JOB_FIRMWARE_UPDATE && j->getState() == JobUtils::JOB_STATE_DONE)
+    {
+        m_firmwareState = DeviceUtils::FirmwareUpdateInstalled;
+        Q_EMIT deviceUpdated();
+    }
+
     m_trackedJobs.removeOne(j);
     Q_EMIT jobsUpdated();
 }

@@ -66,6 +66,7 @@ class Device: public ShotProvider
     Q_PROPERTY(QString model READ getModel NOTIFY deviceUpdated)
     Q_PROPERTY(QString serial READ getSerial NOTIFY deviceUpdated)
     Q_PROPERTY(QString firmware READ getFirmware NOTIFY deviceUpdated)
+    Q_PROPERTY(int firmwareState READ getFirmwareState NOTIFY deviceUpdated)
 
     Q_PROPERTY(float batteryLevel READ getMtpBatteryLevel NOTIFY batteryUpdated)
     Q_PROPERTY(float storageLevel READ getStorageLevel NOTIFY storageUpdated)
@@ -94,6 +95,7 @@ class Device: public ShotProvider
     QString m_stringId;         //!< A backup string that describe the device in case neither brand/model can be identified
     QString m_serial;
     QString m_firmware;
+    DeviceUtils::DeviceFirmwareState m_firmwareState = DeviceUtils::FirmwareUnknown;
 
     // MTP infos
     QList <ofb_mtp_device *> m_mtpDevices;
@@ -140,6 +142,10 @@ public:
     QString getModel() const { return m_model; }
     QString getSerial() const { return m_serial; }
     QString getFirmware() const { return m_firmware; }
+
+    // Firmware
+    void updateFirmwareState();
+    int getFirmwareState() const { return m_firmwareState; }
 
     // Storage
     QVariant getStorages() const { if (m_mediaStorages.size() > 0) { return QVariant::fromValue(m_mediaStorages); } return QVariant(); }
