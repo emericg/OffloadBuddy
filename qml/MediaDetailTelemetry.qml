@@ -25,25 +25,20 @@ Item {
     }
 
     function updateMap() { // "image" mode
-        map.fullscreen = true
-        button_map_fullscreen.visible = false
-
-        if (shot.latitude !== 0.0) {
-            map.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
-            map.zoomLevel = 12
-            mapTrace.visible = false
-            mapMarker.visible = true
-            mapMarker.coordinate = QtPositioning.coordinate(shot.latitude, shot.longitude)
-            button_map_dezoom.enabled = true
-            button_map_zoom.enabled = true
-            calculateScale()
+        mapArea.fullscreen = true
+        if (!mapLoader.sourceComponent) {
+            mapLoader.sourceComponent = mapComponent
         }
+        mapLoader.item.updateMap()
     }
 
     function updateMetadata() { // "video" mode
-        map.fullscreen = false
-        mapMarker.visible = false
-        button_map_fullscreen.visible = true
+        // Map
+        mapArea.fullscreen = false
+        if (!mapLoader.sourceComponent) {
+            mapLoader.sourceComponent = mapComponent
+        }
+        mapLoader.item.updateMetadata()
 
         // Graphs sizes
         altiGraph.legend.visible = false
@@ -97,104 +92,13 @@ Item {
             axisAcclX0.max = acclX.count
             axisGyroX0.min = 0;
             axisGyroX0.max = gyroX.count
-
-            // GPS trace
-            if (shot.latitude !== 0.0) {
-                button_map_dezoom.enabled = true
-                button_map_zoom.enabled = true
-
-                // clean GPS points
-                while (mapTrace.pathLength() > 0)
-                    mapTrace.removeCoordinate(mapTrace.coordinateAt(0))
-
-                // add new GPS points // one per seconde (was 18Hz)
-                for (var i = 0; i < shot.getGpsPointCount(); i += 18)
-                    mapTrace.addCoordinate(shot.getGpsCoordinates(i))
-
-                // choose a default zoom level
-                if (shot.distanceKm < 0.5)
-                    map.zoomLevel = 18
-                else if (shot.distanceKm < 2)
-                    map.zoomLevel = 15
-                else if (shot.distanceKm < 10)
-                    map.zoomLevel = 12
-                else if (shot.distanceKm < 50)
-                    map.zoomLevel = 10
-                else if (shot.distanceKm < 100)
-                    map.zoomLevel = 8
-
-                // center view
-                map.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
-                mapMarker.coordinate = QtPositioning.coordinate(shot.latitude, shot.longitude)
-
-                // scale indicator
-                calculateScale()
-
-                if (mapTrace.pathLength() > 1) {
-                    mapTrace.visible = true
-                    mapMarker.visible = false
-                } else {
-                    mapTrace.visible = false
-                    mapMarker.visible = true
-                }
-            }
-        }
-    }
-
-    property variant scaleLengths: [5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000]
-
-    function calculateScale() {
-        //console.log("calculateScale(zoom: " + map.zoomLevel + ")")
-
-        var coord1, coord2, dist, f
-        f = 0
-        coord1 = map.toCoordinate(Qt.point(0, mapScale.y))
-        coord2 = map.toCoordinate(Qt.point(100, mapScale.y))
-        dist = Math.round(coord1.distanceTo(coord2))
-
-        if (dist === 0) {
-            // not visible
-        } else {
-            for (var i = 0; i < scaleLengths.length-1; i++) {
-                if (dist < (scaleLengths[i] + scaleLengths[i+1]) / 2 ) {
-                    f = scaleLengths[i] / dist
-                    dist = scaleLengths[i]
-                    break;
-                }
-            }
-            if (f === 0) {
-                f = dist / scaleLengths[i]
-                dist = scaleLengths[i]
-            }
-        }
-
-        mapScale.width = 100 * f
-        mapScaleText.text = UtilsString.distanceToString(dist, 0, settingsManager.appUnits)
-    }
-
-    function zoomIn() {
-        if (map.zoomLevel < Math.round(map.maximumZoomLevel)) {
-            map.zoomLevel = Math.round(map.zoomLevel + 1)
-            if (!map.moove) map.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
-            calculateScale()
-        }
-    }
-
-    function zoomOut() {
-        if (map.zoomLevel > Math.round(map.minimumZoomLevel)) {
-            map.zoomLevel = Math.round(map.zoomLevel - 1)
-            if (!map.moove) map.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
-            calculateScale()
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////
 
-    Map {
-        id: map
-        width: fullscreen ? parent.width - 32 : parent.width * 0.40
-        Behavior on width { NumberAnimation { duration: 333 } }
-
+    Rectangle {
+        id: mapArea
         anchors.top: parent.top
         anchors.topMargin: 16
         anchors.right: parent.right
@@ -202,235 +106,362 @@ Item {
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 16
 
-        gesture.enabled: moove
-        plugin: Plugin {
-            //name: "mapboxgl"
-            preferred: ["mapboxgl", "osm", "esri"]
-            //PluginParameter { name: "osm.mapping.highdpi_tiles"; value: "true"; }
-        }
-        copyrightsVisible: false
-
         property bool fullscreen: false
-        property bool moove: false
+        width: fullscreen ? parent.width - 32 : parent.width * 0.40
+        Behavior on width { NumberAnimation { duration: 333 } }
 
-        //zoomLevel: 2
-        //center: QtPositioning.coordinate(45.5, 6)
+        color: Theme.colorForeground
 
-        Rectangle {
+        ImageSvg {
+            width: 64; height: 64;
+            anchors.centerIn: parent
+
+            color: Theme.colorIcon
+            source: "qrc:/assets/icons_material/baseline-hourglass_empty-24px.svg"
+        }
+
+        Loader {
+            id: mapLoader
             anchors.fill: parent
-            z: -1
-            visible: !map.mapReady
-            color: Theme.colorForeground
 
-            ImageSvg {
-                width: 64; height: 64;
-                anchors.centerIn: parent
-
-                color: Theme.colorIcon
-                source: "qrc:/assets/icons_material/baseline-hourglass_empty-24px.svg"
-            }
+            //sourceComponent: mapComponent
+            //asynchronous: true
         }
+    }
 
-        MouseArea {
-            anchors.fill: parent
-            onWheel: {
-                if (wheel.angleDelta.y < 0) zoomOut()
-                else if (wheel.angleDelta.y > 0) zoomIn()
+    Component {
+        id: mapComponent
+
+        Map {
+            id: map
+
+            gesture.enabled: moove
+            plugin: Plugin {
+                //name: "mapboxgl"
+                preferred: ["mapboxgl", "osm", "esri"]
+                //PluginParameter { name: "osm.mapping.highdpi_tiles"; value: "true"; }
             }
-        }
+            copyrightsVisible: false
 
-        ////////
+            property bool fullscreen: false
+            property bool moove: false
 
-        MapQuickItem {
-            id: mapMarker
-            visible: false
-            anchorPoint.x: mapMarkerImg.width/2
-            anchorPoint.y: mapMarkerImg.height/2
-            sourceItem: Image {
-                id: mapMarkerImg
-                width: 64
-                height: 64
-                source: "qrc:/assets/others/gps_marker.svg"
-            }
-        }
+            //zoomLevel: 2
+            //center: QtPositioning.coordinate(45.5, 6)
 
-        MapPolyline {
-            id: mapTrace
-            visible: false
-            line.width: 3
-            line.color: Theme.colorSecondary
-        }
+            ////////
 
-        ////////
+            function updateMap() { // "image" mode
+                button_map_fullscreen.visible = false
 
-        Row {
-            anchors.top: parent.top
-            anchors.topMargin: 16
-            anchors.left: parent.left
-            anchors.leftMargin: 16
-            spacing: 16
-
-            ItemImageButton {
-                id: button_map_fullscreen
-                width: map.fullscreen ? 48 : 40
-                height: map.fullscreen ? 48 : 40
-
-                background: true
-                backgroundColor: Theme.colorHeader
-                iconColor: Theme.colorHeaderContent
-                highlightMode: "color"
-                highlightColor: Theme.colorBackground
-
-                source: map.fullscreen ? "qrc:/assets/icons_material/baseline-fullscreen_exit-24px.svg"
-                                       : "qrc:/assets/icons_material/baseline-fullscreen-24px.svg"
-                onClicked: map.fullscreen = !map.fullscreen
+                if (shot.latitude !== 0.0) {
+                    map.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
+                    map.zoomLevel = 12
+                    mapTrace.visible = false
+                    mapMarker.visible = true
+                    mapMarker.coordinate = QtPositioning.coordinate(shot.latitude, shot.longitude)
+                    button_map_dezoom.enabled = true
+                    button_map_zoom.enabled = true
+                    calculateScale()
+                }
             }
 
-            ItemImageButton {
-                id: button_map_moove
-                width: map.fullscreen ? 48 : 40
-                height: map.fullscreen ? 48 : 40
+            function updateMetadata() { // "video" mode
+                mapMarker.visible = false
+                button_map_fullscreen.visible = true
 
-                background: true
-                backgroundColor: Theme.colorHeader
-                iconColor: Theme.colorHeaderContent
-                highlightMode: "color"
-                highlightColor: Theme.colorBackground
+                // GPS trace
+                if (shot.latitude !== 0.0) {
+                    button_map_dezoom.enabled = true
+                    button_map_zoom.enabled = true
 
-                selected: map.moove
-                onClicked: map.moove = !map.moove
-                source: "qrc:/assets/icons_material/baseline-open_with-24px.svg"
-            }
-        }
+                    // clean GPS points
+                    while (mapTrace.pathLength() > 0)
+                        mapTrace.removeCoordinate(mapTrace.coordinateAt(0))
 
-        Row {
-            anchors.top: parent.top
-            anchors.topMargin: 16
-            anchors.right: parent.right
-            anchors.rightMargin: 16
-            spacing: 16
+                    // add new GPS points // one per seconde (was 18Hz)
+                    for (var i = 0; i < shot.getGpsPointCount(); i += 18)
+                        mapTrace.addCoordinate(shot.getGpsCoordinates(i))
 
-            ItemImageButton {
-                id: button_map_dezoom
-                width: map.fullscreen ? 48 : 40
-                height: map.fullscreen ? 48 : 40
+                    // choose a default zoom level
+                    if (shot.distanceKm < 0.5)
+                        map.zoomLevel = 18
+                    else if (shot.distanceKm < 2)
+                        map.zoomLevel = 15
+                    else if (shot.distanceKm < 10)
+                        map.zoomLevel = 12
+                    else if (shot.distanceKm < 50)
+                        map.zoomLevel = 10
+                    else if (shot.distanceKm < 100)
+                        map.zoomLevel = 8
 
-                background: true
-                backgroundColor: Theme.colorHeader
-                iconColor: Theme.colorHeaderContent
-                highlightMode: "color"
-                highlightColor: Theme.colorBackground
+                    // center view
+                    map.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
+                    mapMarker.coordinate = QtPositioning.coordinate(shot.latitude, shot.longitude)
 
-                source: "qrc:/assets/icons_material/baseline-zoom_out-24px.svg"
-                onClicked: zoomOut()
-            }
+                    // scale indicator
+                    calculateScale()
 
-            ItemImageButton {
-                id: button_map_zoom
-                width: map.fullscreen ? 48 : 40
-                height: map.fullscreen ? 48 : 40
-
-                background: true
-                backgroundColor: Theme.colorHeader
-                iconColor: Theme.colorHeaderContent
-                highlightMode: "color"
-                highlightColor: Theme.colorBackground
-
-                source: "qrc:/assets/icons_material/baseline-zoom_in-24px.svg"
-                onClicked: zoomIn()
-            }
-        }
-
-        ////////
-
-        Item {
-            id: mapScale
-            width: 100
-            height: 16
-            anchors.left: parent.left
-            anchors.leftMargin: 16
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: mapMarker.visible ? 64 : 16
-
-            Text {
-                id: mapScaleText
-                anchors.centerIn: parent
-                text: "100m"
-                color: "#555"
-                font.pixelSize: 12
+                    if (mapTrace.pathLength() > 1) {
+                        mapTrace.visible = true
+                        mapMarker.visible = false
+                    } else {
+                        mapTrace.visible = false
+                        mapMarker.visible = true
+                    }
+                }
             }
 
-            Rectangle {
-                width: 2; height: 6;
-                anchors.left: parent.left
-                anchors.bottom: parent.bottom
-                color: "#555"
-            }
-            Rectangle {
-                width: parent.width; height: 2;
-                anchors.bottom: parent.bottom
-                color: "#555"
-            }
-            Rectangle {
-                width: 2; height: 6;
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                color:"#555"
-            }
-        }
+            property variant scaleLengths: [5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000]
 
-        ////////
+            function calculateScale() {
+                //console.log("calculateScale(zoom: " + map.zoomLevel + ")")
 
-        Rectangle {
-            height: map.fullscreen ? 48 : 40
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
+                var coord1, coord2, dist, f
+                f = 0
+                coord1 = map.toCoordinate(Qt.point(0, mapScale.y))
+                coord2 = map.toCoordinate(Qt.point(100, mapScale.y))
+                dist = Math.round(coord1.distanceTo(coord2))
 
-            color: Theme.colorHeader
-            opacity: 0.8
-            visible: mapMarker.visible
+                if (dist === 0) {
+                    // not visible
+                } else {
+                    for (var i = 0; i < scaleLengths.length-1; i++) {
+                        if (dist < (scaleLengths[i] + scaleLengths[i+1]) / 2 ) {
+                            f = scaleLengths[i] / dist
+                            dist = scaleLengths[i]
+                            break;
+                        }
+                    }
+                    if (f === 0) {
+                        f = dist / scaleLengths[i]
+                        dist = scaleLengths[i]
+                    }
+                }
+
+                mapScale.width = 100 * f
+                mapScaleText.text = UtilsString.distanceToString(dist, 0, settingsManager.appUnits)
+            }
+
+            function zoomIn() {
+                if (map.zoomLevel < Math.round(map.maximumZoomLevel)) {
+                    map.zoomLevel = Math.round(map.zoomLevel + 1)
+                    if (!map.moove) map.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
+                    calculateScale()
+                }
+            }
+
+            function zoomOut() {
+                if (map.zoomLevel > Math.round(map.minimumZoomLevel)) {
+                    map.zoomLevel = Math.round(map.zoomLevel - 1)
+                    if (!map.moove) map.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
+                    calculateScale()
+                }
+            }
+
+            ////////
+
+            MouseArea {
+                anchors.fill: parent
+                onWheel: {
+                    if (wheel.angleDelta.y < 0) zoomOut()
+                    else if (wheel.angleDelta.y > 0) zoomIn()
+                }
+            }
+
+            ////////
+
+            MapQuickItem {
+                id: mapMarker
+                visible: false
+                anchorPoint.x: mapMarkerImg.width/2
+                anchorPoint.y: mapMarkerImg.height/2
+                sourceItem: Image {
+                    id: mapMarkerImg
+                    width: 64
+                    height: 64
+                    source: "qrc:/assets/others/gps_marker.svg"
+                }
+            }
+
+            MapPolyline {
+                id: mapTrace
+                visible: false
+                line.width: 3
+                line.color: Theme.colorSecondary
+            }
+
+            ////////
 
             Row {
-                anchors.fill: parent
+                anchors.top: parent.top
+                anchors.topMargin: 16
+                anchors.left: parent.left
                 anchors.leftMargin: 16
+                spacing: 16
+
+                ItemImageButton {
+                    id: button_map_fullscreen
+                    width: mapArea.fullscreen ? 48 : 40
+                    height: mapArea.fullscreen ? 48 : 40
+
+                    background: true
+                    backgroundColor: Theme.colorHeader
+                    iconColor: Theme.colorHeaderContent
+                    highlightMode: "color"
+                    highlightColor: Theme.colorBackground
+
+                    source: mapArea.fullscreen ? "qrc:/assets/icons_material/baseline-fullscreen_exit-24px.svg"
+                                           : "qrc:/assets/icons_material/baseline-fullscreen-24px.svg"
+                    onClicked: mapArea.fullscreen = !mapArea.fullscreen
+                }
+
+                ItemImageButton {
+                    id: button_map_moove
+                    width: mapArea.fullscreen ? 48 : 40
+                    height: mapArea.fullscreen ? 48 : 40
+
+                    background: true
+                    backgroundColor: Theme.colorHeader
+                    iconColor: Theme.colorHeaderContent
+                    highlightMode: "color"
+                    highlightColor: Theme.colorBackground
+
+                    selected: map.moove
+                    onClicked: map.moove = !map.moove
+                    source: "qrc:/assets/icons_material/baseline-open_with-24px.svg"
+                }
+            }
+
+            Row {
+                anchors.top: parent.top
+                anchors.topMargin: 16
+                anchors.right: parent.right
                 anchors.rightMargin: 16
                 spacing: 16
 
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
+                ItemImageButton {
+                    id: button_map_dezoom
+                    width: mapArea.fullscreen ? 48 : 40
+                    height: mapArea.fullscreen ? 48 : 40
 
-                    text: qsTr("GPS coordinates:")
-                    font.pixelSize: Theme.fontSizeContent
-                    font.bold: true
-                    color: Theme.colorHeaderContent
+                    background: true
+                    backgroundColor: Theme.colorHeader
+                    iconColor: Theme.colorHeaderContent
+                    highlightMode: "color"
+                    highlightColor: Theme.colorBackground
+
+                    source: "qrc:/assets/icons_material/baseline-zoom_out-24px.svg"
+                    onClicked: zoomOut()
                 }
 
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
+                ItemImageButton {
+                    id: button_map_zoom
+                    width: mapArea.fullscreen ? 48 : 40
+                    height: mapArea.fullscreen ? 48 : 40
 
-                    text: shot.latitudeString + "    " + shot.longitudeString
-                    font.pixelSize: Theme.fontSizeContent
-                    color: Theme.colorHeaderContent
+                    background: true
+                    backgroundColor: Theme.colorHeader
+                    iconColor: Theme.colorHeaderContent
+                    highlightMode: "color"
+                    highlightColor: Theme.colorBackground
+
+                    source: "qrc:/assets/icons_material/baseline-zoom_in-24px.svg"
+                    onClicked: zoomIn()
+                }
+            }
+
+            ////////
+
+            Item {
+                id: mapScale
+                width: 100
+                height: 16
+                anchors.left: parent.left
+                anchors.leftMargin: 16
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: mapMarker.visible ? 64 : 16
+
+                Text {
+                    id: mapScaleText
+                    anchors.centerIn: parent
+                    text: "100m"
+                    color: "#555"
+                    font.pixelSize: 12
                 }
 
-                Item { width: 1; height: 1; } // spacer
-
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    text: qsTr("Altitude:")
-                    font.pixelSize: Theme.fontSizeContent
-                    font.bold: true
-                    color: Theme.colorHeaderContent
+                Rectangle {
+                    width: 2; height: 6;
+                    anchors.left: parent.left
+                    anchors.bottom: parent.bottom
+                    color: "#555"
                 }
+                Rectangle {
+                    width: parent.width; height: 2;
+                    anchors.bottom: parent.bottom
+                    color: "#555"
+                }
+                Rectangle {
+                    width: 2; height: 6;
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    color:"#555"
+                }
+            }
 
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
+            ////////
 
-                    text: UtilsString.altitudeToString(shot.altitude - shot.altitudeOffset, 0, settingsManager.appUnits)
-                    font.pixelSize: Theme.fontSizeContent
-                    color: Theme.colorHeaderContent
+            Rectangle {
+                height: mapArea.fullscreen ? 48 : 40
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+
+                color: Theme.colorHeader
+                opacity: 0.8
+                visible: mapMarker.visible
+
+                Row {
+                    anchors.fill: parent
+                    anchors.leftMargin: 16
+                    anchors.rightMargin: 16
+                    spacing: 16
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        text: qsTr("GPS coordinates:")
+                        font.pixelSize: Theme.fontSizeContent
+                        font.bold: true
+                        color: Theme.colorHeaderContent
+                    }
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        text: shot.latitudeString + "    " + shot.longitudeString
+                        font.pixelSize: Theme.fontSizeContent
+                        color: Theme.colorHeaderContent
+                    }
+
+                    Item { width: 1; height: 1; } // spacer
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        text: qsTr("Altitude:")
+                        font.pixelSize: Theme.fontSizeContent
+                        font.bold: true
+                        color: Theme.colorHeaderContent
+                    }
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        text: UtilsString.altitudeToString(shot.altitude - shot.altitudeOffset, 0, settingsManager.appUnits)
+                        font.pixelSize: Theme.fontSizeContent
+                        color: Theme.colorHeaderContent
+                    }
                 }
             }
         }
