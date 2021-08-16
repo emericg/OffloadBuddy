@@ -1144,7 +1144,6 @@ Item {
                     id: timecode
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: "0:12 / 0:24"
                     color: "white"
                     font.bold: true
                     font.pixelSize: 15
@@ -1167,7 +1166,7 @@ Item {
                     highlightColor: Theme.colorPrimary
                     highlightMode: "color"
 
-                    source: "qrc:/assets/icons_material/baseline-timer-24px.svg"
+                    source: "qrc:/assets/icons_material/baseline-content_cut_black-24px.svg"
                     onClicked: toggleTrim()
                 }
                 ItemImageButton {
