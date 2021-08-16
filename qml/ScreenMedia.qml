@@ -113,14 +113,8 @@ Item {
     // KEYS HANDLING ///////////////////////////////////////////////////////////
 
     Keys.onPressed: {
-        if (event.key === Qt.Key_Space) {
-            if (screenMedia.shot) {
-                if (screenMedia.shot.fileType === ShotUtils.FILE_VIDEO) {
-                    event.accepted = true
-                    contentOverview.setPlayPause()
-                }
-            }
-        } else if (event.key === Qt.Key_F9) {
+        // UI
+        if (event.key === Qt.Key_F9) {
             event.accepted = true
             contentOverview.toggleInfoPanel()
         }  else if (event.key === Qt.Key_Backspace) {
@@ -129,6 +123,17 @@ Item {
         } else if (event.key === Qt.Key_Delete) {
             event.accepted = true
             contentOverview.openDeletePopup()
+        }
+        // Player
+        else if (event.key === Qt.Key_Space) {
+            event.accepted = true
+            contentOverview.setPlayPause()
+        } else if (event.key === Qt.Key_MediaPlay) {
+            console.log("Key_MediaPlay")
+        } else if (event.key === Qt.Key_MediaPause) {
+            console.log("Key_MediaPause")
+        } else if (event.key === Qt.Key_MediaTogglePlayPause) {
+            console.log("Key_MediaTogglePlayPause")
         }
     }
 

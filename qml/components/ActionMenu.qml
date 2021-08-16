@@ -8,7 +8,7 @@ Rectangle {
     width: 220
     height: menuHolder.height
     visible: false
-    focus: visible && !isMobile
+    //focus: (visible && !isMobile) // disabled
 
     color: "white" // Theme.colorComponent
     radius: 2 // Theme.componentRadius

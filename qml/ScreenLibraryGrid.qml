@@ -22,42 +22,42 @@ Item {
 
     function selectFile(index) {
         // make sure it's not already selected
-        if (mediaLibrary.getShotByProxyIndex(index).selected) return;
+        if (mediaLibrary.getShotByProxyIndex(index).selected) return
 
         // then add
-        selectionMode = true;
-        selectionList.push(index);
-        selectionCount++;
+        selectionMode = true
+        selectionList.push(index)
+        selectionCount++
 
-        mediaLibrary.getShotByProxyIndex(index).selected = true;
+        mediaLibrary.getShotByProxyIndex(index).selected = true
     }
     function deselectFile(index) {
-        var i = selectionList.indexOf(index);
+        var i = selectionList.indexOf(index)
         if (i > -1) { selectionList.splice(i, 1); selectionCount--; }
         if (selectionList.length <= 0 || selectionCount <= 0) { exitSelectionMode() }
 
-        mediaLibrary.getShotByProxyIndex(index).selected = false;
+        mediaLibrary.getShotByProxyIndex(index).selected = false
     }
 
     function selectAll() {
         exitSelectionMode()
 
-        selectionMode = true;
+        selectionMode = true
         for (var i = 0; i < shotsView.count; i++) {
-            selectionList.push(i);
-            selectionCount++;
+            selectionList.push(i)
+            selectionCount++
 
-            mediaLibrary.getShotByProxyIndex(i).selected = true;
+            mediaLibrary.getShotByProxyIndex(i).selected = true
         }
     }
 
     function exitSelectionMode() {
-        selectionMode = false;
-        selectionList = [];
-        selectionCount = 0;
+        selectionMode = false
+        selectionList = []
+        selectionCount = 0
 
         for (var i = 0; i < shotsView.count; i++) {
-            mediaLibrary.getShotByProxyIndex(i).selected = false;
+            mediaLibrary.getShotByProxyIndex(i).selected = false
         }
     }
 
@@ -69,7 +69,7 @@ Item {
         mediaGrid.exitSelectionMode()
     }
 
-    function updateGridViewSettings() {
+    function clearGridViewSettings() {
         actionMenu.visible = false
         shotsView.currentIndex = -1
         mediaGrid.exitSelectionMode()
@@ -571,7 +571,7 @@ Item {
             focus: (appContent.state === "library" && screenLibrary.state === "stateMediaGrid")
 
             Component.onCompleted: initGridViewSettings()
-            onCountChanged: updateGridViewSettings()
+            onCountChanged: clearGridViewSettings()
             onWidthChanged: computeCellSize()
 
             Connections {
@@ -648,37 +648,43 @@ Item {
             highlight: itemHighlight
             highlightMoveDuration: 0
 
-            flickableChildren: MouseArea {
-                id: mouseAreaInsideView
+            ////////
+
+            MouseArea {
+                id: mouseAreaBottomView
                 anchors.fill: parent
+                z: -1
 
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
-                onClicked: {
-                    //console.log("mouseAreaInsideView clicked")
-                    mediaGrid.exitSelectionMode()
-                    shotsView.currentIndex = -1
-                    actionMenu.visible = false
-                }
+                propagateComposedEvents: false
+                onClicked: mediaGrid.clearGridViewSettings()
             }
+
+            ////////
 
             Keys.onPressed: {
                 actionMenu.visible = false
 
-                if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                // Composite events
+                if (event.modifiers & Qt.ControlModifier) {
+                    if (event.key === Qt.Key_A) {
+                        event.accepted = true
+                        mediaGrid.selectAll()
+                    } else if (event.key === Qt.Key_Plus) {
+                        console.log("shotsView::Key_Plus")
+                    } else if (event.key === Qt.Key_Minus) {
+                        console.log("shotsView::Key_Minus")
+                    }
+                }
+                // Actions
+                else if (event.key === Qt.Key_Enter || event.key === Qt.Key_Return) {
+                    event.accepted = true
                     screenMedia.loadShot(mediaLibrary.getShotByUuid(screenLibraryGrid.selectedItemUuid))
-                } else if (event.key === Qt.Key_PageUp) {
-                    shotsView.currentIndex = 0
-                } else if (event.key === Qt.Key_PageDown) {
-                    shotsView.currentIndex = shotsView.count - 1
-                } else if ((event.key === Qt.Key_A) && (event.modifiers & Qt.ControlModifier)) {
-                    mediaGrid.selectAll()
-                } else if (event.key === Qt.Key_Clear) {
-                    mediaGrid.exitSelectionMode()
-                } else if (event.key === Qt.Key_Escape) {
-                    mediaGrid.exitSelectionMode()
-                } else if (event.key === Qt.Key_Menu) {
-                    //console.log("shotsView::Key_Menu")
+                } else if (event.key === Qt.Key_Space) {
+                    //event.accepted = true
+                    //mediaGrid.selectFile(shotsView.currentIndex)
                 } else if (event.key === Qt.Key_Delete) {
+                    event.accepted = true
                     var indexes = []
                     if (mediaGrid.selectionMode) {
                         indexes = selectionList
@@ -690,6 +696,22 @@ Item {
                     popupDelete.shots_files = mediaLibrary.getSelectedShotsFilepaths(indexes)
                     popupDelete.openSelection(mediaLibrary)
                 }
+                // Navigation
+                else if (event.key === Qt.Key_PageUp) {
+                    event.accepted = true
+                    shotsView.currentIndex = 0
+                } else if (event.key === Qt.Key_PageDown) {
+                    event.accepted = true
+                    shotsView.currentIndex = shotsView.count - 1
+                } else if (event.key === Qt.Key_Clear) {
+                    event.accepted = true
+                    mediaGrid.clearGridViewSettings()
+                } else if (event.key === Qt.Key_Escape) {
+                    event.accepted = true
+                    mediaGrid.clearGridViewSettings()
+                } else if (event.key === Qt.Key_Menu) {
+                    console.log("shotsView::Key_Menu")
+                }
             }
         }
 
@@ -698,9 +720,8 @@ Item {
         MouseArea {
             id: mouseAreaOutsideView
             anchors.fill: parent
-            acceptedButtons: Qt.RightButton
-            propagateComposedEvents: true
-            //onClicked: console.log("mouseAreaOutsideView clicked")
+            acceptedButtons: Qt.NoButton
+            hoverEnabled: true
         }
     }
 }

@@ -25,14 +25,14 @@ Item {
 
     function selectFile(index) {
         // make sure it's not already selected
-        if (currentDevice.getShotByProxyIndex(index).selected) return;
+        if (currentDevice.getShotByProxyIndex(index).selected) return
 
         // then add
-        selectionMode = true;
-        selectionList.push(index);
-        selectionCount++;
+        selectionMode = true
+        selectionList.push(index)
+        selectionCount++
 
-        currentDevice.getShotByProxyIndex(index).selected = true;
+        currentDevice.getShotByProxyIndex(index).selected = true
 
         // save state
         if (deviceSavedState) {
@@ -46,7 +46,7 @@ Item {
         if (i > -1) { selectionList.splice(i, 1); selectionCount--; }
         if (selectionList.length <= 0 || selectionCount <= 0) { exitSelectionMode() }
 
-        currentDevice.getShotByProxyIndex(index).selected = false;
+        currentDevice.getShotByProxyIndex(index).selected = false
 
         // save state
         if (deviceSavedState) {
@@ -61,10 +61,10 @@ Item {
 
         selectionMode = true;
         for (var i = 0; i < shotsView.count; i++) {
-            selectionList.push(i);
-            selectionCount++;
+            selectionList.push(i)
+            selectionCount++
 
-            currentDevice.getShotByProxyIndex(i).selected = true;
+            currentDevice.getShotByProxyIndex(i).selected = true
         }
 
         // save state
@@ -76,13 +76,13 @@ Item {
     }
 
     function exitSelectionMode() {
-        selectionMode = false;
-        selectionList = [];
-        selectionCount = 0;
+        selectionMode = false
+        selectionList = []
+        selectionCount = 0
 
         for (var i = 0; i < shotsView.count; i++) {
             if (currentDevice && currentDevice.getShotByProxyIndex(i))
-                currentDevice.getShotByProxyIndex(i).selected = false;
+                currentDevice.getShotByProxyIndex(i).selected = false
         }
 
         // save state
@@ -172,6 +172,13 @@ Item {
         } else {
             imageEmpty.source = "qrc:/devices/usb.svg"
         }
+    }
+
+    function clearGridViewSettings() {
+        actionMenu.visible = false
+        shotsView.currentIndex = -1
+        mediaGrid.exitSelectionMode()
+        deviceSavedState.selectedIndex = -1
     }
 
     function updateGridViewSettings() {
@@ -746,7 +753,7 @@ Item {
             interactive: !actionMenu.visible
             keyNavigationEnabled: true
             //snapMode: GridView.FlowTopToBottom
-            focus: (appContent.state === "device" && screenLibrary.state === "stateMediaGrid")
+            focus: (appContent.state === "device" && screenDevice.state === "stateMediaGrid")
 
             Component.onCompleted: initGridViewSettings()
             onCountChanged: updateGridViewSettings()
@@ -840,37 +847,43 @@ Item {
             highlight: itemHighlight
             highlightMoveDuration: 0
 
-            flickableChildren: MouseArea {
-                id: mouseAreaInsideView
+            ////////
+
+            MouseArea {
+                id: mouseAreaBottomView
                 anchors.fill: parent
+                z:-1
 
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
-                onClicked: {
-                    mediaGrid.exitSelectionMode()
-                    shotsView.currentIndex = -1
-                    deviceSavedState.selectedIndex = -1
-                    actionMenu.visible = false
-                }
+                propagateComposedEvents: false
+                onClicked: mediaGrid.clearGridViewSettings()
             }
+
+            ////////
 
             Keys.onPressed: {
                 actionMenu.visible = false
 
-                if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                // Composite events
+                if (event.modifiers & Qt.ControlModifier) {
+                    if (event.key === Qt.Key_A) {
+                        event.accepted = true
+                        mediaGrid.selectAll()
+                    } else if (event.key === Qt.Key_Plus) {
+                        console.log("shotsView::Key_Plus")
+                    } else if (event.key === Qt.Key_Minus) {
+                        console.log("shotsView::Key_Minus")
+                    }
+                }
+                // Actions
+                else if (event.key === Qt.Key_Enter || event.key === Qt.Key_Return) {
+                    event.accepted = true
                     screenMedia.loadShot(currentDevice.getShotByUuid(screenDeviceGrid.selectedItemUuid))
-                } else if (event.key === Qt.Key_PageUp) {
-                    shotsView.currentIndex = 0
-                } else if (event.key === Qt.Key_PageDown) {
-                    shotsView.currentIndex = shotsView.count - 1
-                } else if ((event.key === Qt.Key_A) && (event.modifiers & Qt.ControlModifier)) {
-                    mediaGrid.selectAll()
-                } else if (event.key === Qt.Key_Clear) {
-                    mediaGrid.exitSelectionMode()
-                } else if (event.key === Qt.Key_Escape) {
-                    mediaGrid.exitSelectionMode()
-                } else if (event.key === Qt.Key_Menu) {
-                    //console.log("shotsView::Key_Menu")
+                } else if (event.key === Qt.Key_Space) {
+                    //event.accepted = true
+                    //mediaGrid.selectFile(shotsView.currentIndex)
                 } else if (event.key === Qt.Key_Delete) {
+                    event.accepted = true
                     var indexes = []
                     if (mediaGrid.selectionMode) {
                         indexes = selectionList
@@ -882,6 +895,22 @@ Item {
                     popupDelete.shots_files = currentDevice.getSelectedShotsFilepaths(indexes)
                     popupDelete.openSelection(currentDevice)
                 }
+                // Navigation
+                else if (event.key === Qt.Key_PageUp) {
+                    event.accepted = true
+                    shotsView.currentIndex = 0
+                } else if (event.key === Qt.Key_PageDown) {
+                    event.accepted = true
+                    shotsView.currentIndex = shotsView.count - 1
+                } else if (event.key === Qt.Key_Clear) {
+                    event.accepted = true
+                    mediaGrid.clearGridViewSettings()
+                } else if (event.key === Qt.Key_Escape) {
+                    event.accepted = true
+                    mediaGrid.clearGridViewSettings()
+                } else if (event.key === Qt.Key_Menu) {
+                    console.log("shotsView::Key_Menu")
+                }
             }
         }
 
@@ -890,9 +919,8 @@ Item {
         MouseArea {
             id: mouseAreaOutsideView
             anchors.fill: parent
-            acceptedButtons: Qt.RightButton
-            propagateComposedEvents: true
-            //onClicked: console.log("mouseAreaOutsideView clicked")
+            acceptedButtons: Qt.NoButton
+            hoverEnabled: true
         }
     }
 }
