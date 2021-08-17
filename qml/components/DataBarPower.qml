@@ -63,7 +63,7 @@ Item {
                 textFormat: Text.PlainText
                 color: "white"
                 font.bold: true
-                font.pixelSize: 10 // Theme.fontSizeContentVerySmall
+                font.pixelSize: 10
             }
         }
     }

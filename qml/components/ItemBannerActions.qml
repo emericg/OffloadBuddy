@@ -178,7 +178,7 @@ Rectangle {
 
         text: qsTr("%n element(s) selected", "", mediaGrid.selectionCount)
         color: Theme.colorActionbarContent
-        font.pixelSize: 16
+        font.pixelSize: Theme.fontSizeContent
         font.bold: true
     }
 

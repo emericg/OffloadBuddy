@@ -99,7 +99,7 @@ Item {
                             else return qsTr("other")
                         }
                         color: Theme.colorSubText
-                        font.pixelSize: 14
+                        font.pixelSize: Theme.fontSizeContentSmall
                         font.bold: false
                     }
                 }

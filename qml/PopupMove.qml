@@ -183,7 +183,7 @@ Popup {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     text: modelData
-                    font.pixelSize: 14
+                    font.pixelSize: Theme.fontSizeContentSmall
                     elide: Text.ElideLeft
                     color: Theme.colorSubText
                 }
@@ -233,7 +233,7 @@ Popup {
                         anchors.left: parent.left
                         anchors.right: parent.right
                         text: modelData
-                        font.pixelSize: 14
+                        font.pixelSize: Theme.fontSizeContentSmall
                         elide: Text.ElideLeft
                         color: Theme.colorText
                     }

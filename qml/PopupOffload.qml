@@ -204,7 +204,7 @@ Popup {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     text: modelData
-                    font.pixelSize: 14
+                    font.pixelSize: Theme.fontSizeContentSmall
                     elide: Text.ElideLeft
                     color: Theme.colorSubText
                 }
@@ -330,7 +330,7 @@ Popup {
 
                         text: qsTr("Destination")
                         color: Theme.colorSubText
-                        font.pixelSize: 16
+                        font.pixelSize: Theme.fontSizeContent
                     }
                 }
 

@@ -126,7 +126,7 @@ Rectangle {
                 color: Theme.colorText
                 font.bold: true
                 verticalAlignment: Text.AlignVCenter
-                font.pixelSize: 14
+                font.pixelSize: Theme.fontSizeContentSmall
             }
 
             Text {
@@ -135,7 +135,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: job.name
-                font.pixelSize: 14
+                font.pixelSize: Theme.fontSizeContentSmall
                 color: Theme.colorText
                 verticalAlignment: Text.AlignVCenter
             }
@@ -147,7 +147,7 @@ Rectangle {
 
                 visible: (job.elementsCount > 1)
                 text: (job.elementsIndex+1) + "/" + job.elementsCount
-                font.pixelSize: 14
+                font.pixelSize: Theme.fontSizeContentSmall
                 color: Theme.colorSubText
                 horizontalAlignment: Text.AlignHCenter
             }
@@ -158,7 +158,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
 
                 visible: (job.elapsed > 0)
-                font.pixelSize: 14
+                font.pixelSize: Theme.fontSizeContentSmall
                 color: Theme.colorSubText
                 horizontalAlignment: Text.AlignHCenter
 

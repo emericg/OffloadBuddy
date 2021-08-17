@@ -413,7 +413,7 @@ Popup {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     text: modelData
-                    font.pixelSize: 14
+                    font.pixelSize: Theme.fontSizeContentSmall
                     elide: Text.ElideLeft
                     color: Theme.colorSubText
                 }
@@ -591,7 +591,7 @@ Popup {
                             anchors.leftMargin: popupEncoding.legendWidth + 16
                             anchors.right: parent.right
 
-                            font.pixelSize: 14
+                            font.pixelSize: Theme.fontSizeContentSmall
                             wrapMode: Text.WordWrap
                             color: Theme.colorSubText
                         }
@@ -1223,7 +1223,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("GPS and telemetry tracks will NOT be caried to the reencoded files. You can export them separately if you want.")
-                            font.pixelSize: 14
+                            font.pixelSize: Theme.fontSizeContentSmall
                             wrapMode: Text.WordWrap
                             color: Theme.colorSubText
                         }

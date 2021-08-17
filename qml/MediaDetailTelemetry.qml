@@ -387,7 +387,7 @@ Item {
                     anchors.centerIn: parent
                     text: "100m"
                     color: "#555"
-                    font.pixelSize: 12
+                    font.pixelSize: Theme.fontSizeContentVerySmall
                 }
 
                 Rectangle {
@@ -772,7 +772,7 @@ Item {
                     color: Theme.colorPrimary;  width: 1;
                     axisX: ValueAxis { id: axisSpeedX0; visible: false; gridVisible: false; }
                     axisY: ValueAxis { id: axisSpeedY0; visible: true; gridVisible: true;
-                                       labelsFont.pixelSize: 12; labelsColor: Theme.colorSubText; labelFormat: "%0.1f";
+                                       labelsFont.pixelSize: Theme.fontSizeContentVerySmall; labelsColor: Theme.colorSubText; labelFormat: "%0.1f";
                                        gridLineColor: Theme.colorSeparator; }
                 }
             }
@@ -796,7 +796,7 @@ Item {
                     color: Theme.colorWarning;  width: 1;
                     axisX: ValueAxis { id: axisAltiX0; visible: false; gridVisible: false; }
                     axisY: ValueAxis { id: axisAltiY0; visible: true; gridVisible: true;
-                                       labelsFont.pixelSize: 12; labelsColor: Theme.colorSubText; labelFormat: "%i";
+                                       labelsFont.pixelSize: Theme.fontSizeContentVerySmall; labelsColor: Theme.colorSubText; labelFormat: "%i";
                                        gridLineColor: Theme.colorSeparator; }
                 }
             }
@@ -816,7 +816,7 @@ Item {
 
                 ValueAxis { id: axisAcclX0; visible: false; gridVisible: false; }
                 ValueAxis { id: axisAcclY0; visible: true; gridVisible: true;
-                            labelsFont.pixelSize: 12; labelsColor: Theme.colorSubText; labelFormat: "%i";
+                            labelsFont.pixelSize: Theme.fontSizeContentVerySmall; labelsColor: Theme.colorSubText; labelFormat: "%i";
                             gridLineColor: Theme.colorSeparator; }
 
                 LineSeries { id: acclX; axisX: axisAcclX0; axisY: axisAcclY0; }
@@ -839,7 +839,7 @@ Item {
 
                 ValueAxis { id: axisGyroX0; visible: false; gridVisible: false; }
                 ValueAxis { id: axisGyroY0; visible: true; gridVisible: true;
-                            labelsFont.pixelSize: 12; labelsColor: Theme.colorSubText; labelFormat: "%i";
+                            labelsFont.pixelSize: Theme.fontSizeContentVerySmall; labelsColor: Theme.colorSubText; labelFormat: "%i";
                             gridLineColor: Theme.colorSeparator; }
 
                 LineSeries { id: gyroX; axisX: axisGyroX0; axisY: axisGyroY0; }

@@ -330,7 +330,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: "Application theme"
-                    font.pixelSize: 16
+                    font.pixelSize: Theme.fontSizeContent
                     font.bold: true
                     color: Theme.colorText
                 }

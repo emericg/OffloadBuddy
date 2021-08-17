@@ -50,8 +50,8 @@ Rectangle {
         Text {
             visible: (bannerJob.jobrunning === 0)
             text: qsTr("%1 job(s) queued...").arg(currentDevice.jobsCount)
-            font.pixelSize: 0
             color: Theme.colorActionbarContent
+            font.pixelSize: Theme.fontSizeContentBig
         }
 
         Repeater {
