@@ -25,6 +25,7 @@
 
 #include "DeviceUtils.h"
 #include "DeviceStorage.h"
+#include "DeviceCapabilities.h"
 #include "StorageUtils.h"
 #include "ShotProvider.h"
 #include "Job.h"
@@ -81,6 +82,8 @@ class Device: public ShotProvider
 
     Q_PROPERTY(int jobsCount READ getJobsCount NOTIFY jobsUpdated)
     Q_PROPERTY(QVariant jobsList READ getJobs NOTIFY jobsUpdated)
+
+    Q_PROPERTY(DeviceCapabilities *capabilities READ getCapabilities NOTIFY deviceUpdated)
 
     DeviceUtils::DeviceType m_deviceType = DeviceUtils::DeviceUnknown;
     DeviceUtils::DeviceModel m_deviceModel = DeviceUtils::ModelUnknown;
@@ -142,6 +145,10 @@ public:
     QString getModel() const { return m_model; }
     QString getSerial() const { return m_serial; }
     QString getFirmware() const { return m_firmware; }
+
+    // Capabilities
+    DeviceCapabilities *caps = nullptr;
+    DeviceCapabilities *getCapabilities() { return caps; };
 
     // Firmware
     void updateFirmwareState();

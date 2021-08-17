@@ -60,6 +60,7 @@ SOURCES  += src/main.cpp \
             src/DeviceManager.cpp \
             src/Device.cpp \
             src/DeviceStorage.cpp \
+            src/DeviceCapabilities.cpp \
             src/FileScanner.cpp \
             src/ItemImage.cpp \
             src/Job.cpp \
@@ -96,6 +97,7 @@ HEADERS  += src/SettingsManager.h \
             src/DeviceManager.h \
             src/Device.h \
             src/DeviceStorage.h \
+            src/DeviceCapabilities.h \
             src/DeviceUtils.h \
             src/FileScanner.h \
             src/ItemImage.h \

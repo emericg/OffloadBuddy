@@ -138,7 +138,7 @@ Rectangle {
         spacing: 24
         property int boxSize: (width >= 1280) ? ((width - 24) / 2) : (width)
 
-        ////////////////
+        ////////////////////////////////
 
         Rectangle {
             width: columnDevice.width
@@ -146,7 +146,7 @@ Rectangle {
             radius: Theme.componentRadius
 
             color: Theme.colorBackground
-            border.color: Theme.colorBackground
+            border.color: Theme.colorForeground
 
             Rectangle {
                 id: columnDeviceHeader
@@ -173,7 +173,7 @@ Rectangle {
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("Device")
-                        font.pixelSize: 18
+                        font.pixelSize: Theme.fontSizeContentBig
                         font.bold: true
                         color: Theme.colorText
                     }
@@ -266,6 +266,12 @@ Rectangle {
                         if (currentDevice.firmwareState === DeviceUtils.FirmwareUpdateInstalled) return qsTr("Update installed")
                         return ""
                     }
+                    primaryColor: {
+                        if (currentDevice.firmwareState === DeviceUtils.FirmwareUpToDate) return Theme.colorSuccess
+                        if (currentDevice.firmwareState === DeviceUtils.FirmwareUpdateInstalled) return Theme.colorSuccess
+                        return Theme.colorPrimary
+                    }
+
                     source: "qrc:/assets/icons_material/baseline-archive-24px.svg"
 
                     visible: (currentDevice.firmwareState > 0)
@@ -274,7 +280,7 @@ Rectangle {
             }
         }
 
-        ////////////////
+        ////////////////////////////////
 
         Rectangle {
             width: columnStorage.width
@@ -282,7 +288,7 @@ Rectangle {
             radius: Theme.componentRadius
 
             color: Theme.colorBackground
-            border.color: Theme.colorBackground
+            border.color: Theme.colorForeground
 
             Rectangle {
                 id: columnStorageHeader
@@ -309,7 +315,7 @@ Rectangle {
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("Storage")
-                        font.pixelSize: 18
+                        font.pixelSize: Theme.fontSizeContentBig
                         font.bold: true
                         color: Theme.colorText
                     }
@@ -354,7 +360,7 @@ Rectangle {
             }
         }
 
-        ////////////////
+        ////////////////////////////////
 
         Rectangle {
             width: columnCapabilities.width
@@ -362,7 +368,9 @@ Rectangle {
             radius: Theme.componentRadius
 
             color: Theme.colorBackground
-            border.color: Theme.colorBackground
+            border.color: Theme.colorForeground
+
+            visible: currentDevice.capabilities
 
             Rectangle {
                 id: columnCapabilitiesHeader
@@ -389,7 +397,7 @@ Rectangle {
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("Capabilities")
-                        font.pixelSize: Theme.fontSizeContent
+                        font.pixelSize: Theme.fontSizeContentBig
                         font.bold: true
                         color: Theme.colorText
                     }
@@ -402,9 +410,265 @@ Rectangle {
                 width: contentflow.boxSize
                 padding: 16
                 spacing: 16
+
+                Row {
+                    spacing: 8
+                    visible: currentDevice.capabilities.year
+
+                    Text {
+                        text: qsTr("Release")
+                        color: Theme.colorText
+                        font.bold: true
+                        font.pixelSize: Theme.fontSizeContent
+                    }
+                    Text {
+                        text: currentDevice.capabilities.year
+                        color: Theme.colorText
+                        font.pixelSize: Theme.fontSizeContent
+                    }
+                }
+                Row {
+                    spacing: 8
+
+                    Text {
+                        text: qsTr("Codecs")
+                        color: Theme.colorText
+                        font.bold: true
+                        font.pixelSize: Theme.fontSizeContent
+                    }
+                    Repeater {
+                        model: currentDevice.capabilities.codecs
+                        Text {
+                            text: modelData + " / "
+                            color: Theme.colorText
+                            font.pixelSize: Theme.fontSizeContent
+                        }
+                    }
+                }
+                Row {
+                    spacing: 8
+
+                    Text {
+                        text: qsTr("Features")
+                        color: Theme.colorText
+                        font.bold: true
+                        font.pixelSize: Theme.fontSizeContent
+                    }
+                    Repeater {
+                        model: currentDevice.capabilities.features
+                        Text {
+                            text: modelData + " / "
+                            color: Theme.colorText
+                            font.pixelSize: Theme.fontSizeContent
+                        }
+                    }
+                }
+                Row {
+                    spacing: 8
+
+                    Text {
+                        text: qsTr("Video modes")
+                        color: Theme.colorText
+                        font.bold: true
+                        font.pixelSize: Theme.fontSizeContent
+                    }
+                    Repeater {
+                        model: currentDevice.capabilities.modesVideo
+                        Text {
+                            text: modelData + " / "
+                            color: Theme.colorText
+                            font.pixelSize: Theme.fontSizeContent
+                        }
+                    }
+                }
+                Row {
+                    spacing: 8
+
+                    Text {
+                        text: qsTr("Photo modes")
+                        color: Theme.colorText
+                        font.bold: true
+                        font.pixelSize: Theme.fontSizeContent
+                    }
+                    Repeater {
+                        model: currentDevice.capabilities.modesPhoto
+                        Text {
+                            text: modelData + " / "
+                            color: Theme.colorText
+                            font.pixelSize: Theme.fontSizeContent
+                        }
+                    }
+                }
+                Row {
+                    spacing: 8
+
+                    Text {
+                        text: qsTr("Timelapse modes")
+                        color: Theme.colorText
+                        font.bold: true
+                        font.pixelSize: Theme.fontSizeContent
+                    }
+                    Repeater {
+                        model: currentDevice.capabilities.modesTimelapse
+                        Text {
+                            text: modelData + " / "
+                            color: Theme.colorText
+                            font.pixelSize: Theme.fontSizeContent
+                        }
+                    }
+                }
+
+                //
+
+                Column {
+                    anchors.left: parent.left
+                    anchors.leftMargin: 16
+                    anchors.right: parent.right
+                    anchors.rightMargin: 16
+
+                    visible: currentDevice.capabilities.modesVideoTable
+
+                    Rectangle {
+                        id: modeHeader
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        height: 32
+                        radius: Theme.componentRadius
+                        color: Theme.colorForeground
+
+                        Row {
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            height: 24
+
+                            Text {
+                                width: modeHeader.width*0.12
+                                height: 24
+                                text: qsTr("MODE")
+                                color: Theme.colorText
+                                font.pixelSize: Theme.fontSizeContent
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                            Text {
+                                width: modeHeader.width*0.24
+                                height: 24
+                                text: qsTr("FOV")
+                                color: Theme.colorText
+                                font.pixelSize: Theme.fontSizeContent
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                            Text {
+                                width: modeHeader.width*0.12
+                                height: 24
+                                text: qsTr("RATIO")
+                                color: Theme.colorText
+                                font.pixelSize: Theme.fontSizeContent
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                            Text {
+                                width: modeHeader.width*0.24
+                                height: 24
+                                text: qsTr("RESOLUTION")
+                                color: Theme.colorText
+                                font.pixelSize: Theme.fontSizeContent
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                            Text {
+                                width: modeHeader.width*0.12
+                                height: 24
+                                text: qsTr("FPS")
+                                color: Theme.colorText
+                                font.pixelSize: Theme.fontSizeContent
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                            Text {
+                                width: modeHeader.width*0.12
+                                height: 24
+                                text: qsTr("CODEC")
+                                color: Theme.colorText
+                                font.pixelSize: Theme.fontSizeContent
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                        }
+                    }
+
+                    Repeater {
+                        model: currentDevice.capabilities.modesVideoTable
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: 32
+                            color: (index % 2 === 0) ? Theme.colorBackground : Theme.colorForeground
+
+                            Rectangle {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.bottom: parent.bottom
+                                height: 1
+                                color: Theme.colorSeparator
+                            }
+
+                            Row {
+                                anchors.verticalCenter: parent.verticalCenter
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                height: 24
+
+                                Text {
+                                    width: modeHeader.width*0.12
+                                    height: 24
+                                    text: modelData.name
+                                    color: Theme.colorSubText
+                                    font.pixelSize: Theme.fontSizeContent
+                                    verticalAlignment: Text.AlignVCenter
+                                }
+                                Text {
+                                    width: modeHeader.width*0.24
+                                    height: 24
+                                    text: modelData.fov
+                                    color: Theme.colorSubText
+                                    font.pixelSize: Theme.fontSizeContent
+                                    verticalAlignment: Text.AlignVCenter
+                                }
+                                Text {
+                                    width: modeHeader.width*0.12
+                                    height: 24
+                                    text: modelData.ratio
+                                    color: Theme.colorSubText
+                                    font.pixelSize: Theme.fontSizeContent
+                                    verticalAlignment: Text.AlignVCenter
+                                }
+                                Text {
+                                    width: modeHeader.width*0.24
+                                    height: 24
+                                    text: modelData.resolution
+                                    color: Theme.colorSubText
+                                    font.pixelSize: Theme.fontSizeContent
+                                    verticalAlignment: Text.AlignVCenter
+                                }
+                                Text {
+                                    width: modeHeader.width*0.12
+                                    height: 24
+                                    text: modelData.fps
+                                    color: Theme.colorSubText
+                                    font.pixelSize: Theme.fontSizeContent
+                                    verticalAlignment: Text.AlignVCenter
+                                }
+                                Text {
+                                    width: modeHeader.width*0.12
+                                    height: 24
+                                    text: modelData.codec
+                                    color: Theme.colorSubText
+                                    font.pixelSize: Theme.fontSizeContent
+                                    verticalAlignment: Text.AlignVCenter
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
-        ////////////////
+        ////////////////////////////////
     }
 }

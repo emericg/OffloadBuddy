@@ -574,7 +574,7 @@ Item {
             fullColor: true
             primaryColor: Theme.colorPrimary
 
-            text: qsTr("Offload content")
+            text: qsTr("Offload ALL content")
             onClicked: popupOffload.openAll(currentDevice)
         }
 

@@ -104,6 +104,13 @@ Device::Device(const DeviceUtils::DeviceType type, const StorageUtils::StorageTy
     }
 
     updateFirmwareState();
+
+    caps = new DeviceCapabilities(this);
+    if (caps->load(m_brand, m_model) == false)
+    {
+        delete caps;
+        caps = nullptr;
+    }
 }
 
 Device::~Device()

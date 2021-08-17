@@ -1,0 +1,170 @@
+{
+  "cameras": [
+  {
+    "brand": "GoPro",
+    "model": "HERO 2014",
+    "year": 2014,
+    "codecs": ["H.264"],
+    "features": ["HiLight tags"],
+    "connectivity": ["WiFi", "Bluetooth"],
+    "modes_video": ["video", "looping video"],
+    "modes_photo": ["photo", "burst", "night"],
+    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"],
+    "modes_video_table": [
+      ["1080p", "wide", "16:9", "1920*1080", 30, "H.264"],
+      ["720p", "wide", "16:9", "1920*1080", 60, "H.264"],
+      ["1080p", "superview", "16:9", "1920*1080", 60, "H.264"]
+    ]
+  },
+  {
+    "brand": "GoPro",
+    "model": "HERO4 Silver",
+    "year": 2014,
+    "codecs": ["H.264"],
+    "features": ["Protune", "HiLight tags"],
+    "connectivity": ["WiFi", "Bluetooth"],
+    "modes_video": ["video", "looping video"],
+    "modes_photo": ["photo", "burst", "night"],
+    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"]
+  },
+  {
+    "brand": "GoPro",
+    "model": "HERO4 Black",
+    "year": 2014,
+    "codecs": ["H.264"],
+    "features": ["Protune", "HiLight tags"],
+    "connectivity": ["WiFi", "Bluetooth"],
+    "modes_video": ["video", "looping video"],
+    "modes_photo": ["photo", "burst", "night"],
+    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"]
+  },
+  {
+    "brand": "GoPro",
+    "model": "HERO4 Session",
+    "year": 2015,
+    "codecs": ["H.264"],
+    "features": ["Protune", "HiLight tags"],
+    "connectivity": ["WiFi", "Bluetooth"],
+    "modes_video": ["video", "looping video"],
+    "modes_photo": ["photo", "burst", "night"],
+    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"]
+  },
+  {
+    "brand": "GoPro",
+    "model": "HERO5 Black",
+    "year": 2016,
+    "codecs": ["H.264"],
+    "features": ["GPS", "Protune", "HiLight tags", "voice control"],
+    "connectivity": ["WiFi", "Bluetooth"],
+    "modes_video": ["video", "looping video"],
+    "modes_photo": ["photo", "burst", "night"],
+    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"]
+  },
+  {
+    "brand": "GoPro",
+    "model": "HERO5 Session",
+    "year": 2016,
+    "codecs": ["H.264"],
+    "features": ["Protune", "HiLight tags", "voice control"],
+    "connectivity": ["WiFi", "Bluetooth"],
+    "modes_video": ["video", "looping video"],
+    "modes_photo": ["photo", "burst", "night"],
+    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"]
+  },
+  {
+    "brand": "GoPro",
+    "model": "HERO6 Black",
+    "year": 2017,
+    "codecs": ["H.264", "H.265"],
+    "features": ["Stabilization", "GPS", "Protune", "HiLight tags", "HDR photo", "RAW photo", "voice control"],
+    "connectivity": ["WiFi", "Bluetooth"],
+    "modes_video": ["video", "looping video"],
+    "modes_photo": ["photo", "burst", "night"],
+    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"],
+    "modes_video_table": [
+      ["4K", "wide", "16:9", "3840*2160", 60, "H.265"],
+      ["", "wide", "16:9", "3840*2160", 30, "H.264"],
+      ["", "wide, superview", "16:9", "3840*2160", 60, "H.265"],
+      ["", "wide, superview", "16:9", "3840*2160", 30, "H.264"],
+      ["", "wide", "4:3", "4096*3072", 30, "H.264"],
+      ["2.7K", "wide", "16:9", "3840*2160", 120, "H.264"],
+      ["", "wide, superview, linear", "16:9", "2704*1520", 60, "H.264"],
+      ["", "wide, linear", "16:9", "2704*2028", 60, "H.264"],
+      ["1440p", "wide, linear", "4:3", "1920*1440", 60, "H.264"],
+      ["1080p", "wide", "16:9", "1920*1080", 240, "H.264"],
+      ["", "wide, superview, linear", "16:9", "1920*1080", 240, "H.264"],
+      ["720p", "wide, linear", "16:9", "1280*720", 60, "H.264"]
+    ]
+  },
+  {
+    "brand": "GoPro",
+    "model": "HERO 2018",
+    "year": 2018,
+    "codecs": ["H.264"],
+    "features": ["Stabilization", "Protune", "HiLight tags", "HDR photo", "voice control"],
+    "connectivity": ["WiFi", "Bluetooth"],
+    "modes_video": ["video"],
+    "modes_photo": ["photo", "burst", "night"],
+    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"],
+    "modes_video_table": [
+      ["1440p", "wide", "4:3", "1920*1440", 60, "H.264"],
+      ["1080p", "wide,medium,narrow", "16:9", "1920*1080", 60, "H.264"]
+    ]
+  },
+  {
+    "brand": "GoPro",
+    "model": "HERO7 White",
+    "year": 2018,
+    "codecs": ["H.264"],
+    "features": ["Stabilization", "Protune", "HiLight tags", "HDR photo", "RAW photo", "voice control"],
+    "connectivity": ["WiFi", "Bluetooth"],
+    "modes_video": ["video"],
+    "modes_photo": ["photo", "burst", "night"],
+    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"]
+  },
+  {
+    "brand": "GoPro",
+    "model": "HERO7 Silver",
+    "year": 2018,
+    "codecs": ["H.264"],
+    "features": ["Stabilization", "GPS", "Protune", "HiLight tags", "HDR photo", "RAW photo", "voice control"],
+    "connectivity": ["WiFi", "Bluetooth"],
+    "modes_video": ["video"],
+    "modes_photo": ["photo", "burst", "night"],
+    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"]
+  },
+  {
+    "brand": "GoPro",
+    "model": "HERO7 Black",
+    "year": 2018,
+    "codecs": ["H.264", "H.265"],
+    "features": ["HyperSmooth", "GPS", "Live Streaming", "Protune", "HiLight tags", "HDR photo", "RAW photo", "voice control"],
+    "connectivity": ["WiFi", "Bluetooth"],
+    "modes_video": ["video", "timewarp video", "looping video"],
+    "modes_photo": ["photo", "burst", "night"],
+    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"]
+  },
+  {
+    "brand": "GoPro",
+    "model": "HERO8 Black",
+    "year": 2019,
+    "codecs": ["H.264"],
+    "features": ["HyperSmooth 2.0", "GPS", "Protune", "HiLight tags", "HDR photo", "RAW photo", "voice control"],
+    "connectivity": ["WiFi", "Bluetooth"],
+    "modes_video": ["video", "timewarp video", "looping video"],
+    "modes_photo": ["photo", "burst", "night"],
+    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"]
+  },
+  {
+    "brand": "GoPro",
+    "model": "HERO9 Black",
+    "year": 2020,
+    "codecs": ["H.264"],
+    "features": ["HyperSmooth 2.0", "GPS", "Protune", "HiLight tags", "HDR photo", "RAW photo", "voice control"],
+    "connectivity": ["WiFi", "Bluetooth"],
+    "modes_video": ["video", "timewarp video", "looping video"],
+    "modes_photo": ["photo", "burst", "night"],
+    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"]
+  }
+  ]
+}
