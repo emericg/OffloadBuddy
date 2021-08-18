@@ -170,7 +170,7 @@ Rectangle {
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: 16
 
-                        ImageSvg{
+                        ImageSvg {
                             source: "qrc:/assets/icons_material/outline-camera_alt-24px.svg"
                             color: Theme.colorText
                         }
@@ -188,16 +188,17 @@ Rectangle {
 
                 ImageSvg {
                     id: deviceImage
-                    width: 256
                     anchors.top: columnDeviceHeader.bottom
                     anchors.topMargin: 8
                     anchors.right: parent.right
                     anchors.rightMargin: 16
                     anchors.bottom: parent.bottom
                     anchors.bottomMargin: 8
+                    width: height
 
-                    fillMode: Image.PreserveAspectCrop
+                    smooth: true
                     color: Theme.colorHeaderContent
+                    fillMode: Image.PreserveAspectFit
                 }
 
                 Column {
@@ -281,7 +282,10 @@ Rectangle {
                         source: "qrc:/assets/icons_material/baseline-archive-24px.svg"
 
                         visible: (currentDevice.firmwareState > 0)
-                        onClicked: popupFirmware.openDevice(currentDevice)
+                        onClicked: {
+                            if (currentDevice.firmwareState === DeviceUtils.FirmwareUpdateAvailable)
+                                popupFirmware.openDevice(currentDevice)
+                        }
                     }
                 }
             }
@@ -312,7 +316,7 @@ Rectangle {
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: 16
 
-                        ImageSvg{
+                        ImageSvg {
                             source: "qrc:/assets/icons_material/outline-sd_card-24px.svg"
                             color: Theme.colorText
                         }
@@ -394,7 +398,7 @@ Rectangle {
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: 16
 
-                        ImageSvg{
+                        ImageSvg {
                             source: "qrc:/assets/icons_material/baseline-aspect_ratio-24px.svg"
                             color: Theme.colorText
                         }

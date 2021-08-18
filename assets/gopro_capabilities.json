@@ -2,7 +2,8 @@
   "cameras": [
   {
     "brand": "GoPro",
-    "model": "HERO 2014",
+    "model": "Hero (2014)",
+    "model_string": "HD3.20",
     "year": 2014,
     "codecs": ["H.264"],
     "features": ["HiLight tags"],
@@ -19,6 +20,7 @@
   {
     "brand": "GoPro",
     "model": "HERO4 Silver",
+    "model_string": "HD4.01",
     "year": 2014,
     "codecs": ["H.264"],
     "features": ["Protune", "HiLight tags"],
@@ -40,6 +42,7 @@
   {
     "brand": "GoPro",
     "model": "HERO4 Black",
+    "model_string": "HD4.02",
     "year": 2014,
     "codecs": ["H.264"],
     "features": ["Protune", "HiLight tags"],
@@ -65,7 +68,8 @@
   },
   {
     "brand": "GoPro",
-    "model": "HERO4 Session",
+    "model": "HERO Session",
+    "model_string": "HX1.01",
     "year": 2015,
     "codecs": ["H.264"],
     "features": ["Protune", "HiLight tags"],
@@ -85,6 +89,7 @@
   {
     "brand": "GoPro",
     "model": "HERO5 Black",
+    "model_string": "HD5.02",
     "year": 2016,
     "codecs": ["H.264"],
     "features": ["GPS", "Protune", "HiLight tags", "voice control"],
@@ -111,6 +116,7 @@
   {
     "brand": "GoPro",
     "model": "HERO5 Session",
+    "model_string": "HD5.03",
     "year": 2016,
     "codecs": ["H.264"],
     "features": ["Protune", "HiLight tags", "voice control"],
@@ -133,6 +139,7 @@
   {
     "brand": "GoPro",
     "model": "HERO6 Black",
+    "model_string": "HD6.01",
     "year": 2017,
     "codecs": ["H.264", "H.265"],
     "features": ["Stabilization", "GPS", "Protune", "HiLight tags", "HDR photo", "RAW photo", "voice control"],
@@ -157,7 +164,8 @@
   },
   {
     "brand": "GoPro",
-    "model": "HERO 2018",
+    "model": "Hero (2018)",
+    "model_string": "H18.01",
     "year": 2018,
     "codecs": ["H.264"],
     "features": ["Stabilization", "Protune", "HiLight tags", "HDR photo", "voice control"],
@@ -173,6 +181,7 @@
   {
     "brand": "GoPro",
     "model": "HERO7 White",
+    "model_string": "H18.02",
     "year": 2018,
     "codecs": ["H.264"],
     "features": ["Stabilization", "Protune", "HiLight tags", "HDR photo", "RAW photo", "voice control"],
@@ -184,6 +193,7 @@
   {
     "brand": "GoPro",
     "model": "HERO7 Silver",
+    "model_string": "H18.03",
     "year": 2018,
     "codecs": ["H.264"],
     "features": ["Stabilization", "GPS", "Protune", "HiLight tags", "HDR photo", "RAW photo", "voice control"],
@@ -195,6 +205,7 @@
   {
     "brand": "GoPro",
     "model": "HERO7 Black",
+    "model_string": "HD7.01",
     "year": 2018,
     "codecs": ["H.264", "H.265"],
     "features": ["HyperSmooth", "GPS", "Live Streaming", "Protune", "HiLight tags", "HDR photo", "RAW photo", "voice control"],
@@ -221,6 +232,7 @@
   {
     "brand": "GoPro",
     "model": "HERO8 Black",
+    "model_string": "HD8.01",
     "year": 2019,
     "codecs": ["H.264"],
     "features": ["HyperSmooth 2.0", "GPS", "Live Streaming", "Protune", "HiLight tags", "HDR photo", "RAW photo", "voice control"],
@@ -245,6 +257,7 @@
   {
     "brand": "GoPro",
     "model": "HERO9 Black",
+    "model_string": "HD9.01",
     "year": 2020,
     "codecs": ["H.264"],
     "features": ["HyperSmooth 2.0", "GPS", "Live Streaming", "Protune", "HiLight tags", "HDR photo", "RAW photo", "voice control"],
@@ -266,7 +279,8 @@
   },
   {
     "brand": "GoPro",
-    "model": "Fusion",
+    "model": "FUSION",
+    "model_string": "FS1.04",
     "year": 2017,
     "codecs": ["H.264"],
     "features": ["Spherical camera", "GPS", "Protune", "HiLight tags", "RAW photo", "voice control"],
@@ -282,7 +296,8 @@
   },
   {
     "brand": "GoPro",
-    "model": "Max",
+    "model": "MAX",
+    "model_string": "H19.03",
     "year": 2019,
     "codecs": ["H.264", "H.265"],
     "features": ["Spherical camera", "GPS", "Protune", "HiLight tags", "RAW photo", "voice control"],
