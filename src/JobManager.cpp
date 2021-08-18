@@ -610,24 +610,40 @@ QString JobManager::getandmakeDestination(Shot *s, Device *d, MediaDirectory *md
             // Destination subdirectories
             if (s->isGoPro())
             {
-                if (md->getHierarchy() == StorageUtils::HierarchyNone)
+                int h = md->getHierarchyMode();
+
+                if (h == StorageUtils::HierarchyNone)
                 {
                     //
                 }
-                else if (md->getHierarchy() == StorageUtils::HierarchyShot)
+                else if (h == StorageUtils::HierarchyShot)
                 {
                     destDir += s->getName();
                     destDir += QDir::separator();
                 }
-                else if (md->getHierarchy() == StorageUtils::HierarchyDateShot)
+                else if (h == StorageUtils::HierarchyDateShot)
                 {
                     destDir += s->getDate().toString("yyyy-MM-dd");
                     destDir += QDir::separator();
                     destDir += s->getName();
                     destDir += QDir::separator();
                 }
-                else if (md->getHierarchy() >= StorageUtils::HierarchyDateDeviceShot)
+                else if (h >= StorageUtils::HierarchyDateDeviceShot)
                 {
+                    destDir += s->getDate().toString("yyyy-MM-dd");
+                    destDir += QDir::separator();
+                    if (d)
+                    {
+                        destDir += d->getModel();
+                        destDir += QDir::separator();
+                    }
+                    destDir += s->getName();
+                    destDir += QDir::separator();
+                }
+                else if (h >= StorageUtils::HierarchyYearDateDeviceShot)
+                {
+                    destDir += s->getDate().toString("yyyy");
+                    destDir += QDir::separator();
                     destDir += s->getDate().toString("yyyy-MM-dd");
                     destDir += QDir::separator();
                     if (d)
@@ -700,7 +716,8 @@ QString JobManager::getDestinationHierarchyDisplay(Shot *s, const QString &path)
             MediaDirectory *md_current = qobject_cast<MediaDirectory*>(md);
             if (md_current && md_current->getPath() == path)
             {
-                int h = md_current->getHierarchy();
+                int h = md_current->getHierarchyMode();
+
                 if (h == StorageUtils::HierarchyNone)
                 {
                     hierarchyString = " FILES";
@@ -747,6 +764,24 @@ QString JobManager::getDestinationHierarchyDisplay(Shot *s, const QString &path)
                         hierarchyString = " date / device / SHOT / FILES";
                     }
                 }
+                else if (h == StorageUtils::HierarchyYearDateDeviceShot)
+                {
+                    if (s)
+                    {
+                        hierarchyString += s->getDate().toString("yyyy");
+                        hierarchyString += QDir::separator();
+                        hierarchyString += s->getDate().toString("yyyy-MM-dd");
+                        hierarchyString += QDir::separator();
+                        hierarchyString += s->getCameraSource();
+                        hierarchyString += QDir::separator();
+                        hierarchyString += s->getName();
+                        hierarchyString += QDir::separator();
+                    }
+                    else
+                    {
+                        hierarchyString = " year / date / device / SHOT / FILES";
+                    }
+                }
                 break;
             }
         }
@@ -769,7 +804,8 @@ QString JobManager::getDestinationHierarchy(Shot *s, const QString &path)
             MediaDirectory *md_current = qobject_cast<MediaDirectory*>(md);
             if (md_current && md_current->getPath() == path)
             {
-                int h = md_current->getHierarchy();
+                int h = md_current->getHierarchyMode();
+
                 if (h == StorageUtils::HierarchyNone)
                 {
                     //
@@ -788,6 +824,17 @@ QString JobManager::getDestinationHierarchy(Shot *s, const QString &path)
                 }
                 else if (h == StorageUtils::HierarchyDateDeviceShot)
                 {
+                    hierarchyString += s->getDate().toString("yyyy-MM-dd");
+                    hierarchyString += QDir::separator();
+                    hierarchyString += s->getCameraSource();
+                    hierarchyString += QDir::separator();
+                    hierarchyString += s->getName();
+                    hierarchyString += QDir::separator();
+                }
+                else if (h == StorageUtils::HierarchyYearDateDeviceShot)
+                {
+                    hierarchyString += s->getDate().toString("yyyy");
+                    hierarchyString += QDir::separator();
                     hierarchyString += s->getDate().toString("yyyy-MM-dd");
                     hierarchyString += QDir::separator();
                     hierarchyString += s->getCameraSource();

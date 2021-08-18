@@ -32,8 +32,6 @@
 #include <QSettings>
 #include <QDebug>
 
-#define MEDIA_DIRECTORIES_REFRESH_INTERVAL 30
-
 /* ************************************************************************** */
 
 /*!
@@ -61,7 +59,7 @@ MediaDirectory::MediaDirectory(QObject *parent)
         m_enabled = true;
         m_primary = true;
 
-        m_storage_refreshTimer.setInterval(MEDIA_DIRECTORIES_REFRESH_INTERVAL * 1000);
+        m_storage_refreshTimer.setInterval(m_storage_refreshInterval * 1000);
         connect(&m_storage_refreshTimer, &QTimer::timeout, this, &MediaDirectory::refreshMediaDirectory);
         m_storage_refreshTimer.start();
     }
@@ -73,18 +71,20 @@ MediaDirectory::MediaDirectory(QObject *parent)
  * Do not check if the path exists, we are allow to save paths that have been
  * disconnected since (ex: removable media).
  */
-MediaDirectory::MediaDirectory(const QString &path, int content, int hierarchy,
+MediaDirectory::MediaDirectory(const QString &path, int content,
+                               int hierarchy_mode, const QString &hierarchy_custom,
                                bool enabled, bool primary, QObject *parent)
     : QObject(parent)
 {
     setPath(path);
 
     m_content = content;
-    m_hierarchy = hierarchy;
+    m_hierarchy_mode = hierarchy_mode;
+    m_hierarchy_custom = hierarchy_custom;
     m_enabled = enabled;
     m_primary = primary;
 
-    m_storage_refreshTimer.setInterval(MEDIA_DIRECTORIES_REFRESH_INTERVAL * 1000);
+    m_storage_refreshTimer.setInterval(m_storage_refreshInterval * 1000);
     connect(&m_storage_refreshTimer, &QTimer::timeout, this, &MediaDirectory::refreshMediaDirectory);
     m_storage_refreshTimer.start();
 }
@@ -139,11 +139,21 @@ void MediaDirectory::setContent(int content)
     }
 }
 
-void MediaDirectory::setHierarchy(int hierarchy)
+void MediaDirectory::setHierarchyMode(int hierarchy)
 {
-    if (m_hierarchy != hierarchy)
+    if (m_hierarchy_mode != hierarchy)
     {
-        m_hierarchy = hierarchy;
+        m_hierarchy_mode = hierarchy;
+        Q_EMIT directoryUpdated(m_path);
+        Q_EMIT saveData();
+    }
+}
+
+void MediaDirectory::setHierarchyCustom(QString hierarchy)
+{
+    if (m_hierarchy_custom != hierarchy)
+    {
+        m_hierarchy_custom = hierarchy;
         Q_EMIT directoryUpdated(m_path);
         Q_EMIT saveData();
     }

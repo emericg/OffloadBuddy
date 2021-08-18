@@ -28,8 +28,6 @@
 #include <QSettings>
 #include <QDebug>
 
-#define MEDIA_DIRECTORIES_REFRESH_INTERVAL 30
-
 /* ************************************************************************** */
 
 StorageManager *StorageManager::instance = nullptr;
@@ -74,20 +72,23 @@ bool StorageManager::readSettings()
             QString p = "MediaDirectories/" + QString::number(i) + "/path";
             QString e = "MediaDirectories/" + QString::number(i) + "/enabled";
             QString c = "MediaDirectories/" + QString::number(i) + "/content";
-            QString h = "MediaDirectories/" + QString::number(i) + "/hierarchy";
+            QString hm = "MediaDirectories/" + QString::number(i) + "/hierarchy_mode";
+            QString hc = "MediaDirectories/" + QString::number(i) + "/hierarchy_custom";
 
             bool ee = true;
             int cc = 0;
-            int hh = 0;
+            int hhm = 0;
+            QString hhc = 0;
             if (settings.contains(e)) ee = settings.value(e).toBool();
             if (settings.contains(c)) cc = settings.value(c).toInt();
-            if (settings.contains(h)) hh = settings.value(h).toInt();
+            if (settings.contains(hm)) hhm = settings.value(hm).toInt();
+            if (settings.contains(hc)) hhc = settings.value(hc).toString();
 
             if (settings.contains(p))
             {
                 QString pp = settings.value(p).toString();
 
-                MediaDirectory *d = new MediaDirectory(pp, cc, hh, ee, false, this);
+                MediaDirectory *d = new MediaDirectory(pp, cc, hhm, hhc, ee, false, this);
                 m_mediaDirectories.push_back(d);
                 Q_EMIT directoryAdded(d->getPath());
                 Q_EMIT directoriesUpdated();
@@ -132,11 +133,13 @@ bool StorageManager::writeSettings()
                 QString p = "MediaDirectories/" + QString::number(i) + "/path";
                 QString e = "MediaDirectories/" + QString::number(i) + "/enabled";
                 QString c = "MediaDirectories/" + QString::number(i) + "/content";
-                QString h = "MediaDirectories/" + QString::number(i) + "/hierarchy";
+                QString hm = "MediaDirectories/" + QString::number(i) + "/hierarchy_mode";
+                QString hc = "MediaDirectories/" + QString::number(i) + "/hierarchy_custom";
                 settings.setValue(p, dd->getPath());
                 settings.setValue(e, dd->isEnabled());
                 settings.setValue(c, dd->getContent());
-                settings.setValue(h, dd->getHierarchy());
+                settings.setValue(hm, dd->getHierarchyMode());
+                settings.setValue(hc, dd->getHierarchyCustom());
                 i++;
             }
         }
@@ -145,11 +148,13 @@ bool StorageManager::writeSettings()
             QString p = "MediaDirectories/" + QString::number(i) + "/path";
             QString e = "MediaDirectories/" + QString::number(i) + "/enabled";
             QString c = "MediaDirectories/" + QString::number(i) + "/content";
-            QString h = "MediaDirectories/" + QString::number(i) + "/hierarchy";
+            QString hm = "MediaDirectories/" + QString::number(i) + "/hierarchy_mode";
+            QString hc = "MediaDirectories/" + QString::number(i) + "/hierarchy_custom";
             settings.remove(p);
             settings.remove(e);
             settings.remove(c);
-            settings.remove(h);
+            settings.remove(hm);
+            settings.remove(hc);
         }
 
         if (settings.status() == QSettings::NoError)
@@ -256,7 +261,7 @@ void StorageManager::addDirectory(const QString &path)
         }
 
         // Add
-        MediaDirectory *newDir = new MediaDirectory(path, 0, 0, true, false, this);
+        MediaDirectory *newDir = new MediaDirectory(path, 0, 0, "", true, false, this);
         if (newDir)
         {
             m_mediaDirectories.push_back(newDir);

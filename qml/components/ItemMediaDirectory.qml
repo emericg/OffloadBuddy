@@ -272,21 +272,24 @@ Item {
                     ListElement { text: qsTr("/ SHOT / FILES"); }
                     ListElement { text: qsTr("/ date / SHOT / FILES"); }
                     ListElement { text: qsTr("/ date / device / SHOT / FILES"); }
+                    ListElement { text: qsTr("CUSTOM"); }
                 }
 
                 Component.onCompleted: {
                     currentIndex = directory.directoryHierarchy
-                    if (currentIndex === -1) currentIndex = 0
+                    if (directory.directoryHierarchy === -1) currentIndex = 0
+                    if (directory.directoryHierarchy === 32) currentIndex = 4
                 }
                 property bool cbinit: false
                 onCurrentIndexChanged: {
-                    if (cbinit)
-                        directory.directoryHierarchy = currentIndex
-                    else
+                    if (cbinit) {
+                        if (currentIndex === 4) directory.directoryHierarchy = StorageUtils.HierarchyCustom
+                        else directory.directoryHierarchy = currentIndex
+                    } else {
                         cbinit = true
+                    }
                 }
             }
-        }
     }
 
     ////////////////

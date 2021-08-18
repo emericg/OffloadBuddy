@@ -47,7 +47,8 @@ class MediaDirectory: public QObject
 
     Q_PROPERTY(QString directoryPath READ getPath WRITE setPath NOTIFY directoryUpdated)
     Q_PROPERTY(int directoryContent READ getContent WRITE setContent NOTIFY directoryUpdated)
-    Q_PROPERTY(int directoryHierarchy READ getHierarchy WRITE setHierarchy NOTIFY directoryUpdated)
+    Q_PROPERTY(int directoryHierarchy READ getHierarchyMode WRITE setHierarchyMode NOTIFY directoryUpdated)
+    Q_PROPERTY(QString directoryHierarchyCustom READ getHierarchyCustom WRITE setHierarchyCustom NOTIFY directoryUpdated)
 
     Q_PROPERTY(bool available READ isAvailable NOTIFY availableUpdated)
     Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledUpdated)
@@ -62,8 +63,9 @@ class MediaDirectory: public QObject
     Q_PROPERTY(double storageLevel READ getStorageLevel NOTIFY storageUpdated)
 
     QString m_path;
-    int m_content = 0;  // StorageUtils::ContentAll;        //!< see StorageUtils::StorageContent
-    int m_hierarchy = 2;// StorageUtils::HierarchyDateShot; //!< see StorageUtils::StorageHierarchy
+    int m_content = StorageUtils::ContentAll;                   //!< see StorageUtils::StorageContent
+    int m_hierarchy_mode = StorageUtils::HierarchyDateShot;     //!< see StorageUtils::StorageHierarchy
+    QString m_hierarchy_custom;                                 //!< regex
 
     bool m_available = false;
     bool m_enabled = true;
@@ -74,6 +76,7 @@ class MediaDirectory: public QObject
     bool m_storage_lfs = true;
     QStorageInfo *m_storage = nullptr;
     QTimer m_storage_refreshTimer;
+    const int m_storage_refreshInterval = 30;
 
 Q_SIGNALS:
     void directoryUpdated(const QString &);
@@ -89,7 +92,8 @@ private slots:
 
 public:
     MediaDirectory(QObject *parent = nullptr);
-    MediaDirectory(const QString &path, int content, int hierarchy,
+    MediaDirectory(const QString &path, int content,
+                   int hierarchy_mode, const QString &hierarchy_custom,
                    bool enabled = true, bool primary = false, QObject *parent = nullptr);
     ~MediaDirectory();
 
@@ -106,8 +110,11 @@ public:
     int getContent() const { return m_content; }
     void setContent(int content);
 
-    int getHierarchy() const { return m_hierarchy; }
-    void setHierarchy(int hierarchy);
+    int getHierarchyMode() const { return m_hierarchy_mode; }
+    void setHierarchyMode(int hierarchy);
+
+    QString getHierarchyCustom() const { return m_hierarchy_custom; }
+    void setHierarchyCustom(QString hierarchy);
 
     bool isPrimary() const { return m_primary; }
     void setPrimary(bool primary);

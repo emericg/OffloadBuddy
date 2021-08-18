@@ -32,6 +32,7 @@ namespace StorageUtils
     enum StorageType
     {
         StorageUnknown = 0,
+
         StorageFilesystem,
         StorageVirtualFilesystem,
         StorageNetworkFilesystem,
@@ -42,6 +43,7 @@ namespace StorageUtils
     enum StorageContent
     {
         ContentAll = 0,
+
         ContentAudio,
         ContentVideo,
         ContentPictures,
@@ -51,15 +53,20 @@ namespace StorageUtils
     enum StorageHierarchy
     {
         HierarchyNone = 0,
+
         HierarchyShot,
         HierarchyDateShot,
         HierarchyDateDeviceShot,
+        HierarchyYearDateDeviceShot,
+
+        HierarchyCustom = 32,
     };
     Q_ENUM_NS(StorageHierarchy)
 
     enum DeviceType
     {
         DeviceUnknown = 0,
+
         DeviceActionCamera,
         DeviceCamera,
         DeviceMobile,
