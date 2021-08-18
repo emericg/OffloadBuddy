@@ -13,6 +13,8 @@ Item {
 
     property var directory: null
 
+    PopupMediaDirectory { id: popupMediaDirectory }
+
     ////////////////
 
     FolderInputArea {
@@ -195,7 +197,7 @@ Item {
                 verticalAlignment: Text.AlignVCenter
             }
         }
-
+/*
         // or even that
         Row {
             anchors.verticalCenter: parent.verticalCenter
@@ -290,6 +292,21 @@ Item {
                     }
                 }
             }
+
+            ////////
+
+            TextFieldThemed {
+                id: textfieldContentHierarchyCustom
+                width: 256
+                height: 32
+                anchors.verticalCenter: parent.verticalCenter
+
+                visible: (directory.directoryHierarchy === StorageUtils.HierarchyCustom)
+                text: directory.directoryHierarchyCustom
+                onEditingFinished: directory.directoryHierarchyCustom = text
+            }
+        }
+*/
     }
 
     ////////////////
@@ -355,10 +372,7 @@ Item {
             highlightMode: "color"
             highlightColor: Theme.colorPrimary
             source: "qrc:/assets/icons_material/baseline-settings_applications-24px.svg"
-            onClicked: {
-                if (menus.memusmode !== 1) menus.memusmode = 1
-                else menus.memusmode = 0
-            }
+            onClicked: popupMediaDirectory.open()
         }
 
         ItemImageButton {

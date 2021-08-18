@@ -20,6 +20,7 @@
         <file>PopupOffload.qml</file>
         <file>PopupMove.qml</file>
         <file>PopupMerge.qml</file>
+        <file>PopupMediaDirectory.qml</file>
         <file>PopupTelemetry.qml</file>
         <file>MediaDetailOverview.qml</file>
         <file>MediaDetailDetails.qml</file>
@@ -37,6 +38,7 @@
         <file alias="ItemBannerActions.qml">components/ItemBannerActions.qml</file>
         <file alias="ItemBannerMessage.qml">components/ItemBannerMessage.qml</file>
         <file alias="ItemBannerJob.qml">components/ItemBannerJob.qml</file>
+        <file alias="ItemTag.qml">components/ItemTag.qml</file>
         <file alias="ItemJob.qml">components/ItemJob.qml</file>
         <file alias="ItemShot.qml">components/ItemShot.qml</file>
         <file alias="ItemMediaDirectory.qml">components/ItemMediaDirectory.qml</file>
