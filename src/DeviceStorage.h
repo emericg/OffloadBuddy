@@ -52,8 +52,6 @@ class DeviceStorage: public QObject
     Q_OBJECT
 
     Q_PROPERTY(QString directoryPath READ getDevicePath WRITE setDevicePath NOTIFY directoryUpdated)
-    Q_PROPERTY(int directoryContent READ getContent WRITE setContent NOTIFY directoryUpdated)
-    Q_PROPERTY(int directoryHierarchy READ getHierarchy WRITE setHierarchy NOTIFY directoryUpdated)
 
     Q_PROPERTY(bool available READ isAvailable NOTIFY availableUpdated)
     Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledUpdated)
@@ -67,9 +65,6 @@ class DeviceStorage: public QObject
     Q_PROPERTY(qint64 spaceAvailable READ getSpaceAvailable NOTIFY storageUpdated)
     Q_PROPERTY(double storageLevel READ getStorageLevel NOTIFY storageUpdated)
 
-    int m_content = 0;                  //!< see StorageUtils::StorageContent
-    int m_hierarchy = 0;                //!< see StorageUtils::StorageHierarchy
-
     bool m_available = false;
     bool m_enabled = true;
     bool m_primary = false;
@@ -82,6 +77,7 @@ class DeviceStorage: public QObject
     QString m_fs_path;
     QStorageInfo *m_fs_storage = nullptr;
     QTimer m_storage_refreshTimer;
+    const int m_storage_refreshInterval = 30;
 
     // MTP storage
     unsigned m_dcim_id = 0;
@@ -98,7 +94,6 @@ Q_SIGNALS:
     void primaryUpdated();
     void enabledUpdated();
     void storageUpdated();
-    void saveData();
 
 public slots:
     void refreshMediaStorage();
@@ -122,12 +117,6 @@ public:
 
     //
 
-    int getContent() const { return m_content; }
-    void setContent(int content);
-
-    int getHierarchy() const { return m_hierarchy; }
-    void setHierarchy(int hierarchy);
-
     bool isPrimary() const { return m_primary; }
     void setPrimary(bool primary);
 
@@ -135,7 +124,6 @@ public:
     void setEnabled(bool enabled);
 
     bool isAvailable() const { return m_available; }
-    bool isAvailableFor(unsigned shotType, int64_t shotSize);
 
     //
 

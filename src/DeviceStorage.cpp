@@ -32,8 +32,6 @@
 #include <QSettings>
 #include <QDebug>
 
-#define MEDIA_DIRECTORIES_REFRESH_INTERVAL 30
-
 /* ************************************************************************** */
 
 /*!
@@ -49,12 +47,10 @@ DeviceStorage::DeviceStorage(const QString &path, bool primary, QObject *parent)
 
     setDevicePath(path);
 
-    m_content = 0;
-    m_hierarchy = 0;
     m_enabled = true;
     m_primary = primary;
 
-    m_storage_refreshTimer.setInterval(MEDIA_DIRECTORIES_REFRESH_INTERVAL * 1000);
+    m_storage_refreshTimer.setInterval(m_storage_refreshInterval * 1000);
     connect(&m_storage_refreshTimer, &QTimer::timeout, this, &DeviceStorage::refreshMediaStorage);
     m_storage_refreshTimer.start();
 }
@@ -70,12 +66,10 @@ DeviceStorage::DeviceStorage(LIBMTP_mtpdevice_t *device, LIBMTP_devicestorage_t 
 
     setDeviceMtp(device, storage);
 
-    m_content = 0;
-    m_hierarchy = 0;
     m_enabled = true;
     m_primary = primary;
 
-    m_storage_refreshTimer.setInterval(MEDIA_DIRECTORIES_REFRESH_INTERVAL * 1000);
+    m_storage_refreshTimer.setInterval(m_storage_refreshInterval * 1000);
     connect(&m_storage_refreshTimer, &QTimer::timeout, this, &DeviceStorage::refreshMediaStorage);
     m_storage_refreshTimer.start();
 }
@@ -111,7 +105,6 @@ void DeviceStorage::setDevicePath(const QString &path)
         if (!m_fs_path.endsWith('/')) m_fs_path += '/';
 
         Q_EMIT directoryUpdated();
-        Q_EMIT saveData();
 
         if (m_fs_storage)
         {
@@ -150,33 +143,12 @@ void DeviceStorage::setDeviceMtp(LIBMTP_mtpdevice_t *device, LIBMTP_devicestorag
 
 /* ************************************************************************** */
 
-void DeviceStorage::setContent(int content)
-{
-    if (m_content != content)
-    {
-        m_content = content;
-        Q_EMIT directoryUpdated();
-        Q_EMIT saveData();
-    }
-}
-
-void DeviceStorage::setHierarchy(int hierarchy)
-{
-    if (m_hierarchy != hierarchy)
-    {
-        m_hierarchy = hierarchy;
-        Q_EMIT directoryUpdated();
-        Q_EMIT saveData();
-    }
-}
-
 void DeviceStorage::setEnabled(bool enabled)
 {
     if (m_enabled != enabled)
     {
         m_enabled = enabled;
         Q_EMIT enabledUpdated();
-        Q_EMIT saveData();
     }
 }
 
@@ -186,7 +158,6 @@ void DeviceStorage::setPrimary(bool primary)
     {
         m_primary = primary;
         Q_EMIT primaryUpdated();
-        Q_EMIT saveData();
     }
 }
 
@@ -196,35 +167,7 @@ void DeviceStorage::setScanning(bool scanning)
     {
         m_scanning = scanning;
         Q_EMIT scanningUpdated();
-        Q_EMIT saveData();
     }
-}
-
-bool DeviceStorage::isAvailableFor(unsigned shotType, int64_t shotSize)
-{
-    bool available = false;
-
-    refreshMediaStorage();
-
-    if (m_available && m_fs_storage && !m_fs_storage->isReadOnly())
-    {
-        if (shotSize < getSpaceAvailable())
-        {
-            if ((shotType == ShotUtils::SHOT_UNKNOWN && m_content == StorageUtils::ContentAll) ||
-                (shotType < ShotUtils::SHOT_PICTURE && (m_content == StorageUtils::ContentAll || m_content == StorageUtils::ContentVideo)) ||
-                (shotType >= ShotUtils::SHOT_PICTURE && (m_content == StorageUtils::ContentAll || m_content == StorageUtils::ContentPictures)))
-            {
-                available = true;
-            }
-
-            if (!m_storage_lfs && shotSize > std::numeric_limits<long long>::max())
-            {
-                available = false;
-            }
-        }
-    }
-
-    return available;
 }
 
 /* ************************************************************************** */
