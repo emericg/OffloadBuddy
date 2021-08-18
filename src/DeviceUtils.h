@@ -119,6 +119,17 @@ namespace DeviceUtils
             DEVICE_DJI_OSMOp,
             DEVICE_DJI_OSMO_POCKET,
             DEVICE_DJI_OSMO_ACTION,
+
+        DEVICE_RYLO = 350,
+            DEVICE_RYLO_360,
+
+        DEVICE_INSTA360 = 370,
+            DEVICE_INSTA360_ONE,
+            DEVICE_INSTA360_ONEX,
+            DEVICE_INSTA360_ONEX2,
+            DEVICE_INSTA360_GO,
+            DEVICE_INSTA360_GO2,
+            DEVICE_INSTA_EVO,
     };
     Q_ENUM_NS(DeviceModel)
 

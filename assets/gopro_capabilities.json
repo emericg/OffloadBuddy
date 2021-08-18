@@ -25,7 +25,17 @@
     "connectivity": ["WiFi", "Bluetooth"],
     "modes_video": ["video", "looping video"],
     "modes_photo": ["photo", "burst", "night"],
-    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"]
+    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"],
+    "modes_video_table": [
+      ["4K", "wide", "16:9", "3840*2160", 15, "H.264"],
+      ["2.7K", "wide, medium", "16:9", "2704*1520", 30, "H.264"],
+      ["1440p", "wide", "4:3", "1920*1440", 48, "H.264"],
+      ["1080p", "wide, medium, narrow", "16:9", "1920*1080", 60, "H.264"],
+      ["", "superview", "16:9", "1920*1080", 60, "H.264"],
+      ["960p", "wide", "4:3", "1280*960", 100, "H.264"],
+      ["720p", "wide, medium, narrow", "16:9", "1280*720", 120, "H.264"],
+      ["", "superview", "16:9", "1280*720", 100, "H.264"]
+    ]
   },
   {
     "brand": "GoPro",
@@ -36,7 +46,22 @@
     "connectivity": ["WiFi", "Bluetooth"],
     "modes_video": ["video", "looping video"],
     "modes_photo": ["photo", "burst", "night"],
-    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"]
+    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"],
+    "modes_video_table": [
+      ["4K", "wide", "16:9", "3840*2160", 30, "H.264"],
+      ["", "superview", "16:9", "3840*2160", 24, "H.264"],
+      ["2.7K", "wide, medium", "16:9", "2704*1520", 60, "H.264"],
+      ["", "superview", "16:9", "2704*1520", 30, "H.264"],
+      ["", "wide", "4:3", "2704*2028", 30, "H.264"],
+      ["1440p", "wide", "4:3", "1920*1440", 80, "H.264"],
+      ["1080p", "wide, narrow", "16:9", "1920*1080", 120, "H.264"],
+      ["", "wide, medium, narrow", "16:9", "1920*1080", 60, "H.264"],
+      ["", "superview", "16:9", "1920*1080", 80, "H.264"],
+      ["960p", "wide", "4:3", "1280*960", 120, "H.264"],
+      ["720p", "narrow", "16:9", "1280*720", 240, "H.264"],
+      ["", "wide, medium, narrow", "16:9", "1280*720", 120, "H.264"],
+      ["", "superview", "16:9", "1280*720", 120, "H.264"]
+    ]
   },
   {
     "brand": "GoPro",
@@ -47,7 +72,15 @@
     "connectivity": ["WiFi", "Bluetooth"],
     "modes_video": ["video", "looping video"],
     "modes_photo": ["photo", "burst", "night"],
-    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"]
+    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"],
+    "modes_video_table": [
+      ["1440p", "wide", "4:3", "1920*1440", 30, "H.264"],
+      ["1080p", "wide, medium", "16:9", "1920*1080", 60, "H.264"],
+      ["", "superview", "16:9", "1920*1080", 48, "H.264"],
+      ["960p", "wide", "4:3", "1280*960", 60, "H.264"],
+      ["720p", "wide, medium", "16:9", "1280*720", 100, "H.264"],
+      ["", "superview", "16:9", "1280*720", 60, "H.264"]
+    ]
   },
   {
     "brand": "GoPro",
@@ -58,7 +91,22 @@
     "connectivity": ["WiFi", "Bluetooth"],
     "modes_video": ["video", "looping video"],
     "modes_photo": ["photo", "burst", "night"],
-    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"]
+    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"],
+    "modes_video_table": [
+      ["4K", "wide", "16:9", "3840*2160", 30, "H.264"],
+      ["4K", "superview, wide", "16:9", "3840*2160", 24, "H.264"],
+      ["2.7K", "wide, medium, linear", "16:9", "2704*1520", 60, "H.264"],
+      ["", "superview, wide, medium, linear", "16:9", "2704*1520", 30, "H.264"],
+      ["", "wide", "4:3", "2704*2028", 30, "H.264"],
+      ["1440p", "wide", "4:3", "1920*1440", 80, "H.264"],
+      ["1080p", "wide, narrow", "16:9", "1920*1080", 120, "H.264"],
+      ["", "wide", "16:9", "1920*1080", 90, "H.264"],
+      ["", "superview", "16:9", "1920*1080", 80, "H.264"],
+      ["", "superview, wide, medium, linear, narrow", "16:9", "1920*1080", 60, "H.264"],
+      ["960p", "wide", "4:3", "1280*960", 120, "H.264"],
+      ["720p", "narrow", "16:9", "1280*720", 240, "H.264"],
+      ["", "superview, wide, medium, narrow", "16:9", "1280*720", 120, "H.264"]
+    ]
   },
   {
     "brand": "GoPro",
@@ -69,7 +117,18 @@
     "connectivity": ["WiFi", "Bluetooth"],
     "modes_video": ["video", "looping video"],
     "modes_photo": ["photo", "burst", "night"],
-    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"]
+    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"],
+    "modes_video_table": [
+      ["4K", "wide", "16:9", "3840*2160", 30, "H.264"],
+      ["2.7K", "medium", "16:9", "2704*1520", 48, "H.264"],
+      ["", "superview, wide, medium, linear", "16:9", "2704*1520", 30, "H.264"],
+      ["", "wide", "4:3", "2704*2028", 30, "H.264"],
+      ["1440p", "wide", "4:3", "1920*1440", 60, "H.264"],
+      ["1080p", "wide", "16:9", "1920*1080", 90, "H.264"],
+      ["", "superview, wide, linear", "16:9", "1920*1080", 60, "H.264"],
+      ["960p", "wide", "4:3", "1280*960", 100, "H.264"],
+      ["720p", "wide", "16:9", "1280*720", 120, "H.264"]
+    ]
   },
   {
     "brand": "GoPro",
@@ -87,12 +146,12 @@
       ["", "wide, superview", "16:9", "3840*2160", 60, "H.265"],
       ["", "wide, superview", "16:9", "3840*2160", 30, "H.264"],
       ["", "wide", "4:3", "4096*3072", 30, "H.264"],
-      ["2.7K", "wide", "16:9", "3840*2160", 120, "H.264"],
+      ["2.7K", "wide", "16:9", "2704*1520", 120, "H.264"],
       ["", "wide, superview, linear", "16:9", "2704*1520", 60, "H.264"],
-      ["", "wide, linear", "16:9", "2704*2028", 60, "H.264"],
+      ["", "wide, linear", "4:3", "2704*2028", 60, "H.264"],
       ["1440p", "wide, linear", "4:3", "1920*1440", 60, "H.264"],
       ["1080p", "wide", "16:9", "1920*1080", 240, "H.264"],
-      ["", "wide, superview, linear", "16:9", "1920*1080", 240, "H.264"],
+      ["", "wide, superview, linear", "16:9", "1920*1080", 120, "H.264"],
       ["720p", "wide, linear", "16:9", "1280*720", 60, "H.264"]
     ]
   },
@@ -142,29 +201,101 @@
     "connectivity": ["WiFi", "Bluetooth"],
     "modes_video": ["video", "timewarp video", "looping video"],
     "modes_photo": ["photo", "burst", "night"],
-    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"]
+    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"],
+    "modes_video_table": [
+      ["4K", "wide", "16:9", "3840*2160", 60, "H.265"],
+      ["", "wide", "16:9", "3840*2160", 30, "H.264"],
+      ["", "wide, superview", "16:9", "3840*2160", 60, "H.265"],
+      ["", "wide, superview", "16:9", "3840*2160", 30, "H.264"],
+      ["", "wide", "4:3", "4096*3072", 30, "H.264"],
+      ["2.7K", "wide", "16:9", "2704*1520", 120, "H.264"],
+      ["", "wide, superview, linear", "16:9", "2704*1520", 60, "H.264"],
+      ["", "wide, linear", "4:3", "2704*2028", 30, "H.264"],
+      ["1440p", "wide", "4:3", "1920*1440", 120, "H.264"],
+      ["1440p", "wide, linear", "4:3", "1920*1440", 60, "H.264"],
+      ["1080p", "wide", "16:9", "1920*1080", 240, "H.264"],
+      ["", "wide, superview, linear", "16:9", "1920*1080", 120, "H.264"],
+      ["720p", "wide, linear", "16:9", "1280*720", 60, "H.264"]
+    ]
   },
   {
     "brand": "GoPro",
     "model": "HERO8 Black",
     "year": 2019,
     "codecs": ["H.264"],
-    "features": ["HyperSmooth 2.0", "GPS", "Protune", "HiLight tags", "HDR photo", "RAW photo", "voice control"],
+    "features": ["HyperSmooth 2.0", "GPS", "Live Streaming", "Protune", "HiLight tags", "HDR photo", "RAW photo", "voice control"],
     "connectivity": ["WiFi", "Bluetooth"],
     "modes_video": ["video", "timewarp video", "looping video"],
     "modes_photo": ["photo", "burst", "night"],
-    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"]
+    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"],
+    "modes_video_table": [
+      ["4K", "wide, linear", "16:9", "3840*2160", 60, "H.265"],
+      ["", "superview, wide, linear", "16:9", "3840*2160", 30, "H.264"],
+      ["", "wide, linear", "4:3", "4096*3072", 30, "H.264"],
+      ["2.7K", "wide", "16:9", "2704*1520", 120, "H.264"],
+      ["", "superview, wide, linear, narrow", "16:9", "2704*1520", 60, "H.264"],
+      ["", "wide", "4:3", "2704*2028", 60, "H.264"],
+      ["", "wide, linear, narrow", "4:3", "2704*2028", 30, "H.264"],
+      ["1440p", "wide", "4:3", "1920*1440", 120, "H.264"],
+      ["1440p", "wide, linear, narrow", "4:3", "1920*1440", 60, "H.264"],
+      ["1080p", "wide", "16:9", "1920*1080", 240, "H.264"],
+      ["", "superview, wide, linear, narrow", "16:9", "1920*1080", 120, "H.264"]
+    ]
   },
   {
     "brand": "GoPro",
     "model": "HERO9 Black",
     "year": 2020,
     "codecs": ["H.264"],
-    "features": ["HyperSmooth 2.0", "GPS", "Protune", "HiLight tags", "HDR photo", "RAW photo", "voice control"],
+    "features": ["HyperSmooth 2.0", "GPS", "Live Streaming", "Protune", "HiLight tags", "HDR photo", "RAW photo", "voice control"],
     "connectivity": ["WiFi", "Bluetooth"],
     "modes_video": ["video", "timewarp video", "looping video"],
     "modes_photo": ["photo", "burst", "night"],
-    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"]
+    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"],
+    "modes_video_table": [
+      ["5K", "wide, linear, narrow", "16:9", "5120*2880", 30, "H.265"],
+      ["4K", "wide, linear, narrow", "16:9", "3840*2160", 60, "H.265"],
+      ["", "superview, wide, linear, narrow", "16:9", "3840*2160", 30, "H.264"],
+      ["", "superview, wide, linear, narrow", "4:3", "4096*3072", 30, "H.264"],
+      ["2.7K", "superview, wide, linear, narrow", "16:9", "2704*1520", 120, "H.265"],
+      ["", "wide, linear, narrow", "4:3", "2704*2028", 60, "H.264"],
+      ["1440p", "wide, linear, narrow", "4:3", "1920*1440", 120, "H.264"],
+      ["1080p", "wide, linear, narrow", "16:9", "1920*1080", 240, "H.264"],
+      ["", "superview, wide, linear, narrow", "16:9", "1920*1080", 120, "H.264"]
+    ]
+  },
+  {
+    "brand": "GoPro",
+    "model": "Fusion",
+    "year": 2017,
+    "codecs": ["H.264"],
+    "features": ["Spherical camera", "GPS", "Protune", "HiLight tags", "RAW photo", "voice control"],
+    "connectivity": ["WiFi", "Bluetooth"],
+    "modes_video": ["video"],
+    "modes_photo": ["photo", "burst", "night"],
+    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"],
+    "modes_video_table": [
+      ["5.6K", "spherical", "16:9", "5120*2880", 24, "H.264"],
+      ["5.2K", "spherical", "16:9", "5120*2880", 30, "H.264"],
+      ["3K", "spherical", "16:9", "3000*1504", 60, "H.264"]
+    ]
+  },
+  {
+    "brand": "GoPro",
+    "model": "Max",
+    "year": 2019,
+    "codecs": ["H.264", "H.265"],
+    "features": ["Spherical camera", "GPS", "Protune", "HiLight tags", "RAW photo", "voice control"],
+    "connectivity": ["WiFi", "Bluetooth"],
+    "modes_video": ["video", "timewarp video"],
+    "modes_photo": ["photo", "burst", "night"],
+    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"],
+    "modes_video_table": [
+      ["5.6K", "spherical", "16:9", "5120*2880", 30, "H.264"],
+      ["3K", "spherical", "16:9", "3000*1504", 60, "H.264"],
+      ["1440p", "hero mode", "4:3", "1920*1440", 60, "H.264"],
+      ["1080p", "hero mode", "16:9", "1920*1080", 60, "H.264"]
+    ]
   }
   ]
 }
