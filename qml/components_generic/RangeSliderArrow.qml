@@ -9,9 +9,8 @@ RangeSlider {
     implicitHeight: Theme.componentHeight
     padding: 4
 
-    first.value: 0.25
-    second.value: 0.75
-
+    //first.value: 0.25
+    //second.value: 0.75
     snapMode: RangeSlider.SnapAlways
 
     ////////

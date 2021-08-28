@@ -1,14 +1,17 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
-import QtGraphicalEffects 1.12 // Qt5
-//import Qt5Compat.GraphicalEffects // Qt6
+import QtGraphicalEffects 1.12
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsNumber.js" as UtilsNumber
 
 Button {
     id: control
-    implicitWidth: contentRow.width + 16 + ((source && !text) ? 0 : 16)
+    implicitWidth: {
+        if (source && text) return contentTextInvisible.contentWidth + imgSize + 32
+        if (!source && text) return contentTextInvisible.contentWidth + 24
+        return height
+    }
     implicitHeight: Theme.componentHeight
 
     font.pixelSize: Theme.fontSizeComponent
@@ -16,20 +19,23 @@ Button {
 
     focusPolicy: Qt.NoFocus
 
+    // actions
     signal clicked()
     signal pressed()
     signal pressAndHold()
 
-    property alias source: contentImage.source
+    // settings
+    property string source: ""
+    property bool sourceRightToLeft: false
     property int imgSize: UtilsNumber.alignTo(height * 0.666, 2)
 
+    // colors
     property bool fullColor: false
     property string fulltextColor: "white"
     property string primaryColor: Theme.colorPrimary
     property string secondaryColor: Theme.colorComponentBackground
 
-    property bool sourceRightToLeft: false
-
+    // animation
     property bool hoverAnimation: isDesktop
 
     ////////////////////////////////////////////////////////////////////////////
@@ -109,6 +115,17 @@ Button {
     ////////////////////////////////////////////////////////////////////////////
 
     contentItem: Item {
+        anchors.fill: control
+
+        Text {
+            id: contentTextInvisible
+            // this one is just used for reference
+            text: control.text
+            textFormat: Text.PlainText
+            font: control.font
+            visible: false
+        }
+
         Row {
             id: contentRow
             height: parent.height
@@ -122,13 +139,18 @@ Button {
                 width: imgSize
                 height: imgSize
                 anchors.verticalCenter: parent.verticalCenter
+                visible: control.source
 
+                source: control.source
                 opacity: enabled ? 1.0 : 0.33
                 color: fullColor ? fulltextColor : control.primaryColor
             }
             Text {
                 id: contentText
                 height: parent.height
+                width: (control.implicitWidth - 24 - (control.source ? control.imgSize + 8 : 0))
+                visible: control.text
+                anchors.verticalCenter: parent.verticalCenter
 
                 text: control.text
                 textFormat: Text.PlainText
@@ -137,7 +159,9 @@ Button {
                 color: fullColor ? fulltextColor : control.primaryColor
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                elide: Text.ElideRight
+
+                //elide: Text.ElideRight
+                wrapMode: Text.WordWrap
             }
         }
     }

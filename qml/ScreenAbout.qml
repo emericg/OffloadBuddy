@@ -8,6 +8,8 @@ Item {
     width: 1280
     height: 720
 
+    // HEADER //////////////////////////////////////////////////////////////////
+
     Rectangle {
         id: rectangleHeader
         anchors.top: parent.top
@@ -79,7 +81,7 @@ Item {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    // CONTENT /////////////////////////////////////////////////////////////////
 
     ScrollView {
         id: scrollView
@@ -225,6 +227,7 @@ Item {
                 spacing: 4
 
                 Text {
+                    height: 32
                     anchors.left: parent.left
                     anchors.right: parent.right
 

@@ -1,13 +1,12 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
-import QtGraphicalEffects 1.12 // Qt5
-//import Qt5Compat.GraphicalEffects // Qt6
+import QtGraphicalEffects 1.12
 
 import ThemeEngine 1.0
 
 Button {
     id: control
-    implicitWidth: contentText.width + 24
+    implicitWidth: contentTextInvisible.contentWidth + 24
     implicitHeight: Theme.componentHeight
 
     font.pixelSize: Theme.fontSizeComponent
@@ -15,15 +14,18 @@ Button {
 
     focusPolicy: Qt.NoFocus
 
+    // actions
     signal clicked()
     signal pressed()
     signal pressAndHold()
 
+    // colors
     property bool fullColor: false
     property string fulltextColor: "white"
     property string primaryColor: Theme.colorPrimary
     property string secondaryColor: Theme.colorComponentBackground
 
+    // animation
     property bool hoverAnimation: isDesktop
 
     ////////////////////////////////////////////////////////////////////////////
@@ -104,9 +106,16 @@ Button {
 
     contentItem: Item {
         Text {
+            id: contentTextInvisible
+            // this one is just used for size reference
+            text: control.text
+            textFormat: Text.PlainText
+            font: control.font
+            visible: false
+        }
+        Text {
             id: contentText
-            height: parent.height
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.fill: parent
 
             text: control.text
             textFormat: Text.PlainText
@@ -115,7 +124,9 @@ Button {
             color: fullColor ? fulltextColor : control.primaryColor
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-            elide: Text.ElideRight
+
+            //elide: Text.ElideMiddle
+            wrapMode: Text.WordWrap
         }
     }
 }
