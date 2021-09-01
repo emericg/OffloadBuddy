@@ -119,8 +119,8 @@ public:
     ShotModel(const ShotModel &other, QObject *parent = nullptr);
     ~ShotModel();
 
-    int rowCount(const QModelIndex & parent = QModelIndex()) const;
-    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
     void getShots(QList<Shot *> &shots);
     Shot *getShotAt(ShotUtils::ShotType type, int file_id, int camera_id) const;

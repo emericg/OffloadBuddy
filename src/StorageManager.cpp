@@ -114,6 +114,8 @@ bool StorageManager::readSettings()
     return status;
 }
 
+/* ************************************************************************** */
+
 bool StorageManager::writeSettings()
 {
     bool status = false;
@@ -211,32 +213,6 @@ void StorageManager::directoryModified()
 
 /* ************************************************************************** */
 
-void StorageManager::createDefaultDirectory()
-{
-    // Create a default entry
-    MediaDirectory *d = new MediaDirectory(this);
-    if (d)
-    {
-        m_mediaDirectories.push_back(d);
-        Q_EMIT directoryAdded(d->getPath());
-        Q_EMIT directoriesUpdated();
-
-        connect(d, SIGNAL(saveData()), this, SLOT(directoryModified()));
-        connect(d, SIGNAL(enabledUpdated(QString)), this, SLOT(directoryAvailabilityModified(QString)));
-        connect(d, SIGNAL(availableUpdated(QString)), this, SLOT(directoryAvailabilityModified(QString)));
-        directoryModified();
-    }
-/*
-    // Create a default entries
-    QString pathV = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + "/GoPro";
-    QString pathP = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/GoPro";
-    MediaDirectory *dv = new MediaDirectory(pathV, 1);
-    m_mediaDirectories.push_back(dv);
-    MediaDirectory *dp = new MediaDirectory(pathP, 2);
-    m_mediaDirectories.push_back(dp);
-*/
-}
-
 void StorageManager::addDirectory(const QString &path)
 {
     if (!path.isEmpty())
@@ -276,6 +252,8 @@ void StorageManager::addDirectory(const QString &path)
     }
 }
 
+/* ************************************************************************** */
+
 void StorageManager::removeDirectory(const QString &path)
 {
     if (!path.isEmpty())
@@ -297,8 +275,38 @@ void StorageManager::removeDirectory(const QString &path)
 
     if (m_mediaDirectories.isEmpty())
     {
+        // Create defaults entries (if needed)
         //createDefaultDirectory();
     }
+}
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+void StorageManager::createDefaultDirectory()
+{
+    // Create a default entry
+    MediaDirectory *d = new MediaDirectory(this);
+    if (d)
+    {
+        m_mediaDirectories.push_back(d);
+        Q_EMIT directoryAdded(d->getPath());
+        Q_EMIT directoriesUpdated();
+
+        connect(d, SIGNAL(saveData()), this, SLOT(directoryModified()));
+        connect(d, SIGNAL(enabledUpdated(QString)), this, SLOT(directoryAvailabilityModified(QString)));
+        connect(d, SIGNAL(availableUpdated(QString)), this, SLOT(directoryAvailabilityModified(QString)));
+        directoryModified();
+    }
+/*
+    // Create a default entries
+    QString pathV = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + "/GoPro";
+    QString pathP = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/GoPro";
+    MediaDirectory *dv = new MediaDirectory(pathV, 1);
+    m_mediaDirectories.push_back(dv);
+    MediaDirectory *dp = new MediaDirectory(pathP, 2);
+    m_mediaDirectories.push_back(dp);
+*/
 }
 
 /* ************************************************************************** */

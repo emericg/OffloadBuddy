@@ -137,6 +137,7 @@ Item {
                     id: applicationCSD
                     anchors.verticalCenter: parent.verticalCenter
 
+                    visible: utilsApp.isDebugBuild()
                     text: qsTr("Use Client Side Decoration")
 
                     checked: settingsManager.appThemeCSD
@@ -425,7 +426,7 @@ Item {
 
                 FileDialog {
                     id: fileDialogAdd
-                    title: qsTr("Please choose a directory!")
+                    title: qsTr("Please choose a media directory!")
                     sidebarVisible: true
                     selectExisting: true
                     selectMultiple: false

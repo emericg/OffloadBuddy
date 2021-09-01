@@ -31,6 +31,10 @@ TextField {
     placeholderText: ""
     placeholderTextColor: colorPlaceholderText
 
+    selectByMouse: true
+    selectionColor: Theme.colorPrimary
+    selectedTextColor: "white"
+
     color: enabled ? colorText : colorPlaceholderText
     font.pixelSize: Theme.fontSizeComponent
 

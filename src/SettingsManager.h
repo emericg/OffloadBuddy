@@ -59,6 +59,8 @@ class SettingsManager: public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(bool firstLaunch READ isFirstLaunch NOTIFY firstLaunchChanged)
+
     Q_PROPERTY(QSize initialSize READ getInitialSize NOTIFY initialSizeChanged)
     Q_PROPERTY(QSize initialPosition READ getInitialPosition NOTIFY initialSizeChanged)
     Q_PROPERTY(uint initialVisibility READ getInitialVisibility NOTIFY initialSizeChanged)
@@ -68,6 +70,7 @@ class SettingsManager: public QObject
     Q_PROPERTY(bool appThemeCSD READ getAppThemeCSD WRITE setAppThemeCSD NOTIFY appThemeCSDChanged)
     Q_PROPERTY(uint appUnits READ getAppUnits WRITE setAppUnits NOTIFY appUnitsChanged)
     Q_PROPERTY(QString appLanguage READ getAppLanguage WRITE setAppLanguage NOTIFY appLanguageChanged)
+    Q_PROPERTY(QString appOrientation READ getAppOrientation WRITE setAppOrientation NOTIFY appOrientationChanged)
 
     Q_PROPERTY(uint thumbQuality READ getThumbQuality WRITE setThumbQuality NOTIFY thumbQualityChanged)
     Q_PROPERTY(uint thumbFormat READ getThumbFormat WRITE setThumbFormat NOTIFY thumbFormatChanged)
@@ -85,6 +88,8 @@ class SettingsManager: public QObject
     Q_PROPERTY(uint deviceSortRole READ getDeviceSortRole WRITE setDeviceSortRole NOTIFY deviceSortChanged)
     Q_PROPERTY(uint deviceSortOrder READ getDeviceSortOrder WRITE setDeviceSortOrder NOTIFY deviceSortChanged)
 
+    bool m_firstlaunch = true;
+
     // Application window
     QSize m_appSize;
     QSize m_appPosition;
@@ -96,6 +101,7 @@ class SettingsManager: public QObject
     bool m_appThemeCSD = false;
     unsigned m_appUnits = 0;                    //!< QLocale::MeasurementSystem
     QString m_appLanguage = "auto";
+    QString m_appOrientation = "locked";
 
     // Application specific
     unsigned m_thumbQuality = 1;
@@ -123,12 +129,14 @@ class SettingsManager: public QObject
     ~SettingsManager();
 
 Q_SIGNALS:
+    void firstLaunchChanged();
     void initialSizeChanged();
     void appThemeChanged();
     void appThemeAutoChanged();
     void appThemeCSDChanged();
     void appUnitsChanged();
     void appLanguageChanged();
+    void appOrientationChanged();
     void autoMergeChanged();
     void autoTelemetryChanged();
     void autoDeleteChanged();
@@ -145,66 +153,71 @@ Q_SIGNALS:
 public:
     static SettingsManager *getInstance();
 
+    bool isFirstLaunch() const { return m_firstlaunch; }
+
     QSize getInitialSize() { return m_appSize; }
     QSize getInitialPosition() { return m_appPosition; }
     unsigned getInitialVisibility() { return m_appVisibility; }
 
     unsigned getAppTheme() const { return m_appTheme; }
-    void setAppTheme(unsigned value);
+    void setAppTheme(const unsigned value);
 
     bool getAppThemeAuto() const { return m_appThemeAuto; }
-    void setAppThemeAuto(bool value);
+    void setAppThemeAuto(const bool value);
 
     bool getAppThemeCSD() const { return m_appThemeCSD; }
-    void setAppThemeCSD(bool value);
+    void setAppThemeCSD(const bool value);
 
     unsigned getAppUnits() const { return m_appUnits; }
-    void setAppUnits(unsigned value);
+    void setAppUnits(const unsigned value);
 
     QString getAppLanguage() const { return m_appLanguage; }
     void setAppLanguage(const QString &value);
 
+    QString getAppOrientation() const { return m_appOrientation; }
+    void setAppOrientation(const QString &value);
+
     bool getAutoMerge() const { return m_autoMerge; }
-    void setAutoMerge(bool value);
+    void setAutoMerge(const bool value);
 
     bool getAutoTelemetry() const { return m_autoTelemetry; }
-    void setAutoTelemetry(bool value);
+    void setAutoTelemetry(const bool value);
 
     bool getAutoDelete() const { return m_autoDelete; }
-    void setAutoDelete(bool value);
+    void setAutoDelete(const bool value);
 
     bool getIgnoreJunk() const { return m_ignoreJunk; }
-    void setIgnoreJunk(bool value);
+    void setIgnoreJunk(const bool value);
 
     bool getIgnoreHdAudio() const { return m_ignoreHdAudio; }
-    void setIgnoreHdAudio(bool value);
+    void setIgnoreHdAudio(const bool value);
 
     unsigned getThumbQuality() const { return m_thumbQuality; }
-    void setThumbQuality(unsigned value);
+    void setThumbQuality(const unsigned value);
 
     unsigned getThumbFormat() const { return m_thumbFormat; }
-    void setThumbFormat(unsigned value);
+    void setThumbFormat(const unsigned value);
 
     unsigned getThumbSize() const { return m_thumbSize; }
-    void setThumbSize(unsigned value);
+    void setThumbSize(const unsigned value);
 
     bool getMoveToTrash() const { return m_moveToTrash; }
-    void setMoveToTrash(bool value);
+    void setMoveToTrash(const bool value);
 
     bool getMtpFullScan() const { return m_mtpFullScan; }
-    void setMtpFullScan(bool value);
+    void setMtpFullScan(const bool value);
 
     unsigned getLibrarySortRole() const { return m_librarySortRole; }
-    void setLibrarySortRole(unsigned order);
+    void setLibrarySortRole(const unsigned order);
 
     unsigned getLibrarySortOrder() const { return m_librarySortOrder; }
-    void setLibrarySortOrder(unsigned order);
+    void setLibrarySortOrder(const unsigned order);
 
     unsigned getDeviceSortRole() const { return m_deviceSortRole; }
-    void setDeviceSortRole(unsigned order);
+    void setDeviceSortRole(const unsigned order);
 
     unsigned getDeviceSortOrder() const { return m_deviceSortOrder; }
-    void setDeviceSortOrder(unsigned order);
+    void setDeviceSortOrder(const unsigned order);
 };
 
 /* ************************************************************************** */

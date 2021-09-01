@@ -566,7 +566,7 @@ Item {
             bottomMargin: 4
 
             interactive: !actionMenu.visible
-            keyNavigationEnabled: true
+            keyNavigationEnabled: !actionMenu.visible
             //snapMode: GridView.FlowTopToBottom
             focus: (appContent.state === "library" && screenLibrary.state === "stateMediaGrid")
 

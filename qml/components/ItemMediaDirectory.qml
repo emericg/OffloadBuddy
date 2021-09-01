@@ -25,7 +25,7 @@ Item {
 
         text: directory.directoryPath
 
-        onPathChanged: {
+        onEditingFinished: {
             directory.directoryPath = path
             focus = false
         }
@@ -75,9 +75,7 @@ Item {
                 highlightMode: "color"
                 visible: directory.available
                 source: "qrc:/assets/icons_material/baseline-folder_open-24px.svg"
-                onClicked: {
-                    utilsApp.openWith(directory.directoryPath)
-                }
+                onClicked: utilsApp.openWith(directory.directoryPath)
             }
 
             ItemImageButton {
@@ -88,29 +86,24 @@ Item {
 
                 highlightMode: "color"
                 visible: directory.available
+                enabled: directory.enabled
                 source: "qrc:/assets/icons_material/baseline-refresh-24px.svg"
-                onClicked: mediaLibrary.searchMediaDirectory(directory.directoryPath)
 
-                NumberAnimation on rotation {
-                    id: refreshAnimation
-                    duration: 1000
-                    from: 0
-                    to: 360
-                    running: directory.scanning
-                    loops: Animation.Infinite
-                    alwaysRunToEnd: true
-                    easing.type: Easing.Linear
-                }
+                animation: "rotate"
+                animationRunning: directory.scanning
+
+                onClicked: mediaLibrary.searchMediaDirectory(directory.directoryPath)
             }
 
-            ImageSvg {
-                width: 24
-                height: 24
+            ItemImageButton {
+                width: 32
+                height: 32
                 anchors.verticalCenter: parent.verticalCenter
 
+                highlightMode: "off"
                 visible: !directory.available
                 source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
-                color: Theme.colorWarning
+                iconColor: Theme.colorWarning
             }
         }
     }
@@ -121,9 +114,9 @@ Item {
         id: menus
         anchors.top: parent.top
         anchors.left: textField_path.right
-        anchors.leftMargin: 16
+        anchors.leftMargin: 12
         anchors.right: rowButtons.left
-        anchors.rightMargin: 16
+        anchors.rightMargin: 12
         anchors.bottom: parent.bottom
 
         property int memusmode: 0
@@ -132,11 +125,11 @@ Item {
         Row {
             width: parent.width
             anchors.verticalCenter: parent.verticalCenter
-            spacing: 8
+            spacing: 0
             visible: (menus.memusmode === 0 && directory.available)
 
             CheckBoxThemed {
-                id: checkBox_enabled2
+                id: checkBox_enabled
                 anchors.verticalCenter: parent.verticalCenter
 
                 checked: directory.enabled
@@ -144,7 +137,7 @@ Item {
             }
             Column {
                 anchors.verticalCenter: parent.verticalCenter
-                width: parent.width - checkBox_enabled2.width
+                width: parent.width - checkBox_enabled.width
                 spacing: 4
 
                 Text {
@@ -205,7 +198,7 @@ Item {
             visible: (menus.memusmode === 1)
 
             CheckBoxThemed {
-                id: checkBox_enabled
+                id: checkBox_enabled2
                 anchors.verticalCenter: parent.verticalCenter
                 text: qsTr("Enabled")
 
@@ -313,7 +306,7 @@ Item {
 
     Row {
         id: rowConfirmation
-        anchors.left: comboBox_content.right
+        anchors.left: parent.left
         anchors.leftMargin: 12
         anchors.right: parent.right
         anchors.rightMargin: 12

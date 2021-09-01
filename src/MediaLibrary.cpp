@@ -175,7 +175,6 @@ void MediaLibrary::searchMediaDirectories()
 void MediaLibrary::cleanMediaDirectory(const QString &path)
 {
     //qDebug() << "MediaLibrary::cleanMediaDirectory(" << path << ")";
-    Q_UNUSED(path)
 
     if (m_shotModel)
     {
@@ -215,6 +214,7 @@ void MediaLibrary::workerScanningStarted(const QString &path)
             if (dd && dd->getPath() == path)
             {
                 dd->setScanning(true);
+                break;
             }
         }
     }
@@ -240,6 +240,7 @@ void MediaLibrary::workerScanningFinished(const QString &path)
             if (dd && dd->getPath() == path)
             {
                 dd->setScanning(false);
+                break;
             }
         }
     }

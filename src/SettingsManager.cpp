@@ -137,6 +137,8 @@ bool SettingsManager::readSettings()
     return status;
 }
 
+/* ************************************************************************** */
+
 bool SettingsManager::writeSettings()
 {
     bool status = false;
@@ -146,7 +148,7 @@ bool SettingsManager::writeSettings()
     if (settings.isWritable())
     {
         settings.setValue("global/appTheme", m_appTheme);
-        settings.setValue("global/appThemeAuto", m_appTheme);
+        settings.setValue("global/appThemeAuto", m_appThemeAuto);
         settings.setValue("global/appThemeCSD", m_appThemeCSD);
         settings.setValue("global/appUnits", m_appUnits);
         settings.setValue("global/appLanguage", m_appLanguage);
@@ -184,7 +186,7 @@ bool SettingsManager::writeSettings()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void SettingsManager::setAppTheme(unsigned value)
+void SettingsManager::setAppTheme(const unsigned value)
 {
     if (m_appTheme != value)
     {
@@ -194,7 +196,7 @@ void SettingsManager::setAppTheme(unsigned value)
     }
 }
 
-void SettingsManager::setAppThemeAuto(bool value)
+void SettingsManager::setAppThemeAuto(const bool value)
 {
     if (m_appThemeAuto != value)
     {
@@ -204,7 +206,7 @@ void SettingsManager::setAppThemeAuto(bool value)
     }
 }
 
-void SettingsManager::setAppThemeCSD(bool value)
+void SettingsManager::setAppThemeCSD(const bool value)
 {
     if (m_appThemeCSD != value)
     {
@@ -214,7 +216,7 @@ void SettingsManager::setAppThemeCSD(bool value)
     }
 }
 
-void SettingsManager::setAppUnits(unsigned value)
+void SettingsManager::setAppUnits(const unsigned value)
 {
     if (m_appUnits != value)
     {
@@ -234,7 +236,17 @@ void SettingsManager::setAppLanguage(const QString &value)
     }
 }
 
-void SettingsManager::setAutoMerge(bool value)
+void SettingsManager::setAppOrientation(const QString &value)
+{
+    if (m_appOrientation != value)
+    {
+        m_appOrientation = value;
+        writeSettings();
+        Q_EMIT appOrientationChanged();
+    }
+}
+
+void SettingsManager::setAutoMerge(const bool value)
 {
     if (m_autoMerge != value)
     {
@@ -244,7 +256,7 @@ void SettingsManager::setAutoMerge(bool value)
     }
 }
 
-void SettingsManager::setAutoTelemetry(bool value)
+void SettingsManager::setAutoTelemetry(const bool value)
 {
     if (m_autoTelemetry != value)
     {
@@ -253,7 +265,7 @@ void SettingsManager::setAutoTelemetry(bool value)
         Q_EMIT autoTelemetryChanged();
     }
 }
-void SettingsManager::setAutoDelete(bool value)
+void SettingsManager::setAutoDelete(const bool value)
 {
     if (m_autoDelete != value)
     {
@@ -263,7 +275,7 @@ void SettingsManager::setAutoDelete(bool value)
     }
 }
 
-void SettingsManager::setIgnoreJunk(bool value)
+void SettingsManager::setIgnoreJunk(const bool value)
 {
     if (m_ignoreJunk != value)
     {
@@ -273,7 +285,7 @@ void SettingsManager::setIgnoreJunk(bool value)
     }
 }
 
-void SettingsManager::setIgnoreHdAudio(bool value)
+void SettingsManager::setIgnoreHdAudio(const bool value)
 {
     if (m_ignoreHdAudio != value)
     {
@@ -283,7 +295,7 @@ void SettingsManager::setIgnoreHdAudio(bool value)
     }
 }
 
-void SettingsManager::setThumbQuality(unsigned value)
+void SettingsManager::setThumbQuality(const unsigned value)
 {
     if (m_thumbQuality != value)
     {
@@ -293,7 +305,7 @@ void SettingsManager::setThumbQuality(unsigned value)
     }
 }
 
-void SettingsManager::setThumbFormat(unsigned value)
+void SettingsManager::setThumbFormat(const unsigned value)
 {
     if (m_thumbFormat != value)
     {
@@ -303,7 +315,7 @@ void SettingsManager::setThumbFormat(unsigned value)
     }
 }
 
-void SettingsManager::setThumbSize(unsigned value)
+void SettingsManager::setThumbSize(const unsigned value)
 {
     if (m_thumbSize != value)
     {
@@ -313,7 +325,7 @@ void SettingsManager::setThumbSize(unsigned value)
     }
 }
 
-void SettingsManager::setMoveToTrash(bool value)
+void SettingsManager::setMoveToTrash(const bool value)
 {
     if (m_moveToTrash != value)
     {
@@ -323,7 +335,7 @@ void SettingsManager::setMoveToTrash(bool value)
     }
 }
 
-void SettingsManager::setMtpFullScan(bool value)
+void SettingsManager::setMtpFullScan(const bool value)
 {
     if (m_mtpFullScan != value)
     {
@@ -333,7 +345,7 @@ void SettingsManager::setMtpFullScan(bool value)
     }
 }
 
-void SettingsManager::setLibrarySortRole(unsigned value)
+void SettingsManager::setLibrarySortRole(const unsigned value)
 {
     if (m_librarySortRole != value)
     {
@@ -343,7 +355,7 @@ void SettingsManager::setLibrarySortRole(unsigned value)
     }
 }
 
-void SettingsManager::setLibrarySortOrder(unsigned value)
+void SettingsManager::setLibrarySortOrder(const unsigned value)
 {
     if (m_librarySortOrder != value)
     {
@@ -353,7 +365,7 @@ void SettingsManager::setLibrarySortOrder(unsigned value)
     }
 }
 
-void SettingsManager::setDeviceSortRole(unsigned value)
+void SettingsManager::setDeviceSortRole(const unsigned value)
 {
     if (m_deviceSortRole != value)
     {
@@ -363,7 +375,7 @@ void SettingsManager::setDeviceSortRole(unsigned value)
     }
 }
 
-void SettingsManager::setDeviceSortOrder(unsigned value)
+void SettingsManager::setDeviceSortOrder(const unsigned value)
 {
     if (m_deviceSortOrder != value)
     {
