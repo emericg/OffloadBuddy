@@ -15,13 +15,14 @@ Item {
     anchors.bottom: parent.bottom
     anchors.margins: 16
 
+    // keep that in UI
     property bool isFullScreen: false
+    property string mode: ""
+    property int overlayHeight: overlays.height
 
     ////////
 
-    property string mode: ""
-
-    property int timelapseIndex: 0
+    property int timelapseIndex: 0 // keep that in UI (FOR NOW)
 
     property int startLimit: -1
     property int stopLimit: -1
@@ -34,8 +35,6 @@ Item {
     property real cropY: 0.0
     property real cropW: 1.0
     property real cropH: 1.0
-
-    property int overlayHeight: overlays.height
 
     ////////
 
@@ -1166,7 +1165,7 @@ Item {
                     highlightColor: Theme.colorPrimary
                     highlightMode: "color"
 
-                    source: "qrc:/assets/icons_material/baseline-content_cut_black-24px.svg"
+                    source: "qrc:/assets/icons_material/baseline-content_cut-24px.svg"
                     onClicked: toggleTrim()
                 }
                 ItemImageButton {

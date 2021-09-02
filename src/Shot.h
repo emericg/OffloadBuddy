@@ -251,11 +251,6 @@ class Shot: public QObject
     Q_PROPERTY(double altitude READ getAltitude NOTIFY metadataUpdated)
     Q_PROPERTY(double altitudeOffset READ getAltitudeOffset NOTIFY metadataUpdated)
 
-    Q_PROPERTY(bool selected READ isSelected WRITE setSelected NOTIFY selectionUpdated)
-    bool selected = false;
-    bool isSelected() const { return selected; }
-    void setSelected(bool value) { selected = value; Q_EMIT selectionUpdated(); }
-
     QString m_uuid;                 //!< Shot unique identifier, generated at object creation
 
     ShotUtils::ShotType m_type = ShotUtils::SHOT_UNKNOWN;
@@ -289,12 +284,13 @@ class Shot: public QObject
     // QML facing structure
     QList <ShotFile *> m_shotfiles;
 
+    // METADATA ////////////////////////////////////////////////////////////////
+
     // Dates
     QDateTime m_date_file;          //!< File creation
     QDateTime m_date_file_m;        //!< File last modification
     QDateTime m_date_metadata;
     QDateTime m_date_gps;
-    QDateTime m_date_user;          //!< Set by the user
 
     // GLOBAL metadata
     unsigned width = 0;
@@ -351,10 +347,144 @@ class Shot: public QObject
     bool getMetadataFromPicture(int index = 0);
     bool getMetadataFromVideo(int index = 0);
 
+    // USER SETTINGS ///////////////////////////////////////////////////////////
 
+    Q_PROPERTY(bool selected READ isSelected WRITE setSelected NOTIFY selectionUpdated) // > userSelected
+    Q_PROPERTY(QDateTime userDate READ getUserDate WRITE setUserDate NOTIFY userSettingsUpdated)
+    Q_PROPERTY(QString userTag READ getUserTag WRITE setUserTag NOTIFY userSettingsUpdated)
 
+    Q_PROPERTY(int trimStart READ getUserTrimStart WRITE setUserTrimStart NOTIFY userSettingsUpdated)
+    Q_PROPERTY(int trimStop READ getUserTrimStop WRITE setUserTrimStop NOTIFY userSettingsUpdated)
+    Q_PROPERTY(float cropAR READ getUserCropAR WRITE setUserCropAR NOTIFY userSettingsUpdated)
+    Q_PROPERTY(bool cropARlock READ getUserCropARlock WRITE setUserCropARlock NOTIFY userSettingsUpdated)
+    Q_PROPERTY(float cropX READ getUserCropX WRITE setUserCropX NOTIFY userSettingsUpdated)
+    Q_PROPERTY(float cropY READ getUserCropY WRITE setUserCropY NOTIFY userSettingsUpdated)
+    Q_PROPERTY(float cropW READ getUserCropW WRITE setUserCropW NOTIFY userSettingsUpdated)
+    Q_PROPERTY(float cropH READ getUserCropH WRITE setUserCropH NOTIFY userSettingsUpdated)
+    Q_PROPERTY(int userRotation READ getUserRotation WRITE setUserRotation NOTIFY userSettingsUpdated)
+    Q_PROPERTY(bool userHFlipped READ getUserHFlipped WRITE setUserHFlipped NOTIFY userSettingsUpdated)
+    Q_PROPERTY(bool userVFlipped READ getUserVFlipped WRITE setUserVFlipped NOTIFY userSettingsUpdated)
 
-    /// > GPMF WIP /////////////////////////
+    bool selected = false;
+
+    QDateTime m_user_date;
+    QString m_user_tag;
+
+    // video & timelapse position
+    int m_user_media_position = -1;
+
+    // encoding
+    int m_user_trim_start = -1;
+    int m_user_trim_duration = -1;
+
+    int m_user_rotation = 0;
+    bool m_user_VFlip = false;
+    bool m_user_HFlip = false;
+
+    float m_user_cropAR = 16.f/9.f;
+    bool m_user_cropARlock = true;
+    float m_user_cropX = 0.f;
+    float m_user_cropY = 0.f;
+    float m_user_cropW = 1.f;
+    float m_user_cropH = 1.f;
+
+    bool isSelected() const { return selected; }
+    void setSelected(bool value) { selected = value; Q_EMIT selectionUpdated(); }
+
+    QDateTime getUserDate() const { return m_date_gps; }
+    void setUserDate(const QDateTime &d) {
+        if (d != m_user_date) {
+            m_user_date = d;
+            Q_EMIT userSettingsUpdated();
+        }
+    }
+
+    QString getUserTag() const { return m_user_tag; }
+    void setUserTag(const QString &t) {
+        if (t != m_user_tag) {
+            m_user_tag = t;
+            Q_EMIT userSettingsUpdated();
+        }
+    }
+
+    int getUserTrimStart() const { return m_user_trim_start; }
+    void setUserTrimStart(const int trim) {
+         if (trim > 0) m_user_trim_start = trim;
+         else m_user_trim_start = -1;
+         Q_EMIT userSettingsUpdated();
+    }
+    int getUserTrimStop() const { return m_user_trim_duration; }
+    void setUserTrimStop(const int trim) {
+        if (trim > 0 && trim < m_duration) m_user_trim_duration = trim;
+        else m_user_trim_duration = -1;
+        Q_EMIT userSettingsUpdated();
+    }
+
+    float getUserCropAR() const { return m_user_cropAR; }
+    void setUserCropAR(const float ar) {
+        m_user_cropAR = ar;
+        Q_EMIT userSettingsUpdated();
+    }
+    bool getUserCropARlock() const { return m_user_cropARlock; }
+    void setUserCropARlock(const bool lock) {
+        if (lock != m_user_cropARlock) {
+            m_user_cropARlock = lock;
+            Q_EMIT userSettingsUpdated();
+        }
+    }
+
+    float getUserCropX() const { return m_user_cropX; }
+    void setUserCropX(const float c) {
+        if (c < 0.f) m_user_cropX = 0.f;
+        else if (c > 1.f) m_user_cropX = 1.f;
+        else m_user_cropX = c;
+        Q_EMIT userSettingsUpdated();
+    }
+    float getUserCropY() const { return m_user_cropY; }
+    void setUserCropY(const float c) {
+        if (c < 0.f) m_user_cropY = 0.f;
+        else if (c > 1.f) m_user_cropY = 1.f;
+        else m_user_cropY = c;
+        Q_EMIT userSettingsUpdated();
+    }
+    float getUserCropW() const { return m_user_cropW; }
+    void setUserCropW(const float c) {
+        if (c < 0.f) m_user_cropW = 0.f;
+        else if (c > 1.f) m_user_cropW = 1.f;
+        else m_user_cropW = c;
+        Q_EMIT userSettingsUpdated();
+    }
+    float getUserCropH() const { return m_user_cropH; }
+    void setUserCropH(const float c) {
+        if (c < 0.f) m_user_cropH = 0.f;
+        else if (c > 1.f) m_user_cropH = 1.f;
+        else m_user_cropH = c;
+        Q_EMIT userSettingsUpdated();
+    }
+
+    int getUserRotation() const { return m_user_rotation; }
+    void setUserRotation(const int r) {
+        if (r != m_user_rotation) {
+            m_user_rotation = r;
+            Q_EMIT userSettingsUpdated();
+        }
+    }
+    bool getUserHFlipped() const { return m_user_HFlip; }
+    void setUserHFlipped(const bool f) {
+        if (f != m_user_HFlip) {
+            m_user_HFlip = f;
+            Q_EMIT userSettingsUpdated();
+        }
+    }
+    bool getUserVFlipped() const { return m_user_VFlip; }
+    void setUserVFlipped(const bool f) {
+        if (f != m_user_VFlip) {
+            m_user_VFlip = f;
+            Q_EMIT userSettingsUpdated();
+        }
+    }
+
+    // TELEMETRY ///////////////////////////////////////////////////////////////
 
     typedef struct TriFloat {
         float x;
@@ -428,36 +558,28 @@ class Shot: public QObject
     float getDistanceKm() { return distance_km; }
     Q_PROPERTY(float distanceKm READ getDistanceKm NOTIFY metadataUpdated)
 
-public slots:
-    Q_INVOKABLE bool getMetadataFromVideoGPMF();
-    Q_INVOKABLE void updateSpeedsSerie(QtCharts::QLineSeries *serie, int appUnit);
-    Q_INVOKABLE void updateAltiSerie(QtCharts::QLineSeries *serie, int appUnit);
-    Q_INVOKABLE void updateAcclSeries(QtCharts::QLineSeries *x, QtCharts::QLineSeries *y, QtCharts::QLineSeries *z);
-    Q_INVOKABLE void updateGyroSeries(QtCharts::QLineSeries *x, QtCharts::QLineSeries *y, QtCharts::QLineSeries *z);
-    Q_INVOKABLE QGeoCoordinate getGpsCoordinates(unsigned index);
-
-    Q_INVOKABLE bool exportTelemetry(const QString &path, int format, int accl_frequency, int gps_frequency, bool egm96_correction);
-    Q_INVOKABLE bool exportGps(const QString &path, int format, int gps_frequency, bool egm96_correction);
-
-    /// < GPMF WIP /////////////////////////
-
-
-
 Q_SIGNALS:
     void shotUpdated();
     void stateUpdated();
     void selectionUpdated();
+    void usersettingsUpdated();
     void metadataUpdated();
+    void telemetryUpdated();
     void dataUpdated();
+    void userSettingsUpdated();
 
 public:
     Shot(QObject *parent = nullptr);
     Shot(ShotUtils::ShotType type, QObject *parent = nullptr);
     ~Shot();
 
-    void addFile(ofb_file *file);
+    // Shot IDs
+    QString getUuid() const { return m_uuid; }
 
-    const QList <ofb_file *> getFiles(bool withPreviews = true, bool withHdAudio = true, bool withOthers = true) const;
+    int getFileId() const { return m_shot_id; }
+    void setFileId(int id) { m_shot_id = id; }
+    int getCameraId() const { return m_camera_id; }
+    void setCameraId(int id) { m_camera_id = id; }
 
     unsigned getShotType() const { return m_type; }
     unsigned getFileType() const {
@@ -471,11 +593,9 @@ public:
     unsigned getState() const { return m_state; }
     void setState(ShotUtils::ShotState state) { m_state = state; emit stateUpdated(); }
 
-    Q_INVOKABLE bool isValid() const;
-    Q_INVOKABLE bool isGoPro() const;
-
-    Q_INVOKABLE void parseMetadata() { getMetadataFromVideo(); }
-    Q_INVOKABLE void parseTelemetry() { getMetadataFromVideoGPMF(); }
+    // Files
+    void addFile(ofb_file *file);
+    const QList <ofb_file *> getFiles(bool withPreviews = true, bool withHdAudio = true, bool withOthers = true) const;
 
     QString getFolderString();
     QString getFilesString() const;
@@ -485,8 +605,7 @@ public:
     const QString &getFolderRefString();
     const QString &getNameRefString() const { return m_shot_name; }
 
-    QString getUuid() const { return m_uuid; }
-
+    // Metadata
     QString getName() const { return m_shot_name; }
     qint64 getDuration() const;
     qint64 getSize() const;
@@ -543,6 +662,11 @@ public:
         else return QString::number(media_type);
     }
 
+    // HiLights
+    unsigned getHiLightCount() const { return m_hilight.size(); }
+    QVariant getHiLights() const { if (m_hilight.size() > 0) { return QVariant::fromValue(m_hilight); } return QVariant(); }
+
+    // GPS
     QString getLatitudeStr() const { return gps_lat_str; }
     QString getLongitudeStr() const { return gps_long_str; }
     QString getAltitudeStr() const { return gps_alt_str; }
@@ -551,16 +675,25 @@ public:
     double getAltitude() const { return gps_alt; }
     double getAltitudeOffset() const { return m_gps_altitude_offset; }
 
-    unsigned getHiLightCount() const { return m_hilight.size(); }
-    QVariant getHiLights() const { if (m_hilight.size() > 0) { return QVariant::fromValue(m_hilight); } return QVariant(); }
+    // Telemetry
+    Q_INVOKABLE void parseMetadata() { getMetadataFromVideo(); }
+    Q_INVOKABLE void parseTelemetry() { getMetadataFromVideoGPMF(); }
+
+    Q_INVOKABLE bool getMetadataFromVideoGPMF();
+    Q_INVOKABLE void updateSpeedsSerie(QtCharts::QLineSeries *serie, int appUnit);
+    Q_INVOKABLE void updateAltiSerie(QtCharts::QLineSeries *serie, int appUnit);
+    Q_INVOKABLE void updateAcclSeries(QtCharts::QLineSeries *x, QtCharts::QLineSeries *y, QtCharts::QLineSeries *z);
+    Q_INVOKABLE void updateGyroSeries(QtCharts::QLineSeries *x, QtCharts::QLineSeries *y, QtCharts::QLineSeries *z);
+    Q_INVOKABLE QGeoCoordinate getGpsCoordinates(unsigned index);
+
+    Q_INVOKABLE bool exportTelemetry(const QString &path, int format, int accl_frequency, int gps_frequency, bool egm96_correction);
+    Q_INVOKABLE bool exportGps(const QString &path, int format, int gps_frequency, bool egm96_correction);
 
     Q_INVOKABLE unsigned getGpsPointCount() const { return m_gps.size(); }
 
-    int getFileId() const { return m_shot_id; }
-    void setFileId(int id) { m_shot_id = id; }
-    int getCameraId() const { return m_camera_id; }
-    void setCameraId(int id) { m_camera_id = id; }
-
+    // Utils
+    Q_INVOKABLE bool isValid() const;
+    Q_INVOKABLE bool isGoPro() const;
     Q_INVOKABLE void openFile() const;
     Q_INVOKABLE void openFolder() const;
 };
