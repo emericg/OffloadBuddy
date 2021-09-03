@@ -223,7 +223,7 @@ void FirmwareManager::downloadFirmware(Device *d)
 {
     if (d)
     {
-        QUrl url = lastUrl(d->getModel());
+        QUrl url = lastUrl(d->getModelString());
         qDebug() << "FirmwareManager::downloadFirmware(" << url << ")";
 
         QString folderPath = d->getPath();
@@ -334,7 +334,7 @@ void FirmwareManager::firmwareProgress(qint64 bytesRead, qint64 totalBytes)
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-bool FirmwareManager::hasUpdate(const QString &name, const QString &version)
+bool FirmwareManager::hasUpdate(const QString &modelStr, const QString &version)
 {
     QJsonObject jsonObject = m_catalogGoPro_json.object();
     QJsonArray jsonArray = jsonObject["cameras"].toArray();
@@ -343,9 +343,10 @@ bool FirmwareManager::hasUpdate(const QString &name, const QString &version)
     {
         QJsonObject obj = value.toObject();
         QString n = obj["name"].toString();
+        QString m = obj["model_string"].toString();
         QString v = obj["version"].toString();
 
-        if (n == name)
+        if (n == modelStr || m == modelStr)
         {
             QString current = version;
             current.remove(0, 7);
@@ -359,7 +360,7 @@ bool FirmwareManager::hasUpdate(const QString &name, const QString &version)
     return false;
 }
 
-QString FirmwareManager::lastUpdate(const QString &name)
+QString FirmwareManager::lastUpdate(const QString &modelStr)
 {
     QJsonObject jsonObject = m_catalogGoPro_json.object();
     QJsonArray jsonArray = jsonObject["cameras"].toArray();
@@ -367,7 +368,10 @@ QString FirmwareManager::lastUpdate(const QString &name)
     foreach (const QJsonValue &value, jsonArray)
     {
         QJsonObject obj = value.toObject();
-        if (name == obj["name"].toString())
+        QString n = obj["name"].toString();
+        QString m = obj["model_string"].toString();
+
+        if (n == modelStr || m == modelStr)
         {
             return obj["version"].toString();
         }
@@ -376,7 +380,7 @@ QString FirmwareManager::lastUpdate(const QString &name)
     return QString();
 }
 
-QDateTime FirmwareManager::lastDate(const QString &name)
+QDateTime FirmwareManager::lastDate(const QString &modelStr)
 {
     QJsonObject jsonObject = m_catalogGoPro_json.object();
     QJsonArray jsonArray = jsonObject["cameras"].toArray();
@@ -384,7 +388,10 @@ QDateTime FirmwareManager::lastDate(const QString &name)
     foreach (const QJsonValue &value, jsonArray)
     {
         QJsonObject obj = value.toObject();
-        if (name == obj["name"].toString())
+        QString n = obj["name"].toString();
+        QString m = obj["model_string"].toString();
+
+        if (n == modelStr || m == modelStr)
         {
             return QDateTime::fromString(obj["release_date"].toString(), "yyyyMMdd");
         }
@@ -393,7 +400,7 @@ QDateTime FirmwareManager::lastDate(const QString &name)
     return QDateTime();
 }
 
-QString FirmwareManager::lastReleaseNotes(const QString &name)
+QString FirmwareManager::lastReleaseNotes(const QString &modelStr)
 {
     QJsonObject jsonObject = m_catalogGoPro_json.object();
     QJsonArray jsonArray = jsonObject["cameras"].toArray();
@@ -401,7 +408,10 @@ QString FirmwareManager::lastReleaseNotes(const QString &name)
     foreach (const QJsonValue &value, jsonArray)
     {
         QJsonObject obj = value.toObject();
-        if (name == obj["name"].toString())
+        QString n = obj["name"].toString();
+        QString m = obj["model_string"].toString();
+
+        if (n == modelStr || m == modelStr)
         {
             return obj["release_html"].toString().section("</p>", 1, -1);
         }
@@ -410,7 +420,7 @@ QString FirmwareManager::lastReleaseNotes(const QString &name)
     return QString();
 }
 
-QString FirmwareManager::lastUrl(const QString &name)
+QString FirmwareManager::lastUrl(const QString &modelStr)
 {
     QJsonObject jsonObject = m_catalogGoPro_json.object();
     QJsonArray jsonArray = jsonObject["cameras"].toArray();
@@ -418,7 +428,10 @@ QString FirmwareManager::lastUrl(const QString &name)
     foreach (const QJsonValue &value, jsonArray)
     {
         QJsonObject obj = value.toObject();
-        if (name == obj["name"].toString())
+        QString n = obj["name"].toString();
+        QString m = obj["model_string"].toString();
+
+        if (n == modelStr || m == modelStr)
         {
             return obj["url"].toString();
         }

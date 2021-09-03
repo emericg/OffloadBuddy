@@ -65,6 +65,7 @@ class Device: public ShotProvider
 
     Q_PROPERTY(QString brand READ getBrand NOTIFY deviceUpdated)
     Q_PROPERTY(QString model READ getModel NOTIFY deviceUpdated)
+    Q_PROPERTY(QString modelString READ getModelString NOTIFY deviceUpdated)
     Q_PROPERTY(QString serial READ getSerial NOTIFY deviceUpdated)
     Q_PROPERTY(QString firmware READ getFirmware NOTIFY deviceUpdated)
     Q_PROPERTY(int firmwareState READ getFirmwareState NOTIFY deviceUpdated)
@@ -95,7 +96,7 @@ class Device: public ShotProvider
     // Generic infos
     QString m_brand = "Unknown";//!< Device brand
     QString m_model = "device"; //!< Device model
-    QString m_stringId;         //!< A backup string that describe the device in case neither brand/model can be identified
+    QString m_model_string;     //!< A backup string that describe the device in case neither brand/model can be identified
     QString m_serial;
     QString m_firmware;
     DeviceUtils::DeviceFirmwareState m_firmwareState = DeviceUtils::FirmwareUnknown;
@@ -143,6 +144,7 @@ public:
     int getDeviceStorage() const { return m_deviceStorage; }
     QString getBrand() const { return m_brand; }
     QString getModel() const { return m_model; }
+    QString getModelString() const { return m_model_string; }
     QString getSerial() const { return m_serial; }
     QString getFirmware() const { return m_firmware; }
 

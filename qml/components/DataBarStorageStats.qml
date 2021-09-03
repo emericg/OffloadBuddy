@@ -15,6 +15,7 @@ Item {
         //console.log("StorageStats.load(" + currentDevice.model + ")")
 
         currentDevice.shotModel.computeStats()
+        dataBarStorageStats.visible = currentDevice.shotModel.shotCount
     }
 
     ////////////////////////////////////////////////////////////////////////////

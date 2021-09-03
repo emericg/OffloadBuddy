@@ -53,6 +53,8 @@ Device::Device(const DeviceUtils::DeviceType type, const StorageUtils::StorageTy
     m_serial = serial;
     m_firmware = version;
 
+    m_model_string = m_firmware.left(6);
+
     m_uuid = QUuid::createUuid().toString();
 
     if (m_deviceStorage == StorageUtils::StorageMTP)
@@ -435,7 +437,7 @@ void Device::updateFirmwareState()
     FirmwareManager *fmgr = FirmwareManager::getInstance();
     if (fmgr)
     {
-        if (fmgr->hasUpdate(m_model, m_firmware))
+        if (fmgr->hasUpdate(m_model_string, m_firmware))
         {
             m_firmwareState = DeviceUtils::FirmwareUpdateAvailable;
 

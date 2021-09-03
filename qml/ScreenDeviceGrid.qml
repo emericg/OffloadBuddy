@@ -655,7 +655,7 @@ Item {
             width: 350; height: 350; radius: 350;
             anchors.centerIn: parent
             visible: (shotsView.count <= 0)
-            color: Theme.colorHeader
+            color: Theme.colorSeparator
 
             Image {
                 id: imageEmpty

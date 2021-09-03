@@ -96,11 +96,11 @@ public:
     void downloadFirmware(Device *device);
     void cancelFirmware(Device *device);
 
-    Q_INVOKABLE bool hasUpdate(const QString &cameraName, const QString &version);
-    Q_INVOKABLE QString lastUpdate(const QString &cameraName);
-    Q_INVOKABLE QDateTime lastDate(const QString &cameraName);
-    Q_INVOKABLE QString lastReleaseNotes(const QString &cameraName);
-    Q_INVOKABLE QString lastUrl(const QString &cameraName);
+    Q_INVOKABLE bool hasUpdate(const QString &model, const QString &version);
+    Q_INVOKABLE QString lastUpdate(const QString &model);
+    Q_INVOKABLE QDateTime lastDate(const QString &model);
+    Q_INVOKABLE QString lastReleaseNotes(const QString &model);
+    Q_INVOKABLE QString lastUrl(const QString &model);
 };
 
 /* ************************************************************************** */

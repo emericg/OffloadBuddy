@@ -126,8 +126,7 @@ Rectangle {
 
     // CONTENT /////////////////////////////////////////////////////////////////
 
-    Flickable
-    {
+    Flickable {
         anchors.top: rectangleHeader.bottom
         anchors.left: parent.left
         anchors.right: parent.right
@@ -146,9 +145,9 @@ Rectangle {
 
             ////////////////////////////////
 
-            Rectangle {
-                width: columnDevice.width
-                height: columnDevice.height + 48
+            Rectangle { // DEVICE
+                width: contentflow.boxSize
+                height: columnDevice.height + 80
                 radius: Theme.componentRadius
 
                 color: Theme.colorBackground
@@ -204,8 +203,9 @@ Rectangle {
                 Column {
                     id: columnDevice
                     anchors.top: columnDeviceHeader.bottom
-                    width: contentflow.boxSize
-                    padding: 16
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.margins: 16
                     spacing: 16
 
                     Row {
@@ -292,9 +292,9 @@ Rectangle {
 
             ////////////////////////////////
 
-            Rectangle {
-                width: columnStorage.width
-                height: columnStorage.height + 48
+            Rectangle { // STORAGE
+                width: contentflow.boxSize
+                height: columnStorage.height + 80
                 radius: Theme.componentRadius
 
                 color: Theme.colorBackground
@@ -335,14 +335,15 @@ Rectangle {
                 Column {
                     id: columnStorage
                     anchors.top: columnStorageHeader.bottom
-                    width: contentflow.boxSize
-                    padding: 16
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.margins: 16
                     spacing: 16
 
                     Repeater {
                         model: currentDevice.storageList
                         delegate: DataBarStorage {
-                            width: columnStorage.width-32
+                            width: columnStorage.width
                             value: modelData.spaceUsed
                             valueMin: 0
                             valueMax: modelData.spaceTotal
@@ -353,7 +354,7 @@ Rectangle {
 
                     DataBarPower {
                         id: deviceBatteryBar
-                        width: columnStorage.width-32
+                        width: columnStorage.width
                         height: 16
 
                         visible: currentDevice.batteryLevel > 0
@@ -364,7 +365,7 @@ Rectangle {
 
                     DataBarStorageStats {
                         id: deviceStorageStats
-                        width: columnStorage.width-32
+                        width: columnStorage.width
                         height: 32
                     }
                 }
@@ -372,9 +373,9 @@ Rectangle {
 
             ////////////////////////////////
 
-            Rectangle {
-                width: columnCapabilities.width
-                height: columnCapabilities.height + 48
+            Rectangle { // CAPABILITIES
+                width: contentflow.boxSize
+                height: columnCapabilities.height + 80
                 radius: Theme.componentRadius
 
                 color: Theme.colorBackground
@@ -417,8 +418,9 @@ Rectangle {
                 Column {
                     id: columnCapabilities
                     anchors.top: columnCapabilitiesHeader.bottom
-                    width: contentflow.boxSize
-                    padding: 16
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.margins: 16
                     spacing: 16
 
                     Row {
@@ -437,26 +439,11 @@ Rectangle {
                             font.pixelSize: Theme.fontSizeContent
                         }
                     }
-                    Row {
+                    Flow {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
                         spacing: 8
-
-                        Text {
-                            text: qsTr("Codecs")
-                            color: Theme.colorText
-                            font.bold: true
-                            font.pixelSize: Theme.fontSizeContent
-                        }
-                        Repeater {
-                            model: currentDevice.capabilities.codecs
-                            Text {
-                                text: modelData + " / "
-                                color: Theme.colorText
-                                font.pixelSize: Theme.fontSizeContent
-                            }
-                        }
-                    }
-                    Row {
-                        spacing: 8
+                        visible: currentDevice.capabilities.features
 
                         Text {
                             text: qsTr("Features")
@@ -470,11 +457,15 @@ Rectangle {
                                 text: modelData + " / "
                                 color: Theme.colorText
                                 font.pixelSize: Theme.fontSizeContent
+                                wrapMode: Text.WordWrap
                             }
                         }
                     }
-                    Row {
+                    Flow {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
                         spacing: 8
+                        visible: currentDevice.capabilities.modesVideo
 
                         Text {
                             text: qsTr("Video modes")
@@ -491,8 +482,11 @@ Rectangle {
                             }
                         }
                     }
-                    Row {
+                    Flow {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
                         spacing: 8
+                        visible: currentDevice.capabilities.modesPhoto
 
                         Text {
                             text: qsTr("Photo modes")
@@ -509,8 +503,11 @@ Rectangle {
                             }
                         }
                     }
-                    Row {
+                    Flow {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
                         spacing: 8
+                        visible: currentDevice.capabilities.modesTimelapse
 
                         Text {
                             text: qsTr("Timelapse modes")
@@ -532,9 +529,7 @@ Rectangle {
 
                     Column {
                         anchors.left: parent.left
-                        anchors.leftMargin: 16
                         anchors.right: parent.right
-                        anchors.rightMargin: 16
 
                         visible: currentDevice.capabilities.modesVideoTable
 

@@ -32,7 +32,7 @@ Popup {
     function openDevice(device) {
         if (typeof device === "undefined" || !device) return
         if (device.brand !== "GoPro") return
-        if (!firmwareManager.hasUpdate(device.model, device.firmware)) return
+        if (!firmwareManager.hasUpdate(device.modelString, device.firmware)) return
 
         currentDevice = device
         visible = true
@@ -182,13 +182,13 @@ Popup {
                         spacing: 16
 
                         Text {
-                            text: "v" + firmwareManager.lastUpdate(currentDevice.model)
+                            text: "v" + firmwareManager.lastUpdate(currentDevice.modelString)
                             color: Theme.colorText
                             font.pixelSize: Theme.fontSizeContent
                         }
 
                         Text {
-                            text: "(" + firmwareManager.lastDate(currentDevice.model).toLocaleDateString() + ")"
+                            text: "(" + firmwareManager.lastDate(currentDevice.modelString).toLocaleDateString() + ")"
                             color: Theme.colorText
                             font.pixelSize: Theme.fontSizeContent
                         }
@@ -215,7 +215,7 @@ Popup {
 
                         Text {
                             width: parent.width-32
-                            text: firmwareManager.lastReleaseNotes(currentDevice.model)
+                            text: firmwareManager.lastReleaseNotes(currentDevice.modelString)
                             wrapMode: Text.WordWrap
                             color: Theme.colorText
                             font.pixelSize: Theme.fontSizeContent
