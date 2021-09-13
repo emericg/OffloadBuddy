@@ -66,6 +66,7 @@ public slots:
 
 signals:
     void startWorking();
+    void stopWorking();
 
     void jobStarted(int);
     void jobProgress(int, float);

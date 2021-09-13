@@ -549,24 +549,26 @@ void DeviceManager::addMtpDevice(ofb_mtp_device *deviceInfos)
 
 void DeviceManager::removeFsDevice(const QString &path)
 {
-    if (path.isEmpty())
-        return;
+    if (path.isEmpty()) return;
 
     QList<QObject *>::iterator it = m_devices.begin();
     while (it != m_devices.end())
     {
         Device *d = qobject_cast<Device*>(*it);
-        if (d && (d->getPath(0) == path || d->getPath(1) == path))
+        if (d)
         {
-            it = m_devices.erase(it);
+            if (d->getPath(0) == path || d->getPath(1) == path)
+            {
+                it = m_devices.erase(it);
 
-            emit deviceRemoved(d);
-            emit deviceListUpdated();
+                emit deviceRemoved(d);
+                emit deviceListUpdated();
 
-            return;
+                return;
+            }
         }
-        else
-            ++it;
+
+        ++it;
     }
 }
 

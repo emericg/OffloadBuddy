@@ -83,6 +83,8 @@ void JobWorkerThread::queueWork(JobTracker *job)
     QMutexLocker locker(&m_jobsMutex);
     m_jobs.enqueue(job);
 
+    //emit startWorking();
+
     qDebug() << "<< JobWorkerThread::queueWork()";
 }
 

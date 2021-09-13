@@ -67,52 +67,52 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             spacing: 12
 
-            ImageSvg {
-                id: imageJob
+            Item {
                 width: 32
                 height: 32
                 anchors.verticalCenter: parent.verticalCenter
 
-                source: {
-                    if (job.type === JobUtils.JOB_ENCODE || job.type === JobUtils.JOB_CLIP)
-                        return "qrc:/assets/icons_material/baseline-memory-24px.svg"
-                    else if (job.type === JobUtils.JOB_OFFLOAD || job.type === JobUtils.JOB_MOVE)
-                        return "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
-                    else if (job.type === JobUtils.JOB_MERGE)
-                        return "qrc:/assets/icons_material/baseline-merge_type-24px.svg"
-                    else if (job.type === JobUtils.JOB_DELETE || job.type === JobUtils.JOB_FORMAT)
-                        return "qrc:/assets/icons_material/baseline-delete-24px.svg"
-                    else if (job.type === JobUtils.JOB_TELEMETRY)
-                        return "qrc:/assets/icons_material/baseline-insert_chart-24px.svg"
-                    else if (job.type === JobUtils.JOB_FIRMWARE_UPDATE)
-                        return "qrc:/assets/icons_material/baseline-settings_applications-24px.svg"
-                    else
-                        return "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
-                }
-                color: Theme.colorIcon
+                ImageSvg {
+                    id: imageJob
+                    width: 32
+                    height: 32
 
-                SequentialAnimation on opacity {
-                    running: (job.state === JobUtils.JOB_STATE_WORKING &&
-                              job.type === JobUtils.JOB_ENCODE)
-                    loops: Animation.Infinite
-                    alwaysRunToEnd: true
+                    source: {
+                        if (job.type === JobUtils.JOB_ENCODE || job.type === JobUtils.JOB_CLIP)
+                            return "qrc:/assets/icons_material/baseline-memory-24px.svg"
+                        else if (job.type === JobUtils.JOB_OFFLOAD || job.type === JobUtils.JOB_MOVE)
+                            return "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
+                        else if (job.type === JobUtils.JOB_MERGE)
+                            return "qrc:/assets/icons_material/baseline-merge_type-24px.svg"
+                        else if (job.type === JobUtils.JOB_DELETE || job.type === JobUtils.JOB_FORMAT)
+                            return "qrc:/assets/icons_material/baseline-delete-24px.svg"
+                        else if (job.type === JobUtils.JOB_TELEMETRY)
+                            return "qrc:/assets/icons_material/baseline-insert_chart-24px.svg"
+                        else if (job.type === JobUtils.JOB_FIRMWARE_UPDATE)
+                            return "qrc:/assets/icons_material/baseline-settings_applications-24px.svg"
+                        else
+                            return "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
+                    }
+                    color: Theme.colorIcon
 
-                    PropertyAnimation { to: 0.66; duration: 666; }
-                    PropertyAnimation { to: 1; duration: 666; }
-                }
-                SequentialAnimation {
-                    running: (job.state === JobUtils.JOB_STATE_WORKING &&
-                              job.type === JobUtils.JOB_OFFLOAD)
-                    loops: Animation.Infinite
-                    //alwaysRunToEnd: true
+                    SequentialAnimation on opacity {
+                        running: (job.state === JobUtils.JOB_STATE_WORKING &&
+                                  job.type === JobUtils.JOB_ENCODE)
+                        loops: Animation.Infinite
+                        alwaysRunToEnd: true
 
-                    NumberAnimation {
-                        target: imageJob
-                        property: "y"
-                        duration: 1000
-                        from: -40
-                        to: 40
+                        PropertyAnimation { to: 0.66; duration: 666; }
+                        PropertyAnimation { to: 1; duration: 666; }
+                    }
+                    SequentialAnimation {
+                        running: (job.state === JobUtils.JOB_STATE_WORKING &&
+                                  job.type === JobUtils.JOB_OFFLOAD)
+                        loops: Animation.Infinite
+                        alwaysRunToEnd: false
+
                         onStopped: imageJob.y = 0
+                        NumberAnimation { target: imageJob; property: "y"; duration: 666; to: 32; }
+                        NumberAnimation { target: imageJob; property: "y"; duration: 666; to: -32; }
                     }
                 }
             }
@@ -264,7 +264,12 @@ Rectangle {
                 }
             }
 
-            Item { width: 8; height: 8; } // separator
+            Item { // separator
+                width: 8; height: 8;
+                visible: (rectangleOpenFile.visible || rectangleOpenFolder.visible ||
+                          rectanglePlayPause.visible || rectangleStop.visible ||
+                          jobETA.visible)
+            }
 
             ImageSvg {
                 id: imageStatus
@@ -276,34 +281,13 @@ Rectangle {
                 color: Theme.colorIcon
 
                 NumberAnimation on rotation {
-                    id: encodeAnimation
+                    loops: Animation.Infinite
+                    alwaysRunToEnd: true
 
+                    running: (job.state === JobUtils.JOB_STATE_WORKING)
                     from: 0
                     to: 360
                     duration: 2000
-                    loops: Animation.Infinite
-                    alwaysRunToEnd: true
-
-                    running: (job.state === JobUtils.JOB_STATE_WORKING &&
-                              job.type !== JobUtils.JOB_OFFLOAD)
-                }
-
-                SequentialAnimation {
-                    id: offloadAnimation
-                    loops: Animation.Infinite
-                    alwaysRunToEnd: true
-
-                    running: (job.state === JobUtils.JOB_STATE_WORKING &&
-                              job.type === JobUtils.JOB_OFFLOAD)
-                    onFinished: imageStatus.y = 0
-
-                    NumberAnimation {
-                        target: imageStatus
-                        property: "y"
-                        from: -40
-                        to: 40
-                        duration: 1000
-                    }
                 }
             }
         }

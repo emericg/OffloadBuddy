@@ -375,27 +375,27 @@ Item {
                     ItemLilMenuButton {
                         source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
                         sourceSize: 18
-                        selected: (shotsView.cellSizeTarget === 221)
+                        selected: (shotsView.cellSizeTarget === 240)
                         onClicked: {
-                            shotsView.cellSizeTarget = 221
+                            shotsView.cellSizeTarget = 240
                             shotsView.computeCellSize()
                         }
                     }
                     ItemLilMenuButton {
                         source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
                         sourceSize: 22
-                        selected: (shotsView.cellSizeTarget === 279)
+                        selected: (shotsView.cellSizeTarget === 320)
                         onClicked: {
-                            shotsView.cellSizeTarget = 279
+                            shotsView.cellSizeTarget = 320
                             shotsView.computeCellSize()
                         }
                     }
                     ItemLilMenuButton {
                         source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
                         sourceSize: 26
-                        selected: (shotsView.cellSizeTarget === 376)
+                        selected: (shotsView.cellSizeTarget === 400)
                         onClicked: {
-                            shotsView.cellSizeTarget = 376
+                            shotsView.cellSizeTarget = 400
                             shotsView.computeCellSize()
                         }
                     }
@@ -588,11 +588,11 @@ Item {
                 }
                 onThumbSizeChanged: {
                     if (settingsManager.thumbSize === 1)
-                        shotsView.cellSizeTarget = 221
+                        shotsView.cellSizeTarget = 240
                     else if (settingsManager.thumbSize === 2)
-                        shotsView.cellSizeTarget = 279
+                        shotsView.cellSizeTarget = 320
                     else if (settingsManager.thumbSize === 3)
-                        shotsView.cellSizeTarget = 376
+                        shotsView.cellSizeTarget = 400
                     else if (settingsManager.thumbSize === 4)
                         shotsView.cellSizeTarget = 512
 
@@ -612,11 +612,11 @@ Item {
             }
             property int cellSizeTarget: {
                 if (settingsManager.thumbSize === 1)
-                    return 221
+                    return 240
                 else if (settingsManager.thumbSize === 2)
-                    return 279
+                    return 320
                 else if (settingsManager.thumbSize === 3)
-                    return 376
+                    return 400
                 else if (settingsManager.thumbSize === 4)
                     return 512
             }

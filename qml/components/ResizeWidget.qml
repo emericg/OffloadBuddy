@@ -375,18 +375,18 @@ Item {
         }
         ItemImageButton {
             id: buttonLock
-            width: 32; height: 32;
+            //width: 32; height: 32;
             anchors.right: parent.right
             anchors.rightMargin: 8
             anchors.top: parent.top
             anchors.topMargin: 8
 
-            visible: resizeWidget.editing
             background: true
             backgroundColor: "#222222"
             highlightMode: "color"
             iconColor: (resizeWidget.projectARlock) ? Theme.colorPrimary : "white"
 
+            visible: resizeWidget.editing
             source: "qrc:/assets/icons_material/outline-https-24px.svg"
             onClicked: {
                 resizeWidget.projectARlock = !resizeWidget.projectARlock
@@ -455,27 +455,23 @@ Item {
 
             ItemImageButton {
                 id: buttonReset
-                width: 32; height: 32;
-
-                visible: resizeWidget.editing
+                iconColor: "white"
                 background: true
                 backgroundColor: "#222222"
                 highlightMode: "color"
-                iconColor: highlighted ? Theme.colorPrimary : "white"
 
+                visible: resizeWidget.editing
                 source: "qrc:/assets/icons_material/baseline-close-24px.svg"
                 onClicked: resizeWidget.reset()
             }
             ItemImageButton {
-                id: buttonValidate
-                width: 32; height: 32;
-
-                visible: resizeWidget.editing
+                id: buttonValidate               
+                iconColor: "white"
                 background: true
                 backgroundColor: "#222222"
                 highlightMode: "color"
-                iconColor: highlighted ? Theme.colorPrimary : "white"
 
+                visible: resizeWidget.editing
                 source: "qrc:/assets/icons_material/baseline-done-24px.svg"
                 onClicked: resizeWidget.editing = false
             }

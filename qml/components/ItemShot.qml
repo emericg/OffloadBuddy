@@ -11,7 +11,7 @@ import "qrc:/js/UtilsString.js" as UtilsString
 
 Rectangle {
     id: itemShot
-    width: 280
+    width: 400
     height: Math.round(width / cellFormat)
     color: Theme.colorForeground
 
@@ -27,18 +27,18 @@ Rectangle {
     }
 
     function handleState() {
-        icon_state.visible = true
-        overlayWorkDone.visible = false
-
         if (shot.state === ShotUtils.SHOT_STATE_QUEUED) {
+            icon_state.visible = true
             icon_state.source = "qrc:/assets/icons_material/baseline-schedule-24px.svg"
             offloadAnimation.stop()
             encodeAnimation.stop()
         } else if (shot.state === ShotUtils.SHOT_STATE_OFFLOADING) {
-            //icon_state.source = "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
+            icon_state.visible = true
+            icon_state.source = "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
             offloadAnimation.start()
         } else if (shot.state === ShotUtils.SHOT_STATE_ENCODING) {
-            //icon_state.source = "qrc:/assets/icons_material/baseline-memory-24px.svg"
+            icon_state.visible = true
+            icon_state.source = "qrc:/assets/icons_material/baseline-memory-24px.svg"
             encodeAnimation.start()
         } else if (shot.state === ShotUtils.SHOT_STATE_DONE ||
                    shot.state === ShotUtils.SHOT_STATE_OFFLOADED ||
@@ -269,37 +269,41 @@ Rectangle {
 
         ////
 
-        ImageSvg {
-            id: icon_state
+        Item {
             width: 24
             height: 24
-
+            clip: true
             anchors.top: parent.top
             anchors.topMargin: 8
             anchors.right: parent.right
             anchors.rightMargin: 8
 
-            color: "white"
+            ImageSvg {
+                id: icon_state
+                width: 24
+                height: 24
 
-            NumberAnimation on rotation {
-                id: encodeAnimation
-                running: false
+                color: "white"
 
-                onStarted: icon_state.source = "qrc:/assets/icons_material/baseline-memory-24px.svg"
-                onStopped: icon_state.rotation = 0
-                duration: 2000;
-                from: 0;
-                to: 360;
-                loops: Animation.Infinite
-            }
-            SequentialAnimation {
-                id: offloadAnimation
-                running: false
+                NumberAnimation on rotation {
+                    id: encodeAnimation
+                    running: false
+                    loops: Animation.Infinite
 
-                onStarted: icon_state.source = "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
-                onStopped: icon_state.y = 0
-                NumberAnimation { target: icon_state; property: "y"; from: -40; to: 40; duration: 1000; }
-                loops: Animation.Infinite
+                    onStopped: icon_state.rotation = 0
+                    duration: 2000
+                    from: 0
+                    to: 360
+                }
+                SequentialAnimation {
+                    id: offloadAnimation
+                    running: false
+                    loops: Animation.Infinite
+
+                    onStopped: icon_state.y = 0
+                    NumberAnimation { target: icon_state; property: "y"; to: 24; duration: 500; }
+                    NumberAnimation { target: icon_state; property: "y"; to: -24; duration: 500; }
+                }
             }
         }
 
@@ -399,6 +403,7 @@ Rectangle {
         id: overlayWorkDone
         anchors.fill: parent
 
+        visible: false
         color: "#80ffffff"
 
         ImageSvg {

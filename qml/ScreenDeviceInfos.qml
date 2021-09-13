@@ -279,7 +279,9 @@ Rectangle {
                             return Theme.colorPrimary
                         }
 
-                        source: "qrc:/assets/icons_material/baseline-archive-24px.svg"
+                        source: currentDevice.firmwareState === DeviceUtils.FirmwareUpToDate ?
+                                    "qrc:/assets/icons_material/baseline-done-24px.svg" :
+                                    "qrc:/assets/icons_material/baseline-archive-24px.svg"
 
                         visible: (currentDevice.firmwareState > 0)
                         onClicked: {

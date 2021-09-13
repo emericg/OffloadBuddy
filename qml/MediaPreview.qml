@@ -761,6 +761,7 @@ Item {
                 backgroundColor: "#222"
                 highlightColor: "green"
                 highlightMode: "color"
+
                 visible: orientationToTransform_qt(mediaArea.rotation, mediaArea.hflipped, mediaArea.vflipped) !== shot.transformation
                 source: "qrc:/assets/icons_material/baseline-save-24px.svg"
                 //onClicked: shot.saveRotation(angle)
@@ -771,6 +772,7 @@ Item {
                 background: true
                 backgroundColor: "#222"
                 highlightMode: "color"
+
                 visible: orientationToTransform_qt(mediaArea.rotation, mediaArea.hflipped, mediaArea.vflipped) !== shot.transformation
                 source: "qrc:/assets/icons_material/baseline-close-24px.svg"
                 onClicked: computeTransformation()
@@ -781,6 +783,7 @@ Item {
                 background: true
                 backgroundColor: "#222"
                 highlightMode: "color"
+
                 source: "qrc:/assets/icons_material/baseline-rotate_left-24px.svg"
                 onClicked: mediaArea.addRotation(-90)
             }
@@ -790,6 +793,7 @@ Item {
                 background: true
                 backgroundColor: "#222"
                 highlightMode: "color"
+
                 source: "qrc:/assets/icons_material/baseline-rotate_right-24px.svg"
                 onClicked: mediaArea.addRotation(+90)
             }
@@ -799,6 +803,7 @@ Item {
                 background: true
                 backgroundColor: "#222"
                 highlightMode: "color"
+
                 source: "qrc:/assets/icons_material/baseline-flip-24px.svg"
                 onClicked: mediaArea.setFlip("vertical")
             }
@@ -809,6 +814,7 @@ Item {
                 background: true
                 backgroundColor: "#222"
                 highlightMode: "color"
+
                 source: "qrc:/assets/icons_material/baseline-flip-24px.svg"
                 onClicked: mediaArea.setFlip("horizontal")
             }

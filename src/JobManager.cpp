@@ -232,7 +232,7 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
         // ffmpeg worker
         if (m_job_cpu == nullptr)
         {
-            qDebug() << "Starting an FFMPEG worker";
+            qDebug() << "Starting a JobWorkerFFmpeg";
             m_job_cpu = new JobWorkerFFmpeg();
 
             connect(m_job_cpu, SIGNAL(jobStarted(int)), this, SLOT(jobStarted(int)));
@@ -255,11 +255,11 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
         // async worker
         if (m_job_web == nullptr)
         {
-            qDebug() << "Starting an ASYNC worker";
+            qDebug() << "Starting a JobWorkerASync";
             m_job_web = new JobWorkerASync();
 
-            connect(m_job_web, SIGNAL(jobProgress(int,float)), this, SLOT(jobProgress(int,float)));
             connect(m_job_web, SIGNAL(jobStarted(int)), this, SLOT(jobStarted(int)));
+            connect(m_job_web, SIGNAL(jobProgress(int,float)), this, SLOT(jobProgress(int,float)));
             connect(m_job_web, SIGNAL(jobFinished(int,int)), this, SLOT(jobFinished(int,int)));
             connect(m_job_web, SIGNAL(jobErrored(int,int)), this, SLOT(jobErrored(int,int)));
             connect(m_job_web, SIGNAL(shotStarted(int,Shot*)), this, SLOT(shotStarted(int,Shot*)));
@@ -285,9 +285,8 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
 
             if (m_selected_worker == nullptr)
             {
-                qDebug() << "Starting a THREAD worker";
+                qDebug() << "Starting a JobWorkerThread";
                 m_selected_worker = new JobWorkerThread();
-                m_selected_worker->start();
 
                 connect(m_selected_worker, SIGNAL(startWorking()), m_selected_worker, SLOT(work()));
                 connect(m_selected_worker, SIGNAL(jobProgress(int,float)), this, SLOT(jobProgress(int,float)));
@@ -299,9 +298,9 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
                 //connect(m_selected_worker, SIGNAL(shotErrored(int,int,Shot*)), this, SLOT(shotErrored(int,int,Shot*)));
                 connect(m_selected_worker, SIGNAL(fileProduced(QString)), this, SLOT(newFile(QString)));
 
-                status = true;
-
                 m_job_instant = m_selected_worker;
+                m_selected_worker->start();
+                status = true;
             }
         }
         else if (type == JobUtils::JOB_OFFLOAD || type == JobUtils::JOB_MOVE || type == JobUtils::JOB_TELEMETRY)
@@ -311,9 +310,8 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
 
             if (m_selected_worker == nullptr)
             {
-                qDebug() << "Starting a sync worker";
+                qDebug() << "Starting a JobWorkerThread";
                 m_selected_worker = new JobWorkerThread();
-                m_selected_worker->start();
 
                 connect(m_selected_worker, SIGNAL(startWorking()), m_selected_worker, SLOT(work()));
                 connect(m_selected_worker, SIGNAL(jobProgress(int,float)), this, SLOT(jobProgress(int,float)));
@@ -325,10 +323,10 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
                 //connect(m_selected_worker, SIGNAL(shotErrored(int,int,Shot*)), this, SLOT(shotErrored(int,int,Shot*)));
                 connect(m_selected_worker, SIGNAL(fileProduced(QString)), this, SLOT(newFile(QString)));
 
-                status = true;
-
                 if (dev) m_job_disk.insert(dev->getUuid(), m_selected_worker);
                 else m_job_disk.insert("hdd", m_selected_worker);
+                m_selected_worker->start();
+                status = true;
             }
         }
         else
@@ -618,15 +616,21 @@ QString JobManager::getandmakeDestination(Shot *s, Device *d, MediaDirectory *md
                 }
                 else if (h == StorageUtils::HierarchyShot)
                 {
-                    destDir += s->getName();
-                    destDir += QDir::separator();
+                    if (s->getFileCount() > 1)
+                    {
+                        destDir += s->getName();
+                        destDir += QDir::separator();
+                    }
                 }
                 else if (h == StorageUtils::HierarchyDateShot)
                 {
                     destDir += s->getDate().toString("yyyy-MM-dd");
                     destDir += QDir::separator();
-                    destDir += s->getName();
-                    destDir += QDir::separator();
+                    if (s->getFileCount() > 1)
+                    {
+                        destDir += s->getName();
+                        destDir += QDir::separator();
+                    }
                 }
                 else if (h >= StorageUtils::HierarchyDateDeviceShot)
                 {
@@ -637,8 +641,11 @@ QString JobManager::getandmakeDestination(Shot *s, Device *d, MediaDirectory *md
                         destDir += d->getModel();
                         destDir += QDir::separator();
                     }
-                    destDir += s->getName();
-                    destDir += QDir::separator();
+                    if (s->getFileCount() > 1)
+                    {
+                        destDir += s->getName();
+                        destDir += QDir::separator();
+                    }
                 }
                 else if (h >= StorageUtils::HierarchyYearDateDeviceShot)
                 {
@@ -651,8 +658,11 @@ QString JobManager::getandmakeDestination(Shot *s, Device *d, MediaDirectory *md
                         destDir += d->getModel();
                         destDir += QDir::separator();
                     }
-                    destDir += s->getName();
-                    destDir += QDir::separator();
+                    if (s->getFileCount() > 1)
+                    {
+                        destDir += s->getName();
+                        destDir += QDir::separator();
+                    }
                 }
                 else if (h >= StorageUtils::HierarchyCustom)
                 {
@@ -662,7 +672,14 @@ QString JobManager::getandmakeDestination(Shot *s, Device *d, MediaDirectory *md
                     c.replace("$(YEAR)", s->getDate().toString("yyyy"));
                     c.replace("$(MONTH)", s->getDate().toString("MM"));
                     c.replace("$(DAY)", s->getDate().toString("dd"));
-                    c.replace("$(SHOT_NAME)", s->getName());
+                    if (s->getFileCount() > 1)
+                    {
+                        c.replace("$(SHOT_NAME)", s->getName());
+                    }
+                    else
+                    {
+                        c.remove("$(SHOT_NAME)");
+                    }
                     c.replace("$(CAMERA)", s->getCameraSource());
 
                     c.replace("//", "/");
@@ -742,8 +759,11 @@ QString JobManager::getDestinationHierarchyDisplay(Shot *s, const QString &path)
                 {
                     if (s)
                     {
-                        hierarchyString += s->getName();
-                        hierarchyString += QDir::separator();
+                        if (s->getFileCount() > 1)
+                        {
+                            hierarchyString += s->getName();
+                            hierarchyString += QDir::separator();
+                        }
                     }
                     else
                     {
@@ -756,8 +776,11 @@ QString JobManager::getDestinationHierarchyDisplay(Shot *s, const QString &path)
                     {
                         hierarchyString += s->getDate().toString("yyyy-MM-dd");
                         hierarchyString += QDir::separator();
-                        hierarchyString += s->getName();
-                        hierarchyString += QDir::separator();
+                        if (s->getFileCount() > 1)
+                        {
+                            hierarchyString += s->getName();
+                            hierarchyString += QDir::separator();
+                        }
                     }
                     else
                     {
@@ -772,8 +795,11 @@ QString JobManager::getDestinationHierarchyDisplay(Shot *s, const QString &path)
                         hierarchyString += QDir::separator();
                         hierarchyString += s->getCameraSource();
                         hierarchyString += QDir::separator();
-                        hierarchyString += s->getName();
-                        hierarchyString += QDir::separator();
+                        if (s->getFileCount() > 1)
+                        {
+                            hierarchyString += s->getName();
+                            hierarchyString += QDir::separator();
+                        }
                     }
                     else
                     {
@@ -790,8 +816,11 @@ QString JobManager::getDestinationHierarchyDisplay(Shot *s, const QString &path)
                         hierarchyString += QDir::separator();
                         hierarchyString += s->getCameraSource();
                         hierarchyString += QDir::separator();
-                        hierarchyString += s->getName();
-                        hierarchyString += QDir::separator();
+                        if (s->getFileCount() > 1)
+                        {
+                            hierarchyString += s->getName();
+                            hierarchyString += QDir::separator();
+                        }
                     }
                     else
                     {
@@ -808,7 +837,14 @@ QString JobManager::getDestinationHierarchyDisplay(Shot *s, const QString &path)
                         c.replace("$(YEAR)", s->getDate().toString("yyyy"));
                         c.replace("$(MONTH)", s->getDate().toString("MM"));
                         c.replace("$(DAY)", s->getDate().toString("dd"));
-                        c.replace("$(SHOT_NAME)", s->getName());
+                        if (s->getFileCount() > 1)
+                        {
+                            c.replace("$(SHOT_NAME)", s->getName());
+                        }
+                        else
+                        {
+                            c.remove("$(SHOT_NAME)");
+                        }
                         c.replace("$(CAMERA)", s->getCameraSource());
 
                         c.replace("//", "/");
@@ -853,15 +889,21 @@ QString JobManager::getDestinationHierarchy(Shot *s, const QString &path)
                 }
                 else if (h == StorageUtils::HierarchyShot)
                 {
-                    hierarchyString += s->getName();
-                    hierarchyString += QDir::separator();
+                    if (s->getFileCount() > 1)
+                    {
+                        hierarchyString += s->getName();
+                        hierarchyString += QDir::separator();
+                    }
                 }
                 else if (h == StorageUtils::HierarchyDateShot)
                 {
                     hierarchyString += s->getDate().toString("yyyy-MM-dd");
                     hierarchyString += QDir::separator();
-                    hierarchyString += s->getName();
-                    hierarchyString += QDir::separator();
+                    if (s->getFileCount() > 1)
+                    {
+                        hierarchyString += s->getName();
+                        hierarchyString += QDir::separator();
+                    }
                 }
                 else if (h == StorageUtils::HierarchyDateDeviceShot)
                 {
@@ -869,8 +911,11 @@ QString JobManager::getDestinationHierarchy(Shot *s, const QString &path)
                     hierarchyString += QDir::separator();
                     hierarchyString += s->getCameraSource();
                     hierarchyString += QDir::separator();
-                    hierarchyString += s->getName();
-                    hierarchyString += QDir::separator();
+                    if (s->getFileCount() > 1)
+                    {
+                        hierarchyString += s->getName();
+                        hierarchyString += QDir::separator();
+                    }
                 }
                 else if (h == StorageUtils::HierarchyYearDateDeviceShot)
                 {
@@ -880,8 +925,11 @@ QString JobManager::getDestinationHierarchy(Shot *s, const QString &path)
                     hierarchyString += QDir::separator();
                     hierarchyString += s->getCameraSource();
                     hierarchyString += QDir::separator();
-                    hierarchyString += s->getName();
-                    hierarchyString += QDir::separator();
+                    if (s->getFileCount() > 1)
+                    {
+                        hierarchyString += s->getName();
+                        hierarchyString += QDir::separator();
+                    }
                 }
                 else if (h == StorageUtils::HierarchyCustom)
                 {
@@ -891,7 +939,14 @@ QString JobManager::getDestinationHierarchy(Shot *s, const QString &path)
                     c.replace("$(YEAR)", s->getDate().toString("yyyy"));
                     c.replace("$(MONTH)", s->getDate().toString("MM"));
                     c.replace("$(DAY)", s->getDate().toString("dd"));
-                    c.replace("$(SHOT_NAME)", s->getName());
+                    if (s->getFileCount() > 1)
+                    {
+                        c.replace("$(SHOT_NAME)", s->getName());
+                    }
+                    else
+                    {
+                        c.remove("$(SHOT_NAME)");
+                    }
                     c.replace("$(CAMERA)", s->getCameraSource());
 
                     c.replace("//", "/");
