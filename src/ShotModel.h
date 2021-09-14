@@ -126,8 +126,8 @@ public:
     Shot *getShotAt(ShotUtils::ShotType type, int file_id, int camera_id) const;
     Shot *getShotAtIndex(int index);
     Shot *getShotWithUuid(const QString &uuid);
-    Shot *getShotWithName(const QString &name);
     Shot *getShotWithPath(const QString &path);
+    std::vector<Shot *> getShotsWithName(const QString &name);
 
     void addShot(Shot *shot);
     void removeShot(Shot *shot);

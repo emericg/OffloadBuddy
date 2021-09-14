@@ -265,6 +265,27 @@ void MediaLibrary::workerScanningFinished(const QString &path)
 /* ************************************************************************** */
 /* ************************************************************************** */
 
+bool MediaLibrary::isShotAlreadyOffloaded(const QString &name, const qint64 datasize)
+{
+    if (m_shotModel)
+    {
+        if (datasize && !name.isEmpty())
+        {
+            std::vector <Shot *> list = m_shotModel->getShotsWithName(name);
+            for (auto s: list)
+            {
+                if (s && s->getDataSize() == datasize)
+                    return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+
 QStringList MediaLibrary::getSelectedShotsUuids(const QVariant &indexes)
 {
     //qDebug() << "MediaLibrary::getSelectedShotsUuids(" << indexes << ")";

@@ -305,6 +305,40 @@ void ShotModel::getShots(QList<Shot *> &shots)
 }
 
 /*!
+ * \brief ShotModel::getShotAt
+ * \param type
+ * \param file_id
+ * \param camera_id
+ * \return Pointer to an existing shot
+ *
+ * This function is used to associate new files to existing shots. We go backward
+ * for faster association, because we will just most likely use the last created
+ * shot.
+ */
+Shot *ShotModel::getShotAt(ShotUtils::ShotType type, int file_id, int camera_id) const
+{
+    if (file_id > 0)
+    {
+        for (int i = m_shots.size()-1; i >= 0; i--)
+        {
+            Shot *search = qobject_cast<Shot*>(m_shots.at(i));
+            if (search && search->getShotType() == type)
+            {
+                if (search->getFileId() == file_id &&
+                    search->getCameraId() == camera_id)
+                {
+                    return search;
+                }
+            }
+        }
+
+        //qDebug() << "No shot found for id" << file_id;
+    }
+
+    return nullptr;
+}
+
+/*!
  * \brief ShotModel::getShotAtIndex
  * \param listIndex: UNFILTERED INDEX be careful
  * \return
@@ -316,30 +350,6 @@ Shot *ShotModel::getShotAtIndex(int listIndex)
     if (listIndex >= 0 && listIndex < m_shots.size())
     {
         return m_shots.at(listIndex);
-    }
-
-    return nullptr;
-}
-
-/*!
- * \brief ShotModel::getShotWithName
- * \param name
- * \return
- */
-Shot *ShotModel::getShotWithName(const QString &name)
-{
-    if (!name.isEmpty())
-    {
-        for (auto shot: qAsConst(m_shots))
-        {
-            Shot *search = qobject_cast<Shot*>(shot);
-            if (search->getName() == name)
-            {
-                return search;
-            }
-        }
-
-        //qDebug() << "No shot found for name" << name;
     }
 
     return nullptr;
@@ -402,37 +412,29 @@ Shot *ShotModel::getShotWithPath(const QString &path)
 }
 
 /*!
- * \brief ShotModel::getShotAt
- * \param type
- * \param file_id
- * \param camera_id
- * \return Pointer to an existing shot
- *
- * This function is used to associate new files to existing shots. We go backward
- * for faster association, because we will just most likely use the last created
- * shot.
+ * \brief ShotModel::getShotsWithName
+ * \param name
+ * \return
  */
-Shot *ShotModel::getShotAt(ShotUtils::ShotType type, int file_id, int camera_id) const
+std::vector<Shot *> ShotModel::getShotsWithName(const QString &name)
 {
-    if (file_id > 0)
+    std::vector<Shot *> list;
+
+    if (!name.isEmpty())
     {
-        for (int i = m_shots.size()-1; i >= 0; i--)
+        for (auto shot: qAsConst(m_shots))
         {
-            Shot *search = qobject_cast<Shot*>(m_shots.at(i));
-            if (search && search->getShotType() == type)
+            Shot *search = qobject_cast<Shot*>(shot);
+            if (search->getName() == name)
             {
-                if (search->getFileId() == file_id &&
-                    search->getCameraId() == camera_id)
-                {
-                    return search;
-                }
+                list.push_back(search);
             }
         }
 
-        //qDebug() << "No shot found for id" << file_id;
+        //qDebug() << "No shot(s) found for name" << name;
     }
 
-    return nullptr;
+    return list;
 }
 
 /* ************************************************************************** */

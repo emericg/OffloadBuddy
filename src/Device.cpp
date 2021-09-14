@@ -581,7 +581,7 @@ QStringList Device::getSelectedShotsUuids(const QVariant &indexes)
 
         Shot *shot = qvariant_cast<Shot*>(m_shotFilter->data(proxyIndexes.at(i), ShotModel::PointerRole));
         if (shot) selectedUuids += shot->getUuid();
-        //qDebug() << "MediaLibrary::getSelectedShotsUuids(" <<  shot->getUuid();
+        //qDebug() << "Device::getSelectedShotsUuids(" <<  shot->getUuid();
     }
 
     return selectedUuids;
@@ -606,7 +606,7 @@ QStringList Device::getSelectedShotsNames(const QVariant &indexes)
 
         Shot *shot = qvariant_cast<Shot*>(m_shotFilter->data(proxyIndexes.at(i), ShotModel::PointerRole));
         if (shot) selectedNames += shot->getName();
-        //qDebug() << "MediaLibrary::getSelectedShotsNames(" <<  shot->getUuid();
+        //qDebug() << "Device::getSelectedShotsNames(" <<  shot->getUuid();
     }
 
     return selectedNames;
@@ -631,7 +631,7 @@ QStringList Device::getSelectedShotsFilepaths(const QVariant &indexes)
 
         Shot *shot = qvariant_cast<Shot*>(m_shotFilter->data(proxyIndexes.at(i), ShotModel::PointerRole));
         if (shot) selectedPaths += shot->getFilesStringList();
-        //qDebug() << "MediaLibrary::listSelected(" <<  shot->getFilesQStringList();
+        //qDebug() << "Device::listSelected(" <<  shot->getFilesQStringList();
     }
 
     return selectedPaths;

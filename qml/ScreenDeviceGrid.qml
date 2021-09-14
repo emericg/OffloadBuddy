@@ -574,8 +574,26 @@ Item {
             fullColor: true
             primaryColor: Theme.colorPrimary
 
-            text: qsTr("Offload ALL content")
-            onClicked: popupOffload.openAll(currentDevice)
+            text: {
+                if (selectionCount)
+                    return qsTr("Offload %1 shot(s)").arg(selectionCount)
+                //else if (selectedItem)
+                //    return qsTr("Offload selected shot")
+                else
+                    return qsTr("Offload ALL content")
+            }
+            onClicked: {
+                if (selectionCount) {
+                    popupOffload.shots_uuids = currentDevice.getSelectedShotsUuids(mediaGrid.selectionList)
+                    popupOffload.shots_names = currentDevice.getSelectedShotsNames(mediaGrid.selectionList)
+                    popupOffload.shots_files = currentDevice.getSelectedShotsFilepaths(mediaGrid.selectionList)
+                    popupOffload.openSelection(currentDevice)
+                //} else if (selectedItem) {
+                //    popupOffload.openSingle(currentDevice, selectedItem.shot)
+                } else {
+                    popupOffload.openAll(currentDevice)
+                }
+            }
         }
 
         ButtonWireframe {
@@ -676,8 +694,6 @@ Item {
                 width: shotsView.cellSize
                 height: shotsView.cellSize
                 x: 0; y: 0; z: 2;
-
-                visible: !mediaGrid.selectionMode
 
                 color: "transparent"
                 radius: (Theme.componentRadius > 4) ? Theme.componentRadius : 2
@@ -856,7 +872,7 @@ Item {
 
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
                 propagateComposedEvents: false
-                onClicked: mediaGrid.clearGridViewSettings()
+                onClicked: shotsView.currentIndex = -1
             }
 
             ////////
@@ -880,8 +896,9 @@ Item {
                     event.accepted = true
                     screenMedia.loadShot(currentDevice.getShotByUuid(screenDeviceGrid.selectedItemUuid))
                 } else if (event.key === Qt.Key_Space) {
-                    //event.accepted = true
-                    //mediaGrid.selectFile(shotsView.currentIndex)
+                    event.accepted = true
+                    mediaGrid.selectFile(shotsView.currentIndex)
+                    //mediaGrid.deselectFile((shotsView.currentIndex)
                 } else if (event.key === Qt.Key_Delete) {
                     event.accepted = true
                     var indexes = []
@@ -912,15 +929,6 @@ Item {
                     console.log("shotsView::Key_Menu")
                 }
             }
-        }
-
-        ////////
-
-        MouseArea {
-            id: mouseAreaOutsideView
-            anchors.fill: parent
-            acceptedButtons: Qt.NoButton
-            hoverEnabled: true
         }
     }
 }

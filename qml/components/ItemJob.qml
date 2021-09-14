@@ -101,7 +101,7 @@ Rectangle {
                         loops: Animation.Infinite
                         alwaysRunToEnd: true
 
-                        PropertyAnimation { to: 0.66; duration: 666; }
+                        PropertyAnimation { to: 0.5; duration: 666; }
                         PropertyAnimation { to: 1; duration: 666; }
                     }
                     SequentialAnimation {

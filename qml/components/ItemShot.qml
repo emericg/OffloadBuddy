@@ -1,5 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
+import QtQuick.Shapes 1.12
 import QtGraphicalEffects 1.12 // Qt5
 //import Qt5Compat.GraphicalEffects // Qt6
 
@@ -18,8 +19,10 @@ Rectangle {
     property var shot: pointer
     property var shotDevice: null
     property real cellFormat: 4/3
+
     //property bool singleSelection: (mediaGridView.currentIndex === index)
     //property bool multiSelection: (shot && shot.selected)
+    property bool alreadyOffloaded: false
 
     Connections {
         target: shot
@@ -43,11 +46,19 @@ Rectangle {
         } else if (shot.state === ShotUtils.SHOT_STATE_DONE ||
                    shot.state === ShotUtils.SHOT_STATE_OFFLOADED ||
                    shot.state === ShotUtils.SHOT_STATE_ENCODED) {
+            if (shot.state === ShotUtils.SHOT_STATE_OFFLOADED)
+                image_overlay.source = "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
+            else if (shot.state === ShotUtils.SHOT_STATE_ENCODED)
+                image_overlay.source = "qrc:/assets/icons_material/baseline-memory-24px.svg"
+            else
+                image_overlay.source = "qrc:/assets/icons_material/outline-check_circle-24px.svg"
             icon_state.visible = false
-            image_overlay.source = "qrc:/assets/icons_material/outline-check_circle-24px.svg"
             overlayWorkDone.visible = true
             offloadAnimation.stop()
             encodeAnimation.stop()
+        } else if (alreadyOffloaded) {
+            image_overlay.source = "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
+            overlayWorkDone.visible = true
         } else {
             icon_state.visible = false
             overlayWorkDone.visible = false
@@ -104,6 +115,11 @@ Rectangle {
             }
         } else {
             icon_left.source = "qrc:/assets/icons_material/baseline-broken_image-24px.svg"
+        }
+
+        if (shotDevice) {
+            alreadyOffloaded = mediaLibrary.isShotAlreadyOffloaded(shot.name, shot.datasize)
+            if (alreadyOffloaded) handleState()
         }
     }
 
@@ -172,15 +188,17 @@ Rectangle {
 
         actionMenu.visible = true
 
-        if (appSidebar.width + mouseAreaOutsideView.mouseX + actionMenu.width < appWindow.width)
-            actionMenu.x = mouseAreaOutsideView.mouseX + 8
-        else
-            actionMenu.x = mouseAreaOutsideView.mouseX - actionMenu.width
+        var positionInShotsView = mapToItem(shotsView, mouseAreaItem.mouseX, mouseAreaItem.mouseY)
 
-        if (rectangleHeader.height + mouseAreaOutsideView.mouseY + actionMenu.height < appWindow.height)
-            actionMenu.y = mouseAreaOutsideView.mouseY + 8
+        if ((appSidebar.width + positionInShotsView.x + actionMenu.width) < appWindow.width)
+            actionMenu.x = positionInShotsView.x + 8
         else
-            actionMenu.y = mouseAreaOutsideView.mouseY - 4 - actionMenu.height
+            actionMenu.x = positionInShotsView.x - 4 - actionMenu.width
+
+        if ((rectangleHeader.height + positionInShotsView.y + actionMenu.height) < appWindow.height)
+            actionMenu.y = positionInShotsView.y + 8
+        else
+            actionMenu.y = positionInShotsView.y - 4 - actionMenu.height
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -208,7 +226,7 @@ Rectangle {
                            : "qrc:/assets/icons_material/baseline-broken_image-24px.svg"
     }
 
-    // TODO loader between imageFs and imageMtp
+    ////////////////////////////////////////////////////////////////////////////
 
     Image {
         id: imageFs
@@ -219,7 +237,6 @@ Rectangle {
         antialiasing: false
         fillMode: Image.PreserveAspectCrop
 
-        //visible: (imageFs.progress === 1.0)
         opacity: (imageFs.progress === 1.0) ? 1 : 0
         Behavior on opacity { NumberAnimation { duration: 133 } }
 
@@ -390,6 +407,42 @@ Rectangle {
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+
+    Item {
+        id: overlayWorkDone
+        anchors.fill: parent
+
+        Shape {
+            width: 64
+            height: 64
+            anchors.top: parent.top
+            anchors.right: parent.right
+            asynchronous: true
+            opacity: 0.666
+
+            ShapePath {
+                fillColor: Theme.colorPrimary
+                startX: 1; startY: 0
+                PathLine { x: 64; y: 0 }
+                PathLine { x: 64; y: 64 }
+                PathLine { x: 64; y: 64 }
+            }
+        }
+
+        ImageSvg {
+            id: image_overlay
+            width: 32
+            height: 32
+            anchors.top: parent.top
+            anchors.topMargin: 3
+            anchors.right: parent.right
+            anchors.rightMargin: 3
+
+            color: "white"
+        }
+    }
+
     Rectangle {
         id: overlaySelection
         anchors.fill: parent
@@ -397,25 +450,6 @@ Rectangle {
         visible: shot.selected
         color: Theme.colorPrimary
         opacity: 0.33
-    }
-
-    Rectangle {
-        id: overlayWorkDone
-        anchors.fill: parent
-
-        visible: false
-        color: "#80ffffff"
-
-        ImageSvg {
-            id: image_overlay
-            width: 64
-            height: 64
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-
-            source: "qrc:/assets/icons_material/outline-check_circle-24px.svg"
-            color: "white"
-        }
     }
 
     ////////////////////////////////////////////////////////////////////////////

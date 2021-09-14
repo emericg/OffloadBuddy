@@ -70,6 +70,9 @@ public:
     Q_INVOKABLE void searchMediaDirectory(const QString &path);
     Q_INVOKABLE void cleanMediaDirectory(const QString &path);
 
+    // Device utils
+    Q_INVOKABLE bool isShotAlreadyOffloaded(const QString &name, const qint64 size);
+
     // Get uuids/names/paths from grid indexes
     Q_INVOKABLE QStringList getSelectedShotsUuids(const QVariant &indexes);
     Q_INVOKABLE QStringList getSelectedShotsNames(const QVariant &indexes);

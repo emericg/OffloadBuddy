@@ -260,7 +260,6 @@ class Shot: public QObject
     int m_shot_id = -1;             //!< Shot ID (if we have a shot, not a single file)
     int m_camera_id = 0;            //!< Camera ID (if the shot is part of a multi camera system)
 
-    //
     QString m_camera_source;        //!< Model of the camera that produced the shot
     QString m_camera_firmware;      //!< Firmware of the camera that produced the shot
 
