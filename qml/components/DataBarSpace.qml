@@ -74,8 +74,8 @@ Item {
             Behavior on width { NumberAnimation { duration: animated ? 333 : 0 } }
 
             Text {
-                anchors.horizontalCenter: parent.right
-                anchors.horizontalCenterOffset: (contentWidth+12 < item_data.width) ? -contentWidth/1.75 : contentWidth/1.75
+                anchors.left: parent.right
+                anchors.leftMargin: (contentWidth+12 < item_data.width) ? -contentWidth-6 : 6
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.verticalCenterOffset: 1
 

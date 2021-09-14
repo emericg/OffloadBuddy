@@ -14,10 +14,12 @@ Item {
     height: 700
     anchors.fill: parent
 
+    property string mapmode: ""
     Connections {
         target: settingsManager
         onAppUnitsChanged: updateUnits()
     }
+
     function updateUnits() {
         speedsGraph.title = "Speed (" + UtilsString.speedUnit(settingsManager.appUnits) + ")"
         altiGraph.title = "Altitude (" + UtilsString.altitudeUnit(settingsManager.appUnits) + ")"
@@ -25,20 +27,33 @@ Item {
     }
 
     function updateMap() { // "image" mode
+        mapmode = "image"
         mapArea.fullscreen = true
+
+        // Map
         if (!mapLoader.sourceComponent) {
             mapLoader.sourceComponent = mapComponent
+        } else {
+            mapLoader.item.updateMap()
         }
-        mapLoader.item.updateMap()
+
+        // Reverse geo coding
+        shot.getLocation()
     }
 
     function updateMetadata() { // "video" mode
-        // Map
+        mapmode = "video"
         mapArea.fullscreen = false
+
+        // Map
         if (!mapLoader.sourceComponent) {
             mapLoader.sourceComponent = mapComponent
+        } else {
+            mapLoader.item.updateMetadata()
         }
-        mapLoader.item.updateMetadata()
+
+        // Reverse geo coding
+        shot.getLocation()
 
         // Graphs sizes
         altiGraph.legend.visible = false
@@ -124,8 +139,14 @@ Item {
             id: mapLoader
             anchors.fill: parent
 
-            //sourceComponent: mapComponent
-            //asynchronous: true
+            asynchronous: true
+            onLoaded: {
+                // initial loading
+                if (mapmode === "image")
+                    mapLoader.item.updateMap()
+                else
+                    mapLoader.item.updateMetadata()
+            }
         }
     }
 
@@ -155,19 +176,25 @@ Item {
                 button_map_fullscreen.visible = false
 
                 if (shot.latitude !== 0.0) {
+                    button_map_dezoom.enabled = true
+                    button_map_zoom.enabled = true
+
+                    // center view
                     map.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
                     map.zoomLevel = 12
+
+                    // clean GPS points
+                    while (mapTrace.pathLength() > 0)
+                        mapTrace.removeCoordinate(mapTrace.coordinateAt(0))
+
                     mapTrace.visible = false
                     mapMarker.visible = true
                     mapMarker.coordinate = QtPositioning.coordinate(shot.latitude, shot.longitude)
-                    button_map_dezoom.enabled = true
-                    button_map_zoom.enabled = true
                     calculateScale()
                 }
             }
 
             function updateMetadata() { // "video" mode
-                mapMarker.visible = false
                 button_map_fullscreen.visible = true
 
                 // GPS trace
@@ -175,10 +202,12 @@ Item {
                     button_map_dezoom.enabled = true
                     button_map_zoom.enabled = true
 
+                    // center view
+                    map.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
+
                     // clean GPS points
                     while (mapTrace.pathLength() > 0)
                         mapTrace.removeCoordinate(mapTrace.coordinateAt(0))
-
                     // add new GPS points // one per seconde (was 18Hz)
                     for (var i = 0; i < shot.getGpsPointCount(); i += 18)
                         mapTrace.addCoordinate(shot.getGpsCoordinates(i))
@@ -195,20 +224,11 @@ Item {
                     else if (shot.distanceKm < 100)
                         map.zoomLevel = 8
 
-                    // center view
-                    map.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
+                    mapMarker.visible = false
                     mapMarker.coordinate = QtPositioning.coordinate(shot.latitude, shot.longitude)
 
                     // scale indicator
                     calculateScale()
-
-                    if (mapTrace.pathLength() > 1) {
-                        mapTrace.visible = true
-                        mapMarker.visible = false
-                    } else {
-                        mapTrace.visible = false
-                        mapMarker.visible = true
-                    }
                 }
             }
 
@@ -241,6 +261,14 @@ Item {
 
                 mapScale.width = 100 * f
                 mapScaleText.text = UtilsString.distanceToString(dist, 0, settingsManager.appUnits)
+
+                if (map.zoomLevel >= 10 && mapTrace.pathLength() > 1) {
+                    mapTrace.visible = true
+                    mapMarker.visible = false
+                } else {
+                    mapTrace.visible = false
+                    mapMarker.visible = true
+                }
             }
 
             function zoomIn() {
@@ -380,7 +408,7 @@ Item {
                 anchors.left: parent.left
                 anchors.leftMargin: 16
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: mapMarker.visible ? 64 : 16
+                anchors.bottomMargin: (mapmode === "image") ? 64 : 16
 
                 Text {
                     id: mapScaleText
@@ -419,7 +447,7 @@ Item {
 
                 color: Theme.colorHeader
                 opacity: 0.8
-                visible: mapMarker.visible
+                visible: (mapmode === "image")
 
                 Row {
                     anchors.fill: parent

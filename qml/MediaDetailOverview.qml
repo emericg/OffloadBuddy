@@ -230,6 +230,32 @@ Item {
             spacing: 8
 
             ImageSvg {
+                id: labelLocation
+                width: 28
+                height: 28
+
+                visible: shot.location
+                color: Theme.colorText
+                source: "qrc:/assets/icons_material/duotone-pin_drop-24px.svg"
+
+                Text {
+                    id: location
+                    height: 28
+                    width: 320-48
+                    anchors.left: parent.right
+                    anchors.leftMargin: 16
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: shot.location
+                    verticalAlignment: Text.AlignVCenter
+                    //horizontalAlignment: Text.AlignRight
+                    font.pixelSize: Theme.fontSizeContentSmall
+                    color: Theme.colorText
+                    wrapMode: Text.WordWrap
+                }
+            }
+
+            ImageSvg {
                 id: labelDate
                 width: 28
                 height: 28

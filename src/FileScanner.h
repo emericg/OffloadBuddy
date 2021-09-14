@@ -19,8 +19,8 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#ifndef FILE_SCANNER
-#define FILE_SCANNER
+#ifndef FILE_SCANNER_H
+#define FILE_SCANNER_H
 /* ************************************************************************** */
 
 #include "Shot.h"
@@ -83,4 +83,4 @@ signals:
 };
 
 /* ************************************************************************** */
-#endif // FILE_SCANNER
+#endif // FILE_SCANNER_H

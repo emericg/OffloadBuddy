@@ -48,6 +48,7 @@
 #include <QAbstractListModel>
 
 #include <QGeoCoordinate>
+#include <QGeoCodeReply>
 #include <QtCharts/QLineSeries>
 
 /* ************************************************************************** */
@@ -557,6 +558,12 @@ class Shot: public QObject
     float getDistanceKm() { return distance_km; }
     Q_PROPERTY(float distanceKm READ getDistanceKm NOTIFY metadataUpdated)
 
+    QGeoCodeReply *m_geoRep = nullptr;
+    QString locationName;
+    QString getLocationName() const { return locationName; }
+    void setLocationName(const QString &location);
+    Q_PROPERTY(QString location READ getLocationName NOTIFY locationUpdated)
+
 Q_SIGNALS:
     void shotUpdated();
     void stateUpdated();
@@ -564,6 +571,7 @@ Q_SIGNALS:
     void usersettingsUpdated();
     void metadataUpdated();
     void telemetryUpdated();
+    void locationUpdated();
     void dataUpdated();
     void userSettingsUpdated();
 
@@ -689,6 +697,10 @@ public:
     Q_INVOKABLE bool exportGps(const QString &path, int format, int gps_frequency, bool egm96_correction);
 
     Q_INVOKABLE unsigned getGpsPointCount() const { return m_gps.size(); }
+
+    Q_INVOKABLE void getLocation() const;
+    void setLocationResponse(QGeoCodeReply *geo_rep);
+    Q_SLOT void setLocation();
 
     // Utils
     Q_INVOKABLE bool isValid() const;

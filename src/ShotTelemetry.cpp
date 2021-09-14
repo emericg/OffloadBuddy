@@ -19,12 +19,13 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-#include <cmath>
-
 #include "Shot.h"
 #include "EGM96.h"
 #include "GpmfTags.h"
+#include "GeoCoding.h"
 #include "utils/utils_maths.h"
+
+#include <cmath>
 
 #include <QDir>
 #include <QUrl>
@@ -33,10 +34,78 @@
 #include <QDateTime>
 #include <QImageReader>
 #include <QDesktopServices>
+#include <QGeoCodeReply>
+#include <QGeoAddress>
 #include <QDebug>
 
 #include <QtCharts>
 using namespace QtCharts;
+
+/* ************************************************************************** */
+
+void Shot::getLocation() const
+{
+    GeoCoding *geo = GeoCoding::getInstance();
+    if (geo)
+    {
+        geo->getLocation((Shot*)this);
+    }
+}
+
+void Shot::setLocationResponse(QGeoCodeReply *geo_rep)
+{
+    if (geo_rep)
+    {
+        m_geoRep = geo_rep;
+        connect(m_geoRep, SIGNAL(finished()), this, SLOT(setLocation()));
+    }
+}
+
+void Shot::setLocation()
+{
+    if (m_geoRep)
+    {
+        if (m_geoRep->error() == QGeoCodeReply::NoError)
+        {
+            const QList<QGeoLocation> &a = m_geoRep->locations();
+            for (const auto &l: a)
+            {
+                //qDebug() << "city: " << l.address().city();
+                //qDebug() << "district: " << l.address().district() << "state: " << l.address().state();
+
+                QString location;
+
+                if (!l.address().city().isEmpty())
+                    location += l.address().city();
+
+                if (!l.address().city().isEmpty() && !l.address().state().isEmpty())
+                    location += " / ";
+
+                if (!l.address().state().isEmpty())
+                    location += l.address().state();
+
+                setLocationName(location);
+            }
+        }
+        else
+        {
+            qDebug() << "Shot::setLocation() error > " << m_geoRep->errorString();
+        }
+
+        disconnect(m_geoRep, SIGNAL(finished()), this, SLOT(setLocation()));
+        delete m_geoRep;
+        m_geoRep = nullptr;
+    }
+}
+
+void Shot::setLocationName(const QString &location)
+{
+    if (!location.isEmpty())
+    {
+        locationName = location;
+        emit locationUpdated();
+    }
+}
 
 /* ************************************************************************** */
 

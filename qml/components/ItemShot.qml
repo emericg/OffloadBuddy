@@ -1,6 +1,5 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
-import QtQuick.Shapes 1.12
 import QtGraphicalEffects 1.12 // Qt5
 //import Qt5Compat.GraphicalEffects // Qt6
 
@@ -227,7 +226,12 @@ Rectangle {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
+/*
+    Loader { // TODO // loader between imageFs and imageMtp
+        id: imageLoader
+        anchors.fill: parent
+    }
+*/
     Image {
         id: imageFs
         anchors.fill: parent
@@ -413,20 +417,24 @@ Rectangle {
         id: overlayWorkDone
         anchors.fill: parent
 
-        Shape {
-            width: 64
-            height: 64
-            anchors.top: parent.top
-            anchors.right: parent.right
-            asynchronous: true
+        Canvas {
+            anchors.fill: parent
             opacity: 0.666
 
-            ShapePath {
-                fillColor: Theme.colorPrimary
-                startX: 1; startY: 0
-                PathLine { x: 64; y: 0 }
-                PathLine { x: 64; y: 64 }
-                PathLine { x: 64; y: 64 }
+            Connections {
+                target: ThemeEngine
+                onCurrentThemeChanged: canvas.requestPaint()
+            }
+
+            onPaint: {
+                var context = getContext("2d");
+                context.beginPath();
+                context.moveTo(itemShot.width, 0);
+                context.lineTo(itemShot.width, 72);
+                context.lineTo(itemShot.width - 72, 0);
+                context.closePath();
+                context.fillStyle = Theme.colorPrimary;
+                context.fill();
             }
         }
 

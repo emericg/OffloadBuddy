@@ -74,6 +74,7 @@ SOURCES  += src/main.cpp \
             src/GpmfBuffer.cpp \
             src/GpmfKLV.cpp \
             src/GpmfTags.cpp \
+            src/GeoCoding.cpp \
             src/utils/utils_app.cpp \
             src/utils/utils_screen.cpp \
             src/utils/utils_language.cpp \
@@ -111,6 +112,7 @@ HEADERS  += src/SettingsManager.h \
             src/GpmfBuffer.h \
             src/GpmfKLV.h \
             src/GpmfTags.h \
+            src/GeoCoding.h \
             src/utils/utils_app.h \
             src/utils/utils_screen.h \
             src/utils/utils_language.h \
