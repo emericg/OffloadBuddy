@@ -412,6 +412,10 @@ function speedToString(value, precision, unit) {
     return distanceToString(value, precision, unit) + qsTr("/h");
 }
 
+function speedToString_km(value, precision, unit) {
+    return distanceToString_km(value, precision, unit) + qsTr("/h");
+}
+
 /*!
  * speedUnit()
  */

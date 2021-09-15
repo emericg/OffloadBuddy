@@ -247,10 +247,14 @@ class Shot: public QObject
     Q_PROPERTY(QString latitudeString READ getLatitudeStr NOTIFY metadataUpdated)
     Q_PROPERTY(QString longitudeString READ getLongitudeStr NOTIFY metadataUpdated)
     Q_PROPERTY(QString altitudeString READ getAltitudeStr NOTIFY metadataUpdated)
+    Q_PROPERTY(QString directionString READ getDirectionStr NOTIFY metadataUpdated)
+    Q_PROPERTY(QString speedString READ getDirectionStr NOTIFY metadataUpdated)
     Q_PROPERTY(double latitude READ getLatitude NOTIFY metadataUpdated)
     Q_PROPERTY(double longitude READ getLongitude NOTIFY metadataUpdated)
     Q_PROPERTY(double altitude READ getAltitude NOTIFY metadataUpdated)
     Q_PROPERTY(double altitudeOffset READ getAltitudeOffset NOTIFY metadataUpdated)
+    Q_PROPERTY(double direction READ getDirection NOTIFY metadataUpdated)
+    Q_PROPERTY(double speed READ getSpeed NOTIFY metadataUpdated)
 
     QString m_uuid;                 //!< Shot unique identifier, generated at object creation
 
@@ -306,10 +310,14 @@ class Shot: public QObject
     QString gps_long_str;
     QString gps_alt_str;
     QString gps_alt_egm96_str;
+    QString gps_direction_str;
+    QString gps_speed_str;
     double gps_lat = 0.0;
     double gps_long = 0.0;
     double gps_alt = 0.0;
     double gps_alt_egm96 = 0.0;
+    double gps_direction = 0.0;
+    double gps_speed = 0.0;
 
     // PICTURES metadata
     QString icodec;
@@ -498,7 +506,6 @@ class Shot: public QObject
 
     std::vector <std::pair<float, float>> m_gps;
     std::vector <std::pair<std::string, unsigned>> m_gps_params;
-    float m_gps_altitude_offset = 0.f;
     std::vector <float> m_alti;
     std::vector <float> m_speed;
 
@@ -677,10 +684,14 @@ public:
     QString getLatitudeStr() const { return gps_lat_str; }
     QString getLongitudeStr() const { return gps_long_str; }
     QString getAltitudeStr() const { return gps_alt_str; }
+    QString getDirectionStr() const { return gps_direction_str; }
+    QString getSpeedStr() const { return gps_speed_str; }
     double getLatitude() const { return gps_lat; }
     double getLongitude() const { return gps_long; }
     double getAltitude() const { return gps_alt; }
-    double getAltitudeOffset() const { return m_gps_altitude_offset; }
+    double getAltitudeOffset() const { return gps_alt_egm96; }
+    double getDirection() const { return gps_direction; }
+    double getSpeed() const { return gps_speed; }
 
     // Telemetry
     Q_INVOKABLE void parseMetadata() { getMetadataFromVideo(); }

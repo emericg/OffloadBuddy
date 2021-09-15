@@ -431,13 +431,13 @@ void Shot::parseData_gps5(GpmfBuffer &buf, GpmfKLV &klv,
         // Update altitude offset?
         if (m_gps.size() < 1) // && gps_fix == 3)
         {
-            m_gps_altitude_offset = egm96_compute_altitude_offset(gps_coord.first, gps_coord.second);
+            gps_alt_egm96 = egm96_compute_altitude_offset(gps_coord.first, gps_coord.second);
         }
 
         m_gps.push_back(gps_coord);
         m_gps_params.emplace_back(gps_params);
 
-        m_alti.push_back(alti - m_gps_altitude_offset);
+        m_alti.push_back(alti - gps_alt_egm96);
         m_speed.push_back(speed);
 
         // Compute distance between this point and the previous one
@@ -767,7 +767,7 @@ bool Shot::exportTelemetry(const QString &path, int format, int accl_frequency, 
                 exportStream << "\n  \"altimeter\": { \"frequency\": " << QString::number(gps_frequency) << ", \"unit\": \"m\", \"data\": [\n  ";
                 for (unsigned i = 0; i < m_alti.size(); i += gps_rate) {
                     float alti = m_alti.at(i);
-                    if (!egm96_correction) alti += m_gps_altitude_offset;
+                    if (!egm96_correction) alti += gps_alt_egm96;
                     exportStream << alti << ",";
                 } exportStream << "\n  ]},";
 
@@ -852,7 +852,7 @@ bool Shot::exportGps(const QString &path, int format, int gps_frequency, bool eg
                 exportStream << "\n  <trkpt lat=\"" + QString::number(m_gps.at(i).first, 'f', 12) +"\" lon=\"" + QString::number(m_gps.at(i).second, 'f', 12) + "\">";
 
                 float alti = m_alti.at(i);
-                if (!egm96_correction) alti += m_gps_altitude_offset;
+                if (!egm96_correction) alti += gps_alt_egm96;
 
                 exportStream << "<ele>" + QString::number(alti, 'f', 1) + "</ele>";
                 exportStream << "<time>" + QString::fromStdString(m_gps_params.at(i).first) + "</time>";

@@ -952,7 +952,6 @@ bool Shot::getMetadataFromPicture(int index)
                 double min = str.midRef(4, 2).toDouble();
                 double sec = str.mid(8, 10).replace(',', '.').toDouble();
                 gps_lat = deg + min/60.0 + sec/3600.0;
-                gps_lat_str = str.mid(0, 2) + "° " + str.mid(4, 2) + "` " + str.mid(8, 8) + "``";
 
                 entry = exif_content_get_entry(ed->ifd[EXIF_IFD_GPS],
                                                static_cast<ExifTag>(EXIF_TAG_GPS_LATITUDE_REF));
@@ -960,9 +959,13 @@ bool Shot::getMetadataFromPicture(int index)
                 {
                     exif_entry_get_value(entry, entry_buf, sizeof(entry_buf));
                     if (strncmp(entry_buf, "S", 1) == 0)
+                    {
                         gps_lat = -gps_lat;
-                    gps_lat_str += " " +  QString::fromLatin1(entry_buf);
+                        //gps_lat_str += " " +  QString::fromLatin1(entry_buf);
+                    }
                 }
+
+                gps_lat_str = str.mid(0, 2) + "° " + str.mid(4, 2) + "` " + str.mid(8, 8) + "`` N";
             }
             entry = exif_content_get_entry(ed->ifd[EXIF_IFD_GPS],
                                            static_cast<ExifTag>(EXIF_TAG_GPS_LONGITUDE));
@@ -974,7 +977,6 @@ bool Shot::getMetadataFromPicture(int index)
                 double min = str.midRef(4, 2).toDouble();
                 double sec = str.mid(8, 10).replace(',', '.').toDouble();
                 gps_long = deg + min/60.0 + sec/3600.0;
-                gps_long_str = str.midRef(0, 2) + "° " + str.midRef(4, 2) + "` " + str.mid(8, 8) + "``";
 
                 entry = exif_content_get_entry(ed->ifd[EXIF_IFD_GPS],
                                                static_cast<ExifTag>(EXIF_TAG_GPS_LONGITUDE_REF));
@@ -982,42 +984,92 @@ bool Shot::getMetadataFromPicture(int index)
                 {
                     exif_entry_get_value(entry, entry_buf, sizeof(entry_buf));
                     if (strncmp(entry_buf, "W", 1) == 0)
+                    {
                         gps_long = -gps_long;
-                    gps_long_str += " " + QString::fromLatin1(entry_buf);
+                        //gps_long_str += " " + QString::fromLatin1(entry_buf);
+                    }
                 }
+
+                gps_long_str = str.midRef(0, 2) + "° " + str.midRef(4, 2) + "` " + str.mid(8, 8) + "`` E";
             }
             entry = exif_content_get_entry(ed->ifd[EXIF_IFD_GPS],
                                            static_cast<ExifTag>(EXIF_TAG_GPS_ALTITUDE));
             if (entry)
             {
                 exif_entry_get_value(entry, entry_buf, sizeof(entry_buf));
-                QString str = entry_buf;
-                str.replace(',', '.');
-                gps_alt = str.toDouble();
-                gps_alt_str = QString::number(gps_alt, 'g', 3);
-                gps_alt_str += " " +  QObject::tr("meters");
+                gps_alt = QString::fromLatin1(entry_buf).replace(',', '.').toDouble();
 
                 entry = exif_content_get_entry(ed->ifd[EXIF_IFD_GPS],
                                                static_cast<ExifTag>(EXIF_TAG_GPS_ALTITUDE_REF));
                 if (entry)
                 {
                     exif_entry_get_value(entry, entry_buf, sizeof(entry_buf));
-                    QString gps_alt_ref_qstr = entry_buf;
-                    if (gps_alt_ref_qstr.contains("below", Qt::CaseInsensitive))
+                    QString alt_ref_str = entry_buf;
+                    if (alt_ref_str.contains("below", Qt::CaseInsensitive))
                         gps_alt = -gps_alt;
                 }
-            }
 
-            m_gps_altitude_offset = egm96_compute_altitude_offset(gps_lat, gps_long);
+                gps_alt_str = QString::number(gps_alt, 'g', 3);
+                gps_alt_str += " " +  QObject::tr("meters");
+                gps_alt_egm96 = egm96_compute_altitude_offset(gps_lat, gps_long);
+            }
+            entry = exif_content_get_entry(ed->ifd[EXIF_IFD_GPS],
+                                           static_cast<ExifTag>(EXIF_TAG_GPS_IMG_DIRECTION));
+            if (entry)
+            {
+                exif_entry_get_value(entry, entry_buf, sizeof(entry_buf));
+                gps_direction = QString::fromLatin1(entry_buf).replace(',', '.').toDouble();
+                gps_direction_str = QString::number(gps_direction, 'g', 4);
+
+                //entry = exif_content_get_entry(ed->ifd[EXIF_IFD_GPS],
+                //                               static_cast<ExifTag>(EXIF_TAG_GPS_IMG_DIRECTION_REF));
+                //if (entry)
+                //{
+                //    exif_entry_get_value(entry, entry_buf, sizeof(entry_buf));
+                //    QString dir_ref_str = entry_buf;
+                //}
+            }
+            entry = exif_content_get_entry(ed->ifd[EXIF_IFD_GPS],
+                                           static_cast<ExifTag>(EXIF_TAG_GPS_SPEED));
+            if (entry)
+            {
+                exif_entry_get_value(entry, entry_buf, sizeof(entry_buf));
+                gps_speed = QString::fromLatin1(entry_buf).replace(',', '.').toDouble();
+
+                entry = exif_content_get_entry(ed->ifd[EXIF_IFD_GPS],
+                                               static_cast<ExifTag>(EXIF_TAG_GPS_SPEED_REF));
+                if (entry)
+                {
+                    exif_entry_get_value(entry, entry_buf, sizeof(entry_buf));
+
+                    if (strncmp(entry_buf, "M", 1) == 0)
+                    {
+                        // miles/h to km/h
+                        gps_speed *= 1.60934;
+                    }
+                    else if (strncmp(entry_buf, "N", 1) == 0)
+                    {
+                        // knots to km/h
+                        gps_speed *= 1.852;
+                    }
+                    //else if (strncmp(entry_buf, "K", 1) == 0) //km/h
+                }
+
+                gps_speed_str = QString::number(gps_speed, 'g', 4);
+            }
 /*
-            qDebug() << "gps_lat_str:" << gps_lat_str;
-            qDebug() << "gps_long_str:" << gps_long_str;
-            qDebug() << "gps_alt_str:" << gps_alt_str;
-            qDebug() << "gps_lat:" << gps_lat;
-            qDebug() << "gps_long:" << gps_long;
-            qDebug() << "gps_alt:" << gps_alt;
-            qDebug() << "gps_alt_offset:" << m_gps_altitude_offset;
-            qDebug() << "gps_timestamp:" << m_date_gps;
+            qDebug() << "gps_timestamp: " << m_date_gps;
+            qDebug() << "gps_lat_str:   " << gps_lat_str;
+            qDebug() << "gps_long_str:  " << gps_long_str;
+            qDebug() << "gps_alt_str:   " << gps_alt_str;
+            qDebug() << "gps_direction_str:" << gps_direction_str;
+            qDebug() << "gps_speed_str: " << gps_speed_str;
+            qDebug() << "gps_lat:  " << gps_lat;
+            qDebug() << "gps_long: " << gps_long;
+            qDebug() << "gps_alt:  " << gps_alt;
+            qDebug() << "gps_alt_offset:" << gps_alt_egm96;
+            qDebug() << "gps_direction: " << gps_direction;
+            qDebug() << "gps_speed:     " << gps_speed;
 */
         }
 

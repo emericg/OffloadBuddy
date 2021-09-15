@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/assets">
         <file>others/gps_marker.svg</file>
+        <file>others/gps_marker_direction.svg</file>
         <file>others/navigate_before_big.svg</file>
 
         <file>gopro_capabilities.json</file>

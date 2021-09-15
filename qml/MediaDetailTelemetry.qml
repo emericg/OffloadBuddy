@@ -15,6 +15,9 @@ Item {
     anchors.fill: parent
 
     property string mapmode: ""
+
+    ////////////////////////////////////////////////////////////////////////////
+
     Connections {
         target: settingsManager
         onAppUnitsChanged: updateUnits()
@@ -66,9 +69,9 @@ Item {
             speedsGraph.title = "Speed (" + UtilsString.speedUnit(settingsManager.appUnits) + ")"
             shot.updateSpeedsSerie(speedsSeries, settingsManager.appUnits)
             altiGraph.title = "Altitude (" + UtilsString.altitudeUnit(settingsManager.appUnits) + ")"
-            shot.updateAltiSerie(altiSeries, settingsManager.appUnits);
-            shot.updateAcclSeries(acclX, acclY, acclZ);
-            shot.updateGyroSeries(gyroX, gyroY, gyroZ);
+            shot.updateAltiSerie(altiSeries, settingsManager.appUnits)
+            shot.updateAcclSeries(acclX, acclY, acclZ)
+            shot.updateGyroSeries(gyroX, gyroY, gyroZ)
 
             // Text data
             speedMIN.text = UtilsString.speedToString(shot.minSpeed, 2, settingsManager.appUnits)
@@ -89,23 +92,23 @@ Item {
             acclMAX.text = (shot.maxG / 9.80665).toFixed(1) + " G's"
 
             // Graphs axis
-            axisSpeedY0.min = shot.minSpeed * 0.9;
-            axisSpeedY0.max = shot.maxSpeed * 1.1;
-            axisAltiY0.min = shot.minAlti * 0.9;
-            axisAltiY0.max = shot.maxAlti * 1.1;
-            axisAcclY0.min = -12;
-            axisAcclY0.max = 12;
-            axisGyroY0.min = -8;
-            axisGyroY0.max = 8;
+            axisSpeedY0.min = shot.minSpeed * 0.9
+            axisSpeedY0.max = shot.maxSpeed * 1.1
+            axisAltiY0.min = shot.minAlti * 0.9
+            axisAltiY0.max = shot.maxAlti * 1.1
+            axisAcclY0.min = -12
+            axisAcclY0.max = 12
+            axisGyroY0.min = -8
+            axisGyroY0.max = 8
             //axisGyroY0.applyNiceNumbers()
 
-            axisSpeedX0.min = 0;
+            axisSpeedX0.min = 0
             axisSpeedX0.max = speedsSeries.count
-            axisAltiX0.min = 0;
+            axisAltiX0.min = 0
             axisAltiX0.max = altiSeries.count
-            axisAcclX0.min = 0;
+            axisAcclX0.min = 0
             axisAcclX0.max = acclX.count
-            axisGyroX0.min = 0;
+            axisGyroX0.min = 0
             axisGyroX0.max = gyroX.count
         }
     }
@@ -187,9 +190,18 @@ Item {
                     while (mapTrace.pathLength() > 0)
                         mapTrace.removeCoordinate(mapTrace.coordinateAt(0))
 
+                    // map marker
                     mapTrace.visible = false
+                    if (shot.direction) {
+                        mapMarkerImg.source = "qrc:/assets/others/gps_marker_direction.svg"
+                    } else {
+                        mapMarkerImg.source = "qrc:/assets/others/gps_marker.svg"
+                    }
                     mapMarker.visible = true
+                    mapMarker.rotation = shot.direction
                     mapMarker.coordinate = QtPositioning.coordinate(shot.latitude, shot.longitude)
+
+                    // scale indicator
                     calculateScale()
                 }
             }
@@ -212,6 +224,10 @@ Item {
                     for (var i = 0; i < shot.getGpsPointCount(); i += 18)
                         mapTrace.addCoordinate(shot.getGpsCoordinates(i))
 
+                    // map marker
+                    mapMarker.visible = false
+                    mapMarker.coordinate = QtPositioning.coordinate(shot.latitude, shot.longitude)
+
                     // choose a default zoom level
                     if (shot.distanceKm < 0.5)
                         map.zoomLevel = 18
@@ -223,9 +239,6 @@ Item {
                         map.zoomLevel = 10
                     else if (shot.distanceKm < 100)
                         map.zoomLevel = 8
-
-                    mapMarker.visible = false
-                    mapMarker.coordinate = QtPositioning.coordinate(shot.latitude, shot.longitude)
 
                     // scale indicator
                     calculateScale()
@@ -250,7 +263,7 @@ Item {
                         if (dist < (scaleLengths[i] + scaleLengths[i+1]) / 2 ) {
                             f = scaleLengths[i] / dist
                             dist = scaleLengths[i]
-                            break;
+                            break
                         }
                     }
                     if (f === 0) {
@@ -262,9 +275,17 @@ Item {
                 mapScale.width = 100 * f
                 mapScaleText.text = UtilsString.distanceToString(dist, 0, settingsManager.appUnits)
 
-                if (map.zoomLevel >= 10 && mapTrace.pathLength() > 1) {
-                    mapTrace.visible = true
-                    mapMarker.visible = false
+                if (mapTrace.pathLength() > 1) {
+                    if ((shot.distanceKm < 1 && map.zoomLevel < 15) ||
+                        (shot.distanceKm < 10 && map.zoomLevel < 10) ||
+                        (shot.distanceKm < 50 && map.zoomLevel < 8) ||
+                        (shot.distanceKm < 100 && map.zoomLevel < 7)) {
+                        mapTrace.visible = false
+                        mapMarker.visible = true
+                    } else {
+                        mapTrace.visible = true
+                        mapMarker.visible = false
+                    }
                 } else {
                     mapTrace.visible = false
                     mapMarker.visible = true
@@ -308,7 +329,9 @@ Item {
                     id: mapMarkerImg
                     width: 64
                     height: 64
+                    sourceSize: Qt.size(width, height)
                     source: "qrc:/assets/others/gps_marker.svg"
+                    //source: "qrc:/assets/others/gps_marker_direction.svg"
                 }
             }
 
@@ -463,7 +486,6 @@ Item {
                         font.bold: true
                         color: Theme.colorHeaderContent
                     }
-
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
 
@@ -476,17 +498,38 @@ Item {
 
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
+                        visible: shot.altitude
 
                         text: qsTr("Altitude:")
                         font.pixelSize: Theme.fontSizeContent
                         font.bold: true
                         color: Theme.colorHeaderContent
                     }
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        visible: shot.altitude
+
+                        text: UtilsString.altitudeToString(shot.altitude - shot.altitudeOffset, 0, settingsManager.appUnits)
+                        font.pixelSize: Theme.fontSizeContent
+                        color: Theme.colorHeaderContent
+                    }
+
+                    Item { width: 1; height: 1; } // spacer
 
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
+                        visible: shot.altitude
 
-                        text: UtilsString.altitudeToString(shot.altitude - shot.altitudeOffset, 0, settingsManager.appUnits)
+                        text: qsTr("Speed:")
+                        font.pixelSize: Theme.fontSizeContent
+                        font.bold: true
+                        color: Theme.colorHeaderContent
+                    }
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        visible: shot.speed
+
+                        text: UtilsString.speedToString_km(shot.speed, 1, settingsManager.appUnits)
                         font.pixelSize: Theme.fontSizeContent
                         color: Theme.colorHeaderContent
                     }
@@ -504,6 +547,7 @@ Item {
         anchors.left: parent.left
         anchors.bottom: parent.bottom
 
+        enabled: !mapArea.fullscreen
         width: parent.width * 0.6
         z: -1
 
