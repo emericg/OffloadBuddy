@@ -900,7 +900,7 @@ Popup {
                             id: cbTimelapse
                             anchors.verticalCenter: parent.verticalCenter
                             checked: false
-                            text: qsTr("Enable")
+                            text: qsTr("Convert this video to a timelapse")
                         }
 
                         SliderValueSolid {
@@ -1567,8 +1567,6 @@ Popup {
                     settingsEncoding["transform"] = clipTransformation_exif
 
                     settingsEncoding["quality"] = sliderQuality.value
-
-                    settingsEncoding["path"] = fileInput.text
 
                     // filters
                     if (checkBox_defisheye.checked) settingsEncoding["defisheye"] = checkBox_defisheye.checked

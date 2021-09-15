@@ -387,7 +387,7 @@ void MediaLibrary::moveSelected(const QString &shot_uuid, const QVariant &settin
             dst.file = variantMap.value("file").toString();
 
         if (variantMap.contains("extension"))
-            dst.file = variantMap.value("extension").toString();
+            dst.extension = variantMap.value("extension").toString();
     }
 
     // Submit job
@@ -428,7 +428,7 @@ void MediaLibrary::moveSelection(const QVariant &uuids, const QVariant &settings
             dst.file = variantMap.value("file").toString();
 
         if (variantMap.contains("extension"))
-            dst.file = variantMap.value("extension").toString();
+            dst.extension = variantMap.value("extension").toString();
     }
 
     // Submit jobs
@@ -465,7 +465,7 @@ void MediaLibrary::mergeSelected(const QString &shot_uuid, const QVariant &setti
             dst.file = variantMap.value("file").toString();
 
         if (variantMap.contains("extension"))
-            dst.file = variantMap.value("extension").toString();
+            dst.extension = variantMap.value("extension").toString();
     }
 
     // Submit job
@@ -506,7 +506,7 @@ void MediaLibrary::mergeSelection(const QVariant &uuids, const QVariant &setting
             dst.file = variantMap.value("file").toString();
 
         if (variantMap.contains("extension"))
-            dst.file = variantMap.value("extension").toString();
+            dst.extension = variantMap.value("extension").toString();
     }
 
     // Submit jobs
@@ -603,7 +603,7 @@ void MediaLibrary::reencodeSelected(const QString &shot_uuid, const QVariant &se
             dst.file = variantMap.value("file").toString();
 
         if (variantMap.contains("extension"))
-            dst.file = variantMap.value("extension").toString();
+            dst.extension = variantMap.value("extension").toString();
     }
 
     // Get settings
@@ -701,7 +701,7 @@ void MediaLibrary::extractTelemetrySelected(const QString &shot_uuid, const QVar
             dst.file = variantMap.value("file").toString();
 
         if (variantMap.contains("extension"))
-            dst.file = variantMap.value("extension").toString();
+            dst.extension = variantMap.value("extension").toString();
     }
 
     // Get settings
@@ -759,7 +759,7 @@ void MediaLibrary::extractTelemetrySelection(const QVariant &uuids, const QVaria
             dst.file = variantMap.value("file").toString();
 
         if (variantMap.contains("extension"))
-            dst.file = variantMap.value("extension").toString();
+            dst.extension = variantMap.value("extension").toString();
     }
 
     // Get settings

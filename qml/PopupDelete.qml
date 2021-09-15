@@ -171,46 +171,37 @@ Popup {
         }
 
         ////////////////
-
+/*
+        Column {
+            id: contentArea
+            height: (shots_files.length > 0) ? 160 : 96
+            //height: Math.min(64, listArea.count*16)
+            anchors.left: parent.left
+            anchors.leftMargin: 24
+            anchors.right: parent.right
+            anchors.rightMargin: 24
+            spacing: 16
+*/
         Item {
             id: contentArea
             height: (shots_files.length > 0) ? 160 : 96
+            //height: Math.min(64, listArea.count*16)
             anchors.left: parent.left
+            anchors.leftMargin: 24
             anchors.right: parent.right
-
-            ////////
-
-            ListView {
-                anchors.fill: parent
-                anchors.leftMargin: 24
-                anchors.rightMargin: 24
-
-                visible: recapOpened
-
-                model: shots_files
-                delegate: Text {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    text: modelData
-                    font.pixelSize: Theme.fontSizeContentSmall
-                    elide: Text.ElideLeft
-                    color: Theme.colorSubText
-                }
-            }
+            anchors.rightMargin: 24
 
             ////////
 
             Text {
                 id: textArea
                 height: Theme.componentHeight
-                anchors.top: parent.top
-                anchors.topMargin: 16
                 anchors.left: parent.left
-                anchors.leftMargin: 24
                 anchors.right: parent.right
-                anchors.rightMargin: 24
+                topPadding: 16
 
                 visible: !recapOpened
+
                 font.pixelSize: Theme.fontSizeContent
                 color: Theme.colorText
                 verticalAlignment: Text.AlignVCenter
@@ -220,17 +211,15 @@ Popup {
 
             ListView {
                 id: listArea
-                anchors.top: textArea.bottom
-                anchors.topMargin: 8
+                anchors.top: parent.top
+                anchors.topMargin: recapOpened ? 0 : textArea.height + 16
                 anchors.left: parent.left
-                anchors.leftMargin: 24
                 anchors.right: parent.right
-                anchors.rightMargin: 24
 
-                visible: !recapOpened
-                height: Math.min(64, currentShot.fileCount*16)
+                anchors.bottom: parent.bottom
+                height: Math.min(64, listArea.count*16)
 
-                model: currentShot.filesList
+                model: recapOpened ? shots_files : currentShot.filesList
                 delegate: Text {
                     anchors.left: parent.left
                     anchors.right: parent.right

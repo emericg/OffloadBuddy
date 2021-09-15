@@ -108,8 +108,9 @@ typedef struct JobElement
     Shot *parent_shot = nullptr;
     std::vector <ofb_file> files;
 
-    QString destination_dir;
+    QString destination_folder;
     QString destination_file;
+    QString destination_ext;
 
 } JobElement;
 

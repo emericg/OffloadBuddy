@@ -33,12 +33,12 @@ Popup {
         qdateFile = shot.dateFile
         qdateMetadata = shot.dateMetadata
         qdateGps = shot.dateGPS
-        //qdateUser = shot.dateUser
+        qdateUser = shot.dateUser
 
         dateFile.text = Qt.formatDateTime(shot.dateFile, Qt.SystemLocaleDate)
         dateMetadata.text = Qt.formatDateTime(shot.dateMetadata, Qt.SystemLocaleDate)
         dateGps.text = Qt.formatDateTime(shot.dateGPS, Qt.SystemLocaleDate)
-        //qdateUser.text = Qt.formatDateTime(shot.dateUser, Qt.SystemLocaleDate)
+        dateUser.text = Qt.formatDateTime(shot.dateUser, Qt.SystemLocaleDate)
 
         loadDate(shot.date)
     }
@@ -302,6 +302,9 @@ Popup {
             anchors.rightMargin: 24
             spacing: 24
 
+            function setUserDate() {
+            }
+
             Column {
                 id: columnYear
                 spacing: 8
@@ -318,8 +321,10 @@ Popup {
 
                     locale: Qt.locale('C')
                     from: 2000
-                    to: 2200
-                    value: 2019
+                    to: 2100
+                    value: 2022
+
+                    onValueModified: rowDate.setUserDate()
                 }
             }
 
@@ -339,6 +344,8 @@ Popup {
                     value: 1
                     from: 1
                     to: 12
+
+                    onValueModified: rowDate.setUserDate()
                 }
             }
 
@@ -358,6 +365,8 @@ Popup {
                     value: 3
                     from: 1
                     to: 31
+
+                    onValueModified: rowDate.setUserDate()
                 }
             }
         }
@@ -386,6 +395,8 @@ Popup {
                     value: 0
                     from: 0
                     to: 23
+
+                    onValueModified: rowDate.setUserDate()
                 }
             }
 
@@ -405,6 +416,8 @@ Popup {
                     value: 0
                     from: 0
                     to: 59
+
+                    onValueModified: rowDate.setUserDate()
                 }
             }
         }

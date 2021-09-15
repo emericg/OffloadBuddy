@@ -125,7 +125,7 @@ Popup {
 
             z: 1
             height: 48
-            visible: (recapEnabled && shots_files.length)
+            visible: (recapEnabled && shots_uuids.length)
             color: Theme.colorForeground
 
             MouseArea {

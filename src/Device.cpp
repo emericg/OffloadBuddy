@@ -665,7 +665,7 @@ void Device::offloadSelected(const QString &shot_uuid, const QVariant &settings)
             dst.file = variantMap.value("file").toString();
 
         if (variantMap.contains("extension"))
-            dst.file = variantMap.value("extension").toString();
+            dst.extension = variantMap.value("extension").toString();
     }
 
     // Get settings
@@ -725,7 +725,7 @@ void Device::offloadSelection(const QVariant &uuids, const QVariant &settings)
             dst.file = variantMap.value("file").toString();
 
         if (variantMap.contains("extension"))
-            dst.file = variantMap.value("extension").toString();
+            dst.extension = variantMap.value("extension").toString();
     }
 
     // Get settings
@@ -806,7 +806,7 @@ void Device::offloadAll(const QVariant &settings)
             dst.file = variantMap.value("file").toString();
 
         if (variantMap.contains("extension"))
-            dst.file = variantMap.value("extension").toString();
+            dst.extension = variantMap.value("extension").toString();
     }
 
     // Get settings
@@ -979,7 +979,7 @@ void Device::reencodeSelected(const QString &shot_uuid, const QVariant &settings
             dst.file = variantMap.value("file").toString();
 
         if (variantMap.contains("extension"))
-            dst.file = variantMap.value("extension").toString();
+            dst.extension = variantMap.value("extension").toString();
     }
 
     // Get settings
@@ -1077,7 +1077,7 @@ void Device::extractTelemetrySelected(const QString &shot_uuid, const QVariant &
             dst.file = variantMap.value("file").toString();
 
         if (variantMap.contains("extension"))
-            dst.file = variantMap.value("extension").toString();
+            dst.extension = variantMap.value("extension").toString();
     }
 
     // Get settings
@@ -1135,7 +1135,7 @@ void Device::extractTelemetrySelection(const QVariant &uuids, const QVariant &se
             dst.file = variantMap.value("file").toString();
 
         if (variantMap.contains("extension"))
-            dst.file = variantMap.value("extension").toString();
+            dst.extension = variantMap.value("extension").toString();
     }
 
     // Get settings

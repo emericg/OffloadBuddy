@@ -9,6 +9,8 @@ Item {
     width: 1280
     height: 720
 
+    // HEADER //////////////////////////////////////////////////////////////////
+
     Rectangle {
         id: rectangleHeader
         anchors.top: parent.top
@@ -30,7 +32,7 @@ Item {
             id: textHeader
             height: 40
             anchors.left: parent.left
-            anchors.leftMargin: 16
+            anchors.leftMargin: 24
             anchors.verticalCenter: parent.verticalCenter
 
             text: qsTr("JOBS QUEUE")
@@ -80,7 +82,7 @@ Item {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    // CONTENT /////////////////////////////////////////////////////////////////
 
     Item {
         id: rectangleContent

@@ -154,10 +154,10 @@ void JobWorkerThread::work()
                 {
                     // "auto" telemetry extraction
                     element->parent_shot->parseTelemetry();
-                    element->parent_shot->exportGps(element->destination_dir, 0,
+                    element->parent_shot->exportGps(element->destination_folder, 0,
                                             current_job->settings_telemetry.gps_frequency,
                                             current_job->settings_telemetry.EGM96);
-                    element->parent_shot->exportTelemetry(element->destination_dir, 0,
+                    element->parent_shot->exportTelemetry(element->destination_folder, 0,
                                             current_job->settings_telemetry.telemetry_frequency,
                                             current_job->settings_telemetry.gps_frequency,
                                             current_job->settings_telemetry.EGM96);
@@ -176,7 +176,7 @@ void JobWorkerThread::work()
                             //qDebug() << "       to  > " << element->destination_dir;
 
                             QFileInfo fi_src(file.filesystemPath);
-                            QString destFile = element->destination_dir + fi_src.baseName() + "." + fi_src.suffix();
+                            QString destFile = element->destination_folder + fi_src.baseName() + "." + fi_src.suffix();
                             QFileInfo fi_dst(destFile);
 
                             if (!fi_dst.exists() ||
@@ -234,7 +234,7 @@ void JobWorkerThread::work()
                             //qDebug() << "JobWorkerThread  >  MTP copying:" << file->mtpObjectId;
                             //qDebug() << "       to  > " << element->destination_dir;
 
-                            QString destFile = element->destination_dir + file.name + "." + file.extension;
+                            QString destFile = element->destination_folder + file.name + "." + file.extension;
                             QFileInfo fi_dst(destFile);
 
                             if (!fi_dst.exists() ||
@@ -346,13 +346,13 @@ void JobWorkerThread::work_telemetry(JobElement *element, JobSettingsTelemetry *
 
         if (!settings->gps_format.isEmpty())
         {
-            element->parent_shot->exportGps(element->destination_dir, 0,
+            element->parent_shot->exportGps(element->destination_folder, 0,
                                             settings->gps_frequency,
                                             settings->EGM96);
         }
         if (!settings->telemetry_format.isEmpty())
         {
-            element->parent_shot->exportTelemetry(element->destination_dir, 0,
+            element->parent_shot->exportTelemetry(element->destination_folder, 0,
                                                   settings->telemetry_frequency,
                                                   settings->gps_frequency,
                                                   settings->EGM96);

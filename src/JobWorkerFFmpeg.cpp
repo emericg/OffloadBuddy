@@ -196,10 +196,10 @@ void JobWorkerFFmpeg::queueWork_merge(JobTracker *job)
             // telemetry extraction ////////////////////////////////////////////
 
             element->parent_shot->parseTelemetry();
-            element->parent_shot->exportGps(element->destination_dir, 0,
+            element->parent_shot->exportGps(element->destination_folder, 0,
                                             job->settings_telemetry.gps_frequency,
                                             job->settings_telemetry.EGM96);
-            element->parent_shot->exportTelemetry(element->destination_dir, 0,
+            element->parent_shot->exportTelemetry(element->destination_folder, 0,
                                                   job->settings_telemetry.telemetry_frequency,
                                                   job->settings_telemetry.gps_frequency,
                                                   job->settings_telemetry.EGM96);
@@ -243,10 +243,15 @@ void JobWorkerFFmpeg::queueWork_merge(JobTracker *job)
             ptiwrap->arguments << "-c" << "copy";
             ptiwrap->arguments << "-y";
 
-            QString name_suffix = "_merged";
+            QString file_folder = element->destination_folder;
+            QString file_name;
+            QString file_name_suffix = "_merged";
             QString file_extension = "mp4";
 
-            ptiwrap->destFile = element->destination_dir + element->files.front().name + name_suffix + "." + file_extension;
+            if (!element->destination_file.isEmpty()) file_name = element->destination_file;
+            else file_name = element->files.front().name + file_name_suffix;
+
+            ptiwrap->destFile = file_folder + file_name + "." + file_extension;
             ptiwrap->arguments << ptiwrap->destFile;
 
             // Dispatch job
@@ -288,10 +293,10 @@ void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
             {
                 // "auto" telemetry extraction
                 element->parent_shot->parseTelemetry();
-                element->parent_shot->exportGps(element->destination_dir, 0,
+                element->parent_shot->exportGps(element->destination_folder, 0,
                                                 job->settings_telemetry.gps_frequency,
                                                 job->settings_telemetry.EGM96);
-                element->parent_shot->exportTelemetry(element->destination_dir, 0,
+                element->parent_shot->exportTelemetry(element->destination_folder, 0,
                                                       job->settings_telemetry.telemetry_frequency,
                                                       job->settings_telemetry.gps_frequency,
                                                       job->settings_telemetry.EGM96);
@@ -310,8 +315,11 @@ void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
                 codec = job->settings_encode.image_codec;
             }
 
-            QString name_suffix = (codec == "copy") ? "_clipped" : "_reencoded";
-            QString file_extension = "";
+            QString file_folder = element->destination_folder;
+            QString file_name;
+            QString file_name_suffix = (codec == "copy") ? "_clipped" : "_reencoded";
+            QString file_extension;
+
             QString video_filters;
             QString audio_filters;
 
@@ -495,7 +503,7 @@ void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
                 {
                     ptiwrap->arguments << "-ss" << getFFmpegDurationString(job->settings_encode.startMs);
                     ptiwrap->arguments << "-frames:v" << "1";
-                    name_suffix = "_screen" + QString::number(job->settings_encode.startMs / 1000);
+                    file_name_suffix = "_screen" + QString::number(job->settings_encode.startMs / 1000);
                 }
 
                 // Filters
@@ -649,8 +657,11 @@ void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
             // Keep (some) metadata?
             ptiwrap->arguments << "-map_metadata" << "0";
 
+            if (!element->destination_file.isEmpty()) file_name = element->destination_file;
+            else file_name = element->files.front().name + file_name_suffix;
+
             // Re-encoding
-            ptiwrap->destFile = element->destination_dir + element->files.front().name + name_suffix + "." + file_extension;
+            ptiwrap->destFile = file_folder + file_name + "." + file_extension;
             ptiwrap->arguments << ptiwrap->destFile;
 
             // Dispatch job

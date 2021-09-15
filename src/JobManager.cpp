@@ -154,6 +154,7 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
     MediaDirectory *md = nullptr;
     QString dstFolder;
     QString dstFile;
+    QString dstExt;
 
     if (dst)
     {
@@ -179,6 +180,10 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
         {
             dstFile = dst->file;
         }
+        if (!dst->extension.isEmpty())
+        {
+            dstExt = dst->extension;
+        }
     }
 
     // CREATE JOB //////////////////////////////////////////////////////////////
@@ -198,9 +203,11 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
         {
             JobElement *je = new JobElement;
             je->parent_shot = shot;
+
+            if (md) je->destination_folder = getandmakeDestination(shot, dev, md);
+            else je->destination_folder = dstFolder;
             je->destination_file = dstFile;
-            if (md) je->destination_dir = getandmakeDestination(shot, dev, md);
-            else je->destination_dir = dstFolder;
+            je->destination_ext = dstExt;
 
             const QList <ofb_file *> files = shot->getFiles(getPreviews, getHdAudio, true);
             for (auto f: qAsConst(files))
@@ -217,7 +224,7 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
     if (tracker->getElementsCount() > 0)
     {
         tracker->setName(tracker->getElement(0)->parent_shot->getName());
-        tracker->setDestinationFolder(tracker->getElement(0)->destination_dir);
+        tracker->setDestinationFolder(tracker->getElement(0)->destination_folder);
     }
 
     m_trackedJobs.push_back(tracker);
