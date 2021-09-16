@@ -3,7 +3,7 @@
 echo "> OffloadBuddy packager (Linux x86_64)"
 
 export APP_NAME="OffloadBuddy";
-export APP_VERSION=0.8;
+export APP_VERSION=0.9;
 export GIT_VERSION=$(git rev-parse --short HEAD);
 
 ## CHECKS ######################################################################

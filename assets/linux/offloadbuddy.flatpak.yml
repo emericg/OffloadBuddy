@@ -27,5 +27,5 @@ modules:
   buildsystem: qmake
   sources:
     - type: archive
-      url: https://github.com/emericg/OffloadBuddy/archive/refs/tags/v0.6.tar.gz
+      url: https://github.com/emericg/OffloadBuddy/archive/refs/tags/v0.9.tar.gz
       sha256: 7199f1eba6c2943c3207e9eef3235933f2ff16e353e28e47b8fcf143f3a4c65a
