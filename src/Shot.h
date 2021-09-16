@@ -359,8 +359,8 @@ class Shot: public QObject
 
     Q_PROPERTY(bool selected READ isSelected WRITE setSelected NOTIFY selectionUpdated) // > userSelected
     Q_PROPERTY(QDateTime userDate READ getUserDate WRITE setUserDate NOTIFY userSettingsUpdated)
-    Q_PROPERTY(QString userTag READ getUserTag WRITE setUserTag NOTIFY userSettingsUpdated)
-
+    Q_PROPERTY(QStringList userTags READ getUserTags WRITE setUserTags NOTIFY userSettingsUpdated)
+    Q_PROPERTY(int mediaPosition READ getUserMediaPosition WRITE setUserMediaPosition NOTIFY userSettingsUpdated)
     Q_PROPERTY(int trimStart READ getUserTrimStart WRITE setUserTrimStart NOTIFY userSettingsUpdated)
     Q_PROPERTY(int trimStop READ getUserTrimStop WRITE setUserTrimStop NOTIFY userSettingsUpdated)
     Q_PROPERTY(float cropAR READ getUserCropAR WRITE setUserCropAR NOTIFY userSettingsUpdated)
@@ -376,7 +376,7 @@ class Shot: public QObject
     bool selected = false;
 
     QDateTime m_user_date;
-    QString m_user_tag;
+    QStringList m_user_tags;
 
     // video & timelapse position
     int m_user_media_position = -1;
@@ -407,12 +407,31 @@ class Shot: public QObject
         }
     }
 
-    QString getUserTag() const { return m_user_tag; }
-    void setUserTag(const QString &t) {
-        if (t != m_user_tag) {
-            m_user_tag = t;
+    QStringList getUserTags() const { return m_user_tags; }
+    void setUserTags(const QStringList &tl) {
+        if (tl != m_user_tags) {
+            m_user_tags = tl;
             Q_EMIT userSettingsUpdated();
         }
+    }
+    void addUserTag(const QString &t) {
+        if (!m_user_tags.contains(t)) {
+            m_user_tags.push_back(t);
+            Q_EMIT userSettingsUpdated();
+        }
+    }
+    void removeUserTag(const QString &t) {
+        if (m_user_tags.contains(t)) {
+            m_user_tags.removeAll(t);
+            Q_EMIT userSettingsUpdated();
+        }
+    }
+
+    int getUserMediaPosition() const { return m_user_media_position; }
+    void setUserMediaPosition(const int position) {
+         if (position > 0) m_user_media_position = position;
+         else m_user_media_position = -1;
+         Q_EMIT userSettingsUpdated();
     }
 
     int getUserTrimStart() const { return m_user_trim_start; }
