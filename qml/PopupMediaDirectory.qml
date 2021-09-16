@@ -19,8 +19,6 @@ Popup {
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
-    signal confirmed()
-
     ////////////////////////////////////////////////////////////////////////////
 
     enter: Transition { NumberAnimation { property: "opacity"; from: 0.5; to: 1.0; duration: 133; } }
@@ -36,6 +34,8 @@ Popup {
     }
 
     ////////////////////////////////////////////////////////////////////////////
+
+    property int legendWidth: 96
 
     contentItem: Column {
 
@@ -63,10 +63,34 @@ Popup {
                 anchors.leftMargin: 24
                 anchors.verticalCenter: parent.verticalCenter
 
-                text: qsTr("Media Directory settings")
+                text: qsTr("Media directory settings")
                 font.pixelSize: Theme.fontSizeTitle
                 font.bold: true
                 color: "white"
+            }
+        }
+
+        ////////////////
+
+        Rectangle {
+            anchors.left: parent.left
+            anchors.right: parent.right
+
+            z: 1
+            height: 48
+            color: Theme.colorForeground
+
+            Text {
+                anchors.left: parent.left
+                anchors.leftMargin: 24
+                anchors.right: parent.right
+                anchors.rightMargin: 24
+                anchors.verticalCenter: parent.verticalCenter
+
+                text: directory.directoryPath
+                color: Theme.colorText
+                font.pixelSize: Theme.fontSizeContent
+                wrapMode: Text.WrapAnywhere
             }
         }
 
@@ -95,7 +119,7 @@ Popup {
                     height: 48
 
                     Text {
-                        width: 128
+                        width: popupMediaDirectory.legendWidth
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
 
@@ -107,11 +131,24 @@ Popup {
                     CheckBoxThemed {
                         id: checkBox_enabled
                         anchors.left: parent.left
-                        anchors.leftMargin: 128 + 12
+                        anchors.leftMargin: popupMediaDirectory.legendWidth + 12
                         anchors.verticalCenter: parent.verticalCenter
 
                         checked: directory.enabled
                         onClicked: directory.enabled = checked
+                    }
+
+                    Text {
+                        id: legendEnabled
+                        anchors.left: parent.left
+                        anchors.leftMargin: popupMediaDirectory.legendWidth + checkBox_enabled.width + 16
+                        anchors.right: parent.right
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        text: qsTr("You can quickly enable/disable this directory if you don't need it at the moment, or if you dont want it to overload your media library.")
+                        font.pixelSize: Theme.fontSizeContentSmall
+                        wrapMode: Text.WordWrap
+                        color: Theme.colorSubText
                     }
                 }
 
@@ -123,7 +160,7 @@ Popup {
                     height: 48
 
                     Text {
-                        width: 128
+                        width: popupMediaDirectory.legendWidth
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
 
@@ -133,10 +170,10 @@ Popup {
                     }
 
                     ComboBoxThemed {
-                        width: 320
                         height: 36
                         anchors.left: parent.left
-                        anchors.leftMargin: 128 + 16
+                        anchors.leftMargin: popupMediaDirectory.legendWidth + 16
+                        anchors.right: parent.right
                         anchors.verticalCenter: parent.verticalCenter
 
                         font.pixelSize: Theme.fontSizeContentSmall
@@ -162,6 +199,25 @@ Popup {
                     }
                 }
 
+                Item {
+                    height: legendContent.contentHeight + 16
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+
+                    Text {
+                        id: legendContent
+                        anchors.left: parent.left
+                        anchors.leftMargin: popupMediaDirectory.legendWidth + 16
+                        anchors.right: parent.right
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        text: qsTr("Choose to restrict what kind of content can be saved into this media directory.")
+                        font.pixelSize: Theme.fontSizeContentSmall
+                        wrapMode: Text.WordWrap
+                        color: Theme.colorSubText
+                    }
+                }
+
                 ////////
 
                 Item {
@@ -179,10 +235,10 @@ Popup {
                     }
 
                     ComboBoxThemed {
-                        width: 320
                         height: 36
                         anchors.left: parent.left
-                        anchors.leftMargin: 128 + 16
+                        anchors.leftMargin: popupMediaDirectory.legendWidth + 16
+                        anchors.right: parent.right
                         anchors.verticalCenter: parent.verticalCenter
 
                         model: ListModel {
@@ -210,12 +266,31 @@ Popup {
                     }
                 }
 
+                Item {
+                    height: legendHierarchy.contentHeight + 12
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+
+                    Text {
+                        id: legendHierarchy
+                        anchors.left: parent.left
+                        anchors.leftMargin: popupMediaDirectory.legendWidth + 16
+                        anchors.right: parent.right
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        text: qsTr("How media will be stored in this directory. Choose an available hierarchy, or use the CUSTOM item to create your own.")
+                        font.pixelSize: Theme.fontSizeContentSmall
+                        wrapMode: Text.WordWrap
+                        color: Theme.colorSubText
+                    }
+                }
+
                 ////////
 
                 Item {
                     anchors.right: parent.right
                     anchors.left: parent.left
-                    anchors.leftMargin: 128 + 16
+                    anchors.leftMargin: popupMediaDirectory.legendWidth + 16
                     height: 48
 
                     visible: (directory.directoryHierarchy === StorageUtils.HierarchyCustom)
@@ -239,7 +314,7 @@ Popup {
                 Flow {
                     anchors.right: parent.right
                     anchors.left: parent.left
-                    anchors.leftMargin: 128 + 16
+                    anchors.leftMargin: popupMediaDirectory.legendWidth + 16
                     topPadding: 6
                     spacing: 12
 
