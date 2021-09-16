@@ -225,7 +225,7 @@ Item {
 
         width: 320
         height: mediaPreview.overlayHeight
-        visible: !mediaPreview.isFullScreen
+        visible: !mediaPreview.isFullSize
 
         Column {
             id: infosGenericCol

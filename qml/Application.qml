@@ -64,6 +64,19 @@ ApplicationWindow {
         windowInstance: appWindow
     }
 
+    // Fullscreen window ///////////////////////////////////////////////////////
+
+    Window {
+        id: videoWindow
+        flags: Qt.FramelessWindowHint
+        color: "black"
+
+        Item {
+            id: videoWindowItem
+            anchors.fill: parent
+        }
+    }
+
     // Events handling /////////////////////////////////////////////////////////
 
     Component.onCompleted: {

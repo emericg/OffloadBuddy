@@ -9,14 +9,13 @@ import "qrc:/js/UtilsString.js" as UtilsString
 
 Item {
     id: mediaArea
-    anchors.top: parent.top
-    anchors.left: parent.left
-    anchors.right: isFullScreen ? parent.right : infosGeneric.left
-    anchors.bottom: parent.bottom
-    anchors.margins: 16
+    anchors.fill: parent
+    anchors.margins: isFullScreen ? 0 : 16
+    anchors.rightMargin: isFullScreen ? 0 : (isFullSize ? 16 : infosGeneric.width + 16)
 
     // keep that in UI
     property bool isFullScreen: false
+    property bool isFullSize: false
     property string mode: ""
     property int overlayHeight: overlays.height
 
@@ -195,16 +194,32 @@ Item {
     function toggleInfoPanel() {
         if (typeof shot === "undefined" || !shot) return
 
-        // Check if fullscreen is necessary (preview is already maxed out)
-        if (!mediaArea.isFullScreen) {
-            //console.log("Check if fullscreen is necessary: " + (shot.width / shot.height) + " vs " + (mediaArea.width / mediaArea.height))
+        // Check if fullsize is necessary (preview is already maxed out)
+        if (!mediaArea.isFullSize) {
+            //console.log("Check if fullsize is necessary: " + (shot.width / shot.height) + " vs " + (mediaArea.width / mediaArea.height))
             if ((shot.width / shot.height) < (mediaArea.width / mediaArea.height))
                 return;
             // TODO if rotated
         }
 
-        // Set fullscreen
-        mediaArea.isFullScreen = !mediaArea.isFullScreen
+        // Set fullsize
+        mediaArea.isFullSize = !mediaArea.isFullSize
+
+        computeOverlaySize()
+    }
+
+    function toggleFullScreen() {
+        if (typeof shot === "undefined" || !shot) return
+
+        if (!mediaArea.isFullScreen) {
+            mediaArea.isFullScreen = true
+            mediaArea.parent = videoWindowItem
+            videoWindow.showFullScreen()
+        } else {
+            mediaArea.isFullScreen = false
+            mediaArea.parent = contentOverview
+            videoWindow.hide()
+        }
 
         computeOverlaySize()
     }
@@ -1254,7 +1269,7 @@ Item {
 
                     source: isFullScreen ? "qrc:/assets/icons_material/baseline-fullscreen_exit-24px.svg"
                                          : "qrc:/assets/icons_material/baseline-fullscreen-24px.svg"
-                    onClicked: toggleInfoPanel()
+                    onClicked: toggleFullScreen()
                 }
             }
         }
