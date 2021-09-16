@@ -319,7 +319,7 @@ Item {
 
                             source: {
                                 if (modelData.type === 1)
-                                    return "qrc:/assets/icons_material/baseline-aspect_ratio-24px.svg"
+                                    return "qrc:/assets/icons_material/duotone-aspect_ratio-24px.svg"
                                 else if (modelData.type === 2)
                                     return "qrc:/assets/icons_material/baseline-photo-24px.svg"
                                 else if (modelData.type === 3)
@@ -379,7 +379,7 @@ Item {
                         ItemImageButton {
                             width: 32; height: 32;
                             backgroundColor: Theme.colorBackground
-                            source: "qrc:/assets/icons_material/baseline-launch-24px.svg"
+                            source: "qrc:/assets/icons_material/duotone-launch-24px.svg"
                             onClicked: utilsApp.openWith(modelData.path)
                         }
 /*

@@ -234,7 +234,7 @@ Item {
                     id: buttonTrim
                     width: 40
                     height: 40
-                    source: "qrc:/assets/icons_material/baseline-timer-24px.svg"
+                    source: "qrc:/assets/icons_material/duotone-timer-24px.svg"
                     visible: (shot && shot.fileType === ShotUtils.FILE_VIDEO)
                     backgroundColor: Theme.colorForeground
                     onClicked: contentOverview.toggleTrim()
@@ -244,7 +244,7 @@ Item {
                     id: buttonRotate
                     width: 40
                     height: 40
-                    source: "qrc:/assets/icons_material/baseline-rotate_90_degrees_ccw-24px.svg"
+                    source: "qrc:/assets/icons_material/duotone-rotate_90_degrees_ccw-24px.svg"
                     backgroundColor: Theme.colorForeground
                     onClicked: contentOverview.toggleTransform()
                 }
@@ -276,7 +276,7 @@ Item {
                     id: buttonTimestamp
                     width: 40
                     height: 40
-                    source: "qrc:/assets/icons_material/baseline-date_range-24px.svg"
+                    source: "qrc:/assets/icons_material/duotone-date_range-24px.svg"
                     backgroundColor: Theme.colorForeground
                     onClicked: contentOverview.openDatePopup()
                 }
@@ -358,7 +358,7 @@ Item {
                 height: parent.height
 
                 menuText: qsTr("Overview")
-                source: "qrc:/assets/icons_material/baseline-aspect_ratio-24px.svg"
+                source: "qrc:/assets/icons_material/duotone-aspect_ratio-24px.svg"
                 selected: (screenMedia.state === "overview")
                 onClicked: screenMedia.state = "overview"
             }
@@ -380,7 +380,7 @@ Item {
                 visible: (shot && shot.hasGPMF && shot.hasGPS)
 
                 menuText: qsTr("Telemetry")
-                source: "qrc:/assets/icons_material/baseline-insert_chart_outlined-24px.svg"
+                source: "qrc:/assets/icons_material/duotone-insert_chart-24px.svg"
                 selected: (screenMedia.state === "metadata")
                 onClicked: screenMedia.state = "metadata"
             }

@@ -402,7 +402,7 @@ Rectangle {
                         spacing: 16
 
                         ImageSvg {
-                            source: "qrc:/assets/icons_material/baseline-aspect_ratio-24px.svg"
+                            source: "qrc:/assets/icons_material/duotone-aspect_ratio-24px.svg"
                             color: Theme.colorText
                         }
 

@@ -2,6 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 
 import ThemeEngine 1.0
+import "qrc:/js/UtilsNumber.js" as UtilsNumber
 
 Popup {
     id: popupDate
@@ -40,11 +41,12 @@ Popup {
         dateGps.text = Qt.formatDateTime(shot.dateGPS, Qt.SystemLocaleDate)
         dateUser.text = Qt.formatDateTime(shot.dateUser, Qt.SystemLocaleDate)
 
-        loadDate(shot.date)
+        loadDate(shot.date, false)
     }
 
-    function loadDate(dateToLoad) {
+    function loadDate(dateToLoad, clicked) {
         qdate = dateToLoad
+        if (clicked) shot.dateUser = dateToLoad
         // date
         spinBoxYear.value = Qt.formatDateTime(dateToLoad, "yyyy");
         spinBoxMonth.value = Qt.formatDateTime(dateToLoad, "MM");
@@ -165,7 +167,7 @@ Popup {
                             enabled: visible
                             selected: (qdate && Qt.formatDateTime(qdate) === Qt.formatDateTime(qdateFile))
                             background: selected
-                            onClicked: loadDate(qdateFile)
+                            onClicked: loadDate(qdateFile, true)
                         }
                     }
                 }
@@ -226,7 +228,7 @@ Popup {
                         enabled: visible
                         selected: (qdate && Qt.formatDateTime(qdate) === Qt.formatDateTime(qdateMetadata))
                         background: selected
-                        onClicked: loadDate(qdateMetadata)
+                        onClicked: loadDate(qdateMetadata, true)
                     }
                 }
             }
@@ -286,7 +288,7 @@ Popup {
                         enabled: visible
                         selected: (qdate && Qt.formatDateTime(qdate) === Qt.formatDateTime(qdateGps))
                         background: selected
-                        onClicked: loadDate(qdateGps)
+                        onClicked: loadDate(qdateGps, true)
                     }
                 }
             }
@@ -303,6 +305,14 @@ Popup {
             spacing: 24
 
             function setUserDate() {
+                var ds = spinBoxYear.value + "-" +
+                         UtilsNumber.padNumber(spinBoxMonth.value) + "-" +
+                         UtilsNumber.padNumber(spinBoxDay.value) + " " +
+                         UtilsNumber.padNumber(spinBoxHours.value) + ":" +
+                         UtilsNumber.padNumber(spinBoxMinutes.value)
+
+                qdate = Date.fromLocaleString(Qt.locale(), ds, "yyyy-MM-dd hh:mm")
+                shot.userDate = Date.fromLocaleString(Qt.locale(), ds, "yyyy-MM-dd hh:mm")
             }
 
             Column {
@@ -447,7 +457,7 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Change")
-                source: "qrc:/assets/icons_material/baseline-schedule-24px.svg"
+                source: "qrc:/assets/icons_material/duotone-schedule-24px.svg"
                 fullColor: true
                 primaryColor: Theme.colorPrimary
                 onClicked: {

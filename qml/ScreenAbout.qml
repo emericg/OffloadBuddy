@@ -171,7 +171,7 @@ Item {
                             primaryColor: Theme.colorPrimary
 
                             text: qsTr("Discussions")
-                            source: "qrc:/assets/icons_material/baseline-question_answer-24px.svg"
+                            source: "qrc:/assets/icons_material/duotone-question_answer-24px.svg"
                             onClicked: Qt.openUrlExternally("https://www.github.com/emericg/OffloadBuddy/discussions")
                         }
                     }

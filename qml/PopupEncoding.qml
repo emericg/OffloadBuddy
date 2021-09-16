@@ -271,7 +271,7 @@ Popup {
                     textCodecHelp.text = qsTr("Almost lossless compression, so HUGE file size but very good quality and speed.")
                 } else if (rbGIF.checked) {
                     fileInput.extension = "gif"
-                    textCodecHelp.text = qsTr("The meme maker. Go nuts with this oO")
+                    textCodecHelp.text = qsTr("The meme maker. Go nuts with this one \o/")
                 }
             }
         } else {

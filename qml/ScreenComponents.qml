@@ -90,7 +90,7 @@ Item {
                 height: parent.height
 
                 menuText: "First"
-                source: "qrc:/assets/icons_material/baseline-aspect_ratio-24px.svg"
+                source: "qrc:/assets/icons_material/duotone-aspect_ratio-24px.svg"
                 selected: true
                 onClicked: {
                     menuFirst.selected = true
@@ -575,7 +575,7 @@ Item {
                             id: lilmenu11
                             height: parent.height
 
-                            source: "qrc:/assets/icons_material/baseline-date_range-24px.svg"
+                            source: "qrc:/assets/icons_material/duotone-date_range-24px.svg"
                             sourceSize: 18
                             selected: true
                             onClicked: {
@@ -588,7 +588,7 @@ Item {
                             id: lilmenu22
                             height: parent.height
 
-                            source: "qrc:/assets/icons_material/baseline-date_range-24px.svg"
+                            source: "qrc:/assets/icons_material/duotone-date_range-24px.svg"
                             sourceSize: 22
                             onClicked: {
                                 lilmenu11.selected = false
@@ -600,7 +600,7 @@ Item {
                             id: lilmenu33
                             height: parent.height
 
-                            source: "qrc:/assets/icons_material/baseline-date_range-24px.svg"
+                            source: "qrc:/assets/icons_material/duotone-date_range-24px.svg"
                             sourceSize: 26
                             onClicked: {
                                 lilmenu11.selected = false

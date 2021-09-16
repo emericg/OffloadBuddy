@@ -58,14 +58,14 @@ Rectangle {
             id: shotOffload
             index: 1
             button_text: qsTr("Offload")
-            button_source: "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
+            button_source: "qrc:/assets/icons_material/duotone-save_alt-24px.svg"
             onButtonClicked: menuSelected(index)
         }
         ActionButton {
             id: shotMove
             index: 2
             button_text: qsTr("Move")
-            button_source: "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
+            button_source: "qrc:/assets/icons_material/duotone-save_alt-24px.svg"
             onButtonClicked: menuSelected(index)
         }
         ActionButton {
@@ -97,14 +97,14 @@ Rectangle {
             id: telemetry
             index: 8
             button_text: qsTr("Extract telemetry")
-            button_source: "qrc:/assets/icons_material/baseline-insert_chart_outlined-24px.svg"
+            button_source: "qrc:/assets/icons_material/duotone-insert_chart-24px.svg"
             onButtonClicked: menuSelected(index)
         }
         ActionButton {
             id: telemetryGPMF
             index: 9
             button_text: qsTr("Extract telemetry")
-            button_source: "qrc:/assets/icons_material/baseline-insert_chart_outlined-24px.svg"
+            button_source: "qrc:/assets/icons_material/duotone-insert_chart-24px.svg"
             onButtonClicked: menuSelected(index)
         }
         ActionButton {

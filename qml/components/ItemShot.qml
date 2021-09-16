@@ -31,12 +31,12 @@ Rectangle {
     function handleState() {
         if (shot.state === ShotUtils.SHOT_STATE_QUEUED) {
             icon_state.visible = true
-            icon_state.source = "qrc:/assets/icons_material/baseline-schedule-24px.svg"
+            icon_state.source = "qrc:/assets/icons_material/duotone-schedule-24px.svg"
             offloadAnimation.stop()
             encodeAnimation.stop()
         } else if (shot.state === ShotUtils.SHOT_STATE_OFFLOADING) {
             icon_state.visible = true
-            icon_state.source = "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
+            icon_state.source = "qrc:/assets/icons_material/duotone-save_alt-24px.svg"
             offloadAnimation.start()
         } else if (shot.state === ShotUtils.SHOT_STATE_ENCODING) {
             icon_state.visible = true
@@ -46,7 +46,7 @@ Rectangle {
                    shot.state === ShotUtils.SHOT_STATE_OFFLOADED ||
                    shot.state === ShotUtils.SHOT_STATE_ENCODED) {
             if (shot.state === ShotUtils.SHOT_STATE_OFFLOADED)
-                image_overlay.source = "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
+                image_overlay.source = "qrc:/assets/icons_material/duotone-save_alt-24px.svg"
             else if (shot.state === ShotUtils.SHOT_STATE_ENCODED)
                 image_overlay.source = "qrc:/assets/icons_material/baseline-memory-24px.svg"
             else
@@ -56,7 +56,7 @@ Rectangle {
             offloadAnimation.stop()
             encodeAnimation.stop()
         } else if (alreadyOffloaded) {
-            image_overlay.source = "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
+            image_overlay.source = "qrc:/assets/icons_material/duotone-save_alt-24px.svg"
             overlayWorkDone.visible = true
         } else {
             icon_state.visible = false
@@ -97,18 +97,18 @@ Rectangle {
                 text_left.text = UtilsString.durationToString_ISO8601_compact_loose(shot.duration)
             }
             if (shot.chapterCount > 1)
-                icon_left.source = "qrc:/assets/icons_material/baseline-video_library-24px.svg"
+                icon_left.source = "qrc:/assets/icons_material/duotone-video_library-24px.svg"
             else
                 icon_left.source = "qrc:/assets/icons_material/baseline-video-24px.svg"
         } else if (shot.fileType === ShotUtils.FILE_PICTURE) {
             if (shot.shotType === ShotUtils.SHOT_PICTURE_BURST) {
                 text_left.visible = true
                 text_left.text = duration
-                icon_left.source = "qrc:/assets/icons_material/baseline-burst_mode-24px.svg"
+                icon_left.source = "qrc:/assets/icons_material/duotone-burst_mode-24px.svg"
             } else if (shotType >= ShotUtils.SHOT_PICTURE_MULTI) {
                 text_left.visible = true
                 text_left.text = duration
-                icon_left.source = "qrc:/assets/icons_material/baseline-photo_library-24px.svg"
+                icon_left.source = "qrc:/assets/icons_material/duotone-photo_library-24px.svg"
             } else {
                 icon_left.source = "qrc:/assets/icons_material/baseline-photo-24px.svg"
             }

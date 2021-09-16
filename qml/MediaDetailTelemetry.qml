@@ -576,7 +576,7 @@ Item {
                             width: 20
                             height: 20
                             anchors.centerIn: parent
-                            source: "qrc:/assets/icons_material/baseline-timer-24px.svg"
+                            source: "qrc:/assets/icons_material/duotone-timer-24px.svg"
                             color: "white"
                         }
                     }
@@ -638,7 +638,7 @@ Item {
                             width: 20
                             height: 20
                             anchors.centerIn: parent
-                            source: "qrc:/assets/icons_material/outline-speed-24px.svg"
+                            source: "qrc:/assets/icons_material/duotone-speed-24px.svg"
                             color: "white"
                         }
                     }

@@ -35,7 +35,7 @@ Rectangle {
             primaryColor: Theme.colorActionbarHighlight
 
             text: (appContent.state === "library") ? qsTr("Move") : qsTr("Offload")
-            source: "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
+            source: "qrc:/assets/icons_material/duotone-save_alt-24px.svg"
             onClicked: {
                 if (appContent.state === "library") {
                     // move
@@ -129,7 +129,7 @@ Rectangle {
             primaryColor: Theme.colorActionbarHighlight
 
             text: qsTr("Extract telemetry")
-            source: "qrc:/assets/icons_material/baseline-insert_chart_outlined-24px.svg"
+            source: "qrc:/assets/icons_material/duotone-insert_chart-24px.svg"
             onClicked: {
                 if (appContent.state === "library") {
                     popupTelemetry.shots_uuids = mediaLibrary.getSelectedShotsUuids(mediaGrid.selectionList)

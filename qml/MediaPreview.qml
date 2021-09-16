@@ -1184,7 +1184,7 @@ Item {
                     highlightColor: Theme.colorPrimary
                     highlightMode: "color"
 
-                    source: "qrc:/assets/icons_material/baseline-rotate_90_degrees_ccw-24px.svg"
+                    source: "qrc:/assets/icons_material/duotone-rotate_90_degrees_ccw-24px.svg"
                     onClicked: toggleTransform()
                 }
                 ItemImageButton {

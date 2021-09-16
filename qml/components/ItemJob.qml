@@ -33,7 +33,7 @@ Rectangle {
 
     function updateJobStatus() {
         if (job.state === JobUtils.JOB_STATE_QUEUED) {
-            imageStatus.source = "qrc:/assets/icons_material/baseline-schedule-24px.svg"
+            imageStatus.source = "qrc:/assets/icons_material/duotone-schedule-24px.svg"
         } else if (job.state === JobUtils.JOB_STATE_WORKING) {
             imageStatus.source = "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
         } else if (job.state === JobUtils.JOB_STATE_PAUSED) {
@@ -81,7 +81,7 @@ Rectangle {
                         if (job.type === JobUtils.JOB_ENCODE || job.type === JobUtils.JOB_CLIP)
                             return "qrc:/assets/icons_material/baseline-memory-24px.svg"
                         else if (job.type === JobUtils.JOB_OFFLOAD || job.type === JobUtils.JOB_MOVE)
-                            return "qrc:/assets/icons_material/baseline-save_alt-24px.svg"
+                            return "qrc:/assets/icons_material/duotone-save_alt-24px.svg"
                         else if (job.type === JobUtils.JOB_MERGE)
                             return "qrc:/assets/icons_material/baseline-merge_type-24px.svg"
                         else if (job.type === JobUtils.JOB_DELETE || job.type === JobUtils.JOB_FORMAT)
@@ -277,7 +277,7 @@ Rectangle {
                 height: 32
                 anchors.verticalCenter: parent.verticalCenter
 
-                source: "qrc:/assets/icons_material/baseline-schedule-24px.svg"
+                source: "qrc:/assets/icons_material/duotone-schedule-24px.svg"
                 color: Theme.colorIcon
 
                 NumberAnimation on rotation {
