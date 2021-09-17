@@ -217,6 +217,7 @@ QDateTime Shot::getDate() const
     if (m_camera_source.contains("HERO7")) firstpossibledate = QDateTime(QDate(2018, 1, 1), QTime(0, 0));
     if (m_camera_source.contains("HERO8")) firstpossibledate = QDateTime(QDate(2019, 1, 1), QTime(0, 0));
     if (m_camera_source.contains("HERO9")) firstpossibledate = QDateTime(QDate(2020, 1, 1), QTime(0, 0));
+    if (m_camera_source.contains("HERO10")) firstpossibledate = QDateTime(QDate(2021, 1, 1), QTime(0, 0));
 
     if (m_date_gps.isValid())
     {
@@ -1259,6 +1260,7 @@ bool Shot::getMetadataFromVideo(int index)
 
             // GoPro shot metadata (from MP4)
             m_camera_firmware = media->metadata_gopro->camera_firmware;
+            if (m_camera_firmware.startsWith("H21")) m_camera_source = "GoPro HERO10";
             if (m_camera_firmware.startsWith("HD9")) m_camera_source = "GoPro HERO9";
             if (m_camera_firmware.startsWith("HD8")) m_camera_source = "GoPro HERO8";
             if (m_camera_firmware.startsWith("HD7")) m_camera_source = "GoPro HERO7";

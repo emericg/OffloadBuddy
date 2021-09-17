@@ -10,7 +10,8 @@ function getDevicePicture(device) {
     var camera_model = "qrc:/cameras/";
 
     // Using device name
-    if (deviceName.includes("HERO9")) {
+    if (deviceName.includes("HERO10") ||
+        deviceName.includes("HERO9")) {
         camera_model += "H9"
     } else if (deviceName.includes("HERO8")) {
         camera_model += "H8"

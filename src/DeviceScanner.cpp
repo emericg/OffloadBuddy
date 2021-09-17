@@ -260,7 +260,9 @@ void DeviceScanner::scanVirtualFilesystems()
                         {
                             deviceInfos->brand = "GoPro";
 
-                            if (deviceInfos->stringId.contains("HERO9"))
+                            if (deviceInfos->stringId.contains("HERO10"))
+                                deviceInfos->model = "HERO10";
+                            else if (deviceInfos->stringId.contains("HERO9"))
                                 deviceInfos->model = "HERO9";
                             else if (deviceInfos->stringId.contains("HERO8"))
                                 deviceInfos->model = "HERO8";

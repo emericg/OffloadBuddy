@@ -79,8 +79,9 @@ namespace DeviceUtils
             DEVICE_HERO7_WHITE,
             DEVICE_HERO7_SILVER,
             DEVICE_HERO7_BLACK,
-            DEVICE_HERO9,
             DEVICE_HERO8,
+            DEVICE_HERO9,
+            DEVICE_HERO10,
             DEVICE_FUSION,
             DEVICE_MAX,
 
