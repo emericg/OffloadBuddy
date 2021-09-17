@@ -518,7 +518,7 @@ Item {
 
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
-                        visible: shot.altitude
+                        visible: shot.speed
 
                         text: qsTr("Speed:")
                         font.pixelSize: Theme.fontSizeContent

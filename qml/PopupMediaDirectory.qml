@@ -116,7 +116,7 @@ Popup {
                 Item {
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    height: 48
+                    height: 56
 
                     Text {
                         width: popupMediaDirectory.legendWidth
@@ -141,7 +141,7 @@ Popup {
                     Text {
                         id: legendEnabled
                         anchors.left: parent.left
-                        anchors.leftMargin: popupMediaDirectory.legendWidth + checkBox_enabled.width + 16
+                        anchors.leftMargin: popupMediaDirectory.legendWidth + checkBox_enabled.width + 8
                         anchors.right: parent.right
                         anchors.verticalCenter: parent.verticalCenter
 
@@ -157,7 +157,7 @@ Popup {
                 Item {
                     anchors.right: parent.right
                     anchors.left: parent.left
-                    height: 48
+                    height: 56
 
                     Text {
                         width: popupMediaDirectory.legendWidth
@@ -207,9 +207,10 @@ Popup {
                     Text {
                         id: legendContent
                         anchors.left: parent.left
-                        anchors.leftMargin: popupMediaDirectory.legendWidth + 16
+                        anchors.leftMargin: popupMediaDirectory.legendWidth + 20
                         anchors.right: parent.right
                         anchors.verticalCenter: parent.verticalCenter
+                        anchors.verticalCenterOffset: -8
 
                         text: qsTr("Choose to restrict what kind of content can be saved into this media directory.")
                         font.pixelSize: Theme.fontSizeContentSmall
@@ -223,10 +224,11 @@ Popup {
                 Item {
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    height: 48
+                    height: 56
 
                     Text {
-                        id: textMediaHierarchy2
+                        width: popupMediaDirectory.legendWidth
+                        anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("Hierarchy")
@@ -267,16 +269,17 @@ Popup {
                 }
 
                 Item {
-                    height: legendHierarchy.contentHeight + 12
+                    height: legendHierarchy.contentHeight + 16
                     anchors.left: parent.left
                     anchors.right: parent.right
 
                     Text {
                         id: legendHierarchy
                         anchors.left: parent.left
-                        anchors.leftMargin: popupMediaDirectory.legendWidth + 16
+                        anchors.leftMargin: popupMediaDirectory.legendWidth + 20
                         anchors.right: parent.right
                         anchors.verticalCenter: parent.verticalCenter
+                        anchors.verticalCenterOffset: -8
 
                         text: qsTr("How media will be stored in this directory. Choose an available hierarchy, or use the CUSTOM item to create your own.")
                         font.pixelSize: Theme.fontSizeContentSmall

@@ -23,6 +23,7 @@
 #include "JobManager.h"
 #include "Shot.h"
 #include "utils/utils_app.h"
+#include "utils/utils_maths.h"
 
 #include <QProcess>
 #include <QFileInfo>
@@ -369,21 +370,21 @@ void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
                 // H.264 video
                 ptiwrap->arguments << "-c:v" << "libx264";
 
-                if (job->settings_encode.encoding_speed == 0)
+                if (job->settings_encode.encoding_speed == 3)
                     ptiwrap->arguments << "-preset" << "faster";
-                else if (job->settings_encode.encoding_speed == 2)
+                else if (job->settings_encode.encoding_speed == 1)
                     ptiwrap->arguments << "-preset" << "slower";
                 else
                     ptiwrap->arguments << "-preset" << "medium";
 
-                ptiwrap->arguments << "-tune" << "film";
-
                 // CRF scale range is 0–51
                 // (0 is lossless, 23 is default, 51 is worst) // sane range is 17–28
-                int crf = 21 - job->settings_encode.encoding_quality;
+                int crf = mapNumber(job->settings_encode.encoding_quality, 50, 100, 28, 17);
+
+                ptiwrap->arguments << "-tune" << "film";
                 ptiwrap->arguments << "-crf" << QString::number(crf);
 
-                // AAC audio copy
+                // Audio copy
                 ptiwrap->arguments << "-c:a" << "copy";
             }
 
@@ -394,17 +395,20 @@ void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
                 // H.265 video
                 ptiwrap->arguments << "-c:v" << "libx265";
 
-                if (job->settings_encode.encoding_speed == 0)
+                if (job->settings_encode.encoding_speed == 3)
                     ptiwrap->arguments << "-preset" << "faster";
-                else if (job->settings_encode.encoding_speed == 2)
+                else if (job->settings_encode.encoding_speed == 1)
                     ptiwrap->arguments << "-preset" << "slower";
                 else
                     ptiwrap->arguments << "-preset" << "medium";
 
-                int crf = 28 - job->settings_encode.encoding_quality;
+                // CRF scale range is 0–51
+                // (0 is lossless, 28 is default, 51 is worst) // sane range is 20–33
+                int crf = mapNumber(job->settings_encode.encoding_quality, 50, 100, 33, 20);
+
                 ptiwrap->arguments << "-crf" << QString::number(crf);
 
-                // AAC audio copy
+                // Audio copy
                 ptiwrap->arguments << "-c:a" << "copy";
             }
 
@@ -412,13 +416,21 @@ void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
             {
                 file_extension = "mkv";
 
+                if (job->settings_encode.encoding_speed == 3)
+                    ptiwrap->arguments << "-deadline" << "realtime";
+                else if (job->settings_encode.encoding_speed == 1)
+                    ptiwrap->arguments << "-deadline" << "best";
+                else
+                    ptiwrap->arguments << "-deadline" << "good";
+
                 // CRF scale range is 0–63
                 // (0 is lossless, 23 is default, 63 is worst) // sane range is 15–35
-                int crf = 35 - job->settings_encode.encoding_quality;
+                int crf = mapNumber(job->settings_encode.encoding_quality, 50, 100, 35, 17);
 
                 // VP9 video
                 ptiwrap->arguments << "-c:v" << "libvpx-vp9";
-                ptiwrap->arguments <<"-crf" << QString::number(crf) << "-b:v" << "0" <<"-cpu-used" << "2";
+                ptiwrap->arguments << "-crf" << QString::number(crf) << "-b:v" << "0";
+                //ptiwrap->arguments << "-cpu-used" << "2";
                 // Opus audio
                 ptiwrap->arguments << "-c:a" << "libopus";
                 ptiwrap->arguments << "-b:a" << "70K";
@@ -437,16 +449,21 @@ void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
             {
                 file_extension = "jpg";
 
-                int qscale = 5 - job->settings_encode.encoding_quality;
+                // qscale range is 2–31
+                int qscale = mapNumber(job->settings_encode.encoding_quality, 50, 100, 14, 2);
+
                 ptiwrap->arguments << "-q:v" << QString::number(qscale);
+                ptiwrap->arguments << "-pix_fmt" << "yuv420p";
             }
             if (codec == "WEBP")
             {
                 file_extension = "webp";
 
-                int qscale = 75 + (job->settings_encode.encoding_quality * 4);
-                ptiwrap->arguments << "-quality" << QString::number(qscale);
+                // quality range is 0-100, default is 75
+                int quality = job->settings_encode.encoding_quality;
+                ptiwrap->arguments << "-quality" << QString::number(quality);
                 ptiwrap->arguments << "-preset" << "photo";
+                 // 0 faster but worst // 6 slower but better
                 ptiwrap->arguments << "-compression_level" << QString::number(6);
             }
 
@@ -756,19 +773,27 @@ void JobWorkerFFmpeg::processFinished()
 {
     if (m_childProcess && m_ffmpegCurrent)
     {
-        JobUtils::JobState js = static_cast<JobUtils::JobState>(m_ffmpegCurrent->job->getState());
-
         int exitStatus = m_childProcess->exitStatus();
         int exitCode = m_childProcess->exitCode();
-        qDebug() << "JobWorkerFFmpeg::processFinished(" << exitStatus << "/" << exitCode << ")";
 
+        //qDebug() << "JobWorkerFFmpeg::processFinished(" << exitStatus << "/" << exitCode << ")";
+
+        JobUtils::JobState js = static_cast<JobUtils::JobState>(m_ffmpegCurrent->job->getState());
         if (js != JobUtils::JOB_STATE_ABORTED)
         {
             if (exitStatus == QProcess::NormalExit)
             {
                 if (exitCode == 0)
                 {
-                    js = JobUtils::JOB_STATE_DONE;
+                    // Still, make sure that the output file exists
+                    if (QFile::exists(m_ffmpegCurrent->job->getDestinationFile()))
+                    {
+                        js = JobUtils::JOB_STATE_DONE;
+                    }
+                    else
+                    {
+                        js = JobUtils::JOB_STATE_ERRORED;
+                    }
                 }
                 else
                 {
@@ -828,7 +853,7 @@ void JobWorkerFFmpeg::processOutput()
                 if (m_ffmpegCurrent && m_ffmpegCurrent->job)
                 {
                     // fallback, use duration from the shot
-                    m_duration = QTime(0,0,0).addMSecs(m_ffmpegCurrent->job->getElement(m_ffmpegCurrent->job_element_index)->parent_shot->getDuration());
+                    m_duration = QTime(0, 0, 0).addMSecs(m_ffmpegCurrent->job->getElement(m_ffmpegCurrent->job_element_index)->parent_shot->getDuration());
                 }
             }
         }

@@ -198,49 +198,6 @@ Item {
                 spacing: 32
 
                 Text {
-                    id: titleQuality
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    text: qsTr("Quality")
-                    font.pixelSize: Theme.fontSizeComponent
-                    color: Theme.colorText
-                }
-
-                ItemLilMenu {
-                    width: rowLilMenuQuality.width
-                    height: 32
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    Row {
-                        id: rowLilMenuQuality
-                        height: parent.height
-
-                        ItemLilMenuButton {
-                            text: qsTr("Low")
-                            selected: (settingsManager.thumbQuality === 0)
-                            onClicked: settingsManager.thumbQuality = 0
-                        }
-                        ItemLilMenuButton {
-                            text: qsTr("Balanced")
-                            selected: (settingsManager.thumbQuality === 1)
-                            onClicked: settingsManager.thumbQuality = 1
-                        }
-                        ItemLilMenuButton {
-                            text: qsTr("High")
-                            selected: (settingsManager.thumbQuality === 2)
-                            onClicked: settingsManager.thumbQuality = 2
-                        }
-                    }
-                }
-            }
-
-            ////////
-
-            Row {
-                height: 40
-                spacing: 32
-
-                Text {
                     id: titleAR
                     anchors.verticalCenter: parent.verticalCenter
 
@@ -313,6 +270,47 @@ Item {
                             text: qsTr("Huge")
                             selected: (settingsManager.thumbSize === 4)
                             onClicked: settingsManager.thumbSize = 4
+                        }
+                    }
+                }
+            }
+
+            Row {
+                height: 40
+                spacing: 32
+
+                Text {
+                    id: titleQuality
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: qsTr("Quality")
+                    font.pixelSize: Theme.fontSizeComponent
+                    color: Theme.colorText
+                }
+
+                ItemLilMenu {
+                    width: rowLilMenuQuality.width
+                    height: 32
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    Row {
+                        id: rowLilMenuQuality
+                        height: parent.height
+
+                        ItemLilMenuButton {
+                            text: qsTr("Low")
+                            selected: (settingsManager.thumbQuality === 0)
+                            onClicked: settingsManager.thumbQuality = 0
+                        }
+                        ItemLilMenuButton {
+                            text: qsTr("Balanced")
+                            selected: (settingsManager.thumbQuality === 1)
+                            onClicked: settingsManager.thumbQuality = 1
+                        }
+                        ItemLilMenuButton {
+                            text: qsTr("High")
+                            selected: (settingsManager.thumbQuality === 2)
+                            onClicked: settingsManager.thumbQuality = 2
                         }
                     }
                 }

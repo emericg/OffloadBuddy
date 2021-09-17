@@ -625,11 +625,11 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             wheelEnabled: true
-                            stepSize: 1
+                            stepSize: 5
 
-                            from: -2
-                            to: 2
-                            value: 0
+                            from: 50
+                            to: 100
+                            value: 85
                         }
                     }
 
@@ -646,7 +646,7 @@ Popup {
                             width: popupEncoding.legendWidth
                             anchors.verticalCenter: parent.verticalCenter
 
-                            text: qsTr("Speed index")
+                            text: qsTr("Speed preset")
                             font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
@@ -661,9 +661,9 @@ Popup {
                             wheelEnabled: true
                             stepSize: 1
 
-                            from: 2
-                            to: 0
-                            value: 1
+                            from: 1
+                            to: 3
+                            value: 2
                         }
                     }
 

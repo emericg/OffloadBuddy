@@ -418,6 +418,7 @@ Rectangle {
         anchors.fill: parent
 
         Canvas {
+            id: canvas
             anchors.fill: parent
             opacity: 0.666
 

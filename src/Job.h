@@ -80,8 +80,8 @@ typedef struct JobSettingsEncode
     QString video_codec = "H.264";
     QString image_codec = "JPEG";
 
-    int encoding_quality = 3;   // [1:5]
-    int encoding_speed = 2;     // [1:3]
+    int encoding_quality = 85;  // [50:100]
+    int encoding_speed = 2;     // [1:3] slow / balanced / fast
 
     float fps = -1;
     int resolution = -1;        // height

@@ -9,7 +9,7 @@ QT     += multimedia location charts
 
 # Validate Qt version
 !versionAtLeast(QT_VERSION, 5.12) : error("You need at least Qt version 5.12 for $${TARGET}")
-!versionAtMost(QT_VERSION, 6.0) : error("You can't use Qt 6.0+ for WatchFlower")
+!versionAtMost(QT_VERSION, 6.0) : error("You can't use Qt 6.0+ for OffloadBuddy")
 
 # Project features #############################################################
 
