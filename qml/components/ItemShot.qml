@@ -482,6 +482,8 @@ Rectangle {
             running: false
             repeat: true
             onTriggered: {
+                if (!shot || typeof shot === "undefined") return
+
                 if (shot.fileType === ShotUtils.FILE_VIDEO) {
                     var timecode_s = Math.round((shot.duration / 4000) * mouseAreaItem.thumbId)
 
@@ -496,6 +498,8 @@ Rectangle {
             }
         }
         onEntered: {
+            if (!shot || typeof shot === "undefined") return
+
             mouseAreaItem.isHovered = true
             shotsView.focus = true
 
@@ -506,6 +510,8 @@ Rectangle {
             }
         }
         onExited: {
+            if (!shot || typeof shot === "undefined") return
+
             mouseAreaItem.isHovered = false
 
             if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== ShotUtils.STORAGE_MTP)) {
@@ -523,7 +529,9 @@ Rectangle {
         ////////
 
         onClicked: (mouse)=> {
+            if (!shot || typeof shot === "undefined") return
             //console.log("ItemShot::onClicked")
+
             var lastIndex = shotsView.currentIndex
             shotsView.currentIndex = index
 
@@ -563,6 +571,7 @@ Rectangle {
                 actionMenu.visible = false
         }
         onDoubleClicked: (mouse)=> {
+            if (!shot || typeof shot === "undefined") return
             //console.log("ItemShot::onDoubleClicked")
 
             if (mouse.button === Qt.LeftButton) {
@@ -570,6 +579,7 @@ Rectangle {
             }
         }
         onPressAndHold: {
+            if (!shot || typeof shot === "undefined") return
             //console.log("ItemShot::onPressAndHold")
 
             // multi selection
