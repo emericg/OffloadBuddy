@@ -22,7 +22,7 @@
 
 #include <cmath>
 
-#include <QApplication>
+#include <QGuiApplication>
 #include <QScreen>
 #include <QWindow>
 #include <QDebug>
@@ -65,7 +65,7 @@ void UtilsScreen::getScreenInfos()
 {
     qDebug() << "UtilsScreen::getScreenInfos()";
 
-    QScreen *scr = QApplication::primaryScreen();
+    QScreen *scr = QGuiApplication::primaryScreen();
     if (scr)
     {
         qDebug() << "- physicalSize (mm) " << scr->physicalSize();
@@ -95,7 +95,7 @@ double UtilsScreen::getScreenSize()
 {
     if (m_screenSize <= 0)
     {
-        QScreen *scr = QApplication::primaryScreen();
+        QScreen *scr = QGuiApplication::primaryScreen();
         if (scr)
         {
             // TODO // On Android, physicalSize().height seems to ignore the buttons and/or status bar
@@ -110,7 +110,7 @@ int UtilsScreen::getScreenDpi()
 {
     if (m_screenDpi <= 0)
     {
-        QScreen *scr = QApplication::primaryScreen();
+        QScreen *scr = QGuiApplication::primaryScreen();
         if (scr)
         {
             m_screenDpi = static_cast<int>(std::round(scr->physicalDotsPerInch()));
