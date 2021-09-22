@@ -149,6 +149,7 @@ void Shot::addFile(ofb_file *file)
                     m_date_file = file->creation_date;
                 else
                     m_date_file = file->modification_date;
+                Q_EMIT dateUpdated();
             }
 
             if (file->extension == "jpg" || file->extension == "jpeg" ||
@@ -909,6 +910,7 @@ bool Shot::getMetadataFromPicture(int index)
             // ex: DateTime: 2018:08:10 10:37:08
             exif_entry_get_value(entry, entry_buf, sizeof(entry_buf));
             m_date_metadata = QDateTime::fromString(entry_buf, "yyyy:MM:dd hh:mm:ss");
+            Q_EMIT dateUpdated();
         }
 
         QDate gpsDate;
@@ -934,7 +936,10 @@ bool Shot::getMetadataFromPicture(int index)
         }
 
         if (gpsDate.isValid() && gpsTime.isValid())
+        {
             m_date_gps = QDateTime(gpsDate, gpsTime);
+            Q_EMIT dateUpdated();
+        }
 
         // GPS infos ///////////////////////////////////////////////////////////////
 
@@ -1161,6 +1166,7 @@ bool Shot::getMetadataFromVideo(int index)
     if (media)
     {
         m_date_metadata = QDateTime::fromSecsSinceEpoch(media->creation_time);
+        Q_EMIT dateUpdated();
 
         if (media->tracks_audio_count > 0)
         {

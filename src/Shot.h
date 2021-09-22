@@ -201,11 +201,13 @@ class Shot: public QObject
     Q_PROPERTY(QStringList filesList READ getFilesStringList NOTIFY shotUpdated)
     Q_PROPERTY(QVariant filesShot READ getShotFiles NOTIFY shotUpdated)
 
+    Q_PROPERTY(QDateTime date READ getDate NOTIFY dateUpdated)
+    Q_PROPERTY(QDateTime dateFile READ getDateFile NOTIFY dateUpdated)
+    Q_PROPERTY(QDateTime dateMetadata READ getDateMetadata NOTIFY dateUpdated)
+    Q_PROPERTY(QDateTime dateGPS READ getDateGPS NOTIFY dateUpdated)
+    Q_PROPERTY(QDateTime dateUser READ getUserDate WRITE setUserDate NOTIFY dateUpdated)
+
     Q_PROPERTY(qint64 duration READ getDuration NOTIFY shotUpdated)
-    Q_PROPERTY(QDateTime date READ getDate NOTIFY shotUpdated)
-    Q_PROPERTY(QDateTime dateFile READ getDateFile NOTIFY shotUpdated)
-    Q_PROPERTY(QDateTime dateMetadata READ getDateMetadata NOTIFY shotUpdated)
-    Q_PROPERTY(QDateTime dateGPS READ getDateGPS NOTIFY shotUpdated)
 
     Q_PROPERTY(unsigned width READ getWidth NOTIFY shotUpdated)
     Q_PROPERTY(unsigned height READ getHeight NOTIFY shotUpdated)
@@ -358,7 +360,7 @@ class Shot: public QObject
     // USER SETTINGS ///////////////////////////////////////////////////////////
 
     Q_PROPERTY(bool selected READ isSelected WRITE setSelected NOTIFY selectionUpdated) // > userSelected
-    Q_PROPERTY(QDateTime userDate READ getUserDate WRITE setUserDate NOTIFY userSettingsUpdated)
+    //Q_PROPERTY(QDateTime userDate READ getUserDate WRITE setUserDate NOTIFY userSettingsUpdated)
     Q_PROPERTY(QStringList userTags READ getUserTags WRITE setUserTags NOTIFY userSettingsUpdated)
     Q_PROPERTY(int mediaPosition READ getUserMediaPosition WRITE setUserMediaPosition NOTIFY userSettingsUpdated)
     Q_PROPERTY(int trimStart READ getUserTrimStart WRITE setUserTrimStart NOTIFY userSettingsUpdated)
@@ -399,11 +401,11 @@ class Shot: public QObject
     bool isSelected() const { return selected; }
     void setSelected(bool value) { selected = value; Q_EMIT selectionUpdated(); }
 
-    QDateTime getUserDate() const { return m_date_gps; }
+    QDateTime getUserDate() const { return m_user_date; }
     void setUserDate(const QDateTime &d) {
         if (d != m_user_date) {
             m_user_date = d;
-            Q_EMIT userSettingsUpdated();
+            Q_EMIT dateUpdated();
         }
     }
 
@@ -595,6 +597,7 @@ Q_SIGNALS:
     void stateUpdated();
     void selectionUpdated();
     void usersettingsUpdated();
+    void dateUpdated();
     void metadataUpdated();
     void telemetryUpdated();
     void locationUpdated();

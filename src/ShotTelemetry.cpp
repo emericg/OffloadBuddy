@@ -332,8 +332,8 @@ bool Shot::parseGpmfSampleFast(GpmfBuffer &buf, int &devc_count)
 
                                 QString dt = QString::fromStdString(gps_tmcd);
                                 m_date_gps = QDateTime::fromString(dt, "yyyy-MM-ddThh:mm:ssZ");
+                                emit dateUpdated();
 
-                                emit shotUpdated();
                                 return true;
                             }
                             break;
@@ -388,7 +388,7 @@ void Shot::parseData_gps5(GpmfBuffer &buf, GpmfKLV &klv,
     {
         QString dt = QString::fromStdString(gps_tmcd);
         m_date_gps = QDateTime::fromString(dt, "yyyy-MM-ddThh:mm:ssZ");
-        emit shotUpdated();
+        emit dateUpdated();
     }
 
     //qDebug() << "GPS   FIX: " << gps_fix << "  DOP: " << gps_dop;

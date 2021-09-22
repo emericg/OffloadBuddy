@@ -46,7 +46,10 @@ Popup {
 
     function loadDate(dateToLoad, clicked) {
         qdate = dateToLoad
-        if (clicked) shot.dateUser = dateToLoad
+        if (clicked) {
+            shot.dateUser = dateToLoad
+            qdateUser = shot.dateUser
+        }
         // date
         spinBoxYear.value = Qt.formatDateTime(dateToLoad, "yyyy");
         spinBoxMonth.value = Qt.formatDateTime(dateToLoad, "MM");
@@ -292,6 +295,79 @@ Popup {
                     }
                 }
             }
+
+            Text {
+                height: 32
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                visible: dateUser.text
+
+                text: qsTr("User date")
+                color: Theme.colorSubText
+                font.pixelSize: Theme.fontSizeContent
+                verticalAlignment: Text.AlignVCenter
+
+                Text {
+                    id: dateUser
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.leftMargin: 140
+                    anchors.left: parent.left
+
+                    color: Theme.colorText
+                    font.pixelSize: Theme.fontSizeContent
+                    verticalAlignment: Text.AlignVCenter
+                }
+
+                Row {
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    Item {
+                        width: 36
+                        height: 36
+                        ImageSvg {
+                            id: dateUserValidator
+                            width: 24
+                            height: 24
+                            anchors.centerIn: parent
+
+                            visible: (qdateUser < qdateFirst || qdateUser > qdateToday)
+                            source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
+                            color: Theme.colorWarning
+                            fillMode: Image.PreserveAspectFit
+                        }
+                    }
+                    ItemImageButton {
+                        id: dateUserSelector
+                        width: 36
+                        height: 36
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        highlightMode: "color"
+                        source: "qrc:/assets/icons_material/baseline-done-24px.svg"
+
+                        visible: (qdateUser > qdateFirst && qdateUser < qdateToday)
+                        enabled: visible
+                        selected: (qdate &&
+                                   (Qt.formatDateTime(qdate) === Qt.formatDateTime(qdateUser) &&
+                                    Qt.formatDateTime(qdate) !== Qt.formatDateTime(qdateFile) &&
+                                    Qt.formatDateTime(qdate) !== Qt.formatDateTime(qdateMetadata) &&
+                                    Qt.formatDateTime(qdate) !== Qt.formatDateTime(qdateGps)))
+                        background: selected
+                        onClicked: loadDate(qdateUser, true)
+                    }
+                }
+            }
+        }
+
+        ////////////////
+
+        Rectangle { // separator
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 2
+            color: Theme.colorSeparator
         }
 
         ////////////////
@@ -312,7 +388,10 @@ Popup {
                          UtilsNumber.padNumber(spinBoxMinutes.value)
 
                 qdate = Date.fromLocaleString(Qt.locale(), ds, "yyyy-MM-dd hh:mm")
-                shot.userDate = Date.fromLocaleString(Qt.locale(), ds, "yyyy-MM-dd hh:mm")
+                qdateUser = Date.fromLocaleString(Qt.locale(), ds, "yyyy-MM-dd hh:mm")
+
+                shot.dateUser = Date.fromLocaleString(Qt.locale(), ds, "yyyy-MM-dd hh:mm")
+                dateUser.text = Qt.formatDateTime(shot.dateUser, Qt.SystemLocaleDate)
             }
 
             Column {
