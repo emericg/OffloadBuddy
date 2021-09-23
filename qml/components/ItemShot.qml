@@ -71,6 +71,7 @@ Rectangle {
             shotDevice = currentDevice
 
         handleState()
+
         if (shot.previewVideo)
             imageFs.source = "image://MediaThumbnailer/" + shot.previewVideo + "@" + (shot.duration/12000).toFixed()
         else if (shot.previewPhoto)
@@ -81,7 +82,6 @@ Rectangle {
             imageMtp.image = shot.getPreviewMtp()
         }
 
-        text_left.visible = false
         if (shot.fileType === ShotUtils.FILE_VIDEO) {
             if (shot.transformation === 4) {
                 imageFs.rotation = 90
@@ -92,28 +92,20 @@ Rectangle {
                 imageFs.rotation = 270
                 imageFs.scale = cellFormat
             }
-            if (shot.duration > 0) {
-                text_left.visible = true
-                text_left.text = UtilsString.durationToString_ISO8601_compact_loose(shot.duration)
-            }
             if (shot.chapterCount > 1)
-                icon_left.source = "qrc:/assets/icons_material/duotone-video_library-24px.svg"
+                icon_mediaType.source = "qrc:/assets/icons_material/duotone-video_library-24px.svg"
             else
-                icon_left.source = "qrc:/assets/icons_material/baseline-video-24px.svg"
+                icon_mediaType.source = "qrc:/assets/icons_material/baseline-video-24px.svg"
         } else if (shot.fileType === ShotUtils.FILE_PICTURE) {
             if (shot.shotType === ShotUtils.SHOT_PICTURE_BURST) {
-                text_left.visible = true
-                text_left.text = duration
-                icon_left.source = "qrc:/assets/icons_material/duotone-burst_mode-24px.svg"
+                icon_mediaType.source = "qrc:/assets/icons_material/duotone-burst_mode-24px.svg"
             } else if (shotType >= ShotUtils.SHOT_PICTURE_MULTI) {
-                text_left.visible = true
-                text_left.text = duration
-                icon_left.source = "qrc:/assets/icons_material/duotone-photo_library-24px.svg"
+                icon_mediaType.source = "qrc:/assets/icons_material/duotone-photo_library-24px.svg"
             } else {
-                icon_left.source = "qrc:/assets/icons_material/baseline-photo-24px.svg"
+                icon_mediaType.source = "qrc:/assets/icons_material/baseline-photo-24px.svg"
             }
         } else {
-            icon_left.source = "qrc:/assets/icons_material/baseline-broken_image-24px.svg"
+            icon_mediaType.source = "qrc:/assets/icons_material/baseline-broken_image-24px.svg"
         }
 
         if (shotDevice) {
@@ -338,7 +330,7 @@ Rectangle {
             spacing: 4
 
             ImageSvg {
-                id: icon_left
+                id: icon_mediaType
                 width: 24
                 height: 24
                 anchors.verticalCenter: parent.verticalCenter
@@ -346,11 +338,13 @@ Rectangle {
             }
 
             Text {
-                id: text_left
+                id: text_mediaDuration
                 anchors.verticalCenter: parent.verticalCenter
 
+                visible: (shot.duration > 1)
+                text: (shot.fileType === ShotUtils.FILE_VIDEO) ? UtilsString.durationToString_ISO8601_compact_loose(shot.duration) : shot.duration
+
                 color: "white"
-                text: "left"
                 lineHeight: 1
                 style: Text.Raised
                 styleColor: "black"
@@ -390,16 +384,6 @@ Rectangle {
             }
 
             ImageSvg {
-                id: icon_tlm
-                width: 20
-                height: 20
-                anchors.verticalCenter: parent.verticalCenter
-                visible: (shot.fileType === ShotUtils.FILE_VIDEO && shot.hasGPS)
-                color: "white"
-                source: "qrc:/assets/icons_material/baseline-insert_chart-24px.svg"
-            }
-
-            ImageSvg {
                 id: icon_gps
                 width: 20
                 height: 20
@@ -407,6 +391,16 @@ Rectangle {
                 visible: shot.hasGPS
                 color: "white"
                 source: "qrc:/assets/icons_material/baseline-map-24px.svg"
+            }
+
+            ImageSvg {
+                id: icon_tlm
+                width: 20
+                height: 20
+                anchors.verticalCenter: parent.verticalCenter
+                visible: (shot.fileType === ShotUtils.FILE_VIDEO && shot.hasGPS)
+                color: "white"
+                source: "qrc:/assets/icons_material/baseline-insert_chart-24px.svg"
             }
         }
     }

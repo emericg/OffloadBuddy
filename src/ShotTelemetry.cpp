@@ -238,13 +238,6 @@ bool Shot::parseGpmfSample(GpmfBuffer &buf, int &devc_count)
         }
     }
 
-    if (m_gps.size() > 1)
-    {
-        // We have a GPS track
-        hasGPS = true;
-        emit shotUpdated();
-    }
-
     return status;
 }
 

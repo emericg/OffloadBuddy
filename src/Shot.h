@@ -184,22 +184,23 @@ class Shot: public QObject
 
     Q_PROPERTY(QString name READ getName NOTIFY shotUpdated)
     Q_PROPERTY(QString camera READ getCameraSource NOTIFY shotUpdated)
-    Q_PROPERTY(qint64 size READ getSize NOTIFY shotUpdated)
-    Q_PROPERTY(qint64 datasize READ getDataSize NOTIFY shotUpdated)
+    Q_PROPERTY(qint64 size READ getSize NOTIFY dataUpdated)
+    Q_PROPERTY(qint64 datasize READ getDataSize NOTIFY dataUpdated)
+    Q_PROPERTY(qint64 duration READ getDuration NOTIFY dataUpdated)
 
-    Q_PROPERTY(QString previewPhoto READ getPreviewPhoto NOTIFY shotUpdated)
-    Q_PROPERTY(QString previewVideo READ getPreviewVideo NOTIFY shotUpdated)
-    Q_PROPERTY(QImage previewMtp READ getPreviewMtp NOTIFY shotUpdated)
-    Q_PROPERTY(QStringList previewTimelapse READ getPreviewPhotos NOTIFY shotUpdated)
+    Q_PROPERTY(QString previewPhoto READ getPreviewPhoto NOTIFY dataUpdated)
+    Q_PROPERTY(QString previewVideo READ getPreviewVideo NOTIFY dataUpdated)
+    Q_PROPERTY(QImage previewMtp READ getPreviewMtp NOTIFY dataUpdated)
+    Q_PROPERTY(QStringList previewTimelapse READ getPreviewPhotos NOTIFY dataUpdated)
 
-    Q_PROPERTY(unsigned chapterCount READ getChapterCount NOTIFY shotUpdated)
-    Q_PROPERTY(QStringList chapterPaths READ getChapterPaths NOTIFY shotUpdated)
-    Q_PROPERTY(QVariant chapterDurations READ getChapterDurations NOTIFY shotUpdated)
+    Q_PROPERTY(unsigned chapterCount READ getChapterCount NOTIFY dataUpdated)
+    Q_PROPERTY(QStringList chapterPaths READ getChapterPaths NOTIFY dataUpdated)
+    Q_PROPERTY(QVariant chapterDurations READ getChapterDurations NOTIFY dataUpdated)
 
-    Q_PROPERTY(unsigned fileCount READ getFileCount NOTIFY shotUpdated)
-    Q_PROPERTY(QString filesString READ getFilesString NOTIFY shotUpdated)
-    Q_PROPERTY(QStringList filesList READ getFilesStringList NOTIFY shotUpdated)
-    Q_PROPERTY(QVariant filesShot READ getShotFiles NOTIFY shotUpdated)
+    Q_PROPERTY(unsigned fileCount READ getFileCount NOTIFY dataUpdated)
+    Q_PROPERTY(QString filesString READ getFilesString NOTIFY dataUpdated)
+    Q_PROPERTY(QStringList filesList READ getFilesStringList NOTIFY dataUpdated)
+    Q_PROPERTY(QVariant filesShot READ getShotFiles NOTIFY dataUpdated)
 
     Q_PROPERTY(QDateTime date READ getDate NOTIFY dateUpdated)
     Q_PROPERTY(QDateTime dateFile READ getDateFile NOTIFY dateUpdated)
@@ -207,56 +208,54 @@ class Shot: public QObject
     Q_PROPERTY(QDateTime dateGPS READ getDateGPS NOTIFY dateUpdated)
     Q_PROPERTY(QDateTime dateUser READ getUserDate WRITE setUserDate NOTIFY dateUpdated)
 
-    Q_PROPERTY(qint64 duration READ getDuration NOTIFY shotUpdated)
+    Q_PROPERTY(unsigned width READ getWidth NOTIFY metadataUpdated)
+    Q_PROPERTY(unsigned height READ getHeight NOTIFY metadataUpdated)
+    Q_PROPERTY(unsigned transformation READ getTransformation NOTIFY metadataUpdated)
+    Q_PROPERTY(int rotation READ getRotation NOTIFY metadataUpdated)
 
-    Q_PROPERTY(unsigned width READ getWidth NOTIFY shotUpdated)
-    Q_PROPERTY(unsigned height READ getHeight NOTIFY shotUpdated)
-    Q_PROPERTY(unsigned transformation READ getTransformation NOTIFY shotUpdated)
-    Q_PROPERTY(int rotation READ getRotation NOTIFY shotUpdated)
+    Q_PROPERTY(QString codecImage READ getCodecImage NOTIFY metadataUpdated)
+    Q_PROPERTY(QString iso READ getIso NOTIFY metadataUpdated)
+    Q_PROPERTY(QString focal READ getFocal NOTIFY metadataUpdated)
+    Q_PROPERTY(QString exposureTime READ getExposureTime NOTIFY metadataUpdated)
+    Q_PROPERTY(QString meteringMode READ getMeteringMode NOTIFY metadataUpdated)
+    Q_PROPERTY(bool flash READ getFlash NOTIFY metadataUpdated)
 
-    Q_PROPERTY(QString codecImage READ getCodecImage NOTIFY shotUpdated)
-    Q_PROPERTY(QString iso READ getIso NOTIFY shotUpdated)
-    Q_PROPERTY(QString focal READ getFocal NOTIFY shotUpdated)
-    Q_PROPERTY(QString exposureTime READ getExposureTime NOTIFY shotUpdated)
-    Q_PROPERTY(QString meteringMode READ getMeteringMode NOTIFY shotUpdated)
-    Q_PROPERTY(bool flash READ getFlash NOTIFY shotUpdated)
+    Q_PROPERTY(QString codecVideo READ getCodecVideo NOTIFY metadataUpdated)
+    Q_PROPERTY(double framerate READ getFramerate NOTIFY metadataUpdated)
+    Q_PROPERTY(unsigned bitrate READ getBitrate NOTIFY metadataUpdated)
+    Q_PROPERTY(QString timecode READ getTimecode NOTIFY metadataUpdated)
 
-    Q_PROPERTY(QString codecVideo READ getCodecVideo NOTIFY shotUpdated)
-    Q_PROPERTY(double framerate READ getFramerate NOTIFY shotUpdated)
-    Q_PROPERTY(unsigned bitrate READ getBitrate NOTIFY shotUpdated)
-    Q_PROPERTY(QString timecode READ getTimecode NOTIFY shotUpdated)
+    Q_PROPERTY(QString audioCodec READ getAudioCodec NOTIFY metadataUpdated)
+    Q_PROPERTY(unsigned audioChannels READ getAudioChannels NOTIFY metadataUpdated)
+    Q_PROPERTY(unsigned audioBitrate READ getAudioBitrate NOTIFY metadataUpdated)
+    Q_PROPERTY(unsigned audioSamplerate READ getAudioSamplerate NOTIFY metadataUpdated)
 
-    Q_PROPERTY(QString audioCodec READ getAudioCodec NOTIFY shotUpdated)
-    Q_PROPERTY(unsigned audioChannels READ getAudioChannels NOTIFY shotUpdated)
-    Q_PROPERTY(unsigned audioBitrate READ getAudioBitrate NOTIFY shotUpdated)
-    Q_PROPERTY(unsigned audioSamplerate READ getAudioSamplerate NOTIFY shotUpdated)
+    Q_PROPERTY(unsigned hilightCount READ getHiLightCount NOTIFY hilightUpdated)
+    Q_PROPERTY(QVariant hilight READ getHiLights NOTIFY hilightUpdated)
 
-    Q_PROPERTY(unsigned hilightCount READ getHiLightCount NOTIFY shotUpdated)
-    Q_PROPERTY(QVariant hilight READ getHiLights NOTIFY shotUpdated)
+    Q_PROPERTY(unsigned protune READ getProtune NOTIFY metadataUpdated)
+    Q_PROPERTY(unsigned cam_raw READ getCamRaw NOTIFY metadataUpdated)
+    Q_PROPERTY(unsigned broadcast_range READ getLowlight NOTIFY metadataUpdated)
+    Q_PROPERTY(unsigned lens_type READ getLensType NOTIFY metadataUpdated)
+    Q_PROPERTY(unsigned video_mode_fov READ getVideoModeFov NOTIFY metadataUpdated)
+    Q_PROPERTY(unsigned lowlight READ getLowlight NOTIFY metadataUpdated)
+    Q_PROPERTY(unsigned superview READ getSuperview NOTIFY metadataUpdated)
+    Q_PROPERTY(unsigned sharpening READ getSharpening NOTIFY metadataUpdated)
+    Q_PROPERTY(bool eis READ getEIS NOTIFY metadataUpdated)
+    Q_PROPERTY(unsigned media_type READ getMediaType NOTIFY metadataUpdated)
+    Q_PROPERTY(QString media_type_str READ getMediaTypeString NOTIFY metadataUpdated) // FIXME
 
-    Q_PROPERTY(unsigned protune READ getProtune NOTIFY shotUpdated)
-    Q_PROPERTY(unsigned cam_raw READ getCamRaw NOTIFY shotUpdated)
-    Q_PROPERTY(unsigned broadcast_range READ getLowlight NOTIFY shotUpdated)
-    Q_PROPERTY(unsigned lens_type READ getLensType NOTIFY shotUpdated)
-    Q_PROPERTY(unsigned video_mode_fov READ getVideoModeFov NOTIFY shotUpdated)
-    Q_PROPERTY(unsigned lowlight READ getLowlight NOTIFY shotUpdated)
-    Q_PROPERTY(unsigned superview READ getSuperview NOTIFY shotUpdated)
-    Q_PROPERTY(unsigned sharpening READ getSharpening NOTIFY shotUpdated)
-    Q_PROPERTY(bool eis READ getEIS NOTIFY shotUpdated)
-    Q_PROPERTY(unsigned media_type READ getMediaType NOTIFY shotUpdated)
-    Q_PROPERTY(QString media_type_str READ getMediaTypeString NOTIFY shotUpdated)
-
-    Q_PROPERTY(QString latitudeString READ getLatitudeStr NOTIFY metadataUpdated)
-    Q_PROPERTY(QString longitudeString READ getLongitudeStr NOTIFY metadataUpdated)
-    Q_PROPERTY(QString altitudeString READ getAltitudeStr NOTIFY metadataUpdated)
-    Q_PROPERTY(QString directionString READ getDirectionStr NOTIFY metadataUpdated)
-    Q_PROPERTY(QString speedString READ getDirectionStr NOTIFY metadataUpdated)
-    Q_PROPERTY(double latitude READ getLatitude NOTIFY metadataUpdated)
-    Q_PROPERTY(double longitude READ getLongitude NOTIFY metadataUpdated)
-    Q_PROPERTY(double altitude READ getAltitude NOTIFY metadataUpdated)
-    Q_PROPERTY(double altitudeOffset READ getAltitudeOffset NOTIFY metadataUpdated)
-    Q_PROPERTY(double direction READ getDirection NOTIFY metadataUpdated)
-    Q_PROPERTY(double speed READ getSpeed NOTIFY metadataUpdated)
+    Q_PROPERTY(QString latitudeString READ getLatitudeStr NOTIFY gpsUpdated)
+    Q_PROPERTY(QString longitudeString READ getLongitudeStr NOTIFY gpsUpdated)
+    Q_PROPERTY(QString altitudeString READ getAltitudeStr NOTIFY gpsUpdated)
+    Q_PROPERTY(QString directionString READ getDirectionStr NOTIFY gpsUpdated)
+    Q_PROPERTY(QString speedString READ getDirectionStr NOTIFY gpsUpdated)
+    Q_PROPERTY(double latitude READ getLatitude NOTIFY gpsUpdated)
+    Q_PROPERTY(double longitude READ getLongitude NOTIFY gpsUpdated)
+    Q_PROPERTY(double altitude READ getAltitude NOTIFY gpsUpdated)
+    Q_PROPERTY(double altitudeOffset READ getAltitudeOffset NOTIFY gpsUpdated)
+    Q_PROPERTY(double direction READ getDirection NOTIFY gpsUpdated)
+    Q_PROPERTY(double speed READ getSpeed NOTIFY gpsUpdated)
 
     QString m_uuid;                 //!< Shot unique identifier, generated at object creation
 
@@ -564,9 +563,9 @@ class Shot: public QObject
     float getMinAlti() { return minAlti; }
     float getMaxAlti() { return maxAlti; }
     float getAvgAlti() { return avgAlti; }
-    Q_PROPERTY(float minAlti READ getMinAlti NOTIFY metadataUpdated)
-    Q_PROPERTY(float maxAlti READ getMaxAlti NOTIFY metadataUpdated)
-    Q_PROPERTY(float avgAlti READ getAvgAlti NOTIFY metadataUpdated)
+    Q_PROPERTY(float minAlti READ getMinAlti NOTIFY telemetryUpdated)
+    Q_PROPERTY(float maxAlti READ getMaxAlti NOTIFY telemetryUpdated)
+    Q_PROPERTY(float avgAlti READ getAvgAlti NOTIFY telemetryUpdated)
 
     float minSpeed = 0.f;
     float maxSpeed = 0.f;
@@ -574,17 +573,17 @@ class Shot: public QObject
     float getMinSpeed() { return minSpeed; }
     float getMaxSpeed() { return maxSpeed; }
     float getAvgSpeed() { return avgSpeed; }
-    Q_PROPERTY(float minSpeed READ getMinSpeed NOTIFY metadataUpdated)
-    Q_PROPERTY(float maxSpeed READ getMaxSpeed NOTIFY metadataUpdated)
-    Q_PROPERTY(float avgSpeed READ getAvgSpeed NOTIFY metadataUpdated)
+    Q_PROPERTY(float minSpeed READ getMinSpeed NOTIFY telemetryUpdated)
+    Q_PROPERTY(float maxSpeed READ getMaxSpeed NOTIFY telemetryUpdated)
+    Q_PROPERTY(float avgSpeed READ getAvgSpeed NOTIFY telemetryUpdated)
 
     float maxG = 1;
     float getMaxG() { return maxG; }
-    Q_PROPERTY(float maxG READ getMaxG NOTIFY metadataUpdated)
+    Q_PROPERTY(float maxG READ getMaxG NOTIFY telemetryUpdated)
 
     float distance_km = 0;
     float getDistanceKm() { return distance_km; }
-    Q_PROPERTY(float distanceKm READ getDistanceKm NOTIFY metadataUpdated)
+    Q_PROPERTY(float distanceKm READ getDistanceKm NOTIFY telemetryUpdated)
 
     QGeoCodeReply *m_geoRep = nullptr;
     QString locationName;
@@ -595,14 +594,15 @@ class Shot: public QObject
 Q_SIGNALS:
     void shotUpdated();
     void stateUpdated();
-    void selectionUpdated();
-    void usersettingsUpdated();
     void dateUpdated();
-    void metadataUpdated();
-    void telemetryUpdated();
-    void locationUpdated();
-    void dataUpdated();
+    void selectionUpdated();
     void userSettingsUpdated();
+    void dataUpdated();
+    void metadataUpdated();
+    void hilightUpdated();
+    void telemetryUpdated();
+    void gpsUpdated();
+    void locationUpdated();
 
 public:
     Shot(QObject *parent = nullptr);

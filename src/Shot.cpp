@@ -184,6 +184,8 @@ void Shot::addFile(ofb_file *file)
                 m_others.push_back(file);
             }
         }
+
+        Q_EMIT dataUpdated();
     }
     else
     {
@@ -250,9 +252,11 @@ QDateTime Shot::getDateGPS() const
 
 qint64 Shot::getDuration() const
 {
+    // videos
     if (m_type < ShotUtils::SHOT_PICTURE)
         return m_duration;
 
+    // pictures
     return m_pictures.size();
 }
 
@@ -945,8 +949,6 @@ bool Shot::getMetadataFromPicture(int index)
 
         if (m_date_gps.isValid())
         {
-            hasGPS = true;
-
             entry = exif_content_get_entry(ed->ifd[EXIF_IFD_GPS],
                                            static_cast<ExifTag>(EXIF_TAG_GPS_LATITUDE));
             if (entry)
@@ -1063,6 +1065,9 @@ bool Shot::getMetadataFromPicture(int index)
 
                 gps_speed_str = QString::number(gps_speed, 'g', 4);
             }
+
+            hasGPS = true;
+            Q_EMIT gpsUpdated();
 /*
             qDebug() << "gps_timestamp: " << m_date_gps;
             qDebug() << "gps_lat_str:   " << gps_lat_str;
@@ -1125,6 +1130,8 @@ bool Shot::getMetadataFromPicture(int index)
 
         status = true;
     }
+
+    Q_EMIT metadataUpdated();
 
     return status;
 }
@@ -1214,17 +1221,15 @@ bool Shot::getMetadataFromVideo(int index)
                     uint32_t gpmf_sample_count = t->sample_count;
                     int devc_count = 0;
 
-                    if (devc_count)
-                        hasGPMF = true;
-
-                    // Now the purpose of the following code is to get accurate
-                    // date from the GPS, but in case of chaptered videos, we may
-                    // have that date already, so don't run this code twice (it's slow)
-                    if (!m_date_gps.isValid())
+                    // Now the purpose of the following code is to get accurate date from the GPS
+                    // in case of chaptered videos, we may have that date already, so don't run this code twice (it's slow)
+                    if (gpmf_sample_count && !m_date_gps.isValid())
                     {
                         // We start at the last GPMF sample, we have more chance
                         // to have a GPS lock than at the begining of the video
-                        for (unsigned sp_index = gpmf_sample_count-1; sp_index > 0; sp_index--)
+                        for (unsigned sp_index = gpmf_sample_count-1;
+                             sp_index >= 0 && sp_index < gpmf_sample_count;
+                             sp_index++)
                         {
                             MediaSample_t *sp = minivideo_get_sample(media, t, sp_index);
 
@@ -1242,6 +1247,9 @@ bool Shot::getMetadataFromVideo(int index)
                             break; // if we don't find a GPS sample immediately, we bail
                         }
                     }
+
+                    if (devc_count) hasGPMF = true;
+                    if (m_date_gps.isValid()) hasGPS = true;
                 }
             }
         }
@@ -1259,11 +1267,10 @@ bool Shot::getMetadataFromVideo(int index)
             {
                 m_hilight.push_back(timeoffset + media->chapters[i].pts);
             }
+            if (m_hilight.size() > 0) Q_EMIT hilightUpdated();
         }
         if (media->metadata_gopro)
         {
-            hasGoProMetadata = true;
-
             // GoPro shot metadata (from MP4)
             m_camera_firmware = media->metadata_gopro->camera_firmware;
             if (m_camera_firmware.startsWith("H21")) m_camera_source = "GoPro HERO10";
@@ -1286,8 +1293,11 @@ bool Shot::getMetadataFromVideo(int index)
             sharpening = media->metadata_gopro->sharpening;
             eis = media->metadata_gopro->eis;
             media_type = media->metadata_gopro->media_type;
+
+            hasGoProMetadata = true;
         }
 
+        Q_EMIT metadataUpdated();
         return true;
     }
 
@@ -1373,7 +1383,10 @@ bool Shot::getMetadataFromVideoGPMF()
                             return false; // FIXME
                         }
                         else
+                        {
                             hasGPMF = true;
+                            if (m_gps.size() > 1) hasGPS = true;
+                        }
 
                         minivideo_destroy_sample(&sp);
                     }
@@ -1384,7 +1397,9 @@ bool Shot::getMetadataFromVideoGPMF()
                         gps_lat = m_gps.at(m_gps.size() / 2).first;
                         gps_long = m_gps.at(m_gps.size() / 2).second;
                         gps_alt = m_alti.at(m_alti.size() / 2);
+
                         //QDateTime gps_ts; // TODO
+                        emit gpsUpdated();
                     }
 
                     // update time offset
@@ -1398,6 +1413,7 @@ bool Shot::getMetadataFromVideoGPMF()
 
     emit shotUpdated();
     emit metadataUpdated();
+    if (hasGPMF) emit telemetryUpdated();
 
     return true;
 
