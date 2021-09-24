@@ -776,7 +776,7 @@ void JobWorkerFFmpeg::processFinished()
         int exitStatus = m_childProcess->exitStatus();
         int exitCode = m_childProcess->exitCode();
 
-        //qDebug() << "JobWorkerFFmpeg::processFinished(" << exitStatus << "/" << exitCode << ")";
+        //qDebug() << "JobWorkerFFmpeg::processFinished(" << exitStatus << "/" << exitCode << ")" << m_ffmpegCurrent->destFile;
 
         JobUtils::JobState js = static_cast<JobUtils::JobState>(m_ffmpegCurrent->job->getState());
         if (js != JobUtils::JOB_STATE_ABORTED)
@@ -786,7 +786,7 @@ void JobWorkerFFmpeg::processFinished()
                 if (exitCode == 0)
                 {
                     // Still, make sure that the output file exists
-                    if (QFile::exists(m_ffmpegCurrent->job->getDestinationFile()))
+                    if (QFile::exists(m_ffmpegCurrent->destFile))
                     {
                         js = JobUtils::JOB_STATE_DONE;
                     }
