@@ -199,10 +199,10 @@ void ShotModel::addFile(ofb_file *f, ofb_shot *s)
 
             // We make sure files are in the same folder
             // Useful when shot IDs are looping (same ID, but different camera/year/whatever...)
-            if (shot && f->filesystemPath.contains(shot->getFolderRefString()) == false)
-            {
-                shot = nullptr;
-            }
+            //if (shot && f->filesystemPath.contains(shot->getFolderRefString()) == false)
+            //{
+            //    shot = nullptr;
+            //}
         }
 
         if (!shot)
