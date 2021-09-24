@@ -412,7 +412,7 @@ Item {
                     width: 28
                     height: 28
 
-                    source: "qrc:/assets/icons_material/baseline-screen_rotation-24px.svg"
+                    source: "qrc:/assets/icons_material/duotone-rotate_90_degrees_ccw-24px.svg"
                     color: Theme.colorText
 
                     Text {
@@ -581,7 +581,7 @@ Item {
                     width: 28
                     height: 28
 
-                    source: "qrc:/assets/icons_material/baseline-screen_rotation-24px.svg"
+                    source: "qrc:/assets/icons_material/duotone-rotate_90_degrees_ccw-24px.svg"
                     color: Theme.colorText
 
                     Text {
