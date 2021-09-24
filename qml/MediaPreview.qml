@@ -13,6 +13,8 @@ Item {
     anchors.margins: isFullScreen ? 0 : 16
     anchors.rightMargin: isFullScreen ? 0 : (isFullSize ? 16 : infosGeneric.width + 16)
 
+    focus: isFullScreen
+
     // keep that in UI
     property bool isFullScreen: false
     property bool isFullSize: false
@@ -215,10 +217,17 @@ Item {
             mediaArea.isFullScreen = true
             mediaArea.parent = videoWindowItem
             videoWindow.showFullScreen()
+            mediaArea.focus = true
         } else {
             mediaArea.isFullScreen = false
             mediaArea.parent = contentOverview
             videoWindow.hide()
+            //screenMedia.focus = true
+        }
+
+        if (!videoPlayer.isRunning) {
+            videoPlayer.play()
+            videoPlayer.pause()
         }
 
         computeOverlaySize()
@@ -521,6 +530,22 @@ Item {
 
     onWidthChanged: computeOverlaySize()
     onHeightChanged: computeOverlaySize()
+
+    // KEYS HANDLING ///////////////////////////////////////////////////////////
+
+    Keys.onPressed: {
+        // UI
+        if (event.key === Qt.Key_F) {
+            event.accepted = true
+            toggleFullScreen()
+        }
+        // Player
+        else if (event.key === Qt.Key_Space) {
+            event.accepted = true
+            setPlayPause()
+        }
+
+    }
 
     ////////////////////////////////////////////////////////////////////////////
 

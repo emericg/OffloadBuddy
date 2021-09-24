@@ -13,8 +13,8 @@ Item {
     property string startedFrom: ""
     property var shot: null
 
-    focus : (screenMedia.startedFrom === "device" && appContent.state === "device" && screenDevice.state === "stateMediaDetails") ||
-            (screenMedia.startedFrom === "library" && appContent.state === "library" && screenLibrary.state === "stateMediaDetails")
+    focus: (screenMedia.startedFrom === "device" && appContent.state === "device" && screenDevice.state === "stateMediaDetails") ||
+           (screenMedia.startedFrom === "library" && appContent.state === "library" && screenLibrary.state === "stateMediaDetails")
 
     function loadShot(newshot) {
         //console.log("screenMedia - loadShot(" + newshot.name + ")")
@@ -82,10 +82,9 @@ Item {
     }
 
     function updateFocus() {
-        //focus = (screenMedia.startedFrom === "device" && appContent.state === "device" && screenDevice.state === "stateMediaDetails") ||
-        //        (screenMedia.startedFrom === "library" && appContent.state === "library" && screenLibrary.state === "stateMediaDetails")
-
-        if (focus === false) contentOverview.setPause()
+        if (focus === false && videoWindow.visibility !== Qt.WindowFullScreen) {
+            contentOverview.setPause()
+        }
     }
 
     function updateShotDetails() {
@@ -117,12 +116,15 @@ Item {
         if (event.key === Qt.Key_F9) {
             event.accepted = true
             contentOverview.toggleInfoPanel()
-        }  else if (event.key === Qt.Key_Backspace) {
+        } else if (event.key === Qt.Key_Backspace) {
             event.accepted = true
             screenMedia.back()
         } else if (event.key === Qt.Key_Delete) {
             event.accepted = true
             contentOverview.openDeletePopup()
+        } else if (event.key === Qt.Key_F) {
+            event.accepted = true
+            contentOverview.toggleFullScreen()
         }
         // Player
         else if (event.key === Qt.Key_Space) {
