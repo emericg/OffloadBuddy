@@ -67,18 +67,6 @@ Item {
             }
 
             ItemImageButton {
-                id: button_open
-                width: 32
-                height: 32
-                anchors.verticalCenter: parent.verticalCenter
-
-                highlightMode: "color"
-                visible: directory.available
-                source: "qrc:/assets/icons_material/baseline-folder_open-24px.svg"
-                onClicked: utilsApp.openWith(directory.directoryPath)
-            }
-
-            ItemImageButton {
                 id: button_refresh
                 width: 32
                 height: 32
@@ -93,6 +81,18 @@ Item {
                 animationRunning: directory.scanning
 
                 onClicked: mediaLibrary.searchMediaDirectory(directory.directoryPath)
+            }
+
+            ItemImageButton {
+                id: button_open
+                width: 32
+                height: 32
+                anchors.verticalCenter: parent.verticalCenter
+
+                highlightMode: "color"
+                visible: directory.available
+                source: "qrc:/assets/icons_material/baseline-folder_open-24px.svg"
+                onClicked: utilsApp.openWith(directory.directoryPath)
             }
 
             ItemImageButton {
@@ -160,7 +160,7 @@ Item {
             }
         }
 
-        // or this
+        // or that
         Row {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
@@ -190,116 +190,6 @@ Item {
                 verticalAlignment: Text.AlignVCenter
             }
         }
-/*
-        // or even that
-        Row {
-            anchors.verticalCenter: parent.verticalCenter
-            spacing: 8
-            visible: (menus.memusmode === 1)
-
-            CheckBoxThemed {
-                id: checkBox_enabled2
-                anchors.verticalCenter: parent.verticalCenter
-                text: qsTr("Enabled")
-
-                checked: directory.enabled
-                onClicked: directory.enabled = checked
-            }
-
-            Text {
-                id: textContent2
-                anchors.verticalCenter: parent.verticalCenter
-
-                text: qsTr("Content")
-                font.pixelSize: Theme.fontSizeComponent
-                color: Theme.colorText
-            }
-
-            ComboBoxThemed {
-                id: comboBox_content2
-                width: 180
-                height: 32
-                anchors.verticalCenter: parent.verticalCenter
-
-                font.pixelSize: Theme.fontSizeContentSmall
-
-                model: ListModel {
-                    id: cbItemsContent2
-                    ListElement { text: qsTr("all media"); }
-                    ListElement { text: qsTr("audio"); }
-                    ListElement { text: qsTr("videos"); }
-                    ListElement { text: qsTr("pictures"); }
-                }
-                Component.onCompleted: {
-                    currentIndex = directory.directoryContent
-                    if (currentIndex === -1) currentIndex = 0
-                }
-                property bool cbinit: false
-                onCurrentIndexChanged: {
-                    if (cbinit) {
-                        directory.directoryContent = currentIndex
-                    } else {
-                        cbinit = true;
-                    }
-                }
-            }
-
-            ////////
-
-            Text {
-                id: textMediaHierarchy2
-                anchors.verticalCenter: parent.verticalCenter
-
-                text: qsTr("Hierarchy")
-                font.pixelSize: Theme.fontSizeComponent
-                color: Theme.colorText
-            }
-
-            ComboBoxThemed {
-                id: comboBoxContentHierarchy2
-                width: 256
-                height: 32
-                anchors.verticalCenter: parent.verticalCenter
-
-                model: ListModel {
-                    id: cbItemsContentHierarchy
-                    ListElement { text: qsTr("/ FILES"); }
-                    ListElement { text: qsTr("/ SHOT / FILES"); }
-                    ListElement { text: qsTr("/ date / SHOT / FILES"); }
-                    ListElement { text: qsTr("/ date / device / SHOT / FILES"); }
-                    ListElement { text: qsTr("CUSTOM"); }
-                }
-
-                Component.onCompleted: {
-                    currentIndex = directory.directoryHierarchy
-                    if (directory.directoryHierarchy === -1) currentIndex = 0
-                    if (directory.directoryHierarchy === 32) currentIndex = 4
-                }
-                property bool cbinit: false
-                onCurrentIndexChanged: {
-                    if (cbinit) {
-                        if (currentIndex === 4) directory.directoryHierarchy = StorageUtils.HierarchyCustom
-                        else directory.directoryHierarchy = currentIndex
-                    } else {
-                        cbinit = true
-                    }
-                }
-            }
-
-            ////////
-
-            TextFieldThemed {
-                id: textfieldContentHierarchyCustom
-                width: 256
-                height: 32
-                anchors.verticalCenter: parent.verticalCenter
-
-                visible: (directory.directoryHierarchy === StorageUtils.HierarchyCustom)
-                text: directory.directoryHierarchyCustom
-                onEditingFinished: directory.directoryHierarchyCustom = text
-            }
-        }
-*/
     }
 
     ////////////////
