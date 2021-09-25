@@ -82,7 +82,13 @@ Item {
     }
 
     function updateFocus() {
-        if (focus === false && videoWindow.visibility !== Qt.WindowFullScreen) {
+        // make sure we are not still viewing the video from the media screen
+        if ((screenMedia.startedFrom === "device" && appContent.state === "device" && screenDevice.state === "stateMediaDetails") ||
+            (screenMedia.startedFrom === "library" && appContent.state === "library" && screenLibrary.state === "stateMediaDetails")) {
+            return
+        }
+        // if we are leaving the media screen, pause the video
+        if (screenMedia.focus === false && videoWindow.visibility !== Qt.WindowFullScreen) {
             contentOverview.setPause()
         }
     }
