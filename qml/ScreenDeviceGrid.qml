@@ -23,6 +23,9 @@ Item {
     property var selectionList: []
     property int selectionCount: 0
 
+    function isSelected(index) {
+        return (currentDevice.getShotByProxyIndex(index).selected)
+    }
     function selectFile(index) {
         // make sure it's not already selected
         if (currentDevice.getShotByProxyIndex(index).selected) return
@@ -872,7 +875,10 @@ Item {
 
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
                 propagateComposedEvents: false
-                onClicked: shotsView.currentIndex = -1
+                onClicked: {
+                    shotsView.currentIndex = -1
+                    actionMenu.visible = false
+                }
             }
 
             ////////
@@ -897,8 +903,10 @@ Item {
                     screenMedia.loadShot(currentDevice.getShotByUuid(screenDeviceGrid.selectedItemUuid))
                 } else if (event.key === Qt.Key_Space) {
                     event.accepted = true
-                    mediaGrid.selectFile(shotsView.currentIndex)
-                    //mediaGrid.deselectFile((shotsView.currentIndex)
+                    if (mediaGrid.isSelected(shotsView.currentIndex))
+                        mediaGrid.deselectFile(shotsView.currentIndex)
+                    else
+                        mediaGrid.selectFile(shotsView.currentIndex)
                 } else if (event.key === Qt.Key_Delete) {
                     event.accepted = true
                     var indexes = []

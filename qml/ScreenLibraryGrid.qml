@@ -20,6 +20,9 @@ Item {
     property var selectionList: []
     property int selectionCount: 0
 
+    function isSelected(index) {
+        return (mediaLibrary.getShotByProxyIndex(index).selected)
+    }
     function selectFile(index) {
         // make sure it's not already selected
         if (mediaLibrary.getShotByProxyIndex(index).selected) return
