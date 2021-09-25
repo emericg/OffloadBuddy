@@ -323,7 +323,7 @@ Item {
                                 else if (modelData.type === 2)
                                     return "qrc:/assets/icons_material/baseline-photo-24px.svg"
                                 else if (modelData.type === 3)
-                                    return "qrc:/assets/icons_material/baseline-list-24px.svg"
+                                    return "qrc:/assets/icons_material/duotone-list-24px.svg"
                                 else
                                     return "qrc:/assets/icons_material/baseline-broken_image-24px.svg"
                             }

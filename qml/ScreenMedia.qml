@@ -371,7 +371,7 @@ Item {
                 visible: (shot && (shot.hasGoProMetadata || shot.fileCount > 1))
 
                 menuText: qsTr("Details")
-                source: "qrc:/assets/icons_material/baseline-list-24px.svg"
+                source: "qrc:/assets/icons_material/duotone-list-24px.svg"
                 selected: (screenMedia.state === "details")
                 onClicked: screenMedia.state = "details"
             }

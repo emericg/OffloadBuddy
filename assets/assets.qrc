@@ -35,7 +35,6 @@
         <file>icons_material/baseline-iso-24px.svg</file>
         <file>icons_material/baseline-label_important-24px.svg</file>
         <file>icons_material/baseline-link-24px.svg</file>
-        <file>icons_material/baseline-list-24px.svg</file>
         <file>icons_material/baseline-local_movies-24px.svg</file>
         <file>icons_material/baseline-map-24px.svg</file>
         <file>icons_material/baseline-memory-24px.svg</file>
@@ -70,6 +69,7 @@
         <file>icons_material/duotone-exit_to_app-24px.svg</file>
         <file>icons_material/duotone-insert_chart-24px.svg</file>
         <file>icons_material/duotone-launch-24px.svg</file>
+        <file>icons_material/duotone-list-24px.svg</file>
         <file>icons_material/duotone-pin_drop-24px.svg</file>
         <file>icons_material/duotone-photo_library-24px.svg</file>
         <file>icons_material/duotone-question_answer-24px.svg</file>
