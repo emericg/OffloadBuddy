@@ -192,15 +192,11 @@ void DeviceScanner::scanVirtualFilesystems()
                 //qDebug() << "> skipping OS internal filesystem";
                 continue;
             }
-            if (storage.rootPath().contains("smb-share"))
-            {
-                //qDebug() << "> skipping network filesystem";
-                continue;
-            }
 
             // Chances are, we now have a virtual MTP filesystem, so let's look for it
             // ex: /run/user/1000/gvfs/gphoto2:host=%5Busb%3A005%2C012%5D/
             // ex: /run/user/1000/gvfs/mtp:host=%5Busb%3A005%2C012%5D/
+            // ex: /run/user/1000/gvfs/smb-share:server=myserver.local,share=myuser
             // 0x2C: ','   0x3A: ':'   0x5B: '['   0x5D: ']'
 
             QDir gvfsDirectory(storage.rootPath() + "/gvfs");
@@ -208,6 +204,12 @@ void DeviceScanner::scanVirtualFilesystems()
             {
                 QString virtual_mountpoint = storage.rootPath() + "/gvfs/" + subdir_device;
                 //qDebug() << "> VIRTUAL MOUNTPOINT(" << storage.fileSystemType() << ") > " << virtual_mountpoint;
+
+                if (virtual_mountpoint.contains("smb-share"))
+                {
+                    //qDebug() << "> skipping network filesystem";
+                    continue;
+                }
 
                 connectedVirtualFilesystems.push_back(storage.rootPath() + "/gvfs/" + subdir_device);
 
@@ -325,7 +327,7 @@ void DeviceScanner::scanVirtualFilesystems()
                     }
                     else
                     {
-                        qDebug() << "> skipping device: probably not handled by libMTP...";
+                        //qDebug() << "> skipping device: probably not handled by libMTP...";
                         delete deviceInfos;
                         continue;
                     }
