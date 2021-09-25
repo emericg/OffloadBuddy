@@ -380,7 +380,7 @@ class Shot: public QObject
     QStringList m_user_tags;
 
     // video & timelapse position
-    int m_user_media_position = -1;
+    int m_user_media_position = 0;
 
     // encoding
     int m_user_trim_start = -1;
@@ -430,16 +430,16 @@ class Shot: public QObject
 
     int getUserMediaPosition() const { return m_user_media_position; }
     void setUserMediaPosition(const int position) {
-         if (position > 0) m_user_media_position = position;
-         else m_user_media_position = -1;
-         Q_EMIT userSettingsUpdated();
+        if (position > 0 && position < getDuration()) m_user_media_position = position;
+        else m_user_media_position = 0;
+        Q_EMIT userSettingsUpdated();
     }
 
     int getUserTrimStart() const { return m_user_trim_start; }
     void setUserTrimStart(const int trim) {
-         if (trim > 0) m_user_trim_start = trim;
-         else m_user_trim_start = -1;
-         Q_EMIT userSettingsUpdated();
+        if (trim > 0) m_user_trim_start = trim;
+        else m_user_trim_start = -1;
+        Q_EMIT userSettingsUpdated();
     }
     int getUserTrimStop() const { return m_user_trim_duration; }
     void setUserTrimStop(const int trim) {
@@ -643,7 +643,7 @@ public:
 
     // Metadata
     QString getName() const { return m_shot_name; }
-    qint64 getDuration() const;
+    qint64 getDuration() const; // FIXME
     qint64 getSize() const;
     qint64 getDataSize() const;
     qint64 getFullSize() const;

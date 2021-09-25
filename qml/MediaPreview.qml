@@ -23,8 +23,6 @@ Item {
 
     ////////
 
-    property int timelapseIndex: 0 // keep that in UI (FOR NOW)
-
     property int startLimit: -1
     property int stopLimit: -1
 
@@ -40,15 +38,18 @@ Item {
     ////////
 
     function setImageMode() {
-        //console.log("MediaPreview::setImageMode()  >  '" + shot.previewPhoto + "'")
-        mode = "image"
+        if (shot.duration > 1) {
+            //console.log("MediaPreview::setImageMode() > timelapse mode")
+            mode = "timelapse"
+        } else {
+            //console.log("MediaPreview::setImageMode()  >  '" + shot.previewPhoto + "'")
+            mode = "image"
+        }
 
         imageOutput.visible = true
         videoOutput.visible = false
 
         mediaBanner.close()
-
-        timelapseIndex = 0
 
         overlayTransform.visible = false
         overlayTransform.anchors.bottom = undefined
@@ -71,13 +72,12 @@ Item {
         overlayCrop.editing = false
         overlayCrop.load()
 
-        if (shot.duration > 1) { // playlist
-            //mode = "timelapse"
-            //console.log("MediaPreview::setImageMode() > timelapse mode")
-        }
-
         if (shot.previewPhoto) {
-            imageOutput.source = "file:///" + shot.previewPhoto
+            if (shot.mediaPosition > 0 && shot.previewTimelapse[shot.mediaPosition]) {
+                imageOutput.source = "file:///" + shot.previewTimelapse[shot.mediaPosition]
+            } else {
+                imageOutput.source = "file:///" + shot.previewPhoto
+            }
         } else {
             // error icon?
         }
@@ -87,14 +87,14 @@ Item {
         computeOverlaySize()
     }
 
+    ////////
+
     function setVideoMode() {
         //console.log("MediaPreview::setVideoMode()  >  '" + shot.previewVideo + "'")
         mode = "video"
 
         imageOutput.visible = false
         videoOutput.visible = true
-
-        timelapseIndex = 0
 
         overlayTransform.visible = false
         overlayTransform.anchors.top = undefined
@@ -114,10 +114,14 @@ Item {
                 videoPlayer.playlist.clear()
                 for (var i = 0; i < shot.chapterCount; i++)
                     videoPlayer.playlist.insertItem(i, "file:///" + shot.chapterPaths[i])
-                videoPlayer.play()
             } else if (shot.previewVideo) { // single video
                 videoPlayer.source = "file:///" + shot.previewVideo
             }
+
+            videoPlayer.play()
+            restorePosition()
+            videoPlayer.pause()
+
             timeline.visible = true
             cutline.visible = false
             cutline.first.value = 0
@@ -126,22 +130,22 @@ Item {
             // error icon?
         }
 
-        videoPlayer.pause()
-
         computeTransformation()
 
         computeOverlaySize()
     }
 
-    ////////
+    ////////////////////////////////////////////////////////////////////////////
 
     function setPause() {
-        if (mode === "image") {
+        if (mode === "timelapse") {
             timerTimelapse.stop()
         }
-        if (videoPlayer.isRunning) {
-            videoPlayer.pause()
-            videoPlayer.isRunning = false
+        if (mode === "video") {
+            if (videoPlayer.isRunning) {
+                videoPlayer.pause()
+                videoPlayer.isRunning = false
+            }
         }
     }
 
@@ -155,13 +159,38 @@ Item {
                 videoPlayer.isRunning = true
             }
         }
-        if (mode === "image" && shot.duration > 1) {
+        if (mode === "timelapse") {
             if (timerTimelapse.running)
                 timerTimelapse.stop()
             else
                 timerTimelapse.start()
         }
     }
+
+    ////////
+
+    function savePosition() {
+        if (videoPlayer.position > 0) {
+            if (shot.chapterCount === 1) {
+                shot.mediaPosition = videoPlayer.position
+            } else if (shot.chapterCount > 1) {
+                var pos = videoPlayer.position
+                for (var i = 0; i < videoPlayer.playlist.currentIndex; i++) {
+                    pos += shot.chapterDurations[i]
+                }
+                shot.mediaPosition = pos
+            }
+            //console.log("position saved: " + shot.mediaPosition)
+        }
+    }
+    function restorePosition() {
+        if (shot.mediaPosition > 0 && shot.mediaPosition < shot.duration) {
+            mediaControls.seek_ms(shot.mediaPosition)
+            //console.log("position restored: " + shot.mediaPosition)
+        }
+    }
+
+    ////////
 
     function toggleTrim() {
         //timeline.visible = !timeline.visible
@@ -222,10 +251,10 @@ Item {
             mediaArea.isFullScreen = false
             mediaArea.parent = contentOverview
             videoWindow.hide()
-            //screenMedia.focus = true
         }
 
         if (!videoPlayer.isRunning) {
+            // force player to show one frame
             videoPlayer.play()
             videoPlayer.pause()
         }
@@ -544,7 +573,6 @@ Item {
             event.accepted = true
             setPlayPause()
         }
-
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -603,9 +631,9 @@ Item {
         repeat: true
         onTriggered: {
             if (shot.duration > 1) {
-                mediaArea.timelapseIndex++
-                if (mediaArea.timelapseIndex >= shot.duration) mediaArea.timelapseIndex = 0
-                imageOutput.source = "file:///" + shot.previewTimelapse[mediaArea.timelapseIndex]
+                shot.mediaPosition++
+                if (shot.mediaPosition >= shot.duration) shot.mediaPosition = 0
+                imageOutput.source = "file:///" + shot.previewTimelapse[shot.mediaPosition]
             }
         }
     }
@@ -614,7 +642,7 @@ Item {
         id: videoPlayer
         volume: 0.5
         autoLoad: true
-        autoPlay: true // will be paused immediately
+        autoPlay: false // will be paused immediately
         notifyInterval: 33
         //playlist: Playlist { id: playlist; }
 
@@ -628,14 +656,18 @@ Item {
         }
         onPlaying: {
             buttonPlay.source = "qrc:/assets/icons_material/baseline-pause-24px.svg"
+            savePosition()
         }
         onPaused: {
             buttonPlay.source = "qrc:/assets/icons_material/baseline-play_arrow-24px.svg"
+            savePosition()
         }
         onStopped: {
             if (videoPlayer.position >= shot.duration) { // EOF
                 isRunning = false
                 videoPlayer.seek(0)
+                savePosition()
+
                 videoPlayer.play()
                 videoPlayer.pause()
 
@@ -664,7 +696,7 @@ Item {
             overlayCrop.load()
         }
         onSourceChanged: {
-            //console.log("onSourceChanged()")
+            //console.log("onSourceChanged(" + source + ")")
 
             // reset player settings
             videoPlayer.isRunning = false
@@ -731,8 +763,8 @@ Item {
             onPressed: {
                 // play/pause
                 if (pressedButtons & Qt.RightButton) {
-                    setPlayPause();
-                    return;
+                    setPlayPause()
+                    return
                 }
             }
             onDoubleClicked: {
@@ -877,10 +909,10 @@ Item {
 
             visible: (imageOutput.visible && shot.duration > 1)
 
-            property bool wide: maxrects > shot.duration
-            property real maxrects: (parent.width / (24+8))
-            property real maxpoints: (parent.width / (12+8))
-            property var points: (mediaArea.mode === "image") ? ((shot.duration > maxpoints) ? maxpoints-3 : shot.duration) : 0
+            property bool wide: (maxrects > shot.duration)
+            property int maxrects: (parent.width / (24+8))
+            property int maxpoints: (parent.width / (12+8))
+            property int points: (mediaArea.mode === "timelapse") ? ((shot.duration > maxpoints) ? maxpoints-3 : shot.duration) : 0
             property real divider: (shot.duration / points)
 
             ImageSvg {
@@ -912,15 +944,15 @@ Item {
 
                     color: "white"
                     border.color: "#eee"
-                    opacity: (Math.round(mediaArea.timelapseIndex / timelapseControls.divider) == index) ? 1 : 0.6
+                    opacity: (Math.round(shot.mediaPosition / timelapseControls.divider) == index) ? 1 : 0.6
                     Behavior on opacity { NumberAnimation { duration: 133 } }
 
                     MouseArea {
                         anchors.fill: parent
                         anchors.margins: -4
                         onClicked: {
-                            mediaArea.timelapseIndex = Math.round(index * timelapseControls.divider)
-                            imageOutput.source = "file:///" + shot.previewTimelapse[mediaArea.timelapseIndex]
+                            shot.mediaPosition = Math.round(index * timelapseControls.divider)
+                            imageOutput.source = "file:///" + shot.previewTimelapse[shot.mediaPosition]
                         }
                     }
                 }
@@ -966,11 +998,11 @@ Item {
 
                 first.onMoved: {
                     mediaArea.startLimit = shot.duration * first.value
-                    mediaControls.sseeekk(first.value)
+                    mediaControls.seek_real(first.value)
                 }
                 second.onMoved: {
                     mediaArea.stopLimit = shot.duration * second.value
-                    mediaControls.sseeekk(second.value)
+                    mediaControls.seek_real(second.value)
                 }
             }
             SliderPlayer {
@@ -988,7 +1020,7 @@ Item {
                 from: 0
                 to: 1
 
-                onMoved: mediaControls.sseeekk(value)
+                onMoved: mediaControls.seek_real(value)
             }
 
             ////
@@ -1066,7 +1098,47 @@ Item {
 
             ////
 
-            function sseeekk(value) {
+            function seek_ms(value) { // seek(milliseconds) with chapter awareness
+                var seekpoint = value
+                if (seekpoint === videoPlayer.position) return
+
+                //
+                var wasRunning = videoPlayer.isRunning
+                if (Qt.platform.os === "osx") {
+                    if (wasRunning) {
+                        videoPlayer.pause()
+                        videoPlayer.isRunning = false
+                    }
+                }
+
+                if (shot.chapterCount > 1) {
+                    var doff = 0;
+                    var seekindex = 0;
+                    for (var i = 0; i < videoPlayer.playlist.itemCount; i++) {
+                        if (seekpoint > doff && seekpoint < (doff + shot.chapterDurations[i])) {
+                            seekpoint -= doff
+                            seekindex = i
+                            break
+                        }
+                        doff += shot.chapterDurations[i]
+                    }
+
+                    if (videoPlayer.playlist.currentIndex !== seekindex)
+                        videoPlayer.playlist.currentIndex = seekindex
+                }
+
+                videoPlayer.seek(seekpoint)
+                savePosition()
+
+                if (Qt.platform.os === "osx") {
+                    if (wasRunning) {
+                        videoPlayer.play()
+                        videoPlayer.isRunning = true
+                    }
+                }
+            }
+
+            function seek_real(value) { // seek(0-1) instead of seek(milliseconds)
                 var seekpoint = shot.duration * value
                 if (seekpoint === videoPlayer.position) return
 
@@ -1095,6 +1167,7 @@ Item {
                 }
 
                 videoPlayer.seek(seekpoint)
+                savePosition()
 
                 if (Qt.platform.os === "osx") {
                     if (wasRunning) {
