@@ -6,19 +6,12 @@
    fill="#000000"
    version="1.1"
    id="svg6"
-   sodipodi:docname="duotone-question_answer-24px.svg"
-   inkscape:version="1.1 (c4e8f9ed74, 2021-05-24)"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
+   xmlns="http://www.w3.org/2000/svg">
   <path
      d="M 17,12 V 3 C 17,2.45 16.55,2 16,2 H 3 C 2.45,2 2,2.45 2,3 v 14 l 4,-4 h 10 c 0.55,0 1,-0.45 1,-1 z"
-     id="path4"
-     sodipodi:nodetypes="sssssccss" />
+     id="path4" />
   <path
      d="m 21,6 h -2 v 9 H 6 v 2 c 0,0.55 0.45,1 1,1 h 11 l 4,4 V 7 C 22,6.45 21.55,6 21,6 Z"
      id="path4-3"
-     sodipodi:nodetypes="scccssccss"
      style="opacity:0.66" />
 </svg>

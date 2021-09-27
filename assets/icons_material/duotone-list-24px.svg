@@ -5,16 +5,12 @@
    viewBox="0 0 24 24"
    version="1.1"
    id="svg6"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg">
   <path
      d="M 3,13 H 5 V 11 H 3 Z m 0,4 H 5 V 15 H 3 Z M 3,9 H 5 V 7 H 3 Z"
-     id="path2"
-     sodipodi:nodetypes="ccccccccccccccc" />
+     id="path2" />
   <path
      d="M 7,13 H 21 V 11 H 7 Z m 0,4 H 21 V 15 H 7 Z M 7,7 V 9 H 21 V 7 Z"
      id="path2-3"
-     sodipodi:nodetypes="ccccccccccccccc"
      style="opacity:0.66" />
 </svg>
