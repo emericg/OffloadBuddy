@@ -129,10 +129,16 @@ Item {
 
     function openEncodingPopup() {
         popupEncoding.updateEncodePanel(shot)
-        popupEncoding.setClip(mediaPreview.startLimit, mediaPreview.stopLimit)
+
+         // v2
+        popupEncoding.setClip(shot.trimStart, shot.trimStop)
+        //popupEncoding.setOrientation(shot.userRotation, shot.userHFlipped, shot.userVFlipped)
+        popupEncoding.setCrop(shot.cropX, shot.cropY, shot.cropW, shot.cropH)
+
+        // v1
+        //popupEncoding.setClip(mediaPreview.startLimit, mediaPreview.stopLimit)
         popupEncoding.setOrientation(mediaPreview.rotation, mediaPreview.hflipped, mediaPreview.vflipped)
-        popupEncoding.setCrop(mediaPreview.cropX, mediaPreview.cropY,
-                              mediaPreview.cropW, mediaPreview.cropH)
+        //popupEncoding.setCrop(mediaPreview.cropX, mediaPreview.cropY, mediaPreview.cropW, mediaPreview.cropH)
 
         if (appContent.state === "library") {
             popupEncoding.openSingle(mediaLibrary, shot)

@@ -32,12 +32,12 @@ Item {
         editing = false
 
         // Load values from project
-        gismo.fx = mediaArea.cropX
-        gismo.fy = mediaArea.cropY
-        gismo.fcx = mediaArea.cropX + (mediaArea.cropW / 2)
-        gismo.fcy = mediaArea.cropY + (mediaArea.cropH / 2)
-        gismo.fwidth = mediaArea.cropW
-        gismo.fheight = mediaArea.cropH
+        gismo.fx = shot.cropX
+        gismo.fy = shot.cropY
+        gismo.fcx = shot.cropX + (shot.cropW / 2)
+        gismo.fcy = shot.cropY + (shot.cropH / 2)
+        gismo.fwidth = shot.cropW
+        gismo.fheight = shot.cropH
 
         // Restore on screen coordinates
         gismo.restoreCoord()
@@ -47,18 +47,18 @@ Item {
         gismo.saveCoord()
 
         // Save values to project
-        mediaArea.cropX = gismo.fx
-        mediaArea.cropY = gismo.fy
-        mediaArea.cropW = gismo.fwidth
-        mediaArea.cropH = gismo.fheight
+        shot.cropX = gismo.fx
+        shot.cropY = gismo.fy
+        shot.cropW = gismo.fwidth
+        shot.cropH = gismo.fheight
     }
     function reset() {
         resizeWidget.editing = false
         gismo.resetCoord()
-        mediaArea.cropX = gismo.fx
-        mediaArea.cropY = gismo.fy
-        mediaArea.cropW = gismo.fwidth
-        mediaArea.cropH = gismo.fheight
+        shot.cropX = gismo.fx
+        shot.cropY = gismo.fy
+        shot.cropW = gismo.fwidth
+        shot.cropH = gismo.fheight
     }
 
     ////////////////////////////////////////////////////////////////////////////

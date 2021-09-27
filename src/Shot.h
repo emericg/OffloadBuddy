@@ -383,7 +383,7 @@ class Shot: public QObject
     int m_user_media_position = 0;
 
     // encoding
-    int m_user_trim_start = -1;
+    int m_user_trim_start = 0;
     int m_user_trim_duration = -1;
 
     int m_user_rotation = 0;
@@ -438,13 +438,13 @@ class Shot: public QObject
     int getUserTrimStart() const { return m_user_trim_start; }
     void setUserTrimStart(const int trim) {
         if (trim > 0) m_user_trim_start = trim;
-        else m_user_trim_start = -1;
+        else m_user_trim_start = 0;
         Q_EMIT userSettingsUpdated();
     }
     int getUserTrimStop() const { return m_user_trim_duration; }
     void setUserTrimStop(const int trim) {
         if (trim > 0 && trim < m_duration) m_user_trim_duration = trim;
-        else m_user_trim_duration = -1;
+        else m_user_trim_duration = m_duration;
         Q_EMIT userSettingsUpdated();
     }
 

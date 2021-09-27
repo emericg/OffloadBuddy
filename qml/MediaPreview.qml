@@ -21,21 +21,12 @@ Item {
     property string mode: ""
     property int overlayHeight: overlays.height
 
-    ////////
-
-    property int startLimit: -1
-    property int stopLimit: -1
-
+    // put that in shot
     property int rotation: 0
     property bool hflipped: false
     property bool vflipped: false
 
-    property real cropX: 0.0
-    property real cropY: 0.0
-    property real cropW: 1.0
-    property real cropH: 1.0
-
-    ////////
+    ////////////////////////////////////////////////////////////////////////////
 
     function setImageMode() {
         if (shot.duration > 1) {
@@ -65,10 +56,6 @@ Item {
         mediaArea.hflipped = false
         mediaArea.vflipped = false
 
-        mediaArea.cropX = 0.0
-        mediaArea.cropY = 0.0
-        mediaArea.cropW = 1.0
-        mediaArea.cropH = 1.0
         overlayCrop.editing = false
         overlayCrop.load()
 
@@ -124,8 +111,6 @@ Item {
 
             timeline.visible = true
             cutline.visible = false
-            cutline.first.value = 0
-            cutline.second.value = 1
         } else {
             // error icon?
         }
@@ -193,15 +178,15 @@ Item {
     ////////
 
     function toggleTrim() {
-        //timeline.visible = !timeline.visible
+        if (shot.trimStart > 0)  cutline.first.value = (shot.trimStart / shot.duration)
+        else cutline.first.value = 0
+        if (shot.trimStop > 0) cutline.second.value = (shot.trimStop / shot.duration)
+        else cutline.second.value = 1
         cutline.visible = !cutline.visible
-        overlayTrim.visible = !overlayTrim.visible
 
+        overlayTrim.visible = !overlayTrim.visible
         overlayTransform.visible = false
         overlayCrop.editing = false
-
-        if (mediaArea.startLimit < 0) mediaArea.startLimit = 0
-        if (mediaArea.stopLimit < 0) mediaArea.stopLimit = shot.duration
     }
 
     function toggleTransform() {
@@ -677,42 +662,22 @@ Item {
         }
         onPlaylistChanged: {
             //console.log("onPlaylistChanged()")
-
-            // reset player settings
             videoPlayer.isRunning = false
-
             mediaBanner.close()
-            mediaArea.startLimit = -1
-            mediaArea.stopLimit = -1
 
             mediaArea.hflipped = false
             mediaArea.vflipped = false
             mediaArea.rotation = 0
-
-            mediaArea.cropX = 0.0
-            mediaArea.cropY = 0.0
-            mediaArea.cropW = 1.0
-            mediaArea.cropH = 1.0
             overlayCrop.load()
         }
         onSourceChanged: {
             //console.log("onSourceChanged(" + source + ")")
-
-            // reset player settings
             videoPlayer.isRunning = false
-
             mediaBanner.close()
-            mediaArea.startLimit = -1
-            mediaArea.stopLimit = -1
 
             mediaArea.hflipped = false
             mediaArea.vflipped = false
             mediaArea.rotation = 0
-
-            mediaArea.cropX = 0.0
-            mediaArea.cropY = 0.0
-            mediaArea.cropW = 1.0
-            mediaArea.cropH = 1.0
             overlayCrop.load()
         }
         onVolumeChanged: {
@@ -808,7 +773,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter
 
-                text: qsTr("trim from ") + UtilsString.durationToString_ISO8601_full(mediaArea.startLimit) + qsTr(" to ") + UtilsString.durationToString_ISO8601_full(mediaArea.stopLimit)
+                text: qsTr("trim from ") + UtilsString.durationToString_ISO8601_full(shot.trimStart) + qsTr(" to ") + UtilsString.durationToString_ISO8601_full(shot.trimStop)
                 color: "white"
                 font.bold: true
                 font.pixelSize: 15
@@ -997,11 +962,11 @@ Item {
                 second.value: 1
 
                 first.onMoved: {
-                    mediaArea.startLimit = shot.duration * first.value
+                    shot.trimStart = shot.duration * first.value
                     mediaControls.seek_real(first.value)
                 }
                 second.onMoved: {
-                    mediaArea.stopLimit = shot.duration * second.value
+                    shot.trimStop = shot.duration * second.value
                     mediaControls.seek_real(second.value)
                 }
             }
@@ -1026,10 +991,10 @@ Item {
             ////
 
             Rectangle {
-                x: (parent.width * (mediaArea.startLimit / shot.duration))
-                width: (parent.width * ((mediaArea.stopLimit - mediaArea.startLimit) / shot.duration))
+                x: (parent.width * (shot.trimStart / shot.duration))
+                width: (parent.width * ((shot.trimStop - shot.trimStart) / shot.duration))
                 height: 4
-                visible: (mediaArea.startLimit >= 0 && mediaArea.stopLimit > 0 && mediaArea.stopLimit < shot.duration)
+                visible: (shot.trimStart > 0 || (shot.trimStop > 0 && shot.trimStop < shot.duration))
                 color: Theme.colorSecondary
 
                 Rectangle {
@@ -1336,23 +1301,23 @@ Item {
                         else
                             return
 
-                        var encodingParams = {}
-                        encodingParams["mode"] = "screenshot"
-                        encodingParams["folder"] = shot.folder
-                        encodingParams["image_codec"] = "JPEG"
-                        encodingParams["quality"] = 3
-                        encodingParams["clipStartMs"] = videoPlayer.position
+                        var screenshotParams = {}
+                        screenshotParams["mode"] = "screenshot"
+                        screenshotParams["folder"] = shot.folder
+                        screenshotParams["image_codec"] = "JPEG"
+                        screenshotParams["quality"] = 3
+                        screenshotParams["clipStartMs"] = videoPlayer.position
 
-                        if (mediaPreview.cropX > 0.0 || mediaPreview.cropY > 0.0 ||
-                            mediaPreview.cropW < 1.0 || mediaPreview.cropH < 1.0) {
-                            var clipCropX = Math.round(shot.width * mediaPreview.cropX)
-                            var clipCropY = Math.round(shot.height * mediaPreview.cropY)
-                            var clipCropW = Math.round(shot.width * mediaPreview.cropW)
-                            var clipCropH = Math.round(shot.height * mediaPreview.cropH)
-                            encodingParams["crop"] = clipCropW + ":" + clipCropH + ":" + clipCropX + ":" + clipCropY
+                        if (shot.cropX > 0.0 || shot.cropY > 0.0 ||
+                            shot.cropW < 1.0 || shot.cropH < 1.0) {
+                            var clipCropX = Math.round(shot.width * shot.cropX)
+                            var clipCropY = Math.round(shot.height * shot.cropY)
+                            var clipCropW = Math.round(shot.width * shot.cropW)
+                            var clipCropH = Math.round(shot.height * shot.cropH)
+                            screenshotParams["crop"] = clipCropW + ":" + clipCropH + ":" + clipCropX + ":" + clipCropY
                         }
 
-                        mediaProvider.reencodeSelected(shot.uuid, encodingParams)
+                        mediaProvider.reencodeSelected(shot.uuid, screenshotParams)
                     }
                 }
                 ItemImageButton {

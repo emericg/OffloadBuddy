@@ -1534,7 +1534,8 @@ Popup {
                         if (clipCropW > clipCropH) cropAR = clipCropW / clipCropH
                         else if (clipCropW < clipCropH) cropAR = clipCropH / clipCropW
 
-                        settingsEncoding["scale"] = UtilsNumber.round2((settingsEncoding["resolution"] * cropAR)) + ":" + settingsEncoding["resolution"]
+                        var res = selectorVideoRes.res;
+                        settingsEncoding["scale"] = UtilsNumber.round2((res * cropAR)) + ":" + res
                     }
 
                     if (rbGIF.checked) {
