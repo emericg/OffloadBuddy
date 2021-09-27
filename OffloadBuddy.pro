@@ -94,6 +94,7 @@ HEADERS  += src/SettingsManager.h \
             src/StorageUtils.h \
             src/MediaDirectory.h \
             src/MediaLibrary.h \
+            src/MediaUtils.h \
             src/DeviceScanner.h \
             src/DeviceManager.h \
             src/Device.h \

@@ -4,6 +4,7 @@ import QtGraphicalEffects 1.12 // Qt5
 //import Qt5Compat.GraphicalEffects // Qt6
 
 import ThemeEngine 1.0
+import MediaUtils 1.0
 
 Item {
     id: resizeWidget
@@ -22,8 +23,6 @@ Item {
     }
 */
     property bool editing: false
-    property real projectAR: 16/9
-    property bool projectARlock: true
     property string grid: "rulesofthree"
 
     visible: (resizeWidget.editing || gismo.fx > 0.0 || gismo.fy > 0.0 || gismo.fwidth < 1.0 || gismo.fheight < 1.0)
@@ -106,10 +105,13 @@ Item {
         width: 0
         height: 0
 
-        property real ar: resizeWidget.projectAR
-        property bool arLock: resizeWidget.projectARlock
-        property int minWidth: 128
-        property int minHeight: 128
+        ////////
+
+        //property bool arLock: shot.cropARlock
+        //property real arEnum: shot.cropAR
+        //property real arFloat: mediaUtils.arToFloat(shot.cropAR)
+        property int minWidth: 256
+        property int minHeight: 256
 
         ////////
 
@@ -121,14 +123,15 @@ Item {
         property real fheight: 1.0
 
         function saveCoord() {
-            fx = gismo.x / resizeWidget.width
-            fy = gismo.y / resizeWidget.height
-            fcx = (gismo.x / resizeWidget.width) + (gismo.width / 2)
-            fcy = (gismo.y / resizeWidget.height) + (gismo.height / 2)
-            fwidth =  gismo.width / resizeWidget.width
-            fheight =  gismo.height / resizeWidget.height
+            fx = (gismo.x / resizeWidget.width)
+            fy = (gismo.y / resizeWidget.height)
+            fwidth =  (gismo.width / resizeWidget.width)
+            fheight =  (gismo.height / resizeWidget.height)
+            fcx = fx + fwidth/2
+            fcy = fy + fheight/2
 
             //console.log("saveCoord() > fx : " + fx.toFixed(2) + " > fy "+ fy.toFixed(2) +
+            //            " > fcx "+ fcx.toFixed(2) + " > fcy "+ fcy.toFixed(2) +
             //            " > fwidth "+ fwidth.toFixed(2) + " > fheight "+ fheight.toFixed(2))
         }
 
@@ -148,7 +151,7 @@ Item {
 
         function restoreCoord() {
             restoreCoordFromFx()        // for regular content
-            //restoreCoordFromCenter()  // for 360 sizeless content
+            //restoreCoordFromCenter()  // for 360 'sizeless' content
         }
 
         function restoreCoordFromFx() {
@@ -162,16 +165,16 @@ Item {
         }
         function restoreCoordFromCenter() {
             if (fwidth <= 0 || fheight <= 0) return
-            //console.log("restoreCoordFromCenter")
+            //console.log("restoreCoordFromCenter()")
 
-            if (resizeWidget.projectARlock) {
+            if (shot.cropARlock) {
                 var sar = resizeWidget.width/ resizeWidget.height
-                if (sar > resizeWidget.projectAR) {
-                    gismo.width = (fheight * resizeWidget.height) * resizeWidget.projectAR
+                if (sar > mediaUtils.arToFloat(shot.cropAR)) {
+                    gismo.width = (fheight * resizeWidget.height) * mediaUtils.arToFloat(shot.cropAR)
                     gismo.height = (fheight * resizeWidget.height)
                 } else {
                     gismo.width = (fwidth * resizeWidget.width)
-                    gismo.height = (fwidth * resizeWidget.width) / resizeWidget.projectAR
+                    gismo.height = (fwidth * resizeWidget.width) / mediaUtils.arToFloat(shot.cropAR)
                 }
             } else {
                 gismo.width = fwidth * resizeWidget.width
@@ -265,21 +268,21 @@ Item {
             Repeater {
                 model: 2
                 Rectangle {
-                    x: (index + 1) * (parent.width / 3);
+                    x: (index + 1) * (parent.width / 3)
                     y: -overlays.height
                     width: 1; height: overlays.height*2;
-                    color: Theme.colorSeparator;
-                    opacity: 0.33;
+                    color: Theme.colorSeparator
+                    opacity: 0.33
                 }
             }
             Repeater {
                 model: 2
                 Rectangle {
                     x: -overlays.width
-                    y: (index + 1) * (parent.height / 3);
+                    y: (index + 1) * (parent.height / 3)
                     width: overlays.width*2; height: 1;
-                    color: Theme.colorSeparator;
-                    opacity: 0.33;
+                    color: Theme.colorSeparator
+                    opacity: 0.33
                 }
             }
         }
@@ -292,29 +295,29 @@ Item {
                 x: parent.width * 0.618
                 y: -overlays.height
                 width: 1; height: overlays.height*2;
-                color: Theme.colorSeparator;
-                opacity: 0.33;
+                color: Theme.colorSeparator
+                opacity: 0.33
             }
             Rectangle {
-                x: parent.width - (parent.width * 0.618);
+                x: parent.width - (parent.width * 0.618)
                 y: -overlays.height
                 width: 1; height: overlays.height*2;
-                color: Theme.colorSeparator;
-                opacity: 0.33;
+                color: Theme.colorSeparator
+                opacity: 0.33
             }
             Rectangle {
                 x: -overlays.width
                 y: parent.height * 0.618
                 width: overlays.width*2; height: 1;
-                color: Theme.colorSeparator;
-                opacity: 0.33;
+                color: Theme.colorSeparator
+                opacity: 0.33
             }
             Rectangle {
                 x: -overlays.width
-                y: parent.height - (parent.height * 0.618);
+                y: parent.height - (parent.height * 0.618)
                 width: overlays.width*2; height: 1;
-                color: Theme.colorSeparator;
-                opacity: 0.33;
+                color: Theme.colorSeparator
+                opacity: 0.33
             }
         }
 
@@ -322,13 +325,12 @@ Item {
 
         // controls
         Row {
-            anchors.top: parent.top
-            anchors.topMargin: 8
             anchors.right: buttonLock.left
             anchors.rightMargin: 8
+            anchors.verticalCenter: buttonLock.verticalCenter
             spacing: 8
 
-            visible: resizeWidget.editing && resizeWidget.projectARlock
+            visible: resizeWidget.editing && shot.cropARlock
 
             ItemTextButton {
                 id: button43
@@ -337,11 +339,12 @@ Item {
                 background: true
                 backgroundColor: "#222222"
                 highlightMode: "color"
-                textColor: (resizeWidget.projectAR == 4/3) ? Theme.colorPrimary : "white"
+                textColor: (shot.cropAR === MediaUtils.AspectRatio_4_3) ? Theme.colorPrimary : "white"
 
                 text: "4:3"
                 onClicked: {
-                    resizeWidget.projectAR = 4/3
+                    shot.cropAR = MediaUtils.AspectRatio_4_3
+                    gismo.restoreCoordFromCenter()
                 }
             }
             ItemTextButton {
@@ -351,11 +354,12 @@ Item {
                 background: true
                 backgroundColor: "#222222"
                 highlightMode: "color"
-                textColor: (resizeWidget.projectAR == 16/9) ? Theme.colorPrimary : "white"
+                textColor: (shot.cropAR === MediaUtils.AspectRatio_16_9) ? Theme.colorPrimary : "white"
 
                 text: "16:9"
                 onClicked: {
-                    resizeWidget.projectAR = 16/9
+                    shot.cropAR = MediaUtils.AspectRatio_16_9
+                    gismo.restoreCoordFromCenter()
                 }
             }
             ItemTextButton {
@@ -365,41 +369,40 @@ Item {
                 background: true
                 backgroundColor: "#222222"
                 highlightMode: "color"
-                textColor: (resizeWidget.projectAR == 21/9) ? Theme.colorPrimary : "white"
+                textColor: (shot.cropAR === MediaUtils.AspectRatio_21_9) ? Theme.colorPrimary : "white"
 
                 text: "21:9"
                 onClicked: {
-                    resizeWidget.projectAR = 21/9
+                    shot.cropAR = MediaUtils.AspectRatio_21_9
+                    gismo.restoreCoordFromCenter()
                 }
             }
         }
         ItemImageButton {
             id: buttonLock
-            //width: 32; height: 32;
-            anchors.right: parent.right
-            anchors.rightMargin: 8
             anchors.top: parent.top
             anchors.topMargin: 8
+            anchors.right: parent.right
+            anchors.rightMargin: 8
 
             background: true
             backgroundColor: "#222222"
             highlightMode: "color"
-            iconColor: (resizeWidget.projectARlock) ? Theme.colorPrimary : "white"
+            iconColor: (shot.cropARlock) ? Theme.colorPrimary : "white"
 
             visible: resizeWidget.editing
             source: "qrc:/assets/icons_material/outline-https-24px.svg"
             onClicked: {
-                resizeWidget.projectARlock = !resizeWidget.projectARlock
+                shot.cropARlock = !shot.cropARlock
             }
         }
         Column {
             anchors.top: buttonLock.bottom
             anchors.topMargin: 8
-            anchors.right: parent.right
-            anchors.rightMargin: 8
+            anchors.horizontalCenter: buttonLock.horizontalCenter
             spacing: 8
 
-            visible: resizeWidget.editing && resizeWidget.projectARlock
+            visible: resizeWidget.editing && shot.cropARlock
 
             ItemTextButton {
                 id: button34
@@ -408,11 +411,12 @@ Item {
                 background: true
                 backgroundColor: "#222222"
                 highlightMode: "color"
-                textColor: (resizeWidget.projectAR == 3/4) ? Theme.colorPrimary : "white"
+                textColor: (shot.cropAR === MediaUtils.AspectRatio_3_4) ? Theme.colorPrimary : "white"
 
                 text: "3:4"
                 onClicked: {
-                    resizeWidget.projectAR = 3/4
+                    shot.cropAR = MediaUtils.AspectRatio_3_4
+                    gismo.restoreCoordFromCenter()
                 }
             }
             ItemTextButton {
@@ -422,11 +426,12 @@ Item {
                 background: true
                 backgroundColor: "#222222"
                 highlightMode: "color"
-                textColor: (resizeWidget.projectAR == 9/16) ? Theme.colorPrimary : "white"
+                textColor: (shot.cropAR === MediaUtils.AspectRatio_9_16) ? Theme.colorPrimary : "white"
 
                 text: "9:16"
                 onClicked: {
-                    resizeWidget.projectAR = 9/16
+                    shot.cropAR = shot.cropAR = MediaUtils.AspectRatio_9_16
+                    gismo.restoreCoordFromCenter()
                 }
             }
             ItemTextButton {
@@ -436,11 +441,12 @@ Item {
                 background: true
                 backgroundColor: "#222222"
                 highlightMode: "color"
-                textColor: (resizeWidget.projectAR == 9/21) ? Theme.colorPrimary : "white"
+                textColor: (shot.cropAR === MediaUtils.AspectRatio_9_21) ? Theme.colorPrimary : "white"
 
                 text: "9:21"
                 onClicked: {
-                    resizeWidget.projectAR = 9/21
+                    shot.cropAR = MediaUtils.AspectRatio_9_21
+                    gismo.restoreCoordFromCenter()
                 }
             }
         }
@@ -465,7 +471,7 @@ Item {
                 onClicked: resizeWidget.reset()
             }
             ItemImageButton {
-                id: buttonValidate               
+                id: buttonValidate
                 iconColor: "white"
                 background: true
                 backgroundColor: "#222222"
@@ -1011,17 +1017,66 @@ Item {
             gismo.width = gismo.originalWidth + changeRight
             gismo.height = gismo.originalHeight + changeDown
 
-            if (gismo.arLock) {
+            if (shot.cropARlock) {
                 if (left || right || (up && right) || (down && left)) {
-                    gismo.height = gismo.width / gismo.ar
-                    if (up) gismo.y = gismo.originalY + gismo.originalHeight - gismo.height
-                    if (left && !down) gismo.y = gismo.originalY + gismo.originalHeight - gismo.height
-                    if (modifier) gismo.y = gismo.originalY + ((gismo.originalHeight - gismo.height) / 2)
+                    var newheight = (gismo.width / mediaUtils.arToFloat(shot.cropAR))
+                    var newy = gismo.originalY
+                    if (up) newy = gismo.originalY + gismo.originalHeight - newheight
+                    if (left && !down) newy = gismo.originalY + gismo.originalHeight - newheight
+                    if (modifier) newy = gismo.originalY + ((gismo.originalHeight - newheight) / 2)
+
+                    // clamp values
+                    if (newy < 0) {
+                        gismo.y = 0
+                        gismo.height = newheight + newy
+                        gismo.width = (gismo.height * mediaUtils.arToFloat(shot.cropAR))
+                        gismo.x = gismo.originalX + gismo.originalWidth - gismo.width
+                        return
+                    }
+                    // clamp values
+                    if (gismo.originalY + newheight > resizeWidget.height) {
+                        gismo.height = resizeWidget.height - gismo.y
+                        gismo.width = (gismo.height * mediaUtils.arToFloat(shot.cropAR))
+                        gismo.x = gismo.originalX
+                        return
+                    }
+
+                    gismo.height = newheight
+                    gismo.y = newy
                 } else if (up || down) {
-                    gismo.width = gismo.height * gismo.ar
-                    if (up) gismo.x = gismo.originalX + gismo.originalWidth - gismo.width
-                    if (modifier) gismo.x = gismo.originalX + ((gismo.originalWidth - gismo.width) / 2)
+                    var newwidth = (gismo.height * mediaUtils.arToFloat(shot.cropAR))
+                    var newx = gismo.originalX
+                    if (up) newx = gismo.originalX + gismo.originalWidth - newwidth
+                    if (modifier) newx = gismo.originalX + ((gismo.originalWidth - newwidth) / 2)
+
+                    // clamp values
+                    if (newx < 0) {
+                        gismo.x = 0
+                        gismo.width = newwidth + newx
+                        gismo.height = (gismo.width / mediaUtils.arToFloat(shot.cropAR))
+                        gismo.y = gismo.originalY + gismo.originalHeight - gismo.height
+                        return
+                    }
+                    // clamp values
+                    if (gismo.originalX + newwidth > resizeWidget.width) {
+                        gismo.width = resizeWidget.width - gismo.x
+                        gismo.height = (gismo.width / mediaUtils.arToFloat(shot.cropAR))
+                        gismo.y = gismo.originalY
+                        return
+                    }
+
+                    gismo.width = newwidth
+                    gismo.x = newx
                 }
+            }
+
+            if (gismo.width < gismo.minWidth) {
+                gismo.width = gismo.minWidth
+                if (shot.cropARlock) gismo.height = (gismo.width / mediaUtils.arToFloat(shot.cropAR))
+            }
+            if (gismo.height < gismo.minHeight) {
+                gismo.height = gismo.minHeight
+                if (shot.cropARlock) gismo.width = (gismo.height * mediaUtils.arToFloat(shot.cropAR))
             }
 
             resizeWidget.save()

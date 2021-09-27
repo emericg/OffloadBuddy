@@ -146,9 +146,9 @@ int main(int argc, char *argv[])
     StorageManager *st = StorageManager::getInstance();
     FirmwareManager *fm = FirmwareManager::getInstance();
     DeviceManager *dm = DeviceManager::getInstance();
-    MediaLibrary *ml = new MediaLibrary;
     JobManager *jm = JobManager::getInstance();
-    if (!sm || !st || !fm || !ml || !dm || !jm)
+    MediaLibrary *ml = new MediaLibrary;
+    if (!sm || !st || !fm || !dm || !jm || !ml)
     {
         qWarning() << "Cannot init OffloadBuddy components!";
         return EXIT_FAILURE;
@@ -168,18 +168,23 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    if (argc > 0 && argv[0])
-    {
-        QString path = QString::fromLocal8Bit(argv[0]);
-        utilsApp->setAppPath(path);
-    }
+    MediaUtils *mediaUtils = new MediaUtils();
 
-    // Translate the application (demo mode always use english)
+    // Set application path
+    utilsApp->setAppPath(QString::fromLocal8Bit(argv[0]));
+
+    // Translate the application
     utilsLanguage->loadLanguage(sm->getAppLanguage());
 
     ////////////////////////////////////////////////////////////////////////////
 
     qmlRegisterSingletonType(QUrl("qrc:/qml/ThemeEngine.qml"), "ThemeEngine", 1, 0, "Theme");
+
+    qmlRegisterUncreatableMetaObject(DeviceUtils::staticMetaObject, "DeviceUtils", 1, 0,
+                                     "DeviceUtils", "Error: only enums");
+
+    qmlRegisterUncreatableMetaObject(JobUtils::staticMetaObject, "JobUtils", 1, 0,
+                                     "JobUtils", "Error: only enums");
 
     qmlRegisterUncreatableMetaObject(SettingsUtils::staticMetaObject, "SettingsUtils", 1, 0,
                                      "SettingsUtils",  "Error: only enums");
@@ -189,12 +194,6 @@ int main(int argc, char *argv[])
 
     qmlRegisterUncreatableMetaObject(ShotUtils::staticMetaObject, "ShotUtils", 1, 0,
                                      "ShotUtils", "Error: only enums");
-
-    qmlRegisterUncreatableMetaObject(DeviceUtils::staticMetaObject, "DeviceUtils", 1, 0,
-                                     "DeviceUtils", "Error: only enums");
-
-    qmlRegisterUncreatableMetaObject(JobUtils::staticMetaObject, "JobUtils", 1, 0,
-                                     "JobUtils", "Error: only enums");
 
     ItemImage::registerQml();
 
@@ -210,6 +209,7 @@ int main(int argc, char *argv[])
     engine_context->setContextProperty("jobManager", jm);
     engine_context->setContextProperty("mediaLibrary", ml);
     engine_context->setContextProperty("utilsApp", utilsApp);
+    engine_context->setContextProperty("mediaUtils", mediaUtils);
 
     MediaThumbnailer_threadpool *tmb = new MediaThumbnailer_threadpool(utilsSysinfo->getCoreCount_physical() / 2);
     tmb->registerQml(&engine);

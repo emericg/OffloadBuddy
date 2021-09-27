@@ -1131,6 +1131,11 @@ bool Shot::getMetadataFromPicture(int index)
         status = true;
     }
 
+    if (width && height)
+    {
+        m_user_cropAR = MediaUtils::arFromGeometry(width, height);
+    }
+
     Q_EMIT metadataUpdated();
 
     return status;
@@ -1199,6 +1204,11 @@ bool Shot::getMetadataFromVideo(int index)
             vcodec = QString::fromLocal8Bit(getCodecString(stream_VIDEO, media->tracks_video[0]->stream_codec, false));
             framerate = media->tracks_video[0]->framerate;
             bitrate = media->tracks_video[0]->bitrate_avg;
+
+            if (width && height)
+            {
+                m_user_cropAR = MediaUtils::arFromGeometry(width, height);
+            }
         }
         for (unsigned i = 0; i < media->tracks_others_count; i++)
         {
@@ -1228,7 +1238,7 @@ bool Shot::getMetadataFromVideo(int index)
                         // We start at the last GPMF sample, we have more chance
                         // to have a GPS lock than at the begining of the video
                         for (unsigned sp_index = gpmf_sample_count-1;
-                             sp_index >= 0 && sp_index < gpmf_sample_count;
+                             sp_index < gpmf_sample_count;
                              sp_index++)
                         {
                             MediaSample_t *sp = minivideo_get_sample(media, t, sp_index);

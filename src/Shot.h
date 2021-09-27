@@ -24,6 +24,7 @@
 /* ************************************************************************** */
 
 #include "ShotUtils.h"
+#include "MediaUtils.h"
 
 #ifdef ENABLE_LIBMTP
 #include <libmtp.h>
@@ -364,7 +365,7 @@ class Shot: public QObject
     Q_PROPERTY(int mediaPosition READ getUserMediaPosition WRITE setUserMediaPosition NOTIFY userSettingsUpdated)
     Q_PROPERTY(int trimStart READ getUserTrimStart WRITE setUserTrimStart NOTIFY userSettingsUpdated)
     Q_PROPERTY(int trimStop READ getUserTrimStop WRITE setUserTrimStop NOTIFY userSettingsUpdated)
-    Q_PROPERTY(float cropAR READ getUserCropAR WRITE setUserCropAR NOTIFY userSettingsUpdated)
+    Q_PROPERTY(int cropAR READ getUserCropAR WRITE setUserCropAR NOTIFY userSettingsUpdated)
     Q_PROPERTY(bool cropARlock READ getUserCropARlock WRITE setUserCropARlock NOTIFY userSettingsUpdated)
     Q_PROPERTY(float cropX READ getUserCropX WRITE setUserCropX NOTIFY userSettingsUpdated)
     Q_PROPERTY(float cropY READ getUserCropY WRITE setUserCropY NOTIFY userSettingsUpdated)
@@ -390,7 +391,7 @@ class Shot: public QObject
     bool m_user_VFlip = false;
     bool m_user_HFlip = false;
 
-    float m_user_cropAR = 16.f/9.f;
+    int m_user_cropAR = MediaUtils::AspectRatio_auto;
     bool m_user_cropARlock = true;
     float m_user_cropX = 0.f;
     float m_user_cropY = 0.f;
@@ -448,8 +449,8 @@ class Shot: public QObject
         Q_EMIT userSettingsUpdated();
     }
 
-    float getUserCropAR() const { return m_user_cropAR; }
-    void setUserCropAR(const float ar) {
+    int getUserCropAR() const { return m_user_cropAR; }
+    void setUserCropAR(const int ar) {
         m_user_cropAR = ar;
         Q_EMIT userSettingsUpdated();
     }
