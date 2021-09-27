@@ -1305,7 +1305,7 @@ Item {
                         screenshotParams["mode"] = "screenshot"
                         screenshotParams["folder"] = shot.folder
                         screenshotParams["image_codec"] = "JPEG"
-                        screenshotParams["quality"] = 3
+                        screenshotParams["quality"] = 85
                         screenshotParams["clipStartMs"] = videoPlayer.position
 
                         if (shot.cropX > 0.0 || shot.cropY > 0.0 ||

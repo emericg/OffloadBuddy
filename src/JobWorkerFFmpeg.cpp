@@ -450,10 +450,10 @@ void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
                 file_extension = "jpg";
 
                 // qscale range is 2–31
-                int qscale = mapNumber(job->settings_encode.encoding_quality, 50, 100, 14, 2);
+                int qscale = mapNumber(job->settings_encode.encoding_quality, 0, 100, 10, 1);
 
                 ptiwrap->arguments << "-q:v" << QString::number(qscale);
-                ptiwrap->arguments << "-pix_fmt" << "yuv420p";
+                //ptiwrap->arguments << "-pix_fmt" << "yuv420p";
             }
             if (codec == "WEBP")
             {
