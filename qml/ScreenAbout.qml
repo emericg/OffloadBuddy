@@ -185,8 +185,9 @@ Item {
                 anchors.leftMargin: -24
                 anchors.right: parent.right
                 anchors.rightMargin: -24
+                height: 2
+                opacity: 0.33
                 color: Theme.colorSeparator
-                height: 1
             }
 
             ////////
@@ -214,8 +215,9 @@ Item {
                 anchors.leftMargin: -24
                 anchors.right: parent.right
                 anchors.rightMargin: -24
+                height: 2
+                opacity: 0.33
                 color: Theme.colorSeparator
-                height: 1
             }
 
             ////////
@@ -379,8 +381,9 @@ Item {
                 anchors.leftMargin: -24
                 anchors.right: parent.right
                 anchors.rightMargin: -24
+                height: 2
+                opacity: 0.33
                 color: Theme.colorSeparator
-                height: 1
             }
 
             ////////

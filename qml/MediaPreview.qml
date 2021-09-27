@@ -1289,7 +1289,7 @@ Item {
                     highlightColor: Theme.colorPrimary
                     highlightMode: "color"
 
-                    source: "qrc:/assets/icons_material/outline-camera_alt-24px.svg"
+                    source: "qrc:/assets/icons_material/duotone-camera_alt-24px.svg"
                     onClicked: {
                         if (typeof shot === "undefined" || !shot) return
 

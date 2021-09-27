@@ -65,6 +65,7 @@
         <file>icons_material/duotone-aspect_ratio-24px.svg</file>
         <file>icons_material/duotone-av_timer-24px.svg</file>
         <file>icons_material/duotone-burst_mode-24px.svg</file>
+        <file>icons_material/duotone-camera_alt-24px.svg</file>
         <file>icons_material/duotone-date_range-24px.svg</file>
         <file>icons_material/duotone-exit_to_app-24px.svg</file>
         <file>icons_material/duotone-insert_chart-24px.svg</file>
@@ -77,12 +78,12 @@
         <file>icons_material/duotone-schedule-24px.svg</file>
         <file>icons_material/duotone-shutter_speed-24px.svg</file>
         <file>icons_material/duotone-save_alt-24px.svg</file>
+        <file>icons_material/duotone-sd_card-24px.svg</file>
         <file>icons_material/duotone-speaker-24px.svg</file>
         <file>icons_material/duotone-speed-24px.svg</file>
         <file>icons_material/duotone-timer-24px.svg</file>
         <file>icons_material/duotone-video_library-24px.svg</file>
         <file>icons_material/outline-camera-24px.svg</file>
-        <file>icons_material/outline-camera_alt-24px.svg</file>
         <file>icons_material/outline-cancel_circle-24px.svg</file>
         <file>icons_material/outline-check_circle-24px.svg</file>
         <file>icons_material/outline-create_new_folder-24px.svg</file>
@@ -92,7 +93,6 @@
         <file>icons_material/outline-pause_circle-24px.svg</file>
         <file>icons_material/outline-play_circle-24px.svg</file>
         <file>icons_material/outline-power-24px.svg</file>
-        <file>icons_material/outline-sd_card-24px.svg</file>
         <file>icons_material/outline-stop_circle-24px.svg</file>
     </qresource>
     <qresource prefix="/menus">

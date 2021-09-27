@@ -147,6 +147,24 @@ Item {
 
             ////////
 
+            Item {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: 16
+                Rectangle {
+                    anchors.left: parent.left
+                    anchors.leftMargin: -24
+                    anchors.right: parent.right
+                    anchors.rightMargin: -24
+                    anchors.verticalCenter: parent.verticalCenter
+                    height: 2
+                    opacity: 0.33
+                    color: Theme.colorSeparator
+                }
+            }
+
+            ////////
+
             Row {
                 height: 40
                 spacing: 32
@@ -183,9 +201,25 @@ Item {
 
             ////////
 
-            Text {
-                height: 40
+            Item {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: 16
+                Rectangle {
+                    anchors.left: parent.left
+                    anchors.leftMargin: -24
+                    anchors.right: parent.right
+                    anchors.rightMargin: -24
+                    anchors.verticalCenter: parent.verticalCenter
+                    height: 2
+                    opacity: 0.33
+                    color: Theme.colorSeparator
+                }
+            }
 
+            ////////
+
+            Text {
                 text: qsTr("Thumbnails")
                 verticalAlignment: Text.AlignVCenter
                 color: Theme.colorText
@@ -318,9 +352,25 @@ Item {
 
             ////////
 
-            Text {
-                height: 40
+            Item {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: 16
+                Rectangle {
+                    anchors.left: parent.left
+                    anchors.leftMargin: -24
+                    anchors.right: parent.right
+                    anchors.rightMargin: -24
+                    anchors.verticalCenter: parent.verticalCenter
+                    height: 2
+                    opacity: 0.33
+                    color: Theme.colorSeparator
+                }
+            }
 
+            ////////
+
+            Text {
                 text: qsTr("Offloading")
                 verticalAlignment: Text.AlignVCenter
                 color: Theme.colorText
@@ -412,6 +462,24 @@ Item {
 
             ////////
 
+            Item {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: 16
+                Rectangle {
+                    anchors.left: parent.left
+                    anchors.leftMargin: -24
+                    anchors.right: parent.right
+                    anchors.rightMargin: -24
+                    anchors.verticalCenter: parent.verticalCenter
+                    height: 2
+                    opacity: 0.33
+                    color: Theme.colorSeparator
+                }
+            }
+
+            ////////
+
             Rectangle {
                 id: rectangleMedia
                 anchors.left: parent.left
@@ -438,12 +506,12 @@ Item {
 
                 Column {
                     id: columnMedia
-                    anchors.leftMargin: 24
                     anchors.left: parent.left
+                    anchors.leftMargin: 24
                     anchors.right: parent.right
                     anchors.rightMargin: 24
 
-                    topPadding: 8
+                    topPadding: 0
                     bottomPadding: 24
 
                     Row {
@@ -557,6 +625,18 @@ Item {
                         }
                     }
                 }
+            }
+
+            ////////
+
+            Rectangle {
+                anchors.left: parent.left
+                anchors.leftMargin: -24
+                anchors.right: parent.right
+                anchors.rightMargin: -24
+                height: 2
+                opacity: 0.33
+                color: Theme.colorSeparator
             }
         }
     }

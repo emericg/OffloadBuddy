@@ -170,7 +170,7 @@ Rectangle {
                         spacing: 16
 
                         ImageSvg {
-                            source: "qrc:/assets/icons_material/outline-camera_alt-24px.svg"
+                            source: "qrc:/assets/icons_material/duotone-camera_alt-24px.svg"
                             color: Theme.colorText
                         }
 
@@ -319,7 +319,7 @@ Rectangle {
                         spacing: 16
 
                         ImageSvg {
-                            source: "qrc:/assets/icons_material/outline-sd_card-24px.svg"
+                            source: "qrc:/assets/icons_material/duotone-sd_card-24px.svg"
                             color: Theme.colorText
                         }
 
