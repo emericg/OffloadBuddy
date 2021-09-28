@@ -195,18 +195,12 @@ void ShotModel::addFile(ofb_file *f, ofb_shot *s)
         if (s->shot_id > 0)
         {
             // Search using shot ID
-            shot = getShotAt(s->shot_type, s->shot_id, s->camera_id);
-
-            // We make sure files are in the same folder
-            // Useful when shot IDs are looping (same ID, but different camera/year/whatever...)
-            //if (shot && f->filesystemPath.contains(shot->getFolderRefString()) == false)
-            //{
-            //    shot = nullptr;
-            //}
+            shot = searchForShot(s->shot_type, s->shot_id, s->camera_id, f->filesystemPath);
         }
 
         if (!shot)
         {
+            // Backup // Search using path
             shot = getShotWithPath(f->filesystemPath);
             if (shot)
             {
@@ -293,6 +287,55 @@ void ShotModel::removeShot(Shot *shot)
 /* ************************************************************************** */
 
 /*!
+ * \brief ShotModel::getShotAt
+ * \param type: see ShotUtils::ShotType
+ * \param file_id
+ * \param camera_id
+ * \param folder
+ * \return Pointer to an existing shot
+ *
+ * This function is used to associate new files to existing shots. We go backward
+ * for faster association, because we will just most likely use the last created shot.
+ * We try only the last 32 shots created, to avoid wasting time.
+ *
+ * Also we make sure the shot files are from the same folder. Mandatory when
+ * shot IDs are looping (same IDs, from different parsing threads, from different
+ * camera/year/whatever, ...)
+ *
+ * \todo Handle timelapse shots looping IDs (ex from 49999 to 50000, the ID goes from 4 to 5).
+ */
+Shot *ShotModel::searchForShot(const ShotUtils::ShotType type,
+                               const int file_id, const int camera_id,
+                               const QString &folder) const
+{
+    if (file_id > 0)
+    {
+        for (int i = m_shots.size()-1, t = 0; i >= 0 && t < 32; i--, t++)
+        {
+            Shot *search = qobject_cast<Shot*>(m_shots.at(i));
+            if (search && search->getShotType() == type)
+            {
+                if (search->getFileId() == file_id &&
+                    search->getCameraId() == camera_id)
+                {
+                    // We make sure shot files are from the same folder
+                    if (folder.contains(search->getFolderRefString()))
+                    {
+                        return search;
+                    }
+                }
+            }
+        }
+
+        //qDebug() << "No shot found for id" << file_id;
+    }
+
+    return nullptr;
+}
+
+/* ************************************************************************** */
+
+/*!
  * \brief Return all of the shots from a device.
  * \param shots[out]
  */
@@ -305,45 +348,11 @@ void ShotModel::getShots(QList<Shot *> &shots)
 }
 
 /*!
- * \brief ShotModel::getShotAt
- * \param type
- * \param file_id
- * \param camera_id
- * \return Pointer to an existing shot
- *
- * This function is used to associate new files to existing shots. We go backward
- * for faster association, because we will just most likely use the last created
- * shot.
- */
-Shot *ShotModel::getShotAt(ShotUtils::ShotType type, int file_id, int camera_id) const
-{
-    if (file_id > 0)
-    {
-        for (int i = m_shots.size()-1; i >= 0; i--)
-        {
-            Shot *search = qobject_cast<Shot*>(m_shots.at(i));
-            if (search && search->getShotType() == type)
-            {
-                if (search->getFileId() == file_id &&
-                    search->getCameraId() == camera_id)
-                {
-                    return search;
-                }
-            }
-        }
-
-        //qDebug() << "No shot found for id" << file_id;
-    }
-
-    return nullptr;
-}
-
-/*!
  * \brief ShotModel::getShotAtIndex
  * \param listIndex: UNFILTERED INDEX be careful
  * \return
  */
-Shot *ShotModel::getShotAtIndex(int listIndex)
+Shot *ShotModel::getShotAtIndex(const int listIndex)
 {
     //qDebug() << "ShotModel::getShotAtIndex:" << index(0, listIndex);
 

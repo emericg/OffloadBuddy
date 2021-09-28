@@ -122,9 +122,12 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
+    Shot *searchForShot(const ShotUtils::ShotType type,
+                        const int file_id, const int camera_id,
+                        const QString &path) const;
+
     void getShots(QList<Shot *> &shots);
-    Shot *getShotAt(ShotUtils::ShotType type, int file_id, int camera_id) const;
-    Shot *getShotAtIndex(int index);
+    Shot *getShotAtIndex(const int index);
     Shot *getShotWithUuid(const QString &uuid);
     Shot *getShotWithPath(const QString &path);
     std::vector<Shot *> getShotsWithName(const QString &name);
