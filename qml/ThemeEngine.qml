@@ -123,7 +123,7 @@ Item {
 
             // "LIGHT AND WARM"
 
-            colorHeader =               "#D0D0D0"
+            colorHeader =               "#DADADA"
             colorHeaderContent =        "#353637"
             colorHeaderHighlight =      ""
 
@@ -151,7 +151,7 @@ Item {
             colorLowContrast =          "white"
             colorHighContrast =         "black"
 
-            colorComponent =            "#DBDBDB"
+            colorComponent =            "#E6E6E6"
             colorComponentText =        "black"
             colorComponentContent =     "black"
             colorComponentBorder =      "#C1C1C1"
@@ -188,7 +188,7 @@ Item {
             colorError =                "#D33E39"
 
             colorText =                 "white"
-            colorSubText =              "#DDD"
+            colorSubText =              "#AAA"
             colorIcon =                 "white"
             colorSeparator =            "#666"
             colorLowContrast =          "black"
@@ -230,9 +230,9 @@ Item {
             colorWarning =              "#FFC107"
             colorError =                "#FF5722"
 
-            colorText =                 "black"
-            colorSubText =              "#606060"
-            colorIcon =                 "black"
+            colorText =                 "#333"
+            colorSubText =              "#666"
+            colorIcon =                 "#333"
             colorSeparator =            "#E0E0E0"
             colorLowContrast =          "white"
             colorHighContrast =         "black"
@@ -240,8 +240,8 @@ Item {
             colorComponent =            "#F3F3F3"
             colorComponentText =        "black"
             colorComponentContent =     "black"
-            colorComponentBorder =      "#E0E0E0"
-            colorComponentDown =        "#C1C1C1"
+            colorComponentBorder =      "#D1D1D1"
+            colorComponentDown =        "#E1E1E1"
             colorComponentBackground =  "#F3F3F3"
 
             sidebarSelector = "arrow"
@@ -275,7 +275,7 @@ Item {
 
             colorText =                 "#D2D2D2"
             colorSubText =              "#A3A3A3"
-            colorIcon =                 "#D2D2D2"
+            colorIcon =                 "#A0A0A0"
             colorSeparator =            "#666"
             colorLowContrast =          "black"
             colorHighContrast =         "white"
@@ -284,7 +284,7 @@ Item {
             colorComponentText =        "black"
             colorComponentContent =     "black"
             colorComponentBorder =      "#E4E4E4"
-            colorComponentDown =        "#CCC"
+            colorComponentDown =        "#DDD"
             colorComponentBackground =  "white"
 
             componentRadius = 1

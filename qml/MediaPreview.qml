@@ -48,8 +48,6 @@ Item {
         overlayTransform.anchors.top = overlays.top
         overlayTransform.anchors.topMargin = 16
 
-        mediaArea.startLimit = -1
-        mediaArea.stopLimit = -1
         overlayTrim.visible = false
 
         mediaArea.rotation = 0

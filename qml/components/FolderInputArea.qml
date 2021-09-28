@@ -28,6 +28,8 @@ TextField {
     placeholderText: ""
     placeholderTextColor: colorPlaceholderText
 
+    clip: true
+
     selectByMouse: true
     selectionColor: Theme.colorPrimary
     selectedTextColor: "white"

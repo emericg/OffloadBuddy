@@ -617,7 +617,7 @@ Popup {
                             color: Theme.colorSubText
                         }
 
-                        SliderArrow {
+                        SliderValueSolid {
                             id: sliderQuality
                             anchors.left: textQuality.right
                             anchors.leftMargin: 16
@@ -651,19 +651,120 @@ Popup {
                             color: Theme.colorSubText
                         }
 
-                        SliderArrow {
-                            id: sliderSpeed
+                        Item {
                             anchors.left: textSpeed.right
                             anchors.leftMargin: 16
                             anchors.right: parent.right
+                            height: 34
+                            width: rowbut.width
                             anchors.verticalCenter: parent.verticalCenter
 
-                            wheelEnabled: true
-                            stepSize: 1
+                            Rectangle {
+                                anchors.top: parent.top
+                                anchors.left: parent.left
+                                anchors.bottom: parent.bottom
+                                width: btnSpeeds.width+32
 
-                            from: 1
-                            to: 3
-                            value: 2
+                                radius: 16
+                                color: "white"
+                                border.color: Theme.colorComponentDown
+                                border.width: 2
+
+                                Row {
+                                    id: btnSpeeds
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 16
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    height: 32
+                                    spacing: 32
+
+                                    property string selected: qsTr("slow")
+                                    property int value: {
+                                        if (selected === qsTr("slow")) return 1
+                                        if (selected === qsTr("fast")) return 3
+                                        else return 2
+                                    }
+
+                                    Text {
+                                        id: btnFast
+                                        anchors.verticalCenter: parent.verticalCenter
+
+                                        property bool selected: false
+                                        text: qsTr("fast")
+                                        font.pixelSize: Theme.fontSizeComponent
+                                        //font.bold: (btnSpeeds.selected === btnFast.text) ? true : false
+                                        color: (btnSpeeds.selected === btnFast.text) ? "white" : Theme.colorSubText
+
+                                        Rectangle {
+                                            anchors.fill: parent
+                                            anchors.topMargin: -8
+                                            anchors.leftMargin: -16
+                                            anchors.rightMargin: -16
+                                            anchors.bottomMargin: -8
+                                            z: -1
+                                            radius: 32
+                                            color: (btnSpeeds.selected === btnFast.text) ? Theme.colorPrimary : "transparent"
+
+                                            MouseArea {
+                                                anchors.fill: parent
+                                                onClicked: btnSpeeds.selected = btnFast.text
+                                            }
+                                        }
+                                    }
+                                    Text {
+                                        id: btnMedium
+                                        anchors.verticalCenter: parent.verticalCenter
+
+                                        property bool selected: false
+                                        text: qsTr("medium")
+                                        font.pixelSize: Theme.fontSizeComponent
+                                        //font.bold: (btnSpeeds.selected === btnMedium.text) ? true : false
+                                        color: (btnSpeeds.selected === btnMedium.text) ? "white" : Theme.colorSubText
+
+                                        Rectangle {
+                                            anchors.fill: parent
+                                            anchors.topMargin: -8
+                                            anchors.leftMargin: -16
+                                            anchors.rightMargin: -16
+                                            anchors.bottomMargin: -8
+                                            z: -1
+                                            radius: 32
+                                            color: (btnSpeeds.selected === btnMedium.text) ? Theme.colorPrimary : "transparent"
+
+                                            MouseArea {
+                                                anchors.fill: parent
+                                                onClicked: btnSpeeds.selected = btnMedium.text
+                                            }
+                                        }
+                                    }
+                                    Text {
+                                        id: btnSlow
+                                        anchors.verticalCenter: parent.verticalCenter
+
+                                        property bool selected: true
+                                        text: qsTr("slow")
+                                        font.pixelSize: Theme.fontSizeComponent
+                                        //font.bold: (btnSpeeds.selected === btnSlow.text) ? true : false
+                                        color: (btnSpeeds.selected === btnSlow.text) ? "white" : Theme.colorSubText
+
+                                        Rectangle {
+                                            anchors.fill: parent
+                                            anchors.topMargin: -8
+                                            anchors.leftMargin: -16
+                                            anchors.rightMargin: -16
+                                            anchors.bottomMargin: -8
+                                            z: -1
+                                            radius: 32
+                                            color: (btnSpeeds.selected === btnSlow.text) ? Theme.colorPrimary : "transparent"
+
+                                            MouseArea {
+                                                anchors.fill: parent
+                                                onClicked: btnSpeeds.selected = btnSlow.text
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
 
@@ -1500,7 +1601,7 @@ Popup {
                                 settingsEncoding["video_codec"] = "copy";
                         }
 
-                        settingsEncoding["speed"] = sliderSpeed.value;
+                        settingsEncoding["speed"] = btnSpeeds.value;
 
                         if (selectorVideoFps.visible && selectorVideoFps.fps != Math.round(currentShot.framerate))
                             settingsEncoding["fps"] = selectorVideoFps.fps;

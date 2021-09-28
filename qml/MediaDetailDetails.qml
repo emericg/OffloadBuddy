@@ -212,11 +212,11 @@ Item {
 
     Rectangle {
         id: infosFiles
-        width: parent.width * 0.40
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.bottom: parent.bottom
 
+        width: parent.width * 0.40
         color: Theme.colorForeground
 
         Column {

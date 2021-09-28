@@ -230,13 +230,15 @@ Item {
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
 
-        width: 320
+        width: parent.width * 0.20
         height: mediaPreview.overlayHeight
         visible: !mediaPreview.isFullSize
 
         Column {
             id: infosGenericCol
-            width: 320
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
 
             spacing: 8
 
@@ -252,7 +254,7 @@ Item {
                 Text {
                     id: location
                     height: 28
-                    width: 320-48
+                    width: infosGenericCol.width-48
                     anchors.left: parent.right
                     anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter

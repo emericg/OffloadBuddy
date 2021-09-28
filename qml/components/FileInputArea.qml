@@ -35,6 +35,8 @@ TextField {
     selectionColor: Theme.colorPrimary
     selectedTextColor: "white"
 
+    clip: true
+
     color: enabled ? colorText : colorPlaceholderText
     font.pixelSize: Theme.fontSizeComponent
 
