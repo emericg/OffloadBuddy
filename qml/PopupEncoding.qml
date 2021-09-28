@@ -99,11 +99,9 @@ Popup {
         } else {
             currentShot = shot
 
-            if (shot.shotType === ShotUtils.SHOT_PICTURE) {
-                titleText.text = qsTr("Image encoding")
-                encodingMode = "image"
-            } else if (shot.shotType === ShotUtils.SHOT_PICTURE_MULTI || shot.shotType === ShotUtils.SHOT_PICTURE_BURST ||
-                       shot.shotType === ShotUtils.SHOT_PICTURE_TIMELAPSE || shot.shotType === ShotUtils.SHOT_PICTURE_NIGHTLAPSE) {
+            if ((shot.shotType === ShotUtils.SHOT_PICTURE_MULTI || shot.shotType === ShotUtils.SHOT_PICTURE_BURST ||
+                 shot.shotType === ShotUtils.SHOT_PICTURE_TIMELAPSE || shot.shotType === ShotUtils.SHOT_PICTURE_NIGHTLAPSE) &&
+                shot.duration > 1) {
                 titleText.text = qsTr("Timelapse encoding")
                 encodingMode = "timelapse"
 
@@ -113,7 +111,10 @@ Popup {
                 timelapseFramerate.from = 1
                 timelapseFramerate.to = 60
                 timelapseFramerate.value = 15
-            } else {
+            } else if (shot.shotType >= ShotUtils.SHOT_PICTURE) {
+                titleText.text = qsTr("Image encoding")
+                encodingMode = "image"
+            } else  {
                 titleText.text = qsTr("Video encoding")
                 encodingMode = "video"
 
