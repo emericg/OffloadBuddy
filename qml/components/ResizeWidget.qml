@@ -107,9 +107,10 @@ Item {
 
         ////////
 
-        //property bool arLock: shot.cropARlock
-        //property real arEnum: shot.cropAR
-        //property real arFloat: mediaUtils.arToFloat(shot.cropAR)
+        property bool arLock: shot.cropARlock
+        property real arFloat: mediaUtils.arToFloat(shot.cropAR)
+        property int arEnum: shot.cropAR
+
         property int minWidth: 256
         property int minHeight: 256
 
@@ -167,14 +168,14 @@ Item {
             if (fwidth <= 0 || fheight <= 0) return
             //console.log("restoreCoordFromCenter()")
 
-            if (shot.cropARlock) {
+            if (gismo.arLock) {
                 var sar = resizeWidget.width/ resizeWidget.height
-                if (sar > mediaUtils.arToFloat(shot.cropAR)) {
-                    gismo.width = (fheight * resizeWidget.height) * mediaUtils.arToFloat(shot.cropAR)
+                if (sar > gismo.arFloat) {
+                    gismo.width = (fheight * resizeWidget.height) * gismo.arFloat
                     gismo.height = (fheight * resizeWidget.height)
                 } else {
                     gismo.width = (fwidth * resizeWidget.width)
-                    gismo.height = (fwidth * resizeWidget.width) / mediaUtils.arToFloat(shot.cropAR)
+                    gismo.height = (fwidth * resizeWidget.width) / gismo.arFloat
                 }
             } else {
                 gismo.width = fwidth * resizeWidget.width
@@ -262,8 +263,9 @@ Item {
         Item {
             id: grid_rulesofthree
             anchors.fill: parent
+
+            visible: (editing && grid === "rulesofthree")
             clip: true
-            visible: editing && grid === "rulesofthree"
 
             Repeater {
                 model: 2
@@ -289,7 +291,9 @@ Item {
         Item {
             id: grid_phi
             anchors.fill: parent
-            visible: editing && grid === "phi"
+
+            visible: (editing && grid === "phi")
+            clip: true
 
             Rectangle {
                 x: parent.width * 0.618
@@ -330,7 +334,7 @@ Item {
             anchors.verticalCenter: buttonLock.verticalCenter
             spacing: 8
 
-            visible: resizeWidget.editing && shot.cropARlock
+            visible: (resizeWidget.editing && gismo.arLock)
 
             ItemTextButton {
                 id: button43
@@ -402,7 +406,7 @@ Item {
             anchors.horizontalCenter: buttonLock.horizontalCenter
             spacing: 8
 
-            visible: resizeWidget.editing && shot.cropARlock
+            visible: (resizeWidget.editing && gismo.arLock)
 
             ItemTextButton {
                 id: button34
@@ -430,7 +434,7 @@ Item {
 
                 text: "9:16"
                 onClicked: {
-                    shot.cropAR = shot.cropAR = MediaUtils.AspectRatio_9_16
+                    shot.cropAR = MediaUtils.AspectRatio_9_16
                     gismo.restoreCoordFromCenter()
                 }
             }
@@ -985,15 +989,15 @@ Item {
         ////////////////
 
         function resize(modifier, up, left, right, down) {
-            //console.log("> resize() > +
+            //console.log("> resize() > " +
             //            "> up: " + up.toFixed(0) + " > left: "+ left.toFixed(0) +
             //            " > right: "+ right.toFixed(0) + " > down: "+ down.toFixed(0))
 
-            // clamp values
-            if (up && gismo.originalY + up < 0) up = -gismo.originalY
-            if (left && gismo.originalX + left < 0) left = -gismo.originalX
-            if (right && gismo.originalX + gismo.originalWidth + right > resizeWidget.width) right = resizeWidget.width - gismo.originalX - gismo.originalWidth
-            if (down && gismo.originalY + gismo.originalHeight + down > resizeWidget.height) down = resizeWidget.height - gismo.originalY - gismo.originalHeight
+            // clamp single direction
+            if (up && !left && !right && !down && gismo.originalY + up < 0) up = -gismo.originalY
+            if (!up && left && !right && !down && gismo.originalX + left < 0) left = -gismo.originalX
+            if (!up && !left && right && !down && gismo.originalX + gismo.originalWidth + right > resizeWidget.width) right = resizeWidget.width - gismo.originalX - gismo.originalWidth
+            if (!up && !left && !right && down && gismo.originalY + gismo.originalHeight + down > resizeWidget.height) down = resizeWidget.height - gismo.originalY - gismo.originalHeight
 
             var changeUp = up
             var changeLeft = left
@@ -1006,80 +1010,185 @@ Item {
             if (left && modifier) changeRight = -left*2
             else if (left) changeRight = -left
 
-            if (right && modifier) { changeLeft = -right; changeRight += right;}
+            if (right && modifier) { changeLeft = -right; changeRight += right; }
             if (down && modifier) { changeUp = -down; changeDown += down; }
 
-            //console.log("> changeUp: " + changeUp.toFixed(0) + " > changeLeft: "+ changeLeft.toFixed(0) +
-            //            " > changeRight: "+ changeRight.toFixed(0) + " > changeDown: "+ changeDown.toFixed(0))
+            //console.log("> changeUp: " + changeUp.toFixed(0) + " > changeLeft: "+ changeLeft.toFixed(0) + " " +
+            //            "> changeRight: "+ changeRight.toFixed(0) + " > changeDown: "+ changeDown.toFixed(0))
 
-            gismo.x = gismo.originalX + changeLeft
-            gismo.y = gismo.originalY + changeUp
-            gismo.width = gismo.originalWidth + changeRight
-            gismo.height = gismo.originalHeight + changeDown
+            var newx = gismo.originalX + changeLeft
+            var newy = gismo.originalY + changeUp
+            var newwidth = gismo.originalWidth + changeRight
+            var newheight = gismo.originalHeight + changeDown
 
-            if (shot.cropARlock) {
-                if (left || right || (up && right) || (down && left)) {
-                    var newheight = (gismo.width / mediaUtils.arToFloat(shot.cropAR))
-                    var newy = gismo.originalY
-                    if (up) newy = gismo.originalY + gismo.originalHeight - newheight
-                    if (left && !down) newy = gismo.originalY + gismo.originalHeight - newheight
+            if (!gismo.arLock) {
+
+                if (modifier && (newwidth < minWidth || newheight < minHeight)) return
+
+                if (newx < 0) { newwidth += newx; newx = 0; }
+                if (newx + newwidth > resizeWidget.width) newwidth = resizeWidget.width - newx
+
+                if (newy < 0) { newheight += newy; newy = 0; }
+                if (newy + newheight > resizeWidget.height) newheight = resizeWidget.height - newy
+
+            } else if (gismo.arLock) {
+
+                if (up && right) { ////
+
+                    newheight = Math.ceil(newwidth / gismo.arFloat)
+                    newy = gismo.originalY + gismo.originalHeight - newheight
+
                     if (modifier) newy = gismo.originalY + ((gismo.originalHeight - newheight) / 2)
 
                     // clamp values
                     if (newy < 0) {
-                        gismo.y = 0
-                        gismo.height = newheight + newy
-                        gismo.width = (gismo.height * mediaUtils.arToFloat(shot.cropAR))
-                        gismo.x = gismo.originalX + gismo.originalWidth - gismo.width
-                        return
+                        //console.log("clamp diag u/r (newy < 0)")
+                        newheight += newy
+                        newwidth = Math.ceil(newheight * gismo.arFloat)
+                        newy = 0
                     }
                     // clamp values
-                    if (gismo.originalY + newheight > resizeWidget.height) {
-                        gismo.height = resizeWidget.height - gismo.y
-                        gismo.width = (gismo.height * mediaUtils.arToFloat(shot.cropAR))
-                        gismo.x = gismo.originalX
-                        return
+                    if (newy + newheight > resizeWidget.height) {
+                        //console.log("clamp diag u/r (newy + newheight > resizeWidget.height)")
+                        newheight = resizeWidget.height - newy
+                        newwidth = Math.ceil(newheight * gismo.arFloat)
+                    }
+                    // clamp values
+                    if (newx + newwidth > resizeWidget.width) {
+                        //console.log("clamp diag u/r (newx + newwidth > resizeWidget.width)")
+                        newwidth = resizeWidget.width - newx
+                        newheight = Math.ceil(newwidth / gismo.arFloat)
+                        newy = gismo.originalY + gismo.originalHeight - newheight
                     }
 
-                    gismo.height = newheight
-                    gismo.y = newy
-                } else if (up || down) {
-                    var newwidth = (gismo.height * mediaUtils.arToFloat(shot.cropAR))
-                    var newx = gismo.originalX
-                    if (up) newx = gismo.originalX + gismo.originalWidth - newwidth
-                    if (modifier) newx = gismo.originalX + ((gismo.originalWidth - newwidth) / 2)
+                } else if (down && left) { ////
+
+                    newheight = Math.ceil(newwidth / gismo.arFloat)
+
+                    if (modifier) newy = gismo.originalY + ((gismo.originalHeight - newheight) / 2)
 
                     // clamp values
                     if (newx < 0) {
-                        gismo.x = 0
-                        gismo.width = newwidth + newx
-                        gismo.height = (gismo.width / mediaUtils.arToFloat(shot.cropAR))
-                        gismo.y = gismo.originalY + gismo.originalHeight - gismo.height
-                        return
+                        //console.log("clamp diag d/l (newx < 0)")
+                        newwidth += newx
+                        newheight = Math.ceil(newwidth / gismo.arFloat)
+                        newx = 0
                     }
                     // clamp values
-                    if (gismo.originalX + newwidth > resizeWidget.width) {
-                        gismo.width = resizeWidget.width - gismo.x
-                        gismo.height = (gismo.width / mediaUtils.arToFloat(shot.cropAR))
-                        gismo.y = gismo.originalY
-                        return
+                    if (gismo.originalY + newheight > resizeWidget.height) {
+                        //console.log("clamp diag d/l (gismo.originalY + newheight > resizeWidget.height)")
+                        newheight = resizeWidget.height - newy
+                        newwidth = Math.ceil(newheight * gismo.arFloat)
+                        newx = gismo.originalX + originalWidth - newwidth
                     }
 
-                    gismo.width = newwidth
-                    gismo.x = newx
+                } else if ((left || right) && !up) { ////
+
+                    newheight = Math.ceil(newwidth / gismo.arFloat)
+                    if (left) newy = gismo.originalY + gismo.originalHeight - newheight
+
+                    if (modifier) newy = gismo.originalY + ((gismo.originalHeight - newheight) / 2)
+
+                    // clamp values
+                    if (left && newy < 0) {
+                        //console.log("clamp l/r (left && newy < 0)")
+                        newheight += newy
+                        newwidth = Math.ceil(newheight * gismo.arFloat)
+                        newx = gismo.originalX + gismo.originalWidth - newwidth
+                        newy = 0
+                    }
+                    // clamp values
+                    if (right && newx + newwidth > resizeWidget.width) {
+                        //console.log("clamp l/r (right && newx + newwidth > resizeWidget.width)")
+                        newwidth = resizeWidget.width - newx
+                        newheight = Math.ceil(newwidth / gismo.arFloat)
+                        newy = gismo.originalY
+                    }
+                    // clamp values
+                    if (newy + newheight > resizeWidget.height) {
+                        //console.log("clamp l/r (newy + newheight > resizeWidget.height)")
+                        newheight = resizeWidget.height - newy
+                        newwidth = Math.ceil(newheight * gismo.arFloat)
+                        newx = gismo.originalX
+                    }
+
+                } else if (up || down) { //////
+
+                    newwidth = Math.ceil(newheight * gismo.arFloat)
+                    if (up) newx = gismo.originalX + gismo.originalWidth - newwidth
+
+                    if (modifier) newx = gismo.originalX + ((gismo.originalWidth - newwidth) / 2)
+
+                    // clamp values
+                    if (up && newx < 0) {
+                        //console.log("clamp u/p (up && newx < 0)")
+                        newwidth += newx
+                        newheight = (newwidth / gismo.arFloat)
+                        newx = 0
+                        newy = gismo.originalY + gismo.originalHeight - newheight
+                    }
+                    if (up && newy < 0) {
+                        //console.log("clamp u/p (up && newy < 0)")
+                        newheight += newy
+                        newwidth = Math.ceil(newheight * gismo.arFloat)
+                        newy = 0
+                        newx = gismo.originalX + gismo.originalWidth - newwidth
+                    }
+                    // clamp values
+                    if (down &&  gismo.originalX + newwidth > resizeWidget.width) {
+                        //console.log("clamp u/p (!up && gismo.originalX + newwidth > resizeWidget.width)")
+                        newwidth = resizeWidget.width - newx
+                        newheight = (newwidth / gismo.arFloat)
+                        newy = gismo.originalY
+                    }
                 }
             }
 
-            if (gismo.width < gismo.minWidth) {
-                gismo.width = gismo.minWidth
-                if (shot.cropARlock) gismo.height = (gismo.width / mediaUtils.arToFloat(shot.cropAR))
-            }
-            if (gismo.height < gismo.minHeight) {
-                gismo.height = gismo.minHeight
-                if (shot.cropARlock) gismo.width = (gismo.height * mediaUtils.arToFloat(shot.cropAR))
+            gismo.x = newx
+            gismo.y = newy
+            gismo.width = newwidth
+            gismo.height = newheight
+
+            // Check minimum sizes
+            if (gismo.arLock) {
+                if (arFloat > 1) {
+                    if (gismo.height < gismo.minHeight) resize_minHeight(up, left, right, down)
+                    else if (gismo.width < gismo.minWidth) resize_minWidth(up, left, right, down)
+                } else if (arFloat < 1) {
+                    if (gismo.width < gismo.minWidth) resize_minWidth(up, left, right, down)
+                    else if (gismo.height < gismo.minHeight) resize_minHeight(up, left, right, down)
+                }
+            } else {
+                if (gismo.width < gismo.minWidth) resize_minWidth(up, left, right, down)
+                if (gismo.height < gismo.minHeight)resize_minHeight(up, left, right, down)
             }
 
             resizeWidget.save()
+        }
+
+        function resize_minWidth(up, left, right, down) {
+            //console.log("MIN WIDTH > " + gismo.width)
+
+            gismo.width = gismo.minWidth
+            if (gismo.arLock) gismo.height = Math.ceil(gismo.minWidth / gismo.arFloat)
+
+            if (!(down && left) && (down || right)) gismo.x = gismo.originalX
+            else gismo.x = gismo.originalX + gismo.originalWidth - gismo.minWidth
+
+            if (!(up && right) && (down || right)) gismo.y = gismo.originalY
+            else gismo.y = gismo.originalY + gismo.originalHeight - gismo.height
+        }
+        function resize_minHeight(up, left, right, down) {
+            //console.log("MIN HEIGHT > " + gismo.height)
+
+            gismo.height = gismo.minHeight
+            if (gismo.arLock) gismo.width = Math.ceil(gismo.minHeight * gismo.arFloat)
+
+            if (!(up && right) && (down || right)) gismo.y = gismo.originalY
+            else gismo.y = gismo.originalY + gismo.originalHeight - gismo.minHeight
+
+            if (!(down && left) && (down || right)) gismo.x = gismo.originalX
+            else gismo.x = gismo.originalX + gismo.originalWidth - gismo.width
         }
     }
 }
