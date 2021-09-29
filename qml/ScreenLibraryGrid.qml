@@ -239,9 +239,7 @@ Item {
                 property bool cbinit: false
                 onCurrentIndexChanged: {
                     if (cbinit) {
-                        mediaGrid.exitSelectionMode()
-                        shotsView.currentIndex = -1
-                        actionMenu.visible = false
+                        clearGridViewSettings()
 
                         var currentName = cbShotsOrderby.get(currentIndex).text
                         if (currentName === qsTr("Date")) {
@@ -309,9 +307,7 @@ Item {
                 property bool cbinit: false
                 onCurrentIndexChanged: {
                     if (cbinit) {
-                        mediaGrid.exitSelectionMode()
-                        shotsView.currentIndex = -1
-                        actionMenu.visible = false
+                        clearGridViewSettings()
 
                         mediaLibrary.filterByType(cbMediaFilters.get(currentIndex).text)
 

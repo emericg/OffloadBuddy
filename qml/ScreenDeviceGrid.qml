@@ -159,9 +159,7 @@ Item {
     }
 
     function initGridViewSettings() {
-        actionMenu.visible = false
-        shotsView.currentIndex = -1
-        mediaGrid.exitSelectionMode()
+        clearGridViewSettings()
 
         if (typeof currentDevice === "undefined" || !currentDevice) return
         //console.log("ScreenDeviceGrid.initGridViewSettings() [device "+ currentDevice + "]
@@ -181,7 +179,6 @@ Item {
         actionMenu.visible = false
         shotsView.currentIndex = -1
         mediaGrid.exitSelectionMode()
-        deviceSavedState.selectedIndex = -1
     }
 
     function updateGridViewSettings() {
@@ -384,9 +381,7 @@ Item {
                 property bool cbinit: false
                 onCurrentIndexChanged: {
                     if (cbinit) {
-                        mediaGrid.exitSelectionMode()
-                        shotsView.currentIndex = -1
-                        actionMenu.visible = false
+                        clearGridViewSettings()
 
                         var currentName = cbShotsOrderby.get(currentIndex).text
                         if (currentName === qsTr("Date")) {
@@ -455,9 +450,7 @@ Item {
                 property bool cbinit: false
                 onCurrentIndexChanged: {
                     if (cbinit) {
-                        mediaGrid.exitSelectionMode()
-                        shotsView.currentIndex = -1
-                        actionMenu.visible = false
+                        clearGridViewSettings()
 
                         currentDevice.filterByType(cbMediaFilters.get(currentIndex).text)
 
@@ -877,6 +870,7 @@ Item {
                 propagateComposedEvents: false
                 onClicked: {
                     shotsView.currentIndex = -1
+                    deviceSavedState.selectedIndex = -1
                     actionMenu.visible = false
                 }
             }
