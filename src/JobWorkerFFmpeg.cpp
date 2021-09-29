@@ -194,6 +194,13 @@ void JobWorkerFFmpeg::queueWork_merge(JobTracker *job)
         {
             JobElement *element = job->getElement(i);
 
+            // Make sure the shot has at least two files to merge...
+            if (element->parent_shot->getFileCount() < 2)
+            {
+                job->setState(JobUtils::JOB_STATE_ERRORED);
+                continue;
+            }
+
             // telemetry extraction ////////////////////////////////////////////
 
             element->parent_shot->parseTelemetry();

@@ -418,6 +418,8 @@ Popup {
                 id: buttonMerge
                 anchors.verticalCenter: parent.verticalCenter
 
+                enabled: (shots_files.length > 1)
+
                 text: qsTr("Merge")
                 source: "qrc:/assets/icons_material/baseline-merge_type-24px.svg"
                 fullColor: true
