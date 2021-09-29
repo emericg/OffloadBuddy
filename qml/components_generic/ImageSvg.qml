@@ -7,30 +7,29 @@ Item {
     implicitHeight: 32
 
     property alias source: sourceImg.source
-    property string color
-
-    property alias smooth: sourceImg.smooth
+    property alias color: overlayImg.color
     property alias fillMode: sourceImg.fillMode
     property alias asynchronous: sourceImg.asynchronous
+    property alias smooth: sourceImg.smooth
 
     Image {
         id: sourceImg
         anchors.fill: parent
+
         visible: parent.color ? false : true
-
         sourceSize: Qt.size(width, height)
-
-        smooth: false
         fillMode: Image.PreserveAspectFit
         asynchronous: false
+        smooth: false
     }
 
     ColorOverlay {
-        source: sourceImg
+        id: overlayImg
         anchors.fill: sourceImg
-        visible: parent.color ? true : false
 
-        cached: true
+        visible: parent.color ? true : false
+        source: sourceImg
         color: parent.color
+        cached: true
     }
 }
