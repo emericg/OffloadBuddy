@@ -1,5 +1,5 @@
 // UtilsMedia.js
-// Version 2
+// Version 3
 .pragma library
 
 /* ************************************************************************** */
@@ -232,88 +232,6 @@ function framerateToString(framerate) {
 /* ************************************************************************** */
 
 /*!
- * orientationExifToString()
- *
- * Convert EXIF orientation enumeration to a readable string
- */
-function orientationExifToString(orientation) {
-    var text = '';
-
-    if (orientation === 2)
-        text = qsTr("Mirror horizontal");
-    else if (orientation === 3)
-        text = qsTr("Rotate 180°");
-    else if (orientation === 4)
-        text = qsTr("Mirror vertical");
-    else if (orientation === 5)
-        text = qsTr("Mirror horizontal and rotate 270°");
-    else if (orientation === 6)
-        text = qsTr("Rotate 90°");
-    else if (orientation === 7)
-        text = qsTr("Mirror horizontal and rotate 90");
-    else if (orientation === 8)
-        text = qsTr("Rotate 270°");
-    else
-        text = qsTr("No transformation");
-
-    return text;
-}
-
-/*!
- * orientationQtToString()
- *
- * Convert Qt QImageIOHandler::Transformation enumeration to a readable string
- */
-function orientationQtToString(orientation) {
-    var text = '';
-
-    if (orientation === 1)
-        text = qsTr("Mirror");
-    else if (orientation === 2)
-        text = qsTr("Flip");
-    else if (orientation === 3)
-        text = qsTr("Rotate 180°");
-    else if (orientation === 4)
-        text = qsTr("Rotate 90°");
-    else if (orientation === 5)
-        text = qsTr("Mirror and rotate 90°");
-    else if (orientation === 6)
-        text = qsTr("Flip and rotate 90°");
-    else if (orientation === 7)
-        text = qsTr("Rotate 270°");
-    else
-        text = qsTr("No transformation");
-
-    return text;
-}
-
-/*!
- * orientationMp4ToString()
- *
- * Convert MP4 rotation enumeration to a readable string
- */
-function orientationMp4ToString(rotation) {
-    var text = '';
-
-    if (rotation > 0) {
-        if (rotation === 1)
-            text = qsTr("Rotate 90°");
-        else if (rotation === 2)
-            text = qsTr("Rotate 180°");
-        else if (rotation === 3)
-            text = qsTr("Rotate 270°");
-        else
-            text = qsTr("Unknown rotation");
-    } else {
-        text = qsTr("No rotation");
-    }
-
-    return text;
-}
-
-/* ************************************************************************** */
-
-/*!
  * projectionToString()
  */
 function projectionToString(proj) {
@@ -350,6 +268,181 @@ function scanmodeToString(scanmode) {
         scanmode_string = qsTr("interlaced");
 
     return scanmode_string;
+}
+
+/* ************************************************************************** */
+
+/*!
+ * orientationMp4ToString()
+ *
+ * Convert MP4 rotation enumeration to a readable string
+ */
+function orientationMp4ToString(rotation) {
+    var text = '';
+
+    if (rotation > 0) {
+        if (rotation === 1)
+            text = qsTr("Rotate 90°");
+        else if (rotation === 2)
+            text = qsTr("Rotate 180°");
+        else if (rotation === 3)
+            text = qsTr("Rotate 270°");
+        else
+            text = qsTr("Unknown rotation");
+    } else {
+        text = qsTr("No rotation");
+    }
+
+    return text;
+}
+
+/*!
+ * orientationExifToString()
+ *
+ * Convert EXIF orientation enumeration to a readable string.
+ * Rotations are clockwise.
+ */
+function orientationExifToString(orientation) {
+    var text = '';
+
+    if (orientation === 1)
+        text = qsTr("No transformation");
+    else if (orientation === 2)
+        text = qsTr("Mirror");
+    else if (orientation === 3)
+        text = qsTr("Rotate 180°");
+    else if (orientation === 4)
+        text = qsTr("Flip");
+    else if (orientation === 5)
+        text = qsTr("Mirror and rotate 270°");
+    else if (orientation === 6)
+        text = qsTr("Rotate 90°");
+    else if (orientation === 7)
+        text = qsTr("Mirror and rotate 90");
+    else if (orientation === 8)
+        text = qsTr("Rotate 270");
+    else
+        text = qsTr("Invalid transformation");
+
+    return text;
+}
+
+/*!
+ * orientationQtToString()
+ *
+ * Convert Qt QImageIOHandler::Transformation enumeration to a readable string.
+ * Rotations are clockwise.
+ */
+function orientationQtToString(orientation) {
+    var text = '';
+
+    if (orientation === 0)
+            text = qsTr("No transformation");
+    else if (orientation === 1)
+        text = qsTr("Mirror");
+    else if (orientation === 2)
+        text = qsTr("Flip");
+    else if (orientation === 3)
+        text = qsTr("Rotate 180°");
+    else if (orientation === 4)
+        text = qsTr("Rotate 90°");
+    else if (orientation === 5)
+        text = qsTr("Mirror and rotate 90°");
+    else if (orientation === 6)
+        text = qsTr("Flip and rotate 90°");
+    else if (orientation === 7)
+        text = qsTr("Rotate 270°");
+    else
+        text = qsTr("Invalid transformation");
+
+    return text;
+}
+
+/* ************************************************************************** */
+
+/*
+ * orientationToTransform_exif()
+ * 1 = Horizontal (default)
+ * 2 = Mirror
+ * 3 = Rotate 180
+ * 4 = Flip
+ * 5 = Flip and rotate 90 CW
+ * 6 = Rotate 90 CW // Rotate 270 CCW
+ * 7 = Mirror and rotate 90 CW
+ * 8 = Rotate 270 CW // Rotate 90 CCW
+ *
+ * rot: rotation in degree
+ * hflip: true if horizontal flip / mirror is applied
+ * vflip: true if vertical flip is applied
+ * return an EXIF enum
+ */
+function orientationToTransform_exif(rot, hflip, vflip) {
+    //console.log("orientationToTransform_exif(" + rot + "/" + hflip + "/" + vflip +")")
+
+    var transform = 0
+
+    // factorize unhandled cases
+    if (hflip && vflip) { rot += 180; rot %= 360; hflip = false; vflip = false; }
+    if (rot === 180 && hflip && !vflip) { rot = 0; hflip = false; vflip = true; }
+    if (rot === 270 && hflip && !vflip) { rot = 90; hflip = false; vflip = true; }
+    if (rot === 270 && !hflip && vflip) { rot = 90; hflip = true; vflip = false; }
+
+    if (rot === 0 && !hflip && !vflip)
+        transform = 1
+    else if (rot === 0 && hflip && !vflip)
+        transform = 2
+    else if (rot === 180 && !hflip && !vflip)
+        transform = 3
+    else if (rot === 0 && !hflip && vflip)
+        transform = 4
+    else if (rot === 90 && !hflip && vflip)
+        transform = 5
+    else if (rot === 90 && !hflip && !vflip)
+        transform = 6
+    else if (rot === 90 && hflip && !vflip)
+        transform = 7
+    else if (rot === 270 && !hflip && !vflip)
+        transform = 8
+
+    return transform
+}
+
+/*
+ * orientationToTransform_qt()
+ * - https://doc.qt.io/qt-5/qimageiohandler.html#Transformation-enum
+ *
+ * rot: rotation in degree
+ * hflip: true if horizontal flip / mirror is applied
+ * vflip: true if vertical flip is applied
+ * return an QImageIOHandler::Transformation enum
+ */
+function orientationToTransform_qt(rot, hflip, vflip) {
+    //console.log("orientationToTransform_qt(" + rot + "/" + hflip + "/" + vflip +")")
+
+    var transform = 0
+
+    // factorize unhandled cases
+    if (hflip && vflip) { rot += 180; rot %= 360; hflip = false; vflip = false; }
+    if (rot === 180 && hflip && !vflip) { rot = 0; hflip = false; vflip = true; }
+    if (rot === 270 && hflip && !vflip) { rot = 90; hflip = false; vflip = true; }
+    if (rot === 270 && !hflip && vflip) { rot = 90; hflip = true; vflip = false; }
+
+    if (rot === 0 && hflip && !vflip)
+        transform = 1
+    else if (rot === 0 && !hflip && vflip)
+        transform = 2
+    else if (rot === 180 && !hflip && !vflip)
+        transform = 3
+    else if (rot === 90 && !hflip && !vflip)
+        transform = 4
+    else if (rot === 90 && hflip && !vflip)
+        transform = 5
+    else if (rot === 90 && !hflip && vflip)
+        transform = 6
+    else if (rot === 270 && !hflip && !vflip)
+        transform = 7
+
+    return transform
 }
 
 /* ************************************************************************** */

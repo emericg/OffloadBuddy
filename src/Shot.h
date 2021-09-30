@@ -211,6 +211,8 @@ class Shot: public QObject
 
     Q_PROPERTY(unsigned width READ getWidth NOTIFY metadataUpdated)
     Q_PROPERTY(unsigned height READ getHeight NOTIFY metadataUpdated)
+    Q_PROPERTY(unsigned widthVisible READ getWidthVisible NOTIFY metadataUpdated)
+    Q_PROPERTY(unsigned heightVisible READ getHeightVisible NOTIFY metadataUpdated)
     Q_PROPERTY(unsigned transformation READ getTransformation NOTIFY metadataUpdated)
     Q_PROPERTY(int rotation READ getRotation NOTIFY metadataUpdated)
 
@@ -301,11 +303,13 @@ class Shot: public QObject
     // GLOBAL metadata
     unsigned width = 0;
     unsigned height = 0;
+    unsigned width_visible = 0;
+    unsigned height_visible = 0;
     unsigned bpp = 0;
     bool alpha = false;
     unsigned projection = 0;
     unsigned transformation = 0;    //!< QImageIOHandler::Transformation
-    int rotation = 0;
+    int rotation = 0; // internal use only
 
     // GPS "quick" metadata (from EXIF or first GPMF sample)
     QString gps_lat_str;
@@ -356,6 +360,7 @@ class Shot: public QObject
 
     bool getMetadataFromPicture(int index = 0);
     bool getMetadataFromVideo(int index = 0);
+    bool computeAdditionalMetadata();
 
     // USER SETTINGS ///////////////////////////////////////////////////////////
 
@@ -365,7 +370,8 @@ class Shot: public QObject
     Q_PROPERTY(int mediaPosition READ getUserMediaPosition WRITE setUserMediaPosition NOTIFY userSettingsUpdated)
     Q_PROPERTY(int trimStart READ getUserTrimStart WRITE setUserTrimStart NOTIFY userSettingsUpdated)
     Q_PROPERTY(int trimStop READ getUserTrimStop WRITE setUserTrimStop NOTIFY userSettingsUpdated)
-    Q_PROPERTY(int cropAR READ getUserCropAR WRITE setUserCropAR NOTIFY userSettingsUpdated)
+    Q_PROPERTY(int cropAR READ getUserCropARenum WRITE setUserCropARenum NOTIFY userSettingsUpdated)
+    Q_PROPERTY(float cropARfloat READ getUserCropARfloat NOTIFY userSettingsUpdated)
     Q_PROPERTY(bool cropARlock READ getUserCropARlock WRITE setUserCropARlock NOTIFY userSettingsUpdated)
     Q_PROPERTY(float cropX READ getUserCropX WRITE setUserCropX NOTIFY userSettingsUpdated)
     Q_PROPERTY(float cropY READ getUserCropY WRITE setUserCropY NOTIFY userSettingsUpdated)
@@ -449,10 +455,15 @@ class Shot: public QObject
         Q_EMIT userSettingsUpdated();
     }
 
-    int getUserCropAR() const { return m_user_cropAR; }
-    void setUserCropAR(const int ar) {
+    int getUserCropARenum() const { return m_user_cropAR; }
+    void setUserCropARenum(const int ar) {
         m_user_cropAR = ar;
         Q_EMIT userSettingsUpdated();
+    }
+    float getUserCropARfloat() const {
+        float ar = 1.f;
+        if (height_visible) ar = width_visible / static_cast<float>(height_visible);
+        return ar;
     }
     bool getUserCropARlock() const { return m_user_cropARlock; }
     void setUserCropARlock(const bool lock) {
@@ -664,6 +675,8 @@ public:
 
     unsigned getWidth() const { return width; }
     unsigned getHeight() const { return height; }
+    unsigned getWidthVisible() const { return width_visible; }
+    unsigned getHeightVisible() const { return height_visible; }
     unsigned getTransformation() const { return transformation; }
     int getRotation() const { return rotation; }
 

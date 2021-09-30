@@ -4,6 +4,7 @@ import QtQuick.Controls 2.12
 import ThemeEngine 1.0
 import ShotUtils 1.0
 import StorageUtils 1.0
+import "qrc:/js/UtilsMedia.js" as UtilsMedia
 import "qrc:/js/UtilsNumber.js" as UtilsNumber
 import "qrc:/js/UtilsString.js" as UtilsString
 import "qrc:/js/UtilsPath.js" as UtilsPath
@@ -202,16 +203,26 @@ Popup {
     }
 
     function setOrientation(rotation, hflip, vflip) {
-        //console.log("setOrientation() " + rotation + " " + vflip + " " + hflip)
+        //console.log("setOrientation() " + rotation + " " + hflip + " " + vflip)
 
-        if (rotation || vflip || hflip) {
+        if (rotation || hflip || vflip) {
+            if (shot.rotation) {
+                rotation -= shot.rotation
+            }
+            if (encodingMode === "image" && shot.transformation) {
+                if (hflip && !vflip) { hflip = false; vflip = true; }
+                if (!hflip && vflip) { hflip = true; vflip = false; }
+            }
+        }
+
+        if (rotation || hflip || vflip) {
             rectangleOrientation.visible = true
             clipRotation = rotation
-            clipVFlip = vflip
             clipHFlip = hflip
+            clipVFlip = vflip
 
-            clipTransformation_qt = mediaPreview.orientationToTransform_qt(rotation, hflip, vflip)
-            clipTransformation_exif = mediaPreview.orientationToTransform_exif(rotation, hflip, vflip)
+            clipTransformation_qt = UtilsMedia.orientationToTransform_qt(rotation, hflip, vflip)
+            clipTransformation_exif = UtilsMedia.orientationToTransform_exif(rotation, hflip, vflip)
         } else {
             rectangleOrientation.visible = false
             clipTransformation_qt = 0
@@ -225,20 +236,20 @@ Popup {
     function setCrop(x, y, width, height) {
         //console.log("setCrop() " + x + ":" + y + " " + width + "x" + height)
 
+        if (clipRotation === 0 || clipRotation === 180) {
+            clipCropX = Math.round(currentShot.width * x)
+            clipCropY = Math.round(currentShot.height * y)
+            clipCropW = Math.round(currentShot.width * width)
+            clipCropH = Math.round(currentShot.height * height)
+        } else if (clipRotation === 90 || clipRotation === 270) {
+            clipCropX = Math.round(currentShot.height * x)
+            clipCropY = Math.round(currentShot.width * y)
+            clipCropW = Math.round(currentShot.height * width)
+            clipCropH = Math.round(currentShot.width * height)
+        }
+
         if (currentShot && (x > 0.0 || y > 0.0 || width < 1.0 || height < 1.0)) {
             rectangleCrop.visible = true
-
-            if (clipRotation == 0 || clipRotation == 180) {
-                clipCropX = Math.round(currentShot.width * x)
-                clipCropY = Math.round(currentShot.height * y)
-                clipCropW = Math.round(currentShot.width * width)
-                clipCropH = Math.round(currentShot.height * height)
-            } else if (clipRotation == 90 || clipRotation == 270) {
-                clipCropX = Math.round(currentShot.height * x)
-                clipCropY = Math.round(currentShot.width * y)
-                clipCropW = Math.round(currentShot.height * width)
-                clipCropH = Math.round(currentShot.width * height)
-            }
 
             textField_cropCoord.text = clipCropX + ":" + clipCropY
             textField_cropSize.text = clipCropW + "x" + clipCropH
@@ -272,7 +283,7 @@ Popup {
                     textCodecHelp.text = qsTr("Almost lossless compression, so HUGE file size but very good quality and speed.")
                 } else if (rbGIF.checked) {
                     fileInput.extension = "gif"
-                    textCodecHelp.text = qsTr("The meme maker. Go nuts with this one \o/")
+                    textCodecHelp.text = qsTr("The meme maker. Go nuts with this one \\o/")
                 }
             }
         } else {
@@ -679,7 +690,7 @@ Popup {
                                     height: 32
                                     spacing: 32
 
-                                    property string selected: qsTr("slow")
+                                    property string selected: qsTr("medium")
                                     property int value: {
                                         if (selected === qsTr("slow")) return 1
                                         if (selected === qsTr("fast")) return 3
@@ -1648,13 +1659,6 @@ Popup {
                         if (clipStartMs <= 0) settingsEncoding["clipStartMs"] = 0;
                         if (clipDurationMs <= 0) settingsEncoding["clipDurationMs"] = currentShot.duration;
                         if (currentShot.shotType > ShotUtils.SHOT_PICTURE)settingsEncoding["clipDurationMs"] = currentShot.duration*33;
-
-                        if (clipCropX <= 0 && clipCropY <= 0 && clipCropW <= 0 && clipCropH <= 0) {
-                            if (clipRotation == 0 || clipRotation == 180)
-                                settingsEncoding["crop"] = currentShot.width + ":" + currentShot.height + ":" + 0 + ":" + 0
-                            else
-                                settingsEncoding["crop"] = currentShot.height + ":" + currentShot.width + ":" + 0 + ":" + 0
-                        }
 
                         // TODO // transform
 

@@ -4,6 +4,9 @@ import QtMultimedia 5.12 // Qt5
 //import QtMultimedia // Qt6
 
 import ThemeEngine 1.0
+import MediaUtils 1.0
+
+import "qrc:/js/UtilsMedia.js" as UtilsMedia
 import "qrc:/js/UtilsNumber.js" as UtilsNumber
 import "qrc:/js/UtilsString.js" as UtilsString
 
@@ -16,15 +19,10 @@ Item {
     focus: isFullScreen
 
     // keep that in UI
+    property string mode: ""
     property bool isFullScreen: false
     property bool isFullSize: false
-    property string mode: ""
     property int overlayHeight: overlays.height
-
-    // put that in shot
-    property int rotation: 0
-    property bool hflipped: false
-    property bool vflipped: false
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -49,10 +47,6 @@ Item {
         overlayTransform.anchors.topMargin = 16
 
         overlayTrim.visible = false
-
-        mediaArea.rotation = 0
-        mediaArea.hflipped = false
-        mediaArea.vflipped = false
 
         overlayCrop.editing = false
         overlayCrop.load()
@@ -211,9 +205,13 @@ Item {
         // Check if fullsize is necessary (preview is already maxed out)
         if (!mediaArea.isFullSize) {
             //console.log("Check if fullsize is necessary: " + (shot.width / shot.height) + " vs " + (mediaArea.width / mediaArea.height))
-            if ((shot.width / shot.height) < (mediaArea.width / mediaArea.height))
-                return;
-            // TODO if rotated
+            if (shot.userRotation === 0 || shot.userRotation === 180) {
+                if ((shot.width / shot.height) < (mediaArea.width / mediaArea.height))
+                    return;
+            } else {
+                if ((shot.height / shot.width) < (mediaArea.width / mediaArea.height))
+                    return;
+            }
         }
 
         // Set fullsize
@@ -247,18 +245,6 @@ Item {
 
     ////////
 
-    function computeTransformation() {
-        if (typeof shot === "undefined" || !shot) return
-        //console.log("computeTransformation(" + shot.transformation + ")")
-
-        transformToOrientation_qt(shot.transformation)
-
-        if (hflipped) setFlip("horizontal")
-        else if (vflipped) setFlip("vertical")
-        else setFlip("")
-        setRotation(rotation)
-    }
-
     function computeOverlaySize() {
         if (typeof shot === "undefined" || !shot) return
         //console.log("computeOverlaySize()")
@@ -273,7 +259,7 @@ Item {
         }
 
         // rotated?
-        if (mediaArea.rotation === 90 || mediaArea.rotation === 270) {
+        if (shot.userRotation === 90 || shot.userRotation === 270) {
             var tmp = mediaWidth
             mediaWidth = mediaHeight
             mediaHeight = tmp
@@ -307,164 +293,71 @@ Item {
     }
 
     Matrix4x4 { id: noflip; matrix: Qt.matrix4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1) }
-    Matrix4x4 { id: vflip; matrix: Qt.matrix4x4(-1, 0, 0, output.width, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1) }
-    Matrix4x4 { id: hflip; matrix: Qt.matrix4x4(1, 0, 0, 0, 0, -1, 0, output.height, 0, 0, 1, 0, 0, 0, 0, 1) }
+    Matrix4x4 { id: hflip; matrix: Qt.matrix4x4(-1, 0, 0, output.width, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1) }
+    Matrix4x4 { id: vflip; matrix: Qt.matrix4x4(1, 0, 0, 0, 0, -1, 0, output.height, 0, 0, 1, 0, 0, 0, 0, 1) }
     Matrix4x4 { id: vhflip; matrix: Qt.matrix4x4(-1, 0, 0, output.width, 0, -1, 0, output.height, 0, 0, 1, 0, 0, 0, 0, 1) }
 
-    function setFlip(value) {
-        if (typeof shot === "undefined" || !shot) return
-        //console.log("setflip(" + value + ")")
-
-        if (value === "vertical")
-            mediaArea.vflipped = !mediaArea.vflipped
-        else if (value === "horizontal")
-            mediaArea.hflipped = !mediaArea.hflipped
-
-        if (mediaArea.vflipped && mediaArea.hflipped)
+    function computeTransformation() {
+        if (shot.userVFlipped && shot.userHFlipped)
             output.transform = vhflip
-        else if (mediaArea.vflipped)
+        else if (shot.userVFlipped)
             output.transform = vflip
-        else if (mediaArea.hflipped)
+        else if (shot.userHFlipped)
             output.transform = hflip
         else
             output.transform = noflip
+    }
+
+    function setTransformation(value) {
+        if (typeof shot === "undefined" || !shot) return
+        //console.log("setTransformation(" + value + ")")
+
+        if (value === "flip") {
+            shot.userVFlipped = !shot.userVFlipped
+        } else if (value === "mirror") {
+            shot.userHFlipped = !shot.userHFlipped
+        }
+
+        computeTransformation()
+    }
+
+    function resetTransformation() {
+        if (typeof shot === "undefined" || !shot) return
+        //console.log("resetTransformation(" + shot.transformation + ")")
+
+        transformToOrientation_qt(shot.transformation)
+        computeTransformation()
+        computeOverlaySize()
     }
 
     function addRotation(value) {
         if (typeof shot === "undefined" || !shot) return
         //console.log("addRotation(" + value + ")")
 
-        mediaArea.rotation += value
-        mediaArea.rotation = UtilsNumber.mod(mediaArea.rotation, 360)
+        shot.userRotation += value
+        shot.userRotation = UtilsNumber.mod(shot.userRotation, 360)
 
-        output.rotation = mediaArea.rotation
-
-        // flip overlayCrop
-        if (mediaArea.rotation === 90 || mediaArea.rotation === 270) {
-            if (overlayCrop.projectAR == 4/3) overlayCrop.projectAR = 3/4
-            else if (overlayCrop.projectAR == 16/9) overlayCrop.projectAR = 9/16
-            else if (overlayCrop.projectAR == 21/9) overlayCrop.projectAR = 9/21
+        // rotate overlayCrop // TODO move it 'naturaly' too?
+        if (shot.userRotation === 90 || shot.userRotation === 270) {
+            if (shot.cropAR === MediaUtils.AspectRatio_4_3) shot.cropAR = MediaUtils.AspectRatio_3_4
+            else if (shot.cropAR === MediaUtils.AspectRatio_16_9) shot.cropAR = MediaUtils.AspectRatio_9_16
+            else if (shot.cropAR === MediaUtils.AspectRatio_21_9) shot.cropAR = MediaUtils.AspectRatio_9_21
         } else {
-            if (overlayCrop.projectAR == 3/4) overlayCrop.projectAR = 4/3
-            else if (overlayCrop.projectAR == 9/16) overlayCrop.projectAR = 16/9
-            else if (overlayCrop.projectAR == 9/21) overlayCrop.projectAR = 21/9
-        }
-
-        // TODO // rotate overlayCrop instead?
-        mediaArea.cropX = 0.0
-        mediaArea.cropY = 0.0
-        mediaArea.cropW = 1.0
-        mediaArea.cropH = 1.0
-
-        computeOverlaySize()
-    }
-
-    function setRotation(value) {
-        if (typeof shot === "undefined" || !shot) return
-        //console.log("setRotation(" + value + ")")
-
-        mediaArea.rotation = value
-        mediaArea.rotation = UtilsNumber.mod(mediaArea.rotation, 360)
-
-        output.rotation = mediaArea.rotation
-
-        // flip overlayCrop
-        if (mediaArea.rotation === 90 || mediaArea.rotation === 270) {
-            if (overlayCrop.projectAR == 4/3) overlayCrop.projectAR = 3/4
-            else if (overlayCrop.projectAR == 16/9) overlayCrop.projectAR = 9/16
-            else if (overlayCrop.projectAR == 21/9) overlayCrop.projectAR = 9/21
-        } else {
-            if (overlayCrop.projectAR == 3/4) overlayCrop.projectAR = 4/3
-            else if (overlayCrop.projectAR == 9/16) overlayCrop.projectAR = 16/9
-            else if (overlayCrop.projectAR == 9/21) overlayCrop.projectAR = 21/9
+            if (shot.cropAR === MediaUtils.AspectRatio_3_4) shot.cropAR = MediaUtils.AspectRatio_4_3
+            else if (shot.cropAR === MediaUtils.AspectRatio_9_16) shot.cropAR = MediaUtils.AspectRatio_16_9
+            else if (shot.cropAR === MediaUtils.AspectRatio_9_21) shot.cropAR = MediaUtils.AspectRatio_21_9
         }
 
         computeOverlaySize()
     }
 
-    function transformToOrientation_exif(transform) {
-        //console.log("transformToOrientation_exif(" + transform +")")
-        // EXIF transformation > rotation, horizontal flip, vertical flip
-
-        if (transform <= 1) {
-            hflipped = false
-            vflipped = false
-            rotation = 0
-        } else if (transform === 2) {
-            hflipped = true
-            vflipped = false
-            rotation = 0
-        } else if (transform === 3) {
-            hflipped = false
-            vflipped = false
-            rotation = 180
-        } else if (transform === 4) {
-            hflipped = false
-            vflipped = true
-            rotation = 0
-        } else if (transform === 5) {
-            hflipped = true
-            vflipped = false
-            rotation = 270
-        } else if (transform === 6) {
-            hflipped = false
-            vflipped = false
-            rotation = 90
-        } else if (transform === 7) {
-            hflipped = true
-            vflipped = false
-            rotation = 90
-        } else if (transform === 8) {
-            hflipped = false
-            vflipped = false
-            rotation = 270
-        } else {
-            console.log("transformToOrientation_exif() unknown transformation: " + transform)
-            hflipped = false
-            vflipped = false
-            rotation = 0
-        }
-    }
-    function orientationToTransform_exif(rot, hflip, vflip) {
-        //console.log("orientationToTransform_exif(" + rot + "/" + hflip + "/" + vflip +")")
-        // rotation, horizontal flip, vertical flip > EXIF transformation
-
-        var transform = 0
-
-        if (hflip && vflip) {
-            rot += 180
-            rot %= 360
-            hflip = false
-            vflip = false
-        }
-        if (rot === 270) {
-            //if (hflip && hflip) { rot = 90; hflip = false; vflip = false; }
-            if (hflip) { rot = 90; hflip = false; vflip = true; }
-            else if (vflip) { rot = 90; hflip = true; vflip = false; }
-        }
-
-        if (rot === 0 && !hflip && !vflip)
-            transform = 1
-        else if (rot === 0 && hflip && !vflip)
-            transform = 2
-        else if (rot === 180 && !hflip && !vflip)
-            transform = 3
-        else if (rot === 0 && !hflip && vflip)
-            transform = 4
-        else if (rot === 270 && hflip && !vflip)
-            transform = 5
-        else if (rot === 90 && !hflip && !vflip)
-            transform = 6
-        else if (rot === 90 && hflip && !vflip)
-            transform = 7
-        else if (rot === 270 && !hflip && !vflip)
-            transform = 8
-
-        return transform
-    }
     function transformToOrientation_qt(transform) {
         //console.log("transformToOrientation_qt(" + transform +")")
         // QImageIOHandler::Transformation > rotation, horizontal flip, vertical flip
+
+        var hflipped = false
+        var vflipped = false
+        var rotation = 0
 
         if (transform <= 0) {
             hflipped = false
@@ -504,40 +397,10 @@ Item {
             vflipped = false
             rotation = 0
         }
-    }
-    function orientationToTransform_qt(rot, hflip, vflip) {
-        //console.log("orientationToTransform_qt(" + rot + "/" + hflip + "/" + vflip +")")
-        // rotation, horizontal flip, vertical flip > QImageIOHandler::Transformation
-        var transform = 0
 
-        if (hflip && vflip) {
-            rot += 180
-            rot %= 360
-            hflip = false
-            vflip = false
-        }
-        if (rot === 270) {
-            //if (hflip && hflip) { rot = 90; hflip = false; vflip = false; }
-            if (hflip) { rot = 90; hflip = false; vflip = true; }
-            else if (vflip) { rot = 90; hflip = true; vflip = false; }
-        }
-
-        if (rot === 0 && hflip && !vflip)
-            transform = 1
-        else if (rot === 0 && !hflip && vflip)
-            transform = 2
-        else if (rot === 180 && !hflip && !vflip)
-            transform = 3
-        else if (rot === 90 && !hflip && !vflip)
-            transform = 4
-        else if (rot === 90 && hflip && !vflip)
-            transform = 5
-        else if (rot === 90 && !hflip && vflip)
-            transform = 6
-        else if (rot === 270 && !hflip && !vflip)
-            transform = 7
-
-        return transform
+        shot.userRotation = rotation
+        shot.userHFlipped = hflipped
+        shot.userVFlipped = vflipped
     }
 
     onWidthChanged: computeOverlaySize()
@@ -577,7 +440,8 @@ Item {
         id: output
         anchors.fill: overlays
 
-        property bool rotated: (mediaArea.rotation === 90 || mediaArea.rotation === 270)
+        property bool rotated: (shot.userRotation === 90 || shot.userRotation === 270)
+        rotation: shot.userRotation
 
         Image {
             id: imageOutput
@@ -593,8 +457,8 @@ Item {
         }
         VideoOutput {
             id: videoOutput
-            width: !output.rotated ? output.width : output.height
-            height: !output.rotated ? output.height : output.width
+            width: output.rotated ? output.height : output.width
+            height: output.rotated ? output.width : output.height
             anchors.centerIn: parent
 
             //autoOrientation: false // doesn't work anyway
@@ -662,20 +526,12 @@ Item {
             //console.log("onPlaylistChanged()")
             videoPlayer.isRunning = false
             mediaBanner.close()
-
-            mediaArea.hflipped = false
-            mediaArea.vflipped = false
-            mediaArea.rotation = 0
             overlayCrop.load()
         }
         onSourceChanged: {
             //console.log("onSourceChanged(" + source + ")")
             videoPlayer.isRunning = false
             mediaBanner.close()
-
-            mediaArea.hflipped = false
-            mediaArea.vflipped = false
-            mediaArea.rotation = 0
             overlayCrop.load()
         }
         onVolumeChanged: {
@@ -797,7 +653,7 @@ Item {
                 highlightColor: "green"
                 highlightMode: "color"
 
-                visible: orientationToTransform_qt(mediaArea.rotation, mediaArea.hflipped, mediaArea.vflipped) !== shot.transformation
+                visible: UtilsMedia.orientationToTransform_qt(shot.userRotation, shot.userHFlipped, shot.userVFlipped) !== shot.transformation
                 source: "qrc:/assets/icons_material/baseline-save-24px.svg"
                 //onClicked: shot.saveRotation(angle)
             }
@@ -808,13 +664,13 @@ Item {
                 backgroundColor: "#222"
                 highlightMode: "color"
 
-                visible: orientationToTransform_qt(mediaArea.rotation, mediaArea.hflipped, mediaArea.vflipped) !== shot.transformation
+                visible: UtilsMedia.orientationToTransform_qt(shot.userRotation, shot.userHFlipped, shot.userVFlipped) !== shot.transformation
                 source: "qrc:/assets/icons_material/baseline-close-24px.svg"
-                onClicked: computeTransformation()
+                onClicked: resetTransformation()
             }
             ItemImageButton {
                 //id: buttonRotateLeft
-                iconColor: (mediaArea.rotation >= 180) ? Theme.colorPrimary : "white"
+                iconColor: (shot.userRotation >= 180) ? Theme.colorPrimary : "white"
                 background: true
                 backgroundColor: "#222"
                 highlightMode: "color"
@@ -824,7 +680,7 @@ Item {
             }
             ItemImageButton {
                 //id: buttonRotateRight
-                iconColor: (mediaArea.rotation > 0 && mediaArea.rotation <= 180) ? Theme.colorPrimary : "white"
+                iconColor: (shot.userRotation > 0 && shot.userRotation <= 180) ? Theme.colorPrimary : "white"
                 background: true
                 backgroundColor: "#222"
                 highlightMode: "color"
@@ -833,25 +689,25 @@ Item {
                 onClicked: mediaArea.addRotation(+90)
             }
             ItemImageButton {
-                //id: buttonFlipV
-                iconColor: (mediaArea.vflipped) ? Theme.colorPrimary : "white"
+                //id: buttonMirror
+                iconColor: (shot.userHFlipped) ? Theme.colorPrimary : "white"
                 background: true
                 backgroundColor: "#222"
                 highlightMode: "color"
 
                 source: "qrc:/assets/icons_material/baseline-flip-24px.svg"
-                onClicked: mediaArea.setFlip("vertical")
+                onClicked: mediaArea.setTransformation("mirror")
             }
             ItemImageButton {
-                //id: buttonFlipH
+                //id: buttonFlip
                 rotation: 90
-                iconColor: (mediaArea.hflipped) ? Theme.colorPrimary : "white"
+                iconColor: (shot.userVFlipped) ? Theme.colorPrimary : "white"
                 background: true
                 backgroundColor: "#222"
                 highlightMode: "color"
 
                 source: "qrc:/assets/icons_material/baseline-flip-24px.svg"
-                onClicked: mediaArea.setFlip("horizontal")
+                onClicked: mediaArea.setTransformation("flip")
             }
         }
 
@@ -1303,15 +1159,34 @@ Item {
                         screenshotParams["mode"] = "screenshot"
                         screenshotParams["folder"] = shot.folder
                         screenshotParams["image_codec"] = "JPEG"
-                        screenshotParams["quality"] = 85
+                        screenshotParams["quality"] = 90
                         screenshotParams["clipStartMs"] = videoPlayer.position
 
+                        var rotation = shot.userRotation
+                        var hflip = shot.userHFlipped
+                        var vflip = shot.userVFlipped
+                        if (shot.userRotation || shot.userHFlipped || shot.userVFlipped) {
+                            if (shot.rotation) rotation -= shot.rotation
+                            if (shot.transformation) {
+                                if (hflip && !vflip) { hflip = false; vflip = true; }
+                                if (!hflip && vflip) { hflip = true; vflip = false; }
+                            }
+                            if (rotation || hflip || vflip) {
+                                screenshotParams["transform"] = UtilsMedia.orientationToTransform_exif(rotation, hflip, vflip)
+                            }
+                        }
                         if (shot.cropX > 0.0 || shot.cropY > 0.0 ||
                             shot.cropW < 1.0 || shot.cropH < 1.0) {
                             var clipCropX = Math.round(shot.width * shot.cropX)
                             var clipCropY = Math.round(shot.height * shot.cropY)
                             var clipCropW = Math.round(shot.width * shot.cropW)
                             var clipCropH = Math.round(shot.height * shot.cropH)
+                            if (shot.userRotation === 90 || shot.userRotation === 270) {
+                                clipCropX = Math.round(shot.height * shot.cropX)
+                                clipCropY = Math.round(shot.width * shot.cropY)
+                                clipCropW = Math.round(shot.height * shot.cropW)
+                                clipCropH = Math.round(shot.width * shot.cropH)
+                            }
                             screenshotParams["crop"] = clipCropW + ":" + clipCropH + ":" + clipCropX + ":" + clipCropY
                         }
 

@@ -11,17 +11,7 @@ Item {
     implicitWidth: 720
     implicitHeight: 720
     anchors.fill: parent
-/*
-    onWidthChanged: {
-        gismo.restoreCoord()
-    }
-    onHeightChanged: {
-        gismo.restoreCoord()
-    }
-    Component.onCompleted: {
-        gismo.restoreCoord()
-    }
-*/
+
     property bool editing: false
     property string grid: "rulesofthree"
 
@@ -60,6 +50,24 @@ Item {
         shot.cropH = gismo.fheight
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+/*
+    onWidthChanged: {
+        gismo.restoreCoord()
+    }
+    onHeightChanged: {
+        gismo.restoreCoord()
+    }
+    Component.onCompleted: {
+        gismo.restoreCoord()
+    }
+    Connections {
+        target: shot
+        userSettingsUpdated: {
+            //
+        }
+    }
+*/
     ////////////////////////////////////////////////////////////////////////////
 
     Rectangle {

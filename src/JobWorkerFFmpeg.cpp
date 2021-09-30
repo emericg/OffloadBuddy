@@ -347,6 +347,7 @@ void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
 
             ptiwrap->arguments << "-y";
             //ptiwrap->arguments << "-loglevel" << "warning" << "-stats";
+            //ptiwrap->arguments << "-noautorotate";
 
             //// INPUTS
 
@@ -535,26 +536,27 @@ void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
                     // Transformations (from GUI)
                     if (job->settings_encode.transform > 1)
                     {
-                        // job->settings_encode.transform
-                        //1 = Horizontal (normal)
-                        //2 = Mirror horizontal
-                        //3 = Rotate 180
-                        //4 = Mirror vertical
-                        //5 = Mirror horizontal and rotate 270 CW
-                        //6 = Rotate 90 CW
-                        //7 = Mirror horizontal and rotate 90 CW
-                        //8 = Rotate 270 CW
+                        // EXIF from job->settings_encode.transform:
+                        // 1 = Horizontal (default)
+                        // 2 = Mirror
+                        // 3 = Rotate 180
+                        // 4 = Flip
+                        // 5 = Flip and rotate 90 CW
+                        // 6 = Rotate 90 CW // Rotate 270 CCW
+                        // 7 = Mirror and rotate 90 CW
+                        // 8 = Rotate 270 CW // Rotate 90 CCW
 
-                        // ffmpeg transpose filter // http://ffmpeg.org/ffmpeg-all.html#transpose-1
-                        //0 = 90CounterCLockwise and Vertical Flip (default)
-                        //1 = 90Clockwise
-                        //2 = 90CounterClockwise
-                        //3 = 90Clockwise and Vertical Flip
-                        //-vf "transpose=2,transpose=2" for 180 degrees.
+                        // ffmpeg transpose filter:
+                        // http://ffmpeg.org/ffmpeg-all.html#transpose-1
+                        // 0 = 90CounterCLockwise and Vertical Flip (default)
+                        // 1 = 90Clockwise
+                        // 2 = 90CounterClockwise
+                        // 3 = 90Clockwise and Vertical Flip
+                        // -vf "transpose=2,transpose=2" for 180 degrees.
 
-                        // ffmpeg metadata
-                        //-metadata:s:v rotate=""
-                        //-noautorotate
+                        // ffmpeg metadata:
+                        //-noautorotate // force the use of metadata instead of proper geometry rotation
+                        //-metadata:s:v rotate="" // force the metadata rotation value
 
                         QString rf = "";
                         if (job->settings_encode.transform == 2)

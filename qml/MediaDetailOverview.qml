@@ -21,9 +21,6 @@ Item {
     function toggleFullScreen() { mediaPreview.toggleFullScreen() }
 
     function updateOverview() {
-        date.text = shot.date.toUTCString()
-        size.text = UtilsString.bytesToString_short(shot.datasize)
-        definition.text = shot.width + "x" + shot.height + "   (" + UtilsMedia.varToString(shot.width, shot.height) + ")"
 
         // FILE_PICTURE
         if (shot.fileType === ShotUtils.FILE_PICTURE) {
@@ -38,9 +35,6 @@ Item {
             } else {
                 labelDuration.visible = false
             }
-
-            labelOrientation.visible = (shot.transformation)
-            orientation.text = UtilsMedia.orientationQtToString(shot.transformation)
 
             if ((!shot.iso || (shot.iso && shot.iso.length === 0)) &&
                 (!shot.focal || (shot.focal && shot.focal.length === 0)) &&
@@ -71,9 +65,6 @@ Item {
 
             labelChapters.visible = (shot.chapterCount > 1)
             chapters.text = shot.chapterCount + qsTr(" chapters")
-
-            labelOrientation2.visible = (shot.transformation)
-            orientation2.text = UtilsMedia.orientationQtToString(shot.transformation)
 
             labelDuration.visible = true
             duration.text = UtilsString.durationToString_short(shot.duration)
@@ -132,12 +123,12 @@ Item {
 
          // v2
         popupEncoding.setClip(shot.trimStart, shot.trimStop)
-        //popupEncoding.setOrientation(shot.userRotation, shot.userHFlipped, shot.userVFlipped)
+        popupEncoding.setOrientation(shot.userRotation, shot.userHFlipped, shot.userVFlipped)
         popupEncoding.setCrop(shot.cropX, shot.cropY, shot.cropW, shot.cropH)
 
         // v1
         //popupEncoding.setClip(mediaPreview.startLimit, mediaPreview.stopLimit)
-        popupEncoding.setOrientation(mediaPreview.rotation, mediaPreview.hflipped, mediaPreview.vflipped)
+        //popupEncoding.setOrientation(mediaPreview.rotation, mediaPreview.hflipped, mediaPreview.vflipped)
         //popupEncoding.setCrop(mediaPreview.cropX, mediaPreview.cropY, mediaPreview.cropW, mediaPreview.cropH)
 
         if (appContent.state === "library") {
@@ -260,11 +251,10 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: shot.location
-                    verticalAlignment: Text.AlignVCenter
-                    //horizontalAlignment: Text.AlignRight
-                    font.pixelSize: Theme.fontSizeContentSmall
-                    color: Theme.colorText
                     wrapMode: Text.WordWrap
+                    color: Theme.colorText
+                    font.pixelSize: Theme.fontSizeContentSmall
+                    verticalAlignment: Text.AlignVCenter
                 }
             }
 
@@ -279,14 +269,16 @@ Item {
                 Text {
                     id: date
                     height: 28
+                    width: infosGenericCol.width-48
                     anchors.left: parent.right
                     anchors.leftMargin: 16
-
-                    color: Theme.colorText
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignLeft
                     anchors.verticalCenter: parent.verticalCenter
+
+                    text: shot.date.toUTCString()
+                    wrapMode: Text.WordWrap
+                    color: Theme.colorText
                     font.pixelSize: Theme.fontSizeContentSmall
+                    verticalAlignment: Text.AlignVCenter
                 }
             }
 
@@ -301,14 +293,13 @@ Item {
                 Text {
                     id: duration
                     height: 28
-                    anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.right
                     anchors.leftMargin: 16
-                    horizontalAlignment: Text.AlignRight
+                    anchors.verticalCenter: parent.verticalCenter
 
-                    verticalAlignment: Text.AlignVCenter
                     color: Theme.colorText
                     font.pixelSize: Theme.fontSizeContentSmall
+                    verticalAlignment: Text.AlignVCenter
                 }
             }
 
@@ -329,10 +320,9 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: shot.camera
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignLeft
-                    font.pixelSize: Theme.fontSizeContentSmall
                     color: Theme.colorText
+                    font.pixelSize: Theme.fontSizeContentSmall
+                    verticalAlignment: Text.AlignVCenter
                 }
             }
 
@@ -351,10 +341,10 @@ Item {
                     anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
 
+                    text: UtilsString.bytesToString_short(shot.datasize)
                     color: Theme.colorText
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignRight
                     font.pixelSize: Theme.fontSizeContentSmall
+                    verticalAlignment: Text.AlignVCenter
                 }
             }
 
@@ -373,14 +363,82 @@ Item {
                     anchors.leftMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
 
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignRight
-                    font.pixelSize: Theme.fontSizeContentSmall
                     color: Theme.colorText
+                    font.pixelSize: Theme.fontSizeContentSmall
+                    verticalAlignment: Text.AlignVCenter
                 }
             }
 
             ////////////////
+
+            Item { width: 16; height: 16; } // spacer
+
+            ImageSvg {
+                id: labelDefinitionInternal
+                width: 28
+                height: 28
+
+                source: "qrc:/assets/icons_material/duotone-aspect_ratio-24px.svg"
+                color: Theme.colorText
+                visible: (shot.width === shot.widthVisible)
+
+                Text {
+                    height: 28
+                    anchors.left: parent.right
+                    anchors.leftMargin: 16
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: shot.width + "x" + shot.height + "   (" + UtilsMedia.varToString(shot.width, shot.height) + ")"
+                    color: Theme.colorText
+                    font.pixelSize: Theme.fontSizeContentSmall
+                    verticalAlignment: Text.AlignVCenter
+                }
+            }
+
+            ImageSvg {
+                id: labelDefinitionVisible
+                width: 28
+                height: 28
+
+                source: "qrc:/assets/icons_material/duotone-aspect_ratio-24px.svg"
+                color: Theme.colorText
+                visible: (shot.width !== shot.widthVisible)
+
+                Text {
+                    height: 28
+                    anchors.left: parent.right
+                    anchors.leftMargin: 16
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: shot.widthVisible + "x" + shot.heightVisible + "  (" + UtilsMedia.varToString(shot.widthVisible, shot.heightVisible) + ")  [rotated]"
+                    color: Theme.colorText
+                    font.pixelSize: Theme.fontSizeContentSmall
+                    verticalAlignment: Text.AlignVCenter
+                }
+            }
+
+            ImageSvg {
+                id: labelOrientation
+                width: 28
+                height: 28
+
+                source: "qrc:/assets/icons_material/duotone-rotate_90_degrees_ccw-24px.svg"
+                color: Theme.colorText
+                visible: (shot.transformation)
+
+                Text {
+                    id: orientation
+                    height: 28
+                    anchors.left: parent.right
+                    anchors.leftMargin: 16
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: UtilsMedia.orientationQtToString(shot.transformation)
+                    color: Theme.colorText
+                    font.pixelSize: Theme.fontSizeContentSmall
+                    verticalAlignment: Text.AlignVCenter
+                }
+            }
 
             Column {
                 id: infosPicture
@@ -390,53 +448,6 @@ Item {
                 anchors.rightMargin: 0
 
                 spacing: 8
-
-                Item { width: 16; height: 16; } // spacer
-
-                ImageSvg {
-                    id: labelDefinition
-                    width: 28
-                    height: 28
-
-                    source: "qrc:/assets/icons_material/duotone-aspect_ratio-24px.svg"
-                    color: Theme.colorText
-
-                    Text {
-                        id: definition
-                        height: 28
-                        anchors.left: parent.right
-                        anchors.leftMargin: 16
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        text: shot.width + "x" + shot.height + "   (" + UtilsMedia.varToString(shot.width, shot.height) + ")"
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignRight
-                        font.pixelSize: Theme.fontSizeContentSmall
-                        color: Theme.colorText
-                    }
-                }
-
-                ImageSvg {
-                    id: labelOrientation
-                    width: 28
-                    height: 28
-
-                    source: "qrc:/assets/icons_material/duotone-rotate_90_degrees_ccw-24px.svg"
-                    color: Theme.colorText
-
-                    Text {
-                        id: orientation
-                        height: 28
-                        anchors.left: parent.right
-                        anchors.leftMargin: 16
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        color: Theme.colorText
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignRight
-                        font.pixelSize: Theme.fontSizeContentSmall
-                    }
-                }
 
                 ImageSvg {
                     id: labelISO
@@ -453,10 +464,9 @@ Item {
                         anchors.leftMargin: 16
                         anchors.verticalCenter: parent.verticalCenter
 
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignRight
-                        font.pixelSize: Theme.fontSizeContentSmall
                         color: Theme.colorText
+                        font.pixelSize: Theme.fontSizeContentSmall
+                        verticalAlignment: Text.AlignVCenter
                     }
                 }
 
@@ -475,10 +485,9 @@ Item {
                         anchors.leftMargin: 16
                         anchors.verticalCenter: parent.verticalCenter
 
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignRight
-                        font.pixelSize: Theme.fontSizeContentSmall
                         color: Theme.colorText
+                        font.pixelSize: Theme.fontSizeContentSmall
+                        verticalAlignment: Text.AlignVCenter
                     }
                 }
 
@@ -497,10 +506,9 @@ Item {
                         anchors.leftMargin: 16
                         anchors.verticalCenter: parent.verticalCenter
 
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignRight
-                        font.pixelSize: Theme.fontSizeContentSmall
                         color: Theme.colorText
+                        font.pixelSize: Theme.fontSizeContentSmall
+                        verticalAlignment: Text.AlignVCenter
                     }
                 }
 
@@ -519,10 +527,9 @@ Item {
                         anchors.leftMargin: 16
                         anchors.verticalCenter: parent.verticalCenter
 
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignRight
-                        font.pixelSize: Theme.fontSizeContentSmall
                         color: Theme.colorText
+                        font.pixelSize: Theme.fontSizeContentSmall
+                        verticalAlignment: Text.AlignVCenter
                     }
                 }
 
@@ -541,10 +548,9 @@ Item {
                         anchors.leftMargin: 16
                         anchors.verticalCenter: parent.verticalCenter
 
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignRight
-                        font.pixelSize: Theme.fontSizeContentSmall
                         color: Theme.colorText
+                        font.pixelSize: Theme.fontSizeContentSmall
+                        verticalAlignment: Text.AlignVCenter
                     }
                 }
             }
@@ -559,53 +565,6 @@ Item {
                 anchors.leftMargin: 0
 
                 spacing: 8
-
-                Item { width: 16; height: 16; } // spacer
-
-                ImageSvg {
-                    id: labelDefinition2
-                    width: 28
-                    height: 28
-
-                    source: "qrc:/assets/icons_material/duotone-aspect_ratio-24px.svg"
-                    color: Theme.colorText
-
-                    Text {
-                        id: definition2
-                        height: 28
-                        anchors.left: parent.right
-                        anchors.leftMargin: 16
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        text: shot.width + "x" + shot.height + "   (" + UtilsMedia.varToString(shot.width, shot.height) + ")"
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignRight
-                        font.pixelSize: Theme.fontSizeContentSmall
-                        color: Theme.colorText
-                    }
-                }
-
-                ImageSvg {
-                    id: labelOrientation2
-                    width: 28
-                    height: 28
-
-                    source: "qrc:/assets/icons_material/duotone-rotate_90_degrees_ccw-24px.svg"
-                    color: Theme.colorText
-
-                    Text {
-                        id: orientation2
-                        height: 28
-                        anchors.left: parent.right
-                        anchors.leftMargin: 16
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        color: Theme.colorText
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignRight
-                        font.pixelSize: Theme.fontSizeContentSmall
-                    }
-                }
 
                 ImageSvg {
                     id: labelFramerate
@@ -622,10 +581,9 @@ Item {
                         anchors.leftMargin: 16
                         anchors.verticalCenter: parent.verticalCenter
 
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignRight
-                        font.pixelSize: Theme.fontSizeContentSmall
                         color: Theme.colorText
+                        font.pixelSize: Theme.fontSizeContentSmall
+                        verticalAlignment: Text.AlignVCenter
                     }
                 }
 
@@ -644,10 +602,9 @@ Item {
                         anchors.leftMargin: 16
                         anchors.verticalCenter: parent.verticalCenter
 
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignRight
-                        font.pixelSize: Theme.fontSizeContentSmall
                         color: Theme.colorText
+                        font.pixelSize: Theme.fontSizeContentSmall
+                        verticalAlignment: Text.AlignVCenter
                     }
                 }
 
@@ -666,10 +623,9 @@ Item {
                         anchors.leftMargin: 16
                         anchors.verticalCenter: parent.verticalCenter
 
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignRight
-                        font.pixelSize: Theme.fontSizeContentSmall
                         color: Theme.colorText
+                        font.pixelSize: Theme.fontSizeContentSmall
+                        verticalAlignment: Text.AlignVCenter
                     }
                 }
 
@@ -688,10 +644,9 @@ Item {
                         anchors.leftMargin: 16
                         anchors.verticalCenter: parent.verticalCenter
 
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignRight
-                        font.pixelSize: Theme.fontSizeContentSmall
                         color: Theme.colorText
+                        font.pixelSize: Theme.fontSizeContentSmall
+                        verticalAlignment: Text.AlignVCenter
                     }
                 }
 
@@ -710,10 +665,9 @@ Item {
                         anchors.leftMargin: 16
                         anchors.verticalCenter: parent.verticalCenter
 
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignRight
-                        font.pixelSize: Theme.fontSizeContentSmall
                         color: Theme.colorText
+                        font.pixelSize: Theme.fontSizeContentSmall
+                        verticalAlignment: Text.AlignVCenter
                     }
                 }
             }

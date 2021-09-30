@@ -805,17 +805,20 @@ bool Shot::getMetadataFromPicture(int index)
         if (entry)
         {
 /*
-            1 = Horizontal (normal)     // "Top-left"
-            2 = Mirror horizontal       // "Top-right"
-            3 = Rotate 180              // "Bottom-right"
-            4 = Mirror vertical         // "Bottom-left"
-            5 = Mirror horizontal and rotate 270 CW // "Left-top"
+            1 = Horizontal (default)                // "Top-left"
+            2 = Mirror horizontal                   // "Top-right"
+            3 = Rotate 180                          // "Bottom-right"
+            4 = Mirror vertical                     // "Bottom-left"
+            5 = Mirror vertical and rotate 90 CW    // "Left-top"
             6 = Rotate 90 CW                        // "Right-top"
             7 = Mirror horizontal and rotate 90 CW  // "Right-bottom"
             8 = Rotate 270 CW                       // "Left-bottom"
 */
             int orientation = exif_get_short(entry->data, byteOrder);
-            //qDebug() << "orientation:" << orientation;
+            //qDebug() << "orientation value:" << orientation;
+
+            //exif_entry_get_value(entry, entry_buf, sizeof(entry_buf));
+            //qDebug() << "orientation string:" << entry_buf;
 
             if (orientation == 1)
                 transformation = QImageIOHandler::TransformationNone;
@@ -833,27 +836,6 @@ bool Shot::getMetadataFromPicture(int index)
                 transformation = QImageIOHandler::TransformationMirrorAndRotate90;
             else if (orientation == 8)
                 transformation = QImageIOHandler::TransformationRotate270;
-/*
-            exif_entry_get_value(entry, buf, sizeof(buf));
-            //qDebug() << "orientation string:" << buf;
-
-            if (strncmp(buf, "Top-left", sizeof(buf)) == 0)
-                transformation = QImageIOHandler::TransformationNone;
-            else if (strncmp(buf, "Top-right", sizeof(buf)) == 0)
-                transformation = QImageIOHandler::TransformationMirror;
-            else if (strncmp(buf, "Bottom-right", sizeof(buf)) == 0)
-                transformation = QImageIOHandler::TransformationRotate180;
-            else if (strncmp(buf, "Bottom-left", sizeof(buf)) == 0)
-                transformation = QImageIOHandler::TransformationFlip;
-            else if (strncmp(buf, "Left-top", sizeof(buf)) == 0)
-                transformation = QImageIOHandler::TransformationFlipAndRotate90;
-            else if (strncmp(buf, "Right-top", sizeof(buf)) == 0)
-                transformation = QImageIOHandler::TransformationRotate90;
-            else if (strncmp(buf, "Right-bottom", sizeof(buf)) == 0)
-                transformation = QImageIOHandler::TransformationMirrorAndRotate90;
-            else if (strncmp(buf, "Left-bottom", sizeof(buf)) == 0)
-                transformation = QImageIOHandler::TransformationRotate270;
-*/
         }
 
         entry = exif_content_get_entry(ed->ifd[EXIF_IFD_EXIF], EXIF_TAG_FNUMBER);
@@ -1131,13 +1113,10 @@ bool Shot::getMetadataFromPicture(int index)
         status = true;
     }
 
-    if (width && height)
-    {
-        m_user_cropAR = MediaUtils::arFromGeometry(width, height);
-    }
+    // Post processing
+    computeAdditionalMetadata();
 
     Q_EMIT metadataUpdated();
-
     return status;
 }
 
@@ -1149,6 +1128,8 @@ bool Shot::getMetadataFromVideo(int index)
         return false;
     if (m_videos.at(index)->filesystemPath.isEmpty())
         return false;
+
+    int status = false;
 
 #ifdef ENABLE_MINIVIDEO
 
@@ -1204,11 +1185,6 @@ bool Shot::getMetadataFromVideo(int index)
             vcodec = QString::fromLocal8Bit(getCodecString(stream_VIDEO, media->tracks_video[0]->stream_codec, false));
             framerate = media->tracks_video[0]->framerate;
             bitrate = media->tracks_video[0]->bitrate_avg;
-
-            if (width && height)
-            {
-                m_user_cropAR = MediaUtils::arFromGeometry(width, height);
-            }
         }
         for (unsigned i = 0; i < media->tracks_others_count; i++)
         {
@@ -1307,13 +1283,86 @@ bool Shot::getMetadataFromVideo(int index)
             hasGoProMetadata = true;
         }
 
-        Q_EMIT metadataUpdated();
-        return true;
+        status = true;
     }
 
 #endif // ENABLE_MINIVIDEO
 
-    return false;
+    // Post processing
+    computeAdditionalMetadata();
+
+    Q_EMIT metadataUpdated();
+    return status;
+}
+
+bool Shot::computeAdditionalMetadata()
+{
+    //qDebug() << "Shot::getMetadataPostProcessing()";
+
+    // Get default aspect ratio value for the UI
+    if (transformation >= QImageIOHandler::TransformationRotate90)
+    {
+        width_visible = height;
+        height_visible = width;
+    }
+    else
+    {
+        width_visible = width;
+        height_visible = height;
+    }
+    m_user_cropAR = MediaUtils::arFromGeometry(width_visible, height_visible);
+
+    // Set default transformation values for UI
+    if (transformation == QImageIOHandler::TransformationNone)
+    {
+        m_user_HFlip = false;
+        m_user_VFlip = false;
+        m_user_rotation = 0;
+    }
+    else if (transformation == QImageIOHandler::TransformationMirror)
+    {
+        m_user_HFlip = true;
+        m_user_VFlip = false;
+        m_user_rotation = 0;
+    }
+    else if (transformation == QImageIOHandler::TransformationFlip)
+    {
+        m_user_HFlip = false;
+        m_user_VFlip = true;
+        m_user_rotation = 0;
+    }
+    else if (transformation == QImageIOHandler::TransformationRotate180)
+    {
+        m_user_HFlip = false;
+        m_user_VFlip = false;
+        m_user_rotation = 180;
+    }
+    else if (transformation == QImageIOHandler::TransformationRotate90)
+    {
+        m_user_HFlip = false;
+        m_user_VFlip = false;
+        m_user_rotation = 90;
+    }
+    else if (transformation == QImageIOHandler::TransformationMirrorAndRotate90)
+    {
+        m_user_HFlip = true;
+        m_user_VFlip = false;
+        m_user_rotation = 90;
+    }
+    else if (transformation == QImageIOHandler::TransformationFlipAndRotate90)
+    {
+        m_user_HFlip = false;
+        m_user_VFlip = true;
+        m_user_rotation = 90;
+    }
+    else if (transformation == QImageIOHandler::TransformationRotate270)
+    {
+        m_user_HFlip = false;
+        m_user_VFlip = false;
+        m_user_rotation = 270;
+    }
+
+    return true;
 }
 
 bool Shot::getMetadataFromVideoGPMF()
