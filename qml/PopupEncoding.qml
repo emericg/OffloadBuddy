@@ -590,7 +590,6 @@ Popup {
                     }
 
                     Item {
-                        id: rectangleCodecHelp
                         height: textCodecHelp.contentHeight + 8
                         anchors.left: parent.left
                         anchors.right: parent.right
@@ -777,6 +776,26 @@ Popup {
                                     }
                                 }
                             }
+                        }
+                    }
+
+                    Item {
+                        height: textSpeedHelp.contentHeight + 8
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+
+                        visible: rectangleEncodingSpeed.visible
+
+                        Text {
+                            id: textSpeedHelp
+                            anchors.left: parent.left
+                            anchors.leftMargin: popupEncoding.legendWidth + 16
+                            anchors.right: parent.right
+
+                            text: qsTr("The slower we encode, the more quality we can extract for a given file size.")
+                            wrapMode: Text.WordWrap
+                            color: Theme.colorSubText
+                            font.pixelSize: Theme.fontSizeContentSmall
                         }
                     }
 
@@ -1565,59 +1584,59 @@ Popup {
                     // settings
                     if (encodingMode === "image" || encodingMode === "batch") {
                         if (rbPNG.checked)
-                            settingsEncoding["image_codec"] = "PNG";
+                            settingsEncoding["image_codec"] = "PNG"
                         else if (rbJPEG.checked)
-                            settingsEncoding["image_codec"] = "JPEG";
+                            settingsEncoding["image_codec"] = "JPEG"
                         else if (rbWEBP.checked)
-                            settingsEncoding["image_codec"] = "WEBP";
+                            settingsEncoding["image_codec"] = "WEBP"
                         else if (rbAVIF.checked)
-                            settingsEncoding["image_codec"] = "AVIF";
+                            settingsEncoding["image_codec"] = "AVIF"
                         else if (rbHEIF.checked)
-                            settingsEncoding["image_codec"] = "HEIF";
+                            settingsEncoding["image_codec"] = "HEIF"
                     }
 
                     if (encodingMode === "video" || encodingMode === "timelapse" || encodingMode === "batch") {
                         if (rbH264.checked)
-                            settingsEncoding["video_codec"] = "H.264";
+                            settingsEncoding["video_codec"] = "H.264"
                         else if (rbH265.checked)
-                            settingsEncoding["video_codec"] = "H.265";
+                            settingsEncoding["video_codec"] = "H.265"
                         else if (rbVP9.checked)
-                            settingsEncoding["video_codec"] = "VP9";
+                            settingsEncoding["video_codec"] = "VP9"
                         else if (rbAV1.checked)
-                            settingsEncoding["video_codec"] = "AV1";
+                            settingsEncoding["video_codec"] = "AV1"
                         else if (rbProRes.checked)
-                            settingsEncoding["video_codec"] = "PRORES";
+                            settingsEncoding["video_codec"] = "PRORES"
                         else if (rbGIF.checked)
-                            settingsEncoding["video_codec"] = "GIF";
+                            settingsEncoding["video_codec"] = "GIF"
 
                         if (clipStartMs > 0 && clipDurationMs > 0) {
                             if (cbCOPY.checked)
-                                settingsEncoding["video_codec"] = "copy";
+                                settingsEncoding["video_codec"] = "copy"
                         }
 
-                        settingsEncoding["speed"] = btnSpeeds.value;
+                        settingsEncoding["speed"] = btnSpeeds.value
 
                         if (selectorVideoFps.visible && selectorVideoFps.fps != Math.round(currentShot.framerate))
-                            settingsEncoding["fps"] = selectorVideoFps.fps;
+                            settingsEncoding["fps"] = selectorVideoFps.fps
 
                         if (selectorGifFps.visible)
-                            settingsEncoding["fps"] = selectorGifFps.fps;
+                            settingsEncoding["fps"] = selectorGifFps.fps
 
                         if (clipStartMs > 0)
-                            settingsEncoding["clipStartMs"] = clipStartMs;
+                            settingsEncoding["clipStartMs"] = clipStartMs
                         if (clipDurationMs > 0) // && (clipStartMs + clipDurationMs) < currentShot.duration)
-                            settingsEncoding["clipDurationMs"] = clipDurationMs;
+                            settingsEncoding["clipDurationMs"] = clipDurationMs
                     }
 
                     if (selectorGifRes.visible &&
                         (!currentShot || (currentShot && selectorGifRes.res !== currentShot.height))) {
-                        settingsEncoding["resolution"] = selectorGifRes.res;
-                        settingsEncoding["scale"] = "-2:" + selectorGifRes.res;
+                        settingsEncoding["resolution"] = selectorGifRes.res
+                        settingsEncoding["scale"] = "-2:" + selectorGifRes.res
                     }
                     if (selectorVideoRes.visible &&
                         (!currentShot || (currentShot && selectorVideoRes.res !== currentShot.height))) {
-                        settingsEncoding["resolution"] = selectorVideoRes.res;
-                        settingsEncoding["scale"] = "-2:" + selectorVideoRes.res;
+                        settingsEncoding["resolution"] = selectorVideoRes.res
+                        settingsEncoding["scale"] = "-2:" + selectorVideoRes.res
                     }
 
                     if (clipCropX > 0 || clipCropY > 0 ||
@@ -1625,22 +1644,19 @@ Popup {
                         (clipCropH > 0 && clipCropH < currentShot.height)) {
                         settingsEncoding["crop"] = clipCropW + ":" + clipCropH + ":" + clipCropX + ":" + clipCropY
 
-                        var cropAR = 1.0
-                        if (clipCropW > clipCropH) cropAR = clipCropW / clipCropH
-                        else if (clipCropW < clipCropH) cropAR = clipCropH / clipCropW
-
-                        var res = selectorVideoRes.res;
+                        var cropAR = clipCropW / clipCropH
+                        var res = selectorVideoRes.res
                         settingsEncoding["scale"] = UtilsNumber.round2((res * cropAR)) + ":" + res
                     }
 
                     if (rbGIF.checked) {
                         // make sure we feed the complex graph
-                        settingsEncoding["fps"] = selectorGifFps.fps;
-                        settingsEncoding["resolution"] = selectorGifRes.res;
-                        settingsEncoding["scale"] = "-2:" + selectorGifRes.res;
-                        if (clipStartMs <= 0) settingsEncoding["clipStartMs"] = 0;
-                        if (clipDurationMs <= 0) settingsEncoding["clipDurationMs"] = currentShot.duration;
-                        if (currentShot.shotType > ShotUtils.SHOT_PICTURE)settingsEncoding["clipDurationMs"] = currentShot.duration*33;
+                        settingsEncoding["fps"] = selectorGifFps.fps
+                        settingsEncoding["resolution"] = selectorGifRes.res
+                        settingsEncoding["scale"] = "-2:" + selectorGifRes.res
+                        if (clipStartMs <= 0) settingsEncoding["clipStartMs"] = 0
+                        if (clipDurationMs <= 0) settingsEncoding["clipDurationMs"] = currentShot.duration
+                        if (currentShot.shotType > ShotUtils.SHOT_PICTURE)settingsEncoding["clipDurationMs"] = currentShot.duration*33
 
                         // TODO // transform
 
