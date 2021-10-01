@@ -206,10 +206,10 @@ Popup {
         //console.log("setOrientation() " + rotation + " " + hflip + " " + vflip)
 
         if (rotation || hflip || vflip) {
-            if (shot.rotation) {
-                rotation -= shot.rotation
+            if (currentShot.rotation) {
+                rotation -= currentShot.rotation
             }
-            if (encodingMode === "image" && shot.transformation) {
+            if (encodingMode === "image" && currentShot.transformation) {
                 if (hflip && !vflip) { hflip = false; vflip = true; }
                 if (!hflip && vflip) { hflip = true; vflip = false; }
             }
@@ -868,43 +868,43 @@ Popup {
 
                                 ItemLilMenuButton {
                                     text: "480p"
-                                    visible: shot.height >= 480
+                                    visible: currentShot.height >= 480
                                     selected: selectorVideoRes.res === 480
                                     onClicked: selectorVideoRes.res = 480
                                 }
                                 ItemLilMenuButton {
                                     text: "720p"
-                                    visible: shot.height >= 720
+                                    visible: currentShot.height >= 720
                                     selected: selectorVideoRes.res === 720
                                     onClicked: selectorVideoRes.res = 720
                                 }
                                 ItemLilMenuButton {
                                     text: "1080p"
-                                    visible: shot.height >= 1080
+                                    visible: currentShot.height >= 1080
                                     selected: selectorVideoRes.res === 1080
                                     onClicked: selectorVideoRes.res = 1080
                                 }
                                 ItemLilMenuButton {
                                     text: "1440p"
-                                    visible: shot.height >= 1440
+                                    visible: currentShot.height >= 1440
                                     selected: selectorVideoRes.res === 1440
                                     onClicked: selectorVideoRes.res = 1440
                                 }
                                 ItemLilMenuButton {
                                     text: "2160p"
-                                    visible: shot.height >= 2160
+                                    visible: currentShot.height >= 2160
                                     selected: selectorVideoRes.res === 2160
                                     onClicked: selectorVideoRes.res = 2160
                                 }
                                 ItemLilMenuButton {
                                     text: "2880p"
-                                    visible: shot.height >= 2880
+                                    visible: currentShot.height >= 2880
                                     selected: selectorVideoRes.res === 2880
                                     onClicked: selectorVideoRes.res = 2880
                                 }
                                 ItemLilMenuButton {
                                     text: "4320p"
-                                    visible: shot.height >= 4320
+                                    visible: currentShot.height >= 4320
                                     selected: selectorVideoRes.res === 4320
                                     onClicked: selectorVideoRes.res = 4320
                                 }
@@ -984,25 +984,25 @@ Popup {
 
                                 ItemLilMenuButton {
                                     text: "30" + (selected ? " " + qsTr("fps") : "")
-                                    visible: shot.framerate >= 29
+                                    visible: currentShot.framerate >= 29
                                     selected: selectorVideoFps.fps === 30
                                     onClicked: selectorVideoFps.fps = 30
                                 }
                                 ItemLilMenuButton {
                                     text: "60" + (selected ? " " + qsTr("fps") : "")
-                                    visible: shot.framerate >= 59
+                                    visible: currentShot.framerate >= 59
                                     selected: selectorVideoFps.fps === 60
                                     onClicked: selectorVideoFps.fps = 60
                                 }
                                 ItemLilMenuButton {
                                     text: "120" + (selected ? " " + qsTr("fps") : "")
-                                    visible: shot.framerate >= 119
+                                    visible: currentShot.framerate >= 119
                                     selected: selectorVideoFps.fps === 120
                                     onClicked: selectorVideoFps.fps = 120
                                 }
                                 ItemLilMenuButton {
                                     text: "240" + (selected ? " " + qsTr("fps") : "")
-                                    visible: shot.framerate >= 239
+                                    visible: currentShot.framerate >= 239
                                     selected: selectorVideoFps.fps === 240
                                     onClicked: selectorVideoFps.fps = 240
                                 }
@@ -1017,7 +1017,7 @@ Popup {
                         height: 48
                         spacing: 16
 
-                        visible: (encodingMode === "timelapse") || (encodingMode === "video" && !cbCOPY.checked && shot.duration > 60000)
+                        visible: (encodingMode === "timelapse") || (encodingMode === "video" && !cbCOPY.checked && currentShot.duration > 60000)
 
                         Text {
                             width: popupEncoding.legendWidth
@@ -1335,7 +1335,7 @@ Popup {
                         anchors.left: parent.left
                         anchors.right: parent.right
 
-                        visible: (shot.fileType === ShotUtils.FILE_VIDEO && shot.hasGPS)
+                        visible: (currentShot.fileType === ShotUtils.FILE_VIDEO && currentShot.hasGPS)
 
                         Text {
                             id: telemetryWarning
@@ -1487,7 +1487,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             onPathChanged: {
-                                if (shot && shot.containSourceFile(fileInput.path)) {
+                                if (currentShot && currentShot.containSourceFile(fileInput.path)) {
                                     fileWarning.setError()
                                 } else if (jobManager.fileExists(fileInput.path)) {
                                     fileWarning.setWarning()

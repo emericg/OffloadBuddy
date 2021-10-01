@@ -462,7 +462,7 @@ Item {
             height: output.rotated ? output.width : output.height
             anchors.centerIn: parent
 
-            //autoOrientation: false // doesn't work anyway
+            autoOrientation: false // doesn't work anyway
             fillMode: Image.Stretch
 
             source: videoPlayer

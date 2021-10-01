@@ -361,7 +361,7 @@ Popup {
 
                     extension: "mp4"
                     onPathChanged: {
-                        if (shot && shot.containSourceFile(fileInput.path)) {
+                        if (currentShot && currentShot.containSourceFile(fileInput.path)) {
                             fileWarning.setError()
                         } else if (jobManager.fileExists(fileInput.path)) {
                             fileWarning.setWarning()
