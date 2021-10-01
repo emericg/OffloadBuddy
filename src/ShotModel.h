@@ -125,11 +125,11 @@ public:
     Shot *searchForShot(const ShotUtils::ShotType type,
                         const int file_id, const int camera_id,
                         const QString &path) const;
+    Shot *searchForDuplicate(const QString &path);
 
     void getShots(QList<Shot *> &shots);
     Shot *getShotAtIndex(const int index);
     Shot *getShotWithUuid(const QString &uuid);
-    Shot *getShotWithPath(const QString &path);
     std::vector<Shot *> getShotsWithName(const QString &name);
 
     void addShot(Shot *shot);

@@ -188,25 +188,36 @@ void ShotModel::addFile(ofb_file *f, ofb_shot *s)
 
     Shot *shot = nullptr;
 
+    // If we think this file may be from a shot, look for its parent shot
     if (f->isShot)
     {
-        // If we think this file may be from a shot, look for its parent shot
-
         if (s->shot_id > 0)
         {
-            // Search using shot ID
+            // Search for parent (using shot ID)
             shot = searchForShot(s->shot_type, s->shot_id, s->camera_id, f->filesystemPath);
-        }
 
-        if (!shot)
-        {
-            // Backup // Search using path
-            shot = getShotWithPath(f->filesystemPath);
-            if (shot)
+            // Duplicate?
+            if (shot && shot->containFile(f->filesystemPath))
             {
+                //qDebug() << "File:" << f->name << f->extension << "is a duplicate. Refreshing shot.";
+                shot->refresh();
+
                 delete s;
                 return;
             }
+        }
+    }
+    else
+    {
+        // Search for duplicate (using full path)
+        shot = searchForDuplicate(f->filesystemPath);
+        if (shot)
+        {
+            //qDebug() << "File:" << f->name << f->extension << "is a duplicate. Refreshing shot.";
+            shot->refresh();
+
+            delete s;
+            return;
         }
     }
 
@@ -287,15 +298,15 @@ void ShotModel::removeShot(Shot *shot)
 /* ************************************************************************** */
 
 /*!
- * \brief ShotModel::getShotAt
  * \param type: see ShotUtils::ShotType
  * \param file_id
  * \param camera_id
  * \param folder
  * \return Pointer to an existing shot
  *
- * This function is used to associate new files to existing shots. We go backward
- * for faster association, because we will just most likely use the last created shot.
+ * This function is used to associate new/scanned files to existing shots. We go
+ * backward for faster association, because we will just most likely use the last
+ * created shot.
  * We try only the last 32 shots created, to avoid wasting time.
  *
  * Also we make sure the shot files are from the same folder. Mandatory when
@@ -328,6 +339,26 @@ Shot *ShotModel::searchForShot(const ShotUtils::ShotType type,
         }
 
         //qDebug() << "No shot found for id" << file_id;
+    }
+
+    return nullptr;
+}
+
+/*!
+ * \brief ShotModel::searchForDuplicate
+ * \param path
+ * \return
+ */
+Shot *ShotModel::searchForDuplicate(const QString &path)
+{
+    if (!path.isEmpty())
+    {
+        for (auto shot: qAsConst(m_shots))
+        {
+            Shot *search = qobject_cast<Shot*>(shot);
+            if (search && search->containFile(path))
+                return search;
+        }
     }
 
     return nullptr;
@@ -383,38 +414,6 @@ Shot *ShotModel::getShotWithUuid(const QString &uuid)
         }
 
         //qDebug() << "No shot found for uuid" << uuid;
-    }
-
-    return nullptr;
-}
-
-/*!
- * \brief ShotModel::getShotWithPath
- * \param path
- * \return
- */
-Shot *ShotModel::getShotWithPath(const QString &path)
-{
-    if (!path.isEmpty())
-    {
-        for (auto shot: qAsConst(m_shots))
-        {
-            Shot *search = qobject_cast<Shot*>(shot);
-            if (search)
-            {
-                QList <ofb_file *> files = search->getFiles();
-
-                for (auto file: qAsConst(files))
-                {
-                    if (file->filesystemPath == path)
-                    {
-                        return search;
-                    }
-                }
-            }
-        }
-
-        //qDebug() << "No shot found for path" << path;
     }
 
     return nullptr;

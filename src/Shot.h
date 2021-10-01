@@ -621,6 +621,8 @@ public:
     Shot(ShotUtils::ShotType type, QObject *parent = nullptr);
     ~Shot();
 
+    void refresh();
+
     // Shot IDs
     QString getUuid() const { return m_uuid; }
 
@@ -643,6 +645,7 @@ public:
 
     // Files
     void addFile(ofb_file *file);
+    Q_INVOKABLE bool containFile(const QString &file) const;
     const QList <ofb_file *> getFiles(bool withPreviews = true, bool withHdAudio = true, bool withOthers = true) const;
 
     QString getFolderString();

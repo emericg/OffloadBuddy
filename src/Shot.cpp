@@ -92,6 +92,37 @@ Shot::~Shot()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
+void Shot::refresh()
+{
+    ofb_file *f = nullptr;
+
+    // Refresh metadata
+    if (!m_pictures.isEmpty())
+    {
+        f = m_pictures.at(0);
+        getMetadataFromPicture();
+    }
+    else if (!m_videos.isEmpty())
+    {
+        f = m_videos.at(0);
+        getMetadataFromVideo();
+    }
+
+    // Refresh file date
+    if (f)
+    {
+        if (f->creation_date.isValid())
+            m_date_file = f->creation_date;
+        else
+            m_date_file = f->modification_date;
+
+        Q_EMIT dateUpdated();
+    }
+
+    // TODO // Refresh shot size
+    //Q_EMIT dataUpdated();
+}
+
 void Shot::addFile(ofb_file *file)
 {
     if (file)
@@ -103,10 +134,15 @@ void Shot::addFile(ofb_file *file)
         {
             m_shot_name = file->name;
 
-            if (file->creation_date.isValid())
-                m_date_file = file->creation_date;
-            else
-                m_date_file = file->modification_date;
+            if (!m_date_file.isValid())
+            {
+                if (file->creation_date.isValid())
+                    m_date_file = file->creation_date;
+                else
+                    m_date_file = file->modification_date;
+
+                Q_EMIT dateUpdated();
+            }
 
             if (file->extension == "jpg" || file->extension == "jpeg" ||
                 file->extension == "png" || file->extension == "gpr" ||
@@ -149,6 +185,7 @@ void Shot::addFile(ofb_file *file)
                     m_date_file = file->creation_date;
                 else
                     m_date_file = file->modification_date;
+
                 Q_EMIT dateUpdated();
             }
 
@@ -666,6 +703,27 @@ QString Shot::getFilesString() const
 #endif // ENABLE_LIBMTP
 
     return list;
+}
+
+bool Shot::containFile(const QString &file) const
+{
+    if (!file.isEmpty())
+    {
+        for (auto f: m_pictures)
+            if (file == f->filesystemPath) return true;
+        for (auto f: m_videos)
+            if (file == f->filesystemPath) return true;
+        for (auto f: m_videos_previews)
+            if (file == f->filesystemPath) return true;
+        for (auto f: m_videos_thumbnails)
+            if (file == f->filesystemPath) return true;
+        for (auto f: m_videos_hdAudio)
+            if (file == f->filesystemPath) return true;
+        for (auto f: m_others)
+            if (file == f->filesystemPath) return true;
+    }
+
+    return false;
 }
 
 void Shot::openFile() const
@@ -1297,7 +1355,7 @@ bool Shot::getMetadataFromVideo(int index)
 
 bool Shot::computeAdditionalMetadata()
 {
-    //qDebug() << "Shot::getMetadataPostProcessing()";
+    //qDebug() << "Shot::computeAdditionalMetadata()";
 
     // Get default aspect ratio value for the UI
     if (transformation >= QImageIOHandler::TransformationRotate90)
