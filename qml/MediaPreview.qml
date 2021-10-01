@@ -425,6 +425,7 @@ Item {
 
     Rectangle {
         anchors.fill: overlays
+        anchors.margins: 1
         color: "black"
 
         ImageSvg {
