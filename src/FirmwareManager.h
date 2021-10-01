@@ -58,6 +58,10 @@ class FirmwareManager: public QObject
     QNetworkAccessManager *m_nwManager = nullptr;
     QNetworkReply *firmwareReply = nullptr;
     QFile *firmwareFile = nullptr;
+    Device *firmwareDevice = nullptr;
+
+    void downloadFirmware();
+    void extractFirmware();
 
     bool hasGpFw() const { return false; }
 
@@ -73,10 +77,12 @@ class FirmwareManager: public QObject
 Q_SIGNALS:
     void firmwareCatalogUpdated();
 
+    void fwUpgradeStarted();
     void fwDlStarted();
     void fwDlProgress(float progress);
-    void fwDlErrored();
+    void fwUpgradeErrored();
     void fwDlFinished();
+    void fwUpgradeFinished();
 
 private slots:
     void catalogsUpdated(QNetworkReply *reply);
@@ -93,9 +99,8 @@ public:
     void loadCatalogs();
     void updateCatalogs();
 
-    void downloadFirmware(Device *device);
-    void cancelFirmware(Device *device);
-    void extractFirmware(Device *device);
+    void startUpgrade(Device *device);
+    void stopUpgrade(Device *device);
 
     Q_INVOKABLE bool hasUpdate(const QString &model, const QString &version);
     Q_INVOKABLE QString lastUpdate(const QString &model);

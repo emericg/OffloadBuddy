@@ -34,7 +34,7 @@ It's designed to remove the hassle of handling and transferring the many videos 
   - [x] Visualize telemetry with graphs
   - [x] Visualize GPS trace on maps
   - [ ] Video overlay
-- [X] GoPro firmware updates (WIP)
+- [X] GoPro firmware updates
 
 ### Screenshots!
 

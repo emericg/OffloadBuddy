@@ -76,7 +76,7 @@ void JobWorkerASync::abortWork()
             FirmwareManager *fwm = FirmwareManager::getInstance();
             if (fwm)
             {
-                fwm->cancelFirmware(m_jobCurrent->getDevice());
+                fwm->stopUpgrade(m_jobCurrent->getDevice());
             }
         }
     }
@@ -130,10 +130,10 @@ void JobWorkerASync::work()
                     if (fwm)
                     {
                         connect(fwm, SIGNAL(fwDlProgress(float)), this, SLOT(asyncJobProgress(float)));
-                        //connect(fwm, SIGNAL(fwDlErrored()), this, SLOT(asyncJobFinished()));
-                        connect(fwm, SIGNAL(fwDlFinished()), this, SLOT(asyncJobFinished()));
+                        connect(fwm, SIGNAL(fwUpgradeErrored()), this, SLOT(asyncJobFinished()));
+                        connect(fwm, SIGNAL(fwUpgradeFinished()), this, SLOT(asyncJobFinished()));
 
-                        fwm->downloadFirmware(m_jobCurrent->getDevice());
+                        fwm->startUpgrade(m_jobCurrent->getDevice());
                     }
                 }
             }

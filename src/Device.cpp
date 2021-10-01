@@ -443,8 +443,13 @@ void Device::updateFirmwareState()
 
             if (m_deviceStorage == StorageUtils::StorageFilesystem)
             {
-                QFileInfo fw(getPath() + "UPDATE.zip");
-                if (fw.exists())
+                QFileInfo fw1(getPath() + "UPDATE.zip");
+                if (fw1.exists())
+                {
+                    m_firmwareState = DeviceUtils::FirmwareUpdateInstalled;
+                }
+                QFileInfo fw2(getPath() + "UPDATE/DATA.bin");
+                if (fw2.exists())
                 {
                     m_firmwareState = DeviceUtils::FirmwareUpdateInstalled;
                 }

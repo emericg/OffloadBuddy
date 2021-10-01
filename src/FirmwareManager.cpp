@@ -222,14 +222,35 @@ void FirmwareManager::errorSSL()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void FirmwareManager::downloadFirmware(Device *d)
+void FirmwareManager::startUpgrade(Device *d)
 {
-    if (d)
+    if (d && !firmwareDevice)
     {
-        QUrl url = lastUrl(d->getModelString());
+        firmwareDevice = d;
+
+        downloadFirmware();
+    }
+}
+
+void FirmwareManager::stopUpgrade(Device *d)
+{
+    if (d && firmwareReply)
+    {
+        firmwareReply->abort();
+        firmwareDevice = nullptr;
+    }
+}
+
+/* ************************************************************************** */
+
+void FirmwareManager::downloadFirmware()
+{
+    if (firmwareDevice)
+    {
+        QUrl url = lastUrl(firmwareDevice->getModelString());
         qDebug() << "FirmwareManager::downloadFirmware(" << url << ")";
 
-        QString folderPath = d->getPath();
+        QString folderPath = firmwareDevice->getPath();
         QString fileName = folderPath + "/UPDATE.zip";
 
         if (QFile::exists(fileName)) QFile::remove(fileName);
@@ -243,8 +264,6 @@ void FirmwareManager::downloadFirmware(Device *d)
             firmwareFile = nullptr;
             return;
         }
-
-        //////////////////////////
 
         if (!m_nwManager)
         {
@@ -263,11 +282,74 @@ void FirmwareManager::downloadFirmware(Device *d)
     }
 }
 
-void FirmwareManager::cancelFirmware(Device *d)
+void FirmwareManager::extractFirmware()
 {
-    if (d && firmwareReply)
+    if (firmwareDevice && firmwareFile)
     {
-        firmwareReply->abort();
+        QUrl url = lastUrl(firmwareDevice->getModelString());
+        qDebug() << "FirmwareManager::extractFirmware(" << url << ")";
+
+        QString destFolder = firmwareDevice->getPath();
+        if (!destFolder.endsWith('/')) destFolder += "/";
+        QString zipFile = destFolder + "/UPDATE.zip";
+        destFolder += "UPDATE/";
+
+        if (QFile::exists(zipFile))
+        {
+            mz_zip_archive zip_archive;
+            memset(&zip_archive, 0, sizeof(zip_archive));
+
+            auto status = mz_zip_reader_init_file(&zip_archive, zipFile.toLocal8Bit(), 0);
+            if (status)
+            {
+                int fileCount = (int)mz_zip_reader_get_num_files(&zip_archive);
+                if (fileCount == 0)
+                {
+                    mz_zip_reader_end(&zip_archive);
+
+                    qWarning() << "!mz_zip_reader_get_num_files()";
+                    //return;
+                }
+                mz_zip_archive_file_stat file_stat;
+                if (!mz_zip_reader_file_stat(&zip_archive, 0, &file_stat))
+                {
+                    mz_zip_reader_end(&zip_archive);
+
+                    qWarning() << "!mz_zip_reader_file_stat()";
+                    //return;
+                }
+
+                // Get and print information about each file in the archive.
+                for (int i = 0; i < fileCount; i++)
+                {
+                    if (!mz_zip_reader_file_stat(&zip_archive, i, &file_stat)) continue;
+                    if (mz_zip_reader_is_file_a_directory(&zip_archive, i)) continue; // skip directories for now
+
+                    QString fileName = file_stat.m_filename;    // make path relative
+                    QString destFile = destFolder + fileName;   // make full dest path
+
+                    QDir currentdir = QFileInfo(destFile).dir();
+                    if (!currentdir.exists())
+                    {
+                        currentdir.mkdir(currentdir.path());
+                    }
+                    if (currentdir.exists())
+                    {
+                        if (mz_zip_reader_extract_to_file(&zip_archive, i, destFile.toLocal8Bit(), 0))
+                        {
+                            qDebug() << "> extracted: " << destFile;
+                        }
+                    }
+                }
+
+                // Close the archive, freeing any resources it was using
+                mz_zip_reader_end(&zip_archive);
+            }
+            else
+            {
+                qWarning() << "!mz_zip_reader_init_file()";
+            }
+        }
     }
 }
 
@@ -300,7 +382,6 @@ void FirmwareManager::firmwareFinished()
     // download finished normally
     firmwareFile->flush();
     firmwareFile->close();
-
     Q_EMIT fwDlFinished();
 /*
     // handle redirection url?
@@ -317,8 +398,18 @@ void FirmwareManager::firmwareFinished()
     firmwareReply->deleteLater();
     firmwareReply = nullptr;
 
+    // now extract the firmware
+    extractFirmware();
+
+    // delete UPDATE.zip
+    firmwareFile->remove();
     delete firmwareFile;
+
+    // cleanup
     firmwareFile = nullptr;
+    firmwareDevice = nullptr;
+
+    Q_EMIT fwUpgradeFinished();
 }
 
 void FirmwareManager::firmwareProgress(qint64 bytesRead, qint64 totalBytes)
