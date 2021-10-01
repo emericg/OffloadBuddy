@@ -89,8 +89,9 @@ $ make
 * Qt [website](https://www.qt.io) ([LGPL 3](https://www.gnu.org/licenses/lgpl-3.0.txt))
 * MiniVideo [website](https://github.com/emericg/MiniVideo) ([LGPL 3](https://www.gnu.org/licenses/lgpl-3.0.txt))
 * ffmpeg [website](https://www.ffmpeg.org/) ([LGPL 2.1](https://www.gnu.org/licenses/lgpl-2.1.txt))
-* libexif [website](https://github.com/libexif/libexif/) ([LGPL 2.1](https://www.gnu.org/licenses/lgpl-2.1.txt))
-* libmtp [website](http://libmtp.sourceforge.net/) ([LGPL 2.1](https://www.gnu.org/licenses/lgpl-2.1.txt))
+* libexif [website](https://github.com/libexif/) ([LGPL 2.1](https://www.gnu.org/licenses/lgpl-2.1.txt))
+* libmtp [website](https://github.com/libmtp/) ([LGPL 2.1](https://www.gnu.org/licenses/lgpl-2.1.txt))
+* miniz [website](https://github.com/richgel999/miniz/) ([MIT](https://opensource.org/licenses/MIT))
 * SingleApplication [website](https://github.com/itay-grudev/SingleApplication) ([MIT](https://opensource.org/licenses/MIT))
 * Graphical resources: [assets/COPYING](assets/COPYING)
 

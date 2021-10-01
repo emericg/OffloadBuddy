@@ -22,8 +22,11 @@
 #include "FirmwareManager.h"
 #include "Device.h"
 #include "utils/utils_versionchecker.h"
+#include "miniz.h"
 
+#include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QSettings>
 #include <QStandardPaths>
 #include <QCoreApplication>
@@ -260,9 +263,9 @@ void FirmwareManager::downloadFirmware(Device *d)
     }
 }
 
-void FirmwareManager::cancelFirmware(Device *device)
+void FirmwareManager::cancelFirmware(Device *d)
 {
-    if (device && firmwareReply)
+    if (d && firmwareReply)
     {
         firmwareReply->abort();
     }

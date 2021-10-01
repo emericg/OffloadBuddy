@@ -95,6 +95,7 @@ public:
 
     void downloadFirmware(Device *device);
     void cancelFirmware(Device *device);
+    void extractFirmware(Device *device);
 
     Q_INVOKABLE bool hasUpdate(const QString &model, const QString &version);
     Q_INVOKABLE QString lastUpdate(const QString &model);

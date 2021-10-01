@@ -38,6 +38,9 @@ DEFINES += ENABLE_MINIVIDEO
 DEFINES += ENABLE_LIBEXIF
 #DEFINES += ENABLE_EXIV2
 
+# Zip extraction
+include(src/thirdparty/miniz/miniz.pri)
+
 # EGM96 altitude correction
 include(src/thirdparty/EGM96/EGM96.pri)
 

@@ -318,7 +318,7 @@ Item {
                     ItemImageButton {
                         anchors.verticalCenter: parent.verticalCenter
                         source: "qrc:/assets/icons_material/baseline-link-24px.svg"
-                        onClicked: Qt.openUrlExternally("https://libexif.github.io")
+                        onClicked: Qt.openUrlExternally("https://github.com/libexif")
                     }
                     ItemBadge {
                         anchors.verticalCenter: parent.verticalCenter
@@ -333,21 +333,42 @@ Item {
 
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
-                        text: "⦁ Google material icons"
+                        text: "⦁ libmtp"
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContentBig
                     }
                     ItemImageButton {
                         anchors.verticalCenter: parent.verticalCenter
                         source: "qrc:/assets/icons_material/baseline-link-24px.svg"
-                        onClicked: Qt.openUrlExternally("https://material.io/tools/icons")
+                        onClicked: Qt.openUrlExternally("https://github.com/libmtp")
                     }
                     ItemBadge {
-                        width: 140
                         anchors.verticalCenter: parent.verticalCenter
                         legend: qsTr("license")
-                        text: qsTr("Apache 2.0")
-                        onClicked: Qt.openUrlExternally("https://www.apache.org/licenses/LICENSE-2.0.txt")
+                        text: qsTr("LGPL 2.1")
+                        onClicked: Qt.openUrlExternally("https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html")
+                    }
+                }
+                Row {
+                    height: 32
+                    spacing: 24
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "⦁ miniz"
+                        color: Theme.colorText
+                        font.pixelSize: Theme.fontSizeContentBig
+                    }
+                    ItemImageButton {
+                        anchors.verticalCenter: parent.verticalCenter
+                        source: "qrc:/assets/icons_material/baseline-link-24px.svg"
+                        onClicked: Qt.openUrlExternally("https://github.com/richgel999/miniz/")
+                    }
+                    ItemBadge {
+                        anchors.verticalCenter: parent.verticalCenter
+                        legend: qsTr("license")
+                        text: qsTr("MIT")
+                        onClicked: Qt.openUrlExternally("https://github.com/richgel999/miniz/blob/master/LICENSE")
                     }
                 }
                 Row {
@@ -370,6 +391,29 @@ Item {
                         legend: qsTr("license")
                         text: qsTr("MIT")
                         onClicked: Qt.openUrlExternally("https://github.com/itay-grudev/SingleApplication/blob/master/LICENSE")
+                    }
+                }
+                Row {
+                    height: 32
+                    spacing: 24
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "⦁ Google Material Icons"
+                        color: Theme.colorText
+                        font.pixelSize: Theme.fontSizeContentBig
+                    }
+                    ItemImageButton {
+                        anchors.verticalCenter: parent.verticalCenter
+                        source: "qrc:/assets/icons_material/baseline-link-24px.svg"
+                        onClicked: Qt.openUrlExternally("https://material.io/tools/icons")
+                    }
+                    ItemBadge {
+                        width: 140
+                        anchors.verticalCenter: parent.verticalCenter
+                        legend: qsTr("license")
+                        text: qsTr("Apache 2.0")
+                        onClicked: Qt.openUrlExternally("https://www.apache.org/licenses/LICENSE-2.0.txt")
                     }
                 }
             }
