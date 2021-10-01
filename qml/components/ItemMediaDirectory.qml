@@ -25,7 +25,7 @@ Item {
 
         text: directory.directoryPath
 
-        onEditingFinished: {
+        onPathChanged: {
             directory.directoryPath = path
             focus = false
         }

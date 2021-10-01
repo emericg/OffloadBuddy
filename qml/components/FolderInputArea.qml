@@ -50,7 +50,7 @@ TextField {
         id: fileDialog
         title: qsTr("Please choose a directory!")
         sidebarVisible: true
-        selectExisting: true
+        selectExisting: false
         selectMultiple: false
         selectFolder: true
 
