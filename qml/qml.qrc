@@ -46,6 +46,7 @@
         <file alias="RangeSliderPlayer.qml">components/RangeSliderPlayer.qml</file>
         <file alias="SidebarWidget.qml">components/SidebarWidget.qml</file>
         <file alias="ResizeWidget.qml">components/ResizeWidget.qml</file>
+        <file alias="FileWarning.qml">components/FileWarning.qml</file>
         <file alias="FileInputArea.qml">components/FileInputArea.qml</file>
         <file alias="FolderInputArea.qml">components/FolderInputArea.qml</file>
         <file alias="ComboBoxFolder.qml">components/ComboBoxFolder.qml</file>

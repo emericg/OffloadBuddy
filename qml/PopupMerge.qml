@@ -361,36 +361,18 @@ Popup {
 
                     extension: "mp4"
                     onPathChanged: {
-                        rectangleFileWarning.visible = jobManager.fileExists(fileInput.path)
+                        if (shot && shot.containSourceFile(fileInput.path)) {
+                            fileWarning.setError()
+                        } else if (jobManager.fileExists(fileInput.path)) {
+                            fileWarning.setWarning()
+                        } else {
+                            fileWarning.setOK()
+                        }
                     }
                 }
 
-                Row {
-                    id: rectangleFileWarning
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    height: 48
-                    spacing: 16
-
-                    visible: false
-
-                    ImageSvg {
-                        width: 28
-                        height: 28
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        color: Theme.colorWarning
-                        source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
-                    }
-
-                    Text {
-                        anchors.verticalCenter: parent.verticalCenter
-                        text: qsTr("Warning, this file exists already and will be overwritten...")
-                        color: Theme.colorText
-                        font.bold: false
-                        font.pixelSize: Theme.fontSizeContent
-                        wrapMode: Text.WordWrap
-                    }
+                FileWarning {
+                    id: fileWarning
                 }
             }
         }

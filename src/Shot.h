@@ -645,7 +645,7 @@ public:
 
     // Files
     void addFile(ofb_file *file);
-    Q_INVOKABLE bool containFile(const QString &file) const;
+    bool containFile(const QString &file) const;
     const QList <ofb_file *> getFiles(bool withPreviews = true, bool withHdAudio = true, bool withOthers = true) const;
 
     QString getFolderString();
@@ -757,6 +757,7 @@ public:
     Q_INVOKABLE bool isGoPro() const;
     Q_INVOKABLE void openFile() const;
     Q_INVOKABLE void openFolder() const;
+    Q_INVOKABLE bool containSourceFile(const QString &file) const;
 };
 
 /* ************************************************************************** */

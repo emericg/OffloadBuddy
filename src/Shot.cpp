@@ -726,6 +726,19 @@ bool Shot::containFile(const QString &file) const
     return false;
 }
 
+bool Shot::containSourceFile(const QString &file) const
+{
+    if (!file.isEmpty())
+    {
+        for (auto f: m_pictures)
+            if (file == f->filesystemPath) return true;
+        for (auto f: m_videos)
+            if (file == f->filesystemPath) return true;
+    }
+
+    return false;
+}
+
 void Shot::openFile() const
 {
     QString file;
