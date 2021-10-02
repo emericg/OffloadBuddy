@@ -193,7 +193,7 @@ Popup {
                             if (cbinit) {
                                 directory.directoryContent = currentIndex
                             } else {
-                                cbinit = true;
+                                cbinit = true
                             }
                         }
                     }

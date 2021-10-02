@@ -27,6 +27,7 @@
 
 #include <QProcess>
 #include <QFileInfo>
+#include <QImageReader>
 #include <QFile>
 #include <QDir>
 #include <QDebug>
@@ -559,19 +560,19 @@ void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
                         //-metadata:s:v rotate="" // force the metadata rotation value
 
                         QString rf = "";
-                        if (job->settings_encode.transform == 2)
+                        if (job->settings_encode.transform == QImageIOHandler::TransformationMirror)
                             rf = "hflip";
-                        else if (job->settings_encode.transform == 3)
+                        else if (job->settings_encode.transform == QImageIOHandler::TransformationRotate180)
                             rf = "transpose=2,transpose=2"; // 180°
-                        else if (job->settings_encode.transform == 4)
+                        else if (job->settings_encode.transform == QImageIOHandler::TransformationFlip)
                             rf = "vflip";
-                        else if (job->settings_encode.transform == 5)
+                        else if (job->settings_encode.transform == QImageIOHandler::TransformationFlipAndRotate90)
                             rf = "hflip,transpose=2";
-                        else if (job->settings_encode.transform == 6)
+                        else if (job->settings_encode.transform == QImageIOHandler::TransformationRotate90)
                             rf = "transpose=1"; // 90°
-                        else if (job->settings_encode.transform == 7)
+                        else if (job->settings_encode.transform == QImageIOHandler::TransformationMirrorAndRotate90)
                             rf = "hflip,transpose=1";
-                        else if (job->settings_encode.transform == 8)
+                        else if (job->settings_encode.transform == QImageIOHandler::TransformationRotate270)
                             rf = "transpose=2"; // 270°
 
                         if (!video_filters.isEmpty()) video_filters += ",";
@@ -584,19 +585,19 @@ void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
                         if (transformation > 0)
                         {
                             QString rf = "";
-                            if (transformation == 2)
+                            if (transformation == QImageIOHandler::TransformationMirror)
                                 rf = "hflip";
-                            else if (transformation == 3)
+                            else if (transformation == QImageIOHandler::TransformationRotate180)
                                 rf = "transpose=2,transpose=2"; // 180°
-                            else if (transformation == 4)
+                            else if (transformation == QImageIOHandler::TransformationFlip)
                                 rf = "vflip";
-                            else if (transformation == 5)
+                            else if (transformation == QImageIOHandler::TransformationFlipAndRotate90)
                                 rf = "hflip,transpose=2";
-                            else if (transformation == 6)
+                            else if (transformation == QImageIOHandler::TransformationRotate90)
                                 rf = "transpose=1"; // 90°
-                            else if (transformation == 7)
+                            else if (transformation == QImageIOHandler::TransformationMirrorAndRotate90)
                                 rf = "hflip,transpose=1";
-                            else if (transformation == 8)
+                            else if (transformation == QImageIOHandler::TransformationRotate270)
                                 rf = "transpose=2"; // 270°
 
                             if (!video_filters.isEmpty()) video_filters += ",";

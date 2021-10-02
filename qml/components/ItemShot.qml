@@ -19,8 +19,8 @@ Rectangle {
     property var shotDevice: null
     property real cellFormat: 4/3
 
-    //property bool singleSelection: (mediaGridView.currentIndex === index)
-    //property bool multiSelection: (shot && shot.selected)
+    property bool singleSelection: (mediaGridView.currentIndex === index)
+    property bool multiSelection: (shot && shot.selected)
     property bool alreadyOffloaded: false
 
     Connections {
@@ -72,11 +72,11 @@ Rectangle {
 
         handleState()
 
-        if (shot.previewVideo)
+        if (shot.previewVideo) {
             imageFs.source = "image://MediaThumbnailer/" + shot.previewVideo + "@" + (shot.duration/12000).toFixed()
-        else if (shot.previewPhoto)
+        } else if (shot.previewPhoto) {
             imageFs.source = "image://MediaThumbnailer/" + shot.previewPhoto
-        else if (shotDevice && shotDevice.deviceStorage === ShotUtils.STORAGE_MTP) {
+        } else if (shotDevice && shotDevice.deviceStorage === ShotUtils.STORAGE_MTP) {
             imageMtp.enabled = true
             imageMtp.visible = true
             imageMtp.image = shot.getPreviewMtp()

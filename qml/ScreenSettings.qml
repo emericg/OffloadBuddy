@@ -81,11 +81,14 @@ Item {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
 
+        topPadding: 24
+        bottomPadding: 24
+
         Column {
             anchors.fill: parent
-            anchors.topMargin: 24
             anchors.leftMargin: 24
             anchors.rightMargin: 24
+
             spacing: 8
 
             ////////
@@ -549,7 +552,7 @@ Item {
                             id: textMediaHierarchy
                             anchors.verticalCenter: parent.verticalCenter
 
-                            text: qsTr("Media hierarchy")
+                            text: qsTr("Default media hierarchy")
 
                             font.pixelSize: Theme.fontSizeComponent
                             color: Theme.colorText
