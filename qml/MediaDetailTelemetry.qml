@@ -24,8 +24,9 @@ Item {
     }
 
     function updateUnits() {
-        speedsGraph.title = "Speed (" + UtilsString.speedUnit(settingsManager.appUnits) + ")"
-        altiGraph.title = "Altitude (" + UtilsString.altitudeUnit(settingsManager.appUnits) + ")"
+        speedTitle.text = qsTr("Speed") + " (" + UtilsString.speedUnit(settingsManager.appUnits) + ")"
+        altiTitle.text = qsTr("Altitude") + " (" + UtilsString.altitudeUnit(settingsManager.appUnits) + ")"
+
         updateMetadata()
     }
 
@@ -58,38 +59,27 @@ Item {
         // Reverse geo coding
         shot.getLocation()
 
-        // Graphs sizes
-        altiGraph.legend.visible = false
-        speedsGraph.legend.visible = false
-        acclGraph.legend.visible = false
-        gyroGraph.legend.visible = false
-
         if (shot) {
             // Graphs data
-            speedsGraph.title = "Speed (" + UtilsString.speedUnit(settingsManager.appUnits) + ")"
             shot.updateSpeedsSerie(speedsSeries, settingsManager.appUnits)
-            altiGraph.title = "Altitude (" + UtilsString.altitudeUnit(settingsManager.appUnits) + ")"
             shot.updateAltiSerie(altiSeries, settingsManager.appUnits)
             shot.updateAcclSeries(acclX, acclY, acclZ)
             shot.updateGyroSeries(gyroX, gyroY, gyroZ)
 
-            // Text data
-            speedMIN.text = UtilsString.speedToString(shot.minSpeed, 2, settingsManager.appUnits)
-            speedAVG.text = UtilsString.speedToString(shot.avgSpeed, 2, settingsManager.appUnits)
-            speedMAX.text = UtilsString.speedToString(shot.maxSpeed, 2, settingsManager.appUnits)
+            // Text data (V2)
+            speedMetrics.text = qsTr("average") + " " +
+                    UtilsString.speedToString(shot.avgSpeed, 0, settingsManager.appUnits) + " / ↘ " +
+                    UtilsString.speedToString(shot.minSpeed, 0, settingsManager.appUnits) + " / ↗ " +
+                    UtilsString.speedToString(shot.maxSpeed, 0, settingsManager.appUnits)
+            altiMetrics.text = qsTr("average") + " " +
+                    UtilsString.altitudeToString(shot.avgAlti, 0, settingsManager.appUnits) + " / ↘ " +
+                    UtilsString.altitudeToString(shot.minAlti, 0, settingsManager.appUnits) + " / ↗ " +
+                    UtilsString.altitudeToString(shot.maxAlti, 0, settingsManager.appUnits)
+            acclMetrics.text = qsTr("max G force") + " " + (shot.maxG / 9.80665).toFixed(1) + " G's"
 
-            altiMIN.text = UtilsString.altitudeToString(shot.minAlti, 0, settingsManager.appUnits)
-            altiAVG.text = UtilsString.altitudeToString(shot.avgAlti, 0, settingsManager.appUnits)
-            altiMAX.text = UtilsString.altitudeToString(shot.maxAlti, 0, settingsManager.appUnits)
-
+            // Text data (V1)
             trackDuration.text = UtilsString.durationToString_long(shot.duration)
             trackDistance.text = UtilsString.distanceToString_km(shot.distanceKm, 1, settingsManager.appUnits)
-
-            trackDuration2.text = UtilsString.durationToString_short(shot.duration)
-            trackDistance2.text = trackDistance.text
-            trackSpeed2.text = speedAVG.text
-
-            acclMAX.text = (shot.maxG / 9.80665).toFixed(1) + " G's"
 
             // Graphs axis
             axisSpeedY0.min = shot.minSpeed * 0.9
@@ -541,141 +531,318 @@ Item {
     ////////////////////////////////////////////////////////////////////////////
 
     Item {
-        id: rectangleGraphs
+        id: graphArea
 
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.bottom: parent.bottom
 
-        enabled: !mapArea.fullscreen
-        width: parent.width * 0.6
         z: -1
+        width: parent.width * 0.60 - 16
+        //Behavior on width { NumberAnimation { duration: 333 } }
 
-        Column {
-            id: rectangleText
+        enabled: !mapArea.fullscreen
+
+        property string graphHead: Theme.colorForeground // Theme.colorPrimary
+        property string graphTxt: Theme.colorText // "white"
+        property string graphBg: (Theme.currentTheme === Theme.BLOOD_AND_TEARS) ? Theme.colorForeground : Theme.colorComponentBackground
+
+        ////////////////
+
+        Grid {
+            id: grid
 
             anchors.top: parent.top
-            anchors.topMargin: 24
+            anchors.topMargin: 16
             anchors.left: parent.left
-            anchors.leftMargin: 24
+            anchors.leftMargin: 16
             anchors.right: parent.right
-            anchors.rightMargin: 24
-            spacing: 12
+            anchors.rightMargin: 16
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 80
 
-            Row {
-                spacing: 24
+            columns: 2
+            spacing: 16
 
-                Row {
-                    height: 28
+            property int graphWidth: (grid.width - 16) / 2
+            property int graphHeight: (grid.height - 16) / 2
 
-                    Rectangle {
-                        width: parent.height
-                        height: parent.height
-                        color: Theme.colorMaterialLightGreen
-                        ImageSvg {
-                            width: 20
-                            height: 20
-                            anchors.centerIn: parent
-                            source: "qrc:/assets/icons_material/duotone-timer-24px.svg"
-                            color: "white"
-                        }
+            Rectangle { // speed box
+                width: grid.graphWidth
+                height: grid.graphHeight
+                radius: Theme.componentRadius
+                color: graphArea.graphBg
+                border.color: graphArea.graphHead
+
+                Rectangle {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 48
+                    radius: Theme.componentRadius
+                    color: graphArea.graphHead
+
+                    Text {
+                        id: speedTitle
+                        anchors.left: parent.left
+                        anchors.leftMargin: 16
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: qsTr("Speed") + " (" + UtilsString.speedUnit(settingsManager.appUnits) + ")"
+                        color: graphArea.graphTxt
+                        font.bold: true
+                        font.pixelSize: Theme.fontSizeContent
                     }
-                    Rectangle {
-                        width: 24 + trackDuration2.contentWidth
-                        height: parent.height
-                        color: Theme.colorForeground
-                        Text {
-                            id: trackDuration2
-                            anchors.centerIn: parent
-                            text: "01:24.254"
-                            color: Theme.colorText
-                            font.bold: true
-                            font.pixelSize: Theme.fontSizeContentSmall
-                        }
-                    }
-                }
 
-                Row {
-                    height: 28
-
-                    Rectangle {
-                        width: parent.height
-                        height: parent.height
-                        color: Theme.colorMaterialLightGreen
-                        ImageSvg {
-                            width: 20
-                            height: 20
-                            anchors.centerIn: parent
-                            source: "qrc:/assets/icons_material/baseline-straighten-24px.svg"
-                            color: "white"
-                        }
-                    }
-                    Rectangle {
-                        width: 24 + trackDistance2.contentWidth
-                        height: parent.height
-                        color: Theme.colorForeground
-                        Text {
-                            id: trackDistance2
-                            height: parent.height
-                            anchors.centerIn: parent
-                            text: "0.0 km"
-                            color: Theme.colorText
-                            font.bold: true
-                            font.pixelSize: Theme.fontSizeContentSmall
-                            verticalAlignment: Text.AlignVCenter
-                        }
+                    Text {
+                        id: speedMetrics
+                        anchors.right: parent.right
+                        anchors.rightMargin: 16
+                        anchors.verticalCenter: parent.verticalCenter
+                        color: graphArea.graphTxt
+                        font.pixelSize: 14
                     }
                 }
 
-                Row {
-                    height: 28
+                Item {
+                    anchors.fill: parent
+                    anchors.topMargin: 48
 
-                    Rectangle {
-                        width: parent.height
-                        height: parent.height
-                        color: Theme.colorMaterialLightGreen
-                        ImageSvg {
-                            width: 20
-                            height: 20
-                            anchors.centerIn: parent
-                            source: "qrc:/assets/icons_material/duotone-speed-24px.svg"
-                            color: "white"
-                        }
-                    }
-                    Rectangle {
-                        width: 24 + trackSpeed2.contentWidth
-                        height: parent.height
-                        color: Theme.colorForeground
-                        Text {
-                            id: trackSpeed2
-                            height: parent.height
-                            anchors.centerIn: parent
-                            text: "0.0 km/h"
-                            color: Theme.colorText
-                            font.bold: true
-                            font.pixelSize: Theme.fontSizeContentSmall
-                            verticalAlignment: Text.AlignVCenter
+                    ChartView {
+                        id: speedsGraph
+                        anchors.fill: parent
+                        anchors.topMargin: -16
+                        anchors.leftMargin: -16
+                        anchors.rightMargin: -12
+                        anchors.bottomMargin: -16
+
+                        legend.visible: false
+                        antialiasing: true
+                        backgroundColor: "transparent"
+                        backgroundRoundness: 0
+
+                        LineSeries {
+                            id: speedsSeries
+                            color: Theme.colorPrimary; width: 2;
+                            axisX: ValueAxis { id: axisSpeedX0; visible: false; gridVisible: false; }
+                            axisY: ValueAxis { id: axisSpeedY0; visible: true; gridVisible: true;
+                                               labelsFont.pixelSize: Theme.fontSizeContentVerySmall; labelsColor: Theme.colorSubText; labelFormat: "%0.1f";
+                                               gridLineColor: Theme.colorSeparator; }
                         }
                     }
                 }
             }
 
-            ////////
+            Rectangle { // alti box
+                width: grid.graphWidth
+                height: grid.graphHeight
+                radius: Theme.componentRadius
+                color: graphArea.graphBg
+                border.color: graphArea.graphHead
+
+                Rectangle {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 48
+                    radius: Theme.componentRadius
+                    color: graphArea.graphHead
+
+                    Text {
+                        id: altiTitle
+                        anchors.left: parent.left
+                        anchors.leftMargin: 16
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: qsTr("Altitude") + " (" + UtilsString.altitudeUnit(settingsManager.appUnits) + ")"
+                        color: graphArea.graphTxt
+                        font.bold: true
+                        font.pixelSize: Theme.fontSizeContent
+                    }
+
+                    Text {
+                        id: altiMetrics
+                        anchors.right: parent.right
+                        anchors.rightMargin: 16
+                        anchors.verticalCenter: parent.verticalCenter
+                        color: graphArea.graphTxt
+                        font.pixelSize: 14
+                    }
+                }
+
+                Item {
+                    anchors.fill: parent
+                    anchors.topMargin: 48
+
+                    ChartView {
+                        id: altiGraph
+                        anchors.fill: parent
+                        anchors.topMargin: -16
+                        anchors.leftMargin: -16
+                        anchors.rightMargin: -12
+                        anchors.bottomMargin: -16
+
+                        legend.visible: false
+                        antialiasing: true
+                        backgroundColor: "transparent"
+
+                        LineSeries {
+                            id: altiSeries
+                            color: Theme.colorWarning; width: 2;
+                            axisX: ValueAxis { id: axisAltiX0; visible: false; gridVisible: false; }
+                            axisY: ValueAxis { id: axisAltiY0; visible: true; gridVisible: true;
+                                               labelsFont.pixelSize: Theme.fontSizeContentVerySmall; labelsColor: Theme.colorSubText; labelFormat: "%i";
+                                               gridLineColor: Theme.colorSeparator; }
+                        }
+                    }
+                }
+            }
+
+            Rectangle { // accl box
+                width: grid.graphWidth
+                height: grid.graphHeight
+                radius: Theme.componentRadius
+                color: graphArea.graphBg
+                border.color: graphArea.graphHead
+
+                Rectangle {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 48
+                    radius: Theme.componentRadius
+                    color: graphArea.graphHead
+
+                    Text {
+                        id: acclTitle
+                        anchors.left: parent.left
+                        anchors.leftMargin: 16
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: qsTr("Accelerometer")
+                        color: graphArea.graphTxt
+                        font.bold: true
+                        font.pixelSize: Theme.fontSizeContent
+                    }
+
+                    Text {
+                        id: acclMetrics
+                        anchors.right: parent.right
+                        anchors.rightMargin: 16
+                        anchors.verticalCenter: parent.verticalCenter
+                        color: graphArea.graphTxt
+                        font.pixelSize: 14
+                    }
+                }
+
+                Item {
+                    anchors.fill: parent
+                    anchors.topMargin: 48
+
+                    ChartView {
+                        id: acclGraph
+                        anchors.fill: parent
+                        anchors.topMargin: -16
+                        anchors.leftMargin: -16
+                        anchors.rightMargin: -12
+                        anchors.bottomMargin: -16
+
+                        legend.visible: false
+                        backgroundColor: "transparent"
+                        antialiasing: true
+
+                        ValueAxis { id: axisAcclX0; visible: false; gridVisible: false; }
+                        ValueAxis { id: axisAcclY0; visible: true; gridVisible: true;
+                                    labelsFont.pixelSize: Theme.fontSizeContentVerySmall; labelsColor: Theme.colorSubText; labelFormat: "%i";
+                                    gridLineColor: Theme.colorSeparator; }
+
+                        LineSeries { id: acclX; width: 1; axisX: axisAcclX0; axisY: axisAcclY0; }
+                        LineSeries { id: acclY; width: 1; axisX: axisAcclX0; axisY: axisAcclY0; }
+                        LineSeries { id: acclZ; width: 1; axisX: axisAcclX0; axisY: axisAcclY0; }
+                    }
+                }
+            }
+
+            Rectangle { // gyro box
+                width: grid.graphWidth
+                height:grid. graphHeight
+                radius: Theme.componentRadius
+                color: graphArea.graphBg
+                border.color: graphArea.graphHead
+
+                Rectangle {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 48
+                    radius: Theme.componentRadius
+                    color: graphArea.graphHead
+
+                    Text {
+                        id: gyroTitle
+                        anchors.left: parent.left
+                        anchors.leftMargin: 16
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: qsTr("Gyroscope")
+                        color: graphArea.graphTxt
+                        font.bold: true
+                        font.pixelSize: Theme.fontSizeContent
+                    }
+                }
+
+                Item {
+                    anchors.fill: parent
+                    anchors.topMargin: 48
+
+                    ChartView {
+                        id: gyroGraph
+                        anchors.fill: parent
+                        anchors.topMargin: -16
+                        anchors.leftMargin: -16
+                        anchors.rightMargin: -12
+                        anchors.bottomMargin: -16
+
+                        legend.visible: false
+                        antialiasing: true
+                        backgroundColor: "transparent"
+
+                        ValueAxis { id: axisGyroX0; visible: false; gridVisible: false; }
+                        ValueAxis { id: axisGyroY0; visible: true; gridVisible: true;
+                                    labelsFont.pixelSize: Theme.fontSizeContentVerySmall; labelsColor: Theme.colorSubText; labelFormat: "%i";
+                                    gridLineColor: Theme.colorSeparator; }
+
+                        LineSeries { id: gyroX; width: 1; axisX: axisGyroX0; axisY: axisGyroY0; }
+                        LineSeries { id: gyroY; width: 1; axisX: axisGyroX0; axisY: axisGyroY0; }
+                        LineSeries { id: gyroZ; width: 1; axisX: axisGyroX0; axisY: axisGyroY0; }
+                    }
+                }
+            }
+        }
+
+        ////////////////
+
+        Rectangle {
+            anchors.left: parent.left
+            anchors.leftMargin: 16
+            anchors.right: parent.right
+            anchors.rightMargin: 16
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 16
+
+            height: 48
+            radius: Theme.componentRadius
+            color: graphArea.graphHead
 
             Row {
+                anchors.left: parent.left
+                anchors.leftMargin: 16
+                anchors.verticalCenter: parent.verticalCenter
                 spacing: 12
 
                 Text {
                     id: labelDuration
                     text: qsTr("Track duration:")
-                    font.pixelSize: Theme.fontSizeContentSmall
-                    color: Theme.colorText
+                    font.pixelSize: Theme.fontSizeContent
+                    color: graphArea.graphTxt
                 }
                 Text {
                     id: trackDuration
                     font.bold: true
-                    font.pixelSize: Theme.fontSizeContentSmall
-                    color: Theme.colorText
+                    font.pixelSize: Theme.fontSizeContent
+                    color: graphArea.graphTxt
                 }
 
                 Item { width: 1; height: 1; } // spacer
@@ -683,240 +850,15 @@ Item {
                 Text {
                     id: labelDistance
                     text: qsTr("Distance traveled:")
-                    font.pixelSize: Theme.fontSizeContentSmall
-                    color: Theme.colorText
+                    font.pixelSize: Theme.fontSizeContent
+                    color: graphArea.graphTxt
                 }
                 Text {
                     id: trackDistance
                     font.bold: true
-                    font.pixelSize: Theme.fontSizeContentSmall
-                    color: Theme.colorText
+                    font.pixelSize: Theme.fontSizeContent
+                    color: graphArea.graphTxt
                 }
-            }
-
-            Row {
-                spacing: 8
-
-                Text {
-                    id: labelAvgSpeed
-                    text: qsTr("Average speed:")
-                    color: Theme.colorText
-                    font.pixelSize: Theme.fontSizeContentSmall
-                }
-                Text {
-                    id: speedAVG
-                    font.bold: true
-                    font.pixelSize: Theme.fontSizeContentSmall
-                    color: Theme.colorText
-                }
-
-                Item { width: 1; height: 1; } // spacer
-
-                Text {
-                    id: labelMinSpeed
-                    text: qsTr("(min:")
-                    font.pixelSize: Theme.fontSizeContentSmall
-                    color: Theme.colorText
-                }
-                Text {
-                    id: speedMIN
-                    font.bold: true
-                    font.pixelSize: Theme.fontSizeContentSmall
-                    color: Theme.colorText
-                }
-
-                Text {
-                    id: labelMaxSpeed
-                    text: qsTr("/ max:")
-                    color: Theme.colorText
-                    font.pixelSize: Theme.fontSizeContentSmall
-                }
-                Text {
-                    id: speedMAX
-                    font.bold: true
-                    font.pixelSize: Theme.fontSizeContentSmall
-                    color: Theme.colorText
-                }
-                Text {
-                    text: qsTr(")")
-                    font.pixelSize: Theme.fontSizeContentSmall
-                    color: Theme.colorText
-                }
-            }
-
-            Row {
-                spacing: 8
-
-                Text {
-                    id: labelAvgAltitude
-                    text: qsTr("Average altitude:")
-                    font.pixelSize: Theme.fontSizeContentSmall
-                    color: Theme.colorText
-                }
-                Text {
-                    id: altiAVG
-                    font.bold: true
-                    font.pixelSize: Theme.fontSizeContentSmall
-                    color: Theme.colorText
-                }
-
-                Item { width: 1; height: 1; } // spacer
-
-                Text {
-                    id: labelMinAltitude
-                    text: qsTr("(min:")
-                    font.pixelSize: Theme.fontSizeContentSmall
-                    color: Theme.colorText
-                }
-                Text {
-                    id: altiMIN
-                    font.bold: true
-                    font.pixelSize: Theme.fontSizeContentSmall
-                    color: Theme.colorText
-                }
-
-                Text {
-                    id: labelMaxAltitude
-                    text: qsTr("/ max:")
-                    color: Theme.colorText
-                    font.pixelSize: Theme.fontSizeContentSmall
-                }
-                Text {
-                    id: altiMAX
-                    font.bold: true
-                    font.pixelSize: Theme.fontSizeContentSmall
-                    color: Theme.colorText
-                }
-                Text {
-                    text: qsTr(")")
-                    font.pixelSize: Theme.fontSizeContentSmall
-                    color: Theme.colorText
-                }
-            }
-
-            Row {
-                spacing: 8
-
-                Text {
-                    id: labelGforce
-                    text: qsTr("Max G force:")
-                    font.pixelSize: Theme.fontSizeContentSmall
-                    color: Theme.colorText
-                }
-                Text {
-                    id: acclMAX
-                    font.bold: true
-                    font.pixelSize: Theme.fontSizeContentSmall
-                    color: Theme.colorText
-                }
-            }
-        }
-
-        ////////////////
-
-        Grid {
-            id: grid
-            columns: 2
-
-            anchors.top: rectangleText.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-
-            ChartView {
-                id: speedsGraph
-                width: grid.width / 2
-                height: grid.height / 2
-                anchors.margins: -24
-
-                title: "Speed (" + UtilsString.speedUnit(settingsManager.appUnits) + ")"
-                titleColor: Theme.colorText
-                titleFont.pixelSize: Theme.fontSizeContentSmall
-                titleFont.bold: true
-
-                antialiasing: true
-                backgroundColor: "transparent"
-                backgroundRoundness: 0
-                legend.visible: false
-
-                LineSeries {
-                    id: speedsSeries
-                    color: Theme.colorPrimary;  width: 1;
-                    axisX: ValueAxis { id: axisSpeedX0; visible: false; gridVisible: false; }
-                    axisY: ValueAxis { id: axisSpeedY0; visible: true; gridVisible: true;
-                                       labelsFont.pixelSize: Theme.fontSizeContentVerySmall; labelsColor: Theme.colorSubText; labelFormat: "%0.1f";
-                                       gridLineColor: Theme.colorSeparator; }
-                }
-            }
-
-            ChartView {
-                id: altiGraph
-                width: grid.width / 2
-                height: grid.height / 2
-                anchors.margins: -24
-
-                title: "Altitude (" + UtilsString.altitudeUnit(settingsManager.appUnits) + ")"
-                titleColor: Theme.colorText
-                titleFont.pixelSize: Theme.fontSizeContentSmall
-                titleFont.bold: true
-
-                backgroundColor: "transparent"
-                antialiasing: true
-
-                LineSeries {
-                    id: altiSeries
-                    color: Theme.colorWarning;  width: 1;
-                    axisX: ValueAxis { id: axisAltiX0; visible: false; gridVisible: false; }
-                    axisY: ValueAxis { id: axisAltiY0; visible: true; gridVisible: true;
-                                       labelsFont.pixelSize: Theme.fontSizeContentVerySmall; labelsColor: Theme.colorSubText; labelFormat: "%i";
-                                       gridLineColor: Theme.colorSeparator; }
-                }
-            }
-
-            ChartView {
-                id: acclGraph
-                width: grid.width / 2
-                height: grid.height / 2
-                anchors.margins: -24
-
-                title: "Acceleration"
-                titleColor: Theme.colorText
-                titleFont.pixelSize: Theme.fontSizeContentSmall
-                titleFont.bold: true
-                backgroundColor: "transparent"
-                antialiasing: true
-
-                ValueAxis { id: axisAcclX0; visible: false; gridVisible: false; }
-                ValueAxis { id: axisAcclY0; visible: true; gridVisible: true;
-                            labelsFont.pixelSize: Theme.fontSizeContentVerySmall; labelsColor: Theme.colorSubText; labelFormat: "%i";
-                            gridLineColor: Theme.colorSeparator; }
-
-                LineSeries { id: acclX; axisX: axisAcclX0; axisY: axisAcclY0; }
-                LineSeries { id: acclY; axisX: axisAcclX0; axisY: axisAcclY0; }
-                LineSeries { id: acclZ; axisX: axisAcclX0; axisY: axisAcclY0; }
-            }
-
-            ChartView {
-                id: gyroGraph
-                width: grid.width / 2
-                height: grid.height / 2
-                anchors.margins: -24
-
-                title: "Gyroscope"
-                titleColor: Theme.colorText
-                titleFont.pixelSize: Theme.fontSizeContentSmall
-                titleFont.bold: true
-                backgroundColor: "transparent"
-                antialiasing: true
-
-                ValueAxis { id: axisGyroX0; visible: false; gridVisible: false; }
-                ValueAxis { id: axisGyroY0; visible: true; gridVisible: true;
-                            labelsFont.pixelSize: Theme.fontSizeContentVerySmall; labelsColor: Theme.colorSubText; labelFormat: "%i";
-                            gridLineColor: Theme.colorSeparator; }
-
-                LineSeries { id: gyroX; axisX: axisGyroX0; axisY: axisGyroY0; }
-                LineSeries { id: gyroY; axisX: axisGyroX0; axisY: axisGyroY0; }
-                LineSeries { id: gyroZ; axisX: axisGyroX0; axisY: axisGyroY0; }
             }
         }
     }
