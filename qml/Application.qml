@@ -146,8 +146,6 @@ ApplicationWindow {
 */
     // Content /////////////////////////////////////////////////////////////////
 
-    property var currentDevicePtr: null
-
     Rectangle {
         id: appBg
         anchors.fill: parent

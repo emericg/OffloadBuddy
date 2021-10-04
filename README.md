@@ -21,7 +21,7 @@ It's designed to remove the hassle of handling and transferring the many videos 
 - [x] Media transcoding
   - [x] Create short video clips (and GIFs) from your videos!
   - [x] Create videos from timelapses
-  - [x] Create timelapse from videos
+  - [x] Create timelapses from videos
   - [x] Extract photos/screenshots from videos
 - [x] Apply filters to transcoded media
   - [x] Reframe media, change aspect ratio

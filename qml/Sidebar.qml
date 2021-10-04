@@ -6,14 +6,16 @@ import ThemeEngine 1.0
 
 Rectangle {
     id: sideBar
-    width: isHdpi ? 80 : 92
     anchors.top: parent.top
     anchors.left: parent.left
     anchors.bottom: parent.bottom
 
+    width: isHdpi ? 80 : 92
     color: Theme.colorSidebar
 
+    property var currentDevicePtr: null
     signal myDeviceClicked(var devicePtr)
+
     onMyDeviceClicked: {
         if (typeof devicePtr !== "undefined") {
             //console.log(devicePtr + ' component was triggered')

@@ -342,7 +342,9 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
 
                 visible: (shot.duration > 1)
-                text: (shot.fileType === ShotUtils.FILE_VIDEO) ? UtilsString.durationToString_ISO8601_compact_loose(shot.duration) : shot.duration
+                text: (shot.fileType === ShotUtils.FILE_VIDEO) ?
+                          UtilsString.durationToString_ISO8601_compact_loose(shot.duration) :
+                          shot.duration
 
                 color: "white"
                 lineHeight: 1
@@ -360,7 +362,7 @@ Rectangle {
             anchors.rightMargin: 8
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 8
-            spacing: 4
+            spacing: 0
 
             Text {
                 id: text_hmmt
