@@ -1426,7 +1426,7 @@ Popup {
                             function updateDestinations() {
                                 cbDestinations.clear()
 
-                                if (currentShot)
+                                if (currentShot && appContent.state !== "device")
                                     cbDestinations.append( { "text": qsTr("Next to the video file") } )
 
                                 for (var child in storageManager.directoriesList) {
@@ -1451,7 +1451,7 @@ Popup {
                                 if (previousDestination === qsTr("Next to the video file")) previousDestination = currentShot.folder
 
                                 if (currentShot) {
-                                    if (comboBoxDestination.currentIndex === 0) {
+                                    if (comboBoxDestination.currentIndex === 0 && appContent.state !== "device") {
                                         fileInput.folder = currentShot.folder + jobManager.getDestinationHierarchy(currentShot, selectedDestination)
                                     } else if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
                                         fileInput.folder = previousDestination + jobManager.getDestinationHierarchy(currentShot, previousDestination)
@@ -1562,7 +1562,7 @@ Popup {
 
                     // destination
                     if (popupMode === 1) {
-                        if (comboBoxDestination.currentIndex === 0) {
+                        if (comboBoxDestination.currentIndex === 0 && appContent.state !== "device") {
                             settingsEncoding["folder"] = currentShot.folder
                             settingsEncoding["file"] = fileInput.file
                             settingsEncoding["extension"] = fileInput.extension

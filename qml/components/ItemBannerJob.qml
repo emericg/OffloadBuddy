@@ -87,7 +87,7 @@ Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
 
                     colorBackground: Theme.colorBackground
-                    colorForeground: Theme.colorActionbarContent
+                    colorForeground: Theme.colorActionbarHighlight
 
                     from: 0
                     to: 1
