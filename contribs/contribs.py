@@ -265,12 +265,12 @@ if OS_HOST == "Linux":
         urllib.request.urlretrieve("https://raw.githubusercontent.com/linuxdeploy/linuxdeploy-plugin-gstreamer/master/linuxdeploy-plugin-gstreamer.sh", deploy_dir + "linuxdeploy-plugin-gstreamer.sh")
 
 ## LAV Filters
-## version: 0.75
+## version: 0.75.1
 if OS_HOST == "Windows":
-    FILE_lavfilters = "LAVFilters-0.75-Installer.exe"
+    FILE_lavfilters = "LAVFilters-0.75.1-Installer.exe"
     if not os.path.exists("src/" + FILE_lavfilters):
         print("> Downloading " + FILE_lavfilters + "...")
-        urllib.request.urlretrieve("https://github.com/Nevcairiel/LAVFilters/releases/download/0.75/" + FILE_lavfilters, deploy_dir + FILE_lavfilters)
+        urllib.request.urlretrieve("https://github.com/Nevcairiel/LAVFilters/releases/download/0.75.1/" + FILE_lavfilters, deploy_dir + FILE_lavfilters)
 
 ## EXECUTE #####################################################################
 

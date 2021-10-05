@@ -82,8 +82,8 @@ Section "Install Visual C++ Redistributable"
 SectionEnd
 
 Section "Install LAV Filters"
-  ExecWait "$INSTDIR\LAVFilters-0.75-Installer.exe /verysilent /norestart"
-  Delete "$INSTDIR\LAVFilters-0.75-Installer.exe"
+  ExecWait "$INSTDIR\LAVFilters-0.75.1-Installer.exe /verysilent /norestart"
+  Delete "$INSTDIR\LAVFilters-0.75.1-Installer.exe"
 SectionEnd
 
 Section "Start Menu Shortcuts"
