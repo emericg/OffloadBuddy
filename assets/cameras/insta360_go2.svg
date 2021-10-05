@@ -8,7 +8,7 @@
    sodipodi:version="0.32"
    inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
    version="1.0"
-   sodipodi:docname="H9.svg"
+   sodipodi:docname="insta360_go2.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    style="display:inline"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -20,7 +20,7 @@
    xmlns:cc="http://creativecommons.org/ns#"
    xmlns:dc="http://purl.org/dc/elements/1.1/">
   <title
-     id="title902">HERO8</title>
+     id="title904">Max</title>
   <defs
      id="defs4">
     <linearGradient
@@ -600,31 +600,37 @@
      borderopacity="1"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="7.2098148"
-     inkscape:cx="65.605014"
-     inkscape:cy="56.797575"
+     inkscape:zoom="24.233553"
+     inkscape:cx="53.603366"
+     inkscape:cy="113.41713"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:showpageshadow="false"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:window-width="2182"
+     inkscape:window-width="2023"
      inkscape:window-height="1364"
-     inkscape:window-x="1169"
+     inkscape:window-x="1417"
      inkscape:window-y="0"
      inkscape:window-maximized="0"
      inkscape:pagecheckerboard="true"
      borderlayer="true"
-     inkscape:snap-bbox="true"
+     inkscape:snap-bbox="false"
      inkscape:snap-nodes="true"
-     inkscape:bbox-nodes="true"
-     inkscape:snap-global="true"
-     inkscape:snap-object-midpoints="true"
-     inkscape:snap-center="false"
+     inkscape:snap-others="true"
      inkscape:snap-grids="true"
+     inkscape:bbox-nodes="true"
+     inkscape:snap-object-midpoints="false"
+     inkscape:snap-center="true"
      inkscape:snap-bbox-edge-midpoints="false"
-     inkscape:snap-smooth-nodes="true">
+     inkscape:snap-bbox-midpoints="false"
+     inkscape:object-paths="false"
+     inkscape:snap-intersection-paths="false"
+     inkscape:snap-midpoints="false"
+     inkscape:snap-smooth-nodes="true"
+     inkscape:object-nodes="true"
+     inkscape:snap-page="true">
     <inkscape:grid
        type="xygrid"
        id="grid3672"
@@ -633,43 +639,21 @@
        empspacing="8"
        snapvisiblegridlinesonly="true" />
     <sodipodi:guide
-       position="56,48"
-       orientation="0,1"
-       id="guide912"
-       inkscape:locked="false" />
+       position="64,168"
+       orientation="1,0"
+       id="guide1925" />
+    <sodipodi:guide
+       position="49,93"
+       orientation="0,-1"
+       id="guide6491" />
   </sodipodi:namedview>
   <metadata
      id="metadata7">
     <rdf:RDF>
       <cc:Work
          rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title>HERO8</dc:title>
-        <cc:license
-           rdf:resource="http://creativecommons.org/licenses/by-sa/4.0/" />
-        <dc:creator>
-          <cc:Agent>
-            <dc:title>Emeric Grange</dc:title>
-          </cc:Agent>
-        </dc:creator>
+        <dc:title>Max</dc:title>
       </cc:Work>
-      <cc:License
-         rdf:about="http://creativecommons.org/licenses/by-sa/4.0/">
-        <cc:permits
-           rdf:resource="http://creativecommons.org/ns#Reproduction" />
-        <cc:permits
-           rdf:resource="http://creativecommons.org/ns#Distribution" />
-        <cc:requires
-           rdf:resource="http://creativecommons.org/ns#Notice" />
-        <cc:requires
-           rdf:resource="http://creativecommons.org/ns#Attribution" />
-        <cc:permits
-           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
-        <cc:requires
-           rdf:resource="http://creativecommons.org/ns#ShareAlike" />
-      </cc:License>
     </rdf:RDF>
   </metadata>
   <g
@@ -679,22 +663,26 @@
      style="display:inline"
      transform="translate(0,106)">
     <path
-       style="display:inline;opacity:0.6;fill-opacity:1;stroke:none;stroke-width:7.69274"
-       d="M 13,22 C 7,22 2,27 2,33 v 62 c 0,6 5,11 11,11 h 102 c 6,0 11,-5 11,-11 V 33 c 0,-6 -5,-11 -11,-11 z m 69.642578,6 H 111.35742 C 118,28 120,30 120,36.642578 V 65.357422 C 120,72 118,74 111.35742,74 H 82.642578 C 75.999998,74 74,72 74,65.357422 V 36.642578 C 74,30 75.999998,28 82.642578,28 Z M 16,32 h 38 c 2,0 4,2 4,4 v 40 c 0,2.020615 -2,4 -4,4 H 16 c -2,0 -4,-2 -4,-4 V 36 c 0,-2 2,-4 4,-4 z"
-       id="rect2915"
-       sodipodi:nodetypes="sssssssssssssssssssssssssss"
-       transform="translate(0,-106)" />
-    <path
-       style="display:inline;opacity:1;fill-opacity:1;stroke:none;stroke-width:11.8264"
-       d="m 79,-84 c -6,0 -11,5 -11,11 v 36 c 0,6.000003 5,11 11,11 h 36 c 6,0 11,-5 11,-11 v -36 c 0,-6 -5,-11 -11,-11 z m 3.64258,6 h 28.71484 C 118,-78 120,-76 120,-69.357422 v 28.714844 C 120,-34 118,-32 111.35742,-32 H 82.64258 C 76,-32 74,-34 74,-40.642578 V -69.357422 C 74,-76 76,-78 82.64258,-78 Z"
-       id="rect2915-3"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ssssssssssssssssss" />
+       style="opacity:0.66;fill:#000000;fill-opacity:0.972;fill-rule:evenodd;stroke:#000000;stroke-width:1.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 64,-98 c -13,0 -27,8 -27,30 v 52 C 37,6 51,14 64,14 77,14 91,6 91,-16 V -68 C 91,-90 77,-98 64,-98 Z m 0,2 c 13.80712,0 25,11.192881 25,25 0,13.807119 -11.19288,25 -25,25 -13.807119,0 -25,-11.192881 -25,-25 0,-13.807119 11.192881,-25 25,-25 z"
+       id="rect906"
+       sodipodi:nodetypes="cssccccsssss" />
     <circle
-       style="opacity:1;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1.53636;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="path922"
-       cx="97"
-       cy="-55"
-       r="13" />
+       style="opacity:1;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1.32955;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path919"
+       cx="63.75"
+       cy="-70.75"
+       r="11.25" />
+    <path
+       style="display:inline;opacity:1;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1.71053;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 64,-96 a 25,25 0 0 0 -25,25 25,25 0 0 0 25,25 25,25 0 0 0 25,-25 25,25 0 0 0 -25,-25 z m 0,4.166667 A 20.833333,20.833333 0 0 1 84.83333,-71 20.833333,20.833333 0 0 1 64,-50.166667 20.833333,20.833333 0 0 1 43.166667,-71 20.833333,20.833333 0 0 1 64,-91.833333 Z"
+       id="path921-3-7-6"
+       inkscape:connector-curvature="0" />
+    <circle
+       style="fill:#141414;stroke:none;stroke-width:1.09402;paint-order:markers fill stroke"
+       id="path11832"
+       cx="64"
+       cy="-40"
+       r="2" />
   </g>
 </svg>

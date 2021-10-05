@@ -2,23 +2,23 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="128"
    height="128"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.92.4 5da689c313, 2019-01-14"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
    version="1.0"
    sodipodi:docname="max.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   style="display:inline">
+   style="display:inline"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
   <title
      id="title904">Max</title>
   <defs
@@ -600,9 +600,9 @@
      borderopacity="1"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="11.313709"
-     inkscape:cx="83.799928"
-     inkscape:cy="80.72456"
+     inkscape:zoom="8.9164381"
+     inkscape:cx="73.12337"
+     inkscape:cy="63.310034"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -679,13 +679,14 @@
      style="display:inline"
      transform="translate(0,106)">
     <path
-       style="opacity:0.66000001;fill:#000000;fill-opacity:0.972;fill-rule:evenodd;stroke:none;stroke-width:1.29999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 28 8 C 16.92 8 8 16.92 8 28 L 8 100 C 8 111.08 16.92 120 28 120 L 100 120 C 111.08 120 120 111.08 120 100 L 120 28 C 120 16.92 111.08 8 100 8 L 28 8 z M 87 12 A 25 25 0 0 1 112 37 A 25 25 0 0 1 87 62 A 25 25 0 0 1 62 37 A 25 25 0 0 1 87 12 z M 27.599609 24 L 44.400391 24 C 46.394791 24 48 25.605209 48 27.599609 L 48 44.400391 C 48 46.394791 46.394791 48 44.400391 48 L 27.599609 48 C 25.605209 48 24 46.394791 24 44.400391 L 24 27.599609 C 24 25.605209 25.605209 24 27.599609 24 z M 19.919922 65 L 108.08008 65 C 110.25176 65 112 66.748238 112 68.919922 L 112 108.08008 C 112 110.25176 110.25176 112 108.08008 112 L 19.919922 112 C 17.748238 112 16 110.25176 16 108.08008 L 16 68.919922 C 16 66.748238 17.748238 65 19.919922 65 z "
+       style="opacity:0.66;fill:#000000;fill-opacity:0.972;fill-rule:evenodd;stroke:none;stroke-width:1.3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 28,8 C 16.92,8 8,16.92 8,28 v 72 c 0,11.08 8.92,20 20,20 h 72 c 11.08,0 20,-8.92 20,-20 V 28 C 120,16.92 111.08,8 100,8 Z m 59,4 c 13.80712,0 25,11.192881 25,25 0,13.807119 -11.19288,25 -25,25 C 73.192881,62 62,50.807119 62,37 62,23.192881 73.192881,12 87,12 Z"
        transform="translate(0,-106)"
-       id="rect906" />
+       id="rect906"
+       sodipodi:nodetypes="ssssssssssssss" />
     <path
-       style="display:inline;opacity:0.8;fill:#131313;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:4.28962612;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 19.919922,65 C 17.748238,65 16,66.748238 16,68.919922 V 108.08008 C 16,110.25176 17.748238,112 19.919922,112 H 108.08008 C 110.25176,112 112,110.25176 112,108.08008 V 68.919922 C 112,66.748238 110.25176,65 108.08008,65 Z"
+       style="display:inline;opacity:0.8;fill:#ffffff;fill-opacity:0.294458;fill-rule:evenodd;stroke:none;stroke-width:4.28963;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 19.919922,65 C 17.748238,65 16,66.748238 16,68.919922 V 106.08008 C 16,108.25176 17.748238,110 19.919922,110 H 108.08008 C 110.25176,110 112,108.25176 112,106.08008 V 68.919922 C 112,66.748238 110.25176,65 108.08008,65 Z"
        transform="translate(0,-106)"
        id="rect1041-5"
        inkscape:connector-curvature="0"
@@ -702,7 +703,7 @@
        id="path921-3-7-6"
        inkscape:connector-curvature="0" />
     <rect
-       style="display:inline;opacity:0.7;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1.95000005;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="display:inline;opacity:0.8;fill:#ffffff;fill-opacity:0.29411766;fill-rule:evenodd;stroke:none;stroke-width:1.95000005;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect915-2"
        width="24"
        height="24"

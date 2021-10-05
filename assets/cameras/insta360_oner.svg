@@ -8,7 +8,7 @@
    sodipodi:version="0.32"
    inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
    version="1.0"
-   sodipodi:docname="H9.svg"
+   sodipodi:docname="H9 (copie).svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    style="display:inline"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -601,8 +601,8 @@
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
      inkscape:zoom="7.2098148"
-     inkscape:cx="65.605014"
-     inkscape:cy="56.797575"
+     inkscape:cx="62.553618"
+     inkscape:cy="58.461973"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -622,7 +622,7 @@
      inkscape:snap-global="true"
      inkscape:snap-object-midpoints="true"
      inkscape:snap-center="false"
-     inkscape:snap-grids="true"
+     inkscape:snap-grids="false"
      inkscape:snap-bbox-edge-midpoints="false"
      inkscape:snap-smooth-nodes="true">
     <inkscape:grid
@@ -637,6 +637,14 @@
        orientation="0,1"
        id="guide912"
        inkscape:locked="false" />
+    <sodipodi:guide
+       position="82.64258,100"
+       orientation="0,-1"
+       id="guide1357" />
+    <sodipodi:guide
+       position="82.64258,54"
+       orientation="0,-1"
+       id="guide1435" />
   </sodipodi:namedview>
   <metadata
      id="metadata7">
@@ -680,7 +688,7 @@
      transform="translate(0,106)">
     <path
        style="display:inline;opacity:0.6;fill-opacity:1;stroke:none;stroke-width:7.69274"
-       d="M 13,22 C 7,22 2,27 2,33 v 62 c 0,6 5,11 11,11 h 102 c 6,0 11,-5 11,-11 V 33 c 0,-6 -5,-11 -11,-11 z m 69.642578,6 H 111.35742 C 118,28 120,30 120,36.642578 V 65.357422 C 120,72 118,74 111.35742,74 H 82.642578 C 75.999998,74 74,72 74,65.357422 V 36.642578 C 74,30 75.999998,28 82.642578,28 Z M 16,32 h 38 c 2,0 4,2 4,4 v 40 c 0,2.020615 -2,4 -4,4 H 16 c -2,0 -4,-2 -4,-4 V 36 c 0,-2 2,-4 4,-4 z"
+       d="M 13,22 C 7,22 2,27 2,33 v 52 c 0,6 5,11 11,11 h 102 c 6,0 11,-5 11,-11 V 33 c 0,-6 -5,-11 -11,-11 z m 69.642578,6 H 111.35742 C 118,28 120,30 120,36.642578 V 65.357422 C 120,72 118,74 111.35742,74 H 82.642578 C 75.999998,74 74,72 74,65.357422 V 36.642578 C 74,30 75.999998,28 82.642578,28 Z M 14,30 h 40 c 2,0 4,2 4,4 v 38 c 0,2.020615 -2,4 -4,4 H 14 c -2,0 -4,-2 -4,-4 V 34 c 0,-2 2,-4 4,-4 z"
        id="rect2915"
        sodipodi:nodetypes="sssssssssssssssssssssssssss"
        transform="translate(0,-106)" />
@@ -696,5 +704,10 @@
        cx="97"
        cy="-55"
        r="13" />
+    <path
+       style="display:inline;opacity:0.6;fill-opacity:1;stroke:none;stroke-width:7.69274"
+       d="m 2,-21 c 0,6 5,11 11,11 h 102 c 6,0 11,-5 11,-11 z"
+       id="rect2915-36"
+       sodipodi:nodetypes="csscc" />
   </g>
 </svg>
