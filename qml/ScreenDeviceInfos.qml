@@ -210,6 +210,8 @@ Rectangle {
 
                     Row {
                         spacing: 8
+                        visible: currentDevice.brand
+
                         Text {
                             text: qsTr("Brand")
                             color: Theme.colorText
@@ -224,6 +226,8 @@ Rectangle {
                     }
                     Row {
                         spacing: 8
+                        visible: currentDevice.model
+
                         Text {
                             text: qsTr("Model")
                             color: Theme.colorText
@@ -238,6 +242,8 @@ Rectangle {
                     }
                     Row {
                         spacing: 8
+                        visible: currentDevice.serial
+
                         Text {
                             text: qsTr("Serial")
                             color: Theme.colorText
@@ -252,6 +258,8 @@ Rectangle {
                     }
                     Row {
                         spacing: 8
+                        visible: currentDevice.firmware
+
                         Text {
                             text: qsTr("Firmware")
                             color: Theme.colorText
@@ -265,7 +273,14 @@ Rectangle {
                         }
                     }
                     ButtonWireframeImage {
+                        visible: (currentDevice.brand === "GoPro" && currentDevice.firmwareState > 0)
+
                         fullColor: true
+                        primaryColor: {
+                            if (currentDevice.firmwareState === DeviceUtils.FirmwareUpToDate) return Theme.colorSuccess
+                            if (currentDevice.firmwareState === DeviceUtils.FirmwareUpdateInstalled) return Theme.colorSuccess
+                            return Theme.colorPrimary
+                        }
                         text: {
                             if (currentDevice.firmwareState === DeviceUtils.FirmwareUpToDate) return qsTr("Up to date")
                             if (currentDevice.firmwareState === DeviceUtils.FirmwareUpdateAvailable) return qsTr("Update available")
@@ -273,17 +288,12 @@ Rectangle {
                             if (currentDevice.firmwareState === DeviceUtils.FirmwareUpdateInstalled) return qsTr("Update installed")
                             return ""
                         }
-                        primaryColor: {
-                            if (currentDevice.firmwareState === DeviceUtils.FirmwareUpToDate) return Theme.colorSuccess
-                            if (currentDevice.firmwareState === DeviceUtils.FirmwareUpdateInstalled) return Theme.colorSuccess
-                            return Theme.colorPrimary
+                        source: {
+                            if (currentDevice.firmwareState === DeviceUtils.FirmwareUpToDate)
+                                return "qrc:/assets/icons_material/baseline-done-24px.svg"
+                            return "qrc:/assets/icons_material/baseline-archive-24px.svg"
                         }
 
-                        source: currentDevice.firmwareState === DeviceUtils.FirmwareUpToDate ?
-                                    "qrc:/assets/icons_material/baseline-done-24px.svg" :
-                                    "qrc:/assets/icons_material/baseline-archive-24px.svg"
-
-                        visible: (currentDevice.firmwareState > 0)
                         onClicked: {
                             if (currentDevice.firmwareState === DeviceUtils.FirmwareUpdateAvailable)
                                 popupFirmware.openDevice(currentDevice)
