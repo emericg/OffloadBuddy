@@ -8,7 +8,7 @@
    sodipodi:version="0.32"
    inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
    version="1.0"
-   sodipodi:docname="generic_actioncam.svg"
+   sodipodi:docname="insta360_one_x.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    style="display:inline"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -20,7 +20,7 @@
    xmlns:cc="http://creativecommons.org/ns#"
    xmlns:dc="http://purl.org/dc/elements/1.1/">
   <title
-     id="title904">Faenza icon theme</title>
+     id="title904">Max</title>
   <defs
      id="defs4">
     <linearGradient
@@ -600,53 +600,39 @@
      borderopacity="1"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="4.5074925"
-     inkscape:cx="57.01618"
-     inkscape:cy="29.395501"
+     inkscape:zoom="12.588409"
+     inkscape:cx="101.44252"
+     inkscape:cy="114.98673"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:showpageshadow="false"
-     showguides="false"
+     showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:window-width="1920"
-     inkscape:window-height="1056"
-     inkscape:window-x="0"
+     inkscape:window-width="2023"
+     inkscape:window-height="1364"
+     inkscape:window-x="1417"
      inkscape:window-y="0"
-     inkscape:window-maximized="1"
+     inkscape:window-maximized="0"
      inkscape:pagecheckerboard="true"
      borderlayer="true"
      inkscape:snap-bbox="true"
-     inkscape:snap-nodes="false"
+     inkscape:snap-nodes="true"
+     inkscape:snap-others="false"
+     inkscape:snap-grids="false"
      inkscape:bbox-nodes="true"
-     inkscape:snap-page="false"
+     inkscape:snap-object-midpoints="false"
+     inkscape:snap-center="true"
      inkscape:snap-bbox-edge-midpoints="true"
-     inkscape:snap-others="false">
-    <sodipodi:guide
-       orientation="1,0"
-       position="0,112"
-       id="guide2383"
-       inkscape:locked="false" />
-    <sodipodi:guide
-       orientation="0,1"
-       position="26.278146,128"
-       id="guide2385"
-       inkscape:locked="false" />
-    <sodipodi:guide
-       orientation="1,0"
-       position="128,54.082119"
-       id="guide2387"
-       inkscape:locked="false" />
-    <sodipodi:guide
-       orientation="0,1"
-       position="78.156291,0"
-       id="guide2389"
-       inkscape:locked="false" />
-    <sodipodi:guide
-       orientation="0,1"
-       position="60.863576,64.084768"
-       id="guide2391"
-       inkscape:locked="false" />
+     inkscape:snap-bbox-midpoints="false"
+     inkscape:object-paths="false"
+     inkscape:snap-intersection-paths="true"
+     inkscape:snap-midpoints="false"
+     inkscape:snap-smooth-nodes="true"
+     inkscape:object-nodes="true"
+     inkscape:snap-to-guides="true"
+     inkscape:snap-global="true"
+     inkscape:bbox-paths="false">
     <inkscape:grid
        type="xygrid"
        id="grid3672"
@@ -654,13 +640,21 @@
        enabled="true"
        empspacing="8"
        snapvisiblegridlinesonly="true" />
+    <sodipodi:guide
+       position="64,88"
+       orientation="1,0"
+       id="guide1213" />
+    <sodipodi:guide
+       position="109,64"
+       orientation="0,-1"
+       id="guide1611" />
   </sodipodi:namedview>
   <metadata
      id="metadata7">
     <rdf:RDF>
       <cc:Work
          rdf:about="">
-        <dc:title>Faenza icon theme</dc:title>
+        <dc:title>Max</dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -671,19 +665,49 @@
      style="display:inline"
      transform="translate(0,106)">
     <path
-       style="display:inline;opacity:0.6;fill-opacity:1;stroke:none;stroke-width:1"
-       d="M 8,-86 C 3.5679994,-86 -1.1e-6,-82.939552 -1.1e-6,-78.999999 V -4.9999896 C -1.1e-6,-1.0604365 3.5679994,2.0000125 8,2.0000125 h 112.00001 c 4.432,0 8,-3.060449 8,-7.0000021 V -78.999999 c 0,-3.939553 -3.568,-7.000001 -8,-7.000001 z m 8,12 h 28 v 40 H 16 Z m 72.000002,10e-7 c 17.673118,0 32.000008,14.326891 32.000008,32.000005 0,17.673116 -14.32689,32.000004 -32.000008,32.000004 -17.673114,0 -32.000001,-14.326888 -32.000001,-32.000004 0,-17.673114 14.326887,-32.000005 32.000001,-32.000005 z"
-       id="rect2915"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="csssssscccccccsssss" />
+       id="rect1211"
+       style="opacity:0.66;fill:#000000;fill-opacity:0.898324;stroke:#000000;stroke-width:2;stroke-opacity:1;paint-order:markers fill stroke;stroke-miterlimit:4;stroke-dasharray:none"
+       d="M 53.910156 8.0175781 C 48.429224 8.0175781 44.017578 12.429224 44.017578 17.910156 L 44.017578 110.08984 C 44.017578 115.57078 48.429224 119.98242 53.910156 119.98242 L 74.089844 119.98242 C 79.570776 119.98242 83.984375 115.57078 83.984375 110.08984 L 83.984375 17.910156 C 83.984375 12.429224 79.570776 8.0175781 74.089844 8.0175781 L 53.910156 8.0175781 z M 64 13 A 13 13 0 0 1 77 26 A 13 13 0 0 1 64 39 A 13 13 0 0 1 51 26 A 13 13 0 0 1 64 13 z "
+       transform="translate(0,-106)" />
     <g
-       id="g906"
-       transform="matrix(1.0456402,0,0,1.0456402,-9.8282921,17.112831)"
-       style="display:inline">
+       id="g2005"
+       transform="matrix(0.61345462,0,0,0.61345458,10.629449,-37.671634)">
+      <ellipse
+         style="opacity:1;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1.32955;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="path919"
+         cx="86.75"
+         cy="-68.75"
+         rx="11.250701"
+         ry="11.25" />
       <path
-         style="display:inline;opacity:1;fill-opacity:1;stroke:none;stroke-width:2.01378;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         d="m 93.55924,-87.13593 a 30.602957,30.602957 0 0 0 -30.60423,30.602293 30.602957,30.602957 0 0 0 30.60423,30.604229 30.602957,30.602957 0 0 0 30.6023,-30.604229 30.602957,30.602957 0 0 0 -30.6023,-30.602293 z m 0,4.341314 a 26.262366,26.262366 0 0 1 26.26292,26.260979 26.262366,26.262366 0 0 1 -26.26292,26.262915 26.262366,26.262366 0 0 1 -26.262916,-26.262915 26.262366,26.262366 0 0 1 26.262916,-26.260979 z m 0,10.652783 a 15.609452,15.609452 0 0 0 -15.610133,15.608196 15.609452,15.609452 0 0 0 15.610133,15.610133 15.609452,15.609452 0 0 0 15.6082,-15.610133 15.609452,15.609452 0 0 0 -15.6082,-15.608196 z"
-         id="path912-3" />
+         style="display:inline;opacity:1;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1.44995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 87,-90.191463 A 21.191463,21.191463 0 0 0 65.808537,-69 21.191463,21.191463 0 0 0 87,-47.808537 21.191463,21.191463 0 0 0 108.19146,-69 21.191463,21.191463 0 0 0 87,-90.191463 Z m 0,3.531911 A 17.659552,17.659552 0 0 1 104.65955,-69 17.659552,17.659552 0 0 1 87,-51.340448 17.659552,17.659552 0 0 1 69.340448,-69 17.659552,17.659552 0 0 1 87,-86.659552 Z"
+         id="path921-3-7-6"
+         inkscape:connector-curvature="0" />
     </g>
+    <rect
+       style="display:inline;opacity:0.8;fill:#ffffff;fill-opacity:0.294118;fill-rule:evenodd;stroke:none;stroke-width:1.67825;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect915-2"
+       width="20.655346"
+       height="20.655346"
+       x="53.672325"
+       y="-58.327675"
+       ry="10.327673" />
+    <rect
+       style="display:inline;opacity:0.33;fill:none;fill-opacity:0.294118;fill-rule:evenodd;stroke:#000000;stroke-width:0.79612;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect915-2-3"
+       width="9.7983837"
+       height="9.7983828"
+       x="59.100807"
+       y="-5.3991909"
+       ry="4.8991914" />
+    <rect
+       style="display:inline;opacity:0.33;fill:none;fill-opacity:0.294118;fill-rule:evenodd;stroke:#000000;stroke-width:1.12717;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect915-2-3-3"
+       width="13.872831"
+       height="13.87283"
+       x="57.063583"
+       y="-29.082243"
+       ry="6.9364152" />
   </g>
 </svg>
