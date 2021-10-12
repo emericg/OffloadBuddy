@@ -36,7 +36,7 @@ It's designed to remove the hassle of handling and transferring the many videos 
   - [ ] Video overlay
 - [X] GoPro firmware updates
 
-### Screenshots!
+## Screenshots
 
 ![overview](https://i.imgur.com/4CAhcYb.jpg)
 ![offload](https://i.imgur.com/9g9Shls.jpg)
@@ -54,7 +54,7 @@ It's designed to remove the hassle of handling and transferring the many videos 
 You will need a C++14 capable compiler and Qt 5.12+ (with QtMultimedia, QtLocation and QtCharts).  Qt 6+ won't be supported for a while.  
 On Windows, the contribs builds fine with MSVC 2017.  
 
-Build OffloadBuddy:
+OffloadBuddy dependencies:
 - Qt (5.12+)  
 - pkg-config (linux / macOS without contribs)  
 
@@ -70,6 +70,8 @@ Build dependencies:
 - and a couple others (see contribs/contribs.py)  
 
 #### Building OffloadBuddy
+
+You can either use the libraries from your system, or use the 'contribs' script to build necessary libraries.  
 
 Build dependencies using the 'contribs' script (optional):
 ```bash
