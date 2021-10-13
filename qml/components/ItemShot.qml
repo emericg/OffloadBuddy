@@ -121,11 +121,7 @@ Rectangle {
                 // Show the "shot details" screen
                 actionMenu.visible = false
                 shotsView.currentIndex = index
-
-                if (shot.isValid()) {
-                    shot.getMetadataFromVideoGPMF()
-                    screenMedia.loadShot(shot)
-                }
+                screenMedia.loadShot(shot)
             }
         }
     }

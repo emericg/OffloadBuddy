@@ -146,13 +146,15 @@ void Shot::addFile(ofb_file *file)
 
             if (file->extension == "jpg" || file->extension == "jpeg" ||
                 file->extension == "png" || file->extension == "gpr" ||
-                file->extension == "webp")
+                file->extension == "webp" ||
+                file->extension == "insp")
             {
                 m_pictures.push_front(file);
                 getMetadataFromPicture();
             }
             else if (file->extension == "mp4" || file->extension == "m4v" || file->extension == "mov" ||
-                     file->extension == "mkv" || file->extension == "webm")
+                     file->extension == "mkv" || file->extension == "webm" ||
+                     file->extension == "insv")
             {
                 m_videos.push_front(file);
                 getMetadataFromVideo();
@@ -191,14 +193,16 @@ void Shot::addFile(ofb_file *file)
 
             if (file->extension == "jpg" || file->extension == "jpeg" ||
                 file->extension == "png" || file->extension == "gpr" ||
-                file->extension == "webp")
+                file->extension == "webp" ||
+                file->extension == "insp")
             {
                 m_pictures.push_back(file);
 
                 if (m_pictures.size() == 1) getMetadataFromPicture();
             }
             else if (file->extension == "mp4" || file->extension == "m4v" || file->extension == "mov" ||
-                     file->extension == "mkv" || file->extension == "webm")
+                     file->extension == "mkv" || file->extension == "webm" ||
+                     file->extension == "insv")
             {
                 m_videos.push_back(file);
                 getMetadataFromVideo(m_videos.size() - 1);

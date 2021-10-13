@@ -1,0 +1,41 @@
+{
+  "cameras": [
+  {
+    "brand": "Insta360",
+    "model": "One X",
+    "model_string": "insta360-onex",
+    "year": 2018
+  },
+  {
+    "brand": "Insta360",
+    "model": "One X2",
+    "model_string": "insta360-onex2",
+    "year": 2020
+  },
+  {
+    "brand": "Insta360",
+    "model": "GO",
+    "model_string": "insta360-go",
+    "year": 2019
+  },
+  {
+    "brand": "Insta360",
+    "model": "GO2",
+    "model_string": "insta360-go2",
+    "year": 2021
+  },
+  {
+    "brand": "Insta360",
+    "model": "One R",
+    "model_string": "insta360-oner",
+    "year": 2020,
+    "codecs": ["H.264"],
+    "features": [""],
+    "connectivity": ["WiFi", "Bluetooth"],
+    "modes_video": ["video", "looping video"],
+    "modes_photo": ["photo", "burst", "night"],
+    "modes_timelapse": ["timelapse photo", "nightlapse photo", "timelapse video"],
+    "modes_video_table": []
+  }
+  ]
+}

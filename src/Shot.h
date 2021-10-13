@@ -146,7 +146,8 @@ public:
                 if (f->ed)
                     type = 2;
                 else if (extension == "jpg" || extension == "jpeg" ||
-                         extension == "png" || extension == "gpr")
+                         extension == "png" || extension == "gpr" ||
+                         extension == "insp")
                     type = 2;
                 else if (extension == "gpx" || extension == "json")
                     type = 3;

@@ -210,8 +210,9 @@ void DeviceManager::searchDevices()
             connect(m_deviceScannerThread, SIGNAL(started()), m_deviceScanner, SLOT(searchDevices()));
             connect(this, SIGNAL(startDeviceScanning()), m_deviceScanner, SLOT(searchDevices()));
 
-            connect(m_deviceScanner, SIGNAL(fsDeviceFound(QString,gopro_device_infos*)), this, SLOT(addFsDeviceGoPro(QString,gopro_device_infos*)));
             connect(m_deviceScanner, SIGNAL(fsDeviceFound(QString,generic_device_infos*)), this, SLOT(addFsDeviceGeneric(QString,generic_device_infos*)));
+            connect(m_deviceScanner, SIGNAL(fsDeviceFound(QString,gopro_device_infos*)), this, SLOT(addFsDeviceGoPro(QString,gopro_device_infos*)));
+            connect(m_deviceScanner, SIGNAL(fsDeviceFound(QString,insta360_device_infos*)), this, SLOT(addFsDeviceInsta360(QString,insta360_device_infos*)));
             connect(m_deviceScanner, SIGNAL(vfsDeviceFound(ofb_vfs_device*)), this, SLOT(addVfsDevice(ofb_vfs_device*)));
             connect(m_deviceScanner, SIGNAL(mtpDeviceFound(ofb_mtp_device*)), this, SLOT(addMtpDevice(ofb_mtp_device*)));
 
@@ -258,6 +259,62 @@ void DeviceManager::workerScanningFinished()
 
 /* ************************************************************************** */
 /* ************************************************************************** */
+
+void DeviceManager::addFsDeviceGeneric(const QString &path, generic_device_infos *deviceInfos)
+{
+    if (m_devices.size() >= MAX_DEVICES || path.isEmpty() || !deviceInfos)
+    {
+        delete deviceInfos;
+        return;
+    }
+
+    Device *d = nullptr;
+    bool deviceExists = false;
+
+    for (auto dd: qAsConst(m_devices))
+    {
+        d = qobject_cast<Device *>(dd);
+        if (d && (d->getPath(0) == path || d->getPath(1) == path))
+        {
+            deviceExists = true;
+            break;
+        }
+    }
+
+    if (!deviceExists)
+    {
+        d = new Device(deviceInfos->device_type,
+                       StorageUtils::StorageFilesystem,
+                       deviceInfos->device_brand,
+                       deviceInfos->device_model,
+                       "", "");
+        if (d)
+        {
+            if (d->addStorage_filesystem(path))
+            {
+                if (d->isValid())
+                {
+                    m_devices.push_back(d);
+
+                    emit deviceListUpdated();
+                    emit devicesAdded();
+                }
+                else
+                {
+                    qWarning() << "> INVALID DEVICE";
+                    delete d;
+                }
+            }
+            else
+            {
+                qWarning() << "> INVALID DEVICE FILESYSTEM";
+                delete d;
+            }
+        }
+    }
+
+    delete deviceInfos;
+}
 
 void DeviceManager::addFsDeviceGoPro(const QString &path, gopro_device_infos *deviceInfos)
 {
@@ -307,11 +364,12 @@ void DeviceManager::addFsDeviceGoPro(const QString &path, gopro_device_infos *de
         else
         {
             QString brand = "GoPro";
+            QString fw = deviceInfos->firmware_version.left(6);
+
             d = new Device(DeviceUtils::DeviceActionCamera,
                            StorageUtils::StorageFilesystem,
                            brand, deviceInfos->camera_type,
-                           deviceInfos->camera_serial_number,
-                           deviceInfos->firmware_version);
+                           deviceInfos->camera_serial_number, fw);
             if (d)
             {
                 if (d->addStorage_filesystem(path))
@@ -341,7 +399,7 @@ void DeviceManager::addFsDeviceGoPro(const QString &path, gopro_device_infos *de
     delete deviceInfos;
 }
 
-void DeviceManager::addFsDeviceGeneric(const QString &path, generic_device_infos *deviceInfos)
+void DeviceManager::addFsDeviceInsta360(const QString &path, insta360_device_infos *deviceInfos)
 {
     if (m_devices.size() >= MAX_DEVICES || path.isEmpty() || !deviceInfos)
     {
@@ -355,20 +413,44 @@ void DeviceManager::addFsDeviceGeneric(const QString &path, generic_device_infos
     for (auto dd: qAsConst(m_devices))
     {
         d = qobject_cast<Device *>(dd);
-        if (d && (d->getPath(0) == path || d->getPath(1) == path))
+        if (d)
         {
-            deviceExists = true;
-            break;
+            if ((d->getPath(0) == path || d->getPath(1) == path) &&
+                (d->getSerial() == deviceInfos->camera_serial_number))
+            {
+                deviceExists = true;
+                break;
+            }
         }
     }
 
     if (!deviceExists)
     {
-        d = new Device(deviceInfos->device_type,
+        QString brand = "Insta360";
+        QString model;
+
+        if (deviceInfos->camera_string.contains("OneR"))
+            model = "One R";
+        else if (deviceInfos->camera_string.contains("OneX2"))
+            model = "One X2";
+        else if (deviceInfos->camera_string.contains("OneX"))
+            model = "One X";
+        else if (deviceInfos->camera_string.contains("GO2"))
+            model = "GO2";
+        else if (deviceInfos->camera_string.contains("GO"))
+            model = "GO";
+        else
+        {
+            model = deviceInfos->camera_string;
+            model.remove(brand);
+            if (model.startsWith(' ')) model.remove(0, 1);
+        }
+
+        d = new Device(DeviceUtils::DeviceActionCamera,
                        StorageUtils::StorageFilesystem,
-                       deviceInfos->device_brand,
-                       deviceInfos->device_model,
-                       "", "");
+                       brand, model,
+                       deviceInfos->camera_serial_number,
+                       deviceInfos->camera_firmware);
         if (d)
         {
             if (d->addStorage_filesystem(path))
@@ -382,7 +464,7 @@ void DeviceManager::addFsDeviceGeneric(const QString &path, generic_device_infos
                 }
                 else
                 {
-                    qWarning() << "> INVALID DEVICE";
+                    qWarning() << "> INVALID (FS) DEVICE";
                     delete d;
                 }
             }

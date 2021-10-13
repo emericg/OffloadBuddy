@@ -27,13 +27,12 @@
 
 bool parseGenericDCIM(const QString &path, generic_device_infos &infos)
 {
-    bool status = false;
+    bool status = true;
 
     QDir dcim(path + "/DCIM");
     if (dcim.exists() && dcim.isReadable())
     {
         //qDebug() << "WE HAVE a DCIM directory on" << path;
-        status = true;
 
         // Try to guess brand
         for (auto const &subdir_name : dcim.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
@@ -95,11 +94,10 @@ bool parseGenericDCIM(const QString &path, generic_device_infos &infos)
                     infos.device_type = DeviceUtils::DeviceCamera;
                     infos.device_brand = "Nikon";
                 }
-                else
+                else if (subdir_name.startsWith("Camera0"))
                 {
-                    // Assume model number? why not?
-                    infos.device_type = DeviceUtils::DeviceCamera;
-                    infos.device_model = brand;
+                    infos.device_type = DeviceUtils::DeviceActionCamera;
+                    infos.device_brand = "Insta360";
                 }
             }
             else
@@ -111,17 +109,20 @@ bool parseGenericDCIM(const QString &path, generic_device_infos &infos)
                     infos.device_brand = "GoPro";
                     infos.device_model = "HERO";
                 }
-                else
-                {
-                    // I mean who knows...
-                    infos.device_type = DeviceUtils::DeviceCamera;
-                    infos.device_brand = "Generic";
-                    infos.device_model = "Camera";
-                }
             }
 
-            break;
+            break; // we only try once
         }
+    }
+
+    if (infos.device_brand.isEmpty())
+    {
+        // I mean who knows...
+        infos.device_type = DeviceUtils::DeviceCamera;
+        infos.device_brand = "Generic";
+        infos.device_model = "Camera";
+
+        status = false;
     }
 
     return status;
@@ -132,28 +133,28 @@ bool parseGenericDCIM(const QString &path, generic_device_infos &infos)
 
 bool getGenericShotInfos(const ofb_file &file, ofb_shot &shot)
 {
-    bool status = true;
-
     shot.group_number = 0;
     shot.file_number = 0;
     shot.shot_id = 0;
 
     if (file.extension == "jpg" || file.extension == "jpeg" ||
-        file.extension == "png" || file.extension == "webp")
+        file.extension == "png" || file.extension == "webp" ||
+        file.extension == "insp")
     {
         shot.shot_type = ShotUtils::SHOT_PICTURE;
     }
     else if (file.extension == "mov" || file.extension == "mp4" || file.extension == "m4v" ||
              file.extension == "lrv" ||
              file.extension == "avi" ||
-             file.extension == "mkv" || file.extension == "webm")
+             file.extension == "mkv" || file.extension == "webm" ||
+             file.extension == "insv")
     {
         shot.shot_type = ShotUtils::SHOT_VIDEO;
     }
     else
     {
         //qDebug() << "Unsupported file extension:" << file.extension;
-        status = false;
+        return false;
     }
 /*
     qDebug() << "* FILE:" << file.name;
@@ -161,7 +162,7 @@ bool getGenericShotInfos(const ofb_file &file, ofb_shot &shot)
     qDebug() << "- " << shot.file_type;
     qDebug() << "- " << shot.shot_type;
 */
-    return status;
+    return true;
 }
 
 /* ************************************************************************** */

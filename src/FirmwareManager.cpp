@@ -77,8 +77,8 @@ bool FirmwareManager::readSettings()
         if (settings.contains("firmware/catalogGoPro"))
             m_catalogGoPro_lastupdate = settings.value("firmware/catalogGoPro").toDateTime();
 
-        if (settings.contains("firmware/catalogInsta"))
-            m_catalogInsta_lastupdate = settings.value("firmware/catalogInsta").toDateTime();
+        if (settings.contains("firmware/catalogInsta360"))
+            m_catalogInsta_lastupdate = settings.value("firmware/catalogInsta360").toDateTime();
 
         status = true;
     }
@@ -99,7 +99,7 @@ bool FirmwareManager::writeSettings()
     if (settings.isWritable())
     {
         settings.setValue("firmware/catalogGoPro", m_catalogGoPro_lastupdate.toString("yyyy-MM-dd"));
-        settings.setValue("firmware/catalogInsta", m_catalogInsta_lastupdate.toString("yyyy-MM-dd"));
+        settings.setValue("firmware/catalogInsta360", m_catalogInsta_lastupdate.toString("yyyy-MM-dd"));
 
         if (settings.status() == QSettings::NoError)
         {

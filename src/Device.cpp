@@ -53,8 +53,6 @@ Device::Device(const DeviceUtils::DeviceType type, const StorageUtils::StorageTy
     m_serial = serial;
     m_firmware = version;
 
-    m_model_string = m_firmware.left(6);
-
     m_uuid = QUuid::createUuid().toString();
 
     if (m_deviceStorage == StorageUtils::StorageMTP)
@@ -103,6 +101,19 @@ Device::Device(const DeviceUtils::DeviceType type, const StorageUtils::StorageTy
         m_sortOrder = (Qt::SortOrder)st->getDeviceSortOrder();
         m_shotFilter->setSortRole(sortRole);
         m_shotFilter->sort(0, m_sortOrder);
+    }
+
+    if (m_brand == "GoPro")
+    {
+        m_model_string = m_firmware.left(6);
+    }
+    else if (m_brand == "Insta360")
+    {
+        if (m_model == "One R") m_model_string = "insta360-oner";
+        else if (m_model == "One X2") m_model_string = "insta360-onex2";
+        else if (m_model == "One X") m_model_string = "insta360-onex";
+        else if (m_model == "GO2") m_model_string = "insta360-go2";
+        else if (m_model == "GO") m_model_string = "insta360-go";
     }
 
     updateFirmwareState();

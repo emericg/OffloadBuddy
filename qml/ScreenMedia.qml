@@ -23,7 +23,9 @@ Item {
 
         if (shot !== newshot) {
             shot = newshot
+            shot.getMetadataFromVideoGPMF()
             updateShotDetails()
+
             screenMedia.state = "overview"
 
             // save state

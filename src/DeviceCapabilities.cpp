@@ -43,16 +43,21 @@ DeviceCapabilities::~DeviceCapabilities()
 
 bool DeviceCapabilities::load(const QString &brand, const QString &model)
 {
+    //qDebug() << "DeviceCapabilities::load(" << brand << "/" << model << ")";
     bool status = false;
 
-    QFile file(":/assets/gopro_capabilities.json");
+    QFile file;
+    if (brand == "GoPro")
+        file.setFileName(":/cameras/gopro_devices.json");
+    else if (brand == "Insta360")
+        file.setFileName(":/cameras/insta360_devices.json");
+
     if (file.open(QIODevice::ReadOnly))
     {
         QJsonDocument capsDoc = QJsonDocument().fromJson(file.readAll());
-        file.close();
-
         QJsonObject capsObject = capsDoc.object();
         QJsonArray cameraArray = capsObject["cameras"].toArray();
+        file.close();
 
         foreach (const QJsonValue &value, cameraArray)
         {

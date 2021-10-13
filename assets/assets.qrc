@@ -4,8 +4,6 @@
         <file>others/gps_marker_direction.svg</file>
         <file>others/navigate_before_big.svg</file>
 
-        <file>gopro_capabilities.json</file>
-
         <file>icons_material/baseline-accessibility-24px.svg</file>
         <file>icons_material/baseline-add-24px.svg</file>
         <file>icons_material/baseline-archive-24px.svg</file>
@@ -108,7 +106,8 @@
         <file alias="generic_actioncam.svg">cameras/generic_actioncam.svg</file>
         <file alias="generic_camera.svg">cameras/generic_camera.svg</file>
         <file alias="generic_smartphone.svg">cameras/generic_smartphone.svg</file>
-        <file alias="dji_osmoaction.svg">cameras/dji_osmoaction.svg</file>
+        <file alias="dji_osmo_action.svg">cameras/dji_osmo_action.svg</file>
+        <file alias="gopro_devices.json">cameras/gopro_devices.json</file>
         <file alias="gopro_H2.svg">cameras/gopro_H2.svg</file>
         <file alias="gopro_H3.svg">cameras/gopro_H3.svg</file>
         <file alias="gopro_H4.svg">cameras/gopro_H4.svg</file>
@@ -119,6 +118,7 @@
         <file alias="gopro_session.svg">cameras/gopro_session.svg</file>
         <file alias="gopro_fusion.svg">cameras/gopro_fusion.svg</file>
         <file alias="gopro_max.svg">cameras/gopro_max.svg</file>
+        <file alias="insta360_devices.json">cameras/insta360_devices.json</file>
         <file alias="insta360_go2.svg">cameras/insta360_go2.svg</file>
         <file alias="insta360_one_r.svg">cameras/insta360_one_r.svg</file>
         <file alias="insta360_one_x.svg">cameras/insta360_one_x.svg</file>

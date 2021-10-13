@@ -21,8 +21,9 @@
 
 #include "DeviceScanner.h"
 #include "DeviceManager.h"
-#include "GoProFileModel.h"
 #include "GenericFileModel.h"
+#include "GoProFileModel.h"
+#include "Insta360FileModel.h"
 
 #ifdef ENABLE_LIBMTP
 #include <libmtp.h>
@@ -121,11 +122,35 @@ void DeviceScanner::scanFilesystems()
                         // Watch this path
                         m_watchedFilesystems.push_back(deviceRootpath);
                         if (!m_watcherFilesystem.addPath(deviceRootpath))
-                            qDebug() << "FILE WATCHER FAILZD for " << deviceRootpath;
+                            qDebug() << "FILE WATCHER FAILED for " << deviceRootpath;
                     }
                     else
                     {
                         delete goproDeviceInfos;
+                    }
+                }
+            }
+
+            if (!found)
+            {
+                auto *insta360DeviceInfos = new insta360_device_infos;
+                if (insta360DeviceInfos)
+                {
+                    if (parseInsta360VersionFile(deviceRootpath, *insta360DeviceInfos))
+                    {
+                        found = true;
+
+                        // Send device infos to the DeviceManager
+                        emit fsDeviceFound(deviceRootpath, insta360DeviceInfos);
+
+                        // Watch this path
+                        m_watchedFilesystems.push_back(deviceRootpath);
+                        if (!m_watcherFilesystem.addPath(deviceRootpath))
+                            qDebug() << "FILE WATCHER FAILED for " << deviceRootpath;
+                    }
+                    else
+                    {
+                        delete insta360DeviceInfos;
                     }
                 }
             }
@@ -145,7 +170,7 @@ void DeviceScanner::scanFilesystems()
                         // Watch this path
                         m_watchedFilesystems.push_back(deviceRootpath);
                         if (!m_watcherFilesystem.addPath(deviceRootpath))
-                            qDebug() << "FILE WATCHER FAILZD for " << deviceRootpath;
+                            qDebug() << "FILE WATCHER FAILED for " << deviceRootpath;
                     }
                     else
                     {

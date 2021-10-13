@@ -90,7 +90,8 @@ function isVideoFile(filePath) {
             extension === "3gp" || extension === "3gpp" ||
             extension === "mkv" || extension === "webm" ||
             extension === "avi" || extension === "divx" ||
-            extension === "asf" || extension === "wmv") {
+            extension === "asf" || extension === "wmv" ||
+            extension === "insv") {
             valid = true;
         }
     }
@@ -113,7 +114,8 @@ function isPictureFile(filePath) {
             extension === "heif" || extension === "heic" || extension === "avif" ||
             extension === "tga" || extension === "bmp" ||
             extension === "tif" || extension === "tiff" ||
-            extension === "svg") {
+            extension === "svg" ||
+            extension === "insp") {
             valid = true;
         }
     }

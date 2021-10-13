@@ -35,11 +35,6 @@ bool parseGoProVersionFile(const QString &path, gopro_device_infos &infos)
         versiontxt.size() > 0 &&
         versiontxt.open(QIODevice::ReadOnly))
     {
-/*
-        qDebug() << "> GOPRO SD CARD FOUND:";
-        qDebug() << "- mountpoint:" << storage.displayName();
-        qDebug() << "- type:" << storage.fileSystemType();
-*/
         QTextStream in(&versiontxt);
         while (!in.atEnd())
         {
@@ -83,7 +78,19 @@ bool parseGoProVersionFile(const QString &path, gopro_device_infos &infos)
     }
 
     versiontxt.close();
-
+/*
+    if (status)
+    {
+        qDebug() << "> GOPRO SD CARD FOUND:";
+        qDebug() << "- mountpoint   :" << path;
+        qDebug() << "- camera type  :" << infos.camera_type;
+        qDebug() << "- serial number:" << infos.camera_serial_number;
+        qDebug() << "- firmware     :" << infos.firmware_version;
+        qDebug() << "- wifi_mac       :" << infos.wifi_mac;
+        qDebug() << "- wifi_version   :" << infos.wifi_version;
+        qDebug() << "- wifi_bootloader:" << infos.wifi_bootloader_version;
+    }
+*/
     return status;
 }
 

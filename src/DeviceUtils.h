@@ -182,6 +182,16 @@ typedef struct gopro_device_infos
 
 } gopro_device_infos;
 
+typedef struct insta360_device_infos
+{
+    StorageUtils::StorageType device_type;
+
+    QString camera_string;          // ex: "Insta360 OneR"
+    QString camera_firmware;        // ex: "v1.1.30_build1"
+    QString camera_serial_number;   // ex: "IAREH55BYABTUG"
+
+} insta360_device_infos;
+
 /* ************************************************************************** */
 
 struct StorageFilesystem

@@ -147,7 +147,9 @@ public:
     {
         float flt = 16.f / 9.f;
 
-        if (ar == AspectRatio_1_1)
+        if (ar == AspectRatio_auto || ar == AspectRatio_custom)
+            flt = 1.f;
+        else if (ar == AspectRatio_1_1)
             flt = 1.f;
         else if (ar == AspectRatio_4_3)
             flt = 4.f / 3.f;

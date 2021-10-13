@@ -120,14 +120,16 @@ void ShotModel::computeStats()
                 audio_space += file->size;
             }
             else if (file->extension == "mp4" || file->extension == "m4v" || file->extension == "mov" ||
-                     file->extension == "mkv" || file->extension == "webm")
+                     file->extension == "mkv" || file->extension == "webm" ||
+                     file->extension == "insv")
             {
                 video_file++;
                 video_space += file->size;
             }
             else if (file->extension == "jpg" || file->extension == "jpeg" ||
                      file->extension == "png" || file->extension == "gpr" ||
-                     file->extension == "webp")
+                     file->extension == "webp" ||
+                     file->extension == "insp")
             {
                 picture_file++;
                 picture_space += file->size;

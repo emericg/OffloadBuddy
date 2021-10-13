@@ -130,7 +130,8 @@ void FileScanner::scanFilesystemDirectory(const QString &dir_path)
                     if (shotStatus)
                     {
                         if (f->extension == "mp4" || f->extension == "m4v" || f->extension == "mov" ||
-                            f->extension == "mkv" || f->extension == "webm" || f->extension == "avi")
+                            f->extension == "mkv" || f->extension == "webm" || f->extension == "avi" ||
+                            f->extension == "insv")
                         {
                             int minivideo_retcode = minivideo_open(f->filesystemPath.toLocal8Bit(), &f->media);
                             if (minivideo_retcode == 1)
@@ -147,7 +148,8 @@ void FileScanner::scanFilesystemDirectory(const QString &dir_path)
                                 qDebug() << "minivideo_open() failed with retcode: " << minivideo_retcode;
                             }
                         }
-                        else if (f->extension == "jpg" || f->extension == "jpeg")
+                        else if (f->extension == "jpg" || f->extension == "jpeg" ||
+                                 f->extension == "insp")
                         {
                             // Only for regular files, not coming from action cams,
                             // so we don't parse 10k files from a timelapse before

@@ -74,6 +74,7 @@ SOURCES  += src/main.cpp \
             src/ShotProvider.cpp \
             src/GenericFileModel.cpp \
             src/GoProFileModel.cpp \
+            src/Insta360FileModel.cpp \
             src/GpmfBuffer.cpp \
             src/GpmfKLV.cpp \
             src/GpmfTags.cpp \
@@ -113,6 +114,7 @@ HEADERS  += src/SettingsManager.h \
             src/ShotProvider.h \
             src/GenericFileModel.h \
             src/GoProFileModel.h \
+            src/Insta360FileModel.h \
             src/GpmfBuffer.h \
             src/GpmfKLV.h \
             src/GpmfTags.h \
