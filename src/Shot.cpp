@@ -1293,19 +1293,21 @@ bool Shot::getMetadataFromVideo(int index)
                              sp_index++)
                         {
                             MediaSample_t *sp = minivideo_get_sample(media, t, sp_index);
-
-                            GpmfBuffer buf;
-                            if (buf.loadBuffer(sp->data, sp->size))
+                            if (sp)
                             {
-                                if (parseGpmfSampleFast(buf, devc_count))
+                                GpmfBuffer buf;
+                                if (buf.loadBuffer(sp->data, sp->size))
                                 {
-                                    minivideo_destroy_sample(&sp);
-                                    break; // we have GPS datetime
+                                    if (parseGpmfSampleFast(buf, devc_count))
+                                    {
+                                        minivideo_destroy_sample(&sp);
+                                        break; // we have GPS datetime
+                                    }
                                 }
-                            }
 
-                            minivideo_destroy_sample(&sp);
-                            break; // if we don't find a GPS sample immediately, we bail
+                                minivideo_destroy_sample(&sp);
+                                break; // if we don't find a GPS sample immediately, we bail
+                            }
                         }
                     }
 
@@ -1497,32 +1499,34 @@ bool Shot::getMetadataFromVideoGPMF()
                     {
                         // Get GPMF sample from MP4
                         MediaSample_t *sp = minivideo_get_sample(media, t, sp_index);
-
-                        // Load that sample into a GpmfBuffer
-                        GpmfBuffer buf;
-                        status = buf.loadBuffer(sp->data, sp->size);
-                        if (!status)
+                        if (sp)
                         {
-                            qWarning() << "buf.loadBuffer(#" << sp_index << ") FAILED";
+                            // Load that sample into a GpmfBuffer
+                            GpmfBuffer buf;
+                            status = buf.loadBuffer(sp->data, sp->size);
+                            if (!status)
+                            {
+                                qWarning() << "buf.loadBuffer(#" << sp_index << ") FAILED";
+                                minivideo_destroy_sample(&sp);
+                                return false; // FIXME
+                            }
+
+                            // Parse GPMF data
+                            status = parseGpmfSample(buf, devc_count);
+                            if (!status)
+                            {
+                                qWarning() << "parseGpmfSample(#" << sp_index << ") FAILED";
+                                minivideo_destroy_sample(&sp);
+                                return false; // FIXME
+                            }
+                            else
+                            {
+                                hasGPMF = true;
+                                if (m_gps.size() > 1) hasGPS = true;
+                            }
+
                             minivideo_destroy_sample(&sp);
-                            return false; // FIXME
                         }
-
-                        // Parse GPMF data
-                        status = parseGpmfSample(buf, devc_count);
-                        if (!status)
-                        {
-                            qWarning() << "parseGpmfSample(#" << sp_index << ") FAILED";
-                            minivideo_destroy_sample(&sp);
-                            return false; // FIXME
-                        }
-                        else
-                        {
-                            hasGPMF = true;
-                            if (m_gps.size() > 1) hasGPS = true;
-                        }
-
-                        minivideo_destroy_sample(&sp);
                     }
 
                     //
