@@ -120,6 +120,7 @@ namespace DeviceUtils
             DEVICE_DJI_OSMOp,
             DEVICE_DJI_OSMO_POCKET,
             DEVICE_DJI_OSMO_ACTION,
+            DEVICE_DJI_POCKET2,
 
         DEVICE_RYLO = 350,
             DEVICE_RYLO_360,
