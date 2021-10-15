@@ -708,7 +708,7 @@ QString JobManager::getandmakeDestination(Shot *s, Device *d, MediaDirectory *md
             if (s->getChapterCount() > 1)
             {
                 destDir += "chaptered_";
-                destDir += QString::number(s->getFileId());
+                destDir += QString::number(s->getShotId());
                 destDir += QDir::separator();
             }
         }
@@ -724,7 +724,7 @@ QString JobManager::getandmakeDestination(Shot *s, Device *d, MediaDirectory *md
             else
                 destDir += "multi_";
 
-            destDir += QString::number(s->getFileId());
+            destDir += QString::number(s->getShotId());
             destDir += QDir::separator();
         }
 

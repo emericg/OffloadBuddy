@@ -58,7 +58,7 @@ Shot::Shot(const ofb_shot *s, QObject *parent) : QObject(parent)
     if (s)
     {
         m_type = s->shot_type;
-        setFileId(s->shot_id);
+        setShotId(s->shot_id);
         setCameraId(s->camera_id);
         if (s->shot_date.isValid()) m_date_metadata = s->shot_date;
     }
@@ -135,7 +135,7 @@ void Shot::refresh()
     //Q_EMIT dataUpdated();
 }
 
-void Shot::addFile(ofb_file *file)
+void Shot::addFile(ofb_file *file, int file_number)
 {
     if (file)
     {
@@ -150,6 +150,7 @@ void Shot::addFile(ofb_file *file)
             {
                 m_pictures.push_front(file);
                 if (m_pictures.size() == 1) getMetadataFromPicture();
+                if (m_type >= ShotUtils::SHOT_PICTURE_MULTI) m_picture_last_id = file_number;
             }
             else if (file->isVideo && !file->isLowRes)
             {
@@ -182,6 +183,7 @@ void Shot::addFile(ofb_file *file)
             {
                 m_pictures.push_back(file);
                 if (m_pictures.size() == 1) getMetadataFromPicture();
+                if (m_type >= ShotUtils::SHOT_PICTURE_MULTI) m_picture_last_id = file_number;
             }
             else if (file->isVideo && !file->isLowRes)
             {

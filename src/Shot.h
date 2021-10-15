@@ -63,28 +63,28 @@ struct ofb_file
     QDateTime creation_date;
     QDateTime modification_date;
 
-    // Filesystem
+    // Paths
     QString filesystemPath;         //!< Absolute file path, if available
     QString directory;              //!< Directory, if available
+
+    // Helpers // set by file models
+    bool isShot = false;
+    bool isLowRes = false;
+    bool isAudio = false;
+    bool isVideo = false;
+    bool isPicture = false;
+    bool isTelemetry = false;
+    bool isOther = false;
+
+    // Metadata structures // if parsing is done on the scanning thread
+    MediaFile_t *media = nullptr;
+    ExifData *ed = nullptr;
 
 #ifdef ENABLE_LIBMTP
     // MTP IDs
     LIBMTP_mtpdevice_t *mtpDevice = nullptr;
     uint32_t mtpObjectId = 0;
 #endif
-
-    // helpers // set by file models
-    bool isShot = false;
-    bool isAudio = false;
-    bool isVideo = false;
-    bool isPicture = false;
-    bool isTelemetry = false;
-    bool isOther = false;
-    bool isLowRes = false;
-
-    // Metadata structures // if parsing is done on the scanning thread
-    MediaFile_t *media = nullptr;
-    ExifData *ed = nullptr;
 };
 
 struct ofb_shot
@@ -277,6 +277,7 @@ class Shot: public QObject
 
     // PICTURES files
     QList <ofb_file *> m_pictures;
+    int m_picture_last_id = -1;
 
     // VIDEOS files
     QList <ofb_file *> m_videos;
@@ -625,8 +626,8 @@ public:
     // Shot IDs
     QString getUuid() const { return m_uuid; }
 
-    int64_t getFileId() const { return m_shot_id; }
-    void setFileId(int64_t id) { m_shot_id = id; }
+    int64_t getShotId() const { return m_shot_id; }
+    void setShotId(int64_t id) { m_shot_id = id; }
     int getCameraId() const { return m_camera_id; }
     void setCameraId(int id) { m_camera_id = id; }
 
@@ -643,9 +644,10 @@ public:
     void setState(ShotUtils::ShotState state) { m_state = state; emit stateUpdated(); }
 
     // Files
-    void addFile(ofb_file *file);
+    void addFile(ofb_file *file, int file_number = -1);
     bool containFile(const QString &file) const;
     const QList <ofb_file *> getFiles(bool withPreviews = true, bool withHdAudio = true, bool withOthers = true) const;
+    int64_t getLastFileId() const { return m_picture_last_id; }
 
     QString getFolderString();
     QString getFilesString() const;
@@ -741,11 +743,10 @@ public:
     Q_INVOKABLE void updateAcclSeries(QtCharts::QLineSeries *x, QtCharts::QLineSeries *y, QtCharts::QLineSeries *z);
     Q_INVOKABLE void updateGyroSeries(QtCharts::QLineSeries *x, QtCharts::QLineSeries *y, QtCharts::QLineSeries *z);
     Q_INVOKABLE QGeoCoordinate getGpsCoordinates(unsigned index);
+    Q_INVOKABLE unsigned getGpsPointCount() const { return m_gps.size(); }
 
     Q_INVOKABLE bool exportTelemetry(const QString &path, int format, int accl_frequency, int gps_frequency, bool egm96_correction);
     Q_INVOKABLE bool exportGps(const QString &path, int format, int gps_frequency, bool egm96_correction);
-
-    Q_INVOKABLE unsigned getGpsPointCount() const { return m_gps.size(); }
 
     Q_INVOKABLE void getLocation() const;
     void setLocationResponse(QGeoCodeReply *geo_rep);

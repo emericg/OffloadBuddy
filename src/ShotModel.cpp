@@ -191,7 +191,7 @@ void ShotModel::addFile(ofb_file *f, ofb_shot *s)
         if (s->shot_id > 0)
         {
             // Search for parent (using shot ID)
-            shot = searchForShot(s->shot_type, s->shot_id, s->camera_id, f->filesystemPath);
+            shot = searchForShot(*s, f->filesystemPath);
 
             // Duplicate?
             if (shot && shot->containFile(f->filesystemPath))
@@ -221,7 +221,7 @@ void ShotModel::addFile(ofb_file *f, ofb_shot *s)
     if (shot)
     {
         //qDebug() << "Adding file:" << f->name << f->extension << "to an existing shot";
-        shot->addFile(f);
+        shot->addFile(f, s->file_number);
     }
     else
     {
@@ -229,7 +229,7 @@ void ShotModel::addFile(ofb_file *f, ofb_shot *s)
         shot = new Shot(s, this);
         if (shot)
         {
-            shot->addFile(f);
+            shot->addFile(f, s->file_number);
             addShot(shot);
         }
         else
@@ -293,10 +293,8 @@ void ShotModel::removeShot(Shot *shot)
 /* ************************************************************************** */
 
 /*!
- * \param type: see ShotUtils::ShotType
- * \param file_id
- * \param camera_id
- * \param folder
+ * \param shot: the new shot we are trying to match to an existing shot
+ * \param folder: folder containing new shot file
  * \return Pointer to an existing shot
  *
  * This function is used to associate new/scanned files to existing shots. We go
@@ -304,30 +302,47 @@ void ShotModel::removeShot(Shot *shot)
  * created shot.
  * We try only the last 32 shots created, to avoid wasting time.
  *
- * Also we make sure the shot files are from the same folder. Mandatory when
- * shot IDs are looping (same IDs, from different parsing threads, from different
- * camera/year/whatever, ...)
+ * In the case of timelapse / multi pictures shots, we handle looping IDs:
+ * - easy case: from 049999 to 050000, the shot ID goes from 4 to 5, and file ID from 9999 to 0000.
+ * - harder case: from 017215 to 027216, the shot ID goes from 1 to 2, and file ID from 7215 to 7216.
  *
- * \todo Handle timelapse shots looping IDs (ex from 49999 to 50000, the ID goes from 4 to 5).
+ * Also in every cases, we make sure the shot files are from the same folder.
+ * Mandatory when shot IDs are looping (same IDs, from different parsing threads,
+ * from different camera/year/whatever, ...)
  */
-Shot *ShotModel::searchForShot(const ShotUtils::ShotType type,
-                               const int64_t file_id, const int camera_id,
-                               const QString &folder) const
+Shot *ShotModel::searchForShot(const ofb_shot &shot, const QString &folder) const
 {
-    if (file_id > 0)
+    if (shot.shot_id > 0)
     {
         for (int i = m_shots.size()-1, t = 0; i >= 0 && t < 32; i--, t++)
         {
             Shot *search = qobject_cast<Shot*>(m_shots.at(i));
-            if (search && search->getShotType() == type)
+            if (search && search->getShotType() == shot.shot_type)
             {
-                if (search->getFileId() == file_id &&
-                    search->getCameraId() == camera_id)
+                if (shot.shot_type >= ShotUtils::SHOT_PICTURE_MULTI)
                 {
-                    // We make sure shot files are from the same folder
-                    if (folder.contains(search->getFolderRefString()))
+                    if (search->getCameraId() == shot.camera_id &&
+                        ((search->getShotId() == shot.shot_id) ||
+                         (search->getLastFileId() == shot.file_number - 1) ||
+                         (search->getLastFileId() == 9999 && shot.file_number == 0)))
                     {
-                        return search;
+                        // We make sure shot files are from the same folder
+                        if (folder.contains(search->getFolderRefString()))
+                        {
+                            return search;
+                        }
+                    }
+                }
+                else
+                {
+                    if (search->getShotId() == shot.shot_id &&
+                        search->getCameraId() == shot.camera_id)
+                    {
+                        // We make sure shot files are from the same folder
+                        if (folder.contains(search->getFolderRefString()))
+                        {
+                            return search;
+                        }
                     }
                 }
             }

@@ -122,9 +122,7 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
-    Shot *searchForShot(const ShotUtils::ShotType type,
-                        const int64_t file_id, const int camera_id,
-                        const QString &path) const;
+    Shot *searchForShot(const ofb_shot &shot, const QString &path) const;
     Shot *searchForDuplicate(const QString &path);
 
     void getShots(QList<Shot *> &shots);
