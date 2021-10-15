@@ -66,6 +66,9 @@ class JobWorkerFFmpeg: public QObject
     QTime m_duration;
     QTime m_progress;
 
+    int m_duration_frame = 0;
+    int m_progress_frame = 0;
+
     void queueWork_encode(JobTracker *job);
     void queueWork_merge(JobTracker *job);
 

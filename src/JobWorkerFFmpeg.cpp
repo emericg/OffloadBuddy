@@ -352,13 +352,15 @@ void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
 
             //// INPUTS
 
-            if (element->parent_shot->getShotType() > ShotUtils::SHOT_PICTURE)
+            if (element->parent_shot->getShotType() >= ShotUtils::SHOT_PICTURE_MULTI)
             {
                 // timelapse to video
                 ptiwrap->arguments << "-r" << QString::number(job->settings_encode.timelapse_fps);
                 ptiwrap->arguments << "-start_number" << element->files.at(0).name.mid(1, -1);
                 QString replacestr = "/" + element->files.at(0).name + "." + element->files.at(0).extension.toUpper();
                 ptiwrap->arguments << "-i" << element->files.at(0).filesystemPath.replace(replacestr, "/G%07d.JPG");
+
+                m_duration_frame = job->getFilesCount();
             }
             else
             {
@@ -675,6 +677,12 @@ void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
                         video_filters += "deshake";
                     }
 
+                    // Fade in/out filter
+                    // video_filters += "fade=t=in:st=0:d=0.5"
+
+                    // Zoom and pan filter
+                    // TODO
+
                     // Apply filters
                     if (!video_filters.isEmpty()) ptiwrap->arguments << "-vf" << video_filters;
                     if (!audio_filters.isEmpty()) ptiwrap->arguments << "-af" << audio_filters;
@@ -831,6 +839,8 @@ void JobWorkerFFmpeg::processFinished()
         m_childProcess = nullptr;
         m_duration = QTime();
         m_progress = QTime();
+        m_duration_frame = 0;
+        m_progress_frame = 0;
 
         delete m_ffmpegCurrent;
         m_ffmpegCurrent = nullptr;
@@ -869,19 +879,33 @@ void JobWorkerFFmpeg::processOutput()
         }
         else
         {
+            if (txt.contains("frame="))
+            {
+                QString progress_qstr = txt.mid(txt.indexOf("frame=") + 6, 6);
+                m_progress_frame = progress_qstr.toInt();
+                //qDebug() << "- progress (QString:" << progress_qstr << ") [int:" << m_progress_frame;
+            }
             if (txt.contains("time="))
             {
                 QString progress_qstr = txt.mid(txt.indexOf("time=") + 5, 11);
                 m_progress = QTime::fromString(progress_qstr, "hh:mm:ss.z");
-                //qDebug() << "- progress (qstr:" << progress_qstr << ") [qtime:" << m_progress;
+                //qDebug() << "- progress (QString:" << progress_qstr << ") [QTime:" << m_progress;
             }
         }
 
-        if (m_duration.isValid() && m_progress.isValid())
+        float progress = 0.f;
         {
-            float progress = QTime(0, 0, 0).msecsTo(m_progress) / static_cast<float>(QTime(0, 0, 0).msecsTo(m_duration));
+            if (m_duration_frame > 0 && m_progress_frame > 0)
+            {
+                progress = m_progress_frame / static_cast<float>(m_duration_frame);
+            }
+            else if (m_duration.isValid() && m_progress.isValid())
+            {
+                progress = QTime(0, 0, 0).msecsTo(m_progress) / static_cast<float>(QTime(0, 0, 0).msecsTo(m_duration));
+            }
+
             progress *= 100.f;
-            //qDebug() << "- PROGRESS:" << progress;
+            //qDebug() << "- ENCODING PROGRESS:" << progress << "%";
 
             if (m_ffmpegCurrent && m_ffmpegCurrent->job)
             {

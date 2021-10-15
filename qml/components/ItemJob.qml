@@ -25,30 +25,6 @@ Rectangle {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    Component.onCompleted: updateJobStatus()
-    Connections {
-        target: job
-        onJobStateUpdated: updateJobStatus()
-    }
-
-    function updateJobStatus() {
-        if (job.state === JobUtils.JOB_STATE_QUEUED) {
-            imageStatus.source = "qrc:/assets/icons_material/duotone-schedule-24px.svg"
-        } else if (job.state === JobUtils.JOB_STATE_WORKING) {
-            imageStatus.source = "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
-        } else if (job.state === JobUtils.JOB_STATE_PAUSED) {
-            imageStatus.source = "qrc:/assets/icons_material/baseline-pause-24px.svg"
-        } else if (job.state === JobUtils.JOB_STATE_DONE) {
-            imageStatus.source = "qrc:/assets/icons_material/outline-check_circle-24px.svg"
-        } else if (job.state === JobUtils.JOB_STATE_ERRORED) {
-            imageStatus.source = "qrc:/assets/icons_material/baseline-report-24px.svg"
-        } else if (job.state === JobUtils.JOB_STATE_ABORTED) {
-            imageStatus.source = "qrc:/assets/icons_material/baseline-cancel-24px.svg"
-        }
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-
     MouseArea {
         anchors.fill: parent
         onClicked: expanded = !expanded
@@ -277,17 +253,32 @@ Rectangle {
                 height: 32
                 anchors.verticalCenter: parent.verticalCenter
 
-                source: "qrc:/assets/icons_material/duotone-schedule-24px.svg"
                 color: Theme.colorIcon
+                source: {
+                    if (job.state === JobUtils.JOB_STATE_QUEUED) {
+                        return "qrc:/assets/icons_material/duotone-schedule-24px.svg"
+                    } else if (job.state === JobUtils.JOB_STATE_WORKING) {
+                        return "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
+                    } else if (job.state === JobUtils.JOB_STATE_PAUSED) {
+                        return "qrc:/assets/icons_material/baseline-pause-24px.svg"
+                    } else if (job.state === JobUtils.JOB_STATE_DONE) {
+                        return "qrc:/assets/icons_material/outline-check_circle-24px.svg"
+                    } else if (job.state === JobUtils.JOB_STATE_ERRORED) {
+                        return "qrc:/assets/icons_material/baseline-report-24px.svg"
+                    } else if (job.state === JobUtils.JOB_STATE_ABORTED) {
+                        return "qrc:/assets/icons_material/baseline-cancel-24px.svg"
+                    }
+                }
 
                 NumberAnimation on rotation {
                     loops: Animation.Infinite
-                    alwaysRunToEnd: true
+                    alwaysRunToEnd: false
 
                     running: (job.state === JobUtils.JOB_STATE_WORKING)
                     from: 0
                     to: 360
                     duration: 2000
+                    onStopped: imageStatus.rotation = 0
                 }
             }
         }
