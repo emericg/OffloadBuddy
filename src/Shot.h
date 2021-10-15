@@ -58,16 +58,10 @@ struct ofb_file
 {
     // Generic file infos
     QString name;                   //!< File base name only, no extension
-    QString extension;              //!< Extension only, lowercase, no dot or anything
-    uint64_t size = 0;              //!< Size in bytes
+    QString extension;              //!< File extension only, lowercase, no dot or anything
+    uint64_t size = 0;              //!< File size in bytes
     QDateTime creation_date;
     QDateTime modification_date;
-
-    // helpers
-    bool isShot = false;
-    bool isAudio = false;
-    bool isVideo = false;
-    bool isPicture = false;
 
     // Filesystem
     QString filesystemPath;         //!< Absolute file path, if available
@@ -79,7 +73,16 @@ struct ofb_file
     uint32_t mtpObjectId = 0;
 #endif
 
-    // Metadata structures (if parsing is done on the scanning thread)
+    // helpers // set by file models
+    bool isShot = false;
+    bool isAudio = false;
+    bool isVideo = false;
+    bool isPicture = false;
+    bool isTelemetry = false;
+    bool isOther = false;
+    bool isLowRes = false;
+
+    // Metadata structures // if parsing is done on the scanning thread
     MediaFile_t *media = nullptr;
     ExifData *ed = nullptr;
 };
@@ -87,12 +90,10 @@ struct ofb_file
 struct ofb_shot
 {
     ShotUtils::ShotType shot_type = ShotUtils::SHOT_UNKNOWN;
-    int shot_id = -1;
-
+    int64_t shot_id = -1;
     int camera_id = 0;              //!< for multi camera system
-
     int file_number = -1;
-    int group_number = -1;
+    QDateTime shot_date;
 };
 
 /* ************************************************************************** */
@@ -115,7 +116,7 @@ class ShotFile: public QObject
     QString name;                   //!< File base name only, no extension
     QString extension;              //!< Extension only, lowercase, no dot or anything
 
-    unsigned type = 0;              //!<
+    unsigned type = 0;              //!< 1 video, 2 picture, 3 telemetry
     qint64 size = 0;                //!< Size in bytes
     unsigned width = 0;
     unsigned height = 0;
@@ -143,13 +144,9 @@ public:
             }
             else
             {
-                if (f->ed)
+                if (f->ed || f->isPicture)
                     type = 2;
-                else if (extension == "jpg" || extension == "jpeg" ||
-                         extension == "png" || extension == "gpr" ||
-                         extension == "insp")
-                    type = 2;
-                else if (extension == "gpx" || extension == "json")
+                else if (f->isTelemetry)
                     type = 3;
             }
         }
@@ -267,9 +264,9 @@ class Shot: public QObject
     ShotUtils::ShotState m_state = ShotUtils::SHOT_STATE_DEFAULT;
 
     QString m_shot_name;
-    int m_shot_id = -1;             //!< Shot ID (if we have a shot, not a single file)
-    int m_camera_id = 0;            //!< Camera ID (if the shot is part of a multi camera system)
+    int64_t m_shot_id = -1;         //!< Shot ID (if we have a shot, not a single file)
 
+    int m_camera_id = 0;            //!< Camera ID (if the shot is part of a multi camera system)
     QString m_camera_source;        //!< Model of the camera that produced the shot
     QString m_camera_firmware;      //!< Firmware of the camera that produced the shot
 
@@ -620,6 +617,7 @@ Q_SIGNALS:
 public:
     Shot(QObject *parent = nullptr);
     Shot(ShotUtils::ShotType type, QObject *parent = nullptr);
+    Shot(const ofb_shot *shot, QObject *parent = nullptr);
     ~Shot();
 
     void refresh();
@@ -627,8 +625,8 @@ public:
     // Shot IDs
     QString getUuid() const { return m_uuid; }
 
-    int getFileId() const { return m_shot_id; }
-    void setFileId(int id) { m_shot_id = id; }
+    int64_t getFileId() const { return m_shot_id; }
+    void setFileId(int64_t id) { m_shot_id = id; }
     int getCameraId() const { return m_camera_id; }
     void setCameraId(int id) { m_camera_id = id; }
 

@@ -50,9 +50,8 @@ bool parseGoProVersionFile(const QString &path, gopro_device_infos &infos);
  * Limitation: Timelapse groups are sometimes from the same timelapse...
  *
  * TODO: test if Qt::CaseSensitivity makes a performance difference?
- * TODO: merge file_number and group_number into shot_id?
  */
-bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot);
+bool getGoProShotInfos(ofb_file &file, ofb_shot &shot);
 
 /* ************************************************************************** */
 #endif // GOPRO_FILE_MODEL_H

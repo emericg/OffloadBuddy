@@ -114,27 +114,22 @@ void ShotModel::computeStats()
         QList <ofb_file *> files = shot->getFiles();
         for (auto file: qAsConst(files))
         {
-            if (file->extension == "wav")
+            if (file->isAudio)
             {
                 audio_file++;
                 audio_space += file->size;
             }
-            else if (file->extension == "mp4" || file->extension == "m4v" || file->extension == "mov" ||
-                     file->extension == "mkv" || file->extension == "webm" ||
-                     file->extension == "insv")
+            else if (file->isVideo)
             {
                 video_file++;
                 video_space += file->size;
             }
-            else if (file->extension == "jpg" || file->extension == "jpeg" ||
-                     file->extension == "png" || file->extension == "gpr" ||
-                     file->extension == "webp" ||
-                     file->extension == "insp")
+            else if (file->isPicture)
             {
                 picture_file++;
                 picture_space += file->size;
             }
-            else if (file->extension == "json" || file->extension == "gpx")
+            else if (file->isTelemetry)
             {
                 telemetry_file++;
                 telemetry_space += file->size;
@@ -231,11 +226,9 @@ void ShotModel::addFile(ofb_file *f, ofb_shot *s)
     else
     {
         //qDebug() << "File:" << f->name << f->extension << "is from a new shot";
-        shot = new Shot(s->shot_type, this);
+        shot = new Shot(s, this);
         if (shot)
         {
-            shot->setFileId(s->shot_id);
-            shot->setCameraId(s->camera_id);
             shot->addFile(f);
             addShot(shot);
         }
@@ -318,7 +311,7 @@ void ShotModel::removeShot(Shot *shot)
  * \todo Handle timelapse shots looping IDs (ex from 49999 to 50000, the ID goes from 4 to 5).
  */
 Shot *ShotModel::searchForShot(const ShotUtils::ShotType type,
-                               const int file_id, const int camera_id,
+                               const int64_t file_id, const int camera_id,
                                const QString &folder) const
 {
     if (file_id > 0)

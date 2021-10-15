@@ -99,21 +99,25 @@ bool parseInsta360VersionFile(const QString &path, insta360_device_infos &infos)
         if (buf.loadBuffer((uint8_t*)bufdata, 1024))
         {
             // tag?
-            buf.read_u32(e);
+            buf.read_u8(e);
+            buf.read_u8(e);
+            buf.read_u8(e);
 
             // path tag? 0x0A
-            //buf.read_u8(e);
+            buf.read_u8(e);
             // path size
             int ppathsize = buf.read_u8(e);
             // path
-            uint8_t *ppath = buf.readBytes(ppathsize, e);
+            /*uint8_t *ppath =*/ buf.readBytes(ppathsize, e);
             //qDebug() << "- path:" << QString::fromLocal8Bit((const char*)ppath, ppathsize);
 
             // tag?
-            buf.read_u32(e);
+            buf.read_u8(e);
+            buf.read_u8(e);
+            buf.read_u8(e);
 
             // serial tag? 0x0A
-            //buf.read_u8(e);
+            buf.read_u8(e);
             // serial size
             int serialsize = buf.read_u8(e);
             // serial
@@ -144,7 +148,7 @@ bool parseInsta360VersionFile(const QString &path, insta360_device_infos &infos)
             // lens size
             int lenssize = buf.read_u8(e);
             // lens
-            uint8_t *lens = buf.readBytes(lenssize, e);
+            /*uint8_t *lens =*/ buf.readBytes(lenssize, e);
             //qDebug() << "- lens:" << QString::fromLocal8Bit((const char*)lens, lenssize);
 
             status = true;
@@ -168,24 +172,25 @@ bool parseInsta360VersionFile(const QString &path, insta360_device_infos &infos)
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-bool getInsta360ShotInfos(const ofb_file &file, ofb_shot &shot)
+bool getInsta360ShotInfos(ofb_file &file, ofb_shot &shot)
 {
-    shot.group_number = 0;
-    shot.file_number = 0;
-    shot.shot_id = 0;
-
-    if (file.extension == "jpg" || file.extension == "jpeg" ||
-        file.extension == "png" || file.extension == "webp" ||
-        file.extension == "insp")
+    if (file.name.size() != 26)
     {
+        //qDebug() << "-" << file.name << ": filename is not 26 chars... Probably not a Insta360 file...";
+        return false;
+    }
+
+    if (file.extension == "insp" && file.name.startsWith("IMG"))
+    {
+        file.isPicture = true;
         shot.shot_type = ShotUtils::SHOT_PICTURE;
     }
-    else if (file.extension == "mov" || file.extension == "mp4" || file.extension == "m4v" ||
-             file.extension == "lrv" ||
-             file.extension == "avi" ||
-             file.extension == "mkv" || file.extension == "webm" ||
-             file.extension == "insv")
+    else if (file.extension == "insv")
     {
+        if (file.name.startsWith("VID")) file.isVideo = true;
+        else if (file.name.startsWith("LRV")) { file.isVideo = true; file.isLowRes = true; }
+        else return false;
+
         shot.shot_type = ShotUtils::SHOT_VIDEO;
     }
     else
@@ -193,14 +198,20 @@ bool getInsta360ShotInfos(const ofb_file &file, ofb_shot &shot)
         //qDebug() << "Unsupported file extension:" << file.extension;
         return false;
     }
+
+    QString date = file.name.mid(4, 8) + file.name.mid(13, 6); // date + time
+    QString number = file.name.midRef(20, 2) + file.name.midRef(23, 3); // ?? + file number?
+
+    file.isShot = true;
+    shot.shot_id = date.toLongLong();
+    shot.file_number = number.toInt();
+    shot.shot_date = QDateTime::fromString(date, "yyyyMMddhhmmss");
 /*
-    qDebug() << "* FILE:" << file.name;
-    qDebug() << "- " << file.extension;
-    //qDebug() << "- " << shot.file_type;
+    qDebug() << "* FILE:" << file.name << "." << file.extension;
     qDebug() << "- " << shot.shot_type;
-    qDebug() << "- " << shot.group_number;
-    qDebug() << "- " << shot.file_number;
     qDebug() << "- " << shot.shot_id;
+    qDebug() << "- " << shot.file_number;
+    qDebug() << "- " << shot.shot_date;
 */
     return true;
 }

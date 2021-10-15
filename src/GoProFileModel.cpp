@@ -97,10 +97,8 @@ bool parseGoProVersionFile(const QString &path, gopro_device_infos &infos)
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot)
+bool getGoProShotInfos(ofb_file &file, ofb_shot &shot)
 {
-    QString group_string;
-
     if (file.name.size() != 8)
     {
         //qDebug() << "-" << file.name << ": filename is not 8 chars... Probably not a GoPro file...";
@@ -112,6 +110,9 @@ bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot)
         return false;
     }
 
+    int group_number = -1;
+    int file_number = file.name.midRef(4, 4).toInt();
+
     if (file.name.startsWith("GOPR"))
     {
         if (file.extension == "jpg" || file.extension == "gpr")
@@ -119,9 +120,7 @@ bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot)
             // Single Photo
             shot.shot_type = ShotUtils::SHOT_PICTURE;
         }
-        else if (file.extension == "mp4" || file.extension == "lrv" ||
-                 file.extension == "thm"  || file.extension == "wav" ||
-                 file.extension == "gpx"  || file.extension == "json")
+        else
         {
             // Single Video
             shot.shot_type = ShotUtils::SHOT_VIDEO;
@@ -130,58 +129,53 @@ bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot)
     else if (file.name.startsWith("GPBK") ||
              file.name.startsWith("GPFR"))
     {
-        // Fusion Video
+        // Fusion
         if (file.extension == "jpg" || file.extension == "gpr")
         {
+            // Single Photo
             shot.shot_type = ShotUtils::SHOT_PICTURE;
         }
-        else if (file.extension == "mp4" || file.extension == "lrv" ||
-                 file.extension == "thm"  || file.extension == "wav" ||
-                 file.extension == "gpx"  || file.extension == "json")
+        else
         {
+            // Single Video
             shot.shot_type = ShotUtils::SHOT_VIDEO;
         }
 
-        if (file.name.startsWith("GPBK"))
-            shot.camera_id = 1;
+        if (file.name.startsWith("GPBK")) shot.camera_id = 1;
     }
     else if (file.name.startsWith("GP"))
     {
         // Chaptered Video
         shot.shot_type = ShotUtils::SHOT_VIDEO;
-        group_string = file.name.mid(2, 2);
-        shot.group_number = group_string.toInt();
+        group_number = file.name.midRef(2, 2).toInt();
     }
     else if (file.name.startsWith("GH") ||
              file.name.startsWith("GX") ||
              file.name.startsWith("GL"))
     {
-        // HERO6 Video
+        // HERO6+ Video
         shot.shot_type = ShotUtils::SHOT_VIDEO;
-        group_string = file.name.mid(2, 2);
-        shot.group_number = group_string.toInt();
+        group_number = file.name.midRef(2, 2).toInt();
     }
     else if (file.name.startsWith("GB") ||
              file.name.startsWith("GF"))
     {
-        // Chaptered Fusion Video
+        // Fusion Chaptered
         shot.shot_type = ShotUtils::SHOT_VIDEO;
-        group_string = file.name.mid(2, 2);
-        shot.group_number = group_string.toInt();
+        group_number = file.name.midRef(2, 2).toInt();
 
         if (file.extension == "jpg" || file.extension == "gpr")
         {
+            // Burst or Time-Lapse Photo
             shot.shot_type = ShotUtils::SHOT_PICTURE_MULTI;
         }
-        else if (file.extension == "mp4" || file.extension == "lrv" ||
-                 file.extension == "thm"  || file.extension == "wav" ||
-                 file.extension == "gpx"  || file.extension == "json")
+        else
         {
+            // Chaptered Video
             shot.shot_type = ShotUtils::SHOT_VIDEO;
         }
 
-        if (file.name.startsWith("GB"))
-            shot.camera_id = 1;
+        if (file.name.startsWith("GB")) shot.camera_id = 1;
     }
     else if (file.name.startsWith("G"))
     {
@@ -190,24 +184,20 @@ bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot)
             // Burst or Time-Lapse Photo
             shot.shot_type = ShotUtils::SHOT_PICTURE_MULTI;
         }
-        else if (file.extension == "mp4" || file.extension == "lrv" ||
-                 file.extension == "thm"  || file.extension == "wav" ||
-                 file.extension == "gpx"  || file.extension == "json")
+        else
         {
             // Looping Video
             shot.shot_type = ShotUtils::SHOT_VIDEO;
         }
 
-        group_string = file.name.mid(1, 3);
-        shot.group_number = group_string.toInt();
+        group_number = file.name.midRef(1, 3).toInt();
     }
     else if (file.name.startsWith("3D_"))
     {
-        // 3D Recording Video
+        // 3D Video
         shot.shot_type = ShotUtils::SHOT_VIDEO_3D;
 
-        qDebug() << "Unhandled file name format:" << file.name;
-        return false;
+        qWarning() << "Unhandled shot type: SHOT_VIDEO_3D";
     }
     else
     {
@@ -215,16 +205,22 @@ bool getGoProShotInfos(const ofb_file &file, ofb_shot &shot)
         return false;
     }
 
-    shot.file_number = file.name.midRef(4, 4).toInt();
-    shot.shot_id = (shot.shot_type == ShotUtils::SHOT_VIDEO) ? shot.file_number : shot.group_number;
+    if (file.extension == "mp4") file.isVideo = true;
+    else if (file.extension == "jpg" || file.extension == "gpr") file.isPicture = true;
+    else if (file.extension == "lrv") { file.isVideo = true; file.isLowRes = true; }
+    else if (file.extension == "thm") { file.isPicture = true; file.isLowRes = true; }
+    else if (file.extension == "wav") file.isAudio = true;
+    else if (file.extension == "gpx" || file.extension == "json") file.isTelemetry = true;
+    else file.isOther = true;
+
+    file.isShot = true;
+    shot.shot_id = (shot.shot_type == ShotUtils::SHOT_VIDEO) ? file_number : group_number;
+    shot.file_number = file_number;
 /*
-    qDebug() << "* FILE:" << file.name;
-    qDebug() << "- " << file.extension;
-    //qDebug() << "- " << shot.file_type;
+    qDebug() << "* FILE:" << file.name << "." << file.extension;
     qDebug() << "- " << shot.shot_type;
-    qDebug() << "- " << shot.group_number;
-    qDebug() << "- " << shot.file_number;
     qDebug() << "- " << shot.shot_id;
+    qDebug() << "- " << shot.file_number;
 */
     return true;
 }

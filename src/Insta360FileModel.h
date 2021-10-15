@@ -43,8 +43,15 @@ bool parseInsta360VersionFile(const QString &path, insta360_device_infos &infos)
  * \param file[in]: Describe the file.
  * \param shot[out]: Describe the shot.
  * \return true if the file is coming from a Insta360 shot.
+ *
+ * File format seems to be:
+ * TYPE_DATE(yyyyMMdd)_TIME(hhmmss)_??_filenumber.ext
+ *
+ * Example:
+ * - IMG_20210424_174249_00_002.insp
+ * - VID_20210424_174231_00_001.insv
  */
-bool getInsta360ShotInfos(const ofb_file &file, ofb_shot &shot);
+bool getInsta360ShotInfos(ofb_file &file, ofb_shot &shot);
 
 /* ************************************************************************** */
 #endif // INSTA360_FILE_MODEL_H

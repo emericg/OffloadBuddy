@@ -123,7 +123,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
     Shot *searchForShot(const ShotUtils::ShotType type,
-                        const int file_id, const int camera_id,
+                        const int64_t file_id, const int camera_id,
                         const QString &path) const;
     Shot *searchForDuplicate(const QString &path);
 

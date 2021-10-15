@@ -47,7 +47,7 @@ bool parseGenericDCIM(const QString &path, generic_device_infos &infos);
  * \todo implement DCM file model.
  * \ref https://en.wikipedia.org/wiki/Design_rule_for_Camera_File_system
  */
-bool getGenericShotInfos(const ofb_file &file, ofb_shot &shot);
+bool getGenericShotInfos(ofb_file &file, ofb_shot &shot);
 
 /* ************************************************************************** */
 #endif // GENERIC_FILE_MODEL_H

@@ -29,42 +29,44 @@ bool parseGenericDCIM(const QString &path, generic_device_infos &infos)
 {
     bool status = true;
 
-    QDir dcim(path + "/DCIM");
+    const QDir dcim(path + "/DCIM");
+    const QStringList &dcim_list = dcim.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+
     if (dcim.exists() && dcim.isReadable())
     {
         //qDebug() << "WE HAVE a DCIM directory on" << path;
 
         // Try to guess brand
-        for (auto const &subdir_name : dcim.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
+        for (const auto &subdir_name : dcim_list)
         {
             //qDebug() << "  * Scanning DCIM subdir:" << subdir_name;
 
             if (subdir_name.size() == 8)
             {
-                QString brand = subdir_name.mid(3, 5);
+                QString brand = subdir_name.mid(3, 5).toUpper();
 
-                if (brand.toUpper() == "ANDRO")
+                if (brand == "ANDRO")
                 {
                     infos.device_type = DeviceUtils::DeviceSmartphone;
                     infos.device_model = "Android";
                 }
-                else if (brand.toUpper() == "APPLE")
+                else if (brand == "APPLE")
                 {
                     infos.device_type = DeviceUtils::DeviceSmartphone;
                     infos.device_brand = "Apple";
                 }
-                else if (brand.toUpper() == "CANON")
+                else if (brand == "CANON")
                 {
                     infos.device_type = DeviceUtils::DeviceCamera;
                     infos.device_brand = "Canon";
                 }
-                else if (brand.toUpper() == "GOPRO" || brand.toUpper() == "0GP")
+                else if (brand == "GOPRO" || brand == "0GP")
                 {
                     infos.device_type = DeviceUtils::DeviceActionCamera;
                     infos.device_brand = "GoPro";
                     infos.device_model = "HERO";
                 }
-                else if (brand.toUpper() == "GBACK"|| brand.toUpper() == "GFRNT")
+                else if (brand == "GBACK"|| brand == "GFRNT")
                 {
                     infos.device_type = DeviceUtils::DeviceActionCamera;
                     infos.device_brand = "GoPro";
@@ -75,26 +77,27 @@ bool parseGenericDCIM(const QString &path, generic_device_infos &infos)
                     infos.device_type = DeviceUtils::DeviceCamera;
                     infos.device_brand = "Olympus";
                 }
-                else if (brand.toUpper() == "SHARP")
+                else if (brand == "SHARP")
                 {
                     infos.device_type = DeviceUtils::DeviceCamera;
                     infos.device_brand = "Sharp";
                 }
-                else if (brand.toUpper() == "MSDCF")
+                else if (brand == "MSDCF")
                 {
                     infos.device_type = DeviceUtils::DeviceCamera;
                     infos.device_brand = "Sony";
                 }
-                else if (brand.toUpper() == "MEDIA")
+                else if (brand == "MEDIA")
                 {
-                    // DJI ???
+                    infos.device_type = DeviceUtils::DeviceActionCamera;
+                    infos.device_brand = "DJI"; // ???
                 }
-                else if (brand.toUpper() == "NIKON")
+                else if (brand == "NIKON")
                 {
                     infos.device_type = DeviceUtils::DeviceCamera;
                     infos.device_brand = "Nikon";
                 }
-                else if (subdir_name.startsWith("Camera0"))
+                else if (subdir_name.startsWith("Camera0")) // 01 to 99
                 {
                     infos.device_type = DeviceUtils::DeviceActionCamera;
                     infos.device_brand = "Insta360";
@@ -104,7 +107,6 @@ bool parseGenericDCIM(const QString &path, generic_device_infos &infos)
             {
                 if (subdir_name == "1000GP")
                 {
-                    // I mean of course they broke the rule...
                     infos.device_type = DeviceUtils::DeviceActionCamera;
                     infos.device_brand = "GoPro";
                     infos.device_model = "HERO";
@@ -131,24 +133,42 @@ bool parseGenericDCIM(const QString &path, generic_device_infos &infos)
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-bool getGenericShotInfos(const ofb_file &file, ofb_shot &shot)
+bool getGenericShotInfos(ofb_file &file, ofb_shot &shot)
 {
-    shot.group_number = 0;
-    shot.file_number = 0;
     shot.shot_id = 0;
+    shot.file_number = 0;
 
     if (file.extension == "jpg" || file.extension == "jpeg" ||
         file.extension == "png" || file.extension == "webp" ||
+        file.extension == "gpr" ||
         file.extension == "insp")
     {
+        file.isPicture = true;
         shot.shot_type = ShotUtils::SHOT_PICTURE;
     }
     else if (file.extension == "mov" || file.extension == "mp4" || file.extension == "m4v" ||
-             file.extension == "lrv" ||
              file.extension == "avi" ||
              file.extension == "mkv" || file.extension == "webm" ||
              file.extension == "insv")
     {
+        file.isVideo = true;
+        shot.shot_type = ShotUtils::SHOT_VIDEO;
+    }
+    else if (file.extension == "lrv")
+    {
+        file.isVideo = true;
+        file.isLowRes = true;
+        shot.shot_type = ShotUtils::SHOT_VIDEO;
+    }
+    else if (file.extension == "thm")
+    {
+        file.isPicture = true;
+        file.isLowRes = true;
+        shot.shot_type = ShotUtils::SHOT_VIDEO;
+    }
+    else if (file.extension == "gpx" || file.extension == "json")
+    {
+        file.isTelemetry = true;
         shot.shot_type = ShotUtils::SHOT_VIDEO;
     }
     else
@@ -157,9 +177,7 @@ bool getGenericShotInfos(const ofb_file &file, ofb_shot &shot)
         return false;
     }
 /*
-    qDebug() << "* FILE:" << file.name;
-    qDebug() << "- " << file.extension;
-    qDebug() << "- " << shot.file_type;
+    qDebug() << "* FILE:" << file.name << "." << file.extension;
     qDebug() << "- " << shot.shot_type;
 */
     return true;

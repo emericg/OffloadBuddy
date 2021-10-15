@@ -20,9 +20,10 @@
  */
 
 #include "FileScanner.h"
-#include "GenericFileModel.h"
-#include "GoProFileModel.h"
 #include "ShotModel.h"
+#include "GoProFileModel.h"
+#include "Insta360FileModel.h"
+#include "GenericFileModel.h"
 #include "SettingsManager.h"
 
 #include <QStorageInfo>
@@ -116,22 +117,15 @@ void FileScanner::scanFilesystemDirectory(const QString &dir_path)
 
                     // Try to get shot infos, if applicable
                     ofb_shot *s = new ofb_shot;
-                    bool shotStatus = getGoProShotInfos(*f, *s);
-                    if (shotStatus)
-                    {
-                        f->isShot = true;
-                    }
-                    else
-                    {
-                        shotStatus = getGenericShotInfos(*f, *s);
-                    }
+                    bool shotStatus = false;
+                    if (!shotStatus) shotStatus = getGoProShotInfos(*f, *s);
+                    if (!shotStatus) shotStatus = getInsta360ShotInfos(*f, *s);
+                    if (!shotStatus) shotStatus = getGenericShotInfos(*f, *s);
 
                     // Pre-parse metadata on scanning thread
                     if (shotStatus)
                     {
-                        if (f->extension == "mp4" || f->extension == "m4v" || f->extension == "mov" ||
-                            f->extension == "mkv" || f->extension == "webm" || f->extension == "avi" ||
-                            f->extension == "insv")
+                        if (f->isVideo && !f->isLowRes)
                         {
                             int minivideo_retcode = minivideo_open(f->filesystemPath.toLocal8Bit(), &f->media);
                             if (minivideo_retcode == 1)
@@ -148,12 +142,11 @@ void FileScanner::scanFilesystemDirectory(const QString &dir_path)
                                 qDebug() << "minivideo_open() failed with retcode: " << minivideo_retcode;
                             }
                         }
-                        else if (f->extension == "jpg" || f->extension == "jpeg" ||
-                                 f->extension == "insp")
+                        if (f->isPicture && !f->isLowRes)
                         {
                             // Only for regular files, not coming from action cams,
                             // so we don't parse 10k files from a timelapse before
-                            // they have been associated with a shot
+                            // they have been associated within a single shot
                             if (!f->isShot)
                             {
                                 f->ed = exif_data_new_from_file(f->filesystemPath.toLocal8Bit());

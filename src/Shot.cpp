@@ -52,6 +52,18 @@ Shot::Shot(ShotUtils::ShotType type, QObject *parent) : QObject(parent)
     m_type = type;
 }
 
+Shot::Shot(const ofb_shot *s, QObject *parent) : QObject(parent)
+{
+    m_uuid = QUuid::createUuid().toString();
+    if (s)
+    {
+        m_type = s->shot_type;
+        setFileId(s->shot_id);
+        setCameraId(s->camera_id);
+        if (s->shot_date.isValid()) m_date_metadata = s->shot_date;
+    }
+}
+
 Shot::~Shot()
 {
     for (auto picture: qAsConst(m_pictures))
@@ -113,7 +125,7 @@ void Shot::refresh()
     {
         if (f->creation_date.isValid())
             m_date_file = f->creation_date;
-        else
+        else if (f->modification_date.isValid())
             m_date_file = f->modification_date;
 
         Q_EMIT dateUpdated();
@@ -134,40 +146,25 @@ void Shot::addFile(ofb_file *file)
         {
             m_shot_name = file->name;
 
-            if (!m_date_file.isValid())
-            {
-                if (file->creation_date.isValid())
-                    m_date_file = file->creation_date;
-                else
-                    m_date_file = file->modification_date;
-
-                Q_EMIT dateUpdated();
-            }
-
-            if (file->extension == "jpg" || file->extension == "jpeg" ||
-                file->extension == "png" || file->extension == "gpr" ||
-                file->extension == "webp" ||
-                file->extension == "insp")
+            if (file->isPicture && !file->isLowRes)
             {
                 m_pictures.push_front(file);
-                getMetadataFromPicture();
+                if (m_pictures.size() == 1) getMetadataFromPicture();
             }
-            else if (file->extension == "mp4" || file->extension == "m4v" || file->extension == "mov" ||
-                     file->extension == "mkv" || file->extension == "webm" ||
-                     file->extension == "insv")
+            else if (file->isVideo && !file->isLowRes)
             {
                 m_videos.push_front(file);
                 getMetadataFromVideo();
             }
-            else if (file->extension == "lrv")
+            else if (file->isVideo && file->isLowRes)
             {
                 m_videos_previews.push_front(file);
             }
-            else if (file->extension == "thm")
+            else if (file->isPicture && file->isLowRes)
             {
                 m_videos_thumbnails.push_front(file);
             }
-            else if (file->extension == "wav")
+            else if (file->isAudio)
             {
                 m_videos_hdAudio.push_front(file);
             }
@@ -181,41 +178,25 @@ void Shot::addFile(ofb_file *file)
         {
             if (m_shot_name.isEmpty()) m_shot_name = file->name;
 
-            if (!m_date_file.isValid())
-            {
-                if (file->creation_date.isValid())
-                    m_date_file = file->creation_date;
-                else
-                    m_date_file = file->modification_date;
-
-                Q_EMIT dateUpdated();
-            }
-
-            if (file->extension == "jpg" || file->extension == "jpeg" ||
-                file->extension == "png" || file->extension == "gpr" ||
-                file->extension == "webp" ||
-                file->extension == "insp")
+            if (file->isPicture && !file->isLowRes)
             {
                 m_pictures.push_back(file);
-
                 if (m_pictures.size() == 1) getMetadataFromPicture();
             }
-            else if (file->extension == "mp4" || file->extension == "m4v" || file->extension == "mov" ||
-                     file->extension == "mkv" || file->extension == "webm" ||
-                     file->extension == "insv")
+            else if (file->isVideo && !file->isLowRes)
             {
                 m_videos.push_back(file);
                 getMetadataFromVideo(m_videos.size() - 1);
             }
-            else if (file->extension == "lrv")
+            else if (file->isVideo && file->isLowRes)
             {
                 m_videos_previews.push_back(file);
             }
-            else if (file->extension == "thm")
+            else if (file->isPicture && file->isLowRes)
             {
                 m_videos_thumbnails.push_back(file);
             }
-            else if (file->extension == "wav")
+            else if (file->isAudio)
             {
                 m_videos_hdAudio.push_back(file);
             }
@@ -225,8 +206,17 @@ void Shot::addFile(ofb_file *file)
                 m_others.push_back(file);
             }
         }
-
         Q_EMIT dataUpdated();
+
+        if (!m_date_file.isValid())
+        {
+            if (file->creation_date.isValid())
+                m_date_file = file->creation_date;
+            else if (file->modification_date.isValid())
+                m_date_file = file->modification_date;
+
+            Q_EMIT dateUpdated();
+        }
     }
     else
     {
@@ -235,18 +225,7 @@ void Shot::addFile(ofb_file *file)
 }
 
 /* ************************************************************************** */
-/*
-unsigned Shot::getType() const
-{
-    // FUSION hack
-    if (m_type == Shared::SHOT_PICTURE_MULTI && m_jpg.size() == 1)
-    {
-        m_type = Shared::SHOT_PICTURE;
-        emit shotUpdated();
-    }
-    return m_type;
-}
-*/
+
 int Shot::getChapterCount() const
 {
     return m_videos.size();
@@ -254,7 +233,13 @@ int Shot::getChapterCount() const
 
 QDateTime Shot::getDate() const
 {
+    if (m_date_gps.isValid())
+    {
+        return m_date_gps;
+    }
+
     QDateTime firstpossibledate(QDate(2001, 1, 1), QTime(0, 0));
+
     if (m_camera_source.contains("HERO4")) firstpossibledate = QDateTime(QDate(2014, 1, 1), QTime(0, 0));
     if (m_camera_source.contains("HERO5")) firstpossibledate = QDateTime(QDate(2016, 1, 1), QTime(0, 0));
     if (m_camera_source.contains("HERO6")) firstpossibledate = QDateTime(QDate(2017, 1, 1), QTime(0, 0));
@@ -263,10 +248,6 @@ QDateTime Shot::getDate() const
     if (m_camera_source.contains("HERO9")) firstpossibledate = QDateTime(QDate(2020, 1, 1), QTime(0, 0));
     if (m_camera_source.contains("HERO10")) firstpossibledate = QDateTime(QDate(2021, 1, 1), QTime(0, 0));
 
-    if (m_date_gps.isValid())
-    {
-        return m_date_gps;
-    }
     if (m_date_metadata.isValid())
     {
         if (m_date_metadata > firstpossibledate &&
@@ -276,8 +257,18 @@ QDateTime Shot::getDate() const
         }
     }
 
-    return m_date_file;
+    if (m_date_file.isValid())
+    {
+        if (m_date_file > firstpossibledate &&
+            m_date_file < QDateTime::currentDateTime())
+        {
+            return m_date_file;
+        }
+    }
+
+    return firstpossibledate;
 }
+
 QDateTime Shot::getDateFile() const
 {
     return m_date_file;
