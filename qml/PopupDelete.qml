@@ -44,6 +44,13 @@ Popup {
         else
             textArea.text = qsTr("Are you sure you want to delete the current shot?")
 
+        if (shots_files.length === 0) {
+            recapEnabled = true
+            shots_uuids.push(currentShot.uuid)
+            shots_names.push(currentShot.name)
+            shots_files = currentShot.filesList
+        }
+
         visible = true
     }
 
@@ -171,21 +178,10 @@ Popup {
         }
 
         ////////////////
-/*
-        Column {
-            id: contentArea
-            height: (shots_files.length > 0) ? 160 : 96
-            //height: Math.min(64, listArea.count*16)
-            anchors.left: parent.left
-            anchors.leftMargin: 24
-            anchors.right: parent.right
-            anchors.rightMargin: 24
-            spacing: 16
-*/
+
         Item {
             id: contentArea
             height: (shots_files.length > 0) ? 160 : 96
-            //height: Math.min(64, listArea.count*16)
             anchors.left: parent.left
             anchors.leftMargin: 24
             anchors.right: parent.right
@@ -219,7 +215,9 @@ Popup {
                 anchors.bottom: parent.bottom
                 height: Math.min(64, listArea.count*16)
 
-                model: recapOpened ? shots_files : currentShot.filesList
+                visible: recapOpened || (shots_files.length > 0 && shots_files.length <= 4)
+                model: shots_files
+
                 delegate: Text {
                     anchors.left: parent.left
                     anchors.right: parent.right
