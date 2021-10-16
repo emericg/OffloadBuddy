@@ -112,10 +112,11 @@ bool getGoProShotInfos(ofb_file &file, ofb_shot &shot)
 
     int group_number = -1;
     int file_number = file.name.midRef(4, 4).toInt();
+    QString fileextension = file.extension.toLower();
 
     if (file.name.startsWith("GOPR"))
     {
-        if (file.extension == "jpg" || file.extension == "gpr")
+        if (fileextension == "jpg" || fileextension == "gpr")
         {
             // Single Photo
             shot.shot_type = ShotUtils::SHOT_PICTURE;
@@ -130,7 +131,7 @@ bool getGoProShotInfos(ofb_file &file, ofb_shot &shot)
              file.name.startsWith("GPFR"))
     {
         // Fusion
-        if (file.extension == "jpg" || file.extension == "gpr")
+        if (fileextension == "jpg" || fileextension == "gpr")
         {
             // Single Photo
             shot.shot_type = ShotUtils::SHOT_PICTURE;
@@ -164,7 +165,7 @@ bool getGoProShotInfos(ofb_file &file, ofb_shot &shot)
         shot.shot_type = ShotUtils::SHOT_VIDEO;
         group_number = file.name.midRef(2, 2).toInt();
 
-        if (file.extension == "jpg" || file.extension == "gpr")
+        if (fileextension == "jpg" || fileextension == "gpr")
         {
             // Burst or Time-Lapse Photo
             shot.shot_type = ShotUtils::SHOT_PICTURE_MULTI;
@@ -179,7 +180,7 @@ bool getGoProShotInfos(ofb_file &file, ofb_shot &shot)
     }
     else if (file.name.startsWith("G"))
     {
-        if (file.extension == "jpg" || file.extension == "gpr")
+        if (fileextension == "jpg" || fileextension == "gpr")
         {
             // Burst or Time-Lapse Photo
             shot.shot_type = ShotUtils::SHOT_PICTURE_MULTI;
@@ -205,12 +206,12 @@ bool getGoProShotInfos(ofb_file &file, ofb_shot &shot)
         return false;
     }
 
-    if (file.extension == "mp4") file.isVideo = true;
-    else if (file.extension == "jpg" || file.extension == "gpr") file.isPicture = true;
-    else if (file.extension == "lrv") { file.isVideo = true; file.isLowRes = true; }
-    else if (file.extension == "thm") { file.isPicture = true; file.isLowRes = true; }
-    else if (file.extension == "wav") file.isAudio = true;
-    else if (file.extension == "gpx" || file.extension == "json") file.isTelemetry = true;
+    if (fileextension == "mp4") file.isVideo = true;
+    else if (fileextension == "jpg" || fileextension == "gpr") file.isPicture = true;
+    else if (fileextension == "lrv") { file.isVideo = true; file.isLowRes = true; }
+    else if (fileextension == "thm") { file.isPicture = true; file.isLowRes = true; }
+    else if (fileextension == "wav") file.isAudio = true;
+    else if (fileextension == "gpx" || fileextension == "json") file.isTelemetry = true;
     else file.isOther = true;
 
     file.isShot = true;

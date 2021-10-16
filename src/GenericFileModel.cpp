@@ -138,35 +138,37 @@ bool getGenericShotInfos(ofb_file &file, ofb_shot &shot)
     shot.shot_id = 0;
     shot.file_number = 0;
 
-    if (file.extension == "jpg" || file.extension == "jpeg" ||
-        file.extension == "png" || file.extension == "webp" ||
-        file.extension == "gpr" ||
-        file.extension == "insp")
+    QString fileextension = file.extension.toLower();
+
+    if (fileextension == "jpg" || fileextension == "jpeg" ||
+        fileextension == "png" || fileextension == "webp" ||
+        fileextension == "gpr" ||
+        fileextension == "insp")
     {
         file.isPicture = true;
         shot.shot_type = ShotUtils::SHOT_PICTURE;
     }
-    else if (file.extension == "mov" || file.extension == "mp4" || file.extension == "m4v" ||
-             file.extension == "avi" ||
-             file.extension == "mkv" || file.extension == "webm" ||
-             file.extension == "insv")
+    else if (fileextension == "mov" || fileextension == "mp4" || fileextension == "m4v" ||
+             fileextension == "avi" ||
+             fileextension == "mkv" || fileextension == "webm" ||
+             fileextension == "insv")
     {
         file.isVideo = true;
         shot.shot_type = ShotUtils::SHOT_VIDEO;
     }
-    else if (file.extension == "lrv")
+    else if (fileextension == "lrv")
     {
         file.isVideo = true;
         file.isLowRes = true;
         shot.shot_type = ShotUtils::SHOT_VIDEO;
     }
-    else if (file.extension == "thm")
+    else if (fileextension == "thm")
     {
         file.isPicture = true;
         file.isLowRes = true;
         shot.shot_type = ShotUtils::SHOT_VIDEO;
     }
-    else if (file.extension == "gpx" || file.extension == "json")
+    else if (fileextension == "gpx" || fileextension == "json")
     {
         file.isTelemetry = true;
         shot.shot_type = ShotUtils::SHOT_VIDEO;

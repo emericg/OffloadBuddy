@@ -1,5 +1,5 @@
 // UtilsString.js
-// Version 10
+// Version 11
 .pragma library
 
 /* ************************************************************************** */
@@ -27,7 +27,7 @@ function durationToString_long(duration) {
     var hours = Math.floor(duration / 3600000);
     var minutes = Math.floor((duration - (hours * 3600000)) / 60000);
     var seconds = Math.floor((duration - (hours * 3600000) - (minutes * 60000)) / 1000);
-    var ms = (duration - (hours * 3600000) - (minutes * 60000)) - (seconds * 1000);
+    var milliseconds = Math.round(duration - (hours * 3600000) - (minutes * 60000)) - (seconds * 1000);
 
     if (hours > 0) {
         text += hours.toString();
@@ -43,8 +43,8 @@ function durationToString_long(duration) {
     if (seconds > 0) {
         text += seconds.toString() + " " + qsTr("sec") + " ";
     }
-    if (ms > 0) {
-        text += ms.toString() + " " + qsTr("ms");
+    if (milliseconds > 0) {
+        text += milliseconds.toString() + " " + qsTr("ms");
     }
 
     return text;
@@ -63,7 +63,7 @@ function durationToString_short(duration) {
     var hours = Math.floor(duration / 3600000);
     var minutes = Math.floor((duration - (hours * 3600000)) / 60000);
     var seconds = Math.floor((duration - (hours * 3600000) - (minutes * 60000)) / 1000);
-    var ms = (duration - (hours * 3600000) - (minutes * 60000)) - (seconds * 1000);
+    var milliseconds = Math.round(duration - (hours * 3600000) - (minutes * 60000)) - (seconds * 1000);
 
     if (hours > 0) {
         text += hours.toString() + " " + qsTr("m") + " ";
@@ -74,8 +74,8 @@ function durationToString_short(duration) {
     if (seconds > 0) {
         text += seconds.toString() + " " + qsTr("s") + " ";
     }
-    if (ms > 0) {
-        text += ms.toString() + " " + qsTr("ms");
+    if (milliseconds > 0) {
+        text += milliseconds.toString() + " " + qsTr("ms");
     }
 
     return text;
@@ -96,7 +96,7 @@ function durationToString_compact(duration) {
     var hours = Math.floor(duration / 3600000);
     var minutes = Math.floor((duration - (hours * 3600000)) / 60000);
     var seconds = Math.floor((duration - (hours * 3600000) - (minutes * 60000)) / 1000);
-    var ms = (duration - (hours * 3600000) - (minutes * 60000)) - (seconds * 1000);
+    var milliseconds = Math.round(duration - (hours * 3600000) - (minutes * 60000)) - (seconds * 1000);
 
     if (hours > 0) {
         text += hours.toString() + qsTr("h") + " ";
@@ -105,8 +105,8 @@ function durationToString_compact(duration) {
         text += minutes.toString() + qsTr("m") + " ";
     }
 
-    if (seconds <= 1 && ms > 0) {
-        text += seconds.toString() + qsTr("s") + " " + ms.toString() + qsTr("ms");
+    if (seconds <= 1 && milliseconds > 0) {
+        text += seconds.toString() + qsTr("s") + " " + milliseconds.toString() + qsTr("ms");
     } else {
         text += Math.round((duration - (hours * 3600000) - (minutes * 60000)) / 1000).toString() + qsTr("s");
     }
@@ -129,7 +129,7 @@ function durationToString_ISO8601_compact(duration) {
     if (duration > 1000) {
         var hours = Math.floor(duration / 3600000);
         var minutes = Math.floor((duration - (hours * 3600000)) / 60000);
-        var seconds = Math.floor((duration - (hours * 3600000) - (minutes * 60000)) / 1000);
+        var seconds = Math.round((duration - (hours * 3600000) - (minutes * 60000)) / 1000);
 
         if (hours > 0) text += _padNumber(hours).toString() + ":";
         text += _padNumber(minutes).toString() + ":";
@@ -207,7 +207,7 @@ function durationToString_ISO8601_full_loose(duration_ms) {
         var hours = Math.floor(duration_ms / 3600000);
         var minutes = Math.floor((duration_ms - (hours * 3600000)) / 60000);
         var seconds = Math.floor((duration_ms - (hours * 3600000) - (minutes * 60000)) / 1000);
-        var milliseconds = Math.floor((duration_ms - (hours * 3600000) - (minutes * 60000)) - (seconds * 1000));
+        var milliseconds = Math.round((duration_ms - (hours * 3600000) - (minutes * 60000)) - (seconds * 1000));
 
         if (hours > 0) {
             text += _padNumber(hours).toString();
@@ -246,7 +246,7 @@ function durationToString_ISO8601_full(duration_ms) {
         var hours = Math.floor(duration_ms / 3600000);
         var minutes = Math.floor((duration_ms - (hours * 3600000)) / 60000);
         var seconds = Math.floor((duration_ms - (hours * 3600000) - (minutes * 60000)) / 1000);
-        var milliseconds = Math.floor((duration_ms - (hours * 3600000) - (minutes * 60000)) - (seconds * 1000));
+        var milliseconds = Math.round((duration_ms - (hours * 3600000) - (minutes * 60000)) - (seconds * 1000));
 
         if (hours > 0)
             text += _padNumber(hours).toString();

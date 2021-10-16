@@ -356,9 +356,12 @@ void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
             {
                 // timelapse to video
                 ptiwrap->arguments << "-r" << QString::number(job->settings_encode.timelapse_fps);
+
                 ptiwrap->arguments << "-start_number" << element->files.at(0).name.mid(1, -1);
-                QString replacestr = "/" + element->files.at(0).name + "." + element->files.at(0).extension.toUpper();
-                ptiwrap->arguments << "-i" << element->files.at(0).filesystemPath.replace(replacestr, "/G%07d.JPG");
+                QString replacestr = "/" + element->files.at(0).name;
+                ptiwrap->arguments << "-i" << element->files.at(0).filesystemPath.replace(replacestr, "/G%07d");
+
+                //ptiwrap->arguments << "-pattern_type" << "glob" << "-i" << element->files.at(0).directory + "/*." + timelapse_src_ext;
 
                 m_duration_frame = job->getFilesCount();
             }
@@ -380,6 +383,7 @@ void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
 
                 // H.264 video
                 ptiwrap->arguments << "-c:v" << "libx264";
+                ptiwrap->arguments << "-pix_fmt" << "yuv420p";
 
                 if (job->settings_encode.encoding_speed == 3)
                     ptiwrap->arguments << "-preset" << "faster";
@@ -388,11 +392,11 @@ void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
                 else
                     ptiwrap->arguments << "-preset" << "medium";
 
+                ptiwrap->arguments << "-tune" << "film";
+
                 // CRF scale range is 0–51
                 // (0 is lossless, 23 is default, 51 is worst) // sane range is 17–28
                 int crf = mapNumber(job->settings_encode.encoding_quality, 50, 100, 28, 17);
-
-                ptiwrap->arguments << "-tune" << "film";
                 ptiwrap->arguments << "-crf" << QString::number(crf);
 
                 // Audio copy
@@ -405,6 +409,7 @@ void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
 
                 // H.265 video
                 ptiwrap->arguments << "-c:v" << "libx265";
+                ptiwrap->arguments << "-pix_fmt" << "yuv420p";
 
                 if (job->settings_encode.encoding_speed == 3)
                     ptiwrap->arguments << "-preset" << "faster";
@@ -416,7 +421,6 @@ void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
                 // CRF scale range is 0–51
                 // (0 is lossless, 28 is default, 51 is worst) // sane range is 20–33
                 int crf = mapNumber(job->settings_encode.encoding_quality, 50, 100, 33, 20);
-
                 ptiwrap->arguments << "-crf" << QString::number(crf);
 
                 // Audio copy
@@ -440,11 +444,12 @@ void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
 
                 // VP9 video
                 ptiwrap->arguments << "-c:v" << "libvpx-vp9";
+                ptiwrap->arguments << "-pix_fmt" << "yuv420p";
                 ptiwrap->arguments << "-crf" << QString::number(crf) << "-b:v" << "0";
                 //ptiwrap->arguments << "-cpu-used" << "2";
                 // Opus audio
                 ptiwrap->arguments << "-c:a" << "libopus";
-                ptiwrap->arguments << "-b:a" << "70K";
+                ptiwrap->arguments << "-b:a" << "80K";
             }
 
             if (codec == "GIF")

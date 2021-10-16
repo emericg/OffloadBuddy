@@ -110,7 +110,7 @@ void FileScanner::scanFilesystemDirectory(const QString &dir_path)
                     f->directory = fi.absolutePath();
                     if (!f->directory.endsWith("/")) f->directory += "/";
                     f->name = fi.baseName();
-                    f->extension = fi.suffix().toLower();
+                    f->extension = fi.suffix();
                     f->size = static_cast<uint64_t>(fi.size());
                     f->creation_date = fi.birthTime();
                     f->modification_date = fi.lastModified();
@@ -184,7 +184,7 @@ bool FileScanner::scanFilesystemFile(const QString &file_path, ofb_file *f, ofb_
         {
             f->filesystemPath = fi.filePath();
             f->name = fi.baseName();
-            f->extension = fi.suffix().toLower();
+            f->extension = fi.suffix();
             f->size = static_cast<uint64_t>(fi.size());
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 10, 0))
             f->creation_date = fi.birthTime();
@@ -369,7 +369,7 @@ void FileScanner::mtpFileRec(LIBMTP_mtpdevice_t *device, uint32_t storageid, uin
                 ofb_file *f = new ofb_file;
                 {
                     f->name = file_name.mid(0, file_name.lastIndexOf("."));
-                    f->extension = file_name.mid(file_name.lastIndexOf(".") + 1, -1).toLower();
+                    f->extension = file_name.mid(file_name.lastIndexOf(".") + 1, -1);
                     f->size = mtpFile->filesize;
                     f->creation_date = f->modification_date = QDateTime::fromSecsSinceEpoch(mtpFile->modificationdate);
 

@@ -1041,10 +1041,30 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             visible: (cbTimelapse.checked || encodingMode === "timelapse")
+                            stepSize: 1
                             from: 1
                             to: 15
                             value: 10
-                            snapMode: Slider.SnapAlways
+                        }
+                    }
+
+                    Item {
+                        height: textTimelapseHelp.contentHeight + 8
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+
+                        visible: rectangleTimelapse.visible
+
+                        Text {
+                            id: textTimelapseHelp
+                            anchors.left: parent.left
+                            anchors.leftMargin: popupEncoding.legendWidth + 16
+                            anchors.right: parent.right
+
+                            text: qsTr("The number of picture per second for the timelpase. Currently it will have a duration of %1.").arg(UtilsString.durationToString_short((1/timelapseFramerate.value)*1000*currentShot.duration))
+                            wrapMode: Text.WordWrap
+                            color: Theme.colorSubText
+                            font.pixelSize: Theme.fontSizeContentSmall
                         }
                     }
 

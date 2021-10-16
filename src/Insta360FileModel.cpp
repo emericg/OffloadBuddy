@@ -182,12 +182,16 @@ bool getInsta360ShotInfos(ofb_file &file, ofb_shot &shot)
         return false;
     }
 
-    if (file.extension == "insp" && file.name.startsWith("IMG"))
+    QString date = file.name.mid(4, 8) + file.name.mid(13, 6); // date + time
+    QString number = file.name.midRef(20, 2) + file.name.midRef(23, 3); // ?? + file number?
+    QString fileextension = file.extension.toLower();
+
+    if (fileextension == "insp" && file.name.startsWith("IMG"))
     {
         file.isPicture = true;
         shot.shot_type = ShotUtils::SHOT_PICTURE;
     }
-    else if (file.extension == "insv")
+    else if (fileextension == "insv")
     {
         if (file.name.startsWith("VID")) file.isVideo = true;
         else if (file.name.startsWith("LRV")) { file.isVideo = true; file.isLowRes = true; }
@@ -200,9 +204,6 @@ bool getInsta360ShotInfos(ofb_file &file, ofb_shot &shot)
         //qDebug() << "Unsupported file extension:" << file.extension;
         return false;
     }
-
-    QString date = file.name.mid(4, 8) + file.name.mid(13, 6); // date + time
-    QString number = file.name.midRef(20, 2) + file.name.midRef(23, 3); // ?? + file number?
 
     file.isShot = true;
     shot.shot_id = date.toLongLong();

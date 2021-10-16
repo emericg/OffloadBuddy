@@ -15,7 +15,9 @@ Item {
     property bool editing: false
     property string grid: "rulesofthree"
 
-    visible: (resizeWidget.editing || gismo.fx > 0.0 || gismo.fy > 0.0 || gismo.fwidth < 1.0 || gismo.fheight < 1.0)
+    visible: (resizeWidget.editing ||
+              gismo.arEnum !== mediaUtils.arFromGeometry(shot.widthVisible, shot.heightVisible) ||
+              gismo.fx > 0.0 || gismo.fy > 0.0 || gismo.fwidth < 1.0 || gismo.fheight < 1.0)
 
     function load() {
         editing = false
