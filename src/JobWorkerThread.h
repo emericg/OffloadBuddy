@@ -30,8 +30,8 @@
 class QThread;
 class Shot;
 class JobTracker;
-class JobElement;
-class JobSettingsTelemetry;
+struct JobElement;
+struct JobSettingsTelemetry;
 
 /* ************************************************************************** */
 

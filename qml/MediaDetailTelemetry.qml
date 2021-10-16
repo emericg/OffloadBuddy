@@ -149,21 +149,22 @@ Item {
         Map {
             id: map
 
-            gesture.enabled: moove
-            plugin: Plugin {
-                //name: "mapboxgl"
-                preferred: ["mapboxgl", "osm", "esri"]
-                //PluginParameter { name: "osm.mapping.highdpi_tiles"; value: "true"; }
-            }
-            copyrightsVisible: false
-
             property bool fullscreen: false
             property bool moove: false
+
+            gesture.enabled: moove
+            copyrightsVisible: false
+
+            plugin: Plugin {
+                //name: mapboxgl
+                preferred: (Qt.platform.os === "osx" || Qt.platform.os === "linux") ? ["osm", "esri"] : ["mapboxgl", "osm", "esri"]
+                PluginParameter { name: "osm.mapping.highdpi_tiles"; value: "true"; }
+            }
 
             //zoomLevel: 2
             //center: QtPositioning.coordinate(45.5, 6)
 
-            ////////
+            ////////////////
 
             function updateMap() { // "image" mode
                 button_map_fullscreen.visible = false
@@ -298,7 +299,7 @@ Item {
                 }
             }
 
-            ////////
+            ////////////////
 
             MouseArea {
                 anchors.fill: parent
