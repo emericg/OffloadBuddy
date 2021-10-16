@@ -75,7 +75,7 @@ public:
 
     ////////////////////////////////////////////////////////////////////////////
 
-    Q_INVOKABLE static AspectRatio arFromGeometry(const int width, const int height)
+    Q_INVOKABLE static MediaUtils::AspectRatio arFromGeometry(const int width, const int height)
     {
         AspectRatio ar = AspectRatio_custom;
 
@@ -109,7 +109,7 @@ public:
         return ar;
     }
 
-    Q_INVOKABLE static QString arToString(const AspectRatio ar)
+    Q_INVOKABLE static QString arToString(const MediaUtils::AspectRatio ar)
     {
         QString str = "";
 
@@ -143,7 +143,7 @@ public:
         return str;
     }
 
-    Q_INVOKABLE static float arToFloat(const AspectRatio ar)
+    Q_INVOKABLE static float arToFloat(const MediaUtils::AspectRatio ar)
     {
         float flt = 16.f / 9.f;
 

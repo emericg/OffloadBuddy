@@ -91,7 +91,7 @@ bool parseInsta360VersionFile(const QString &path, insta360_device_infos &infos)
         fileinfo_list.size() > 0 &&
         fileinfo_list.open(QIODevice::ReadOnly))
     {
-        char bufdata[fileinfo_list.size()];
+        char *bufdata = new char[fileinfo_list.size()];
         fileinfo_list.read(bufdata, fileinfo_list.size());
         int e = 0;
 
@@ -153,6 +153,8 @@ bool parseInsta360VersionFile(const QString &path, insta360_device_infos &infos)
 
             status = true;
         }
+
+        delete [] bufdata;
     }
 
     fileinfo_list.close();

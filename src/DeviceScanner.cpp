@@ -225,7 +225,9 @@ void DeviceScanner::scanVirtualFilesystems()
             // 0x2C: ','   0x3A: ':'   0x5B: '['   0x5D: ']'
 
             QDir gvfsDirectory(storage.rootPath() + "/gvfs");
-            for (const auto &subdir_device : gvfsDirectory.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
+            const QStringList &gvfsDirectory_list = gvfsDirectory.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+
+            for (const auto &subdir_device : gvfsDirectory_list)
             {
                 QString virtual_mountpoint = storage.rootPath() + "/gvfs/" + subdir_device;
                 //qDebug() << "> VIRTUAL MOUNTPOINT(" << storage.fileSystemType() << ") > " << virtual_mountpoint;
@@ -360,7 +362,9 @@ void DeviceScanner::scanVirtualFilesystems()
                     // Then we usually have a subdirectory per MTP 'volume'
                     // ex: one volume for the internal flash of a phone and one for its SD card
                     QDir gvfsSubDirectory(virtual_mountpoint);
-                    for (const auto &subdir_volume : gvfsSubDirectory.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
+                    const QStringList &gvfsSubDirectory_list = gvfsSubDirectory.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+
+                    for (const auto &subdir_volume : gvfsSubDirectory_list)
                     {
                         QString devicePath = virtual_mountpoint + "/" + subdir_volume;
 
