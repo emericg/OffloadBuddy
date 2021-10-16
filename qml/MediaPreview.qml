@@ -628,7 +628,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter
 
-                text: qsTr("trim from ") + UtilsString.durationToString_ISO8601_full(shot.trimStart) + qsTr(" to ") + UtilsString.durationToString_ISO8601_full(shot.trimStop)
+                text: qsTr("trim from ") + UtilsString.durationToString_ISO8601_full(shot.trimStart) + qsTr(" to ") + UtilsString.durationToString_ISO8601_full(shot.trimStop > 0 ? shot.trimStop : shot.duration)
                 color: "white"
                 font.bold: true
                 font.pixelSize: 15

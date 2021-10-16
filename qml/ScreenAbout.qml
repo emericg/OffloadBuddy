@@ -110,8 +110,10 @@ Item {
                     //id: imageLogo
                     width: 220
                     height: 160
+                    sourceSize.width: 220
+                    sourceSize.height: 160
 
-                    fillMode: Image.PreserveAspectCrop
+                    fillMode: Image.PreserveAspectFit
                     source: "qrc:/appicons/offloadbuddy.svg"
                 }
 
@@ -158,9 +160,9 @@ Item {
                             fullColor: false
                             primaryColor: Theme.colorPrimary
 
-                            text: qsTr("Bug report")
-                            source: "qrc:/assets/icons_material/baseline-bug_report-24px.svg"
-                            onClicked: Qt.openUrlExternally("https://www.github.com/emericg/OffloadBuddy/issues")
+                            text: qsTr("Discussions")
+                            source: "qrc:/assets/icons_material/duotone-question_answer-24px.svg"
+                            onClicked: Qt.openUrlExternally("https://www.github.com/emericg/OffloadBuddy/discussions")
                         }
 
                         ButtonWireframeImage {
@@ -170,9 +172,9 @@ Item {
                             fullColor: false
                             primaryColor: Theme.colorPrimary
 
-                            text: qsTr("Discussions")
-                            source: "qrc:/assets/icons_material/duotone-question_answer-24px.svg"
-                            onClicked: Qt.openUrlExternally("https://www.github.com/emericg/OffloadBuddy/discussions")
+                            text: qsTr("Bug report")
+                            source: "qrc:/assets/icons_material/baseline-bug_report-24px.svg"
+                            onClicked: Qt.openUrlExternally("https://www.github.com/emericg/OffloadBuddy/issues")
                         }
                     }
                 }

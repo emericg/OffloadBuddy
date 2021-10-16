@@ -170,18 +170,6 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
 
             ItemImageButton {
-                id: rectangleOpenFile
-                width: 40
-                height: 40
-                anchors.verticalCenter: parent.verticalCenter
-
-                visible: (job.destinationFile.length && job.state === JobUtils.JOB_STATE_DONE)
-                highlightMode: "color"
-                source: "qrc:/assets/icons_material/baseline-folder-24px.svg"
-                onClicked: job.openDestinationFile()
-            }
-
-            ItemImageButton {
                 id: rectangleOpenFolder
                 width: 40
                 height: 40
@@ -191,6 +179,18 @@ Rectangle {
                 highlightMode: "color"
                 source: "qrc:/assets/icons_material/baseline-folder_open-24px.svg"
                 onClicked: job.openDestinationFolder()
+            }
+
+            ItemImageButton {
+                id: rectangleOpenFile
+                width: 40
+                height: 40
+                anchors.verticalCenter: parent.verticalCenter
+
+                visible: (job.destinationFile.length && job.state === JobUtils.JOB_STATE_DONE)
+                highlightMode: "color"
+                source: "qrc:/assets/icons_material/duotone-launch-24px.svg"
+                onClicked: job.openDestinationFile()
             }
 
             ItemImageButton {
