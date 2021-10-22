@@ -203,13 +203,15 @@ Popup {
     }
 
     function setOrientation(rotation, hflip, vflip) {
-        //console.log("setOrientation() " + rotation + " " + hflip + " " + vflip)
+        console.log("setOrientation() " + rotation + " " + hflip + " " + vflip)
 
         if (rotation || hflip || vflip) {
             if (currentShot.rotation) {
+                console.log("APPLYING video HACK")
                 rotation -= currentShot.rotation
             }
             if (encodingMode === "image" && currentShot.transformation) {
+                console.log("APPLYING image HACK")
                 if (hflip && !vflip) { hflip = false; vflip = true; }
                 if (!hflip && vflip) { hflip = true; vflip = false; }
             }
@@ -223,6 +225,10 @@ Popup {
 
             clipTransformation_qt = UtilsMedia.orientationToTransform_qt(rotation, hflip, vflip)
             clipTransformation_exif = UtilsMedia.orientationToTransform_exif(rotation, hflip, vflip)
+
+            console.log("clipTransformation_qt() " + clipTransformation_qt)
+            console.log("clipTransformation_exif() " + clipTransformation_exif)
+
         } else {
             rectangleOrientation.visible = false
             clipTransformation_qt = 0

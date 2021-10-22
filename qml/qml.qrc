@@ -12,22 +12,23 @@
         <file>ScreenSettings.qml</file>
         <file>ScreenAbout.qml</file>
         <file>ScreenComponents.qml</file>
-        <file>PopupDate.qml</file>
-        <file>PopupDelete.qml</file>
-        <file>PopupEncoding.qml</file>
-        <file>PopupExit.qml</file>
-        <file>PopupFirmware.qml</file>
-        <file>PopupOffload.qml</file>
-        <file>PopupMove.qml</file>
-        <file>PopupMerge.qml</file>
-        <file>PopupMediaDirectory.qml</file>
-        <file>PopupTelemetry.qml</file>
         <file>MediaDetailOverview.qml</file>
         <file>MediaDetailDetails.qml</file>
         <file>MediaDetailTelemetry.qml</file>
         <file>MediaPreview.qml</file>
 
         <file>ThemeEngine.qml</file>
+
+        <file alias="PopupDate.qml">popups/PopupDate.qml</file>
+        <file alias="PopupDelete.qml">popups/PopupDelete.qml</file>
+        <file alias="PopupEncoding.qml">popups/PopupEncoding.qml</file>
+        <file alias="PopupExit.qml">popups/PopupExit.qml</file>
+        <file alias="PopupFirmware.qml">popups/PopupFirmware.qml</file>
+        <file alias="PopupOffload.qml">popups/PopupOffload.qml</file>
+        <file alias="PopupMove.qml">popups/PopupMove.qml</file>
+        <file alias="PopupMerge.qml">popups/PopupMerge.qml</file>
+        <file alias="PopupMediaDirectory.qml">popups/PopupMediaDirectory.qml</file>
+        <file alias="PopupTelemetry.qml">popups/PopupTelemetry.qml</file>
 
         <file alias="ActionMenu.qml">components/ActionMenu.qml</file>
         <file alias="ActionButton.qml">components/ActionButton.qml</file>
