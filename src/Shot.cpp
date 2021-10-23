@@ -821,16 +821,16 @@ bool Shot::getMetadataFromPicture(int index)
 
     if (m_pictures.at(index)->ed)
     {
-        ExifData *ed = m_pictures.at(index)->ed;
         hasEXIF = true;
-
-        // EXIF ////////////////////////////////////////////////////////////////
-
-        ExifByteOrder byteOrder = exif_data_get_byte_order(ed);
+        ExifData *ed = m_pictures.at(index)->ed;
 
         // Parse tags
         ExifEntry *entry;
         char entry_buf[512];
+
+        ExifByteOrder byteOrder = exif_data_get_byte_order(ed);
+
+        // EXIF ////////////////////////////////////////////////////////////////
 
         QString camera_maker;
         QString camera_model;
@@ -855,6 +855,8 @@ bool Shot::getMetadataFromPicture(int index)
             exif_entry_get_value(entry, entry_buf, sizeof(entry_buf));
             m_camera_firmware = entry_buf;
         }
+
+        // Geometry ////////////////////////////////////////////////////////////
 
         entry = exif_content_get_entry(ed->ifd[EXIF_IFD_EXIF], EXIF_TAG_PIXEL_X_DIMENSION);
         if (entry)
@@ -906,6 +908,8 @@ bool Shot::getMetadataFromPicture(int index)
                 transformation = QImageIOHandler::TransformationRotate270;
         }
 
+        // Camera settings /////////////////////////////////////////////////////
+
         entry = exif_content_get_entry(ed->ifd[EXIF_IFD_EXIF], EXIF_TAG_FNUMBER);
         if (entry)
         {
@@ -939,6 +943,19 @@ bool Shot::getMetadataFromPicture(int index)
             exif_entry_get_value(entry, entry_buf, sizeof(entry_buf));
             exposure_time = entry_buf;
         }
+        entry = exif_content_get_entry(ed->ifd[EXIF_IFD_EXIF], EXIF_TAG_EXPOSURE_BIAS_VALUE);
+        if (entry)
+        {
+            exif_entry_get_value(entry, entry_buf, sizeof(entry_buf));
+            exposure_bias = entry_buf;
+        }
+        entry = exif_content_get_entry(ed->ifd[EXIF_IFD_EXIF], EXIF_TAG_METERING_MODE);
+        if (entry)
+        {
+            exif_entry_get_value(entry, entry_buf, sizeof(entry_buf));
+            metering_mode = entry_buf;
+        }
+
         entry = exif_content_get_entry(ed->ifd[EXIF_IFD_EXIF], EXIF_TAG_FLASH);
         if (entry)
         {
@@ -947,11 +964,21 @@ bool Shot::getMetadataFromPicture(int index)
 
             if (flashvalue > 0) flash = true;
         }
-        entry = exif_content_get_entry(ed->ifd[EXIF_IFD_EXIF], EXIF_TAG_METERING_MODE);
+        //EXIF_TAG_FLASH_ENERGY
+        //EXIF_TAG_FLASH_PIX_VERSION
+
+        // DateTime ////////////////////////////////////////////////////////////
+
+        entry = exif_content_get_entry(ed->ifd[EXIF_IFD_0], EXIF_TAG_DATE_TIME);
         if (entry)
         {
+            // TODO
+            //0x882a	TimeZoneOffset	int16s[n]	ExifIFD	(1 or 2 values: 1. The time zone offset of DateTimeOriginal from GMT in hours, 2. If present, the time zone offset of ModifyDate)
+            //0x9010	OffsetTime	string	ExifIFD	(time zone for ModifyDate)
+
+            // ex: DateTime: 2018:08:10 10:37:08
             exif_entry_get_value(entry, entry_buf, sizeof(entry_buf));
-            metering_mode = entry_buf;
+            m_date_metadata = QDateTime::fromString(entry_buf, "yyyy:MM:dd hh:mm:ss");
         }
 
         entry = exif_content_get_entry(ed->ifd[EXIF_IFD_0], EXIF_TAG_DATE_TIME);

@@ -308,7 +308,7 @@ class Shot: public QObject
     bool alpha = false;
     unsigned projection = 0;
     unsigned transformation = 0;    //!< QImageIOHandler::Transformation
-    int rotation = 0; // internal use only
+    int rotation = 0;               // internal use only
 
     // GPS "quick" metadata (from EXIF or first GPMF sample)
     QString gps_lat_str;
@@ -329,6 +329,7 @@ class Shot: public QObject
     QString focal;
     QString iso;
     QString exposure_time;
+    QString exposure_bias;
     QString metering_mode;
     bool flash = false;
 
