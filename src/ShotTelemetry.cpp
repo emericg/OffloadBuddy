@@ -538,9 +538,11 @@ void Shot::updateSpeedsSerie(QLineSeries *serie, int appUnit)
 
     float speed_sync = 0;
 
+    unsigned freq = 15;
     int id = 0;
+
     QVector<QPointF> points;
-    for (unsigned i = 0; i < m_speed.size(); i++)
+    for (unsigned i = 0; i < m_speed.size(); i += freq)
     {
         current = m_speed.at(i);
 
@@ -574,11 +576,12 @@ void Shot::updateAltiSerie(QLineSeries *serie, int appUnit)
     avgAlti = 0;
     maxAlti = -500000;
 
-    float alti_sync = 0;
+    unsigned freq = 15;
+    unsigned id = 0;
+    unsigned alti_sync = 0;
 
-    int id = 0;
     QVector<QPointF> points;
-    for (unsigned i = 0; i < m_alti.size(); i++)
+    for (unsigned i = 0; i < m_alti.size(); i += freq)
     {
         current = m_alti.at(i);
 
@@ -597,7 +600,7 @@ void Shot::updateAltiSerie(QLineSeries *serie, int appUnit)
         id++;
     }
 
-    avgAlti /= alti_sync;
+    avgAlti /= static_cast<float>(alti_sync);
 
     serie->replace(points);
 }
@@ -607,15 +610,16 @@ void Shot::updateAcclSeries(QLineSeries *x, QLineSeries *y, QLineSeries *z)
     if (x == nullptr || y == nullptr || z == nullptr)
         return;
 
-    maxG = 1;
+    unsigned freq = 800;
     double currentG = 1;
+    maxG = 1;
 
     QVector<QPointF> pointsX;
     QVector<QPointF> pointsY;
     QVector<QPointF> pointsZ;
 
     int id = 0;
-    for (unsigned i = 0; i < m_accl.size(); i+=200)
+    for (unsigned i = 0; i < m_accl.size(); i += freq)
     {
         pointsX.insert(id, QPointF(id, m_accl.at(i).x));
         pointsY.insert(id, QPointF(id, m_accl.at(i).y));
@@ -641,8 +645,10 @@ void Shot::updateGyroSeries(QLineSeries *x, QLineSeries *y, QLineSeries *z)
     QVector<QPointF> pointsY;
     QVector<QPointF> pointsZ;
 
-    int id = 0;
-    for (unsigned i = 0; i < m_gyro.size(); i+=200)
+    unsigned freq = 800;
+    unsigned id = 0;
+
+    for (unsigned i = 0; i < m_gyro.size(); i += freq)
     {
         pointsX.insert(id, QPointF(id, m_gyro.at(i).x));
         pointsY.insert(id, QPointF(id, m_gyro.at(i).y));
