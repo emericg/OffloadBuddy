@@ -1,4 +1,6 @@
 import QtQuick 2.12
+import QtGraphicalEffects 1.12 // Qt5
+//import Qt5Compat.GraphicalEffects // Qt6
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsNumber.js" as UtilsNumber
@@ -53,6 +55,33 @@ Item {
         onEntered: hovered = true
         onExited: hovered = false
         onCanceled: hovered = false
+    }
+
+    ////////
+/*
+    Glow {
+        id: bgBlur
+        anchors.fill: bgRect
+        source: bgRect
+
+        cached: true
+        radius: 8
+        samples: 16
+        opacity: 0.33
+        color: Theme.colorSecondary
+    }
+*/
+    DropShadow {
+        anchors.fill: bgRect
+        source: bgRect
+
+        horizontalOffset: 1
+        verticalOffset: 2
+
+        cached: true
+        radius: 8
+        samples: 17
+        color: "#aaa"
     }
 
     ////////
