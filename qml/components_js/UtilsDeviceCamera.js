@@ -36,6 +36,8 @@ function getDevicePicture(device) {
             camera_model += "gopro_max"
         } else if (deviceName.includes("HD2")) {
             camera_model += "gopro_H2"
+        } else {
+            camera_model += "generic_actioncam"
         }
     } else if (deviceBrand === "Insta360") {
         if (deviceName.includes("One R")) {
@@ -46,6 +48,8 @@ function getDevicePicture(device) {
             camera_model += "insta360_one_x"
         } else if (deviceName.includes("GO2") || deviceName.includes("GO")) {
             camera_model += "insta360_go2"
+        } else {
+            camera_model += "generic_actioncam"
         }
     } else {
         // Using device type

@@ -21,6 +21,8 @@
 
 #include "GoProFileModel.h"
 
+#include <QFile>
+#include <QTextStream>
 #include <QDebug>
 
 /* ************************************************************************** */
@@ -41,13 +43,17 @@ bool parseGoProVersionFile(const QString &path, gopro_device_infos &infos)
             QString line = in.readLine();
             if (!line.isEmpty())
             {
+                if (line.startsWith(',')) line.remove(0, 1); // HERO10+ hack
+                if (line.endsWith(',')) line.remove(0, 1);   // HERO9- hack
+
                 QStringList kv = line.split(':');
                 if (kv.size() == 2)
                 {
                     QString key = kv.at(0);
-                    key.remove(0,1).chop(1);
+                    key.remove(0, 1).chop(1);
                     QString value = kv.at(1);
-                    value.remove(0,1).chop(2);
+                    value.remove(0, 1).chop(1);
+
                     //qDebug() << "key:" << key << " / value:" << value;
 
                     if (key == "info version")
