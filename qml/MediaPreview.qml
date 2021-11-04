@@ -1074,7 +1074,7 @@ Item {
                         from: 0
                         to: 1
                         value: videoPlayer.volume
-                        onValueChanged: videoPlayer.volume = value
+                        onMoved: videoPlayer.volume = value
                     }
                 }
 
