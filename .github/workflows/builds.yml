@@ -52,12 +52,14 @@ jobs:
       # Install dependencies
       - name: Install dependencies
         run: |
-             sudo apt-add-repository ppa:savoury1/ffmpeg4 -y;
+             sudo apt-add-repository ppa:savoury1/backports -y;
+             sudo apt-add-repository ppa:savoury1/build-tools -y;
              sudo apt-add-repository ppa:savoury1/graphics -y;
              sudo apt-add-repository ppa:savoury1/multimedia -y;
+             sudo apt-add-repository ppa:savoury1/ffmpeg4 -y;
              sudo apt-get update -y;
              sudo apt-get install libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-render-util0 libxcb-xinerama0 libzstd-dev -y;
-             sudo apt-get install libgl1-mesa-dev libva-dev libvdpau-dev libmfx1 -y;
+             sudo apt-get install libgl1-mesa-dev libva-dev libvdpau-dev libmfx1 libsrt1.4-gnutls -y;
              sudo apt-get install libswscale5 libswresample3 libpostproc55 libavutil56 libavformat58 libavfilter7 libavdevice58 libavcodec58 ffmpeg -y;
              sudo apt-get install libavutil-dev libavformat-dev libavfilter-dev libavdevice-dev libavcodec-dev -y;
              sudo apt-get install gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-libav -y;

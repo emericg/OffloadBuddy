@@ -294,6 +294,10 @@ macx {
 }
 
 win32 {
+    # Windows utils
+    SOURCES += src/utils/utils_os_windows.cpp
+    HEADERS += src/utils/utils_os_windows.h
+
     # OS icon
     RC_ICONS = $${PWD}/assets/windows/$$lower($${TARGET}).ico
 
