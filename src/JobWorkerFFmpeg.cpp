@@ -226,7 +226,7 @@ void JobWorkerFFmpeg::queueWork_merge(JobTracker *job)
             // No ffmpeg bundled? Just try to use ffmpeg from the system...
             if (!QFileInfo::exists(ptiwrap->command)) ptiwrap->command = "ffmpeg";
 
-#if defined(Q_OS_WIN)
+#if defined(Q_OS_WINDOWS)
             ptiwrap->command += ".exe";
 #endif
 
@@ -340,7 +340,7 @@ void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
             // No ffmpeg bundled? Just try to use ffmpeg from the system...
             if (!QFileInfo::exists(ptiwrap->command)) ptiwrap->command = "ffmpeg";
 
-#if defined(Q_OS_WIN)
+#if defined(Q_OS_WINDOWS)
             ptiwrap->command += ".exe";
 #endif
 

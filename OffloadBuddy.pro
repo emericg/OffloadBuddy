@@ -218,6 +218,11 @@ DESTDIR     = bin/
 linux:!android {
     TARGET = $$lower($${TARGET})
 
+    # Linux utils
+    SOURCES += src/utils/utils_os_linux.cpp
+    HEADERS += src/utils/utils_os_linux.h
+    QT += dbus
+
     # Application packaging # Needs linuxdeployqt installed
     #deploy.commands = $${OUT_PWD}/$${DESTDIR}/ -qmldir=qml/
     #install.depends = deploy
@@ -249,9 +254,13 @@ macx {
     QMAKE_BUNDLE = offloadbuddy
     CONFIG += app_bundle
 
+    # macOS utils
+    SOURCES += src/utils/utils_os_macos.mm
+    HEADERS += src/utils/utils_os_macos.h
+    LIBS    += -framework IOKit
     # macOS dock click handler
-    SOURCES += src/utils/utils_macosdock.mm
-    HEADERS += src/utils/utils_macosdock.h
+    SOURCES += src/utils/utils_os_macosdock.mm
+    HEADERS += src/utils/utils_os_macosdock.h
     LIBS    += -framework AppKit
 
     # OS icon

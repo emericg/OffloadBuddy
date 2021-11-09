@@ -34,7 +34,7 @@
 #include "utils/utils_screen.h"
 #include "utils/utils_sysinfo.h"
 #include "utils/utils_language.h"
-#include "utils/utils_macosdock.h"
+#include "utils/utils_os_macosdock.h"
 
 #include <singleapplication.h>
 
@@ -158,11 +158,11 @@ int main(int argc, char *argv[])
     atexit(exithandler); // will stop running job on exit
 
     // Init OffloadBuddy utils
-    UtilsScreen *utilsScreen = UtilsScreen::getInstance();
     UtilsApp *utilsApp = UtilsApp::getInstance();
+    UtilsScreen *utilsScreen = UtilsScreen::getInstance();
     UtilsLanguage *utilsLanguage = UtilsLanguage::getInstance();
     UtilsSysinfo *utilsSysinfo = UtilsSysinfo::getInstance();
-    if (!utilsScreen || !utilsApp || !utilsLanguage || !utilsSysinfo)
+    if (!utilsApp || !utilsScreen || !utilsLanguage || !utilsSysinfo)
     {
         qWarning() << "Cannot init OffloadBuddy utils!";
         return EXIT_FAILURE;
@@ -209,6 +209,7 @@ int main(int argc, char *argv[])
     engine_context->setContextProperty("jobManager", jm);
     engine_context->setContextProperty("mediaLibrary", ml);
     engine_context->setContextProperty("utilsApp", utilsApp);
+    engine_context->setContextProperty("utilsScreen", utilsScreen);
     engine_context->setContextProperty("mediaUtils", mediaUtils);
 
     MediaThumbnailer_threadpool *tmb = new MediaThumbnailer_threadpool(utilsSysinfo->getCoreCount_physical() / 2);

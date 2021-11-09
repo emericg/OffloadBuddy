@@ -14,36 +14,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * \date      2019
  * \author    Emeric Grange <emeric.grange@gmail.com>
+ * \date      2021
  */
 
-#ifndef UTILS_MACOS_DOCK_H
-#define UTILS_MACOS_DOCK_H
+#ifndef UTILS_MACOS_H
+#define UTILS_MACOS_H
 /* ************************************************************************** */
 
-#include <QObject>
-
-/* ************************************************************************** */
+#include <QtGlobal>
 #ifdef Q_OS_MACOS
 
+#include <QString>
+
+/* ************************************************************************** */
+
 /*!
- * \brief macOS dock click handler
+ * \brief macOS utils
+ *
+ * Use with "LIBS += -framework IOKit"
  */
-class MacOSDockHandler : public QObject
+class UtilsMacOS
 {
-    Q_OBJECT
-
-    MacOSDockHandler();
-    ~MacOSDockHandler();
-
-signals:
-    void dockIconClicked();
-
 public:
-    static MacOSDockHandler *getInstance();
+    static uint32_t keepScreenOn(const QString &application, const QString &reason);
+    static void keepScreenAuto(uint32_t screensaverId);
 };
 
 #endif // Q_OS_MACOS
 /* ************************************************************************** */
-#endif // UTILS_MACOS_DOCK_H
+#endif // UTILS_MACOS_H
