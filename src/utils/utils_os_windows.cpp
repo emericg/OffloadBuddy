@@ -22,8 +22,7 @@
 
 #ifdef Q_OS_WINDOWS
 
-#include <winbase.h>
-
+#include <windows.h>
 #include <QDebug>
 
 /* ************************************************************************** */
