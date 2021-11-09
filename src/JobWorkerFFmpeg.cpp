@@ -24,6 +24,7 @@
 #include "Shot.h"
 #include "utils/utils_app.h"
 #include "utils/utils_maths.h"
+#include "utils/utils_screen.h"
 
 #include <QProcess>
 #include <QFileInfo>
@@ -785,6 +786,9 @@ void JobWorkerFFmpeg::processStarted()
         qDebug() << "JobWorkerFFmpeg::processStarted()";
         m_ffmpegCurrent->job->setState(JobUtils::JOB_STATE_WORKING);
 
+        UtilsScreen *scr = UtilsScreen::getInstance();
+        scr->keepScreenOn(true, "OffloadBuddy", tr("Encoding media"));
+
         Q_EMIT jobStarted(m_ffmpegCurrent->job->getId());
         Q_EMIT shotStarted(m_ffmpegCurrent->job->getId(), m_ffmpegCurrent->job->getElement(m_ffmpegCurrent->job_element_index)->parent_shot);
     }
@@ -800,6 +804,9 @@ void JobWorkerFFmpeg::processFinished()
         int exitCode = m_childProcess->exitCode();
 
         //qDebug() << "JobWorkerFFmpeg::processFinished(" << exitStatus << "/" << exitCode << ")" << m_ffmpegCurrent->destFile;
+
+        UtilsScreen *scr = UtilsScreen::getInstance();
+        scr->keepScreenOn(false);
 
         JobUtils::JobState js = static_cast<JobUtils::JobState>(m_ffmpegCurrent->job->getState());
         if (js != JobUtils::JOB_STATE_ABORTED)

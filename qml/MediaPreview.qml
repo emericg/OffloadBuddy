@@ -505,10 +505,12 @@ Item {
         onPlaying: {
             buttonPlay.source = "qrc:/assets/icons_material/baseline-pause-24px.svg"
             savePosition()
+            utilsScreen.keepScreenOn(true, "OffloadBuddy", qsTr("Playing video"))
         }
         onPaused: {
             buttonPlay.source = "qrc:/assets/icons_material/baseline-play_arrow-24px.svg"
             savePosition()
+            utilsScreen.keepScreenOn(false)
         }
         onStopped: {
             if (videoPlayer.position >= shot.duration) { // EOF
@@ -522,6 +524,8 @@ Item {
                 // Note // on Qt 5.13+, same thing could be achieved with:
                 //videoOutput.flushMode: LastFrame
             }
+
+            utilsScreen.keepScreenOn(false)
         }
         onPlaylistChanged: {
             //console.log("onPlaylistChanged()")
