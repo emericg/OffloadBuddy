@@ -2,7 +2,7 @@
 <!-- Copyright 2020 Emeric Grange <emeric.grange@gmail.com> -->
 
 <component type="desktop-application">
-  <id>com.emeric.offloadbuddy</id>
+  <id>io.emeric.offloadbuddy</id>
   <name>OffloadBuddy</name>
   <launchable type="desktop-id">offloadbuddy.desktop</launchable>
 
@@ -19,7 +19,9 @@
   <developer_name>Emeric Grange</developer_name>
   <updatecontact>emeric.grange@gmail.com</updatecontact>
   <url type="homepage">https://emeric.io/OffloadBuddy</url>
+  <url type="contact">https://emeric.io/OffloadBuddy/support.html</url>
   <url type="bugtracker">https://github.com/emericg/OffloadBuddy/issues</url>
+  <url type="translate">https://github.com/emericg/OffloadBuddy/blob/master/i18n/README.md</url>
   <url type="donation">https://paypal.me/EmericGrange</url>
 
   <releases>
