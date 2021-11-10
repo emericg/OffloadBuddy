@@ -49,8 +49,8 @@ jobs:
           modules: qtcharts
           cached: ${{steps.cache-qt.outputs.cache-hit}}
 
-      # Install dependencies
-      - name: Install dependencies
+      # Install dependencies (from package manager)
+      - name: Install dependencies (from package manager)
         run: |
              sudo apt-add-repository ppa:savoury1/backports -y;
              sudo apt-add-repository ppa:savoury1/build-tools -y;
@@ -67,8 +67,8 @@ jobs:
              sudo apt-get install libudev-dev libusb-dev -y;
              sudo apt-get install ninja-build libtool automake m4 gettext -y;
 
-      # Build dependencies
-      - name: Build dependencies
+      # Build (custom) dependencies
+      - name: Build (custom) dependencies
         run: |
              cd contribs
              python3 contribs.py
