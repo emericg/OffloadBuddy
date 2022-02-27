@@ -226,7 +226,7 @@ bool ThumbnailerBackend_ffmpeg::getImage(const QString &path, QImage &img,
             continue;
 
         // finds the registered decoder for a codec ID
-        AVCodec *pLocalCodec = avcodec_find_decoder(pLocalCodecParameters->codec_id);
+        AVCodec *pLocalCodec = (AVCodec *)avcodec_find_decoder(pLocalCodecParameters->codec_id);
         if (pLocalCodec == nullptr)
         {
             qDebug() << "ERROR unsupported codec!" << QByteArray::fromHex(QString::number(pLocalCodecParameters->codec_tag, 16).toUtf8());

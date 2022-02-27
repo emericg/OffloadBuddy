@@ -111,7 +111,7 @@ bool ffmpeg_get_keyframes(const AVStream *stream, const int64_t target,
                           int64_t &prev, int64_t &next)
 {
     bool status = false;
-
+/*
     if (stream && stream->nb_index_entries > 1)
     {
         for (int i = 0; i < stream->nb_index_entries; i++)
@@ -132,7 +132,7 @@ bool ffmpeg_get_keyframes(const AVStream *stream, const int64_t target,
             }
         }
     }
-
+*/
     return status;
 }
 
