@@ -1,6 +1,6 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
-import QtGraphicalEffects 1.12 // Qt5
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtGraphicalEffects 1.15 // Qt5
 //import Qt5Compat.GraphicalEffects // Qt6
 
 import ThemeEngine 1.0
@@ -19,7 +19,7 @@ Rectangle {
     property var shotDevice: null
     property real cellFormat: 4/3
 
-    property bool singleSelection: (mediaGridView.currentIndex === index)
+    property bool singleSelection: (mediaGrid.currentIndex === index)
     property bool multiSelection: (shot && shot.selected)
     property bool alreadyOffloaded: false
 
@@ -201,7 +201,7 @@ Rectangle {
         }
     }
 
-    ImageSvg {
+    IconSvg {
         id: imageLoading
         width: itemShot.width > 320 ? 72 : 40
         height: width
@@ -235,8 +235,8 @@ Rectangle {
         // extra filtering?
         smooth: (settingsManager.thumbQuality >= 1)
         // big enough so we have good quality regarding of the thumb size
-        sourceSize.width: (sm.thumbQuality > 1) ? 512 : 400
-        sourceSize.height: (sm.thumbQuality > 1) ? 512 : 400
+        sourceSize.width: (settingsManager.thumbQuality > 1) ? 512 : 400
+        sourceSize.height: (settingsManager.thumbQuality > 1) ? 512 : 400
     }
 
     ItemImage {
@@ -287,7 +287,7 @@ Rectangle {
             anchors.right: parent.right
             anchors.rightMargin: 8
 
-            ImageSvg {
+            IconSvg {
                 id: icon_state
                 width: 24
                 height: 24
@@ -325,7 +325,7 @@ Rectangle {
             anchors.bottomMargin: 8
             spacing: 4
 
-            ImageSvg {
+            IconSvg {
                 id: icon_mediaType
                 width: 24
                 height: 24
@@ -370,7 +370,7 @@ Rectangle {
                 font.bold: true
                 font.pixelSize: 13
             }
-            ImageSvg {
+            IconSvg {
                 id: icon_hmmt
                 width: 20
                 height: 20
@@ -381,7 +381,7 @@ Rectangle {
                 source: "qrc:/assets/icons_material/baseline-label_important-24px.svg"
             }
 
-            ImageSvg {
+            IconSvg {
                 id: icon_gps
                 width: 20
                 height: 20
@@ -391,7 +391,7 @@ Rectangle {
                 source: "qrc:/assets/icons_material/baseline-map-24px.svg"
             }
 
-            ImageSvg {
+            IconSvg {
                 id: icon_tlm
                 width: 20
                 height: 20
@@ -431,7 +431,7 @@ Rectangle {
             }
         }
 
-        ImageSvg {
+        IconSvg {
             id: image_overlay
             width: 32
             height: 32

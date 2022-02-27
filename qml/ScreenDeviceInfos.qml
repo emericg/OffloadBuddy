@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 import ThemeEngine 1.0
 import DeviceUtils 1.0
@@ -82,7 +82,7 @@ Rectangle {
 
         ////////////////
 
-        ItemImageButton {
+        RoundButtonIcon {
             id: buttonBack
             width: 48
             height: 48
@@ -109,7 +109,7 @@ Rectangle {
             height: 40
             anchors.left: buttonBack.right
             anchors.leftMargin: 8
-            anchors.right: rowButtons.left
+            anchors.right: parent.right
             anchors.rightMargin: 16
             anchors.verticalCenter: parent.verticalCenter
 
@@ -169,7 +169,7 @@ Rectangle {
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: 16
 
-                        ImageSvg {
+                        IconSvg {
                             source: "qrc:/assets/icons_material/duotone-camera_alt-24px.svg"
                             color: Theme.colorText
                         }
@@ -185,7 +185,7 @@ Rectangle {
                     }
                 }
 
-                ImageSvg {
+                IconSvg {
                     id: deviceImage
                     anchors.top: columnDeviceHeader.bottom
                     anchors.topMargin: 8
@@ -272,7 +272,7 @@ Rectangle {
                             font.pixelSize: Theme.fontSizeContent
                         }
                     }
-                    ButtonWireframeImage {
+                    ButtonWireframeIcon {
                         visible: (currentDevice.brand === "GoPro" && currentDevice.firmwareState > 0)
 
                         fullColor: true
@@ -328,7 +328,7 @@ Rectangle {
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: 16
 
-                        ImageSvg {
+                        IconSvg {
                             source: "qrc:/assets/icons_material/duotone-sd_card-24px.svg"
                             color: Theme.colorText
                         }
@@ -411,7 +411,7 @@ Rectangle {
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: 16
 
-                        ImageSvg {
+                        IconSvg {
                             source: "qrc:/assets/icons_material/duotone-aspect_ratio-24px.svg"
                             color: Theme.colorText
                         }

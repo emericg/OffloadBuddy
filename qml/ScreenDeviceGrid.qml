@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 import ThemeEngine 1.0
 import DeviceUtils 1.0
@@ -246,7 +246,7 @@ Item {
 
         ////////////////
 
-        ImageSvg {
+        IconSvg {
             id: deviceImage
             z: 5
             width: 128
@@ -264,30 +264,28 @@ Item {
                 id: lilIcons
                 height: 28
                 anchors.right: parent.right
-                anchors.rightMargin: -16
+                anchors.rightMargin: -8
                 anchors.bottom: parent.bottom
                 layoutDirection: Qt.RightToLeft
 
-                ItemImageButton {
+                RoundButtonIcon {
                     id: deviceSettings
-                    height: 28
-                    btnSize: 28
-                    imgSize: 24
+                    width: 28; height: 28;
                     background: true
                     visible: true
                     source: "qrc:/assets/icons_material/baseline-memory-24px.svg"
+                    sourceSize: 24
                     onClicked: screenDeviceInfos.loadScreen()
                 }
 
-                ItemImageButtonTooltip {
+                RoundButtonIcon {
                     id: deviceRO
-                    height: 28
-                    btnSize: 28
-                    imgSize: 24
+                    width: 28; height: 28;
                     background: true
                     visible: currentDevice.readOnly
 
                     source: "qrc:/assets/icons_material/outline-https-24px.svg"
+                    sourceSize: 24
                     iconColor: Theme.colorWarning
                     tooltipText: "Read Only storage"
                     tooltipPosition: "left"
@@ -411,7 +409,7 @@ Item {
                     if (deviceSavedState) deviceSavedState.orderBy = currentIndex
                 }
 
-                ItemImageButton {
+                RoundButtonIcon {
                     anchors.right: parent.right
                     anchors.rightMargin: 32
                     width: parent.height
@@ -459,7 +457,7 @@ Item {
                         else
                             displayText = qsTr("Filter by:") + " " + cbMediaFilters.get(currentIndex).text
                     } else {
-                        cbinit = true;
+                        cbinit = true
                     }
 
                     // save state
@@ -476,83 +474,66 @@ Item {
 
             visible: (rectangleHeader.width > 1280)
 
-            ItemLilMenu {
-                width: rowLilMenuFormat.width
+            SelectorMenuThemed {
+                anchors.verticalCenter: parent.verticalCenter
+                height: 32
 
-                Row {
-                    id: rowLilMenuFormat
-                    height: parent.height
-
-                    ItemLilMenuButton {
-                        text: "1:1"
-                        selected: (shotsView.cellFormat === 1.0)
-                        onClicked: {
-                            deviceSavedState.thumbFormat = 1
-                            shotsView.setThumbFormat()
-                        }
+                model: ListModel {
+                    ListElement { idx: 1; txt: "1:1"; src: ""; sz: 0; }
+                    ListElement { idx: 2; txt: "4:3"; src: ""; sz: 0; }
+                    ListElement { idx: 3; txt: "16:9"; src: ""; sz: 0; }
+                }
+                currentSelection: {
+                    if (shotsView.cellFormat == 16/9) return 3
+                    if (shotsView.cellFormat == 4/3) return 2
+                    return 1
+                }
+                onMenuSelected: (index) => {
+                    if (index === 1) {
+                        shotsView.cellFormat = 1.0
+                        deviceSavedState.thumbFormat = 1
+                    } else if (index === 2) {
+                        shotsView.cellFormat = 4/3
+                        deviceSavedState.thumbFormat = 2
+                    } else if (index === 3) {
+                        shotsView.cellFormat = 16/9
+                        deviceSavedState.thumbFormat = 3
                     }
-                    ItemLilMenuButton {
-                        text: "4:3"
-                        selected: (shotsView.cellFormat === 4/3)
-                        onClicked: {
-                            deviceSavedState.thumbFormat = 2
-                            shotsView.setThumbFormat()
-                        }
-                    }
-                    ItemLilMenuButton {
-                        text: "16:9"
-                        selected: (shotsView.cellFormat === 16/9)
-                        onClicked: {
-                            deviceSavedState.thumbFormat = 3
-                            shotsView.setThumbFormat()
-                        }
-                    }
+                    shotsView.computeCellSize()
                 }
             }
 
-            ItemLilMenu {
-                width: rowLilMenuZoom.width
+            SelectorMenuThemed {
+                anchors.verticalCenter: parent.verticalCenter
+                height: 32
 
-                Row {
-                    id: rowLilMenuZoom
-                    height: parent.height
-
-                    ItemLilMenuButton {
-                        source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
-                        sourceSize: 18
-                        selected: (shotsView.cellSizeTarget === 240)
-                        onClicked: {
-                            deviceSavedState.thumbSize = 1
-                            shotsView.setThumbFormat()
-                        }
+                model: ListModel {
+                    ListElement { idx: 1; txt: ""; src: "qrc:/assets/icons_material/baseline-photo-24px.svg"; sz: 18; }
+                    ListElement { idx: 2; txt: ""; src: "qrc:/assets/icons_material/baseline-photo-24px.svg"; sz: 22; }
+                    ListElement { idx: 3; txt: ""; src: "qrc:/assets/icons_material/baseline-photo-24px.svg"; sz: 26; }
+                    ListElement { idx: 4; txt: ""; src: "qrc:/assets/icons_material/baseline-photo-24px.svg"; sz: 30; }
+                }
+                currentSelection: {
+                        if (shotsView.cellSizeTarget == 512) return 4
+                        if (shotsView.cellSizeTarget == 400) return 3
+                        if (shotsView.cellSizeTarget == 320) return 2
+                        return 1
                     }
-                    ItemLilMenuButton {
-                        source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
-                        sourceSize: 22
-                        selected: (shotsView.cellSizeTarget === 320)
-                        onClicked: {
-                            deviceSavedState.thumbSize = 2
-                            shotsView.setThumbFormat()
-                        }
+                onMenuSelected: (index) => {
+                    if (index === 1) {
+                        shotsView.cellSizeTarget = 240
+                        deviceSavedState.thumbSize = 1
+                    } else if (index === 2) {
+                        shotsView.cellSizeTarget = 320
+                        deviceSavedState.thumbSize = 2
+                    } else if (index === 3) {
+                        shotsView.cellSizeTarget = 400
+                        deviceSavedState.thumbSize = 3
+                    } else if (index === 4) {
+                        shotsView.cellSizeTarget = 512
+                        deviceSavedState.thumbSize = 4
                     }
-                    ItemLilMenuButton {
-                        source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
-                        sourceSize: 26
-                        selected: (shotsView.cellSizeTarget === 400)
-                        onClicked: {
-                            deviceSavedState.thumbSize = 3
-                            shotsView.setThumbFormat()
-                        }
-                    }
-                    ItemLilMenuButton {
-                        source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
-                        sourceSize: 30
-                        selected: (shotsView.cellSizeTarget === 512)
-                        onClicked: {
-                            deviceSavedState.thumbSize = 4
-                            shotsView.setThumbFormat()
-                        }
-                    }
+                    shotsView.computeCellSize()
                 }
             }
         }
@@ -608,7 +589,7 @@ Item {
 
         ////////
 
-        Rectangle {
+        Rectangle { // separator
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
@@ -617,14 +598,19 @@ Item {
             opacity: 0.1
             color: Theme.colorHeaderContent
         }
-        SimpleShadow {
-            anchors.top: parent.bottom
-            anchors.topMargin: -height
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: 2
-            opacity: 0.7
-            color: Theme.colorHeaderContent
+    }
+    Rectangle { // shadow
+        anchors.top: rectangleHeader.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+
+        height: 8
+        opacity: 0.66
+
+        gradient: Gradient {
+            orientation: Gradient.Vertical
+            GradientStop { position: 0.0; color: Theme.colorHeaderHighlight; }
+            GradientStop { position: 1.0; color: Theme.colorBackground; }
         }
     }
 
@@ -795,7 +781,7 @@ Item {
             property int cellMarginTarget: 12
             property int cellMargin: 12
 
-            //property int cellMargin: (parent.width%cellSize) / Math.floor(parent.width/cellSize);
+            //property int cellMargin: (parent.width%cellSize) / Math.floor(parent.width/cellSize)
             cellWidth: cellSize + cellMargin
             cellHeight: Math.round(cellSize / cellFormat) + cellMargin
 

@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 import ThemeEngine 1.0
 import ShotUtils 1.0
@@ -395,7 +395,7 @@ Popup {
                 font.pixelSize: Theme.fontSizeContent
             }
 
-            ItemImageButton {
+            RoundButtonIcon {
                 width: 48
                 height: 48
                 anchors.right: parent.right
@@ -668,119 +668,21 @@ Popup {
                             color: Theme.colorSubText
                         }
 
-                        Item {
+                        SelectorMenu {
+                            id: selectorSpeed
                             anchors.left: textSpeed.right
                             anchors.leftMargin: 16
-                            anchors.right: parent.right
-                            height: 34
-                            width: rowbut.width
                             anchors.verticalCenter: parent.verticalCenter
+                            height: 34
 
-                            Rectangle {
-                                anchors.top: parent.top
-                                anchors.left: parent.left
-                                anchors.bottom: parent.bottom
-                                width: btnSpeeds.width+32
-
-                                radius: 16
-                                color: "white"
-                                border.color: Theme.colorComponentDown
-                                border.width: 2
-
-                                Row {
-                                    id: btnSpeeds
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 16
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    height: 32
-                                    spacing: 32
-
-                                    property string selected: qsTr("medium")
-                                    property int value: {
-                                        if (selected === qsTr("slow")) return 1
-                                        if (selected === qsTr("fast")) return 3
-                                        else return 2
-                                    }
-
-                                    Text {
-                                        id: btnFast
-                                        anchors.verticalCenter: parent.verticalCenter
-
-                                        property bool selected: false
-                                        text: qsTr("fast")
-                                        font.pixelSize: Theme.fontSizeComponent
-                                        //font.bold: (btnSpeeds.selected === btnFast.text) ? true : false
-                                        color: (btnSpeeds.selected === btnFast.text) ? "white" : Theme.colorSubText
-
-                                        Rectangle {
-                                            anchors.fill: parent
-                                            anchors.topMargin: -8
-                                            anchors.leftMargin: -16
-                                            anchors.rightMargin: -16
-                                            anchors.bottomMargin: -8
-                                            z: -1
-                                            radius: 32
-                                            color: (btnSpeeds.selected === btnFast.text) ? Theme.colorPrimary : "transparent"
-
-                                            MouseArea {
-                                                anchors.fill: parent
-                                                onClicked: btnSpeeds.selected = btnFast.text
-                                            }
-                                        }
-                                    }
-                                    Text {
-                                        id: btnMedium
-                                        anchors.verticalCenter: parent.verticalCenter
-
-                                        property bool selected: false
-                                        text: qsTr("medium")
-                                        font.pixelSize: Theme.fontSizeComponent
-                                        //font.bold: (btnSpeeds.selected === btnMedium.text) ? true : false
-                                        color: (btnSpeeds.selected === btnMedium.text) ? "white" : Theme.colorSubText
-
-                                        Rectangle {
-                                            anchors.fill: parent
-                                            anchors.topMargin: -8
-                                            anchors.leftMargin: -16
-                                            anchors.rightMargin: -16
-                                            anchors.bottomMargin: -8
-                                            z: -1
-                                            radius: 32
-                                            color: (btnSpeeds.selected === btnMedium.text) ? Theme.colorPrimary : "transparent"
-
-                                            MouseArea {
-                                                anchors.fill: parent
-                                                onClicked: btnSpeeds.selected = btnMedium.text
-                                            }
-                                        }
-                                    }
-                                    Text {
-                                        id: btnSlow
-                                        anchors.verticalCenter: parent.verticalCenter
-
-                                        property bool selected: true
-                                        text: qsTr("slow")
-                                        font.pixelSize: Theme.fontSizeComponent
-                                        //font.bold: (btnSpeeds.selected === btnSlow.text) ? true : false
-                                        color: (btnSpeeds.selected === btnSlow.text) ? "white" : Theme.colorSubText
-
-                                        Rectangle {
-                                            anchors.fill: parent
-                                            anchors.topMargin: -8
-                                            anchors.leftMargin: -16
-                                            anchors.rightMargin: -16
-                                            anchors.bottomMargin: -8
-                                            z: -1
-                                            radius: 32
-                                            color: (btnSpeeds.selected === btnSlow.text) ? Theme.colorPrimary : "transparent"
-
-                                            MouseArea {
-                                                anchors.fill: parent
-                                                onClicked: btnSpeeds.selected = btnSlow.text
-                                            }
-                                        }
-                                    }
-                                }
+                            model: ListModel {
+                                ListElement { idx: 1; txt: qsTr("fast"); src: ""; sz: 0; }
+                                ListElement { idx: 2; txt: qsTr("medium"); src: ""; sz: 0; }
+                                ListElement { idx: 3; txt: qsTr("slow"); src: ""; sz: 0; }
+                            }
+                            currentSelection: 2
+                            onMenuSelected: (index) => {
+                                currentSelection = index
                             }
                         }
                     }
@@ -824,7 +726,89 @@ Popup {
                             font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
+/*
+                        SelectorMenuThemed {
+                            id: selectorGifRes
+                            anchors.verticalCenter: parent.verticalCenter
+                            height: 32
 
+                            visible: rbGIF.checked
+                            property int res: 400
+
+                            model: ListModel {
+                                id: lmGifRes
+                                ListElement { idx: 1; txt: "240p"; src: ""; sz: 32; }
+                                ListElement { idx: 2; txt: "320p"; src: ""; sz: 32; }
+                                ListElement { idx: 3; txt: "400p"; src: ""; sz: 32; }
+                                ListElement { idx: 4; txt: "480p"; src: ""; sz: 32; }
+                            }
+                            currentSelection: 1//{
+                            //    if (selectorGifRes.res === 240) idx = 1
+                            //    if (selectorGifRes.res === 320) idx = 2
+                            //    if (selectorGifRes.res === 400) idx = 3
+                            //    if (selectorGifRes.res === 480) idx = 4
+                            //}
+                            onMenuSelected: (index) => {
+                                if (index === 1) {
+                                    selectorGifRes.res = 240
+                                } else if (index === 2) {
+                                    selectorGifRes.res = 320
+                                } else if (index === 3) {
+                                    selectorGifRes.res = 400
+                                } else if (index === 4) {
+                                    selectorGifRes.res = 480
+                                }
+                                currentSelection = index
+                            }
+                        }
+
+                        SelectorMenuThemed {
+                            id: selectorVideoRes
+                            anchors.verticalCenter: parent.verticalCenter
+                            height: 32
+
+                            visible: !rbGIF.checked
+                            property int res: 1080
+
+                            model: ListModel {
+                                id: lmVideoRes
+                                ListElement { idx: 1; txt: "480p"; src: ""; sz: 32; }
+                                ListElement { idx: 2; txt: "720p"; src: ""; sz: 32; }
+                                ListElement { idx: 3; txt: "1080p"; src: ""; sz: 32; }
+                                ListElement { idx: 4; txt: "1440p"; src: ""; sz: 32; }
+                                ListElement { idx: 5; txt: "2160p"; src: ""; sz: 32; }
+                                //ListElement { idx: 6; txt: "2880p"; src: ""; sz: 32; }
+                                //ListElement { idx: 7; txt: "4320p"; src: ""; sz: 32; }
+                            }
+                            currentSelection: 1 //{
+                            //    if (selectorVideoRes.res === 480) index = 1
+                            //    if (selectorVideoRes.res === 720) index = 2
+                            //    if (selectorVideoRes.res === 1080) index = 3
+                            //    if (selectorVideoRes.res === 1440) index = 4
+                            //    if (selectorVideoRes.res === 2160) index = 5
+                            //    if (selectorVideoRes.res === 2880) index = 6
+                            //    if (selectorVideoRes.res === 4320) index = 7
+                            //}
+                            onMenuSelected: (index) => {
+                                if (index === 1) {
+                                    selectorVideoRes.res = 480
+                                } else if (index === 2) {
+                                    selectorVideoRes.res = 720
+                                } else if (index === 3) {
+                                    selectorVideoRes.res = 1080
+                                } else if (index === 4) {
+                                    selectorVideoRes.res = 1440
+                                } else if (index === 5) {
+                                    selectorVideoRes.res = 2160
+                                } else if (index === 6) {
+                                    selectorVideoRes.res = 2880
+                                } else if (index === 7) {
+                                    selectorVideoRes.res = 4320
+                                }
+                                currentSelection = index
+                            }
+                        }
+*/
                         ItemLilMenu {
                             anchors.verticalCenter: parent.verticalCenter
                             width: selectorGifRes.width
@@ -1567,7 +1551,7 @@ Popup {
                 onClicked: popupEncoding.close()
             }
 
-            ButtonWireframeImage {
+            ButtonWireframeIcon {
                 id: buttonEncode
                 width: 128
                 anchors.verticalCenter: parent.verticalCenter
@@ -1640,7 +1624,7 @@ Popup {
                                 settingsEncoding["video_codec"] = "copy"
                         }
 
-                        settingsEncoding["speed"] = btnSpeeds.value
+                        settingsEncoding["speed"] = selectorSpeed.currentSelection
 
                         if (selectorVideoFps.visible && selectorVideoFps.fps != Math.round(currentShot.framerate))
                             settingsEncoding["fps"] = selectorVideoFps.fps

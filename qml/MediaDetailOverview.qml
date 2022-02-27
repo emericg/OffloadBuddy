@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 import ThemeEngine 1.0
 import ShotUtils 1.0
@@ -233,7 +233,7 @@ Item {
 
             spacing: 8
 
-            ImageSvg {
+            IconSvg {
                 id: labelLocation
                 width: 28
                 height: 28
@@ -258,7 +258,7 @@ Item {
                 }
             }
 
-            ImageSvg {
+            IconSvg {
                 id: labelDate
                 width: 28
                 height: 28
@@ -282,7 +282,7 @@ Item {
                 }
             }
 
-            ImageSvg {
+            IconSvg {
                 id: labelDuration
                 width: 28
                 height: 28
@@ -303,7 +303,7 @@ Item {
                 }
             }
 
-            ImageSvg {
+            IconSvg {
                 id: labelCamera
                 width: 28
                 height: 28
@@ -326,7 +326,7 @@ Item {
                 }
             }
 
-            ImageSvg {
+            IconSvg {
                 id: labelSize
                 width: 28
                 height: 28
@@ -348,7 +348,7 @@ Item {
                 }
             }
 
-            ImageSvg {
+            IconSvg {
                 id: labelChapters
                 width: 28
                 height: 28
@@ -373,7 +373,7 @@ Item {
 
             Item { width: 16; height: 16; } // spacer
 
-            ImageSvg {
+            IconSvg {
                 id: labelDefinitionInternal
                 width: 28
                 height: 28
@@ -395,7 +395,7 @@ Item {
                 }
             }
 
-            ImageSvg {
+            IconSvg {
                 id: labelDefinitionVisible
                 width: 28
                 height: 28
@@ -417,7 +417,7 @@ Item {
                 }
             }
 
-            ImageSvg {
+            IconSvg {
                 id: labelOrientation
                 width: 28
                 height: 28
@@ -449,7 +449,7 @@ Item {
 
                 spacing: 8
 
-                ImageSvg {
+                IconSvg {
                     id: labelISO
                     width: 28
                     height: 28
@@ -470,7 +470,7 @@ Item {
                     }
                 }
 
-                ImageSvg {
+                IconSvg {
                     id: labelFocal
                     width: 28
                     height: 28
@@ -491,7 +491,7 @@ Item {
                     }
                 }
 
-                ImageSvg {
+                IconSvg {
                     id: labelExposureTime
                     width: 28
                     height: 28
@@ -512,7 +512,7 @@ Item {
                     }
                 }
 
-                ImageSvg {
+                IconSvg {
                     id: labelMeteringMode
                     width: 28
                     height: 28
@@ -533,7 +533,7 @@ Item {
                     }
                 }
 
-                ImageSvg {
+                IconSvg {
                     id: labelFlash
                     width: 28
                     height: 28
@@ -566,7 +566,7 @@ Item {
 
                 spacing: 8
 
-                ImageSvg {
+                IconSvg {
                     id: labelFramerate
                     width: 28
                     height: 28
@@ -587,7 +587,7 @@ Item {
                     }
                 }
 
-                ImageSvg {
+                IconSvg {
                     id: labelCodec
                     width: 28
                     height: 28
@@ -608,7 +608,7 @@ Item {
                     }
                 }
 
-                ImageSvg {
+                IconSvg {
                     id: labelBitrate
                     width: 28
                     height: 28
@@ -629,7 +629,7 @@ Item {
                     }
                 }
 
-                ImageSvg {
+                IconSvg {
                     id: labelAudioChannels
                     width: 28
                     height: 28
@@ -650,7 +650,7 @@ Item {
                     }
                 }
 
-                ImageSvg {
+                IconSvg {
                     id: labelTimecode
                     width: 28
                     height: 28

@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 import ThemeEngine 1.0
 import SettingsUtils 1.0
@@ -178,7 +178,7 @@ Item {
 
             function updateDirectories() {
                 cbMediaDirectories.clear()
-                cbMediaDirectories.append( { text: qsTr("ALL media directories") } );
+                cbMediaDirectories.append( { text: qsTr("ALL media directories") } )
 
                 for (var child in storageManager.directoriesList) {
                     if (storageManager.directoriesList[child].available &&
@@ -266,7 +266,7 @@ Item {
                     displayText = qsTr("Order by:") + " " + cbShotsOrderby.get(currentIndex).text
                 }
 
-                ItemImageButton {
+                RoundButtonIcon {
                     anchors.right: parent.right
                     anchors.rightMargin: 32
                     width: parent.height
@@ -316,7 +316,7 @@ Item {
                         else
                             displayText = qsTr("Filter by:") + " " + cbMediaFilters.get(currentIndex).text
                     } else {
-                        cbinit = true;
+                        cbinit = true
                     }
                 }
             }
@@ -330,90 +330,66 @@ Item {
 
             visible: (rectangleHeader.width > 1280)
 
-            ItemLilMenu {
-                width: rowLilMenuFormat.width
+            SelectorMenuThemed {
+                anchors.verticalCenter: parent.verticalCenter
+                height: 32
 
-                Row {
-                    id: rowLilMenuFormat
-                    height: parent.height
-
-                    ItemLilMenuButton {
-                        text: "1:1"
-                        selected: (shotsView.cellFormat === 1.0)
-                        onClicked: {
-                            shotsView.cellFormat = 1.0
-                            shotsView.computeCellSize()
-                        }
+                model: ListModel {
+                    ListElement { idx: 1; txt: "1:1"; src: ""; sz: 0; }
+                    ListElement { idx: 2; txt: "4:3"; src: ""; sz: 0; }
+                    ListElement { idx: 3; txt: "16:9"; src: ""; sz: 0; }
+                }
+                currentSelection: {
+                    if (shotsView.cellFormat == 16/9) return 3
+                    if (shotsView.cellFormat == 4/3) return 2
+                    return 1
+                }
+                onMenuSelected: (index) => {
+                    if (index === 1) {
+                        shotsView.cellFormat = 1.0
+                    } else if (index === 2) {
+                        shotsView.cellFormat = 4/3
+                    } else if (index === 3) {
+                        shotsView.cellFormat = 16/9
                     }
-                    ItemLilMenuButton {
-                        text: "4:3"
-                        selected: (shotsView.cellFormat === 4/3)
-                        onClicked: {
-                            shotsView.cellFormat = 4/3
-                            shotsView.computeCellSize()
-                        }
-                    }
-                    ItemLilMenuButton {
-                        text: "16:9"
-                        selected: (shotsView.cellFormat === 16/9)
-                        onClicked: {
-                            shotsView.cellFormat = 16/9
-                            shotsView.computeCellSize()
-                        }
-                    }
+                    shotsView.computeCellSize()
                 }
             }
 
-            ItemLilMenu {
-                width: rowLilMenuZoom.width
+            SelectorMenuThemed {
+                anchors.verticalCenter: parent.verticalCenter
+                height: 32
 
-                Row {
-                    id: rowLilMenuZoom
-                    height: parent.height
-
-                    ItemLilMenuButton {
-                        source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
-                        sourceSize: 18
-                        selected: (shotsView.cellSizeTarget === 240)
-                        onClicked: {
-                            shotsView.cellSizeTarget = 240
-                            shotsView.computeCellSize()
-                        }
+                model: ListModel {
+                    ListElement { idx: 1; txt: ""; src: "qrc:/assets/icons_material/baseline-photo-24px.svg"; sz: 18; }
+                    ListElement { idx: 2; txt: ""; src: "qrc:/assets/icons_material/baseline-photo-24px.svg"; sz: 22; }
+                    ListElement { idx: 3; txt: ""; src: "qrc:/assets/icons_material/baseline-photo-24px.svg"; sz: 26; }
+                    ListElement { idx: 4; txt: ""; src: "qrc:/assets/icons_material/baseline-photo-24px.svg"; sz: 30; }
+                }
+                currentSelection: {
+                    if (shotsView.cellSizeTarget == 512) return 4
+                    if (shotsView.cellSizeTarget == 400) return 3
+                    if (shotsView.cellSizeTarget == 320) return 2
+                    return 1
+                }
+                onMenuSelected: (index) => {
+                    if (index === 1) {
+                        shotsView.cellSizeTarget = 240
+                    } else if (index === 2) {
+                        shotsView.cellSizeTarget = 320
+                    } else if (index === 3) {
+                        shotsView.cellSizeTarget = 400
+                    } else if (index === 4) {
+                        shotsView.cellSizeTarget = 512
                     }
-                    ItemLilMenuButton {
-                        source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
-                        sourceSize: 22
-                        selected: (shotsView.cellSizeTarget === 320)
-                        onClicked: {
-                            shotsView.cellSizeTarget = 320
-                            shotsView.computeCellSize()
-                        }
-                    }
-                    ItemLilMenuButton {
-                        source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
-                        sourceSize: 26
-                        selected: (shotsView.cellSizeTarget === 400)
-                        onClicked: {
-                            shotsView.cellSizeTarget = 400
-                            shotsView.computeCellSize()
-                        }
-                    }
-                    ItemLilMenuButton {
-                        source: "qrc:/assets/icons_material/baseline-photo-24px.svg"
-                        sourceSize: 30
-                        selected: (shotsView.cellSizeTarget === 512)
-                        onClicked: {
-                            shotsView.cellSizeTarget = 512
-                            shotsView.computeCellSize()
-                        }
-                    }
+                    shotsView.computeCellSize()
                 }
             }
         }
 
         ////////
 
-        Rectangle {
+        Rectangle { // separator
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
@@ -422,14 +398,19 @@ Item {
             opacity: 0.1
             color: Theme.colorHeaderContent
         }
-        SimpleShadow {
-            anchors.top: parent.bottom
-            anchors.topMargin: -height
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: 2
-            opacity: 0.7
-            color: Theme.colorHeaderContent
+    }
+    Rectangle { // shadow
+        anchors.top: rectangleHeader.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+
+        height: 8
+        opacity: 0.66
+
+        gradient: Gradient {
+            orientation: Gradient.Vertical
+            GradientStop { position: 0.0; color: Theme.colorHeaderHighlight; }
+            GradientStop { position: 1.0; color: Theme.colorBackground; }
         }
     }
 
@@ -623,7 +604,7 @@ Item {
             property int cellMarginTarget: 12
             property int cellMargin: 12
 
-            //property int cellMargin: (parent.width%cellSize) / Math.floor(parent.width/cellSize);
+            //property int cellMargin: (parent.width%cellSize) / Math.floor(parent.width/cellSize)
             cellWidth: cellSize + cellMargin
             cellHeight: Math.round(cellSize / cellFormat) + cellMargin
 

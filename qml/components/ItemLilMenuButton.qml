@@ -1,4 +1,4 @@
-import QtQuick 2.12
+import QtQuick 2.15
 
 import ThemeEngine 1.0
 
@@ -56,7 +56,7 @@ Item {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    ImageSvg {
+    IconSvg {
         id: contentImage
         width: parent.sourceSize
         height: parent.sourceSize

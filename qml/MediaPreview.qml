@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 import QtMultimedia 5.12 // Qt5
 //import QtMultimedia // Qt6
 
@@ -428,7 +428,7 @@ Item {
         anchors.margins: 1
         color: "black"
 
-        ImageSvg {
+        IconSvg {
             width: 48; height: 48;
             anchors.centerIn: parent
 
@@ -650,7 +650,7 @@ Item {
             visible: false
             spacing: 4
 
-            ItemImageButton {
+            RoundButtonIcon {
                 //id: buttonRotateSave
                 iconColor: "white"
                 background: true
@@ -662,7 +662,7 @@ Item {
                 source: "qrc:/assets/icons_material/baseline-save-24px.svg"
                 //onClicked: shot.saveRotation(angle)
             }
-            ItemImageButton {
+            RoundButtonIcon {
                 //id: buttonRotateClear
                 iconColor: "white"
                 background: true
@@ -673,7 +673,7 @@ Item {
                 source: "qrc:/assets/icons_material/baseline-close-24px.svg"
                 onClicked: resetTransformation()
             }
-            ItemImageButton {
+            RoundButtonIcon {
                 //id: buttonRotateLeft
                 iconColor: (shot.userRotation >= 180) ? Theme.colorPrimary : "white"
                 background: true
@@ -683,7 +683,7 @@ Item {
                 source: "qrc:/assets/icons_material/baseline-rotate_left-24px.svg"
                 onClicked: mediaArea.addRotation(-90)
             }
-            ItemImageButton {
+            RoundButtonIcon {
                 //id: buttonRotateRight
                 iconColor: (shot.userRotation > 0 && shot.userRotation <= 180) ? Theme.colorPrimary : "white"
                 background: true
@@ -693,7 +693,7 @@ Item {
                 source: "qrc:/assets/icons_material/baseline-rotate_right-24px.svg"
                 onClicked: mediaArea.addRotation(+90)
             }
-            ItemImageButton {
+            RoundButtonIcon {
                 //id: buttonMirror
                 iconColor: (shot.userHFlipped) ? Theme.colorPrimary : "white"
                 background: true
@@ -703,7 +703,7 @@ Item {
                 source: "qrc:/assets/icons_material/baseline-flip-24px.svg"
                 onClicked: mediaArea.setTransformation("mirror")
             }
-            ItemImageButton {
+            RoundButtonIcon {
                 //id: buttonFlip
                 rotation: 90
                 iconColor: (shot.userVFlipped) ? Theme.colorPrimary : "white"
@@ -739,7 +739,7 @@ Item {
             property int points: (mediaArea.mode === "timelapse") ? ((shot.duration > maxpoints) ? maxpoints-3 : shot.duration) : 0
             property real divider: (shot.duration / points)
 
-            ImageSvg {
+            IconSvg {
                 anchors.verticalCenter: parent.verticalCenter
                 width: 28; height: 28;
                 source: (timerTimelapse.running) ? "qrc:/assets/icons_material/baseline-pause-24px.svg"
@@ -1007,7 +1007,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 16
 
-                ItemImageButton {
+                RoundButtonIcon {
                     id: buttonPlay
                     width: 40
                     height: 40
@@ -1043,7 +1043,7 @@ Item {
                     visible: videoPlayer.hasAudio
                     enabled: videoPlayer.hasAudio
 
-                    ItemImageButton {
+                    RoundButtonIcon {
                         id: buttonSound
                         width: 36
                         height: 36
@@ -1098,7 +1098,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 8
 
-                ItemImageButton {
+                RoundButtonIcon {
                     id: buttonToggleTrim
                     width: 36
                     height: 36
@@ -1111,7 +1111,7 @@ Item {
                     source: "qrc:/assets/icons_material/baseline-content_cut-24px.svg"
                     onClicked: toggleTrim()
                 }
-                ItemImageButton {
+                RoundButtonIcon {
                     id: buttonToggleTransform
                     width: 36
                     height: 36
@@ -1124,7 +1124,7 @@ Item {
                     source: "qrc:/assets/icons_material/duotone-rotate_90_degrees_ccw-24px.svg"
                     onClicked: toggleTransform()
                 }
-                ItemImageButton {
+                RoundButtonIcon {
                     id: buttonToggleCrop
                     width: 36
                     height: 36
@@ -1137,7 +1137,7 @@ Item {
                     source: "qrc:/assets/icons_material/baseline-crop-24px.svg"
                     onClicked: toggleCrop()
                 }
-                ItemImageButton {
+                RoundButtonIcon {
                     id: buttonScreenshot
                     width: 36
                     height: 36
@@ -1198,7 +1198,8 @@ Item {
                         mediaProvider.reencodeSelected(shot.uuid, screenshotParams)
                     }
                 }
-                ItemImageButton {
+
+                RoundButtonIcon {
                     id: buttonFullscreen
                     width: 48
                     height: 48

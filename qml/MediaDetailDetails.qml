@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsString.js" as UtilsString
@@ -38,7 +38,7 @@ Item {
 
                 visible: shot.camera
 
-                ImageSvg {
+                IconSvg {
                     width: 32
                     height: 32
                     color: Theme.colorText
@@ -219,6 +219,21 @@ Item {
         width: parent.width * 0.40
         color: Theme.colorForeground
 
+        Rectangle { // shadow
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+
+            height: 8
+            opacity: 0.66
+
+            gradient: Gradient {
+                orientation: Gradient.Vertical
+                GradientStop { position: 0.0; color: Theme.colorHeaderHighlight; }
+                GradientStop { position: 1.0; color: Theme.colorForeground; }
+            }
+        }
+
         Column {
             anchors.top: parent.top
             anchors.topMargin: 24
@@ -258,7 +273,7 @@ Item {
                     verticalAlignment: Text.AlignVCenter
                 }
 
-                ItemImageButton {
+                RoundButtonIcon {
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
 
@@ -306,12 +321,12 @@ Item {
                         id: rowLeft
                         height: 24
                         anchors.left: parent.left
-                        anchors.right: rowRight
+                        anchors.right: rowRight.left
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: 12
 
                         // icon
-                        ImageSvg {
+                        IconSvg {
                             width: 20; height: 20;
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.verticalCenterOffset: -1
@@ -376,14 +391,14 @@ Item {
                         spacing: 8
 
                         // controls
-                        ItemImageButton {
+                        RoundButtonIcon {
                             width: 32; height: 32;
                             backgroundColor: Theme.colorBackground
                             source: "qrc:/assets/icons_material/duotone-launch-24px.svg"
                             onClicked: utilsApp.openWith(modelData.path)
                         }
 /*
-                        ItemImageButton {
+                        RoundButtonIcon {
                             width: 32; height: 32;
                             visible: false
                             backgroundColor: Theme.colorBackground

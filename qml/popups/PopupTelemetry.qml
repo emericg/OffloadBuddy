@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsString.js" as UtilsString
@@ -145,7 +145,7 @@ Popup {
                 font.pixelSize: Theme.fontSizeContent
             }
 
-            ItemImageButton {
+            RoundButtonIcon {
                 width: 48
                 height: 48
                 anchors.right: parent.right
@@ -465,7 +465,7 @@ Popup {
                 primaryColor: Theme.colorGrey
                 onClicked: popupTelemetry.close()
             }
-            ButtonWireframeImage {
+            ButtonWireframeIcon {
                 id: buttonExtractTelemetry
                 anchors.verticalCenter: parent.verticalCenter
 
@@ -509,7 +509,7 @@ Popup {
                     }
                 }
             }
-            ButtonWireframeImage {
+            ButtonWireframeIcon {
                 id: buttonExtractGps
                 anchors.verticalCenter: parent.verticalCenter
 

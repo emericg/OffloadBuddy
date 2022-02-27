@@ -1,4 +1,4 @@
-import QtQuick 2.12
+import QtQuick 2.15
 import ThemeEngine 1.0
 
 Row {
@@ -26,7 +26,7 @@ Row {
         visible = false
     }
 
-    ImageSvg {
+    IconSvg {
         id: imgFileWarning
         width: 28
         height: 28

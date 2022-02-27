@@ -74,7 +74,7 @@ bool SettingsManager::readSettings()
             m_appVisibility = settings.value("ApplicationWindow/visibility").toUInt();
 
         if (settings.contains("global/appTheme"))
-            m_appTheme = settings.value("global/appTheme").toUInt();
+            m_appTheme = settings.value("global/appTheme").toString();
 
         if (settings.contains("global/appThemeAuto"))
             m_appThemeAuto = settings.value("global/appThemeAuto").toBool();
@@ -186,7 +186,7 @@ bool SettingsManager::writeSettings()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-void SettingsManager::setAppTheme(const unsigned value)
+void SettingsManager::setAppTheme(const QString &value)
 {
     if (m_appTheme != value)
     {

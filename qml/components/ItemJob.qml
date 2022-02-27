@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 import ThemeEngine 1.0
 import JobUtils 1.0
@@ -48,7 +48,7 @@ Rectangle {
                 height: 32
                 anchors.verticalCenter: parent.verticalCenter
 
-                ImageSvg {
+                IconSvg {
                     id: imageJob
                     width: 32
                     height: 32
@@ -169,7 +169,7 @@ Rectangle {
             anchors.right: parent.right
             anchors.verticalCenter: parent.verticalCenter
 
-            ItemImageButton {
+            RoundButtonIcon {
                 id: rectangleOpenFolder
                 width: 40
                 height: 40
@@ -181,7 +181,7 @@ Rectangle {
                 onClicked: job.openDestinationFolder()
             }
 
-            ItemImageButton {
+            RoundButtonIcon {
                 id: rectangleOpenFile
                 width: 40
                 height: 40
@@ -193,7 +193,7 @@ Rectangle {
                 onClicked: job.openDestinationFile()
             }
 
-            ItemImageButton {
+            RoundButtonIcon {
                 id: rectanglePlayPause
                 width: 40
                 height: 40
@@ -209,7 +209,7 @@ Rectangle {
                 onClicked: jobManager.playPauseJob(job.id)
             }
 
-            ItemImageButton {
+            RoundButtonIcon {
                 id: rectangleStop
                 width: 40
                 height: 40
@@ -247,7 +247,7 @@ Rectangle {
                           jobETA.visible)
             }
 
-            ImageSvg {
+            IconSvg {
                 id: imageStatus
                 width: 32
                 height: 32

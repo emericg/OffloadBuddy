@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 import ThemeEngine 1.0
 import StorageUtils 1.0
@@ -244,7 +244,7 @@ Popup {
                 primaryColor: Theme.colorGrey
                 onClicked: popupFirmware.close()
             }
-            ButtonWireframeImage {
+            ButtonWireframeIcon {
                 id: buttonUpdate
                 anchors.verticalCenter: parent.verticalCenter
 

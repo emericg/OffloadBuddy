@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsString.js" as UtilsString
@@ -42,7 +42,7 @@ Item {
             color: Theme.colorHeaderContent
         }
 
-        ButtonWireframeImage {
+        ButtonWireframeIcon {
             id: buttonClear
             anchors.right: parent.right
             anchors.rightMargin: 16
@@ -60,9 +60,11 @@ Item {
 
         CsdWindows { }
 
+        CsdLinux { }
+
         ////////
 
-        Rectangle {
+        Rectangle { // separator
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
@@ -71,14 +73,19 @@ Item {
             opacity: 0.1
             color: Theme.colorHeaderContent
         }
-        SimpleShadow {
+        Rectangle { // shadow
             anchors.top: parent.bottom
-            anchors.topMargin: -height
             anchors.left: parent.left
             anchors.right: parent.right
-            height: 2
-            opacity: 0.7
-            color: Theme.colorHeaderContent
+
+            height: 8
+            opacity: 0.66
+
+            gradient: Gradient {
+                orientation: Gradient.Vertical
+                GradientStop { position: 0.0; color: Theme.colorHeaderHighlight; }
+                GradientStop { position: 1.0; color: Theme.colorBackground; }
+            }
         }
     }
 

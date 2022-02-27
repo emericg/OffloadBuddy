@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 import ThemeEngine 1.0
 
@@ -59,9 +59,11 @@ Item {
 
         CsdWindows { }
 
+        CsdLinux { }
+
         ////////
 
-        Rectangle {
+        Rectangle { // separator
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
@@ -70,14 +72,19 @@ Item {
             opacity: 0.1
             color: Theme.colorHeaderContent
         }
-        SimpleShadow {
-            anchors.top: parent.bottom
-            anchors.topMargin: -height
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: 2
-            opacity: 0.7
-            color: Theme.colorHeaderContent
+    }
+    Rectangle { // shadow
+        anchors.top: rectangleHeader.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+
+        height: 8
+        opacity: 0.66
+
+        gradient: Gradient {
+            orientation: Gradient.Vertical
+            GradientStop { position: 0.0; color: Theme.colorHeaderHighlight; }
+            GradientStop { position: 1.0; color: Theme.colorBackground; }
         }
     }
 
@@ -140,7 +147,7 @@ Item {
                         height: 40
                         spacing: 24
 
-                        ButtonWireframeImage {
+                        ButtonWireframeIcon {
                             width: 180
                             anchors.verticalCenter: parent.verticalCenter
 
@@ -148,12 +155,13 @@ Item {
                             primaryColor: Theme.colorPrimary
 
                             text: qsTr("Website")
-                            imgSize: 32
                             source: "qrc:/assets/icons_material/baseline-link-24px.svg"
+                            sourceSize: 32
+
                             onClicked: Qt.openUrlExternally("https://emeric.io/OffloadBuddy")
                         }
 
-                        ButtonWireframeImage {
+                        ButtonWireframeIcon {
                             width: 180
                             anchors.verticalCenter: parent.verticalCenter
 
@@ -162,10 +170,11 @@ Item {
 
                             text: qsTr("Discussions")
                             source: "qrc:/assets/icons_material/duotone-question_answer-24px.svg"
+
                             onClicked: Qt.openUrlExternally("https://www.github.com/emericg/OffloadBuddy/discussions")
                         }
 
-                        ButtonWireframeImage {
+                        ButtonWireframeIcon {
                             width: 180
                             anchors.verticalCenter: parent.verticalCenter
 
@@ -174,6 +183,7 @@ Item {
 
                             text: qsTr("Bug report")
                             source: "qrc:/assets/icons_material/baseline-bug_report-24px.svg"
+
                             onClicked: Qt.openUrlExternally("https://www.github.com/emericg/OffloadBuddy/issues")
                         }
                     }
@@ -251,7 +261,7 @@ Item {
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContentBig
                     }
-                    ItemImageButton {
+                    RoundButtonIcon {
                         anchors.verticalCenter: parent.verticalCenter
                         source: "qrc:/assets/icons_material/baseline-link-24px.svg"
                         onClicked: Qt.openUrlExternally("https://www.qt.io")
@@ -273,7 +283,7 @@ Item {
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContentBig
                     }
-                    ItemImageButton {
+                    RoundButtonIcon {
                         anchors.verticalCenter: parent.verticalCenter
                         source: "qrc:/assets/icons_material/baseline-link-24px.svg"
                         onClicked: Qt.openUrlExternally("https://www.ffmpeg.org")
@@ -295,7 +305,7 @@ Item {
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContentBig
                     }
-                    ItemImageButton {
+                    RoundButtonIcon {
                         anchors.verticalCenter: parent.verticalCenter
                         source: "qrc:/assets/icons_material/baseline-link-24px.svg"
                         onClicked: Qt.openUrlExternally("https://github.com/emericg/MiniVideo")
@@ -317,7 +327,7 @@ Item {
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContentBig
                     }
-                    ItemImageButton {
+                    RoundButtonIcon {
                         anchors.verticalCenter: parent.verticalCenter
                         source: "qrc:/assets/icons_material/baseline-link-24px.svg"
                         onClicked: Qt.openUrlExternally("https://github.com/libexif")
@@ -339,7 +349,7 @@ Item {
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContentBig
                     }
-                    ItemImageButton {
+                    RoundButtonIcon {
                         anchors.verticalCenter: parent.verticalCenter
                         source: "qrc:/assets/icons_material/baseline-link-24px.svg"
                         onClicked: Qt.openUrlExternally("https://github.com/libmtp")
@@ -361,7 +371,7 @@ Item {
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContentBig
                     }
-                    ItemImageButton {
+                    RoundButtonIcon {
                         anchors.verticalCenter: parent.verticalCenter
                         source: "qrc:/assets/icons_material/baseline-link-24px.svg"
                         onClicked: Qt.openUrlExternally("https://github.com/richgel999/miniz/")
@@ -383,7 +393,7 @@ Item {
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContentBig
                     }
-                    ItemImageButton {
+                    RoundButtonIcon {
                         anchors.verticalCenter: parent.verticalCenter
                         source: "qrc:/assets/icons_material/baseline-link-24px.svg"
                         onClicked: Qt.openUrlExternally("https://github.com/itay-grudev/SingleApplication/")
@@ -405,7 +415,7 @@ Item {
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContentBig
                     }
-                    ItemImageButton {
+                    RoundButtonIcon {
                         anchors.verticalCenter: parent.verticalCenter
                         source: "qrc:/assets/icons_material/baseline-link-24px.svg"
                         onClicked: Qt.openUrlExternally("https://material.io/tools/icons")

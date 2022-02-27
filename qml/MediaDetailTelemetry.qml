@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 import QtCharts 2.3
 import QtLocation 5.12
@@ -120,7 +120,7 @@ Item {
 
         color: Theme.colorForeground
 
-        ImageSvg {
+        IconSvg {
             width: 64; height: 64;
             anchors.centerIn: parent
 
@@ -342,7 +342,7 @@ Item {
                 anchors.leftMargin: 16
                 spacing: 16
 
-                ItemImageButton {
+                RoundButtonIcon {
                     id: button_map_fullscreen
                     width: mapArea.fullscreen ? 48 : 40
                     height: mapArea.fullscreen ? 48 : 40
@@ -358,7 +358,7 @@ Item {
                     onClicked: mapArea.fullscreen = !mapArea.fullscreen
                 }
 
-                ItemImageButton {
+                RoundButtonIcon {
                     id: button_map_moove
                     width: mapArea.fullscreen ? 48 : 40
                     height: mapArea.fullscreen ? 48 : 40
@@ -382,7 +382,7 @@ Item {
                 anchors.rightMargin: 16
                 spacing: 16
 
-                ItemImageButton {
+                RoundButtonIcon {
                     id: button_map_dezoom
                     width: mapArea.fullscreen ? 48 : 40
                     height: mapArea.fullscreen ? 48 : 40
@@ -397,7 +397,7 @@ Item {
                     onClicked: zoomOut()
                 }
 
-                ItemImageButton {
+                RoundButtonIcon {
                     id: button_map_zoom
                     width: mapArea.fullscreen ? 48 : 40
                     height: mapArea.fullscreen ? 48 : 40

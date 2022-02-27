@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsString.js" as UtilsString
@@ -27,7 +27,7 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         spacing: 16
 
-        ButtonWireframeImage {
+        ButtonWireframeIcon {
             id: buttonMoveOffload
             anchors.verticalCenter: parent.verticalCenter
 
@@ -53,7 +53,7 @@ Rectangle {
             }
         }
 
-        ButtonWireframeImage {
+        ButtonWireframeIcon {
             id: buttonMergeChapters
             anchors.verticalCenter: parent.verticalCenter
             visible: (appContent.state === "library")
@@ -75,7 +75,7 @@ Rectangle {
             }
         }
 
-        ButtonWireframeImage {
+        ButtonWireframeIcon {
             id: buttonMergeShots
             anchors.verticalCenter: parent.verticalCenter
             visible: (appContent.state !== "device" && mediaGrid.selectionCount >= 2 && mediaGrid.selectionCount <= 4)
@@ -95,7 +95,7 @@ Rectangle {
             }
         }
 
-        ButtonWireframeImage {
+        ButtonWireframeIcon {
             id: buttonEncode
             anchors.verticalCenter: parent.verticalCenter
 
@@ -121,7 +121,7 @@ Rectangle {
             }
         }
 
-        ButtonWireframeImage {
+        ButtonWireframeIcon {
             id: buttonTelemetry
             anchors.verticalCenter: parent.verticalCenter
 
@@ -143,7 +143,7 @@ Rectangle {
             }
         }
 
-        ButtonWireframeImage {
+        ButtonWireframeIcon {
             id: buttonDelete
             anchors.verticalCenter: parent.verticalCenter
 
@@ -182,7 +182,7 @@ Rectangle {
         font.bold: true
     }
 
-    ItemImageButton {
+    RoundButtonIcon {
         id: rectangleClear
         anchors.right: parent.right
         anchors.rightMargin: 12

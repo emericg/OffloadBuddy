@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtGraphicalEffects 1.12 // Qt5
+import QtQuick 2.15
+import QtGraphicalEffects 1.15 // Qt5
 //import Qt5Compat.GraphicalEffects // Qt6
 
 import ThemeEngine 1.0
@@ -46,12 +46,12 @@ Item {
             anchors.right: parent.right
             anchors.verticalCenter: parent.verticalCenter
 
-            ItemCodec {
+            ItemTag {
                 height: 20
                 text: qsTr("Read Only")
                 visible: modelData.readOnly
             }
-            ItemCodec {
+            ItemTag {
                 height: 20
                 text: qsTr("LFS")
                 visible: modelData.largeFileSupport

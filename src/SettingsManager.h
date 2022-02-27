@@ -65,7 +65,7 @@ class SettingsManager: public QObject
     Q_PROPERTY(QSize initialPosition READ getInitialPosition NOTIFY initialSizeChanged)
     Q_PROPERTY(uint initialVisibility READ getInitialVisibility NOTIFY initialSizeChanged)
 
-    Q_PROPERTY(uint appTheme READ getAppTheme WRITE setAppTheme NOTIFY appThemeChanged)
+    Q_PROPERTY(QString appTheme READ getAppTheme WRITE setAppTheme NOTIFY appThemeChanged)
     Q_PROPERTY(bool appThemeAuto READ getAppThemeAuto WRITE setAppThemeAuto NOTIFY appThemeAutoChanged)
     Q_PROPERTY(bool appThemeCSD READ getAppThemeCSD WRITE setAppThemeCSD NOTIFY appThemeCSDChanged)
     Q_PROPERTY(uint appUnits READ getAppUnits WRITE setAppUnits NOTIFY appUnitsChanged)
@@ -96,7 +96,7 @@ class SettingsManager: public QObject
     unsigned m_appVisibility = 1;               //!< QWindow::Visibility
 
     // Application generic
-    unsigned m_appTheme = 0;
+    QString m_appTheme = "THEME_LIGHT_AND_WARM";
     bool m_appThemeAuto = false;
     bool m_appThemeCSD = false;
     unsigned m_appUnits = 0;                    //!< QLocale::MeasurementSystem
@@ -159,8 +159,8 @@ public:
     QSize getInitialPosition() { return m_appPosition; }
     unsigned getInitialVisibility() { return m_appVisibility; }
 
-    unsigned getAppTheme() const { return m_appTheme; }
-    void setAppTheme(const unsigned value);
+    QString getAppTheme() const { return m_appTheme; }
+    void setAppTheme(const QString &value);
 
     bool getAppThemeAuto() const { return m_appThemeAuto; }
     void setAppThemeAuto(const bool value);

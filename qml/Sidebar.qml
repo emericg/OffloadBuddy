@@ -1,8 +1,9 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
-import QtQuick.Window 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Window 2.15
 
 import ThemeEngine 1.0
+import "qrc:/js/UtilsDeviceCamera.js" as UtilsDevice
 
 Rectangle {
     id: sideBar
@@ -10,45 +11,21 @@ Rectangle {
     anchors.left: parent.left
     anchors.bottom: parent.bottom
 
+    z: 10
     width: isHdpi ? 80 : 92
     color: Theme.colorSidebar
 
-    property var currentDevicePtr: null
-    signal myDeviceClicked(var devicePtr)
-
-    onMyDeviceClicked: {
-        if (typeof devicePtr !== "undefined") {
-            //console.log(devicePtr + ' component was triggered')
-            if (!(appContent.state === "device" && screenDevice.currentDevice === devicePtr)) {
-                appContent.state = "device"
-                screenDevice.currentDevice = devicePtr
-                currentDevicePtr = devicePtr // save current device
-            }
-        }
-    }
-
-    Connections {
-        target: deviceManager
-        signal deviceRemoved(var devicePtr)
-        onDeviceRemoved: {
-            //console.log("deviceRemoved(" + devicePtr + ") and currentDevice(" + currentDevicePtr + ")")
-            if (typeof devicePtr !== "undefined")
-                if (devicePtr === currentDevicePtr)
-                    appContent.state = "library"
-        }
-    }
-
     ////////////////////////////////////////////////////////////////////////////
 
-    DragHandler { // Drag on the sidebar to drag the whole window // Qt 5.15+
-        // also, prevent clicks below this area
+    DragHandler {
+        // Drag on the sidebar to drag the whole window // Qt 5.15+
+        // Also, prevent clicks below this area
         onActiveChanged: if (active) appWindow.startSystemMove();
         target: null
     }
 
     CsdMac {
         id: macosWindowButtons
-        height: 48
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
@@ -58,7 +35,7 @@ Rectangle {
 
     // MENUS up
 
-    SidebarWidget {
+    DesktopSidebarItem {
         id: button_library
         height: 80
 
@@ -69,10 +46,13 @@ Rectangle {
         anchors.right: parent.right
         anchors.rightMargin: 0
 
-        selected: appContent.state === "library"
-        animated: mediaLibrary.libraryState
-        onClicked: appContent.state = "library"
         source: "qrc:/menus/media.svg"
+        sourceSize: 64
+        highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
+        indicatorAnimated: mediaLibrary.libraryState
+
+        selected: appContent.state === "library"
+        onClicked: appContent.state = "library"
     }
 
     ListView {
@@ -90,11 +70,22 @@ Rectangle {
         spacing: 16
 
         model: deviceManager.devicesList
-        delegate: SidebarWidget {
+        delegate: DesktopSidebarItem {
             height: 80
-            myDevice: modelData
-            selected: (appContent.state === "device" && modelData === currentDevicePtr)
-            animated: currentDevicePtr.deviceState
+
+            text: modelData.model
+            source: UtilsDevice.getDevicePicture(modelData)
+            sourceSize: 64
+            highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
+            indicatorAnimated: modelData.deviceState
+
+            selected: (appContent.state === "device" && modelData === screenDevice.currentDevice)
+            onClicked: {
+                if (!(appContent.state === "device" && screenDevice.currentDevice === modelData)) {
+                    screenDevice.currentDevice = modelData
+                    appContent.state = "device"
+                }
+            }
         }
     }
 
@@ -111,52 +102,49 @@ Rectangle {
 
         spacing: 0
 
-        SidebarWidget {
+        DesktopSidebarItem {
             id: button_jobs
             width: sideBar.width
-            imgSize: 48
+
+            source: "qrc:/menus/jobs.svg"
+            sourceSize: 48
+            highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
 
             visible: jobManager.trackedJobCount
-            animated: jobManager.workingJobCount
+            indicatorAnimated: jobManager.workingJobCount
 
             selected: appContent.state === "jobs"
             onClicked: appContent.state = "jobs"
-            source: "qrc:/menus/jobs.svg"
         }
-        SidebarWidget {
+        DesktopSidebarItem {
             id: button_settings
             width: sideBar.width
-            imgSize: 48
+
+            source: "qrc:/menus/settings.svg"
+            sourceSize: 48
+            highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
 
             selected: appContent.state === "settings"
             onClicked: appContent.state = "settings"
-            source: "qrc:/menus/settings.svg"
         }
-        SidebarWidget {
+        DesktopSidebarItem {
             id: button_about
-            width: sideBar.width
-            imgSize: 48
+
+            source: "qrc:/menus/about.svg"
+            sourceSize: 48
+            highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
 
             selected: appContent.state === "about"
             onClicked: appContent.state = "about"
-            source: "qrc:/menus/about.svg"
         }
-        SidebarWidget {
+        DesktopSidebarItem {
             id: button_exit
-            width: sideBar.width
-            imgSize: 48
 
             source: "qrc:/menus/exit.svg"
+            sourceSize: 48
+            highlightMode: "circle"
+
             onClicked: appWindow.close()
         }
-    }
-
-    SimpleShadow {
-        anchors.top: parent.top
-        anchors.left: parent.right
-        anchors.leftMargin: -width
-        anchors.bottom: parent.bottom
-        width: 4
-        color: Theme.colorSidebar
     }
 }

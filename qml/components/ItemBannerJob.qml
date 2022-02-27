@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsString.js" as UtilsString
@@ -106,7 +106,7 @@ Rectangle {
         }
     }
 
-    ItemImageButton {
+    RoundButtonIcon {
         id: rectangleClose
         anchors.right: parent.right
         anchors.rightMargin: 8

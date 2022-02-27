@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 import ThemeEngine 1.0
 import StorageUtils 1.0
@@ -168,7 +168,7 @@ Popup {
                 font.pixelSize: Theme.fontSizeContent
             }
 
-            ItemImageButton {
+            RoundButtonIcon {
                 width: 48
                 height: 48
                 anchors.right: parent.right
@@ -425,7 +425,7 @@ Popup {
                 primaryColor: Theme.colorGrey
                 onClicked: popupOffload.close()
             }
-            ButtonWireframeImage {
+            ButtonWireframeIcon {
                 id: buttonOffload
                 anchors.verticalCenter: parent.verticalCenter
 

@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 import ThemeEngine 1.0
 
@@ -102,7 +102,7 @@ Popup {
                 primaryColor: Theme.colorGrey
                 onClicked: popupExit.close()
             }
-            ButtonWireframeImage {
+            ButtonWireframeIcon {
                 id: buttonExit
                 anchors.verticalCenter: parent.verticalCenter
 

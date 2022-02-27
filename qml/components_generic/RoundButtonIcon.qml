@@ -1,34 +1,30 @@
-import QtQuick 2.12
-import QtGraphicalEffects 1.12 // Qt5
-//import Qt5Compat.GraphicalEffects // Qt6
+import QtQuick 2.15
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsNumber.js" as UtilsNumber
 
 Item {
     id: control
-    implicitWidth: 40
-    implicitHeight: 40
+    implicitWidth: Theme.componentHeight
+    implicitHeight: Theme.componentHeight
 
     // actions
     signal clicked()
-    signal pressed()
     signal pressAndHold()
 
     // states
     property bool hovered: false
+    property bool pressed: false
     property bool selected: false
 
     // settings
-    property url source: ""
-
+    property url source
+    property int sourceSize: UtilsNumber.alignTo(height * 0.666, 2)
+    property int rotation: 0
     property string highlightMode: "circle" // available: border, circle, color, both (circle+color), off
+
     property bool border: false
     property bool background: false
-
-    property int rotation: 0
-    property int btnSize: height
-    property int imgSize: UtilsNumber.alignTo(height * 0.666, 2)
 
     // colors
     property string iconColor: Theme.colorIcon
@@ -37,75 +33,55 @@ Item {
     property string backgroundColor: Theme.colorComponent
 
     // animation
-    property string animation: "" // available: rotate, fade
+    property string animation // available: rotate, fade
     property bool animationRunning: false
+
+    // tooltip
+    property bool tooltipEnabled: false
+    property string tooltipPosition: "bottom"
+    property string tooltipText
 
     ////////////////////////////////////////////////////////////////////////////
 
     MouseArea {
         anchors.fill: control
 
-        hoverEnabled: true
+        hoverEnabled: isDesktop
         propagateComposedEvents: false
 
         onClicked: control.clicked()
-        onPressed: control.pressed()
         onPressAndHold: control.pressAndHold()
 
-        onEntered: hovered = true
-        onExited: hovered = false
-        onCanceled: hovered = false
+        onPressed: control.pressed = true
+        onReleased: control.pressed = false
+
+        onEntered: control.hovered = true
+        onExited: control.hovered = false
+        onCanceled: {
+            control.pressed = false
+            control.hovered = false
+        }
     }
 
-    ////////
-/*
-    Glow {
-        id: bgBlur
-        anchors.fill: bgRect
-        source: bgRect
+    ////////////////////////////////////////////////////////////////////////////
 
-        cached: true
-        radius: 8
-        samples: 16
-        opacity: 0.33
-        color: Theme.colorSecondary
-    }
-*/
-    DropShadow {
-        anchors.fill: bgRect
-        source: bgRect
+    Rectangle { // background
+        anchors.fill: control
+        radius: width
 
-        horizontalOffset: 1
-        verticalOffset: 2
-
-        cached: true
-        radius: 8
-        samples: 17
-        color: "#aaa"
-    }
-
-    ////////
-
-    Rectangle {
-        id: bgRect
-        width: btnSize
-        height: btnSize
-        radius: btnSize
-        anchors.centerIn: control
-
-        visible: (highlightMode === "circle" || highlightMode === "both" || control.background)
+        visible: (control.highlightMode === "circle" || control.highlightMode === "both" || control.background)
         color: control.backgroundColor
 
         border.width: {
-            if (control.border || ((hovered || selected) && highlightMode === "border"))
+            if (control.border || ((control.hovered || control.selected) && control.highlightMode === "border"))
                 return Theme.componentBorderWidth
             return 0
         }
         border.color: control.borderColor
 
         opacity: {
-            if (hovered) {
-               return (highlightMode === "circle" || highlightMode === "both" || control.background) ? 1 : 0.75
+            if (control.hovered) {
+               return (control.highlightMode === "circle" || control.highlightMode === "both" || control.background) ? 1 : 0.75
             } else {
                 return control.background ? 0.75 : 0
             }
@@ -113,12 +89,11 @@ Item {
         Behavior on opacity { NumberAnimation { duration: 333 } }
     }
 
-    ////////
+    ////////////////////////////////////////////////////////////////////////////
 
-    ImageSvg {
-        id: contentImage
-        width: imgSize
-        height: imgSize
+    IconSvg { // contentItem
+        width: control.sourceSize
+        height: control.sourceSize
         anchors.centerIn: control
 
         rotation: control.rotation
@@ -127,14 +102,14 @@ Item {
 
         source: control.source
         color: {
-            if ((selected || hovered) && (highlightMode === "color" || highlightMode === "both")) {
+            if ((control.selected || control.hovered) && (control.highlightMode === "color" || control.highlightMode === "both")) {
                 return control.highlightColor
             }
             return control.iconColor
         }
 
         SequentialAnimation on opacity {
-            running: (animation === "fade" && animationRunning)
+            running: (control.animation === "fade" && control.animationRunning)
             alwaysRunToEnd: true
             loops: Animation.Infinite
 
@@ -142,7 +117,7 @@ Item {
             PropertyAnimation { to: 1; duration: 750; }
         }
         NumberAnimation on rotation {
-            running: (animation === "rotate" && animationRunning)
+            running: (control.animation === "rotate" && control.animationRunning)
             alwaysRunToEnd: true
             loops: Animation.Infinite
 
@@ -152,4 +127,16 @@ Item {
             easing.type: Easing.Linear
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    ToolTipFlat {
+        visible: (control.tooltipText && control.hovered)
+        text: control.tooltipText
+
+        textColor: control.iconColor
+        backgroundColor: control.backgroundColor
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
 }

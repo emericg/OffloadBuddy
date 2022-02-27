@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 import ThemeEngine 1.0
 import ShotUtils 1.0
@@ -168,7 +168,7 @@ Item {
 
         ////////////////
 
-        ItemImageButton {
+        RoundButtonIcon {
             id: buttonBack
             width: 48
             height: 48
@@ -217,11 +217,11 @@ Item {
             height: 28
             spacing: 16
 
-            ItemCodec { id: codecImage }
+            ItemTag { id: codecImage }
 
-            ItemCodec { id: codecVideo }
+            ItemTag { id: codecVideo }
 
-            ItemCodec { id: codecAudio }
+            ItemTag { id: codecAudio }
         }
 
         ////////////////
@@ -240,7 +240,7 @@ Item {
 
                 visible: (shot && shot.fileType !== ShotUtils.FILE_VIDEO)
 
-                ItemImageButton {
+                RoundButtonIcon {
                     id: buttonTrim
                     width: 40
                     height: 40
@@ -250,7 +250,7 @@ Item {
                     onClicked: contentOverview.toggleTrim()
                 }
 
-                ItemImageButton {
+                RoundButtonIcon {
                     id: buttonRotate
                     width: 40
                     height: 40
@@ -259,7 +259,7 @@ Item {
                     onClicked: contentOverview.toggleTransform()
                 }
 
-                ItemImageButton {
+                RoundButtonIcon {
                     id: buttonCrop
                     width: 40
                     height: 40
@@ -282,7 +282,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 4
 
-                ItemImageButton {
+                RoundButtonIcon {
                     id: buttonTimestamp
                     width: 40
                     height: 40
@@ -291,7 +291,7 @@ Item {
                     onClicked: contentOverview.openDatePopup()
                 }
 
-                ItemImageButton {
+                RoundButtonIcon {
                     id: buttonTelemetry
                     width: 40
                     height: 40
@@ -301,7 +301,7 @@ Item {
                     onClicked: contentOverview.openTelemetryPopup()
                 }
 
-                ItemImageButton {
+                RoundButtonIcon {
                     id: buttonEncode
                     width: 40
                     height: 40
@@ -324,7 +324,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 4
 
-                ItemImageButton {
+                RoundButtonIcon {
                     id: buttonShowFolder
                     width: 40
                     height: 40
@@ -333,7 +333,7 @@ Item {
                     onClicked: shot.openFolder()
                 }
 
-                ItemImageButton {
+                RoundButtonIcon {
                     id: buttonDelete
                     width: 40
                     height: 40
@@ -363,45 +363,51 @@ Item {
             anchors.rightMargin: 32
             anchors.bottom: parent.bottom
 
-            ItemMenuButton {
+            DesktopHeaderItem {
                 id: menuOverview
                 height: parent.height
 
-                menuText: qsTr("Overview")
+                text: qsTr("Overview")
                 source: "qrc:/assets/icons_material/duotone-aspect_ratio-24px.svg"
+                colorContent: Theme.colorHeaderContent
+                colorHighlight: Theme.colorHeaderHighlight
+
                 selected: (screenMedia.state === "overview")
                 onClicked: screenMedia.state = "overview"
             }
-            ItemMenuButton {
+            DesktopHeaderItem {
                 id: menuDetails
                 height: parent.height
 
                 visible: (shot && (shot.hasGoProMetadata || shot.fileCount > 1))
 
-                menuText: qsTr("Details")
+                text: qsTr("Details")
                 source: "qrc:/assets/icons_material/duotone-list-24px.svg"
+
                 selected: (screenMedia.state === "details")
                 onClicked: screenMedia.state = "details"
             }
-            ItemMenuButton {
+            DesktopHeaderItem {
                 id: menuTelemetry
                 height: parent.height
 
                 visible: (shot && shot.hasGPMF && shot.hasGPS)
 
-                menuText: qsTr("Telemetry")
+                text: qsTr("Telemetry")
                 source: "qrc:/assets/icons_material/duotone-insert_chart-24px.svg"
+
                 selected: (screenMedia.state === "metadata")
                 onClicked: screenMedia.state = "metadata"
             }
-            ItemMenuButton {
+            DesktopHeaderItem {
                 id: menuMap
                 height: parent.height
 
                 visible: (shot && shot.fileType === ShotUtils.FILE_PICTURE && shot.latitude !== 0.0)
 
-                menuText: qsTr("Map")
+                text: qsTr("Map")
                 source: "qrc:/assets/icons_material/baseline-map-24px.svg"
+
                 selected: (screenMedia.state === "metadata")
                 onClicked: screenMedia.state = "metadata"
             }
@@ -411,9 +417,11 @@ Item {
 
         CsdWindows { }
 
+        CsdLinux { }
+
         ////////
 
-        Rectangle {
+        Rectangle { // separator
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
@@ -422,14 +430,19 @@ Item {
             opacity: 0.1
             color: Theme.colorHeaderContent
         }
-        SimpleShadow {
-            anchors.top: parent.bottom
-            anchors.topMargin: -height
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: 2
-            opacity: 0.7
-            color: Theme.colorHeaderContent
+    }
+    Rectangle { // shadow
+        anchors.top: rectangleHeader.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+
+        height: 8
+        opacity: 0.66
+
+        gradient: Gradient {
+            orientation: Gradient.Vertical
+            GradientStop { position: 0.0; color: Theme.colorHeaderHighlight; }
+            GradientStop { position: 1.0; color: Theme.colorBackground; }
         }
     }
 

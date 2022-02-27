@@ -1,6 +1,6 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
-import QtGraphicalEffects 1.12 // Qt5
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtGraphicalEffects 1.15 // Qt5
 //import Qt5Compat.GraphicalEffects // Qt6
 
 import ThemeEngine 1.0
@@ -346,7 +346,7 @@ Item {
 
             visible: (resizeWidget.editing && gismo.arLock)
 
-            ItemTextButton {
+            RoundButtonText {
                 id: button43
                 width: 32; height: 32;
 
@@ -361,7 +361,7 @@ Item {
                     gismo.restoreCoordFromCenter()
                 }
             }
-            ItemTextButton {
+            RoundButtonText {
                 id: button169
                 width: 32; height: 32;
 
@@ -376,7 +376,7 @@ Item {
                     gismo.restoreCoordFromCenter()
                 }
             }
-            ItemTextButton {
+            RoundButtonText {
                 id: button219
                 width: 32; height: 32;
 
@@ -392,7 +392,7 @@ Item {
                 }
             }
         }
-        ItemImageButton {
+        RoundButtonIcon {
             id: buttonLock
             anchors.top: parent.top
             anchors.topMargin: 8
@@ -418,7 +418,7 @@ Item {
 
             visible: (resizeWidget.editing && gismo.arLock)
 
-            ItemTextButton {
+            RoundButtonText {
                 id: button34
                 width: 32; height: 32;
 
@@ -433,7 +433,7 @@ Item {
                     gismo.restoreCoordFromCenter()
                 }
             }
-            ItemTextButton {
+            RoundButtonText {
                 id: button916
                 width: 32; height: 32;
 
@@ -448,7 +448,7 @@ Item {
                     gismo.restoreCoordFromCenter()
                 }
             }
-            ItemTextButton {
+            RoundButtonText {
                 id: button921
                 width: 32; height: 32;
 
@@ -473,7 +473,7 @@ Item {
             anchors.bottomMargin: 8
             spacing: 8
 
-            ItemImageButton {
+            RoundButtonIcon {
                 id: buttonReset
                 iconColor: "white"
                 background: true
@@ -484,7 +484,7 @@ Item {
                 source: "qrc:/assets/icons_material/baseline-close-24px.svg"
                 onClicked: resizeWidget.reset()
             }
-            ItemImageButton {
+            RoundButtonIcon {
                 id: buttonValidate
                 iconColor: "white"
                 background: true

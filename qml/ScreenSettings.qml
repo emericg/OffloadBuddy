@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 import QtQuick.Dialogs 1.3 // Qt5
 
 import ThemeEngine 1.0
@@ -26,7 +26,7 @@ Item {
         DragHandler {
             // Drag on the sidebar to drag the whole window // Qt 5.15+
             // Also, prevent clicks below this area
-            onActiveChanged: if (active) appWindow.startSystemMove();
+            onActiveChanged: if (active) appWindow.startSystemMove()
             target: null
         }
 
@@ -48,9 +48,11 @@ Item {
 
         CsdWindows { }
 
+        CsdLinux { }
+
         ////////
 
-        Rectangle {
+        Rectangle { // separator
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
@@ -59,14 +61,19 @@ Item {
             opacity: 0.1
             color: Theme.colorHeaderContent
         }
-        SimpleShadow {
-            anchors.top: parent.bottom
-            anchors.topMargin: -height
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: 2
-            opacity: 0.7
-            color: Theme.colorHeaderContent
+    }
+    Rectangle { // shadow
+        anchors.top: rectangleHeader.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+
+        height: 8
+        opacity: 0.66
+
+        gradient: Gradient {
+            orientation: Gradient.Vertical
+            GradientStop { position: 0.0; color: Theme.colorHeaderHighlight; }
+            GradientStop { position: 1.0; color: Theme.colorBackground; }
         }
     }
 
@@ -124,15 +131,24 @@ Item {
                     }
 
                     Component.onCompleted: {
-                        currentIndex = settingsManager.appTheme;
-                        if (currentIndex === -1) { currentIndex = 0 }
+                        if (settingsManager.appTheme === "THEME_LIGHT_AND_WARM") currentIndex = 0
+                        else if (settingsManager.appTheme === "THEME_DARK_AND_SPOOKY") currentIndex = 1
+                        else if (settingsManager.appTheme === "THEME_PLAIN_AND_BORING") currentIndex = 2
+                        else if (settingsManager.appTheme === "THEME_BLOOD_AND_TEARS") currentIndex = 3
+                        else if (settingsManager.appTheme === "THEME_MIGHTY_KITTENS") currentIndex = 4
                     }
+
                     property bool cbinit: false
-                    onCurrentIndexChanged: {
-                        if (cbinit)
-                            settingsManager.appTheme = currentIndex;
-                        else
-                            cbinit = true;
+                    onCurrentTextChanged: {
+                        if (cbinit) {
+                            if (currentText === "LIGHT AND WARM") settingsManager.appTheme = "THEME_LIGHT_AND_WARM"
+                            else if (currentText === "DARK AND SPOOKY") settingsManager.appTheme = "THEME_DARK_AND_SPOOKY"
+                            else if (currentText === "PLAIN AND BORING") settingsManager.appTheme = "THEME_PLAIN_AND_BORING"
+                            else if (currentText === "BLOOD AND TEARS") settingsManager.appTheme = "THEME_BLOOD_AND_TEARS"
+                            else if (currentText === "MIGHTY KITTENS") settingsManager.appTheme = "THEME_MIGHTY_KITTENS"
+                        } else {
+                            cbinit = true
+                        }
                     }
                 }
 
@@ -243,31 +259,18 @@ Item {
                     color: Theme.colorText
                 }
 
-                ItemLilMenu {
+                SelectorMenuThemed {
                     anchors.verticalCenter: parent.verticalCenter
-                    width: rowLilMenuAR.width
                     height: 32
 
-                    Row {
-                        id: rowLilMenuAR
-                        height: parent.height
-
-                        ItemLilMenuButton {
-                            text: "1:1"
-                            selected: (settingsManager.thumbFormat === 1)
-                            onClicked: settingsManager.thumbFormat = 1
-                        }
-                        ItemLilMenuButton {
-                            text: "4:3"
-                            selected: (settingsManager.thumbFormat === 2)
-                            onClicked: settingsManager.thumbFormat = 2
-                        }
-                        ItemLilMenuButton {
-                            text: "16:9"
-                            selected: (settingsManager.thumbFormat === 3)
-                            onClicked: settingsManager.thumbFormat = 3
-                        }
+                    model: ListModel {
+                        ListElement { idx: 1; txt: "1:1"; src: ""; sz: 0; }
+                        ListElement { idx: 2; txt: "4:3"; src: ""; sz: 0; }
+                        ListElement { idx: 3; txt: "16:9"; src: ""; sz: 0; }
                     }
+
+                    currentSelection: settingsManager.thumbFormat
+                    onMenuSelected: (index) => { settingsManager.thumbFormat = index }
                 }
 
                 Text {
@@ -279,36 +282,19 @@ Item {
                     color: Theme.colorText
                 }
 
-                ItemLilMenu {
+                SelectorMenuThemed {
                     anchors.verticalCenter: parent.verticalCenter
-                    width: rowLilMenuSize.width
                     height: 32
 
-                    Row {
-                        id: rowLilMenuSize
-                        height: parent.height
-
-                        ItemLilMenuButton {
-                            text: qsTr("Small")
-                            selected: (settingsManager.thumbSize === 1)
-                            onClicked: settingsManager.thumbSize = 1
-                        }
-                        ItemLilMenuButton {
-                            text: qsTr("Medium")
-                            selected: (settingsManager.thumbSize === 2)
-                            onClicked: settingsManager.thumbSize = 2
-                        }
-                        ItemLilMenuButton {
-                            text: qsTr("Big")
-                            selected: (settingsManager.thumbSize === 3)
-                            onClicked: settingsManager.thumbSize = 3
-                        }
-                        ItemLilMenuButton {
-                            text: qsTr("Huge")
-                            selected: (settingsManager.thumbSize === 4)
-                            onClicked: settingsManager.thumbSize = 4
-                        }
+                    model: ListModel {
+                        ListElement { idx: 1; txt: qsTr("Small"); src: ""; sz: 0; }
+                        ListElement { idx: 2; txt: qsTr("Medium"); src: ""; sz: 0; }
+                        ListElement { idx: 3; txt: qsTr("Big"); src: ""; sz: 0; }
+                        ListElement { idx: 4; txt: qsTr("Huge"); src: ""; sz: 0; }
                     }
+
+                    currentSelection: settingsManager.thumbSize
+                    onMenuSelected: (index) => { settingsManager.thumbSize = index }
                 }
             }
 
@@ -325,31 +311,18 @@ Item {
                     color: Theme.colorText
                 }
 
-                ItemLilMenu {
-                    width: rowLilMenuQuality.width
-                    height: 32
+                SelectorMenuThemed {
                     anchors.verticalCenter: parent.verticalCenter
+                    height: 32
 
-                    Row {
-                        id: rowLilMenuQuality
-                        height: parent.height
-
-                        ItemLilMenuButton {
-                            text: qsTr("Low")
-                            selected: (settingsManager.thumbQuality === 0)
-                            onClicked: settingsManager.thumbQuality = 0
-                        }
-                        ItemLilMenuButton {
-                            text: qsTr("Balanced")
-                            selected: (settingsManager.thumbQuality === 1)
-                            onClicked: settingsManager.thumbQuality = 1
-                        }
-                        ItemLilMenuButton {
-                            text: qsTr("High")
-                            selected: (settingsManager.thumbQuality === 2)
-                            onClicked: settingsManager.thumbQuality = 2
-                        }
+                    model: ListModel {
+                        ListElement { idx: 0; txt: qsTr("Low"); src: ""; sz: 0; }
+                        ListElement { idx: 1; txt: qsTr("Balanced"); src: ""; sz: 0; }
+                        ListElement { idx: 2; txt: qsTr("High"); src: ""; sz: 0; }
                     }
+
+                    currentSelection: settingsManager.thumbQuality
+                    onMenuSelected: (index) => { settingsManager.thumbQuality = index }
                 }
             }
 
@@ -531,7 +504,7 @@ Item {
                             color: Theme.colorText
                         }
 
-                        ItemImageButtonTooltip {
+                        RoundButtonIcon {
                             id: buttonNew
                             anchors.verticalCenter: parent.verticalCenter
 
@@ -571,15 +544,15 @@ Item {
                             }
 
                             Component.onCompleted: {
-                                currentIndex = storageManager.contentHierarchy;
+                                currentIndex = storageManager.contentHierarchy
                                 if (currentIndex === -1) { currentIndex = 0 }
                             }
                             property bool cbinit: false
                             onCurrentIndexChanged: {
                                 if (cbinit)
-                                    storageManager.contentHierarchy = currentIndex;
+                                    storageManager.contentHierarchy = currentIndex
                                 else
-                                    cbinit = true;
+                                    cbinit = true
                             }
                         }
                     }
@@ -617,7 +590,7 @@ Item {
                             color: Theme.colorSubText
                         }
 
-                        ButtonWireframeImage {
+                        ButtonWireframeIcon {
                             height: 36
                             anchors.horizontalCenter: parent.horizontalCenter
 

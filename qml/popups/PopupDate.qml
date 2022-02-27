@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsNumber.js" as UtilsNumber
@@ -146,7 +146,7 @@ Popup {
                         width: 36
                         height: 36
 
-                        ImageSvg {
+                        IconSvg {
                             id: dateFileValidator
                             width: 24
                             height: 24
@@ -157,7 +157,7 @@ Popup {
                             color: Theme.colorWarning
                             fillMode: Image.PreserveAspectFit
                         }
-                        ItemImageButton {
+                        RoundButtonIcon {
                             id: dateFileSelector
                             width: 36
                             height: 36
@@ -206,7 +206,7 @@ Popup {
                     Item {
                         width: 36
                         height: 36
-                        ImageSvg {
+                        IconSvg {
                             id: dateMetadataValidator
                             width: 24
                             height: 24
@@ -218,7 +218,7 @@ Popup {
                             fillMode: Image.PreserveAspectFit
                         }
                     }
-                    ItemImageButton {
+                    RoundButtonIcon {
                         id: dateMetadataSelector
                         width: 36
                         height: 36
@@ -266,7 +266,7 @@ Popup {
                     Item {
                         width: 36
                         height: 36
-                        ImageSvg {
+                        IconSvg {
                             id: dateGpsValidator
                             width: 24
                             height: 24
@@ -278,7 +278,7 @@ Popup {
                             fillMode: Image.PreserveAspectFit
                         }
                     }
-                    ItemImageButton {
+                    RoundButtonIcon {
                         id: dateGpsSelector
                         width: 36
                         height: 36
@@ -326,7 +326,7 @@ Popup {
                     Item {
                         width: 36
                         height: 36
-                        ImageSvg {
+                        IconSvg {
                             id: dateUserValidator
                             width: 24
                             height: 24
@@ -338,7 +338,7 @@ Popup {
                             fillMode: Image.PreserveAspectFit
                         }
                     }
-                    ItemImageButton {
+                    RoundButtonIcon {
                         id: dateUserSelector
                         width: 36
                         height: 36
@@ -530,7 +530,7 @@ Popup {
                 primaryColor: Theme.colorGrey
                 onClicked: popupDate.close()
             }
-            ButtonWireframeImage {
+            ButtonWireframeIcon {
                 id: buttonExit
                 width: 128
                 anchors.verticalCenter: parent.verticalCenter

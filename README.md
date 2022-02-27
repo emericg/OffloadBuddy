@@ -51,11 +51,11 @@ It's designed to remove the hassle of handling and transferring the many videos 
 
 #### Dependencies
 
-You will need a C++14 capable compiler and Qt 5.12+ (with QtMultimedia, QtLocation and QtCharts).  Qt 6+ won't be supported for a while.  
+You will need a C++17 capable compiler and Qt 5.15+ (with QtMultimedia, QtLocation and QtCharts).  Qt 6+ won't be supported for a while.  
 On Windows, the contribs builds fine with MSVC 2017.  
 
 OffloadBuddy dependencies:
-- Qt (5.12+)  
+- Qt (5.15)  
 - pkg-config (linux / macOS without contribs)  
 
 Optional dependencies:

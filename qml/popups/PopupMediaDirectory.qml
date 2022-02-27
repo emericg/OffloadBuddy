@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 import ThemeEngine 1.0
 import StorageUtils 1.0
@@ -323,12 +323,12 @@ Popup {
 
                     visible: (directory.directoryHierarchy === StorageUtils.HierarchyCustom)
 
-                    ItemTag { text: "DATE"; onClicked: tfHC.insert(tfHC.selectionStart, "$(DATE)"); }
-                    ItemTag { text: "YEAR"; onClicked: tfHC.insert(tfHC.selectionStart, "$(YEAR)"); }
-                    ItemTag { text: "MONTH"; onClicked: tfHC.insert(tfHC.selectionStart, "$(MONTH)"); }
-                    ItemTag { text: "DAY"; onClicked: tfHC.insert(tfHC.selectionStart, "$(DAY)"); }
-                    ItemTag { text: "SHOT NAME"; onClicked: tfHC.insert(tfHC.selectionStart, "$(SHOT_NAME)"); }
-                    ItemTag { text: "CAMERA"; onClicked: tfHC.insert(tfHC.selectionStart, "$(CAMERA)"); }
+                    ItemTagButton { text: "DATE"; onClicked: tfHC.insert(tfHC.selectionStart, "$(DATE)"); }
+                    ItemTagButton { text: "YEAR"; onClicked: tfHC.insert(tfHC.selectionStart, "$(YEAR)"); }
+                    ItemTagButton { text: "MONTH"; onClicked: tfHC.insert(tfHC.selectionStart, "$(MONTH)"); }
+                    ItemTagButton { text: "DAY"; onClicked: tfHC.insert(tfHC.selectionStart, "$(DAY)"); }
+                    ItemTagButton { text: "SHOT NAME"; onClicked: tfHC.insert(tfHC.selectionStart, "$(SHOT_NAME)"); }
+                    ItemTagButton { text: "CAMERA"; onClicked: tfHC.insert(tfHC.selectionStart, "$(CAMERA)"); }
                 }
 
                 ////////
@@ -344,7 +344,7 @@ Popup {
             anchors.rightMargin: 24
             spacing: 24
 
-            ButtonWireframeImage {
+            ButtonWireframeIcon {
                 id: buttonUpdate
                 anchors.verticalCenter: parent.verticalCenter
 

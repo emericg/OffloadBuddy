@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 import ThemeEngine 1.0
 import StorageUtils 1.0
@@ -36,7 +36,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             spacing: 0
 
-            ItemImageButtonTooltip {
+            RoundButtonIcon {
                 id: button_ro
                 width: 32
                 height: 32
@@ -51,7 +51,7 @@ Item {
                 tooltipPosition: "left"
             }
 
-            ItemImageButtonTooltip {
+            RoundButtonIcon {
                 id: button_lfs
                 width: 32
                 height: 32
@@ -66,7 +66,7 @@ Item {
                 tooltipPosition: "left"
             }
 
-            ItemImageButton {
+            RoundButtonIcon {
                 id: button_refresh
                 width: 32
                 height: 32
@@ -83,7 +83,7 @@ Item {
                 onClicked: mediaLibrary.searchMediaDirectory(directory.directoryPath)
             }
 
-            ItemImageButton {
+            RoundButtonIcon {
                 id: button_open
                 width: 32
                 height: 32
@@ -95,7 +95,7 @@ Item {
                 onClicked: utilsApp.openWith(directory.directoryPath)
             }
 
-            ItemImageButton {
+            RoundButtonIcon {
                 width: 32
                 height: 32
                 anchors.verticalCenter: parent.verticalCenter
@@ -167,7 +167,7 @@ Item {
             spacing: 8
             visible: (menus.memusmode === 0 && !directory.available)
 
-            ImageSvg {
+            IconSvg {
                 id: imageError
                 width: 28
                 height: 28
@@ -246,27 +246,29 @@ Item {
 
         visible: (menus.memusmode !== 3)
 
-        ItemImageButton {
+        RoundButtonIcon {
             id: rectangleSettings
             anchors.verticalCenter: parent.verticalCenter
 
-            imgSize: 32
             iconColor: Theme.colorSubText
             highlightMode: "color"
             highlightColor: Theme.colorPrimary
             source: "qrc:/assets/icons_material/baseline-settings_applications-24px.svg"
+            sourceSize: 32
+
             onClicked: popupMediaDirectory.open()
         }
 
-        ItemImageButton {
+        RoundButtonIcon {
             id: rectangleDelete
             anchors.verticalCenter: parent.verticalCenter
 
-            imgSize: 32
             iconColor: Theme.colorSubText
             highlightMode: "color"
             highlightColor: Theme.colorError
             source: "qrc:/assets/icons_material/baseline-delete-24px.svg"
+            sourceSize: 32
+
             onClicked: {
                 if (menus.memusmode !== 3) menus.memusmode = 3
                 else menus.memusmode = 0

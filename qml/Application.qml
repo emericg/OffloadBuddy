@@ -19,10 +19,10 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-import QtQuick 2.12
-import QtQuick.Controls 2.12
-import QtQuick.Window 2.12
-import QtGraphicalEffects 1.12 // Qt5
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Window 2.15
+import QtGraphicalEffects 1.15 // Qt5
 //import Qt5Compat.GraphicalEffects // Qt6
 
 import ThemeEngine 1.0
@@ -127,6 +127,19 @@ ApplicationWindow {
         onActivated: utilsApp.appExit()
     }
 
+    // Handle device disconnection
+    Connections {
+        target: deviceManager
+        signal deviceRemoved(var devicePtr)
+        onDeviceRemoved: {
+            //console.log("deviceRemoved(" + devicePtr + ") and currentDevice(" + screenDevice.currentDevice + ")")
+            if (appContent.state === "device")
+                if (typeof devicePtr !== "undefined")
+                    if (devicePtr === screenDevice.currentDevice)
+                        appContent.state = "library"
+        }
+    }
+
     // Menubar /////////////////////////////////////////////////////////////////
 /*
     menuBar: MenuBar {
@@ -156,8 +169,6 @@ ApplicationWindow {
 
         Sidebar {
             id: appSidebar
-            z: 2
-
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.bottom: parent.bottom
@@ -192,11 +203,6 @@ ApplicationWindow {
                 id: screenAbout
             }
 
-            //ScreenComponents {
-            //    anchors.fill: parent
-            //    id: screenComponents
-            //}
-
             onStateChanged: {
                 screenLibrary.updateFocus()
                 screenDevice.updateFocus()
@@ -211,7 +217,6 @@ ApplicationWindow {
                     PropertyChanges { target: screenJobs; visible: false; }
                     PropertyChanges { target: screenSettings; visible: false; }
                     PropertyChanges { target: screenAbout; visible: false; }
-                    //PropertyChanges { target: screenComponents; visible: false; }
                 },
                 State {
                     name: "device"
@@ -220,7 +225,6 @@ ApplicationWindow {
                     PropertyChanges { target: screenJobs; visible: false; }
                     PropertyChanges { target: screenSettings; visible: false; }
                     PropertyChanges { target: screenAbout; visible: false; }
-                    //PropertyChanges { target: screenComponents; visible: false; }
                 },
                 State {
                     name: "jobs"
@@ -229,7 +233,6 @@ ApplicationWindow {
                     PropertyChanges { target: screenJobs; visible: true; }
                     PropertyChanges { target: screenSettings; visible: false; }
                     PropertyChanges { target: screenAbout; visible: false; }
-                    //PropertyChanges { target: screenComponents; visible: false; }
                 },
                 State {
                     name: "settings"
@@ -238,7 +241,6 @@ ApplicationWindow {
                     PropertyChanges { target: screenJobs; visible: false; }
                     PropertyChanges { target: screenSettings; visible: true; }
                     PropertyChanges { target: screenAbout; visible: false; }
-                    //PropertyChanges { target: screenComponents; visible: false; }
                 },
                 State {
                     name: "about"
@@ -247,7 +249,6 @@ ApplicationWindow {
                     PropertyChanges { target: screenJobs; visible: false; }
                     PropertyChanges { target: screenSettings; visible: false; }
                     PropertyChanges { target: screenAbout; visible: true; }
-                    //PropertyChanges { target: screenComponents; visible: false; }
                 },
                 State {
                     name: "components"
@@ -256,7 +257,6 @@ ApplicationWindow {
                     PropertyChanges { target: screenJobs; visible: false; }
                     PropertyChanges { target: screenSettings; visible: false; }
                     PropertyChanges { target: screenAbout; visible: false; }
-                    //PropertyChanges { target: screenComponents; visible: true; }
                 }
             ]
         }
@@ -270,7 +270,10 @@ ApplicationWindow {
                 height: appBg.height
                 radius: 10
 
-                DragHandler { // Resize the window without a compositor bar // Qt 5.15+
+                DragHandler {
+                    // Resize the window without a compositor bar // Qt 5.15+
+                    // Drag on the sidebar to drag the whole window // Qt 5.15+
+                    // Also, prevent clicks below this area
                     id: windowHandler2
                     grabPermissions: TapHandler.TakeOverForbidden
                     target: null
