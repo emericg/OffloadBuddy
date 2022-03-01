@@ -60,6 +60,7 @@
         <file alias="ButtonText.qml">components_generic/ButtonText.qml</file>
         <file alias="ButtonWireframe.qml">components_generic/ButtonWireframe.qml</file>
         <file alias="ButtonWireframeIcon.qml">components_generic/ButtonWireframeIcon.qml</file>
+        <file alias="ButtonWireframeIconCentered.qml">components_generic/ButtonWireframeIconCentered.qml</file>
         <file alias="DesktopHeaderItem.qml">components_generic/DesktopHeaderItem.qml</file>
         <file alias="DesktopSidebarItem.qml">components_generic/DesktopSidebarItem.qml</file>
         <file alias="IconSvg.qml">components_generic/IconSvg.qml</file>

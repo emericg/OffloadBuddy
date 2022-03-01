@@ -104,20 +104,20 @@ Item {
         State {
             name: "stateMediaGrid"
             PropertyChanges { target: screenDeviceGrid; visible: true; }
+            PropertyChanges { target: screenDeviceInfos; visible: false; }
             PropertyChanges { target: screenMedia; visible: false; }
-            PropertyChanges { target: screenDeviceInfos; visible: false; }
-        },
-        State {
-            name: "stateMediaDetails"
-            PropertyChanges { target: screenDeviceGrid; visible: false; }
-            PropertyChanges { target: screenMedia; visible: true; }
-            PropertyChanges { target: screenDeviceInfos; visible: false; }
         },
         State {
             name: "stateDeviceInfos"
             PropertyChanges { target: screenDeviceGrid; visible: false; }
-            PropertyChanges { target: screenMedia; visible: false; }
             PropertyChanges { target: screenDeviceInfos; visible: true; }
+            PropertyChanges { target: screenMedia; visible: false; }
+        },
+        State {
+            name: "stateMediaDetails"
+            PropertyChanges { target: screenDeviceGrid; visible: false; }
+            PropertyChanges { target: screenDeviceInfos; visible: false; }
+            PropertyChanges { target: screenMedia; visible: true; }
         }
     ]
 }

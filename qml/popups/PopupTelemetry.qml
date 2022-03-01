@@ -83,8 +83,7 @@ Popup {
 
     contentItem: Column {
 
-        Rectangle {
-            id: titleArea
+        Rectangle { // titleArea
             anchors.left: parent.left
             anchors.right: parent.right
 
@@ -116,8 +115,7 @@ Popup {
 
         ////////////////
 
-        Rectangle {
-            id: filesArea
+        Rectangle { // filesArea
             anchors.left: parent.left
             anchors.leftMargin: 1
             anchors.right: parent.right
@@ -160,8 +158,7 @@ Popup {
 
         ////////////////
 
-        Item {
-            id: contentArea
+        Item { // contentArea
             height: columnTelemetry.height
             anchors.left: parent.left
             anchors.leftMargin: 24
@@ -170,8 +167,7 @@ Popup {
 
             ////////
 
-            ListView {
-                id: listArea
+            ListView { // listArea
                 anchors.fill: parent
 
                 visible: recapOpened
@@ -286,8 +282,7 @@ Popup {
 
                 ////////
 
-                Item {
-                    id: elementAltitude
+                Item { // elementAltitude
                     height: 48
                     anchors.left: parent.left
                     anchors.right: parent.right
@@ -302,8 +297,7 @@ Popup {
                         color: Theme.colorSubText
                     }
 
-                    SwitchThemedDesktop {
-                        id: switchEGM96
+                    SwitchThemedDesktop { // switchEGM96
                         anchors.left: titleAltitude.right
                         anchors.leftMargin: 16
                         anchors.verticalCenter: parent.verticalCenter
@@ -449,14 +443,12 @@ Popup {
         ////////////////
 
         Row {
-            id: rowButtons
             height: Theme.componentHeight*2 + parent.spacing
             anchors.right: parent.right
             anchors.rightMargin: 24
             spacing: 16
 
             ButtonWireframe {
-                id: buttonClose
                 width: 96
                 anchors.verticalCenter: parent.verticalCenter
 
@@ -466,7 +458,6 @@ Popup {
                 onClicked: popupTelemetry.close()
             }
             ButtonWireframeIcon {
-                id: buttonExtractTelemetry
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Extract telemetry")
@@ -510,7 +501,6 @@ Popup {
                 }
             }
             ButtonWireframeIcon {
-                id: buttonExtractGps
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Extract GPS")
