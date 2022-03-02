@@ -12,7 +12,7 @@ on:
 #--------------------------------------------------------------------------------
 
 env:
-  VERSION: "0.9"
+  VERSION: "0.10"
   EXECUTABLE: "OffloadBuddy"
   APPLICATION: "OffloadBuddy"
   QMAKE_PROJECT: "OffloadBuddy.pro"
@@ -142,7 +142,7 @@ jobs:
   ## Windows build #############################################################
   build-windows:
     name: "Windows CI build"
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
       # Checkout the repository
       - name: Checkout repository and submodules

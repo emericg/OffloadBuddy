@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright 2020 Emeric Grange <emeric.grange@gmail.com> -->
+<!-- Copyright 2022 Emeric Grange <emeric.grange@gmail.com> -->
 
 <component type="desktop-application">
   <id>io.emeric.offloadbuddy</id>
@@ -25,6 +25,7 @@
   <url type="donation">https://paypal.me/EmericGrange</url>
 
   <releases>
+    <release version="0.10" date="2022-04-01" />
     <release version="0.9" date="2021-10-01" />
     <release version="0.8" date="2021-08-24" />
     <release version="0.7" date="2021-08-07" />
