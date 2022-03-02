@@ -88,8 +88,12 @@ if "14.0" in os.getenv('VisualStudioVersion', ''):
     MSVC_GEN_VER = "Visual Studio 14 2015"
 elif "15.0" in os.getenv('VisualStudioVersion', ''):
     MSVC_GEN_VER = "Visual Studio 15 2017"
-else:
+elif "16.0" in os.getenv('VisualStudioVersion', ''):
     MSVC_GEN_VER = "Visual Studio 16 2019"
+elif "17.0" in os.getenv('VisualStudioVersion', ''):
+    MSVC_GEN_VER = "Visual Studio 17 2022"
+else:
+    MSVC_GEN_VER = "Visual Studio 17 2022"
 
 ## ARGUMENTS ###################################################################
 
@@ -117,6 +121,8 @@ if len(sys.argv) > 1:
             MSVC_GEN_VER = "Visual Studio 15 2017"
         elif result.msvcversion == 2019:
             MSVC_GEN_VER = "Visual Studio 16 2019"
+        elif result.msvcversion == 2022:
+            MSVC_GEN_VER = "Visual Studio 17 2022"
 
 ## CLEAN #######################################################################
 
@@ -265,12 +271,12 @@ if OS_HOST == "Linux":
         urllib.request.urlretrieve("https://raw.githubusercontent.com/linuxdeploy/linuxdeploy-plugin-gstreamer/master/linuxdeploy-plugin-gstreamer.sh", deploy_dir + "linuxdeploy-plugin-gstreamer.sh")
 
 ## LAV Filters
-## version: 0.75.1
+## version: 0.76.1
 if OS_HOST == "Windows":
-    FILE_lavfilters = "LAVFilters-0.75.1-Installer.exe"
+    FILE_lavfilters = "LAVFilters-0.76.1-Installer.exe"
     if not os.path.exists("src/" + FILE_lavfilters):
         print("> Downloading " + FILE_lavfilters + "...")
-        urllib.request.urlretrieve("https://github.com/Nevcairiel/LAVFilters/releases/download/0.75.1/" + FILE_lavfilters, deploy_dir + FILE_lavfilters)
+        urllib.request.urlretrieve("https://github.com/Nevcairiel/LAVFilters/releases/download/0.76.1/" + FILE_lavfilters, deploy_dir + FILE_lavfilters)
 
 ## EXECUTE #####################################################################
 
