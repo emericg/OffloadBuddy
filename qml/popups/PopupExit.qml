@@ -84,7 +84,7 @@ Popup {
 
         ////////////////
 
-        Row { // rowButtons
+        Row {
             height: Theme.componentHeight*2 + parent.spacing
             anchors.right: parent.right
             anchors.rightMargin: 24

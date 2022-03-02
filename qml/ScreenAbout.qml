@@ -51,7 +51,7 @@ Item {
             text: qsTr("version %1  /  %2  /  built on %3").arg(utilsApp.appVersion()).arg(utilsApp.appBuildMode()).arg(utilsApp.appBuildDate())
             textFormat: Text.PlainText
             font.bold: true
-            font.pixelSize: Theme.fontSizeContentSmall
+            font.pixelSize: Theme.fontSizeComponent
             color: Theme.colorHeaderContent
         }
 
@@ -113,8 +113,7 @@ Item {
                 anchors.right: parent.right
                 spacing: 24
 
-                Image {
-                    //id: imageLogo
+                Image { // logo
                     width: 220
                     height: 160
                     sourceSize.width: 220
@@ -129,25 +128,22 @@ Item {
                     width: parent.width - 220 - 24
                     spacing: 16
 
-                    TextArea {
+                    Text {
                         width: parent.width
-                        //anchors.margins: -8
-                        leftPadding: 0
 
-                        readOnly: true
                         wrapMode: Text.WordWrap
                         font.pixelSize: Theme.fontSizeContentBig
                         color: Theme.colorText
                         text: qsTr("OffloadBuddy is a multimedia offloading software with a few tricks up his sleeve!\n" +
                                    "It's designed to remove the hassle of handling and transferring the many videos and pictures file from your devices like action cameras, regular cameras and smartphones...")
+                        textFormat: Text.PlainText
                     }
 
                     Row {
-                        id: buttonArea
                         height: 40
                         spacing: 24
 
-                        ButtonWireframeIcon {
+                        ButtonWireframeIconCentered {
                             width: 180
                             anchors.verticalCenter: parent.verticalCenter
 
@@ -161,7 +157,7 @@ Item {
                             onClicked: Qt.openUrlExternally("https://emeric.io/OffloadBuddy")
                         }
 
-                        ButtonWireframeIcon {
+                        ButtonWireframeIconCentered {
                             width: 180
                             anchors.verticalCenter: parent.verticalCenter
 
@@ -174,7 +170,7 @@ Item {
                             onClicked: Qt.openUrlExternally("https://www.github.com/emericg/OffloadBuddy/discussions")
                         }
 
-                        ButtonWireframeIcon {
+                        ButtonWireframeIconCentered {
                             width: 180
                             anchors.verticalCenter: parent.verticalCenter
 
@@ -204,20 +200,18 @@ Item {
 
             ////////
 
-            TextArea {
+            Text {
                 anchors.left: parent.left
-                anchors.leftMargin: -8
                 anchors.right: parent.right
-                anchors.rightMargin: -8
 
-                readOnly: true
-                wrapMode: Text.WordWrap
-                font.pixelSize: Theme.fontSizeContentBig
-                color: Theme.colorText
                 text: qsTr("✔ Import data from SD cards, mass storage or MTP devices\n  - Copy, merge or reencode media\n  - Consult and export shots metadata\n  - Organize your media library\n" +
                            "✔ Create clips or extract photos from your videos\n" +
                            "✔ Assemble photo timelapses into videos\n" +
                            "✔ GoPro firmware updates")
+                textFormat: Text.PlainText
+                font.pixelSize: Theme.fontSizeContentBig
+                wrapMode: Text.WordWrap
+                color: Theme.colorText
             }
 
             ////////
@@ -247,6 +241,7 @@ Item {
 
                     color: Theme.colorText
                     text: qsTr("This application is made possible thanks to a couple of third party open source projects:")
+                    textFormat: Text.PlainText
                     wrapMode: Text.WordWrap
                     font.pixelSize: Theme.fontSizeContentBig
                 }
@@ -258,6 +253,7 @@ Item {
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
                         text: "⦁ Qt"
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContentBig
                     }
@@ -280,6 +276,7 @@ Item {
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
                         text: "⦁ ffmpeg"
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContentBig
                     }
@@ -302,6 +299,7 @@ Item {
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
                         text: "⦁ minivideo"
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContentBig
                     }
@@ -324,6 +322,7 @@ Item {
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
                         text: "⦁ libexif"
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContentBig
                     }
@@ -346,6 +345,7 @@ Item {
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
                         text: "⦁ libmtp"
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContentBig
                     }
@@ -368,6 +368,7 @@ Item {
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
                         text: "⦁ miniz"
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContentBig
                     }
@@ -390,6 +391,7 @@ Item {
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
                         text: "⦁ SingleApplication"
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContentBig
                     }
@@ -412,6 +414,7 @@ Item {
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
                         text: "⦁ Google Material Icons"
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContentBig
                     }

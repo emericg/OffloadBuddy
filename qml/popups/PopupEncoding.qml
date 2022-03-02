@@ -332,8 +332,7 @@ Popup {
 
     contentItem: Column {
 
-        Rectangle {
-            id: titleArea
+        Rectangle { // titleArea
             anchors.left: parent.left
             anchors.right: parent.right
 
@@ -1534,14 +1533,12 @@ Popup {
         ////////////////////////////////////////////////////////////////////////
 
         Row {
-            id: rowButtons
             height: Theme.componentHeight*2 + parent.spacing
             anchors.right: parent.right
             anchors.rightMargin: 24
             spacing: 24
 
             ButtonWireframe {
-                id: buttonCancel
                 width: 96
                 anchors.verticalCenter: parent.verticalCenter
 
@@ -1552,7 +1549,6 @@ Popup {
             }
 
             ButtonWireframeIcon {
-                id: buttonEncode
                 width: 128
                 anchors.verticalCenter: parent.verticalCenter
 

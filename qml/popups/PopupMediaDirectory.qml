@@ -39,8 +39,7 @@ Popup {
 
     contentItem: Column {
 
-        Rectangle {
-            id: titleArea
+        Rectangle { // titleArea
             anchors.left: parent.left
             anchors.right: parent.right
 
@@ -96,8 +95,7 @@ Popup {
 
         ////////////////
 
-        Item {
-            id: contentArea
+        Item { // contentArea
             height: columnSettings.height
             anchors.left: parent.left
             anchors.right: parent.right
@@ -338,14 +336,12 @@ Popup {
         //////////////////
 
         Row {
-            id: rowButtons
             height: Theme.componentHeight*2 + parent.spacing
             anchors.right: parent.right
             anchors.rightMargin: 24
             spacing: 24
 
             ButtonWireframeIcon {
-                id: buttonUpdate
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("OK")
