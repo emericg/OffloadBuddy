@@ -110,6 +110,7 @@ Popup {
                 onClicked: {
                     popupExit.confirmed()
                     popupExit.close()
+                    Qt.quit()
                 }
             }
         }

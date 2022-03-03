@@ -466,17 +466,22 @@ Item {
                 height: columnMedia.height
                 color: storageManager.directoriesCount ? "transparent" : Theme.colorForeground
 
-                FileDialog {
-                    id: fileDialogAdd
-                    title: qsTr("Please choose a media directory!")
-                    sidebarVisible: true
-                    selectExisting: true
-                    selectMultiple: false
-                    selectFolder: true
-                    folder: shortcuts.home
+                Loader {
+                    id: fileDialogLoader
 
-                    onAccepted: {
-                        storageManager.addDirectory(UtilsPath.cleanUrl(fileDialogAdd.fileUrl))
+                    active: false
+                    asynchronous: false
+                    sourceComponent: FileDialog {
+                        title: qsTr("Please choose a media directory!")
+                        sidebarVisible: true
+                        selectExisting: true
+                        selectMultiple: false
+                        selectFolder: true
+                        folder: shortcuts.home
+
+                        onAccepted: {
+                            storageManager.addDirectory(UtilsPath.cleanUrl(fileUrl))
+                        }
                     }
                 }
 
@@ -511,7 +516,10 @@ Item {
                             source: "qrc:/assets/icons_material/outline-create_new_folder-24px.svg"
                             tooltipText: qsTr("Add a new media directory")
                             tooltipPosition: "right"
-                            onClicked: fileDialogAdd.open()
+                            onClicked: {
+                                fileDialogLoader.active = true
+                                fileDialogLoader.item.open()
+                            }
                         }
                     }
 
@@ -596,7 +604,10 @@ Item {
 
                             fullColor: true
                             text: qsTr("Add a new one")
-                            onClicked: fileDialogAdd.open()
+                            onClicked:  {
+                                fileDialogLoader.active = true
+                                fileDialogLoader.item.open()
+                            }
                             source: "qrc:/assets/icons_material/baseline-add-24px.svg"
                         }
                     }

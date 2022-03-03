@@ -22,6 +22,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Window 2.15
+
 import QtGraphicalEffects 1.15 // Qt5
 //import Qt5Compat.GraphicalEffects // Qt6
 
@@ -82,7 +83,23 @@ ApplicationWindow {
     Component.onCompleted: {
         mediaLibrary.searchMediaDirectories()
         deviceManager.searchDevices()
+        appWindow.visible = true
     }
+
+    // Handle device disconnection
+    Connections {
+        target: deviceManager
+        signal deviceRemoved(var devicePtr)
+        onDeviceRemoved: {
+            //console.log("deviceRemoved(" + devicePtr + ") and currentDevice(" + screenDevice.currentDevice + ")")
+            if (appContent.state === "device")
+                if (typeof devicePtr !== "undefined")
+                    if (devicePtr === screenDevice.currentDevice)
+                        appContent.state = "library"
+        }
+    }
+
+    // Events handling /////////////////////////////////////////////////////////
 /*
     Shortcut {
         sequences: [StandardKey.Back, StandardKey.Backspace]
@@ -127,19 +144,6 @@ ApplicationWindow {
         onActivated: utilsApp.appExit()
     }
 
-    // Handle device disconnection
-    Connections {
-        target: deviceManager
-        signal deviceRemoved(var devicePtr)
-        onDeviceRemoved: {
-            //console.log("deviceRemoved(" + devicePtr + ") and currentDevice(" + screenDevice.currentDevice + ")")
-            if (appContent.state === "device")
-                if (typeof devicePtr !== "undefined")
-                    if (devicePtr === screenDevice.currentDevice)
-                        appContent.state = "library"
-        }
-    }
-
     // Menubar /////////////////////////////////////////////////////////////////
 /*
     menuBar: MenuBar {
@@ -148,151 +152,163 @@ ApplicationWindow {
             title: qsTr("File")
             MenuItem {
                 text: qsTr("Do nothing")
-                onTriggered: console.log("Do nothing action triggered");
+                onTriggered: console.log("Do nothing action triggered")
             }
             MenuItem {
                 text: qsTr("&Exit")
-                onTriggered: Qt.quit();
+                onTriggered: Qt.quit()
             }
         }
     }
 */
     // Content /////////////////////////////////////////////////////////////////
 
-    Rectangle {
-        id: appBg
+    Loader {
+        id: appLoader
         anchors.fill: parent
 
-        color: Theme.colorBackground
-        border.color: Theme.colorSeparator
-        border.width: settingsManager.appThemeCSD ? 1 : 0
-
-        Sidebar {
-            id: appSidebar
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.bottom: parent.bottom
+        onStatusChanged: {
+            if (appLoader.status === Loader.Ready) {
+                appSplashLoader.item.fadeout()
+            }
         }
 
-        Item {
-            id: appContent
+        asynchronous: true
+        sourceComponent: Rectangle {
+            id: appBg
+            anchors.fill: parent
 
-            anchors.top: parent.top
-            anchors.left: appSidebar.right
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
+            color: Theme.colorBackground
+            border.color: Theme.colorSeparator
+            border.width: settingsManager.appThemeCSD ? 1 : 0
 
-            ScreenLibrary {
-                anchors.fill: parent
-                id: screenLibrary
-            }
-            ScreenDevice {
-                anchors.fill: parent
-                id: screenDevice
-            }
-            ScreenJobs {
-                anchors.fill: parent
-                id: screenJobs
-            }
-            ScreenSettings {
-                anchors.fill: parent
-                id: screenSettings
-            }
-            ScreenAbout {
-                anchors.fill: parent
-                id: screenAbout
+            Sidebar {
+                id: appSidebar
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.bottom: parent.bottom
             }
 
-            onStateChanged: {
-                screenLibrary.updateFocus()
-                screenDevice.updateFocus()
-            }
+            Item {
+                id: appContent
 
-            state: "library"
-            states: [
-                State {
-                    name: "library"
-                    PropertyChanges { target: screenLibrary; visible: true; }
-                    PropertyChanges { target: screenDevice; visible: false; }
-                    PropertyChanges { target: screenJobs; visible: false; }
-                    PropertyChanges { target: screenSettings; visible: false; }
-                    PropertyChanges { target: screenAbout; visible: false; }
-                },
-                State {
-                    name: "device"
-                    PropertyChanges { target: screenLibrary; visible: false; }
-                    PropertyChanges { target: screenDevice; visible: true; }
-                    PropertyChanges { target: screenJobs; visible: false; }
-                    PropertyChanges { target: screenSettings; visible: false; }
-                    PropertyChanges { target: screenAbout; visible: false; }
-                },
-                State {
-                    name: "jobs"
-                    PropertyChanges { target: screenLibrary; visible: false; }
-                    PropertyChanges { target: screenDevice; visible: false; }
-                    PropertyChanges { target: screenJobs; visible: true; }
-                    PropertyChanges { target: screenSettings; visible: false; }
-                    PropertyChanges { target: screenAbout; visible: false; }
-                },
-                State {
-                    name: "settings"
-                    PropertyChanges { target: screenLibrary; visible: false; }
-                    PropertyChanges { target: screenDevice; visible: false; }
-                    PropertyChanges { target: screenJobs; visible: false; }
-                    PropertyChanges { target: screenSettings; visible: true; }
-                    PropertyChanges { target: screenAbout; visible: false; }
-                },
-                State {
-                    name: "about"
-                    PropertyChanges { target: screenLibrary; visible: false; }
-                    PropertyChanges { target: screenDevice; visible: false; }
-                    PropertyChanges { target: screenJobs; visible: false; }
-                    PropertyChanges { target: screenSettings; visible: false; }
-                    PropertyChanges { target: screenAbout; visible: true; }
-                },
-                State {
-                    name: "components"
-                    PropertyChanges { target: screenLibrary; visible: false; }
-                    PropertyChanges { target: screenDevice; visible: false; }
-                    PropertyChanges { target: screenJobs; visible: false; }
-                    PropertyChanges { target: screenSettings; visible: false; }
-                    PropertyChanges { target: screenAbout; visible: false; }
+                anchors.top: parent.top
+                anchors.left: appSidebar.right
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+
+                ScreenLibrary {
+                    anchors.fill: parent
+                    id: screenLibrary
                 }
-            ]
-        }
+                ScreenDevice {
+                    anchors.fill: parent
+                    id: screenDevice
+                }
+                ScreenJobs {
+                    anchors.fill: parent
+                    id: screenJobs
+                }
+                ScreenSettings {
+                    anchors.fill: parent
+                    id: screenSettings
+                }
+                ScreenAbout {
+                    anchors.fill: parent
+                    id: screenAbout
+                }
 
-        layer.enabled: (settingsManager.appThemeCSD && Qt.platform.os !== "windows")
-        layer.effect: OpacityMask {
-            maskSource: Rectangle {
-                x: appBg.x
-                y: appBg.y
-                width: appBg.width
-                height: appBg.height
-                radius: 10
+                onStateChanged: {
+                    screenLibrary.updateFocus()
+                    screenDevice.updateFocus()
+                }
 
-                DragHandler {
-                    // Resize the window without a compositor bar // Qt 5.15+
-                    // Drag on the sidebar to drag the whole window // Qt 5.15+
-                    // Also, prevent clicks below this area
-                    id: windowHandler2
-                    grabPermissions: TapHandler.TakeOverForbidden
-                    target: null
-                    onActiveChanged: if (active) {
-                        var grabSize = 32
+                state: "library"
+                states: [
+                    State {
+                        name: "library"
+                        PropertyChanges { target: screenLibrary; visible: true; }
+                        PropertyChanges { target: screenDevice; visible: false; }
+                        PropertyChanges { target: screenJobs; visible: false; }
+                        PropertyChanges { target: screenSettings; visible: false; }
+                        PropertyChanges { target: screenAbout; visible: false; }
+                    },
+                    State {
+                        name: "device"
+                        PropertyChanges { target: screenLibrary; visible: false; }
+                        PropertyChanges { target: screenDevice; visible: true; }
+                        PropertyChanges { target: screenJobs; visible: false; }
+                        PropertyChanges { target: screenSettings; visible: false; }
+                        PropertyChanges { target: screenAbout; visible: false; }
+                    },
+                    State {
+                        name: "jobs"
+                        PropertyChanges { target: screenLibrary; visible: false; }
+                        PropertyChanges { target: screenDevice; visible: false; }
+                        PropertyChanges { target: screenJobs; visible: true; }
+                        PropertyChanges { target: screenSettings; visible: false; }
+                        PropertyChanges { target: screenAbout; visible: false; }
+                    },
+                    State {
+                        name: "settings"
+                        PropertyChanges { target: screenLibrary; visible: false; }
+                        PropertyChanges { target: screenDevice; visible: false; }
+                        PropertyChanges { target: screenJobs; visible: false; }
+                        PropertyChanges { target: screenSettings; visible: true; }
+                        PropertyChanges { target: screenAbout; visible: false; }
+                    },
+                    State {
+                        name: "about"
+                        PropertyChanges { target: screenLibrary; visible: false; }
+                        PropertyChanges { target: screenDevice; visible: false; }
+                        PropertyChanges { target: screenJobs; visible: false; }
+                        PropertyChanges { target: screenSettings; visible: false; }
+                        PropertyChanges { target: screenAbout; visible: true; }
+                    },
+                    State {
+                        name: "components"
+                        PropertyChanges { target: screenLibrary; visible: false; }
+                        PropertyChanges { target: screenDevice; visible: false; }
+                        PropertyChanges { target: screenJobs; visible: false; }
+                        PropertyChanges { target: screenSettings; visible: false; }
+                        PropertyChanges { target: screenAbout; visible: false; }
+                    }
+                ]
+            }
 
-                        const p = windowHandler2.centroid.position
-                        let e = 0
-                        if (p.x < grabSize) e |= Qt.LeftEdge
-                        if (p.x >= width - grabSize) e |= Qt.RightEdge
-                        if (p.y < grabSize) e |= Qt.TopEdge
-                        if (p.y >= height - grabSize) e |= Qt.BottomEdge
+            layer.enabled: (settingsManager.appThemeCSD && Qt.platform.os !== "windows")
+            layer.effect: OpacityMask {
+                maskSource: Rectangle {
+                    x: appBg.x
+                    y: appBg.y
+                    width: appBg.width
+                    height: appBg.height
+                    radius: 10
 
-                        if (e) {
-                            if (!appWindow.startSystemResize(e)) {
-                                // your fallback code for setting window.width/height manually
+                    DragHandler {
+                        // Resize the window without a compositor bar // Qt 5.15+
+                        // Drag on the sidebar to drag the whole window // Qt 5.15+
+                        // Also, prevent clicks below this area
+                        id: windowHandler2
+                        grabPermissions: TapHandler.TakeOverForbidden
+                        target: null
+                        onActiveChanged: if (active) {
+                            var grabSize = 32
+
+                            const p = windowHandler2.centroid.position
+                            let e = 0
+                            if (p.x < grabSize) e |= Qt.LeftEdge
+                            if (p.x >= width - grabSize) e |= Qt.RightEdge
+                            if (p.y < grabSize) e |= Qt.TopEdge
+                            if (p.y >= height - grabSize) e |= Qt.BottomEdge
+
+                            if (e) {
+                                if (!appWindow.startSystemResize(e)) {
+                                    // your fallback code for setting window.width/height manually
+                                }
+                            } else {
+                                appWindow.startSystemMove()
                             }
-                        } else {
-                            appWindow.startSystemMove()
                         }
                     }
                 }
@@ -300,16 +316,60 @@ ApplicationWindow {
         }
     }
 
+    // Loading screen //////////////////////////////////////////////////////////
+
+    Loader {
+        id: appSplashLoader
+        anchors.fill: parent
+
+        asynchronous: false
+        sourceComponent: Rectangle {
+            id: appSplash
+            anchors.centerIn: parent
+            color: Theme.colorBackground
+
+            function fadeout() {
+                appSplash.width = 0
+                appSplashImage.opacity = 0
+                ttt.start()
+            }
+            Timer {
+                id: ttt
+                interval: 1000
+                running: false
+                repeat: false
+                onTriggered: {
+                    appSplashLoader.sourceComponent = undefined
+                }
+            }
+
+            width: appSplashLoader.width*2
+            height: width
+            radius: width
+            Behavior on width { NumberAnimation { duration: 666; } }
+
+            Image {
+                id: appSplashImage
+                anchors.centerIn: parent
+                width: 256
+                height: 256
+                source: "qrc:/appicons/offloadbuddy.svg"
+                sourceSize: Qt.size(width, height)
+
+                Behavior on opacity { OpacityAnimator { duration: 666; } }
+            }
+        }
+    }
+
     // Exit ////////////////////////////////////////////////////////////////////
 
-    PopupExit {
-        id: popupExit
-        onConfirmed: Qt.quit()
-    }
     onClosing: {
         // If a job is running, ask user to confirm exit
         if (jobManager.workingJobCount > 0) {
-            close.accepted = false;
+            close.accepted = false
+
+            var popupComponent = Qt.createComponent("qrc:/qml/popupExit.qml")
+            var popupExit = popupComponent.createObject(appWindow, { "parent": appWindow })
             popupExit.open()
         }
     }

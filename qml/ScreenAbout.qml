@@ -52,7 +52,7 @@ Item {
             textFormat: Text.PlainText
             font.bold: true
             font.pixelSize: Theme.fontSizeComponent
-            color: Theme.colorHeaderContent
+            color: Theme.colorSubText
         }
 
         ////////

@@ -13,8 +13,6 @@ Item {
 
     property var directory: null
 
-    PopupMediaDirectory { id: popupMediaDirectory }
-
     ////////////////
 
     FolderInputArea {
@@ -256,7 +254,11 @@ Item {
             source: "qrc:/assets/icons_material/baseline-settings_applications-24px.svg"
             sourceSize: 32
 
-            onClicked: popupMediaDirectory.open()
+            onClicked: {
+                var popupComponent = Qt.createComponent("qrc:/qml/PopupMediaDirectory.qml")
+                var popupMediaDirectory = popupComponent.createObject(appWindow, { "parent": appWindow });
+                popupMediaDirectory.open()
+            }
         }
 
         RoundButtonIcon {

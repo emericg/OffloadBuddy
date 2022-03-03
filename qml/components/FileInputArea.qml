@@ -1,32 +1,32 @@
 import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick.Controls.impl 2.15
+import QtQuick.Templates 2.15 as T
+
 import QtQuick.Dialogs 1.3 // Qt5
 import QtGraphicalEffects 1.15 // Qt5
+
+//import QtQuick.Dialogs // Qt6
 //import Qt5Compat.GraphicalEffects // Qt6
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsPath.js" as UtilsPath
 
-TextField {
+T.TextField {
     id: control
-    implicitWidth: 128
-    implicitHeight: Theme.componentHeight
 
-    property string colorText: Theme.colorComponentText
-    property string colorPlaceholderText: Theme.colorSubText
-    property string colorBorder: Theme.colorComponentBorder
-    property string colorBackground: Theme.colorComponentBackground
+    implicitWidth: implicitBackgroundWidth + leftInset + rightInset
+                   || Math.max(contentWidth, placeholder.implicitWidth) + leftPadding + rightPadding
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             contentHeight + topPadding + bottomPadding,
+                             placeholder.implicitHeight + topPadding + bottomPadding)
 
-    property int buttonWidth: (buttonChange.visible ? buttonChange.width : 0)
+    clip: false
+    padding: 12
+    leftPadding: padding + 4
 
-    ////////////////////////////////////////////////////////////////////////////
-
-    property alias folder: control.text
-    property alias file: fileArea.text
-    property alias extension: extensionArea.text
-
-    property string path: folder + file + "." + extension
-    property bool isValid: (control.text.length > 0 && fileArea.text.length > 0 && extensionArea.text.length > 0)
+    text: ""
+    color: colorText
+    font.pixelSize: Theme.fontSizeComponent
 
     placeholderText: ""
     placeholderTextColor: colorPlaceholderText
@@ -35,80 +35,90 @@ TextField {
     selectionColor: Theme.colorPrimary
     selectedTextColor: "white"
 
-    clip: true
+    onEditingFinished: focus = false
 
-    color: enabled ? colorText : colorPlaceholderText
-    font.pixelSize: Theme.fontSizeComponent
+    property alias folder: control.text
+    property alias file: fileArea.text
+    property alias extension: extensionArea.text
+    property string path: folder + file + "." + extension
+    property bool isValid: (control.text.length > 0 && fileArea.text.length > 0 && extensionArea.text.length > 0)
 
-    onTextChanged: {
-        //
-    }
-    onEditingFinished: {
-        focus = false
-    }
+    // settings
+    property int buttonWidth: (buttonChange.visible ? buttonChange.width : 0)
+
+    // colors
+    property string colorText: Theme.colorComponentText
+    property string colorPlaceholderText: Theme.colorSubText
+    property string colorBorder: Theme.colorComponentBorder
+    property string colorBackground: Theme.colorComponentBackground
+    property string colorSelectedText: Theme.colorHighContrast
+    property string colorSelection: Theme.colorPrimary
 
     ////////////////////////////////////////////////////////////////////////////
 
-    FileDialog {
-        id: fileDialog
-        title: qsTr("Please choose a file!")
-        sidebarVisible: true
-        selectExisting: true
-        selectMultiple: false
-        selectFolder: true
+    Loader {
+        id: fileDialogLoader
 
-        onAccepted: {
-            //console.log("fileDialog URL: " + fileUrl)
+        active: false
+        asynchronous: false
+        sourceComponent: FileDialog {
+            title: qsTr("Please choose a file!")
+            sidebarVisible: true
+            selectExisting: false
+            selectMultiple: false
+            selectFolder: false
 
-            var f = UtilsPath.cleanUrl(fileUrl)
-            if (f.slice(0, -1) !== "/") f += "/"
+            folder: control.text
 
-            control.text = f
+            onAccepted: {
+                //console.log("fileDialog URL: " + fileUrl)
+
+                var f = UtilsPath.cleanUrl(fileUrl)
+                if (f.slice(0, -1) !== "/") f += "/"
+
+                control.text = f
+            }
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////
 
-    background: Rectangle {
-        color: colorBackground
-        radius: Theme.componentRadius
+    PlaceholderText {
+        id: placeholder
+        x: control.leftPadding
+        y: control.topPadding
+        width: control.width - (control.leftPadding + control.rightPadding)
+        height: control.height - (control.topPadding + control.bottomPadding)
 
-        Button {
+        text: control.placeholderText
+        font: control.font
+        color: control.placeholderTextColor
+        verticalAlignment: control.verticalAlignment
+        visible: !control.length && !control.preeditText && (!control.activeFocus || control.horizontalAlignment !== Qt.AlignHCenter)
+        elide: Text.ElideRight
+        renderType: control.renderType
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    background: Rectangle {
+        implicitWidth: 256
+        implicitHeight: Theme.componentHeight
+
+        radius: Theme.componentRadius
+        color: control.colorBackground
+
+        ButtonThemed {
             id: buttonChange
             anchors.right: parent.right
-            width: contentText.contentWidth + (contentText.contentWidth / 2)
-            height: Theme.componentHeight
 
+            height: control.height
             visible: control.enabled
-            focusPolicy: Qt.NoFocus
-            font.pixelSize: Theme.fontSizeComponent
+            text: qsTr("change")
 
             onClicked: {
-                //fileDialog.folder =  "file:///" + control.text
-                fileDialog.folder = control.text
-                fileDialog.open()
-            }
-
-            background: Rectangle {
-                radius: Theme.componentRadius
-                //opacity: enabled ? 1 : 0.33
-                color: buttonChange.down ? Theme.colorComponentDown : Theme.colorComponent
-            }
-
-            contentItem: Text {
-                id: contentText
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.horizontalCenter: parent.horizontalCenter
-
-                text: qsTr("change")
-                textFormat: Text.PlainText
-                font: buttonChange.font
-                elide: Text.ElideRight
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-
-                //opacity: enabled ? 1.0 : 0.33
-                color: buttonChange.down ? Theme.colorComponentContent : Theme.colorComponentContent
+                fileDialogLoader.active = true
+                fileDialogLoader.item.open()
             }
         }
 
@@ -117,7 +127,7 @@ TextField {
             color: "transparent"
             radius: Theme.componentRadius
             border.width: 2
-            border.color: (control.activeFocus || fileArea.activeFocus) ? Theme.colorPrimary : colorBorder
+            border.color: (control.activeFocus || fileArea.activeFocus) ? Theme.colorPrimary : control.colorBorder
         }
 
         layer.enabled: false
