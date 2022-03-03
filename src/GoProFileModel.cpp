@@ -44,7 +44,7 @@ bool parseGoProVersionFile(const QString &path, gopro_device_infos &infos)
             if (!line.isEmpty())
             {
                 if (line.startsWith(',')) line.remove(0, 1); // HERO10+ hack
-                if (line.endsWith(',')) line.remove(0, 1);   // HERO9- hack
+                if (line.endsWith(',')) line.remove(-1, 1);   // HERO9- hack
 
                 QStringList kv = line.split(':');
                 if (kv.size() == 2)

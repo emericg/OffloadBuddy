@@ -20,13 +20,13 @@ Loader {
             sourceComponent = componentDeviceInfos
         }
 
-        if (screenDeviceInfos.item) screenMedia.item.loadScreen()
+        if (screenDeviceInfos.item) screenDeviceInfos.item.loadScreen()
         screenDevice.state = "stateDeviceInfos"
     }
 
     function restoreState() {
         if (typeof currentDevice === "undefined" || !currentDevice) return
-        if (screenDeviceInfos.item) screenMedia.item.restoreState()
+        if (screenDeviceInfos.item) screenDeviceInfos.item.restoreState()
         //console.log("screenDeviceInfos.restoreState()")
     }
 
