@@ -35,12 +35,10 @@ Loader {
     Component {
         id: componentDeviceInfos
 
-        Rectangle {
+        Item {
             id: deviceInfos
-            width: 1280
-            height: 720
-
-            color: Theme.colorHeader
+            implicitWidth: 1280
+            implicitHeight: 720
 
             ////////////////////////////////////////////////////////////////////////////
 
@@ -125,6 +123,38 @@ Loader {
                     minimumPixelSize: 22
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
+                }
+
+                ////////
+
+                CsdWindows { }
+
+                CsdLinux { }
+
+                ////////
+
+                Rectangle { // separator
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+
+                    height: 2
+                    opacity: 0.1
+                    color: Theme.colorHeaderContent
+                }
+            }
+            Rectangle { // shadow
+                anchors.top: rectangleHeader.bottom
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                height: 8
+                opacity: 0.66
+
+                gradient: Gradient {
+                    orientation: Gradient.Vertical
+                    GradientStop { position: 0.0; color: Theme.colorHeaderHighlight; }
+                    GradientStop { position: 1.0; color: Theme.colorBackground; }
                 }
             }
 
