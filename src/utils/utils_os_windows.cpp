@@ -1,5 +1,5 @@
 /*!
- * COPYRIGHT (C) 2020 Emeric Grange - All Rights Reserved
+ * COPYRIGHT (C) 2022 Emeric Grange - All Rights Reserved
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,18 +20,14 @@
 
 #include "utils_os_windows.h"
 
-#ifdef Q_OS_WINDOWS
+#if defined(Q_OS_WINDOWS)
 
 #include <windows.h>
 #include <QDebug>
 
 /* ************************************************************************** */
 
-/*!
- * \brief UtilsWindows::keepScreenOn
- * \param on
- */
-void UtilsWindows::keepScreenOn(bool on)
+void UtilsWindows::screenKeepOn(bool on)
 {
     // ES_DISPLAY_REQUIRED prevents display sleep?
     // ES_SYSTEM_REQUIRED prevents idle sleep
@@ -48,7 +44,7 @@ void UtilsWindows::keepScreenOn(bool on)
 
     if (result == NULL)
     {
-        qDebug() << "keepScreenOn() failed";
+        qWarning() << "screenKeepOn() failed";
     }
 }
 

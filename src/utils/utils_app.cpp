@@ -1,5 +1,5 @@
 /*!
- * COPYRIGHT (C) 2020 Emeric Grange - All Rights Reserved
+ * COPYRIGHT (C) 2022 Emeric Grange - All Rights Reserved
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,16 +20,16 @@
 
 #include "utils_app.h"
 
-#if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
-#include "utils_android.h"
-#include "utils_ios.h"
+#if defined(Q_OS_ANDROID)
+#include "utils_os_android.h"
+#elif defined(Q_OS_IOS)
+#include "utils_os_ios.h"
 #endif
 
 #include <cmath>
 
 #include <QDir>
 #include <QSize>
-
 #include <QCoreApplication>
 #include <QStandardPaths>
 #include <QDesktopServices>
@@ -126,7 +126,7 @@ void UtilsApp::setAppPath(const QString &value)
 void UtilsApp::vibrate(int ms)
 {
 #if defined(Q_OS_ANDROID)
-    return android_vibrate(ms);
+    return UtilsAndroid::vibrate(ms);
 #else
     Q_UNUSED(ms)
 #endif
@@ -180,10 +180,6 @@ QUrl UtilsApp::getStandardPath_url(const QString &type)
 
 QString UtilsApp::getStandardPath_string(const QString &type)
 {
-#if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
-    android_ask_storage_read_permission();
-#endif
-
     QString path;
     QStringList paths;
 
@@ -196,7 +192,7 @@ QString UtilsApp::getStandardPath_string(const QString &type)
     else
     {
 #if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
-        paths = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
+        paths = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation); // DEPRECATED
 #else
         paths = QStandardPaths::standardLocations(QStandardPaths::HomeLocation);
 #endif
@@ -212,8 +208,8 @@ QString UtilsApp::getStandardPath_string(const QString &type)
 
 bool UtilsApp::checkMobileLocationPermission()
 {
-#if defined (Q_OS_ANDROID)
-    return android_check_location_permission();
+#if defined(Q_OS_ANDROID)
+    return UtilsAndroid::checkPermission_location();
 #elif defined(Q_OS_IOS)
     return false;
 #else
@@ -223,8 +219,30 @@ bool UtilsApp::checkMobileLocationPermission()
 
 bool UtilsApp::getMobileLocationPermission()
 {
-#if defined (Q_OS_ANDROID)
-    return android_ask_location_permission();
+#if defined(Q_OS_ANDROID)
+    return UtilsAndroid::getPermission_location();
+#elif defined(Q_OS_IOS)
+    return false;
+#else
+    return true;
+#endif
+}
+
+bool UtilsApp::checkMobileBleLocationPermission()
+{
+#if defined(Q_OS_ANDROID)
+    return UtilsAndroid::checkPermission_location_ble();
+#elif defined(Q_OS_IOS)
+    return false;
+#else
+    return true;
+#endif
+}
+
+bool UtilsApp::getMobileBleLocationPermission()
+{
+#if defined(Q_OS_ANDROID)
+    return UtilsAndroid::getPermission_location_ble();
 #elif defined(Q_OS_IOS)
     return false;
 #else
@@ -235,7 +253,7 @@ bool UtilsApp::getMobileLocationPermission()
 bool UtilsApp::checkMobileStoragePermissions()
 {
 #if defined(Q_OS_ANDROID)
-    return android_check_storage_permissions();
+    return UtilsAndroid::checkPermissions_storage();
 #elif defined(Q_OS_IOS)
     return false;
 #else
@@ -246,7 +264,7 @@ bool UtilsApp::checkMobileStoragePermissions()
 bool UtilsApp::getMobileStoragePermissions()
 {
 #if defined(Q_OS_ANDROID)
-    return android_ask_storage_permissions();
+    return UtilsAndroid::getPermissions_storage();
 #elif defined(Q_OS_IOS)
     return false;
 #else
@@ -257,7 +275,7 @@ bool UtilsApp::getMobileStoragePermissions()
 bool UtilsApp::checkMobileStorageReadPermission()
 {
 #if defined(Q_OS_ANDROID)
-    return android_check_storage_read_permission();
+    return UtilsAndroid::checkPermission_storage_read();
 #elif defined(Q_OS_IOS)
     return false;
 #else
@@ -268,7 +286,7 @@ bool UtilsApp::checkMobileStorageReadPermission()
 bool UtilsApp::getMobileStorageReadPermission()
 {
 #if defined(Q_OS_ANDROID)
-    return android_ask_storage_read_permission();
+    return UtilsAndroid::getPermission_storage_read();
 #elif defined(Q_OS_IOS)
     return false;
 #else
@@ -279,7 +297,7 @@ bool UtilsApp::getMobileStorageReadPermission()
 bool UtilsApp::checkMobileStorageWritePermission()
 {
 #if defined(Q_OS_ANDROID)
-    return android_check_storage_write_permission();
+    return UtilsAndroid::checkPermission_storage_write();
 #elif defined(Q_OS_IOS)
     return false;
 #else
@@ -290,7 +308,7 @@ bool UtilsApp::checkMobileStorageWritePermission()
 bool UtilsApp::getMobileStorageWritePermission()
 {
 #if defined(Q_OS_ANDROID)
-    return android_ask_storage_write_permission();
+    return UtilsAndroid::getPermission_storage_write();
 #elif defined(Q_OS_IOS)
     return false;
 #else
@@ -301,7 +319,7 @@ bool UtilsApp::getMobileStorageWritePermission()
 bool UtilsApp::checkMobilePhoneStatePermission()
 {
 #if defined(Q_OS_ANDROID)
-    return android_check_phonestate_permission();
+    return UtilsAndroid::checkPermission_phonestate();
 #elif defined(Q_OS_IOS)
     return false;
 #else
@@ -312,7 +330,7 @@ bool UtilsApp::checkMobilePhoneStatePermission()
 bool UtilsApp::getMobilePhoneStatePermission()
 {
 #if defined(Q_OS_ANDROID)
-    return android_ask_phonestate_permission();
+    return UtilsAndroid::getPermission_phonestate();
 #elif defined(Q_OS_IOS)
     return false;
 #else
@@ -322,10 +340,21 @@ bool UtilsApp::getMobilePhoneStatePermission()
 
 /* ************************************************************************** */
 
+bool UtilsApp::isMobileGpsEnabled()
+{
+#if defined(Q_OS_ANDROID)
+    return UtilsAndroid::isGpsEnabled();
+#else
+    return false;
+#endif
+}
+
+/* ************************************************************************** */
+
 QString UtilsApp::getMobileDeviceModel()
 {
 #if defined(Q_OS_ANDROID)
-    return android_get_device_model();
+    return UtilsAndroid::getDeviceModel();
 #elif defined(Q_OS_IOS)
     return QString();
 #else
@@ -336,7 +365,7 @@ QString UtilsApp::getMobileDeviceModel()
 QString UtilsApp::getMobileDeviceSerial()
 {
 #if defined(Q_OS_ANDROID)
-    return android_get_device_serial();
+    return UtilsAndroid::getDeviceSerial();
 #elif defined(Q_OS_IOS)
     return QString();
 #else
@@ -349,7 +378,7 @@ QString UtilsApp::getMobileDeviceSerial()
 int UtilsApp::getMobileStorageCount()
 {
 #if defined(Q_OS_ANDROID)
-    QStringList storages = android_get_storages_by_api();
+    QStringList storages = UtilsAndroid::get_storages_by_api();
     return storages.size();
 #endif
 
@@ -361,7 +390,7 @@ QString UtilsApp::getMobileStorageInternal()
     QString internal;
 
 #if defined(Q_OS_ANDROID)
-    QStringList storages = android_get_storages_by_api();
+    QStringList storages = UtilsAndroid::get_storages_by_api();
 
     if (storages.size() > 0)
         internal = storages.at(0);
@@ -373,7 +402,7 @@ QString UtilsApp::getMobileStorageInternal()
 QString UtilsApp::getMobileStorageExternal(int index)
 {
 #if defined(Q_OS_ANDROID)
-    QStringList storages = android_get_storages_by_api();
+    QStringList storages = UtilsAndroid::get_storages_by_api();
 
     if (storages.size() > index)
         return storages.at(1 + index);
@@ -386,7 +415,7 @@ QString UtilsApp::getMobileStorageExternal(int index)
 QStringList UtilsApp::getMobileStorageExternals()
 {
 #if defined(Q_OS_ANDROID)
-    QStringList storages = android_get_storages_by_api();
+    QStringList storages = UtilsAndroid::get_storages_by_api();
 
     if (storages.size() > 0)
         storages.removeFirst();

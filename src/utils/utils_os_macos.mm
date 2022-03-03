@@ -1,5 +1,5 @@
 /*!
- * COPYRIGHT (C) 2020 Emeric Grange - All Rights Reserved
+ * COPYRIGHT (C) 2022 Emeric Grange - All Rights Reserved
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,20 +20,15 @@
 
 #include "utils_os_macos.h"
 
-#ifdef Q_OS_MACOS
+#if defined(Q_OS_MACOS)
 
 #include <objc/runtime.h>
 #include <IOKit/pwr_mgt/IOPMLib.h>
 
 /* ************************************************************************** */
 
-/*!
- * \brief UtilsMacOS::keepScreenOn
- */
-uint32_t UtilsMacOS::keepScreenOn(const QString &application, const QString &reason)
+uint32_t UtilsMacOS::screenKeepOn(const QString &application, const QString &reason)
 {
-    // https://developer.apple.com/library/archive/qa/qa1340/_index.html
-
     // kIOPMAssertionTypeNoDisplaySleep prevents display sleep
     // kIOPMAssertionTypeNoIdleSleep prevents idle sleep
 
@@ -57,7 +52,7 @@ uint32_t UtilsMacOS::keepScreenOn(const QString &application, const QString &rea
     return 0;
 }
 
-void UtilsMacOS::keepScreenAuto(uint32_t screensaverId)
+void UtilsMacOS::screenKeepAuto(uint32_t screensaverId)
 {
     IOReturn status = IOPMAssertionRelease(screensaverId);
     if (status == kIOReturnSuccess)

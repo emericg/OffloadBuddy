@@ -1,5 +1,5 @@
 /*!
- * COPYRIGHT (C) 2020 Emeric Grange - All Rights Reserved
+ * COPYRIGHT (C) 2022 Emeric Grange - All Rights Reserved
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,12 +20,13 @@
 
 #ifndef UTILS_MACOS_DOCK_H
 #define UTILS_MACOS_DOCK_H
+
+#include <QtGlobal>
+
+#if defined(Q_OS_MACOS)
 /* ************************************************************************** */
 
 #include <QObject>
-#ifdef Q_OS_MACOS
-
-/* ************************************************************************** */
 
 /*!
  * \brief macOS dock click handler
@@ -46,6 +47,6 @@ public:
     static MacOSDockHandler *getInstance();
 };
 
-#endif // Q_OS_MACOS
 /* ************************************************************************** */
+#endif // Q_OS_MACOS
 #endif // UTILS_MACOS_DOCK_H

@@ -1,5 +1,5 @@
 /*!
- * COPYRIGHT (C) 2020 Emeric Grange - All Rights Reserved
+ * COPYRIGHT (C) 2022 Emeric Grange - All Rights Reserved
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 
 #include "utils_os_macosdock.h"
 
-#ifdef Q_OS_MACOS
+#if defined(Q_OS_MACOS)
 
 #include <AppKit/AppKit.h>
 #include <objc/runtime.h>

@@ -1,5 +1,5 @@
 /*!
- * COPYRIGHT (C) 2020 Emeric Grange - All Rights Reserved
+ * COPYRIGHT (C) 2022 Emeric Grange - All Rights Reserved
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -70,8 +70,13 @@ public:
     static Q_INVOKABLE bool checkMobileLocationPermission();
     static Q_INVOKABLE bool getMobileLocationPermission();
 
+    static Q_INVOKABLE bool checkMobileBleLocationPermission();
+    static Q_INVOKABLE bool getMobileBleLocationPermission();
+
     static Q_INVOKABLE bool checkMobilePhoneStatePermission();
     static Q_INVOKABLE bool getMobilePhoneStatePermission();
+
+    static Q_INVOKABLE bool isMobileGpsEnabled();
 
     static Q_INVOKABLE QString getMobileDeviceModel();
     static Q_INVOKABLE QString getMobileDeviceSerial();
