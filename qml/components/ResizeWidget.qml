@@ -65,7 +65,7 @@ Item {
     }
     Connections {
         target: shot
-        userSettingsUpdated: {
+        function userSettingsUpdated() {
             //
         }
     }
@@ -228,7 +228,7 @@ Item {
             property bool isDragging: false
             property var globalMouseOffset
 
-            onPressed: {
+            onPressed: (mouse) => {
                 //console.log("mouseAreaDrag::onPressed()")
 /*
                 var positionInArea = mapToItem(gismo, mouse.x, mouse.y)
@@ -248,7 +248,7 @@ Item {
                 //console.log("mouseAreaDrag::onReleased()")
                 if (mouseAreaDrag.isDragging) mouseAreaDrag.isDragging = false
             }
-            onPositionChanged: {
+            onPositionChanged: (mouse) => {
                 //console.log("mouseAreaDrag::onPositionChanged()")
                 if (mouseAreaDrag.isDragging) {
                     var globalMouse = mapToItem(resizeWidget, mouse.x, mouse.y)
@@ -517,13 +517,13 @@ Item {
             property bool isHovered: false
             property bool isResizing: false
 
-            onPressed: {
+            onPressed: (mouse) => {
                 isResizing = true
                 gismo.initOriginals(mouse.x, mouse.y)
                 gismo.originalMouseOffset = mapToItem(gismo, mouse.x, mouse.y)
             }
             onReleased: isResizing = false
-            onPositionChanged: {
+            onPositionChanged: (mouse) => {
                 if (isResizing) {
                     var globalMouse = mapToItem(resizeWidget, mouse.x, mouse.y)
                     var changeY = globalMouse.y - gismo.originalY - gismo.originalMouseOffset.y
@@ -573,13 +573,13 @@ Item {
             property bool isHovered: false
             property bool isResizing: false
 
-            onPressed: {
+            onPressed: (mouse) => {
                 isResizing = true
                 gismo.initOriginals(mouse.x, mouse.y)
                 gismo.originalMouseOffset = mapToItem(gismo, mouse.x, mouse.y)
             }
             onReleased: isResizing = false
-            onPositionChanged: {
+            onPositionChanged: (mouse) => {
                 if (isResizing) {
                     var globalMouse = mapToItem(resizeWidget, mouse.x, mouse.y)
                     var changeX = globalMouse.x - gismo.originalX - gismo.originalMouseOffset.x
@@ -629,13 +629,13 @@ Item {
             property bool isHovered: false
             property bool isResizing: false
 
-            onPressed: {
+            onPressed: (mouse) => {
                 isResizing = true
                 gismo.initOriginals(mouse.x, mouse.y)
                 gismo.originalMouseOffset = mapToItem(gismo, mouse.x, mouse.y)
             }
             onReleased: isResizing = false
-            onPositionChanged: {
+            onPositionChanged: (mouse) => {
                 if (isResizing) {
                     var globalMouse = mapToItem(resizeWidget, mouse.x, mouse.y)
                     var changeX = globalMouse.x - gismo.originalX - gismo.originalMouseOffset.x
@@ -685,13 +685,13 @@ Item {
             property bool isHovered: false
             property bool isResizing: false
 
-            onPressed: {
+            onPressed: (mouse) => {
                 isResizing = true
                 gismo.initOriginals(mouse.x, mouse.y)
                 gismo.originalMouseOffset = mapToItem(gismo, mouse.x, mouse.y)
             }
             onReleased: isResizing = false
-            onPositionChanged: {
+            onPositionChanged: (mouse) => {
                 if (isResizing) {
                     var globalMouse = mapToItem(resizeWidget, mouse.x, mouse.y)
                     var changeY = globalMouse.y - gismo.originalY - gismo.originalMouseOffset.y
@@ -741,13 +741,13 @@ Item {
             property bool isHovered: false
             property bool isResizing: false
 
-            onPressed: {
+            onPressed: (mouse) => {
                 isResizing = true
                 gismo.initOriginals(mouse.x, mouse.y)
                 gismo.originalMouseOffset = mapToItem(gismo, mouse.x, mouse.y)
             }
             onReleased: isResizing = false
-            onPositionChanged: {
+            onPositionChanged: (mouse) => {
                 if (isResizing) {
                     var globalMouse = mapToItem(resizeWidget, mouse.x, mouse.y)
                     var changeX = globalMouse.x - gismo.originalX - gismo.originalMouseOffset.x
@@ -810,13 +810,13 @@ Item {
             property bool isHovered: false
             property bool isResizing: false
 
-            onPressed: {
+            onPressed: (mouse) => {
                 isResizing = true
                 gismo.initOriginals(mouse.x, mouse.y)
                 gismo.originalMouseOffset = mapToItem(gismo, mouse.x, mouse.y)
             }
             onReleased: isResizing = false
-            onPositionChanged: {
+            onPositionChanged: (mouse) => {
                 if (isResizing) {
                     var globalMouse = mapToItem(resizeWidget, mouse.x, mouse.y)
                     var changeX = globalMouse.x - gismo.originalX - gismo.originalMouseOffset.x
@@ -879,13 +879,13 @@ Item {
             property bool isHovered: false
             property bool isResizing: false
 
-            onPressed: {
+            onPressed: (mouse) => {
                 isResizing = true
                 gismo.initOriginals(mouse.x, mouse.y)
                 gismo.originalMouseOffset = mapToItem(gismo, mouse.x, mouse.y)
             }
             onReleased: isResizing = false
-            onPositionChanged: {
+            onPositionChanged: (mouse) => {
                 if (isResizing) {
                     var globalMouse = mapToItem(resizeWidget, mouse.x, mouse.y)
                     var changeX = globalMouse.x - gismo.originalX - gismo.originalMouseOffset.x
@@ -948,13 +948,13 @@ Item {
             property bool isHovered: false
             property bool isResizing: false
 
-            onPressed: {
+            onPressed: (mouse) => {
                 isResizing = true
                 gismo.initOriginals(mouse.x, mouse.y)
                 gismo.originalMouseOffset = mapToItem(gismo, mouse.x, mouse.y)
             }
             onReleased: isResizing = false
-            onPositionChanged: {
+            onPositionChanged: (mouse) => {
                 if (isResizing) {
                     var globalMouse = mapToItem(resizeWidget, mouse.x, mouse.y)
                     var changeX = globalMouse.x - gismo.originalX - gismo.originalMouseOffset.x

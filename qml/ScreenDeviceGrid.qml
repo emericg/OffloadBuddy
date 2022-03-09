@@ -100,9 +100,9 @@ Item {
 
     Connections {
         target: currentDevice
-        onStateUpdated: updateGridState()
-        onStorageUpdated: updateStorage()
-        onBatteryUpdated: updateBattery()
+        function onStateUpdated() { updateGridState() }
+        function onStorageUpdated() { updateStorage() }
+        function onBatteryUpdated() { updateBattery() }
     }
 
     function restoreState() {
@@ -759,13 +759,13 @@ Item {
 
             Connections {
                 target: settingsManager
-                onThumbFormatChanged: {
+                function onThumbFormatChanged() {
                     if (deviceSavedState) {
                         deviceSavedState.thumbFormat = settingsManager.thumbFormat
                         shotsView.computeCellSize()
                     }
                 }
-                onThumbSizeChanged: {
+                function onThumbSizeChanged() {
                     if (deviceSavedState) {
                         deviceSavedState.thumbSize = settingsManager.thumbSize
                         shotsView.computeCellSize()
@@ -863,7 +863,7 @@ Item {
 
             ////////
 
-            Keys.onPressed: {
+            Keys.onPressed: (event) => {
                 actionMenu.visible = false
 
                 // Composite events

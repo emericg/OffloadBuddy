@@ -408,7 +408,7 @@ Item {
 
     // KEYS HANDLING ///////////////////////////////////////////////////////////
 
-    Keys.onPressed: {
+    Keys.onPressed: (event) => {
         // UI
         if (event.key === Qt.Key_F) {
             event.accepted = true
@@ -505,12 +505,14 @@ Item {
         onPlaying: {
             buttonPlay.source = "qrc:/assets/icons_material/baseline-pause-24px.svg"
             savePosition()
-            utilsScreen.keepScreenOn(true, "OffloadBuddy", qsTr("Playing video"))
+
+            //utilsScreen.keepScreenOn(true, "OffloadBuddy", qsTr("Playing video"))
         }
         onPaused: {
             buttonPlay.source = "qrc:/assets/icons_material/baseline-play_arrow-24px.svg"
             savePosition()
-            utilsScreen.keepScreenOn(false)
+
+            //utilsScreen.keepScreenOn(false)
         }
         onStopped: {
             if (videoPlayer.position >= shot.duration) { // EOF
@@ -525,7 +527,7 @@ Item {
                 //videoOutput.flushMode: LastFrame
             }
 
-            utilsScreen.keepScreenOn(false)
+            //utilsScreen.keepScreenOn(false)
         }
         onPlaylistChanged: {
             //console.log("onPlaylistChanged()")

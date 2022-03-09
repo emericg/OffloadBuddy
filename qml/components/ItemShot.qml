@@ -25,7 +25,7 @@ Rectangle {
 
     Connections {
         target: shot
-        onStateUpdated: handleState()
+        function onStateUpdated() { handleState() }
     }
 
     function handleState() {
@@ -416,7 +416,7 @@ Rectangle {
 
             Connections {
                 target: ThemeEngine
-                onCurrentThemeChanged: canvas.requestPaint()
+                function onCurrentThemeChanged() { canvas.requestPaint() }
             }
 
             onPaint: {
@@ -570,7 +570,7 @@ Rectangle {
                 openShot(mouse)
             }
         }
-        onPressAndHold: {
+        onPressAndHold: (mouse) => {
             if (!shot || typeof shot === "undefined") return
             //console.log("ItemShot::onPressAndHold")
 

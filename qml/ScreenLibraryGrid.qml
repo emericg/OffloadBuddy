@@ -173,7 +173,7 @@ Item {
             Component.onCompleted: comboBox_directories.updateDirectories()
             Connections {
                 target: storageManager
-                onDirectoriesUpdated: comboBox_directories.updateDirectories()
+                function onDirectoriesUpdated() { comboBox_directories.updateDirectories() }
             }
 
             function updateDirectories() {
@@ -556,7 +556,7 @@ Item {
 
             Connections {
                 target: settingsManager
-                onThumbFormatChanged: {
+                function onThumbFormatChanged() {
                     if (settingsManager.thumbFormat === 1)
                         shotsView.cellFormat = 1.0
                     else if (settingsManager.thumbFormat === 2)
@@ -566,7 +566,7 @@ Item {
 
                     shotsView.computeCellSize()
                 }
-                onThumbSizeChanged: {
+                function onThumbSizeChanged() {
                     if (settingsManager.thumbSize === 1)
                         shotsView.cellSizeTarget = 240
                     else if (settingsManager.thumbSize === 2)
@@ -642,7 +642,7 @@ Item {
 
             ////////
 
-            Keys.onPressed: {
+            Keys.onPressed: (event) => {
                 actionMenu.visible = false
 
                 // Composite events

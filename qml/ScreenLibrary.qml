@@ -31,7 +31,7 @@ Item {
     }
 /*
     focus: true
-    Keys.onPressed: {
+    Keys.onPressed: (event) => {
         if (event.key === Qt.Key_Enter) {
             event.accepted = true;
             console.log("Key_Enter in screenlibrary")
@@ -48,7 +48,7 @@ Item {
         propagateComposedEvents: true
         acceptedButtons: Qt.BackButton | Qt.ForwardButton
 
-        onClicked: (mouse)=> {
+        onClicked: (mouse) => {
             if (mouse.button === Qt.BackButton) {
                 if (screenLibrary.state === "stateMediaDetails")
                     screenMedia.back()

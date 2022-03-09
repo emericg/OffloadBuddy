@@ -41,11 +41,11 @@ Popup {
     Connections {
         // keep default settings up to date
         target: settingsManager
-        onIgnoreJunkChanged: switchIgnoreJunk.checked = settingsManager.ignoreJunk
-        onIgnoreHdAudioChanged: switchIgnoreAudio.checked = settingsManager.ignoreHdAudio
-        onAutoMergeChanged: switchMerge.checked = settingsManager.autoMerge
-        onAutoTelemetryChanged: switchTelemetry.checked = settingsManager.autoTelemetry
-        onAutoDeleteChanged: switchDelete.checked = settingsManager.autoDelete
+        function onIgnoreJunkChanged() { switchIgnoreJunk.checked = settingsManager.ignoreJunk }
+        function onIgnoreHdAudioChanged() { switchIgnoreAudio.checked = settingsManager.ignoreHdAudio }
+        function onAutoMergeChanged() { switchMerge.checked = settingsManager.autoMerge }
+        function onAutoTelemetryChanged() { switchTelemetry.checked = settingsManager.autoTelemetry }
+        function onAutoDeleteChanged() { switchDelete.checked = settingsManager.autoDelete }
     }
 
     ////////
@@ -352,7 +352,7 @@ Popup {
                         Component.onCompleted: comboBoxDestination.updateDestinations()
                         Connections {
                             target: storageManager
-                            onDirectoriesUpdated: comboBoxDestination.updateDestinations()
+                            function onDirectoriesUpdated() { comboBoxDestination.updateDestinations() }
                         }
 
                         function updateDestinations() {

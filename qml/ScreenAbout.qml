@@ -90,20 +90,27 @@ Item {
 
     // CONTENT /////////////////////////////////////////////////////////////////
 
-    ScrollView {
-        id: scrollView
-        contentWidth: -1
-
+    Flickable {
         anchors.top: rectangleHeader.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
 
+        contentWidth: -1
+        contentHeight: columnAbout.height
+
+        boundsBehavior: Flickable.OvershootBounds
+        ScrollBar.vertical: ScrollBar { }
+
         Column {
-            anchors.fill: parent
-            anchors.topMargin: 24
+            id: columnAbout
+            anchors.left: parent.left
             anchors.leftMargin: 24
+            anchors.right: parent.right
             anchors.rightMargin: 24
+
+            topPadding: 24
+            bottomPadding: 24
             spacing: 24
 
             ////////

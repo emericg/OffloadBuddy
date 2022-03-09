@@ -20,7 +20,7 @@ Item {
 
     Connections {
         target: settingsManager
-        onAppUnitsChanged: updateUnits()
+        function onAppUnitsChanged() { updateUnits() }
     }
 
     function updateUnits() {
@@ -118,6 +118,7 @@ Item {
         width: fullscreen ? parent.width - 32 : parent.width * 0.40
         Behavior on width { NumberAnimation { duration: 333 } }
 
+        radius: Theme.componentRadius
         color: Theme.colorForeground
 
         IconSvg {
@@ -156,7 +157,7 @@ Item {
             copyrightsVisible: false
 
             plugin: Plugin {
-                //name: mapboxgl
+                //name: "mapboxgl"
                 preferred: (Qt.platform.os === "osx" || Qt.platform.os === "linux") ? ["osm", "esri"] : ["mapboxgl", "osm", "esri"]
                 PluginParameter { name: "osm.mapping.highdpi_tiles"; value: "true"; }
             }

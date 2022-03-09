@@ -228,7 +228,7 @@ Loader {
 
             // KEYS HANDLING ///////////////////////////////////////////////////
 
-            Keys.onPressed: {
+            Keys.onPressed: (event) => {
                 // UI
                 if (event.key === Qt.Key_F9) {
                     event.accepted = true

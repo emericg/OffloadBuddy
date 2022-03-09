@@ -90,7 +90,7 @@ ApplicationWindow {
     Connections {
         target: deviceManager
         signal deviceRemoved(var devicePtr)
-        onDeviceRemoved: {
+        function onDeviceRemoved() {
             //console.log("deviceRemoved(" + devicePtr + ") and currentDevice(" + screenDevice.currentDevice + ")")
             if (appContent.state === "device")
                 if (typeof devicePtr !== "undefined")

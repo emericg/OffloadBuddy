@@ -1429,7 +1429,7 @@ Popup {
                             Component.onCompleted: comboBoxDestination.updateDestinations()
                             Connections {
                                 target: storageManager
-                                onDirectoriesUpdated: comboBoxDestination.updateDestinations()
+                                function onDirectoriesUpdated() { comboBoxDestination.updateDestinations() }
                             }
 
                             function updateDestinations() {

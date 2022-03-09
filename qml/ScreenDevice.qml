@@ -72,7 +72,7 @@ Item {
         propagateComposedEvents: true
         acceptedButtons: Qt.BackButton | Qt.ForwardButton
 
-        onClicked: {
+        onClicked: (mouse) => {
             if (mouse.button === Qt.BackButton) {
                 if (screenDevice.state === "stateMediaDetails" || screenDevice.state === "stateDeviceInfos")
                     screenMedia.back()

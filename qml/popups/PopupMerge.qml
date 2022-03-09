@@ -38,7 +38,7 @@ Popup {
     Connections {
         // keep default settings up to date
         target: settingsManager
-        onAutoDeleteChanged: switchDelete.checked = settingsManager.autoDelete
+        function onAutoDeleteChanged() { switchDelete.checked = settingsManager.autoDelete }
     }
 
     ////////

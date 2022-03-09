@@ -60,7 +60,7 @@ ComboBox {
 
         Connections {
             target: ThemeEngine
-            onCurrentThemeChanged: canvas.requestPaint()
+            function onCurrentThemeChanged() { canvas.requestPaint() }
         }
 
         onPaint: {
