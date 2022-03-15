@@ -205,53 +205,50 @@ FILE_libmtp = "libmtp-master.tar.gz"
 DIR_libmtp = "libmtp-master"
 
 if OS_HOST != "Windows":
-    if not os.path.exists("src/" + FILE_libusb):
+    if not os.path.exists(src_dir + FILE_libusb):
         print("> Downloading " + FILE_libusb)
         if sys.version_info >= (3, 0):
             urllib.request.urlretrieve("https://github.com/libusb/libusb/archive/master.zip", src_dir + FILE_libusb)
         else:
             urllib.urlretrieve("https://github.com/libusb/libusb/archive/master.zip", src_dir + FILE_libusb)
-    if not os.path.exists("src/" + FILE_libmtp):
+    if not os.path.exists(src_dir + FILE_libmtp):
         print("> Downloading " + FILE_libmtp)
         if sys.version_info >= (3, 0):
             urllib.request.urlretrieve("https://github.com/libmtp/libmtp/archive/master.zip", src_dir + FILE_libmtp)
         else:
             urllib.urlretrieve("https://github.com/libmtp/libmtp/archive/master.zip", src_dir + FILE_libmtp)
 
-## libexif
-## version: git (0.6.22+)
+## libexif (version: git) (0.6.22+)
 FILE_libexif = "libexif-master.zip"
 DIR_libexif = "libexif-master"
 
-if not os.path.exists("src/" + FILE_libexif):
+if not os.path.exists(src_dir + FILE_libexif):
     print("> Downloading " + FILE_libexif + "...")
     urllib.request.urlretrieve("https://github.com/emericg/libexif/archive/master.zip", src_dir + FILE_libexif)
 
-## taglib
-## version: git (1.12)
+## taglib (version: git) (1.12)
 FILE_taglib = "taglib-master.zip"
 DIR_taglib = "taglib-master"
 
-if not os.path.exists("src/" + FILE_taglib):
+if not os.path.exists(src_dir + FILE_taglib):
     print("> Downloading " + FILE_taglib + "...")
     urllib.request.urlretrieve("https://github.com/taglib/taglib/archive/master.zip", src_dir + FILE_taglib)
 
-## minivideo
-## version: git (0.13+)
+## minivideo (version: git) (0.13+)
 FILE_minivideo = "minivideo-master.zip"
 DIR_minivideo = "MiniVideo-master"
 
-if not os.path.exists("src/" + FILE_minivideo):
+if not os.path.exists(src_dir + FILE_minivideo):
     print("> Downloading " + FILE_minivideo + "...")
     urllib.request.urlretrieve("https://github.com/emericg/MiniVideo/archive/master.zip", src_dir + FILE_minivideo)
 
-## Android OpenSSL
+## Android OpenSSL (version: git)
 for TARGET in TARGETS:
     if TARGET[0] == "android":
         FILE_androidopenssl = "android_openssl-master.zip"
         DIR_androidopenssl = "android_openssl"
 
-        if not os.path.exists("src/" + FILE_androidopenssl):
+        if not os.path.exists(src_dir + FILE_androidopenssl):
             print("> Downloading " + FILE_androidopenssl + "...")
             urllib.request.urlretrieve("https://github.com/KDAB/android_openssl/archive/master.zip", src_dir + FILE_androidopenssl)
         if not os.path.isdir("env/" + DIR_androidopenssl):
@@ -259,22 +256,20 @@ for TARGET in TARGETS:
             zipSSL.extractall("env/")
         break
 
-## linuxdeploy
-## version: git
+## linuxdeploy (version: git)
 if OS_HOST == "Linux":
     FILE_linuxdeploy = "linuxdeploy-x86_64.AppImage"
-    if not os.path.exists("src/" + FILE_linuxdeploy):
+    if not os.path.exists(deploy_dir + FILE_linuxdeploy):
         print("> Downloading " + FILE_linuxdeploy + "...")
         urllib.request.urlretrieve("https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/" + FILE_linuxdeploy, deploy_dir + FILE_linuxdeploy)
         urllib.request.urlretrieve("https://github.com/linuxdeploy/linuxdeploy-plugin-appimage/releases/download/continuous/linuxdeploy-plugin-appimage-x86_64.AppImage", deploy_dir + "linuxdeploy-plugin-appimage-x86_64.AppImage")
         urllib.request.urlretrieve("https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage", deploy_dir + "linuxdeploy-plugin-qt-x86_64.AppImage")
         urllib.request.urlretrieve("https://raw.githubusercontent.com/linuxdeploy/linuxdeploy-plugin-gstreamer/master/linuxdeploy-plugin-gstreamer.sh", deploy_dir + "linuxdeploy-plugin-gstreamer.sh")
 
-## LAV Filters
-## version: 0.76.1
+## LAV Filters (version: 0.76.1)
 if OS_HOST == "Windows":
     FILE_lavfilters = "LAVFilters-0.76.1-Installer.exe"
-    if not os.path.exists("src/" + FILE_lavfilters):
+    if not os.path.exists(deploy_dir + FILE_lavfilters):
         print("> Downloading " + FILE_lavfilters + "...")
         urllib.request.urlretrieve("https://github.com/Nevcairiel/LAVFilters/releases/download/0.76.1/" + FILE_lavfilters, deploy_dir + FILE_lavfilters)
 
