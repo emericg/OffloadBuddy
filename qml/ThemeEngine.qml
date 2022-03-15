@@ -486,7 +486,7 @@ Item {
 
             componentRadius = 4
             componentBorderWidth = 2
-            sidebarSelector = ""
+            sidebarSelector = "arrow"
 
         } else if (themeIndex === ThemeEngine.THEME_DARK_AND_SPOOKY) {
 

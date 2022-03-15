@@ -12,7 +12,7 @@ Rectangle {
     anchors.bottom: parent.bottom
 
     z: 10
-    width: isHdpi ? 80 : 92
+    width: isHdpi ? 72 : 88
     color: Theme.colorSidebar
 
     ////////////////////////////////////////////////////////////////////////////
@@ -46,7 +46,7 @@ Rectangle {
         anchors.right: parent.right
         anchors.rightMargin: 0
 
-        source: "qrc:/menus/media.svg"
+        source: "qrc:/assets/icons_fontawesome/photo-video-duotone.svg"
         sourceSize: 64
         highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
         indicatorAnimated: mediaLibrary.libraryState
@@ -106,7 +106,7 @@ Rectangle {
             id: button_jobs
             width: sideBar.width
 
-            source: "qrc:/menus/jobs.svg"
+            source: "qrc:/assets/icons_material/duotone-save_alt-24px.svg"
             sourceSize: 48
             highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
 
@@ -120,7 +120,7 @@ Rectangle {
             id: button_settings
             width: sideBar.width
 
-            source: "qrc:/menus/settings.svg"
+            source: "qrc:/assets/icons_material/duotone-tune-24px.svg"
             sourceSize: 48
             highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
 
@@ -130,7 +130,7 @@ Rectangle {
         DesktopSidebarItem {
             id: button_about
 
-            source: "qrc:/menus/about.svg"
+            source: "qrc:/assets/icons_material/duotone-info-24px.svg"
             sourceSize: 48
             highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
 
@@ -140,7 +140,7 @@ Rectangle {
         DesktopSidebarItem {
             id: button_exit
 
-            source: "qrc:/menus/exit.svg"
+            source: "qrc:/assets/icons_material/duotone-exit_to_app-24px.svg"
             sourceSize: 48
             highlightMode: "circle"
 

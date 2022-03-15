@@ -41,20 +41,20 @@ ApplicationWindow {
 
     // Desktop stuff ///////////////////////////////////////////////////////////
 
-    minimumWidth: isHdpi ? 800 : 1280
-    minimumHeight: isHdpi ? 480 : 720
+    minimumWidth: isHdpi ? 720 : 1280
+    minimumHeight: isHdpi ? 400 : 720
 
     width: {
         if (settingsManager.initialSize.width > 0)
             return settingsManager.initialSize.width
         else
-            return isHdpi ? 800 : 1280
+            return isHdpi ? 720 : 1280
     }
     height: {
         if (settingsManager.initialSize.height > 0)
             return settingsManager.initialSize.height
         else
-            return isHdpi ? 480 : 720
+            return isHdpi ? 400 : 720
     }
     x: settingsManager.initialPosition.width
     y: settingsManager.initialPosition.height

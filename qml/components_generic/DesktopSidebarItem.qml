@@ -110,6 +110,7 @@ Item {
             visible: source.toString().length
 
             source: control.source
+            smooth: true
             color: (!control.selected && control.highlightMode === "content") ? control.colorHighlight : control.colorContent
             opacity: control.enabled ? 1.0 : 0.33
 

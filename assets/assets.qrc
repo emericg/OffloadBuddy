@@ -4,6 +4,7 @@
         <file>others/gps_marker_direction.svg</file>
         <file>others/navigate_before_big.svg</file>
 
+        <file>icons_fontawesome/photo-video-duotone.svg</file>
         <file>icons_material/baseline-accessibility-24px.svg</file>
         <file>icons_material/baseline-add-24px.svg</file>
         <file>icons_material/baseline-archive-24px.svg</file>
@@ -66,9 +67,11 @@
         <file>icons_material/duotone-camera_alt-24px.svg</file>
         <file>icons_material/duotone-date_range-24px.svg</file>
         <file>icons_material/duotone-exit_to_app-24px.svg</file>
+        <file>icons_material/duotone-info-24px.svg</file>
         <file>icons_material/duotone-insert_chart-24px.svg</file>
         <file>icons_material/duotone-launch-24px.svg</file>
         <file>icons_material/duotone-list-24px.svg</file>
+        <file>icons_material/duotone-minimize-24px.svg</file>
         <file>icons_material/duotone-pin_drop-24px.svg</file>
         <file>icons_material/duotone-photo_library-24px.svg</file>
         <file>icons_material/duotone-question_answer-24px.svg</file>
@@ -80,6 +83,7 @@
         <file>icons_material/duotone-speaker-24px.svg</file>
         <file>icons_material/duotone-speed-24px.svg</file>
         <file>icons_material/duotone-timer-24px.svg</file>
+        <file>icons_material/duotone-tune-24px.svg</file>
         <file>icons_material/duotone-video_library-24px.svg</file>
         <file>icons_material/outline-camera-24px.svg</file>
         <file>icons_material/outline-cancel_circle-24px.svg</file>
@@ -92,13 +96,6 @@
         <file>icons_material/outline-play_circle-24px.svg</file>
         <file>icons_material/outline-power-24px.svg</file>
         <file>icons_material/outline-stop_circle-24px.svg</file>
-    </qresource>
-    <qresource prefix="/menus">
-        <file alias="media.svg">menus/media.svg</file>
-        <file alias="jobs.svg">menus/jobs.svg</file>
-        <file alias="settings.svg">menus/settings.svg</file>
-        <file alias="about.svg">menus/about.svg</file>
-        <file alias="exit.svg">menus/exit.svg</file>
     </qresource>
     <qresource prefix="/cameras">
         <file alias="generic_actioncam.svg">cameras/generic_actioncam.svg</file>
