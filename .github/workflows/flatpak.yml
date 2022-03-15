@@ -1,0 +1,26 @@
+#--------------------------------------------------------------------------------
+# Workflow configuration
+#--------------------------------------------------------------------------------
+
+name: "Flatpak build"
+on: workflow_dispatch
+
+#--------------------------------------------------------------------------------
+# Workflow jobs
+#--------------------------------------------------------------------------------
+
+jobs:
+  ## GNU/Linux build ###########################################################
+  build-flatpak:
+    runs-on: ubuntu-20.04
+    container:
+      image: bilelmoussaoui/flatpak-github-actions:kde-5.15
+      options: --privileged
+    steps:
+    - uses: actions/checkout@v2
+    - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v4
+      name: "Flatpak build"
+      with:
+        bundle: offloadbuddy.flatpak
+        manifest-path: assets/linux/offloadbuddy.flatpak.yml
+        cache-key: flatpak-builder-${{ github.sha }}
