@@ -127,14 +127,16 @@ jobs:
 
       # Deploy application
       - name: Deploy application
-        run: ./deploy_macos.sh -c -p
+        run: |
+             export PATH=$PATH:/usr/local/opt/qt@5/bin:/usr/local/bin
+             ./deploy_macos.sh -c -p
 
       # Upload app zip
       - name: Upload app zip
         uses: actions/upload-artifact@v2
         with:
           name: ${{env.APPLICATION}}-${{env.VERSION}}-macOS.zip
-          path: bin/${{env.APPLICATION}}-${{env.VERSION}}-macOS.zip
+          path: bin/${{env.APPLICATION}}.app
 
   ## Windows build #############################################################
   build-windows:
