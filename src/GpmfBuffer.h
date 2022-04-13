@@ -32,7 +32,7 @@
 /* ************************************************************************** */
 
 /*!
- * \brief The GpmfBuffer class is actually a pretty straightforward bytestream reader.
+ * \brief A pretty simple and straightforward bytestream reader.
  */
 class GpmfBuffer
 {
@@ -46,12 +46,12 @@ public:
 
     bool loadBuffer(uint8_t *buffer, uint64_t buffer_size);
 
-    uint8_t *getBuffer();
-    uint64_t getBufferSize();
-    uint64_t getBytesIndex();
-    uint64_t getBytesLeft();
+    uint8_t *getBuffer();           //!< Pointer to the wrapped buffer
+    uint64_t getBufferSize();       //!< Size of the wrapped buffer
+    uint64_t getBytesIndex();       //!< Current read position in the buffer
+    uint64_t getBytesLeft();        //!< Bytes left to read
 
-    bool gotoIndex(uint64_t offset);
+    bool gotoIndex(uint64_t offset);//!< Move read position to given offset
 
     char read_c(int &error);
     uint8_t read_u8(int &error);

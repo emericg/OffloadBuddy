@@ -86,6 +86,7 @@ namespace DeviceUtils
             DEVICE_MAX,
 
         DEVICE_SONY = 256,
+            DEVICE_HDR_AS50,
             DEVICE_HDR_AS300R,
             DEVICE_FDR_X1000VR,
             DEVICE_FDR_X3000R,

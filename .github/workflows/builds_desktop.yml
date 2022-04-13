@@ -135,7 +135,7 @@ jobs:
       - name: Upload app zip
         uses: actions/upload-artifact@v2
         with:
-          name: ${{env.APPLICATION}}-${{env.VERSION}}-macOS.zip
+          name: ${{env.APPLICATION}}-${{env.VERSION}}-macOS.app
           path: bin/${{env.APPLICATION}}.app
 
   ## Windows build #############################################################
