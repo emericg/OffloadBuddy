@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
-import QtMultimedia 5.12 // Qt5
+
+import QtMultimedia 5.15 // Qt5
 //import QtMultimedia // Qt6
 
 import ThemeEngine 1.0
@@ -88,7 +89,7 @@ Item {
         if (shot.previewVideo) {
             if (shot.chapterCount > 1) { // playlist
                 //mode = "multivideo"
-                videoPlayer.playlist = Qt.createQmlObject('import QtMultimedia 5.12; Playlist { id: playlist; }',
+                videoPlayer.playlist = Qt.createQmlObject('import QtMultimedia 5.15; Playlist { id: playlist; }',
                                                           videoPlayer, "playlist")
                 videoPlayer.playlist.clear()
                 for (var i = 0; i < shot.chapterCount; i++)
@@ -517,7 +518,8 @@ Item {
         onStopped: {
             if (videoPlayer.position >= shot.duration) { // EOF
                 isRunning = false
-                videoPlayer.seek(0)
+                videoPlayer.seek(0) // Qt5
+                //videoPlayer.position = 0 // Qt6
                 savePosition()
 
                 videoPlayer.play()
@@ -540,9 +542,6 @@ Item {
             videoPlayer.isRunning = false
             mediaBanner.close()
             overlayCrop.load()
-        }
-        onVolumeChanged: {
-            //
         }
         onPositionChanged: {
             if (shot) {
@@ -953,7 +952,8 @@ Item {
                         videoPlayer.playlist.currentIndex = seekindex
                 }
 
-                videoPlayer.seek(seekpoint)
+                videoPlayer.seek(seekpoint) // Qt5
+                //videoPlayer.position = seekpoint // Qt6
                 savePosition()
 
                 if (Qt.platform.os === "osx") {
@@ -992,7 +992,8 @@ Item {
                         videoPlayer.playlist.currentIndex = seekindex
                 }
 
-                videoPlayer.seek(seekpoint)
+                videoPlayer.seek(seekpoint) // Qt5
+                //videoPlayer.position = seekpoint // Qt6
                 savePosition()
 
                 if (Qt.platform.os === "osx") {

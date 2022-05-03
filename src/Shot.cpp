@@ -503,7 +503,7 @@ bool Shot::isValid() const
 
 bool Shot::isGoPro() const
 {
-    return (m_shot_name.length() == 8 && m_shot_name.at(0) == "G");
+    return (m_shot_name.length() == 8 && m_shot_name.at(0) == 'G');
 }
 
 /* ************************************************************************** */
@@ -1033,8 +1033,8 @@ bool Shot::getMetadataFromPicture(int index)
                 // ex: "45, 41, 24,5662800"
                 exif_entry_get_value(entry, entry_buf, sizeof(entry_buf));
                 QString str = entry_buf;
-                double deg = str.midRef(0, 2).toDouble();
-                double min = str.midRef(4, 2).toDouble();
+                double deg = str.mid(0, 2).toDouble();
+                double min = str.mid(4, 2).toDouble();
                 double sec = str.mid(8, 10).replace(',', '.').toDouble();
                 gps_lat = deg + min/60.0 + sec/3600.0;
 
@@ -1058,8 +1058,8 @@ bool Shot::getMetadataFromPicture(int index)
             {
                 exif_entry_get_value(entry, entry_buf, sizeof(entry_buf));
                 QString str = entry_buf;
-                double deg = str.midRef(0, 2).toDouble();
-                double min = str.midRef(4, 2).toDouble();
+                double deg = str.mid(0, 2).toDouble();
+                double min = str.mid(4, 2).toDouble();
                 double sec = str.mid(8, 10).replace(',', '.').toDouble();
                 gps_long = deg + min/60.0 + sec/3600.0;
 
@@ -1075,7 +1075,7 @@ bool Shot::getMetadataFromPicture(int index)
                     }
                 }
 
-                gps_long_str = str.midRef(0, 2) + "° " + str.midRef(4, 2) + "` " + str.mid(8, 8) + "`` E";
+                gps_long_str = str.mid(0, 2) + "° " + str.mid(4, 2) + "` " + str.mid(8, 8) + "`` E";
             }
             entry = exif_content_get_entry(ed->ifd[EXIF_IFD_GPS],
                                            static_cast<ExifTag>(EXIF_TAG_GPS_ALTITUDE));

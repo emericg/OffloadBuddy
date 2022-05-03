@@ -117,7 +117,7 @@ bool getGoProShotInfos(ofb_file &file, ofb_shot &shot)
     }
 
     int group_number = -1;
-    int file_number = file.name.midRef(4, 4).toInt();
+    int file_number = file.name.mid(4, 4).toInt();
     QString fileextension = file.extension.toLower();
 
     if (file.name.startsWith("GOPR"))
@@ -154,7 +154,7 @@ bool getGoProShotInfos(ofb_file &file, ofb_shot &shot)
     {
         // Chaptered Video
         shot.shot_type = ShotUtils::SHOT_VIDEO;
-        group_number = file.name.midRef(2, 2).toInt();
+        group_number = file.name.mid(2, 2).toInt();
     }
     else if (file.name.startsWith("GH") ||
              file.name.startsWith("GX") ||
@@ -162,14 +162,14 @@ bool getGoProShotInfos(ofb_file &file, ofb_shot &shot)
     {
         // HERO6+ Video
         shot.shot_type = ShotUtils::SHOT_VIDEO;
-        group_number = file.name.midRef(2, 2).toInt();
+        group_number = file.name.mid(2, 2).toInt();
     }
     else if (file.name.startsWith("GB") ||
              file.name.startsWith("GF"))
     {
         // Fusion Chaptered
         shot.shot_type = ShotUtils::SHOT_VIDEO;
-        group_number = file.name.midRef(2, 2).toInt();
+        group_number = file.name.mid(2, 2).toInt();
 
         if (fileextension == "jpg" || fileextension == "gpr")
         {
@@ -197,7 +197,7 @@ bool getGoProShotInfos(ofb_file &file, ofb_shot &shot)
             shot.shot_type = ShotUtils::SHOT_VIDEO;
         }
 
-        group_number = file.name.midRef(1, 3).toInt();
+        group_number = file.name.mid(1, 3).toInt();
     }
     else if (file.name.startsWith("3D_"))
     {

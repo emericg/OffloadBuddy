@@ -183,7 +183,7 @@ bool getInsta360ShotInfos(ofb_file &file, ofb_shot &shot)
     }
 
     QString date = file.name.mid(4, 8) + file.name.mid(13, 6); // date + time
-    QString number = file.name.midRef(20, 2) + file.name.midRef(23, 3); // ?? + file number?
+    QString number = file.name.mid(20, 2) + file.name.mid(23, 3); // ?? + file number?
     QString fileextension = file.extension.toLower();
 
     if (fileextension == "insp" && file.name.startsWith("IMG"))

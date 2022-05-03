@@ -59,39 +59,39 @@ bool DeviceCapabilities::load(const QString &brand, const QString &model)
         QJsonArray cameraArray = capsObject["cameras"].toArray();
         file.close();
 
-        foreach (const QJsonValue &value, cameraArray)
+        for (const QJsonValue &value: cameraArray)
         {
             QJsonObject obj = value.toObject();
             if (brand == obj["brand"].toString() && model == obj["model"].toString())
             {
                 m_year =  obj["year"].toInt();
 
-                foreach (const QJsonValue &vv, obj["codecs"].toArray())
+                for (const QJsonValue &vv: obj["codecs"].toArray())
                 {
                     m_codecs << vv.toString();
                 }
-                foreach (const QJsonValue &vv, obj["features"].toArray())
+                for (const QJsonValue &vv: obj["features"].toArray())
                 {
                     m_features << vv.toString();
                 }
-                foreach (const QJsonValue &vv, obj["connectivity"].toArray())
+                for (const QJsonValue &vv: obj["connectivity"].toArray())
                 {
                     m_connectivity << vv.toString();
                 }
-                foreach (const QJsonValue &vv, obj["modes_video"].toArray())
+                for (const QJsonValue &vv: obj["modes_video"].toArray())
                 {
                     m_modes_video << vv.toString();
                 }
-                foreach (const QJsonValue &vv, obj["modes_photo"].toArray())
+                for (const QJsonValue &vv: obj["modes_photo"].toArray())
                 {
                     m_modes_photo << vv.toString();
                 }
-                foreach (const QJsonValue &vv, obj["modes_timelapse"].toArray())
+                for (const QJsonValue &vv: obj["modes_timelapse"].toArray())
                 {
                     m_modes_timelapse << vv.toString();
                 }
 
-                foreach (const QJsonValue &vv, obj["modes_video_table"].toArray())
+                for (const QJsonValue &vv: obj["modes_video_table"].toArray())
                 {
                     QJsonArray vvv = vv.toArray();
                     if (vvv.size() == 6)

@@ -50,7 +50,9 @@
 
 #include <QGeoCoordinate>
 #include <QGeoCodeReply>
+
 #include <QtCharts/QLineSeries>
+using namespace QtCharts;
 
 /* ************************************************************************** */
 
@@ -739,10 +741,10 @@ public:
     Q_INVOKABLE void parseTelemetry() { getMetadataFromVideoGPMF(); }
 
     Q_INVOKABLE bool getMetadataFromVideoGPMF();
-    Q_INVOKABLE void updateSpeedsSerie(QtCharts::QLineSeries *serie, int appUnit);
-    Q_INVOKABLE void updateAltiSerie(QtCharts::QLineSeries *serie, int appUnit);
-    Q_INVOKABLE void updateAcclSeries(QtCharts::QLineSeries *x, QtCharts::QLineSeries *y, QtCharts::QLineSeries *z);
-    Q_INVOKABLE void updateGyroSeries(QtCharts::QLineSeries *x, QtCharts::QLineSeries *y, QtCharts::QLineSeries *z);
+    Q_INVOKABLE void updateSpeedsSerie(QLineSeries *serie, int appUnit);
+    Q_INVOKABLE void updateAltiSerie(QLineSeries *serie, int appUnit);
+    Q_INVOKABLE void updateAcclSeries(QLineSeries *x, QLineSeries *y, QLineSeries *z);
+    Q_INVOKABLE void updateGyroSeries(QLineSeries *x, QLineSeries *y, QLineSeries *z);
     Q_INVOKABLE QGeoCoordinate getGpsCoordinates(unsigned index);
     Q_INVOKABLE unsigned getGpsPointCount() const { return m_gps.size(); }
 
