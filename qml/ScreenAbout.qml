@@ -431,7 +431,6 @@ Item {
                         onClicked: Qt.openUrlExternally("https://material.io/tools/icons")
                     }
                     ItemBadge {
-                        width: 140
                         anchors.verticalCenter: parent.verticalCenter
                         legend: qsTr("license")
                         text: qsTr("Apache 2.0")

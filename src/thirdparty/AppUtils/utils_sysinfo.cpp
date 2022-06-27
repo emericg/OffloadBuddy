@@ -22,6 +22,7 @@
 
 #include <thread>
 
+#include <QSysInfo>
 #include <QProcess>
 #include <QDebug>
 
@@ -67,8 +68,10 @@ UtilsSysinfo *UtilsSysinfo::getInstance()
 
 UtilsSysinfo::UtilsSysinfo()
 {
-    getCoreInfos();
+    getCpuInfos();
     getRamInfos();
+
+    m_os_name = QSysInfo::prettyProductName();
 }
 
 UtilsSysinfo::~UtilsSysinfo()
@@ -78,13 +81,16 @@ UtilsSysinfo::~UtilsSysinfo()
 
 /* ************************************************************************** */
 
-void UtilsSysinfo::getCoreInfos()
+void UtilsSysinfo::getCpuInfos()
 {
+    // Get CPU hardware architecture
+    m_cpu_arch = QSysInfo::currentCpuArchitecture();
+
     // Get logical core count (using C++11)
-    m_coreCount_logical = std::thread::hardware_concurrency();
+    m_cpu_core_logical = std::thread::hardware_concurrency();
 
     // Default value for physical count == logical count
-    m_coreCount_physical = m_coreCount_logical;
+    m_cpu_core_physical = std::thread::hardware_concurrency();
 
 #if defined(ENABLE_LIBCPUID)
     // Try to get physical core count (using libcpuid)
@@ -104,8 +110,11 @@ void UtilsSysinfo::getCoreInfos()
 #else
 
 #if defined(Q_OS_LINUX) || defined(Q_OS_MACOS) || defined(Q_OS_WINDOWS)
-    // Desktop OS? Assume HyperThreaded CPU...
-    m_coreCount_physical /= 2;
+    if (m_cpu_arch == "x86_64")
+    {
+        // Desktop OS? x86_64 CPU? Assume HyperThreaded CPU...
+        m_cpu_core_physical /= 2;
+    }
 #endif
 
 #endif
@@ -120,7 +129,7 @@ void UtilsSysinfo::getRamInfos()
     struct sysinfo info;
     if (sysinfo(&info) == 0)
     {
-        m_ramTotal = info.totalram / 1048576; // bytes to MB
+        m_ram_total = info.totalram / 1048576; // bytes to MB
     }
 
 #elif defined(Q_OS_MACOS)
@@ -130,13 +139,13 @@ void UtilsSysinfo::getRamInfos()
 
     if (sysctlbyname("hw.memsize", &memsize, &size, NULL, 0) != -1)
     {
-        m_ramTotal = memsize / 1048576; // bytes to MB
+        m_ram_total = memsize / 1048576; // bytes to MB
     }
 
 #elif defined(Q_OS_WINDOWS)
 
-    GetPhysicallyInstalledSystemMemory(&m_ramTotal);
-    m_ramTotal /= 1024; // KB to MB
+    GetPhysicallyInstalledSystemMemory(&m_ram_total);
+    m_ram_total /= 1024; // KB to MB
 
 #endif
 }
@@ -146,11 +155,16 @@ void UtilsSysinfo::getRamInfos()
 void UtilsSysinfo::printInfos()
 {
     qDebug() << "UtilsSysinfo::getCoreInfos()";
-    qDebug() << "> cpu (physical):" << m_coreCount_physical;
-    qDebug() << "> cpu (logical) :" << m_coreCount_logical;
+    qDebug() << "> cpu (physical):" << m_cpu_core_physical;
+    qDebug() << "> cpu (logical) :" << m_cpu_core_logical;
 
     qDebug() << "UtilsSysinfo::getRamInfos()";
-    qDebug() << "> RAM size (mb)    :" << m_ramTotal;
+    qDebug() << "> RAM size (MB)    :" << m_ram_total;
+
+    qDebug() << "UtilsSysinfo::OperatingSystem()";
+    qDebug() << "> name    :" << QSysInfo::prettyProductName();
+    qDebug() << "> version :" << QSysInfo::productType();
+;
 }
 
 /* ************************************************************************** */

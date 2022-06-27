@@ -1,5 +1,5 @@
 /*!
- * COPYRIGHT (C) 2022 Emeric Grange - All Rights Reserved
+ * Copyright (c) 2022 Emeric Grange - All Rights Reserved
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,28 +18,31 @@
  * \date      2021
  */
 
-#ifndef UTILS_OS_LINUX_H
-#define UTILS_OS_LINUX_H
+#ifndef UTILS_MACOS_H
+#define UTILS_MACOS_H
 
 #include <QtGlobal>
 
-#if defined(Q_OS_LINUX)
+#if defined(Q_OS_MACOS)
 /* ************************************************************************** */
 
 #include <QString>
 
 /*!
- * \brief Linux utils
+ * \brief macOS utils
  *
- * Use with "QT += dbus"
+ * Use with "LIBS += -framework IOKit"
  */
-class UtilsLinux
+class UtilsMacOS
 {
 public:
-   static uint32_t screenKeepOn(const QString &application, const QString &reason);
-   static void screenKeepAuto(uint32_t screensaverId);
+    /*!
+     * - https://developer.apple.com/library/archive/qa/qa1340/_index.html
+     */
+    static uint32_t screenKeepOn(const QString &application, const QString &reason);
+    static void screenKeepAuto(uint32_t screensaverId);
 };
 
 /* ************************************************************************** */
-#endif // Q_OS_LINUX
-#endif // UTILS_OS_LINUX_H
+#endif // Q_OS_MACOS
+#endif // UTILS_MACOS_H

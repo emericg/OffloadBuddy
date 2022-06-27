@@ -1,5 +1,5 @@
 /*!
- * COPYRIGHT (C) 2022 Emeric Grange - All Rights Reserved
+ * Copyright (c) 2022 Emeric Grange - All Rights Reserved
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,8 @@
 
 uint32_t UtilsMacOS::screenKeepOn(const QString &application, const QString &reason)
 {
+    Q_UNUSED(application)
+
     // kIOPMAssertionTypeNoDisplaySleep prevents display sleep
     // kIOPMAssertionTypeNoIdleSleep prevents idle sleep
 

@@ -1,5 +1,5 @@
 /*!
- * COPYRIGHT (C) 2022 Emeric Grange - All Rights Reserved
+ * Copyright (c) 2022 Emeric Grange - All Rights Reserved
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,35 +14,41 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
+ * \date      2019
  * \author    Emeric Grange <emeric.grange@gmail.com>
- * \date      2021
  */
 
-#ifndef UTILS_MACOS_H
-#define UTILS_MACOS_H
+#ifndef UTILS_MACOS_DOCK_H
+#define UTILS_MACOS_DOCK_H
 
 #include <QtGlobal>
 
 #if defined(Q_OS_MACOS)
 /* ************************************************************************** */
 
-#include <QString>
+#include <QObject>
 
 /*!
- * \brief macOS utils
+ * \brief macOS dock click handler
  *
- * Use with "LIBS += -framework IOKit"
+ * Use with "LIBS += -framework AppKit"
  */
-class UtilsMacOS
+class MacOSDockHandler : public QObject
 {
+    Q_OBJECT
+
+    MacOSDockHandler();
+    ~MacOSDockHandler();
+
+signals:
+    void dockIconClicked();
+
 public:
-    /*!
-     * - https://developer.apple.com/library/archive/qa/qa1340/_index.html
-     */
-    static uint32_t screenKeepOn(const QString &application, const QString &reason);
-    static void screenKeepAuto(uint32_t screensaverId);
+    static MacOSDockHandler *getInstance();
+
+    Q_INVOKABLE static void toggleDockIconVisibility(bool show);
 };
 
 /* ************************************************************************** */
 #endif // Q_OS_MACOS
-#endif // UTILS_MACOS_H
+#endif // UTILS_MACOS_DOCK_H

@@ -4,8 +4,8 @@ import ThemeEngine 1.0
 
 Item {
     id: control
-    implicitWidth: 128
-    implicitHeight: 22
+    width: leftText.contentWidth + rightText.contentWidth + 24
+    height: 22
 
     property string legend: "legend"
     property string text: "text"
@@ -50,7 +50,7 @@ Item {
         text: control.legend
         textFormat: Text.PlainText
         horizontalAlignment: Text.AlignHCenter
-        font.pixelSize: 12
+        font.pixelSize: Theme.fontSizeContentVerySmall
     }
 
     Text {
@@ -65,7 +65,7 @@ Item {
         text: control.text
         textFormat: Text.PlainText
         horizontalAlignment: Text.AlignHCenter
-        font.pixelSize: 12
+        font.pixelSize: Theme.fontSizeContentVerySmall
         font.bold: true
     }
 

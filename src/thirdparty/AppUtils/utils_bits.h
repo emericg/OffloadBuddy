@@ -1,5 +1,5 @@
 /*!
- * COPYRIGHT (C) 2022 Emeric Grange - All Rights Reserved
+ * Copyright (c) 2022 Emeric Grange - All Rights Reserved
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,27 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * \date      2018
  * \author    Emeric Grange <emeric.grange@gmail.com>
+ * \date      2022
  */
 
-#ifndef UTILS_MATHS_H
-#define UTILS_MATHS_H
+#ifndef UTILS_BITS_H
+#define UTILS_BITS_H
 /* ************************************************************************** */
 
-//! Align buffer sizes to multiples of 'roundTo'
-int roundTo(const int value, const int roundTo);
+#include <cstdint>
 
-//! Map a number from range [a1-a2] to [b1:b2]
-int mapNumber(const int value, const int a1, const int a2, const int b1, const int b2, bool checks = true);
+uint16_t endian_flip_16(uint16_t src);
 
-/* ************************************************************************** */
+uint32_t endian_flip_32(uint32_t src);
 
-//! Calculate haversine distance for linear distance (km)
-double haversine_km(double lat1, double long1, double lat2, double long2);
-
-//! Calculate haversine distance for linear distance (miles)
-double haversine_mi(double lat1, double long1, double lat2, double long2);
+uint64_t endian_flip_64(uint64_t src);
 
 /* ************************************************************************** */
-#endif // UTILS_MATHS_H
+#endif // UTILS_BITS_H

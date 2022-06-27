@@ -22,9 +22,9 @@
 #include "JobWorkerFFmpeg.h"
 #include "JobManager.h"
 #include "Shot.h"
-#include "utils/utils_app.h"
-#include "utils/utils_maths.h"
-#include "utils/utils_screen.h"
+#include "utils_app.h"
+#include "utils_maths.h"
+#include "utils_screen.h"
 
 #include <QProcess>
 #include <QFileInfo>

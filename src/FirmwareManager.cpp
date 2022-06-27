@@ -21,7 +21,7 @@
 
 #include "FirmwareManager.h"
 #include "Device.h"
-#include "utils/utils_versionchecker.h"
+#include "utils_versionchecker.h"
 #include "miniz.h"
 
 #include <QDir>
@@ -445,7 +445,7 @@ bool FirmwareManager::hasUpdate(const QString &modelStr, const QString &version)
             QString current = version;
             current.remove(0, 7);
 
-            Version a(current);
+            VersionChecker a(current);
 
             return !(a == v);
         }

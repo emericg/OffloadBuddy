@@ -23,7 +23,7 @@
 #include "EGM96.h"
 #include "GpmfTags.h"
 #include "GeoCoding.h"
-#include "utils/utils_maths.h"
+#include "utils_maths.h"
 
 #include <cmath>
 

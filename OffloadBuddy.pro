@@ -21,10 +21,6 @@ win32 | ios | android { DEFINES += USE_CONTRIBS }
 
 win32 { DEFINES += _USE_MATH_DEFINES }
 
-# SingleApplication for desktop OS
-include(src/thirdparty/SingleApplication/singleapplication.pri)
-DEFINES += QAPPLICATION_CLASS=QApplication
-
 unix { DEFINES += ENABLE_LIBMTP }
 
 #DEFINES += ENABLE_GSTREAMER
@@ -37,6 +33,13 @@ DEFINES += ENABLE_FFMPEG
 DEFINES += ENABLE_MINIVIDEO
 DEFINES += ENABLE_LIBEXIF
 #DEFINES += ENABLE_EXIV2
+
+# App utils
+include(src/thirdparty/AppUtils/AppUtils.pri)
+
+# SingleApplication for desktop OS
+include(src/thirdparty/SingleApplication/SingleApplication.pri)
+DEFINES += QAPPLICATION_CLASS=QApplication
 
 # Zip extraction
 include(src/thirdparty/miniz/miniz.pri)
@@ -78,13 +81,7 @@ SOURCES  += src/main.cpp \
             src/GpmfBuffer.cpp \
             src/GpmfKLV.cpp \
             src/GpmfTags.cpp \
-            src/GeoCoding.cpp \
-            src/utils/utils_app.cpp \
-            src/utils/utils_screen.cpp \
-            src/utils/utils_language.cpp \
-            src/utils/utils_ffmpeg.cpp \
-            src/utils/utils_maths.cpp \
-            src/utils/utils_sysinfo.cpp
+            src/GeoCoding.cpp
 
 HEADERS  += src/SettingsManager.h \
             src/FirmwareManager.h \
@@ -118,14 +115,7 @@ HEADERS  += src/SettingsManager.h \
             src/GpmfBuffer.h \
             src/GpmfKLV.h \
             src/GpmfTags.h \
-            src/GeoCoding.h \
-            src/utils/utils_app.h \
-            src/utils/utils_screen.h \
-            src/utils/utils_language.h \
-            src/utils/utils_ffmpeg.h \
-            src/utils/utils_maths.h \
-            src/utils/utils_sysinfo.h \
-            src/utils/utils_versionchecker.h
+            src/GeoCoding.h
 
 RESOURCES   += qml/qml.qrc \
                i18n/i18n.qrc \
@@ -218,11 +208,6 @@ DESTDIR     = bin/
 linux:!android {
     TARGET = $$lower($${TARGET})
 
-    # Linux utils
-    SOURCES += src/utils/utils_os_linux.cpp
-    HEADERS += src/utils/utils_os_linux.h
-    QT += dbus
-
     # Application packaging # Needs linuxdeployqt installed
     #deploy.commands = $${OUT_PWD}/$${DESTDIR}/ -qmldir=qml/
     #install.depends = deploy
@@ -246,22 +231,10 @@ linux:!android {
 }
 
 macx {
-    #QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.12
-    #message("QMAKE_MACOSX_DEPLOYMENT_TARGET: $$QMAKE_MACOSX_DEPLOYMENT_TARGET")
-
     # Bundle name
     QMAKE_TARGET_BUNDLE_PREFIX = com.emeric
     QMAKE_BUNDLE = offloadbuddy
     CONFIG += app_bundle
-
-    # macOS utils
-    SOURCES += src/utils/utils_os_macos.mm
-    HEADERS += src/utils/utils_os_macos.h
-    LIBS    += -framework IOKit
-    # macOS dock click handler
-    SOURCES += src/utils/utils_os_macosdock.mm
-    HEADERS += src/utils/utils_os_macosdock.h
-    LIBS    += -framework AppKit
 
     # OS icon
     ICON = $${PWD}/assets/macos/$$lower($${TARGET}).icns
@@ -294,10 +267,6 @@ macx {
 }
 
 win32 {
-    # Windows utils
-    SOURCES += src/utils/utils_os_windows.cpp
-    HEADERS += src/utils/utils_os_windows.h
-
     # OS icon
     RC_ICONS = $${PWD}/assets/windows/$$lower($${TARGET}).ico
 

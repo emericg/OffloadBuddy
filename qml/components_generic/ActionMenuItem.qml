@@ -13,7 +13,7 @@ Rectangle {
     anchors.rightMargin: Theme.componentBorderWidth
 
     radius: 0
-    color: Theme.colorBackground
+    color: "transparent"
 
     // actions
     signal clicked()
@@ -79,11 +79,11 @@ Rectangle {
     states: [
         State {
             name: "normal";
-            PropertyChanges { target: actionMenuItem; color: Theme.colorBackground; }
+            PropertyChanges { target: actionMenuItem; color: "transparent"; }
         },
         State {
             name: "hovered";
-            PropertyChanges { target: actionMenuItem; color: Theme.colorSeparator; }
+            PropertyChanges { target: actionMenuItem; color: Theme.colorForeground; }
         }
     ]
 

@@ -1,5 +1,5 @@
 /*!
- * COPYRIGHT (C) 2022 Emeric Grange - All Rights Reserved
+ * Copyright (c) 2022 Emeric Grange - All Rights Reserved
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -66,6 +66,11 @@ UtilsApp::~UtilsApp()
 /* ************************************************************************** */
 /* ************************************************************************** */
 
+QString UtilsApp::appName()
+{
+    return QString::fromLatin1(APP_NAME);
+}
+
 QString UtilsApp::appVersion()
 {
     return QString::fromLatin1(APP_VERSION);
@@ -83,8 +88,17 @@ QString UtilsApp::appBuildDateTime()
 
 QString UtilsApp::appBuildMode()
 {
-#if defined(QT_NO_DEBUG) || defined(NDEBUG)
+#if !defined(QT_NO_DEBUG) && !defined(NDEBUG)
+    return "DEBUG";
+#endif
+
     return "";
+}
+
+QString UtilsApp::appBuildModeFull()
+{
+#if defined(QT_NO_DEBUG) || defined(NDEBUG)
+    return "RELEASE";
 #endif
 
     return "DEBUG";
@@ -206,12 +220,28 @@ QString UtilsApp::getStandardPath_string(const QString &type)
 /* ************************************************************************** */
 /* ************************************************************************** */
 
+int UtilsApp::getAndroidSdkVersion()
+{
+#if defined(Q_OS_ANDROID)
+    return UtilsAndroid::getSdkVersion();
+#else
+    return 0;
+#endif
+}
+
+void UtilsApp::openAndroidAppInfo(const QString &packageName)
+{
+#if defined(Q_OS_ANDROID)
+    return UtilsAndroid::openApplicationInfo(packageName);
+#endif
+
+    Q_UNUSED(packageName)
+}
+
 bool UtilsApp::checkMobileLocationPermission()
 {
 #if defined(Q_OS_ANDROID)
     return UtilsAndroid::checkPermission_location();
-#elif defined(Q_OS_IOS)
-    return false;
 #else
     return true;
 #endif
@@ -221,8 +251,6 @@ bool UtilsApp::getMobileLocationPermission()
 {
 #if defined(Q_OS_ANDROID)
     return UtilsAndroid::getPermission_location();
-#elif defined(Q_OS_IOS)
-    return false;
 #else
     return true;
 #endif
@@ -233,7 +261,7 @@ bool UtilsApp::checkMobileBleLocationPermission()
 #if defined(Q_OS_ANDROID)
     return UtilsAndroid::checkPermission_location_ble();
 #elif defined(Q_OS_IOS)
-    return false;
+    return true; // TODO // we know have Bluetooth permission on iOS too
 #else
     return true;
 #endif
@@ -243,8 +271,24 @@ bool UtilsApp::getMobileBleLocationPermission()
 {
 #if defined(Q_OS_ANDROID)
     return UtilsAndroid::getPermission_location_ble();
-#elif defined(Q_OS_IOS)
-    return false;
+#else
+    return true;
+#endif
+}
+
+bool UtilsApp::checkMobileBackgroundLocationPermission()
+{
+#if defined(Q_OS_ANDROID)
+    return UtilsAndroid::checkPermission_location_background();
+#else
+    return true;
+#endif
+}
+
+bool UtilsApp::getMobileBackgroundLocationPermission()
+{
+#if defined(Q_OS_ANDROID)
+    return UtilsAndroid::getPermission_location_background();
 #else
     return true;
 #endif
@@ -355,8 +399,6 @@ QString UtilsApp::getMobileDeviceModel()
 {
 #if defined(Q_OS_ANDROID)
     return UtilsAndroid::getDeviceModel();
-#elif defined(Q_OS_IOS)
-    return QString();
 #else
     return QString();
 #endif
@@ -366,8 +408,6 @@ QString UtilsApp::getMobileDeviceSerial()
 {
 #if defined(Q_OS_ANDROID)
     return UtilsAndroid::getDeviceSerial();
-#elif defined(Q_OS_IOS)
-    return QString();
 #else
     return QString();
 #endif

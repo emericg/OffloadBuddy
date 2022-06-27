@@ -30,11 +30,11 @@
 #include "ItemImage.h"
 #include "MediaThumbnailer.h"
 
-#include "utils/utils_app.h"
-#include "utils/utils_screen.h"
-#include "utils/utils_sysinfo.h"
-#include "utils/utils_language.h"
-#include "utils/utils_os_macosdock.h"
+#include "utils_app.h"
+#include "utils_screen.h"
+#include "utils_sysinfo.h"
+#include "utils_language.h"
+#include "utils_os_macosdock.h"
 
 #include <singleapplication.h>
 
@@ -212,7 +212,7 @@ int main(int argc, char *argv[])
     engine_context->setContextProperty("utilsScreen", utilsScreen);
     engine_context->setContextProperty("mediaUtils", mediaUtils);
 
-    MediaThumbnailer_threadpool *tmb = new MediaThumbnailer_threadpool(utilsSysinfo->getCoreCount_physical() / 2);
+    MediaThumbnailer_threadpool *tmb = new MediaThumbnailer_threadpool(utilsSysinfo->getCpuCoreCountPhysical() / 2);
     tmb->registerQml(&engine);
 
     // Load the main view
