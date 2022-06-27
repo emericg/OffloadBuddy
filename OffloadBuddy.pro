@@ -1,6 +1,7 @@
 TARGET  = OffloadBuddy
 
 VERSION = 0.10
+DEFINES+= APP_NAME=\\\"$$TARGET\\\"
 DEFINES+= APP_VERSION=\\\"$$VERSION\\\"
 
 CONFIG += c++17
