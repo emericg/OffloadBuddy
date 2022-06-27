@@ -67,8 +67,8 @@ jobs:
              sudo apt-get install ninja-build libtool automake m4 gettext -y;
              sudo apt-get install appstream -y;
 
-      # Build (custom) dependencies
-      - name: Build (custom) dependencies
+      # Build dependencies (from contribs script)
+      - name: Build dependencies (from contribs script)
         run: |
              cd contribs
              python3 contribs.py
@@ -103,13 +103,13 @@ jobs:
         with:
           submodules: recursive
 
-      # Install dependencies
-      - name: Install dependencies
+      # Install dependencies (from package manager)
+      - name: Install dependencies (from package manager)
         run: |
              brew install qt5
 
-      # Build dependencies
-      - name: Build dependencies
+      # Build dependencies (from contribs script)
+      - name: Build dependencies (from contribs script)
         run: |
              brew install ninja automake autoconf libtool pkg-config gettext
              brew link --force gettext
@@ -179,8 +179,8 @@ jobs:
       #       scoop bucket add extras
       #       scoop install nsis
 
-      # Build dependencies
-      - name: Build dependencies
+      # Build dependencies (from contribs script)
+      - name: Build dependencies (from contribs script)
         run: |
              cd contribs/
              python3 contribs.py

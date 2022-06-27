@@ -62,7 +62,7 @@ Optional dependencies:
 - libusb and libmtp  
 - libexif  
 - ffmpeg (3.4+)  
-- MiniVideo (0.13+)  
+- MiniVideo (0.14+)  
 
 Build dependencies:
 - python 3  
