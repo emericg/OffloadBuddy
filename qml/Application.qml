@@ -19,12 +19,10 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Window 2.15
-
-import QtGraphicalEffects 1.15 // Qt5
-//import Qt5Compat.GraphicalEffects // Qt6
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Window
+import Qt5Compat.GraphicalEffects
 
 import ThemeEngine 1.0
 

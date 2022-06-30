@@ -1164,7 +1164,7 @@ Popup {
 
                                 enabled: false
                                 placeholderText: "00:00:00"
-                                validator: RegExpValidator { regExp: /^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$/ }
+                                //validator: RegExpValidator { regExp: /^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$/ }
                             }
                             Text {
                                 text: qsTr("to")
@@ -1180,7 +1180,7 @@ Popup {
 
                                 enabled: false
                                 placeholderText: "00:00:00"
-                                validator: RegExpValidator { regExp: /^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$/ }
+                                //validator: RegExpValidator { regExp: /^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$/ }
                             }
                         }
                     }

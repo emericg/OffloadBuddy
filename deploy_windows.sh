@@ -3,7 +3,7 @@
 echo "> OffloadBuddy packager (Windows x86_64)"
 
 export APP_NAME="OffloadBuddy";
-export APP_VERSION=0.10;
+export APP_VERSION=0.11;
 export GIT_VERSION=$(git rev-parse --short HEAD);
 
 ## CHECKS ######################################################################
@@ -77,12 +77,6 @@ cp contribs/env/windows_x86_64/usr/bin/ffmpeg.exe bin/
 ## PACKAGE #####################################################################
 
 if [[ $create_package = true ]] ; then
-  if [ ! -x contribs/deploy/LAVFilters-0.76.1-Installer.exe ]; then
-    echo '---- Downloading LAVFilters'
-    wget -c -nv "https://github.com/Nevcairiel/LAVFilters/releases/download/0.76.1/LAVFilters-0.76.1-Installer.exe" -P contribs/deploy/;
-  fi
-  mv contribs/deploy/LAVFilters-0.76.1-Installer.exe bin/
-
   mv bin $APP_NAME-$APP_VERSION-win64;
 fi
 

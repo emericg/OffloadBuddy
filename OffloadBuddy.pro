@@ -1,6 +1,6 @@
 TARGET  = OffloadBuddy
 
-VERSION = 0.10
+VERSION = 0.11
 DEFINES+= APP_NAME=\\\"$$TARGET\\\"
 DEFINES+= APP_VERSION=\\\"$$VERSION\\\"
 
@@ -9,31 +9,28 @@ QT     += core qml quickcontrols2 svg
 QT     += multimedia location charts
 
 # Validate Qt version
-!versionAtLeast(QT_VERSION, 5.15) : error("You need at least Qt version 5.15 for $${TARGET}")
-!versionAtMost(QT_VERSION, 6.0) : error("You can't use Qt 6.0+ for $${TARGET}")
+!versionAtLeast(QT_VERSION, 6.3) : error("You need at least Qt version 6.3 for $${TARGET}")
 
 # Project features #############################################################
-
-# Use Qt Quick compiler
-ios | android { CONFIG += qtquickcompiler }
-
-# Use contribs (otherwise use system libs)
-win32 | ios | android { DEFINES += USE_CONTRIBS }
-
-win32 { DEFINES += _USE_MATH_DEFINES }
 
 unix { DEFINES += ENABLE_LIBMTP }
 
 #DEFINES += ENABLE_GSTREAMER
-
 DEFINES += ENABLE_FFMPEG
-
 #DEFINES += ENABLE_LIBCPUID
-
-# Metadata backends
 DEFINES += ENABLE_MINIVIDEO
 DEFINES += ENABLE_LIBEXIF
 #DEFINES += ENABLE_EXIV2
+
+# Use contribs (otherwise use system libs)
+win32 | ios | android { DEFINES += USE_CONTRIBS }
+
+# Use Qt Quick compiler
+ios | android { CONFIG += qtquickcompiler }
+
+win32 { DEFINES += _USE_MATH_DEFINES }
+
+# Project modules ##############################################################
 
 # App utils
 include(src/thirdparty/AppUtils/AppUtils.pri)
@@ -249,6 +246,12 @@ macx {
     ENTITLEMENTS.name = CODE_SIGN_ENTITLEMENTS
     ENTITLEMENTS.value = $${PWD}/assets/macos/$$lower($${TARGET}).entitlements
     QMAKE_MAC_XCODE_SETTINGS += ENTITLEMENTS
+
+    # Target architecture(s)
+    QMAKE_APPLE_DEVICE_ARCHS = x86_64 arm64
+
+    # Target OS
+    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.14
 
     #======== Automatic bundle packaging
 

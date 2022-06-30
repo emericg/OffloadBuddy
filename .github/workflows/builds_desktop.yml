@@ -12,7 +12,7 @@ on:
 #--------------------------------------------------------------------------------
 
 env:
-  VERSION: "0.10"
+  VERSION: "0.11"
   APPLICATION: "OffloadBuddy"
   QMAKE_PROJECT: "OffloadBuddy.pro"
 
@@ -32,46 +32,33 @@ jobs:
         with:
           submodules: recursive
 
-      # Cache Qt
-      - name: Cache Qt
-        id: cache-qt
-        uses: actions/cache@v1
-        with:
-          path: ../Qt
-          key: ${{runner.os}}-QtCache
-
       # Install Qt
       - name: Install Qt
         uses: jurplel/install-qt-action@v2
         with:
-          version: '5.15.2'
-          modules: qtcharts
-          cached: ${{steps.cache-qt.outputs.cache-hit}}
+          aqtversion: '==2.1.0'
+          version: '6.3.1'
+          modules: qtconnectivity qtcharts qtimageformats qt5compat
+          cached: 'false'
 
       # Install dependencies (from package manager)
       - name: Install dependencies (from package manager)
         run: |
-             sudo apt-add-repository ppa:savoury1/backports -y;
-             sudo apt-add-repository ppa:savoury1/build-tools -y;
-             sudo apt-add-repository ppa:savoury1/graphics -y;
-             sudo apt-add-repository ppa:savoury1/multimedia -y;
-             sudo apt-add-repository ppa:savoury1/ffmpeg4 -y;
-             sudo apt-get update -y;
-             sudo apt-get upgrade -y && sudo apt-get dist-upgrade -y;
-             sudo apt-get install libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-render-util0 libxcb-xinerama0 libzstd-dev -y;
-             sudo apt-get install libgl1-mesa-dev libva-dev libvdpau-dev libmfx1 libsrt1.4-gnutls -y;
+             sudo apt-add-repository ppa:savoury1/ffmpeg5 -y;
+             sudo apt-get update -y && upgrade -y && sudo apt-get dist-upgrade -y;
              sudo apt-get install libswscale5 libswresample3 libpostproc55 libavutil56 libavformat58 libavfilter7 libavdevice58 libavcodec58 ffmpeg -y;
              sudo apt-get install libavutil-dev libavformat-dev libavfilter-dev libavdevice-dev libavcodec-dev -y;
              sudo apt-get install gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-libav -y;
              sudo apt-get install libudev-dev libusb-dev -y;
              sudo apt-get install ninja-build libtool automake m4 gettext -y;
+             sudo apt-get install libgl1-mesa-dev libxkbcommon-x11-dev libx11-xcb-dev libzstd-dev -y;
              sudo apt-get install appstream -y;
 
       # Build dependencies (from contribs script)
       - name: Build dependencies (from contribs script)
         run: |
-             cd contribs
-             python3 contribs.py
+             cd contribs/
+             python3 contribs_builder.py
              cd ..
 
       # Build application
@@ -103,24 +90,36 @@ jobs:
         with:
           submodules: recursive
 
-      # Install dependencies (from package manager)
-      - name: Install dependencies (from package manager)
+      # Install dependencies
+      #- name: Install dependencies
+      #  run: |
+      #       brew install qt6
+
+      # Install Qt
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          aqtversion: '==2.1.0'
+          version: '6.3.1'
+          modules: qtconnectivity qtcharts qt5compat
+          cached: 'false'
+
+      # Build dependencies (from package manager)
+      - name: Build dependencies (from package manager)
         run: |
-             brew install qt5
+             brew install ninja automake autoconf libtool pkg-config gettext
+             brew link --force gettext
 
       # Build dependencies (from contribs script)
       - name: Build dependencies (from contribs script)
         run: |
-             brew install ninja automake autoconf libtool pkg-config gettext
-             brew link --force gettext
              cd contribs/
-             python3 contribs.py
+             python3 contribs_builder.py
              cd ..
 
       # Build application
       - name: Build application
         run: |
-             export PATH=$PATH:/usr/local/opt/qt@5/bin:/usr/local/bin
              qmake --version
              qmake ${{env.QMAKE_PROJECT}} DEFINES+=USE_CONTRIBS CONFIG+=release
              make -j$(nproc)
@@ -156,21 +155,14 @@ jobs:
           arch: x64
           spectre: true
 
-      # Cache Qt
-      - name: Cache Qt
-        id: cache-qt
-        uses: actions/cache@v1
-        with:
-          path: ../Qt
-          key: ${{runner.os}}-QtCache
-
       # Install Qt
       - name: Install Qt
         uses: jurplel/install-qt-action@v2
         with:
-          version: '5.15.2'
-          modules: qtcharts
-          cached: ${{steps.cache-qt.outputs.cache-hit}}
+          aqtversion: '==2.1.0'
+          version: '6.3.1'
+          modules: qtconnectivity qtcharts qt5compat
+          cached: 'false'
 
       # Install NSIS (already installed in 'windows-2022')
       #- name: Install NSIS
@@ -183,7 +175,7 @@ jobs:
       - name: Build dependencies (from contribs script)
         run: |
              cd contribs/
-             python3 contribs.py
+             python3 contribs_builder.py
              cd ..
 
       # Build application

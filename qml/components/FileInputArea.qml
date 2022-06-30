@@ -2,11 +2,11 @@ import QtQuick 2.15
 import QtQuick.Controls.impl 2.15
 import QtQuick.Templates 2.15 as T
 
-import QtQuick.Dialogs 1.3 // Qt5
-import QtGraphicalEffects 1.15 // Qt5
+//import QtQuick.Dialogs 1.3 // Qt5
+//import QtGraphicalEffects 1.15 // Qt5
 
-//import QtQuick.Dialogs // Qt6
-//import Qt5Compat.GraphicalEffects // Qt6
+import QtQuick.Dialogs // Qt6
+import Qt5Compat.GraphicalEffects // Qt6
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsPath.js" as UtilsPath
@@ -32,8 +32,8 @@ T.TextField {
     placeholderTextColor: colorPlaceholderText
 
     selectByMouse: true
-    selectionColor: Theme.colorPrimary
-    selectedTextColor: "white"
+    selectionColor: colorSelection
+    selectedTextColor: colorSelectedText
 
     onEditingFinished: focus = false
 
@@ -63,17 +63,16 @@ T.TextField {
         asynchronous: false
         sourceComponent: FileDialog {
             title: qsTr("Please choose a file!")
-            sidebarVisible: true
-            selectExisting: false
-            selectMultiple: false
-            selectFolder: false
+            currentFolder: UtilsPath.makeUrl(control.text)
+            fileMode: FileDialog.SaveFile
 
-            folder: control.text
+            //fileMode: FileDialog.OpenFile / FileDialog.OpenFiles / FileDialog.SaveFile
+            //flags: FileDialog.HideNameFilterDetails
 
             onAccepted: {
-                //console.log("fileDialog URL: " + fileUrl)
+                //console.log("fileDialog URL: " + selectedFile)
 
-                var f = UtilsPath.cleanUrl(fileUrl)
+                var f = UtilsPath.cleanUrl(selectedFile)
                 if (f.slice(0, -1) !== "/") f += "/"
 
                 control.text = f
@@ -108,18 +107,12 @@ T.TextField {
         radius: Theme.componentRadius
         color: control.colorBackground
 
-        ButtonThemed {
-            id: buttonChange
+        Rectangle {
+            anchors.top: parent.top
             anchors.right: parent.right
-
-            height: control.height
-            visible: control.enabled
-            text: qsTr("change")
-
-            onClicked: {
-                fileDialogLoader.active = true
-                fileDialogLoader.item.open()
-            }
+            anchors.bottom: parent.bottom
+            width: buttonWidth
+            color: Theme.colorComponent
         }
 
         Rectangle {
@@ -130,7 +123,7 @@ T.TextField {
             border.color: (control.activeFocus || fileArea.activeFocus) ? Theme.colorPrimary : control.colorBorder
         }
 
-        layer.enabled: false
+        layer.enabled: true
         layer.effect: OpacityMask {
             maskSource: Rectangle {
                 x: background.x
@@ -146,8 +139,8 @@ T.TextField {
 
     TextInput {
         id: fileArea
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
+        anchors.top: control.top
+        anchors.bottom: control.bottom
 
         x: control.leftPadding + control.contentWidth
         width: control.width - control.buttonWidth - x - 12
@@ -157,8 +150,12 @@ T.TextField {
         color: Theme.colorSubText
         verticalAlignment: Text.AlignVCenter
 
+        selectByMouse: true
+        selectionColor: control.colorSelection
+        selectedTextColor: control.colorSelectedText
+
         onTextChanged: {
-            parent.textChanged()
+            control.textChanged()
         }
         onEditingFinished: {
             focus = false
@@ -167,8 +164,8 @@ T.TextField {
 
     Text {
         id: dot
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
+        anchors.top: control.top
+        anchors.bottom: control.bottom
 
         x: control.leftPadding + control.contentWidth + fileArea.contentWidth
         visible: x < control.width
@@ -179,12 +176,31 @@ T.TextField {
     }
     Text {
         id: extensionArea
-        anchors.top: parent.top
+        anchors.top: control.top
         anchors.left: dot.right
-        anchors.bottom: parent.bottom
+        anchors.bottom: control.bottom
 
         visible: dot.visible
         color: Theme.colorSubText
         verticalAlignment: Text.AlignVCenter
+    }
+
+    ButtonThemed {
+        id: buttonChange
+        anchors.top: parent.top
+        anchors.topMargin: 2
+        anchors.right: parent.right
+        anchors.rightMargin: 2
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 2
+
+        height: control.height
+        visible: control.enabled
+        text: qsTr("change")
+
+        onClicked: {
+            fileDialogLoader.active = true
+            fileDialogLoader.item.open()
+        }
     }
 }

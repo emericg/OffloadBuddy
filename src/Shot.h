@@ -52,7 +52,6 @@
 #include <QGeoCodeReply>
 
 #include <QtCharts/QLineSeries>
-using namespace QtCharts;
 
 /* ************************************************************************** */
 

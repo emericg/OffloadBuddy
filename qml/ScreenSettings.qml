@@ -1,8 +1,6 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-
-import QtQuick.Dialogs 1.3 // Qt5
-//import QtQuick.Dialogs // Qt6
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Dialogs
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsString.js" as UtilsString
@@ -477,16 +475,12 @@ Item {
 
                     active: false
                     asynchronous: false
-                    sourceComponent: FileDialog {
+                    sourceComponent: FolderDialog {
                         title: qsTr("Please choose a media directory!")
-                        sidebarVisible: true
-                        selectExisting: true
-                        selectMultiple: false
-                        selectFolder: true
-                        folder: shortcuts.home
+                        currentFolder: utilsApp.getStandardPath_url("home")
 
                         onAccepted: {
-                            storageManager.addDirectory(UtilsPath.cleanUrl(fileUrl))
+                            storageManager.addDirectory(UtilsPath.cleanUrl(selectedFolder))
                         }
                     }
                 }

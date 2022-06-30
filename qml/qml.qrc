@@ -71,7 +71,7 @@
         <file alias="RoundButtonText.qml">components_generic/RoundButtonText.qml</file>
         <file alias="SelectorMenu.qml">components_generic/SelectorMenu.qml</file>
         <file alias="SelectorMenuItem.qml">components_generic/SelectorMenuItem.qml</file>
-        <file alias="SimpleShadow.qml">components_generic/SimpleShadow5.qml</file>
+        <file alias="SimpleShadow.qml">components_generic/SimpleShadow6.qml</file>
         <file alias="SliderArrow.qml">components_generic/SliderArrow.qml</file>
         <file alias="SliderValueSolid.qml">components_generic/SliderValueSolid.qml</file>
         <file alias="ToolTipFlat.qml">components_generic/ToolTipFlat.qml</file>

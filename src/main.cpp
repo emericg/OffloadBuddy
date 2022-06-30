@@ -117,8 +117,7 @@ static void exithandler()
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+    print_build_infos();
 
 #if defined(Q_OS_LINUX)
     // NVIDIA suspend&resume hack
@@ -130,7 +129,6 @@ int main(int argc, char *argv[])
     }
 #endif
 
-    print_build_infos();
     SingleApplication app(argc, argv, false);
 
     app.setWindowIcon(QIcon(":/appicons/offloadbuddy.svg"));

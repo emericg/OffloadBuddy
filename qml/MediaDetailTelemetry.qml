@@ -116,7 +116,7 @@ Item {
 
         property bool fullscreen: false
         width: fullscreen ? parent.width - 32 : parent.width * 0.40
-        Behavior on width { NumberAnimation { duration: 333 } }
+        Behavior on width { NumberAnimation { duration: 233 } }
 
         radius: Theme.componentRadius
         color: Theme.colorForeground
@@ -541,13 +541,20 @@ Item {
 
         z: -1
         width: parent.width * 0.60 - 16
-        //Behavior on width { NumberAnimation { duration: 333 } }
+        //Behavior on width { NumberAnimation { duration: 233 } }
 
         enabled: !mapArea.fullscreen
 
         property string graphHead: Theme.colorForeground // Theme.colorPrimary
         property string graphTxt: Theme.colorText // "white"
-        property string graphBg: (Theme.currentTheme === Theme.BLOOD_AND_TEARS) ? Theme.colorForeground : Theme.colorComponentBackground
+        property string graphBg: {
+            if (Theme.currentTheme === Theme.THEME_LIGHT_AND_WARM) return Theme.colorComponentBackground
+            if (Theme.currentTheme === Theme.THEME_DARK_AND_SPOOKY) return Theme.colorComponentBackground
+            if (Theme.currentTheme === Theme.THEME_PLAIN_AND_BORING) return Theme.colorForeground
+            if (Theme.currentTheme === Theme.THEME_BLOOD_AND_TEARS) return Theme.colorForeground
+            if (Theme.currentTheme === Theme.THEME_MIGHTY_KITTENS) return Theme.colorComponentBackground
+            return Theme.colorComponentBackground
+        }
 
         ////////////////
 
@@ -561,7 +568,7 @@ Item {
             anchors.right: parent.right
             anchors.rightMargin: 16
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 80
+            anchors.bottomMargin: 72
 
             columns: 2
             spacing: 16
@@ -574,12 +581,13 @@ Item {
                 height: grid.graphHeight
                 radius: Theme.componentRadius
                 color: graphArea.graphBg
+                border.width: 2
                 border.color: graphArea.graphHead
 
                 Rectangle {
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    height: 48
+                    height: 40
                     radius: Theme.componentRadius
                     color: graphArea.graphHead
 
@@ -638,12 +646,13 @@ Item {
                 height: grid.graphHeight
                 radius: Theme.componentRadius
                 color: graphArea.graphBg
+                border.width: 2
                 border.color: graphArea.graphHead
 
                 Rectangle {
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    height: 48
+                    height: 40
                     radius: Theme.componentRadius
                     color: graphArea.graphHead
 
@@ -701,12 +710,13 @@ Item {
                 height: grid.graphHeight
                 radius: Theme.componentRadius
                 color: graphArea.graphBg
+                border.width: 2
                 border.color: graphArea.graphHead
 
                 Rectangle {
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    height: 48
+                    height: 40
                     radius: Theme.componentRadius
                     color: graphArea.graphHead
 
@@ -764,12 +774,13 @@ Item {
                 height:grid. graphHeight
                 radius: Theme.componentRadius
                 color: graphArea.graphBg
+                border.width: 2
                 border.color: graphArea.graphHead
 
                 Rectangle {
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    height: 48
+                    height: 40
                     radius: Theme.componentRadius
                     color: graphArea.graphHead
 
@@ -824,7 +835,7 @@ Item {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 16
 
-            height: 48
+            height: 40
             radius: Theme.componentRadius
             color: graphArea.graphHead
 

@@ -2,11 +2,11 @@ import QtQuick 2.15
 import QtQuick.Controls.impl 2.15
 import QtQuick.Templates 2.15 as T
 
-import QtQuick.Dialogs 1.3 // Qt5
-import QtGraphicalEffects 1.15 // Qt5
+//import QtQuick.Dialogs 1.3 // Qt5
+//import QtGraphicalEffects 1.15 // Qt5
 
-//import QtQuick.Dialogs // Qt6
-//import Qt5Compat.GraphicalEffects // Qt6
+import QtQuick.Dialogs // Qt6
+import Qt5Compat.GraphicalEffects // Qt6
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsPath.js" as UtilsPath
@@ -42,7 +42,7 @@ T.TextField {
     property bool isValid: (control.text.length > 0)
 
     // settings
-    property int buttonWidth: (buttonChange.visible ? buttonChange.width : 0)
+    property int buttonWidth: (buttonChange.visible ? buttonChange.width + 2 : 2)
 
     // colors
     property string colorText: Theme.colorComponentText
@@ -55,21 +55,18 @@ T.TextField {
     ////////////////////////////////////////////////////////////////////////////
 
     Loader {
-        id: fileDialogLoader
+        id: folderDialogLoader
 
         active: false
         asynchronous: false
-        sourceComponent: FileDialog {
+        sourceComponent: FolderDialog {
             title: qsTr("Please choose a directory!")
-            sidebarVisible: true
-            selectExisting: false
-            selectMultiple: false
-            selectFolder: true
+            currentFolder: UtilsPath.makeUrl(control.text)
 
             onAccepted: {
-                //console.log("fileDialog URL: " + fileUrl)
+                //console.log("fileDialog URL: " + selectedFolder)
 
-                var f = UtilsPath.cleanUrl(fileUrl)
+                var f = UtilsPath.cleanUrl(selectedFolder)
                 if (f.slice(0, -1) !== "/") f += "/"
 
                 control.text = f
@@ -97,6 +94,24 @@ T.TextField {
 
     ////////////////////////////////////////////////////////////////////////////
 
+    ButtonThemed {
+        id: buttonChange
+        anchors.top: parent.top
+        anchors.topMargin: 2
+        anchors.right: parent.right
+        anchors.rightMargin: 2
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 2
+
+        visible: control.enabled
+        text: qsTr("change")
+
+        onClicked: {
+            folderDialogLoader.active = true
+            folderDialogLoader.item.open()
+        }
+    }
+
     background: Rectangle {
         implicitWidth: 256
         implicitHeight: Theme.componentHeight
@@ -104,18 +119,12 @@ T.TextField {
         radius: Theme.componentRadius
         color: control.colorBackground
 
-        ButtonThemed {
-            id: buttonChange
+        Rectangle {
+            anchors.top: parent.top
             anchors.right: parent.right
-
-            height: control.height
-            visible: control.enabled
-            text: qsTr("change")
-
-            onClicked: {
-                fileDialogLoader.active = true
-                fileDialogLoader.item.open()
-            }
+            anchors.bottom: parent.bottom
+            width: buttonWidth
+            color: Theme.colorComponent
         }
 
         Rectangle {
@@ -126,7 +135,7 @@ T.TextField {
             border.color: control.activeFocus ? Theme.colorPrimary : colorBorder
         }
 
-        layer.enabled: false
+        layer.enabled: true
         layer.effect: OpacityMask {
             maskSource: Rectangle {
                 x: background.x

@@ -39,7 +39,6 @@
 #include <QDebug>
 
 #include <QtCharts>
-using namespace QtCharts;
 
 /* ************************************************************************** */
 

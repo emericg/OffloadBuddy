@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-echo "> OffloadBuddy packager (macOS x86_64)"
+echo "> OffloadBuddy packager (macOS x86_64 / arm64)"
 
 export APP_NAME="OffloadBuddy";
-export APP_VERSION=0.10;
+export APP_VERSION=0.11;
 export GIT_VERSION=$(git rev-parse --short HEAD);
 
 ## CHECKS ######################################################################

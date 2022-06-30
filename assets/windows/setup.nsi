@@ -10,7 +10,7 @@ Unicode True
 !define COMPANYNAME                  "Emeric Grange"
 !define DESCRIPTION                  "A multimedia offloading software with a few tricks up its sleeve!"
 !define VERSIONMAJOR                 0
-!define VERSIONMINOR                 10
+!define VERSIONMINOR                 11
 !define VERSIONBUILD                 0
 !define INSTALL_DIR_DEFAULT          "$PROGRAMFILES64\${APPNAME}"
 !define MUI_ABORTWARNING
@@ -79,11 +79,6 @@ SectionEnd
 Section "Install Visual C++ Redistributable"
   ExecWait "$INSTDIR\vc_redist.x64.exe /quiet /norestart"
   Delete "$INSTDIR\vc_redist.x64.exe"
-SectionEnd
-
-Section "Install LAV Filters"
-  ExecWait "$INSTDIR\LAVFilters-0.76.1-Installer.exe /verysilent /norestart"
-  Delete "$INSTDIR\LAVFilters-0.76.1-Installer.exe"
 SectionEnd
 
 Section "Start Menu Shortcuts"

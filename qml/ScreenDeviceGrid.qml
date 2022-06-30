@@ -840,6 +840,7 @@ Item {
             model: currentDevice ? currentDevice.shotFilter : null
             delegate: ItemShot { width: shotsView.cellSize; cellFormat: shotsView.cellFormat; }
 
+            maximumFlickVelocity: 10000
             ScrollBar.vertical: ScrollBar { z: 1 }
 
             highlight: itemHighlight

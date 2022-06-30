@@ -51,11 +51,12 @@ It's designed to remove the hassle of handling and transferring the many videos 
 
 #### Dependencies
 
-You will need a C++17 capable compiler and Qt 5.15 (with QtMultimedia, QtLocation and QtCharts).  Qt 6+ won't be supported for a while.  
-On Windows, the contribs builds fine with MSVC 2017.  
+You will need a C++17 capable compiler and Qt 6.3 (with QtMultimedia, QtLocation and QtCharts).  
+On Windows, the contribs builds fine with MSVC 2019 and 2022.  
+On macOS you will need Xcode 12+.  
 
 OffloadBuddy dependencies:
-- Qt (5.15)  
+- Qt (6.3+)  
 - pkg-config (linux / macOS without contribs)  
 
 Optional dependencies:
@@ -71,28 +72,37 @@ Build dependencies:
 
 #### Building OffloadBuddy
 
-You can either use the libraries from your system, or use the 'contribs' script to build necessary libraries.  
+Clone the repository:
 
-Build dependencies using the 'contribs' script (optional):
+```bash
+$ git clone https://github.com/emericg/OffloadBuddy.git
+```
+
+You can either use the libraries from your system, or use the `contribs_builder.py` script to build necessary libraries.  
+You will probably need to use this script, because some libraries aren't widely available in package managers. Also, if you wish to cross compile for Android or iOS, the script will make your life so much easier.  
+
+Build dependencies using the `contribs_builder.py` script (optional):
+
 ```bash
 $ cd OffloadBuddy/contribs/
-$ python3 contribs.py
+$ python3 contribs_builder.py
 ```
 
 Build OffloadBuddy:
+
 ```bash
 $ cd OffloadBuddy/
-$ qmake DEFINES+=USE_CONTRIBS CONFIG+=release
+$ qmake6 DEFINES+=USE_CONTRIBS CONFIG+=release
 $ make
 ```
 
 #### Third party projects used by OffloadBuddy
 
-* Qt [website](https://www.qt.io) ([LGPL 3](https://www.gnu.org/licenses/lgpl-3.0.txt))
-* MiniVideo [website](https://github.com/emericg/MiniVideo) ([LGPL 3](https://www.gnu.org/licenses/lgpl-3.0.txt))
-* ffmpeg [website](https://www.ffmpeg.org/) ([LGPL 2.1](https://www.gnu.org/licenses/lgpl-2.1.txt))
-* libexif [website](https://github.com/libexif/) ([LGPL 2.1](https://www.gnu.org/licenses/lgpl-2.1.txt))
-* libmtp [website](https://github.com/libmtp/) ([LGPL 2.1](https://www.gnu.org/licenses/lgpl-2.1.txt))
+* Qt6 [website](https://www.qt.io) ([LGPL v3](https://www.gnu.org/licenses/lgpl-3.0.txt))
+* MiniVideo [website](https://github.com/emericg/MiniVideo) ([LGPL v3](https://www.gnu.org/licenses/lgpl-3.0.txt))
+* ffmpeg [website](https://www.ffmpeg.org/) ([LGPL v2.1](https://www.gnu.org/licenses/lgpl-2.1.txt))
+* libexif [website](https://github.com/libexif/) ([LGPL v2.1](https://www.gnu.org/licenses/lgpl-2.1.txt))
+* libmtp [website](https://github.com/libmtp/) ([LGPL v2.1](https://www.gnu.org/licenses/lgpl-2.1.txt))
 * miniz [website](https://github.com/richgel999/miniz/) ([MIT](https://opensource.org/licenses/MIT))
 * SingleApplication [website](https://github.com/itay-grudev/SingleApplication) ([MIT](https://opensource.org/licenses/MIT))
 * Graphical resources: [assets/COPYING](assets/COPYING)

@@ -1,3 +1,4 @@
+CONFIG += c++11
 
 # Generic utils
 SOURCES += $${PWD}/utils_app.cpp \

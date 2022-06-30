@@ -1,8 +1,6 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-
-import QtMultimedia 5.15 // Qt5
-//import QtMultimedia // Qt6
+import QtQuick
+import QtQuick.Controls
+import QtMultimedia
 
 import ThemeEngine 1.0
 import MediaUtils 1.0
@@ -87,6 +85,7 @@ Item {
         overlayCrop.editing = false
 
         if (shot.previewVideo) {
+/*
             if (shot.chapterCount > 1) { // playlist
                 //mode = "multivideo"
                 videoPlayer.playlist = Qt.createQmlObject('import QtMultimedia 5.15; Playlist { id: playlist; }',
@@ -95,8 +94,10 @@ Item {
                 for (var i = 0; i < shot.chapterCount; i++)
                     videoPlayer.playlist.insertItem(i, "file:///" + shot.chapterPaths[i])
             } else if (shot.previewVideo) { // single video
-                videoPlayer.source = "file:///" + shot.previewVideo
+                videoPlayer.source = "file://" + shot.previewVideo
             }
+*/
+            videoPlayer.source = "file://" + shot.previewVideo
 
             videoPlayer.play()
             restorePosition()
@@ -152,11 +153,11 @@ Item {
             if (shot.chapterCount === 1) {
                 shot.mediaPosition = videoPlayer.position
             } else if (shot.chapterCount > 1) {
-                var pos = videoPlayer.position
-                for (var i = 0; i < videoPlayer.playlist.currentIndex; i++) {
-                    pos += shot.chapterDurations[i]
-                }
-                shot.mediaPosition = pos
+            //    var pos = videoPlayer.position
+            //    for (var i = 0; i < videoPlayer.playlist.currentIndex; i++) {
+            //        pos += shot.chapterDurations[i]
+            //    }
+            //    shot.mediaPosition = pos
             }
             //console.log("position saved: " + shot.mediaPosition)
         }
@@ -463,11 +464,7 @@ Item {
             height: output.rotated ? output.width : output.height
             anchors.centerIn: parent
 
-            autoOrientation: false // doesn't work anyway
             fillMode: Image.Stretch
-
-            source: videoPlayer
-            //flushMode: LastFrame // Qt 5.13
         }
     }
 
@@ -489,54 +486,57 @@ Item {
 
     MediaPlayer {
         id: videoPlayer
-        volume: 0.5
-        autoLoad: true
-        autoPlay: false // will be paused immediately
-        notifyInterval: 33
+
+        audioOutput: AudioOutput {
+            id: audioOutput
+            volume: 0.5
+        }
+
+        videoOutput: videoOutput
+
         //playlist: Playlist { id: playlist; }
 
         property bool isRunning: false
 
-        onError: {
-            if (Qt.platform.os === "windows")
-                mediaBanner.openMessage(qsTr("Codec pack installed?"))
-            else
-                mediaBanner.openMessage(qsTr("Oooops..."))
-        }
-        onPlaying: {
-            buttonPlay.source = "qrc:/assets/icons_material/baseline-pause-24px.svg"
-            savePosition()
+        onErrorOccurred: (error, errorString) => {
+            //console.log("onErrorOccurred() " + videoPlayer.errorString)
 
-            //utilsScreen.keepScreenOn(true, "OffloadBuddy", qsTr("Playing video"))
+            mediaBanner.openMessage(qsTr("Oooops...") + videoPlayer.errorString)
         }
-        onPaused: {
-            buttonPlay.source = "qrc:/assets/icons_material/baseline-play_arrow-24px.svg"
-            savePosition()
+        onPlaybackStateChanged: {
+            //console.log("onPlaybackStateChanged() " + videoPlayer.playbackState)
 
-            //utilsScreen.keepScreenOn(false)
-        }
-        onStopped: {
-            if (videoPlayer.position >= shot.duration) { // EOF
-                isRunning = false
-                videoPlayer.seek(0) // Qt5
-                //videoPlayer.position = 0 // Qt6
+            if (videoPlayer.playbackState === MediaPlayer.PlayingState) {
+                buttonPlay.source = "qrc:/assets/icons_material/baseline-pause-24px.svg"
                 savePosition()
 
-                videoPlayer.play()
-                videoPlayer.pause()
+                //utilsScreen.keepScreenOn(true, "OffloadBuddy", qsTr("Playing video"))
+            } else if (videoPlayer.playbackState === MediaPlayer.PausedState) {
+                buttonPlay.source = "qrc:/assets/icons_material/baseline-play_arrow-24px.svg"
+                savePosition()
 
-                // Note // on Qt 5.13+, same thing could be achieved with:
-                //videoOutput.flushMode: LastFrame
+                //utilsScreen.keepScreenOn(false)
+            } else if (videoPlayer.playbackState === MediaPlayer.StoppedState) {
+                if (videoPlayer.position >= shot.duration) { // EOF
+                    isRunning = false
+                    videoPlayer.position = 0
+                    savePosition()
+
+                    videoPlayer.play()
+                    videoPlayer.pause()
+                }
+
+                //utilsScreen.keepScreenOn(false)
             }
-
-            //utilsScreen.keepScreenOn(false)
         }
-        onPlaylistChanged: {
+/*
+        onPlaylistChanged: { // removed from Qt6
             //console.log("onPlaylistChanged()")
             videoPlayer.isRunning = false
             mediaBanner.close()
             overlayCrop.load()
         }
+*/
         onSourceChanged: {
             //console.log("onSourceChanged(" + source + ")")
             videoPlayer.isRunning = false
@@ -547,9 +547,9 @@ Item {
             if (shot) {
                 var videoPlayerPosition = videoPlayer.position
                 if (shot.chapterCount > 1) {
-                    for (var i = 0; i < videoPlayer.playlist.currentIndex && i < videoPlayer.playlist.itemCount; i++) {
-                        videoPlayerPosition += shot.chapterDurations[i]
-                    }
+                //    for (var i = 0; i < videoPlayer.playlist.currentIndex && i < videoPlayer.playlist.itemCount; i++) {
+                //        videoPlayerPosition += shot.chapterDurations[i]
+                //    }
                 }
                 timeline.value = (videoPlayerPosition / shot.duration)
                 timecode.text = UtilsString.durationToString_ISO8601_compact(videoPlayerPosition) + " / " + UtilsString.durationToString_ISO8601_compact(shot.duration)
@@ -952,8 +952,7 @@ Item {
                         videoPlayer.playlist.currentIndex = seekindex
                 }
 
-                videoPlayer.seek(seekpoint) // Qt5
-                //videoPlayer.position = seekpoint // Qt6
+                videoPlayer.position = seekpoint
                 savePosition()
 
                 if (Qt.platform.os === "osx") {
@@ -977,23 +976,22 @@ Item {
                 }
 
                 if (shot.chapterCount > 1) {
-                    var doff = 0;
-                    var seekindex = 0;
-                    for (var i = 0; i < videoPlayer.playlist.itemCount; i++) {
-                        if (seekpoint > doff && seekpoint < (doff + shot.chapterDurations[i])) {
-                            seekpoint -= doff
-                            seekindex = i
-                            break
-                        }
-                        doff += shot.chapterDurations[i]
-                    }
+                //    var doff = 0;
+                //    var seekindex = 0;
+                //    for (var i = 0; i < videoPlayer.playlist.itemCount; i++) {
+                //        if (seekpoint > doff && seekpoint < (doff + shot.chapterDurations[i])) {
+                //            seekpoint -= doff
+                //            seekindex = i
+                //            break
+                //        }
+                //        doff += shot.chapterDurations[i]
+                //    }
 
-                    if (videoPlayer.playlist.currentIndex !== seekindex)
-                        videoPlayer.playlist.currentIndex = seekindex
+                //    if (videoPlayer.playlist.currentIndex !== seekindex)
+                //        videoPlayer.playlist.currentIndex = seekindex
                 }
 
-                videoPlayer.seek(seekpoint) // Qt5
-                //videoPlayer.position = seekpoint // Qt6
+                videoPlayer.position = seekpoint
                 savePosition()
 
                 if (Qt.platform.os === "osx") {
@@ -1060,13 +1058,13 @@ Item {
                         selected: parent.isHovered
 
                         source: (soundline.value === 0) ? "qrc:/assets/icons_material/baseline-volume_off-24px.svg" : "qrc:/assets/icons_material/baseline-volume_up-24px.svg"
-                        property real savedVolume: videoPlayer.volume
+                        property real savedVolume: audioOutput.volume
                         onClicked: {
-                            if (videoPlayer.volume) {
-                                savedVolume = videoPlayer.volume
-                                videoPlayer.volume = 0
+                            if (audioOutput.volume) {
+                                savedVolume = audioOutput.volume
+                                audioOutput.volume = 0
                             } else {
-                                videoPlayer.volume = savedVolume
+                                audioOutput.volume = savedVolume
                             }
                         }
                     }
@@ -1080,8 +1078,8 @@ Item {
 
                         from: 0
                         to: 1
-                        value: videoPlayer.volume
-                        onMoved: videoPlayer.volume = value
+                        value: audioOutput.volume
+                        onMoved: audioOutput.volume = value
                     }
                 }
 
