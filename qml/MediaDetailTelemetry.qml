@@ -304,7 +304,7 @@ Item {
 
             MouseArea {
                 anchors.fill: parent
-                onWheel: {
+                onWheel: (wheel) => {
                     if (wheel.angleDelta.y < 0) zoomOut()
                     else if (wheel.angleDelta.y > 0) zoomIn()
                 }

@@ -837,9 +837,9 @@ Item {
                 anchors.top: parent.top
                 anchors.topMargin: -(height/2 + 2)
                 anchors.left: parent.left
-                anchors.leftMargin: -6
+                anchors.leftMargin: 0
                 anchors.right: parent.right
-                anchors.rightMargin: -6
+                anchors.rightMargin: 0
 
                 z: 10
                 from: 0
