@@ -24,7 +24,7 @@ jobs:
   ## GNU/Linux build ###########################################################
   build-linux:
     name: "Linux CI build"
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       # Checkout the repository
       - name: Checkout repository and submodules
@@ -38,14 +38,14 @@ jobs:
         with:
           aqtversion: '==2.1.0'
           version: '6.3.1'
-          modules: qtconnectivity qtcharts qtimageformats qt5compat
+          modules: qtcharts qtimageformats qt5compat
           cached: 'false'
 
       # Install dependencies (from package manager)
       - name: Install dependencies (from package manager)
         run: |
              sudo apt-add-repository ppa:savoury1/ffmpeg5 -y;
-             sudo apt-get update -y && upgrade -y && sudo apt-get dist-upgrade -y;
+             sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get dist-upgrade -y;
              sudo apt-get install libswscale5 libswresample3 libpostproc55 libavutil56 libavformat58 libavfilter7 libavdevice58 libavcodec58 ffmpeg -y;
              sudo apt-get install libavutil-dev libavformat-dev libavfilter-dev libavdevice-dev libavcodec-dev -y;
              sudo apt-get install gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-libav -y;
@@ -58,7 +58,7 @@ jobs:
       - name: Build dependencies (from contribs script)
         run: |
              cd contribs/
-             python3 contribs_builder.py
+             python3 contribs_builder.py --qt-directory ${{env.Qt6_DIR}}/../.. --targets=linux
              cd ..
 
       # Build application
@@ -101,7 +101,7 @@ jobs:
         with:
           aqtversion: '==2.1.0'
           version: '6.3.1'
-          modules: qtconnectivity qtcharts qt5compat
+          modules: qtcharts qtimageformats qt5compat
           cached: 'false'
 
       # Build dependencies (from package manager)
@@ -114,7 +114,7 @@ jobs:
       - name: Build dependencies (from contribs script)
         run: |
              cd contribs/
-             python3 contribs_builder.py
+             python3 contribs_builder.py --qt-directory ${{env.Qt6_DIR}}/../.. --targets=macos
              cd ..
 
       # Build application
@@ -161,7 +161,7 @@ jobs:
         with:
           aqtversion: '==2.1.0'
           version: '6.3.1'
-          modules: qtconnectivity qtcharts qt5compat
+          modules: qtcharts qtimageformats qt5compat
           cached: 'false'
 
       # Install NSIS (already installed in 'windows-2022')
@@ -175,7 +175,7 @@ jobs:
       - name: Build dependencies (from contribs script)
         run: |
              cd contribs/
-             python3 contribs_builder.py
+             python3 contribs_builder.py --qt-directory ${{env.Qt6_DIR}}/../.. --targets=msvc2019
              cd ..
 
       # Build application
