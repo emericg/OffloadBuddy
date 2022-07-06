@@ -486,8 +486,8 @@ for TARGET in TARGETS:
     ## qtlocation
     if "qtlocation" in softwares_selected:
         if not os.path.isdir(build_dir + DIR_qtlocation):
-            zipQtM = zipfile.ZipFile(src_dir + FILE_qtlocation)
-            zipQtM.extractall(build_dir)
+            zipQtLoc = zipfile.ZipFile(src_dir + FILE_qtlocation)
+            zipQtLoc.extractall(build_dir)
 
         try: os.makedirs(build_dir + DIR_qtlocation + "/build")
         except: print() # who cares
