@@ -38,7 +38,7 @@ jobs:
         with:
           aqtversion: '==2.1.0'
           version: '6.3.1'
-          modules: qt5compat qtimageformats qtpositioning qtcharts qtshadertools
+          modules: qt5compat qtmultimedia qtimageformats qtpositioning qtcharts qtshadertools
           cached: 'false'
 
       # Install dependencies (from package manager)
@@ -99,7 +99,7 @@ jobs:
         with:
           aqtversion: '==2.1.0'
           version: '6.3.1'
-          modules: qt5compat qtimageformats qtpositioning qtcharts qtshadertools
+          modules: qt5compat qtmultimedia qtimageformats qtpositioning qtcharts qtshadertools
           cached: 'false'
 
       # Build dependencies (from package manager)
@@ -159,7 +159,7 @@ jobs:
         with:
           aqtversion: '==2.1.0'
           version: '6.3.1'
-          modules: qt5compat qtimageformats qtpositioning qtcharts qtshadertools
+          modules: qt5compat qtmultimedia qtimageformats qtpositioning qtcharts qtshadertools
           cached: 'false'
 
       # Install NSIS (already installed in 'windows-2022')

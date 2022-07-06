@@ -51,7 +51,14 @@ It's designed to remove the hassle of handling and transferring the many videos 
 
 #### Dependencies
 
-You will need a C++17 capable compiler and Qt 6.3 (with QtMultimedia, QtLocation and QtCharts).  
+You will need a C++17 compiler and Qt 6.3+ with the following 'additional librairies':  
+- Qt 5 Compatibility Module
+- Qt Multimedia
+- Qt Image Formats
+- Qt Positioning
+- Qt Location (not yet part of Qt6)
+- Qt Charts
+
 On Windows, the contribs builds fine with MSVC 2019 and 2022.  
 On macOS you will need Xcode 12+.  
 

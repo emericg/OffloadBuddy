@@ -221,7 +221,7 @@ if len(TARGETS) == 0:
     if OS_HOST == "Windows":
         if "17.0" in os.getenv('VisualStudioVersion', ''):
             MSVC_GEN_VER = "Visual Studio 17 2022"
-            TARGETS.append(["windows", "x86_64", "msvc2022_64"])
+            TARGETS.append(["windows", "x86_64", "msvc2019_64"])
         else: # if "16.0" in os.getenv('VisualStudioVersion', ''):
             MSVC_GEN_VER = "Visual Studio 16 2019"
             TARGETS.append(["windows", "x86_64", "msvc2019_64"])
