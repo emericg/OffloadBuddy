@@ -12,7 +12,7 @@ Rectangle {
     anchors.bottom: parent.bottom
 
     z: 10
-    width: isHdpi ? 72 : 88
+    width: isHdpi ? 72 : 80
     color: Theme.colorSidebar
 
     ////////////////////////////////////////////////////////////////////////////
@@ -37,7 +37,7 @@ Rectangle {
 
     DesktopSidebarItem {
         id: button_library
-        height: 80
+        height: sideBar.width
 
         anchors.top: macosWindowButtons.visible ? macosWindowButtons.bottom : parent.top
         anchors.topMargin: 16
@@ -71,7 +71,7 @@ Rectangle {
 
         model: deviceManager.devicesList
         delegate: DesktopSidebarItem {
-            height: 80
+            height: sideBar.width
 
             text: modelData.model
             source: UtilsDevice.getDevicePicture(modelData)
@@ -144,7 +144,7 @@ Rectangle {
             sourceSize: 48
             highlightMode: "circle"
 
-            onClicked: appWindow.close()
+            onClicked: utilsApp.appExit()
         }
     }
 }

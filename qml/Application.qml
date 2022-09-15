@@ -134,7 +134,7 @@ ApplicationWindow {
         onActivated: appContent.state = "settings"
     }
     Shortcut {
-        sequence: StandardKey.Close
+        sequences: [StandardKey.Close]
         onActivated: appWindow.close()
     }
     Shortcut {

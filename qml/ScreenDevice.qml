@@ -51,14 +51,14 @@ Item {
     // KEYS HANDLING ///////////////////////////////////////////////////////////
 
     Shortcut {
-        sequence: StandardKey.Back
+        sequences: [StandardKey.Back]
         onActivated: {
             if (screenDevice.state === "stateMediaDetails" || screenDevice.state === "stateDeviceInfos")
                 screenMedia.back()
         }
     }
     Shortcut {
-        sequence: StandardKey.Forward
+        sequences: [StandardKey.Forward]
         onActivated: {
             if (screenDevice.state === "stateMediaGrid")
                 screenMedia.restoreShot(true)
