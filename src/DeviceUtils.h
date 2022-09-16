@@ -82,6 +82,7 @@ namespace DeviceUtils
             DEVICE_HERO8,
             DEVICE_HERO9,
             DEVICE_HERO10,
+            DEVICE_HERO11,
             DEVICE_FUSION,
             DEVICE_MAX,
 
@@ -120,8 +121,12 @@ namespace DeviceUtils
             DEVICE_DJI_OSMO,
             DEVICE_DJI_OSMOp,
             DEVICE_DJI_OSMO_POCKET,
-            DEVICE_DJI_OSMO_ACTION,
             DEVICE_DJI_POCKET2,
+            DEVICE_DJI_POCKET3,
+            DEVICE_DJI_OSMO_ACTION,
+            DEVICE_DJI_OSMO_ACTION2,
+            DEVICE_DJI_OSMO_ACTION3,
+
 
         DEVICE_RYLO = 350,
             DEVICE_RYLO_360,

@@ -45,7 +45,7 @@ public:
     ~ShotFilter();
 
     void setAcceptedTypes(const QList<int> acceptedTypes) { m_acceptedTypes = acceptedTypes; }
-    void setAcceptedFolder(const QString acceptedFolder) { m_acceptedFolder = acceptedFolder; }
+    void setAcceptedFolder(const QString &acceptedFolder) { m_acceptedFolder = acceptedFolder; }
 };
 
 /* ************************************************************************** */

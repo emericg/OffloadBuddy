@@ -12,7 +12,8 @@ function getDevicePicture(device) {
 
     // Using device name
     if (deviceBrand === "GoPro") {
-        if (deviceName.includes("HERO10") ||
+        if (deviceName.includes("HERO11") ||
+            deviceName.includes("HERO10") ||
             deviceName.includes("HERO9")) {
             camera_model += "gopro_H9"
         } else if (deviceName.includes("HERO8")) {
