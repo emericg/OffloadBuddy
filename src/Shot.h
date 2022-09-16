@@ -48,8 +48,13 @@
 #include <QDateTime>
 #include <QAbstractListModel>
 
+#ifdef ENABLE_QTLOCATION
 #include <QGeoCoordinate>
 #include <QGeoCodeReply>
+#else
+typedef int QGeoCoordinate;
+typedef void QGeoCodeReply;
+#endif
 
 #include <QtCharts/QLineSeries>
 

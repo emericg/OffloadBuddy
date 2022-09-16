@@ -34,10 +34,11 @@
 #include <QDateTime>
 #include <QImageReader>
 #include <QDesktopServices>
+#include <QDebug>
+#ifdef ENABLE_QTLOCATION
 #include <QGeoCodeReply>
 #include <QGeoAddress>
-#include <QDebug>
-
+#endif
 #include <QtCharts>
 
 /* ************************************************************************** */
@@ -53,15 +54,18 @@ void Shot::getLocation() const
 
 void Shot::setLocationResponse(QGeoCodeReply *geo_rep)
 {
+#ifdef ENABLE_QTLOCATION
     if (geo_rep)
     {
         m_geoRep = geo_rep;
         connect(m_geoRep, SIGNAL(finished()), this, SLOT(setLocation()));
     }
+#endif
 }
 
 void Shot::setLocation()
 {
+#ifdef ENABLE_QTLOCATION
     if (m_geoRep)
     {
         if (m_geoRep->error() == QGeoCodeReply::NoError)
@@ -95,6 +99,7 @@ void Shot::setLocation()
         delete m_geoRep;
         m_geoRep = nullptr;
     }
+#endif
 }
 
 void Shot::setLocationName(const QString &location)
@@ -663,6 +668,8 @@ void Shot::updateGyroSeries(QLineSeries *x, QLineSeries *y, QLineSeries *z)
 QGeoCoordinate Shot::getGpsCoordinates(unsigned index)
 {
     QGeoCoordinate c;
+
+#ifdef ENABLE_QTLOCATION
     if (index < m_gps.size())
     {
         if (m_gps_params.at(index).second >= 2) // we need at least a 2D lock
@@ -672,15 +679,16 @@ QGeoCoordinate Shot::getGpsCoordinates(unsigned index)
         }
 
         //qDebug() << "GPS (" << index << ")" << m_gps.at(index).first << m_gps.at(index).second;
-    }/*
-    else // return last point?
-    {
-        if (m_gps.size() > 0)
-        {
-            c.setLatitude(m_gps.at(m_gps.size()-1).first);
-            c.setLongitude(m_gps.at(m_gps.size()-1).second);
-        }
-    }*/
+    }
+    //else // return last point?
+    //{
+    //    if (m_gps.size() > 0)
+    //    {
+    //        c.setLatitude(m_gps.at(m_gps.size()-1).first);
+    //        c.setLongitude(m_gps.at(m_gps.size()-1).second);
+    //    }
+    //}
+#endif
 
     return c;
 }
