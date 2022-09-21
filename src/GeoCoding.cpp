@@ -5,6 +5,9 @@
 #ifdef ENABLE_QTLOCATION
 #include <QGeoCodingManager>
 #include <QGeoServiceProvider>
+#include <QGeoCoordinate>
+#include <QGeoCodeReply>
+#include <QGeoRectangle>
 #endif
 #include <QDebug>
 

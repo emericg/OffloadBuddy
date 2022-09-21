@@ -37,6 +37,7 @@
 #include <QDebug>
 #ifdef ENABLE_QTLOCATION
 #include <QGeoCodeReply>
+#include <QGeoLocation>
 #include <QGeoAddress>
 #endif
 #include <QtCharts>

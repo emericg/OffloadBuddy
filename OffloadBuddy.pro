@@ -6,7 +6,7 @@ DEFINES+= APP_VERSION=\\\"$$VERSION\\\"
 
 CONFIG += c++17
 QT     += core qml quickcontrols2 svg
-QT     += multimedia location charts
+QT     += multimedia charts
 
 # Validate Qt version
 !versionAtLeast(QT_VERSION, 6.3) : error("You need at least Qt version 6.3 for $${TARGET}")
@@ -21,7 +21,9 @@ DEFINES += ENABLE_FFMPEG
 DEFINES += ENABLE_MINIVIDEO
 DEFINES += ENABLE_LIBEXIF
 #DEFINES += ENABLE_EXIV2
-DEFINES += ENABLE_QTLOCATION
+#DEFINES += ENABLE_QTLOCATION
+
+contains(DEFINES, ENABLE_QTLOCATION) { QT += location }
 
 # Use contribs (otherwise use system libs)
 win32 | ios | android { DEFINES += USE_CONTRIBS }

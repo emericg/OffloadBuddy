@@ -1,9 +1,9 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
 
-import QtCharts 2.3
-import QtLocation 5.12
-import QtPositioning 5.12
+import QtCharts
+import QtLocation
+import QtPositioning
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsString.js" as UtilsString
