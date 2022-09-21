@@ -661,7 +661,7 @@ void Device::offloadSelected(const QString &shot_uuid, const QVariant &settings)
     qDebug() << "Device::offloadCopySelected(" << shot_uuid << ")";
 
     QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
-    if (static_cast<QMetaType::Type>(variant.type()) != QMetaType::QVariantMap) return;
+    if (static_cast<QMetaType::Type>(variant.typeId()) != QMetaType::QVariantMap) return;
     QVariantMap variantMap = variant.toMap();
     //qDebug() << "> variantMap " << variantMap;
 
@@ -724,7 +724,7 @@ void Device::offloadSelection(const QVariant &uuids, const QVariant &settings)
     qDebug() << "Device::offloadSelection(" << uuids << ")";
 
     QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
-    if (static_cast<QMetaType::Type>(variant.type()) != QMetaType::QVariantMap) return;
+    if (static_cast<QMetaType::Type>(variant.typeId()) != QMetaType::QVariantMap) return;
     QVariantMap variantMap = variant.toMap();
     //qDebug() << "> variantMap " << variantMap;
 
@@ -805,7 +805,7 @@ void Device::offloadAll(const QVariant &settings)
     qDebug() << "Device::offloadAll()";
 
     QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
-    if (static_cast<QMetaType::Type>(variant.type()) != QMetaType::QVariantMap) return;
+    if (static_cast<QMetaType::Type>(variant.typeId()) != QMetaType::QVariantMap) return;
     QVariantMap variantMap = variant.toMap();
     //qDebug() << "> variantMap " << variantMap;
 
@@ -887,7 +887,7 @@ void Device::deleteSelected(const QString &shot_uuid, const QVariant &settings)
     qDebug() << "Device::deleteSelected(" << shot_uuid << ")";
 
     QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
-    if (static_cast<QMetaType::Type>(variant.type()) != QMetaType::QVariantMap) return;
+    if (static_cast<QMetaType::Type>(variant.typeId()) != QMetaType::QVariantMap) return;
     QVariantMap variantMap = variant.toMap();
     //qDebug() << "> variantMap " << variantMap;
 
@@ -914,7 +914,7 @@ void Device::deleteSelection(const QVariant &uuids, const QVariant &settings)
     qDebug() << "Device::deleteSelection(" << uuids << ")";
 
     QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
-    if (static_cast<QMetaType::Type>(variant.type()) != QMetaType::QVariantMap) return;
+    if (static_cast<QMetaType::Type>(variant.typeId()) != QMetaType::QVariantMap) return;
     QVariantMap variantMap = variant.toMap();
     //qDebug() << "> variantMap " << variantMap;
 
@@ -946,7 +946,7 @@ void Device::deleteAll(const QVariant &settings)
     qDebug() << "Device::deleteAll()";
 
     QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
-    if (static_cast<QMetaType::Type>(variant.type()) != QMetaType::QVariantMap) return;
+    if (static_cast<QMetaType::Type>(variant.typeId()) != QMetaType::QVariantMap) return;
     QVariantMap variantMap = variant.toMap();
     //qDebug() << "> variantMap " << variantMap;
 
@@ -975,7 +975,7 @@ void Device::reencodeSelected(const QString &shot_uuid, const QVariant &settings
     qDebug() << "Device::reencodeSelected(" << shot_uuid << ")";
 
     QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
-    if (static_cast<QMetaType::Type>(variant.type()) != QMetaType::QVariantMap) return;
+    if (static_cast<QMetaType::Type>(variant.typeId()) != QMetaType::QVariantMap) return;
     QVariantMap variantMap = variant.toMap();
     //qDebug() << "> variantMap " << variantMap;
 
@@ -1073,7 +1073,7 @@ void Device::extractTelemetrySelected(const QString &shot_uuid, const QVariant &
     qDebug() << "Device::extractTelemetrySelected(" << shot_uuid << ")";
 
     QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
-    if (static_cast<QMetaType::Type>(variant.type()) != QMetaType::QVariantMap) return;
+    if (static_cast<QMetaType::Type>(variant.typeId()) != QMetaType::QVariantMap) return;
     QVariantMap variantMap = variant.toMap();
     //qDebug() << "> variantMap " << variantMap;
 
@@ -1126,7 +1126,7 @@ void Device::extractTelemetrySelection(const QVariant &uuids, const QVariant &se
     qDebug() << "Device::extractTelemetrySelection(" << uuids << ")";
 
     QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
-    if (static_cast<QMetaType::Type>(variant.type()) != QMetaType::QVariantMap) return;
+    if (static_cast<QMetaType::Type>(variant.typeId()) != QMetaType::QVariantMap) return;
     QVariantMap variantMap = variant.toMap();
     //qDebug() << "> variantMap " << variantMap;
 

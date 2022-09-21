@@ -50,11 +50,6 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
-#if !defined(QT_NO_DEBUG) && !defined(NDEBUG)
-#include <QQmlDebuggingEnabler>
-QQmlDebuggingEnabler enabler;
-#endif
-
 /* ************************************************************************** */
 
 void print_build_infos()
