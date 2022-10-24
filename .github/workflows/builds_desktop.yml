@@ -15,6 +15,7 @@ env:
   VERSION: "0.11"
   APPLICATION: "OffloadBuddy"
   QMAKE_PROJECT: "OffloadBuddy.pro"
+  QT_VERSION: "6.3.2"
 
 #--------------------------------------------------------------------------------
 # Workflow jobs
@@ -28,7 +29,7 @@ jobs:
     steps:
       # Checkout the repository
       - name: Checkout repository and submodules
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           submodules: recursive
 
@@ -36,8 +37,8 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
         with:
-          version: '6.3.2'
-          modules: qt5compat qtmultimedia qtimageformats qtpositioning qtcharts qtshadertools
+          version: ${{env.QT_VERSION}}
+          modules: qtmultimedia qtimageformats qtpositioning qtcharts qtshadertools qt5compat
 
       # Install dependencies (from package manager)
       - name: Install dependencies (from package manager)
@@ -54,7 +55,7 @@ jobs:
       - name: Build dependencies (from contribs script)
         run: |
              cd contribs/
-             python3 contribs_builder.py --qt-directory ${{env.Qt6_DIR}}/../.. --targets=linux
+             python3 contribs_builder.py --targets=linux --qt-directory ${{env.Qt6_DIR}}/../.. --qt-version ${{env.QT_VERSION}}
              cd ..
 
       # Build application
@@ -70,7 +71,7 @@ jobs:
 
       # Upload AppImage
       - name: Upload AppImage
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{env.APPLICATION}}-${{env.VERSION}}-linux64.AppImage
           path: ${{env.APPLICATION}}*.AppImage
@@ -82,7 +83,7 @@ jobs:
     steps:
       # Checkout the repository
       - name: Checkout repository and submodules
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           submodules: recursive
 
@@ -95,8 +96,8 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
         with:
-          version: '6.3.2'
-          modules: qt5compat qtmultimedia qtimageformats qtpositioning qtcharts qtshadertools
+          version: ${{env.QT_VERSION}}
+          modules: qtmultimedia qtimageformats qtpositioning qtcharts qtshadertools qt5compat
 
       # Build dependencies (from package manager)
       - name: Build dependencies (from package manager)
@@ -108,7 +109,7 @@ jobs:
       - name: Build dependencies (from contribs script)
         run: |
              cd contribs/
-             python3 contribs_builder.py --qt-directory ${{env.Qt6_DIR}}/../.. --targets=macos
+             python3 contribs_builder.py --targets=macos --qt-directory ${{env.Qt6_DIR}}/../.. --qt-version ${{env.QT_VERSION}}
              cd ..
 
       # Build application
@@ -120,13 +121,11 @@ jobs:
 
       # Deploy application
       - name: Deploy application
-        run: |
-             export PATH=$PATH:/usr/local/opt/qt@5/bin:/usr/local/bin
-             ./deploy_macos.sh -c -p
+        run: ./deploy_macos.sh -c -p
 
       # Upload app zip
       - name: Upload app zip
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{env.APPLICATION}}-${{env.VERSION}}-macOS.app
           path: bin/${{env.APPLICATION}}.app
@@ -138,7 +137,7 @@ jobs:
     steps:
       # Checkout the repository
       - name: Checkout repository and submodules
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           submodules: recursive
 
@@ -153,8 +152,8 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
         with:
-          version: '6.3.2'
-          modules: qt5compat qtmultimedia qtimageformats qtpositioning qtcharts qtshadertools
+          version: ${{env.QT_VERSION}}
+          modules: qtmultimedia qtimageformats qtpositioning qtcharts qtshadertools qt5compat
 
       # Install NSIS (already installed in 'windows-2022')
       #- name: Install NSIS
@@ -167,7 +166,7 @@ jobs:
       - name: Build dependencies (from contribs script)
         run: |
              cd contribs/
-             python3 contribs_builder.py --qt-directory ${{env.Qt6_DIR}}/../.. --targets=msvc2022
+             python3 contribs_builder.py --targets=msvc2022 --qt-directory ${{env.Qt6_DIR}}/../.. --qt-version ${{env.QT_VERSION}}
              cd ..
 
       # Build application
@@ -183,14 +182,14 @@ jobs:
 
       # Upload ZIP
       - name: Upload ZIP
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{env.APPLICATION}}-${{env.VERSION}}-win64.zip
           path: ${{env.APPLICATION}}-${{env.VERSION}}-win64.zip
 
       # Upload NSIS installer
       - name: Upload NSIS installer
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{env.APPLICATION}}-${{env.VERSION}}-win64.exe
           path: ${{env.APPLICATION}}-${{env.VERSION}}-win64.exe
