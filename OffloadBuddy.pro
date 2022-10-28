@@ -141,12 +141,15 @@ contains(DEFINES, USE_CONTRIBS) {
 
     ARCH = "x86_64"
     linux { PLATFORM = "linux" }
-    macx { PLATFORM = "macOS" }
     win32 { PLATFORM = "windows" }
-    #macx {
-    #    PLATFORM = "macOS"
-    #    ARCH = "unified"
-    #}
+    macx {
+        PLATFORM = "macOS"
+        ARCH = "x86_64"
+        QMAKE_APPLE_DEVICE_ARCHS = x86_64
+
+        #ARCH = "unified"
+        #QMAKE_APPLE_DEVICE_ARCHS = x86_64 arm64
+    }
 
     CONTRIBS_DIR = $${PWD}/contribs/env/$${PLATFORM}_$${ARCH}/usr
 
@@ -254,9 +257,6 @@ macx {
     ENTITLEMENTS.name = CODE_SIGN_ENTITLEMENTS
     ENTITLEMENTS.value = $${PWD}/assets/macos/$$lower($${TARGET}).entitlements
     QMAKE_MAC_XCODE_SETTINGS += ENTITLEMENTS
-
-    # Target architecture(s)
-    QMAKE_APPLE_DEVICE_ARCHS = x86_64 arm64
 
     # Target OS
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.14

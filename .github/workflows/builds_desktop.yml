@@ -100,7 +100,7 @@ jobs:
           modules: qtmultimedia qtimageformats qtpositioning qtcharts qtshadertools qt5compat
 
       # Install dependencies (from package manager)
-      - name: Build dependencies (from package manager)
+      - name: Install dependencies (from package manager)
         run: |
              brew install ninja automake autoconf libtool pkg-config gettext
              brew link --force gettext
