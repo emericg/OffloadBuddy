@@ -123,8 +123,7 @@ RESOURCES   += qml/qml.qrc \
                i18n/i18n.qrc \
                assets/assets.qrc
 
-OTHER_FILES += .travis.yml \
-               .gitignore \
+OTHER_FILES += .gitignore \
                .github/workflows/builds_desktop.yml \
                .github/workflows/flatpak.yml \
                contribs/contribs_builder.py \
@@ -142,11 +141,12 @@ contains(DEFINES, USE_CONTRIBS) {
 
     ARCH = "x86_64"
     linux { PLATFORM = "linux" }
+    macx { PLATFORM = "macOS" }
     win32 { PLATFORM = "windows" }
-    macx {
-        PLATFORM = "macOS"
-        ARCH = "unified"
-    }
+    #macx {
+    #    PLATFORM = "macOS"
+    #    ARCH = "unified"
+    #}
 
     CONTRIBS_DIR = $${PWD}/contribs/env/$${PLATFORM}_$${ARCH}/usr
 
