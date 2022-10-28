@@ -15,7 +15,7 @@ env:
   VERSION: "0.11"
   APPLICATION: "OffloadBuddy"
   QMAKE_PROJECT: "OffloadBuddy.pro"
-  QT_VERSION: "6.3.2"
+  QT_VERSION: "6.4.0"
 
 #--------------------------------------------------------------------------------
 # Workflow jobs
@@ -99,7 +99,7 @@ jobs:
           version: ${{env.QT_VERSION}}
           modules: qtmultimedia qtimageformats qtpositioning qtcharts qtshadertools qt5compat
 
-      # Build dependencies (from package manager)
+      # Install dependencies (from package manager)
       - name: Build dependencies (from package manager)
         run: |
              brew install ninja automake autoconf libtool pkg-config gettext

@@ -299,7 +299,7 @@ if "libexif" in softwares_selected:
         print("> Downloading " + FILE_libexif + "...")
         urllib.request.urlretrieve("https://github.com/emericg/libexif/archive/master.zip", src_dir + FILE_libexif)
 
-## taglib (version: git) (1.12)
+## taglib (version: git) (1.13+)
 FILE_taglib = "taglib-master.zip"
 DIR_taglib = "taglib-master"
 
@@ -494,8 +494,9 @@ for TARGET in TARGETS:
 
         print("> Building QtLocation (patched)")
         subprocess.check_call([QT_CONF_MODULE_cmd, ".."], cwd=build_dir + DIR_qtlocation + "/build")
-        subprocess.check_call(["cmake", "--build", ".", "--target", "all"], cwd=build_dir + DIR_qtlocation + "/build")
-        subprocess.check_call(["cmake", "--install", "."], cwd=build_dir + DIR_qtlocation + "/build")
+        subprocess.check_call(["cmake", "--build", ".", "--parallel", "--target", "all"], cwd=build_dir + DIR_qtlocation + "/build")
+        #subprocess.check_call(["cmake", "--install", "."], cwd=build_dir + DIR_qtlocation + "/build")
+        subprocess.check_call(["ninja", "install"], cwd=build_dir + DIR_qtlocation + "/build") # Qt bug 91647
 
     ############################################################################
 
