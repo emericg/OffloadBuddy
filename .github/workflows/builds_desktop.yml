@@ -109,7 +109,7 @@ jobs:
       - name: Build dependencies (from contribs script)
         run: |
              cd contribs/
-             python3 contribs_builder.py --targets=macos --qt-directory ${{env.Qt6_DIR}}/../.. --qt-version ${{env.QT_VERSION}}
+             python3 contribs_builder.py --targets=macos_x86_64 --qt-directory ${{env.Qt6_DIR}}/../.. --qt-version ${{env.QT_VERSION}}
              cd ..
 
       # Build application
@@ -166,7 +166,7 @@ jobs:
       - name: Build dependencies (from contribs script)
         run: |
              cd contribs/
-             python3 contribs_builder.py --targets=msvc2019 --qt-directory ${{env.Qt6_DIR}}/../.. --qt-version ${{env.QT_VERSION}}
+             python3 contribs_builder.py --targets=msvc2022 --qt-directory ${{env.Qt6_DIR}}/../.. --qt-version ${{env.QT_VERSION}}
              cd ..
 
       # Build application
