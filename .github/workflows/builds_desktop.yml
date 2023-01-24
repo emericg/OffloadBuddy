@@ -1,25 +1,24 @@
-#--------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # Workflow configuration
-#--------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 
 name: "Desktop CI builds"
 on:
   push:
   pull_request:
 
-#--------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # Define application name & version
-#--------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 
 env:
-  VERSION: "0.11"
   APPLICATION: "OffloadBuddy"
-  QMAKE_PROJECT: "OffloadBuddy.pro"
-  QT_VERSION: "6.4.0"
+  APPLICATION_VERSION: "0.11"
+  QT_VERSION: "6.4.2"
 
-#--------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # Workflow jobs
-#--------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 
 jobs:
   ## GNU/Linux build ###########################################################
@@ -62,7 +61,7 @@ jobs:
       - name: Build application
         run: |
              qmake --version
-             qmake ${{env.QMAKE_PROJECT}} DEFINES+=USE_CONTRIBS CONFIG+=release PREFIX=/usr
+             qmake ${{env.APPLICATION}}.pro DEFINES+=USE_CONTRIBS CONFIG+=release PREFIX=/usr
              make -j$(nproc)
 
       # Deploy application
@@ -73,7 +72,7 @@ jobs:
       - name: Upload AppImage
         uses: actions/upload-artifact@v3
         with:
-          name: ${{env.APPLICATION}}-${{env.VERSION}}-linux64.AppImage
+          name: ${{env.APPLICATION}}-${{env.APPLICATION_VERSION}}-linux64.AppImage
           path: ${{env.APPLICATION}}*.AppImage
 
   ## macOS build ###############################################################
@@ -116,7 +115,7 @@ jobs:
       - name: Build application
         run: |
              qmake --version
-             qmake ${{env.QMAKE_PROJECT}} DEFINES+=USE_CONTRIBS CONFIG+=release
+             qmake ${{env.APPLICATION}}.pro DEFINES+=USE_CONTRIBS CONFIG+=release
              make -j$(nproc)
 
       # Deploy application
@@ -127,7 +126,7 @@ jobs:
       - name: Upload app zip
         uses: actions/upload-artifact@v3
         with:
-          name: ${{env.APPLICATION}}-${{env.VERSION}}-macOS.app
+          name: ${{env.APPLICATION}}-${{env.APPLICATION_VERSION}}-macOS.app
           path: bin/${{env.APPLICATION}}.app
 
   ## Windows build #############################################################
@@ -173,7 +172,7 @@ jobs:
       - name: Build application
         run: |
              qmake --version
-             qmake ${{env.QMAKE_PROJECT}} DEFINES+=USE_CONTRIBS CONFIG+=release
+             qmake ${{env.APPLICATION}}.pro DEFINES+=USE_CONTRIBS CONFIG+=release
              nmake
 
       # Deploy application
@@ -184,12 +183,12 @@ jobs:
       - name: Upload ZIP
         uses: actions/upload-artifact@v3
         with:
-          name: ${{env.APPLICATION}}-${{env.VERSION}}-win64.zip
-          path: ${{env.APPLICATION}}-${{env.VERSION}}-win64.zip
+          name: ${{env.APPLICATION}}-${{env.APPLICATION_VERSION}}-win64.zip
+          path: ${{env.APPLICATION}}-${{env.APPLICATION_VERSION}}-win64.zip
 
       # Upload NSIS installer
       - name: Upload NSIS installer
         uses: actions/upload-artifact@v3
         with:
-          name: ${{env.APPLICATION}}-${{env.VERSION}}-win64.exe
-          path: ${{env.APPLICATION}}-${{env.VERSION}}-win64.exe
+          name: ${{env.APPLICATION}}-${{env.APPLICATION_VERSION}}-win64.exe
+          path: ${{env.APPLICATION}}-${{env.APPLICATION_VERSION}}-win64.exe
