@@ -99,7 +99,7 @@ Popup {
         color: recapOpened ? Theme.colorForeground : Theme.colorBackground
         radius: Theme.componentRadius
         border.width: Theme.componentBorderWidth
-        border.color: Theme.colorForeground
+        border.color: Theme.colorComponentBorder
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -119,7 +119,7 @@ Popup {
                 anchors.left: parent.left
                 anchors.leftMargin: 1
                 anchors.right: parent.right
-                anchors.rightMargin: 0
+                anchors.rightMargin: 1
                 anchors.bottom: parent.bottom
                 height: parent.radius
                 color: parent.color
@@ -142,9 +142,9 @@ Popup {
         Rectangle {
             id: filesArea
             anchors.left: parent.left
-            anchors.leftMargin: 1
+            anchors.leftMargin: Theme.componentBorderWidth
             anchors.right: parent.right
-            anchors.rightMargin: 0
+            anchors.rightMargin: Theme.componentBorderWidth
 
             z: 1
             height: 48

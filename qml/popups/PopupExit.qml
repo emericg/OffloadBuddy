@@ -27,7 +27,7 @@ Popup {
         color: Theme.colorBackground
         radius: Theme.componentRadius
         border.width: Theme.componentBorderWidth
-        border.color: Theme.colorForeground
+        border.color: Theme.colorComponentBorder
     }
 
     ////////////////////////////////////////////////////////////////////////////
