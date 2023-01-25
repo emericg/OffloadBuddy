@@ -75,8 +75,8 @@ Popup {
     ////////////////////////////////////////////////////////////////////////////
 
     background: Rectangle {
-        color: recapOpened ? Theme.colorForeground : Theme.colorBackground
         radius: Theme.componentRadius
+        color: recapOpened ? Theme.colorForeground : Theme.colorBackground
         border.width: Theme.componentBorderWidth
         border.color: Theme.colorForeground
     }
