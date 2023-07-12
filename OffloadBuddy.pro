@@ -257,7 +257,7 @@ macx {
     QMAKE_MAC_XCODE_SETTINGS += ENTITLEMENTS
 
     # Target OS
-    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.14
+    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.15
 
     #======== Automatic bundle packaging
 
