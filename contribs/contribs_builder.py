@@ -36,7 +36,7 @@ print("")
 
 targets = ['linux', 'macos', 'macos_x86_64', 'macos_arm64', 'msvc2019', 'msvc2022']
 
-softwares = ['libusb', 'libmtp', 'libexif', 'taglib', 'minivideo', 'qtlocation']
+softwares = ['libusb', 'libmtp', 'libexif', 'taglib', 'minivideo']
 
 print("> targets available:")
 print(str(targets))
@@ -321,15 +321,6 @@ if "minivideo" in softwares_selected:
         print("> Downloading " + FILE_minivideo + "...")
         urllib.request.urlretrieve("https://github.com/emericg/MiniVideo/archive/master.zip", src_dir + FILE_minivideo)
 
-## QtLocation (version: patched)
-FILE_qtlocation = "qtlocation-dev_" + QT_VERSION.replace('.', '') + ".zip"
-DIR_qtlocation = "qtlocation-dev_" + QT_VERSION.replace('.', '')
-
-if "qtlocation" in softwares_selected:
-    if not os.path.exists(src_dir + FILE_qtlocation):
-        print("> Downloading " + FILE_qtlocation + "...")
-        urllib.request.urlretrieve("https://github.com/emericg/qtlocation/archive/refs/heads/dev_" + QT_VERSION.replace('.', '') + ".zip", src_dir + FILE_qtlocation)
-
 ## BUILD SOFTWARES #############################################################
 
 for TARGET in TARGETS:
@@ -486,21 +477,6 @@ for TARGET in TARGETS:
         subprocess.check_call(CMAKE_cmd + ["-G", CMAKE_gen, "-DCMAKE_BUILD_TYPE=Release", "-DBUILD_SHARED_LIBS:BOOL=" + build_shared, "-DBUILD_STATIC_LIBS:BOOL=" + build_static, "-DCMAKE_INSTALL_PREFIX=" + env_dir + "/usr", ".."], cwd=build_dir + DIR_minivideo + "/minivideo/build")
         subprocess.check_call(["cmake", "--build", ".", "--config", "Release"], cwd=build_dir + DIR_minivideo + "/minivideo/build")
         subprocess.check_call(["cmake", "--build", ".", "--target", "install", "--config", "Release"], cwd=build_dir + DIR_minivideo + "/minivideo/build")
-
-    ## qtlocation
-    if "qtlocation" in softwares_selected:
-        if not os.path.isdir(build_dir + DIR_qtlocation):
-            zipQtLoc = zipfile.ZipFile(src_dir + FILE_qtlocation)
-            zipQtLoc.extractall(build_dir)
-
-        try: os.makedirs(build_dir + DIR_qtlocation + "/build")
-        except: print() # who cares
-
-        print("> Building QtLocation (patched)")
-        subprocess.check_call([QT_CONF_MODULE_cmd, ".."], cwd=build_dir + DIR_qtlocation + "/build")
-        subprocess.check_call(["cmake", "--build", ".", "--target", "all"], cwd=build_dir + DIR_qtlocation + "/build")
-        #subprocess.check_call(["cmake", "--install", "."], cwd=build_dir + DIR_qtlocation + "/build")
-        subprocess.check_call(["ninja", "install"], cwd=build_dir + DIR_qtlocation + "/build") # Qt bug 91647
 
     ############################################################################
 
