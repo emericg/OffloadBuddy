@@ -36,7 +36,7 @@
 #include "utils_language.h"
 #include "utils_os_macosdock.h"
 
-#include <singleapplication.h>
+#include <SingleApplication>
 
 #ifdef ENABLE_MINIVIDEO
 #include <minivideo.h>

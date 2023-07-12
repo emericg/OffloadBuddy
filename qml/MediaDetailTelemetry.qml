@@ -108,14 +108,14 @@ Item {
     Rectangle {
         id: mapArea
         anchors.top: parent.top
-        anchors.topMargin: 16
+        anchors.topMargin: 0
         anchors.right: parent.right
-        anchors.rightMargin: 16
+        anchors.rightMargin: 0
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 16
+        anchors.bottomMargin: 0
 
         property bool fullscreen: false
-        width: fullscreen ? parent.width - 32 : parent.width * 0.40
+        width: fullscreen ? parent.width : parent.width * 0.40
         Behavior on width { NumberAnimation { duration: 233 } }
 
         radius: Theme.componentRadius
@@ -153,7 +153,7 @@ Item {
             property bool fullscreen: false
             property bool moove: false
 
-            gesture.enabled: moove
+            //gesture.enabled: moove
             copyrightsVisible: false
 
             plugin: Plugin {
@@ -348,7 +348,7 @@ Item {
                     width: mapArea.fullscreen ? 48 : 40
                     height: mapArea.fullscreen ? 48 : 40
 
-                    background: true
+                    backgroundVisible: true
                     backgroundColor: Theme.colorHeader
                     iconColor: Theme.colorHeaderContent
                     highlightMode: "color"
@@ -364,13 +364,13 @@ Item {
                     width: mapArea.fullscreen ? 48 : 40
                     height: mapArea.fullscreen ? 48 : 40
 
-                    background: true
+                    backgroundVisible: true
                     backgroundColor: Theme.colorHeader
                     iconColor: Theme.colorHeaderContent
                     highlightMode: "color"
                     highlightColor: Theme.colorBackground
 
-                    selected: map.moove
+                    highlighted: map.moove
                     onClicked: map.moove = !map.moove
                     source: "qrc:/assets/icons_material/baseline-open_with-24px.svg"
                 }
@@ -388,7 +388,7 @@ Item {
                     width: mapArea.fullscreen ? 48 : 40
                     height: mapArea.fullscreen ? 48 : 40
 
-                    background: true
+                    backgroundVisible: true
                     backgroundColor: Theme.colorHeader
                     iconColor: Theme.colorHeaderContent
                     highlightMode: "color"
@@ -403,7 +403,7 @@ Item {
                     width: mapArea.fullscreen ? 48 : 40
                     height: mapArea.fullscreen ? 48 : 40
 
-                    background: true
+                    backgroundVisible: true
                     backgroundColor: Theme.colorHeader
                     iconColor: Theme.colorHeaderContent
                     highlightMode: "color"
@@ -478,9 +478,10 @@ Item {
                         font.bold: true
                         color: Theme.colorHeaderContent
                     }
-                    Text {
+                    TextEdit {
                         anchors.verticalCenter: parent.verticalCenter
 
+                        readOnly: true
                         text: shot.latitudeString + "    " + shot.longitudeString
                         font.pixelSize: Theme.fontSizeContent
                         color: Theme.colorHeaderContent
@@ -497,10 +498,11 @@ Item {
                         font.bold: true
                         color: Theme.colorHeaderContent
                     }
-                    Text {
+                    TextEdit {
                         anchors.verticalCenter: parent.verticalCenter
                         visible: shot.altitude
 
+                        readOnly: true
                         text: UtilsString.altitudeToString(shot.altitude - shot.altitudeOffset, 0, settingsManager.appUnits)
                         font.pixelSize: Theme.fontSizeContent
                         color: Theme.colorHeaderContent
@@ -517,10 +519,11 @@ Item {
                         font.bold: true
                         color: Theme.colorHeaderContent
                     }
-                    Text {
+                    TextEdit {
                         anchors.verticalCenter: parent.verticalCenter
                         visible: shot.speed
 
+                        readOnly: true
                         text: UtilsString.speedToString_km(shot.speed, 1, settingsManager.appUnits)
                         font.pixelSize: Theme.fontSizeContent
                         color: Theme.colorHeaderContent

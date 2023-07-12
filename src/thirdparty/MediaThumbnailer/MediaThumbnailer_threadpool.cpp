@@ -32,6 +32,8 @@ MediaThumbnailer_threadpool::MediaThumbnailer_threadpool(int threadCount) : QQui
     if (threadCount > 0)
     {
         pool.setMaxThreadCount(threadCount);
+        pool.setThreadPriority(QThread::LowestPriority);
+        pool.setObjectName("MediaThumbnailer");
     }
 }
 
@@ -92,7 +94,7 @@ QQuickTextureFactory *MediaThumbnailerResponse::textureFactory() const
 
 MediaThumbnailerRunner::MediaThumbnailerRunner(const QString &id, const QSize &requestedSize)
 {
-    QThread::currentThread()->setPriority(QThread::LowestPriority);
+    //QThread::currentThread()->setPriority(QThread::LowestPriority);
 
     width = requestedSize.width() > 0 ? requestedSize.width() : DEFAULT_THUMB_SIZE;
     height = requestedSize.height() > 0 ? requestedSize.height() : DEFAULT_THUMB_SIZE;

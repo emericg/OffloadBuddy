@@ -20,7 +20,7 @@ T.TextField {
     opacity: 1
 
     text: ""
-    font.pixelSize: Theme.fontSizeComponent
+    font.pixelSize: Theme.componentFontSize
     verticalAlignment: Text.AlignVCenter
 
     placeholderText: ""
@@ -43,6 +43,8 @@ T.TextField {
     property string colorSelectedText: Theme.colorHighContrast
     property string colorSelection: Theme.colorPrimary
 
+    ////////////////
+
     PlaceholderText {
         id: placeholder
         x: control.leftPadding
@@ -59,9 +61,11 @@ T.TextField {
         renderType: control.renderType
     }
 
+    ////////////////
+
     background: Rectangle {
         implicitWidth: 256
-        implicitHeight: 56
+        implicitHeight: 48
 
         radius: 8
         color: control.colorBackground
@@ -86,4 +90,6 @@ T.TextField {
             }
         }
     }
+
+    ////////////////
 }

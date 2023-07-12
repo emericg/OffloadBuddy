@@ -350,7 +350,7 @@ Item {
                 id: button43
                 width: 32; height: 32;
 
-                background: true
+                backgroundVisible: true
                 backgroundColor: "#222222"
                 highlightMode: "color"
                 textColor: (shot.cropAR === MediaUtils.AspectRatio_4_3) ? Theme.colorPrimary : "white"
@@ -365,7 +365,7 @@ Item {
                 id: button169
                 width: 32; height: 32;
 
-                background: true
+                backgroundVisible: true
                 backgroundColor: "#222222"
                 highlightMode: "color"
                 textColor: (shot.cropAR === MediaUtils.AspectRatio_16_9) ? Theme.colorPrimary : "white"
@@ -380,7 +380,7 @@ Item {
                 id: button219
                 width: 32; height: 32;
 
-                background: true
+                backgroundVisible: true
                 backgroundColor: "#222222"
                 highlightMode: "color"
                 textColor: (shot.cropAR === MediaUtils.AspectRatio_21_9) ? Theme.colorPrimary : "white"
@@ -399,7 +399,7 @@ Item {
             anchors.right: parent.right
             anchors.rightMargin: 8
 
-            background: true
+            backgroundVisible: true
             backgroundColor: "#222222"
             highlightMode: "color"
             iconColor: (shot.cropARlock) ? Theme.colorPrimary : "white"
@@ -422,7 +422,7 @@ Item {
                 id: button34
                 width: 32; height: 32;
 
-                background: true
+                backgroundVisible: true
                 backgroundColor: "#222222"
                 highlightMode: "color"
                 textColor: (shot.cropAR === MediaUtils.AspectRatio_3_4) ? Theme.colorPrimary : "white"
@@ -437,7 +437,7 @@ Item {
                 id: button916
                 width: 32; height: 32;
 
-                background: true
+                backgroundVisible: true
                 backgroundColor: "#222222"
                 highlightMode: "color"
                 textColor: (shot.cropAR === MediaUtils.AspectRatio_9_16) ? Theme.colorPrimary : "white"
@@ -452,7 +452,7 @@ Item {
                 id: button921
                 width: 32; height: 32;
 
-                background: true
+                backgroundVisible: true
                 backgroundColor: "#222222"
                 highlightMode: "color"
                 textColor: (shot.cropAR === MediaUtils.AspectRatio_9_21) ? Theme.colorPrimary : "white"
@@ -476,7 +476,7 @@ Item {
             RoundButtonIcon {
                 id: buttonReset
                 iconColor: "white"
-                background: true
+                backgroundVisible: true
                 backgroundColor: "#222222"
                 highlightMode: "color"
 
@@ -487,7 +487,7 @@ Item {
             RoundButtonIcon {
                 id: buttonValidate
                 iconColor: "white"
-                background: true
+                backgroundVisible: true
                 backgroundColor: "#222222"
                 highlightMode: "color"
 

@@ -167,8 +167,8 @@ Popup {
 
                             visible: (qdateFile > qdateFirst && qdateFile < qdateToday)
                             enabled: visible
-                            selected: (qdate && Qt.formatDateTime(qdate) === Qt.formatDateTime(qdateFile))
-                            background: selected
+                            highlighted: (qdate && Qt.formatDateTime(qdate) === Qt.formatDateTime(qdateFile))
+                            backgroundVisible: selected
                             onClicked: loadDate(qdateFile, true)
                         }
                     }
@@ -228,8 +228,8 @@ Popup {
 
                         visible: (qdateMetadata > qdateFirst && qdateMetadata < qdateToday)
                         enabled: visible
-                        selected: (qdate && Qt.formatDateTime(qdate) === Qt.formatDateTime(qdateMetadata))
-                        background: selected
+                        highlighted: (qdate && Qt.formatDateTime(qdate) === Qt.formatDateTime(qdateMetadata))
+                        backgroundVisible: selected
                         onClicked: loadDate(qdateMetadata, true)
                     }
                 }
@@ -288,8 +288,8 @@ Popup {
 
                         visible: (qdateGps > qdateFirst && qdateGps < qdateToday)
                         enabled: visible
-                        selected: (qdate && Qt.formatDateTime(qdate) === Qt.formatDateTime(qdateGps))
-                        background: selected
+                        highlighted: (qdate && Qt.formatDateTime(qdate) === Qt.formatDateTime(qdateGps))
+                        backgroundVisible: selected
                         onClicked: loadDate(qdateGps, true)
                     }
                 }
@@ -348,12 +348,12 @@ Popup {
 
                         visible: (qdateUser > qdateFirst && qdateUser < qdateToday)
                         enabled: visible
-                        selected: (qdate &&
+                        highlighted: (qdate &&
                                    (Qt.formatDateTime(qdate) === Qt.formatDateTime(qdateUser) &&
                                     Qt.formatDateTime(qdate) !== Qt.formatDateTime(qdateFile) &&
                                     Qt.formatDateTime(qdate) !== Qt.formatDateTime(qdateMetadata) &&
                                     Qt.formatDateTime(qdate) !== Qt.formatDateTime(qdateGps)))
-                        background: selected
+                        backgroundVisible: selected
                         onClicked: loadDate(qdateUser, true)
                     }
                 }
@@ -404,14 +404,14 @@ Popup {
                     color: Theme.colorSubText
                 }
 
-                SpinBoxThemed {
+                SpinBoxThemedDesktop {
                     id: spinBoxYear
 
                     locale: Qt.locale('C')
                     from: 2000
                     to: 2100
-                    value: 2022
 
+                    value: 2022
                     onValueModified: rowDate.setUserDate()
                 }
             }
@@ -427,12 +427,13 @@ Popup {
                     color: Theme.colorSubText
                 }
 
-                SpinBoxThemed {
+                SpinBoxThemedDesktop {
                     id: spinBoxMonth
-                    value: 1
+
                     from: 1
                     to: 12
 
+                    value: 1
                     onValueModified: rowDate.setUserDate()
                 }
             }
@@ -448,12 +449,13 @@ Popup {
                     color: Theme.colorSubText
                 }
 
-                SpinBoxThemed {
+                SpinBoxThemedDesktop {
                     id: spinBoxDay
-                    value: 3
+
                     from: 1
                     to: 31
 
+                    value: 3
                     onValueModified: rowDate.setUserDate()
                 }
             }
@@ -478,12 +480,13 @@ Popup {
                     color: Theme.colorSubText
                 }
 
-                SpinBoxThemed {
+                SpinBoxThemedDesktop {
                     id: spinBoxHours
-                    value: 0
+
                     from: 0
                     to: 23
 
+                    value: 0
                     onValueModified: rowDate.setUserDate()
                 }
             }
@@ -499,12 +502,12 @@ Popup {
                     color: Theme.colorSubText
                 }
 
-                SpinBoxThemed {
+                SpinBoxThemedDesktop {
                     id: spinBoxMinutes
-                    value: 0
                     from: 0
                     to: 59
 
+                    value: 0
                     onValueModified: rowDate.setUserDate()
                 }
             }

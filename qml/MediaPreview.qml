@@ -654,7 +654,7 @@ Item {
             RoundButtonIcon {
                 //id: buttonRotateSave
                 iconColor: "white"
-                background: true
+                backgroundVisible: true
                 backgroundColor: "#222"
                 highlightColor: "green"
                 highlightMode: "color"
@@ -666,7 +666,7 @@ Item {
             RoundButtonIcon {
                 //id: buttonRotateClear
                 iconColor: "white"
-                background: true
+                backgroundVisible: true
                 backgroundColor: "#222"
                 highlightMode: "color"
 
@@ -677,7 +677,7 @@ Item {
             RoundButtonIcon {
                 //id: buttonRotateLeft
                 iconColor: (shot.userRotation >= 180) ? Theme.colorPrimary : "white"
-                background: true
+                backgroundVisible: true
                 backgroundColor: "#222"
                 highlightMode: "color"
 
@@ -687,7 +687,7 @@ Item {
             RoundButtonIcon {
                 //id: buttonRotateRight
                 iconColor: (shot.userRotation > 0 && shot.userRotation <= 180) ? Theme.colorPrimary : "white"
-                background: true
+                backgroundVisible: true
                 backgroundColor: "#222"
                 highlightMode: "color"
 
@@ -697,7 +697,7 @@ Item {
             RoundButtonIcon {
                 //id: buttonMirror
                 iconColor: (shot.userHFlipped) ? Theme.colorPrimary : "white"
-                background: true
+                backgroundVisible: true
                 backgroundColor: "#222"
                 highlightMode: "color"
 
@@ -708,7 +708,7 @@ Item {
                 //id: buttonFlip
                 rotation: 90
                 iconColor: (shot.userVFlipped) ? Theme.colorPrimary : "white"
-                background: true
+                backgroundVisible: true
                 backgroundColor: "#222"
                 highlightMode: "color"
 
@@ -1055,7 +1055,7 @@ Item {
                         iconColor: "white"
                         highlightColor: Theme.colorPrimary
                         highlightMode: "color"
-                        selected: parent.isHovered
+                        highlighted: parent.isHovered
 
                         source: (soundline.value === 0) ? "qrc:/assets/icons_material/baseline-volume_off-24px.svg" : "qrc:/assets/icons_material/baseline-volume_up-24px.svg"
                         property real savedVolume: audioOutput.volume

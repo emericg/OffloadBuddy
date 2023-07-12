@@ -1,12 +1,13 @@
 TARGET  = OffloadBuddy
 
-VERSION = 0.11
+VERSION = 0.12
 DEFINES+= APP_NAME=\\\"$$TARGET\\\"
 DEFINES+= APP_VERSION=\\\"$$VERSION\\\"
 
 CONFIG += c++17
 QT     += core qml quickcontrols2 svg
 QT     += multimedia charts
+QT += location
 
 # Validate Qt version
 !versionAtLeast(QT_VERSION, 6.3) : error("You need at least Qt version 6.3 for $${TARGET}")
@@ -22,8 +23,6 @@ DEFINES += ENABLE_MINIVIDEO
 DEFINES += ENABLE_LIBEXIF
 #DEFINES += ENABLE_EXIV2
 DEFINES += ENABLE_QTLOCATION
-
-contains(DEFINES, ENABLE_QTLOCATION) { QT += location }
 
 # Use contribs (otherwise use system libs)
 win32 | ios | android { DEFINES += USE_CONTRIBS }
@@ -207,7 +206,6 @@ OBJECTS_DIR = build/
 MOC_DIR     = build/
 RCC_DIR     = build/
 UI_DIR      = build/
-QMLCACHE_DIR= build/
 
 DESTDIR     = bin/
 

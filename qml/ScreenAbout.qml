@@ -51,7 +51,7 @@ Item {
             text: qsTr("version %1  /  %2  /  built on %3").arg(utilsApp.appVersion()).arg(utilsApp.appBuildMode()).arg(utilsApp.appBuildDate())
             textFormat: Text.PlainText
             font.bold: true
-            font.pixelSize: Theme.fontSizeComponent
+            font.pixelSize: Theme.componentFontSize
             color: Theme.colorSubText
         }
 

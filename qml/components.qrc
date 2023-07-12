@@ -30,14 +30,14 @@
         <file alias="MiddleSliderThemed.qml">components_themed/MiddleSliderThemed.qml</file>
         <file alias="ProgressBarThemed.qml">components_themed/ProgressBarThemed.qml</file>
         <file alias="RadioButtonThemed.qml">components_themed/RadioButtonThemed.qml</file>
+        <file alias="RippleThemed.qml">components_themed/RippleThemed.qml</file>
         <file alias="RoundButtonThemed.qml">components_themed/RoundButtonThemed.qml</file>
         <file alias="RangeSliderThemed.qml">components_themed/RangeSliderThemed.qml</file>
         <file alias="SelectorMenuThemed.qml">components_themed/SelectorMenuThemed.qml</file>
         <file alias="SelectorMenuThemedItem.qml">components_themed/SelectorMenuThemedItem.qml</file>
-        <file alias="SpinBoxThemed.qml">components_themed/SpinBoxThemed.qml</file>
+        <file alias="SpinBoxThemedDesktop.qml">components_themed/SpinBoxThemed_desktop.qml</file>
         <file alias="SliderThemed.qml">components_themed/SliderThemed.qml</file>
         <file alias="SwitchThemedDesktop.qml">components_themed/SwitchThemed_desktop.qml</file>
-        <file alias="SwitchThemedMobile.qml">components_themed/SwitchThemed_mobile.qml</file>
         <file alias="TextFieldThemed.qml">components_themed/TextFieldThemed.qml</file>
     </qresource>
 

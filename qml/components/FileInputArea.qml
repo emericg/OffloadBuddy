@@ -26,7 +26,7 @@ T.TextField {
 
     text: ""
     color: colorText
-    font.pixelSize: Theme.fontSizeComponent
+    font.pixelSize: Theme.componentFontSize
 
     placeholderText: ""
     placeholderTextColor: colorPlaceholderText

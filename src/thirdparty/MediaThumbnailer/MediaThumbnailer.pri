@@ -1,5 +1,9 @@
 CONFIG += c++11
 
+MEDIATHUMBNAILER_VERSION = 0.3
+
+INCLUDEPATH += $${PWD}
+
 SOURCES += $${PWD}/MediaThumbnailer_threadpool.cpp \
            $${PWD}/MediaThumbnailer_async.cpp \
            $${PWD}/ThumbnailerBackend.cpp
@@ -8,8 +12,6 @@ HEADERS += $${PWD}/MediaThumbnailer.h \
            $${PWD}/MediaThumbnailer_threadpool.h \
            $${PWD}/MediaThumbnailer_async.h \
            $${PWD}/ThumbnailerBackend.h
-
-INCLUDEPATH += $${PWD}
 
 contains(DEFINES, ENABLE_FFMPEG) {
     SOURCES += $${PWD}/ThumbnailerBackend_ffmpeg.cpp

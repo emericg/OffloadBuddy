@@ -56,7 +56,7 @@ print(str(softwares))
 # brew install libtool pkg-config
 # brew install gettext iconv libudev
 # brew link --force gettext
-# xcode (12+)
+# xcode (13+)
 
 ## Windows:
 # python3 (https://www.python.org/downloads/)
@@ -118,9 +118,10 @@ clean = False
 rebuild = False
 targets_selected = []
 softwares_selected = []
-QT_VERSION = "6.4.0"
+QT_VERSION = "6.5.1"
 QT_DIRECTORY = os.getenv('QT_DIRECTORY', '')
-ANDROID_NDK_HOME = os.getenv('ANDROID_NDK_HOME', '')
+ANDROID_SDK_ROOT = os.getenv('ANDROID_SDK_ROOT', '')
+ANDROID_NDK_ROOT = os.getenv('ANDROID_NDK_ROOT', '')
 MSVC_GEN_VER = ""
 
 ## ARGUMENTS ###################################################################
@@ -135,7 +136,8 @@ parser.add_argument('--targets', dest='targets', help="specify target(s) platfor
 parser.add_argument('--softwares', dest='softwares', help="specify software(s) to build")
 parser.add_argument('--qt-version', dest='qtversion', help="specify a Qt version to use")
 parser.add_argument('--qt-directory', dest='qtdirectory', help="specify a custom path to the Qt install root dir (if QT_DIRECTORY environment variable isn't set)")
-parser.add_argument('--android-ndk', dest='androidndk', help="specify a custom path to the android-ndk (if ANDROID_NDK_HOME environment variable isn't set)")
+parser.add_argument('--android-sdk', dest='androidsdk', help="specify a custom path to the android-sdk (if ANDROID_SDK_ROOT environment variable isn't set)")
+parser.add_argument('--android-ndk', dest='androidndk', help="specify a custom path to the android-ndk (if ANDROID_NDK_ROOT environment variable isn't set)")
 
 if len(sys.argv) > 1:
     result = parser.parse_args()
@@ -151,8 +153,10 @@ if len(sys.argv) > 1:
         QT_VERSION = result.qtversion
     if result.qtdirectory:
         QT_DIRECTORY = result.qtdirectory
+    if result.androidsdk:
+        ANDROID_SDK_ROOT = result.androidsdk
     if result.androidndk:
-        ANDROID_NDK_HOME = result.androidndk
+        ANDROID_NDK_ROOT = result.androidndk
 
 if len(softwares_selected) == 0:
     softwares_selected = softwares
@@ -226,7 +230,7 @@ if len(TARGETS) == 0:
             MSVC_GEN_VER = "Visual Studio 16 2019"
             TARGETS.append(["windows", "x86_64", "msvc2019_64"])
 
-    if ANDROID_NDK_HOME: # Android cross compilation
+    if ANDROID_NDK_ROOT: # Android cross compilation
         TARGETS.append(["android", "armv8", "android_arm64_v8a"])
         TARGETS.append(["android", "armv7", "android_armv7"])
         TARGETS.append(["android", "x86_64", "android_x86_64"])
@@ -413,13 +417,13 @@ for TARGET in TARGETS:
 
     if OS_TARGET == "android":
         if ARCH_TARGET == "x86":
-            CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_HOME + "/build/cmake/android.toolchain.cmake", "-DANDROID_TOOLCHAIN=clang", "-DANDROID_ABI=x86", "-DANDROID_PLATFORM=android-23"]
+            CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_ROOT + "/build/cmake/android.toolchain.cmake", "-DANDROID_ABI=x86", "-DANDROID_PLATFORM=android-23"]
         elif ARCH_TARGET == "x86_64":
-            CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_HOME + "/build/cmake/android.toolchain.cmake", "-DANDROID_TOOLCHAIN=clang", "-DANDROID_ABI=x86_64", "-DANDROID_PLATFORM=android-23"]
+            CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_ROOT + "/build/cmake/android.toolchain.cmake", "-DANDROID_ABI=x86_64", "-DANDROID_PLATFORM=android-23"]
         elif ARCH_TARGET == "armv7":
-            CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_HOME + "/build/cmake/android.toolchain.cmake", "-DANDROID_TOOLCHAIN=clang", "-DANDROID_ABI=armeabi-v7a", "-DANDROID_PLATFORM=android-23"]
+            CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_ROOT + "/build/cmake/android.toolchain.cmake", "-DANDROID_ABI=armeabi-v7a", "-DANDROID_PLATFORM=android-23"]
         else: # ARCH_TARGET == "armv8":
-            CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_HOME + "/build/cmake/android.toolchain.cmake", "-DANDROID_TOOLCHAIN=clang", "-DANDROID_ABI=arm64-v8a", "-DANDROID_PLATFORM=android-23"]
+            CMAKE_cmd = ["cmake", "-DANDROID_NDK=" + ANDROID_NDK_ROOT, "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_ROOT + "/build/cmake/android.toolchain.cmake", "-DANDROID_ABI=arm64-v8a", "-DANDROID_PLATFORM=android-23"]
 
     #### EXTRACT, BUILD & INSTALL ####
 

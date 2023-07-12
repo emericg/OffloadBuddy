@@ -76,7 +76,7 @@ Item {
 
         text: parent.text
         textFormat: Text.PlainText
-        font.pixelSize: Theme.fontSizeComponent
+        font.pixelSize: Theme.componentFontSize
         verticalAlignment: Text.AlignVCenter
 
         color: (parent.selected) ? parent.colorContentHighlight : parent.colorContent

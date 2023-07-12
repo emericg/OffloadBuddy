@@ -230,7 +230,7 @@ Popup {
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("Hierarchy")
-                        font.pixelSize: Theme.fontSizeComponent
+                        font.pixelSize: Theme.componentFontSize
                         color: Theme.colorText
                     }
 

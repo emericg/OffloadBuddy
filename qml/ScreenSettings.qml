@@ -113,7 +113,7 @@ Item {
 
                     text: qsTr("Application theme")
                     font.bold: true
-                    font.pixelSize: Theme.fontSizeComponent
+                    font.pixelSize: Theme.componentFontSize
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignLeft
                     color: Theme.colorText
@@ -197,7 +197,7 @@ Item {
 
                     text: qsTr("Unit system")
                     font.bold: true
-                    font.pixelSize: Theme.fontSizeComponent
+                    font.pixelSize: Theme.componentFontSize
                     color: Theme.colorText
                 }
 
@@ -247,7 +247,7 @@ Item {
                 verticalAlignment: Text.AlignVCenter
                 color: Theme.colorText
                 font.bold: true
-                font.pixelSize: Theme.fontSizeComponent
+                font.pixelSize: Theme.componentFontSize
             }
 
             Row {
@@ -259,7 +259,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Aspect ratio")
-                    font.pixelSize: Theme.fontSizeComponent
+                    font.pixelSize: Theme.componentFontSize
                     color: Theme.colorText
                 }
 
@@ -282,7 +282,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Default size")
-                    font.pixelSize: Theme.fontSizeComponent
+                    font.pixelSize: Theme.componentFontSize
                     color: Theme.colorText
                 }
 
@@ -311,7 +311,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Quality")
-                    font.pixelSize: Theme.fontSizeComponent
+                    font.pixelSize: Theme.componentFontSize
                     color: Theme.colorText
                 }
 
@@ -355,7 +355,7 @@ Item {
                 verticalAlignment: Text.AlignVCenter
                 color: Theme.colorText
                 font.bold: true
-                font.pixelSize: Theme.fontSizeComponent
+                font.pixelSize: Theme.componentFontSize
             }
 
             Row {
@@ -504,7 +504,7 @@ Item {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("Media directories")
-                            font.pixelSize: Theme.fontSizeComponent
+                            font.pixelSize: Theme.componentFontSize
                             font.bold: true
                             color: Theme.colorText
                         }
@@ -535,7 +535,7 @@ Item {
 
                             text: qsTr("Default media hierarchy")
 
-                            font.pixelSize: Theme.fontSizeComponent
+                            font.pixelSize: Theme.componentFontSize
                             color: Theme.colorText
                         }
 

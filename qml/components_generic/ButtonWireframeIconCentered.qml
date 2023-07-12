@@ -20,7 +20,7 @@ T.Button {
     rightPadding: 12 + (control.source.toString().length && control.text ? 2 : 0)
     spacing: 6
 
-    font.pixelSize: Theme.fontSizeComponent
+    font.pixelSize: Theme.componentFontSize
     font.bold: fullColor ? true : false
 
     focusPolicy: Qt.NoFocus
@@ -84,7 +84,7 @@ T.Button {
         color: control.fullColor ? control.primaryColor : control.secondaryColor
 
         border.width: Theme.componentBorderWidth
-        border.color: control.fullColor ? control.primaryColor : Theme.colorComponentBorder
+        border.color: control.fullColor ? Qt.darker(color, 1.03) : Theme.colorComponentBorder
 
         Item {
             anchors.fill: parent

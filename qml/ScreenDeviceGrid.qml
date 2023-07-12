@@ -271,7 +271,7 @@ Item {
                 RoundButtonIcon {
                     id: deviceSettings
                     width: 28; height: 28;
-                    background: true
+                    backgroundVisible: true
                     visible: true
                     source: "qrc:/assets/icons_material/baseline-memory-24px.svg"
                     sourceSize: 24
@@ -281,7 +281,7 @@ Item {
                 RoundButtonIcon {
                     id: deviceRO
                     width: 28; height: 28;
-                    background: true
+                    backgroundVisible: true
                     visible: currentDevice.readOnly
 
                     source: "qrc:/assets/icons_material/outline-https-24px.svg"

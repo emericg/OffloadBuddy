@@ -13,14 +13,14 @@ T.TextField {
                              contentHeight + topPadding + bottomPadding,
                              placeholder.implicitHeight + topPadding + bottomPadding)
 
-    padding: 8
-    leftPadding: padding + 4
+    leftPadding: 12
+    rightPadding: 12
 
     color: colorText
     opacity: control.enabled ? 1 : 0.66
 
     text: ""
-    font.pixelSize: Theme.fontSizeComponent
+    font.pixelSize: Theme.componentFontSize
     verticalAlignment: TextInput.AlignVCenter
 
     placeholderText: ""
@@ -38,7 +38,20 @@ T.TextField {
     property string colorBorder: Theme.colorComponentBorder
     property string colorBackground: Theme.colorComponentBackground
     property string colorSelection: Theme.colorPrimary
-    property string colorSelectedText: "white"
+    property string colorSelectedText: Theme.colorHighContrast
+
+    ////////////////
+
+    background: Rectangle {
+        implicitWidth: 256
+        implicitHeight: Theme.componentHeight
+
+        radius: Theme.componentRadius
+        color: control.colorBackground
+
+        border.width: 2
+        border.color: control.activeFocus ? control.colorSelection : control.colorBorder
+    }
 
     PlaceholderText {
         id: placeholder
@@ -56,14 +69,5 @@ T.TextField {
         renderType: control.renderType
     }
 
-    background: Rectangle {
-        implicitWidth: 256
-        implicitHeight: Theme.componentHeight
-
-        radius: Theme.componentRadius
-        color: control.colorBackground
-
-        border.width: 2
-        border.color: control.activeFocus ? control.colorSelection : control.colorBorder
-    }
+    ////////////////
 }

@@ -1,9 +1,11 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.20)
 
 project(SingleApplication LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
 
 ################################################################################
 
@@ -38,7 +40,7 @@ endif()
 
 ################################################################################
 
-add_library(SingleApplication STATIC singleapplication.cpp singleapplication_p.cpp )
+add_library(SingleApplication STATIC SingleApplication.cpp SingleApplication_private.cpp )
 add_library(SingleApplication::SingleApplication ALIAS SingleApplication)
 
 target_link_libraries(SingleApplication PUBLIC ${CORE_LIBRARIES} ${PLATFORM_LIBRARIES})

@@ -139,7 +139,7 @@ ApplicationWindow {
     }
     Shortcut {
         sequence: StandardKey.Quit
-        onActivated: utilsApp.appExit()
+        onActivated: appWindow.close()
     }
 
     // Menubar /////////////////////////////////////////////////////////////////

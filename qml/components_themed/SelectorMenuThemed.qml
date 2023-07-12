@@ -15,12 +15,15 @@ Item {
 
     property var model: null
 
-    Rectangle {
-        id: background
+    ////////////////
+
+    Rectangle { // background
         anchors.fill: parent
         radius: Theme.componentRadius
         color: Theme.colorComponentBackground
     }
+
+    ////////////////
 
     Row {
         id: contentRow
@@ -30,7 +33,8 @@ Item {
         Repeater {
             model: selectorMenu.model
             delegate: SelectorMenuThemedItem {
-                selected: (selectorMenu.currentSelection === idx)
+                height: parent.height
+                highlighted: (selectorMenu.currentSelection === idx)
                 index: idx ?? 0
                 text: txt ?? ""
                 source: src ?? ""
@@ -40,8 +44,7 @@ Item {
         }
     }
 
-    Rectangle {
-        id: foreground
+    Rectangle { // foreground border
         anchors.fill: parent
         radius: Theme.componentRadius
 
@@ -49,4 +52,6 @@ Item {
         border.width: Theme.componentBorderWidth
         border.color: Theme.colorComponentBorder
     }
+
+    ////////////////
 }

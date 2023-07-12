@@ -13,8 +13,8 @@ on:
 
 env:
   APPLICATION: "OffloadBuddy"
-  APPLICATION_VERSION: "0.11"
-  QT_VERSION: "6.4.2"
+  APPLICATION_VERSION: "0.12"
+  QT_VERSION: "6.5.1"
 
 #-------------------------------------------------------------------------------
 # Workflow jobs

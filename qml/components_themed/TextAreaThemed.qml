@@ -15,19 +15,20 @@ T.TextArea {
                              placeholder.implicitHeight + topPadding + bottomPadding)
 
     padding: 12
-    leftPadding: padding + 4
+
+    color: colorText
+    opacity: control.enabled ? 1 : 0.66
 
     text: ""
-    color: colorText
-    font.pixelSize: Theme.fontSizeComponent
+    font.pixelSize: Theme.componentFontSize
     verticalAlignment: Text.AlignTop
 
     placeholderText: ""
     placeholderTextColor: colorPlaceholderText
 
     selectByMouse: false
-    selectedTextColor: colorSelectedText
     selectionColor: colorSelection
+    selectedTextColor: colorSelectedText
 
     onEditingFinished: focus = false
 
@@ -37,7 +38,20 @@ T.TextArea {
     property string colorBorder: Theme.colorComponentBorder
     property string colorBackground: Theme.colorComponentBackground
     property string colorSelection: Theme.colorPrimary
-    property string colorSelectedText: "white"
+    property string colorSelectedText: Theme.colorHighContrast
+
+    ////////////////
+
+    background: Rectangle {
+        implicitWidth: 256
+        implicitHeight: Theme.componentHeight*2
+
+        radius: Theme.componentRadius
+        color: control.colorBackground
+
+        border.width: 2
+        border.color: control.activeFocus ? control.colorSelection : control.colorBorder
+    }
 
     PlaceholderText {
         id: placeholder
@@ -55,14 +69,5 @@ T.TextArea {
         renderType: control.renderType
     }
 
-    background: Rectangle {
-        implicitWidth: 256
-        implicitHeight: Theme.componentHeight*2
-
-        radius: Theme.componentRadius
-        color: control.colorBackground
-
-        border.width: 2
-        border.color: control.activeFocus ? control.colorSelection : control.colorBorder
-    }
+    ////////////////
 }

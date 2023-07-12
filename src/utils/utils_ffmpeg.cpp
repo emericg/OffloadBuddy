@@ -18,6 +18,9 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
+#if defined(ENABLE_FFMPEG)
+/* ************************************************************************** */
+
 #include "utils_ffmpeg.h"
 
 #ifdef __cplusplus
@@ -75,9 +78,11 @@ void ffmpeg_list_decoders(bool hw_only)
 
     while ((codec = av_codec_iterate(&opaque)))
     {
+#if (LIBAVCODEC_VERSION_MAJOR < 60)
         if (codec->hw_configs)
             qDebug() << "DECODER:  (HW) " << codec->name;
         else if (!hw_only)
+#endif
             qDebug() << "DECODER:" << codec->name;
     }
 #endif
@@ -94,6 +99,7 @@ void ffmpeg_list_encoders(bool hw_only)
 
     while ((codec = av_codec_iterate(&opaque)))
     {
+#if (LIBAVCODEC_VERSION_MAJOR < 60)
         if (codec->encode2)
         {
             if (codec->hw_configs)
@@ -101,6 +107,9 @@ void ffmpeg_list_encoders(bool hw_only)
             else if (!hw_only)
                 qDebug() << "ENCODER:" << codec->name;
         }
+#else
+        qDebug() << "ENCODER:" << codec->name;
+#endif
     }
 #endif
 }
@@ -137,3 +146,4 @@ bool ffmpeg_get_keyframes(const AVStream *stream, const int64_t target,
 }
 
 /* ************************************************************************** */
+#endif // ENABLE_FFMPEG

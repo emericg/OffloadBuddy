@@ -8,7 +8,7 @@ ComboBox {
     implicitWidth: 200
     implicitHeight: Theme.componentHeight
 
-    font.pixelSize: Theme.fontSizeComponent
+    font.pixelSize: Theme.componentFontSize
 
     property string folders: ""
 
@@ -94,7 +94,7 @@ ComboBox {
         contentItem: Text {
             text: modelData
             color: highlighted ? "black" : Theme.colorSubText
-            font.pixelSize: Theme.fontSizeComponent
+            font.pixelSize: Theme.componentFontSize
             elide: Text.ElideRight
             verticalAlignment: Text.AlignVCenter
         }
