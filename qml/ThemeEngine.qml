@@ -15,11 +15,10 @@ Item {
     }
     property int currentTheme: -1
 
+    ////////////////
+
     property bool isHdpi: (utilsScreen.screenDpi >= 128 || utilsScreen.screenPar >= 2.0)
     property bool isDesktop: true
-    property bool isMobile: false
-    property bool isPhone: false
-    property bool isTablet: false
 
     ////////////////
 
@@ -120,13 +119,13 @@ Item {
     property int componentRadius: 4
     property int componentBorderWidth: 2
 
-    property int componentFontSize: isMobile ? 14 : 15
+    property int componentFontSize: 15
 
     ////////////////
 
     // Fonts (sizes in pixel)
-    readonly property int fontSizeHeader: isMobile ? 22 : 26
-    readonly property int fontSizeTitle: isMobile ? 24 : 28
+    readonly property int fontSizeHeader: 26
+    readonly property int fontSizeTitle: 28
     readonly property int fontSizeContentVeryVerySmall: 10
     readonly property int fontSizeContentVerySmall: 12
     readonly property int fontSizeContentSmall: 14

@@ -100,11 +100,11 @@ T.TextField {
     ButtonThemed {
         id: buttonChange
         anchors.top: parent.top
-        anchors.topMargin: 2
+        anchors.topMargin: Theme.componentBorderWidth
         anchors.right: parent.right
-        anchors.rightMargin: 2
+        anchors.rightMargin: Theme.componentBorderWidth
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 2
+        anchors.bottomMargin: Theme.componentBorderWidth
 
         visible: control.enabled
         text: qsTr("change")
@@ -134,11 +134,11 @@ T.TextField {
             anchors.fill: parent
             color: "transparent"
             radius: Theme.componentRadius
-            border.width: 2
+            border.width: Theme.componentBorderWidth
             border.color: control.activeFocus ? Theme.colorPrimary : colorBorder
         }
 
-        layer.enabled: true
+        layer.enabled: false
         layer.effect: OpacityMask {
             maskSource: Rectangle {
                 x: background.x
@@ -149,4 +149,6 @@ T.TextField {
             }
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 }

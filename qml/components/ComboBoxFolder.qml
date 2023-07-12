@@ -17,7 +17,7 @@ ComboBox {
     background: Rectangle {
         radius: Theme.componentRadius
         color: control.down ? Theme.colorComponentDown : Theme.colorComponent
-        border.width: 1
+        border.width: Theme.componentBorderWidth
         border.color: Theme.colorComponentBorder
     }
 

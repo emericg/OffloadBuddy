@@ -48,8 +48,5 @@
         <file alias="RangeSliderPlayer.qml">components/RangeSliderPlayer.qml</file>
         <file alias="ResizeWidget.qml">components/ResizeWidget.qml</file>
         <file alias="SliderPlayer.qml">components/SliderPlayer.qml</file>
-
-        <file alias="ItemLilMenu.qml">components/ItemLilMenu.qml</file>
-        <file alias="ItemLilMenuButton.qml">components/ItemLilMenuButton.qml</file>
     </qresource>
 </RCC>

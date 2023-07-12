@@ -168,7 +168,7 @@ Popup {
                             visible: (qdateFile > qdateFirst && qdateFile < qdateToday)
                             enabled: visible
                             highlighted: (qdate && Qt.formatDateTime(qdate) === Qt.formatDateTime(qdateFile))
-                            backgroundVisible: selected
+                            backgroundVisible: highlighted
                             onClicked: loadDate(qdateFile, true)
                         }
                     }
@@ -229,7 +229,7 @@ Popup {
                         visible: (qdateMetadata > qdateFirst && qdateMetadata < qdateToday)
                         enabled: visible
                         highlighted: (qdate && Qt.formatDateTime(qdate) === Qt.formatDateTime(qdateMetadata))
-                        backgroundVisible: selected
+                        backgroundVisible: highlighted
                         onClicked: loadDate(qdateMetadata, true)
                     }
                 }
@@ -289,7 +289,7 @@ Popup {
                         visible: (qdateGps > qdateFirst && qdateGps < qdateToday)
                         enabled: visible
                         highlighted: (qdate && Qt.formatDateTime(qdate) === Qt.formatDateTime(qdateGps))
-                        backgroundVisible: selected
+                        backgroundVisible: highlighted
                         onClicked: loadDate(qdateGps, true)
                     }
                 }
@@ -353,7 +353,7 @@ Popup {
                                     Qt.formatDateTime(qdate) !== Qt.formatDateTime(qdateFile) &&
                                     Qt.formatDateTime(qdate) !== Qt.formatDateTime(qdateMetadata) &&
                                     Qt.formatDateTime(qdate) !== Qt.formatDateTime(qdateGps)))
-                        backgroundVisible: selected
+                        backgroundVisible: highlighted
                         onClicked: loadDate(qdateUser, true)
                     }
                 }

@@ -725,14 +725,13 @@ Popup {
                             font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
-/*
+
                         SelectorMenuThemed {
                             id: selectorGifRes
                             anchors.verticalCenter: parent.verticalCenter
                             height: 32
 
                             visible: rbGIF.checked
-                            property int res: 400
 
                             model: ListModel {
                                 id: lmGifRes
@@ -741,12 +740,10 @@ Popup {
                                 ListElement { idx: 3; txt: "400p"; src: ""; sz: 32; }
                                 ListElement { idx: 4; txt: "480p"; src: ""; sz: 32; }
                             }
-                            currentSelection: 1//{
-                            //    if (selectorGifRes.res === 240) idx = 1
-                            //    if (selectorGifRes.res === 320) idx = 2
-                            //    if (selectorGifRes.res === 400) idx = 3
-                            //    if (selectorGifRes.res === 480) idx = 4
-                            //}
+
+                            property int res: 400
+
+                            currentSelection: 3
                             onMenuSelected: (index) => {
                                 if (index === 1) {
                                     selectorGifRes.res = 240
@@ -767,7 +764,6 @@ Popup {
                             height: 32
 
                             visible: !rbGIF.checked
-                            property int res: 1080
 
                             model: ListModel {
                                 id: lmVideoRes
@@ -779,15 +775,10 @@ Popup {
                                 //ListElement { idx: 6; txt: "2880p"; src: ""; sz: 32; }
                                 //ListElement { idx: 7; txt: "4320p"; src: ""; sz: 32; }
                             }
-                            currentSelection: 1 //{
-                            //    if (selectorVideoRes.res === 480) index = 1
-                            //    if (selectorVideoRes.res === 720) index = 2
-                            //    if (selectorVideoRes.res === 1080) index = 3
-                            //    if (selectorVideoRes.res === 1440) index = 4
-                            //    if (selectorVideoRes.res === 2160) index = 5
-                            //    if (selectorVideoRes.res === 2880) index = 6
-                            //    if (selectorVideoRes.res === 4320) index = 7
-                            //}
+
+                            property int res: 1080
+
+                            currentSelection: 3
                             onMenuSelected: (index) => {
                                 if (index === 1) {
                                     selectorVideoRes.res = 480
@@ -805,98 +796,6 @@ Popup {
                                     selectorVideoRes.res = 4320
                                 }
                                 currentSelection = index
-                            }
-                        }
-*/
-                        ItemLilMenu {
-                            anchors.verticalCenter: parent.verticalCenter
-                            width: selectorGifRes.width
-
-                            visible: rbGIF.checked
-
-                            Row {
-                                id: selectorGifRes
-                                height: parent.height
-
-                                property int res: 400
-
-                                ItemLilMenuButton {
-                                    text: "240p"
-                                    selected: selectorGifRes.res === 240
-                                    onClicked: selectorGifRes.res = 240
-                                }
-                                ItemLilMenuButton {
-                                    text: "320p"
-                                    selected: selectorGifRes.res === 320
-                                    onClicked: selectorGifRes.res = 320
-                                }
-                                ItemLilMenuButton {
-                                    text: "400p"
-                                    selected: selectorGifRes.res === 400
-                                    onClicked: selectorGifRes.res = 400
-                                }
-                                ItemLilMenuButton {
-                                    text: "480p"
-                                    selected: selectorGifRes.res === 480
-                                    onClicked: selectorGifRes.res = 480
-                                }
-                            }
-                        }
-
-                        ItemLilMenu {
-                            anchors.verticalCenter: parent.verticalCenter
-                            width: selectorVideoRes.width
-
-                            visible: !rbGIF.checked
-
-                            Row {
-                                id: selectorVideoRes
-                                height: parent.height
-
-                                property int res: 1080
-
-                                ItemLilMenuButton {
-                                    text: "480p"
-                                    visible: currentShot.height >= 480
-                                    selected: selectorVideoRes.res === 480
-                                    onClicked: selectorVideoRes.res = 480
-                                }
-                                ItemLilMenuButton {
-                                    text: "720p"
-                                    visible: currentShot.height >= 720
-                                    selected: selectorVideoRes.res === 720
-                                    onClicked: selectorVideoRes.res = 720
-                                }
-                                ItemLilMenuButton {
-                                    text: "1080p"
-                                    visible: currentShot.height >= 1080
-                                    selected: selectorVideoRes.res === 1080
-                                    onClicked: selectorVideoRes.res = 1080
-                                }
-                                ItemLilMenuButton {
-                                    text: "1440p"
-                                    visible: currentShot.height >= 1440
-                                    selected: selectorVideoRes.res === 1440
-                                    onClicked: selectorVideoRes.res = 1440
-                                }
-                                ItemLilMenuButton {
-                                    text: "2160p"
-                                    visible: currentShot.height >= 2160
-                                    selected: selectorVideoRes.res === 2160
-                                    onClicked: selectorVideoRes.res = 2160
-                                }
-                                ItemLilMenuButton {
-                                    text: "2880p"
-                                    visible: currentShot.height >= 2880
-                                    selected: selectorVideoRes.res === 2880
-                                    onClicked: selectorVideoRes.res = 2880
-                                }
-                                ItemLilMenuButton {
-                                    text: "4320p"
-                                    visible: currentShot.height >= 4320
-                                    selected: selectorVideoRes.res === 4320
-                                    onClicked: selectorVideoRes.res = 4320
-                                }
                             }
                         }
                     }
@@ -921,41 +820,75 @@ Popup {
                             color: Theme.colorSubText
                         }
 
-                        ItemLilMenu {
+                        SelectorMenuThemed {
+                            id: selectorGifFps
                             anchors.verticalCenter: parent.verticalCenter
-                            width: selectorGifFps.width
+                            height: 32
 
                             visible: rbGIF.checked || cbTimelapse.checked
 
-                            Row {
-                                id: selectorGifFps
-                                height: parent.height
+                            model: ListModel {
+                                id: lmGifFps
+                                ListElement { idx: 1; txt: "10"; src: ""; sz: 32; }
+                                ListElement { idx: 2; txt: "15"; src: ""; sz: 32; }
+                                ListElement { idx: 3; txt: "20"; src: ""; sz: 32; }
+                                ListElement { idx: 4; txt: "24"; src: ""; sz: 32; }
+                            }
 
-                                property int fps: 15
+                            property int fps: 15
 
-                                ItemLilMenuButton {
-                                    text: "10" + (selected ? " " + qsTr("fps") : "")
-                                    selected: selectorGifFps.fps === 10
-                                    onClicked: selectorGifFps.fps = 10
+                            currentSelection: 2
+                            onMenuSelected: (index) => {
+                                if (index === 1) {
+                                    selectorGifFps.fps = 10
+                                    //text: "10" + (selected ? " " + qsTr("fps") : "")
+                                } else if (index === 2) {
+                                    selectorGifFps.fps = 15
+                                } else if (index === 3) {
+                                    selectorGifFps.fps = 20
+                                } else if (index === 4) {
+                                    selectorGifFps.fps = 24
                                 }
-                                ItemLilMenuButton {
-                                    text: "15" + (selected ? " " + qsTr("fps") : "")
-                                    selected: selectorGifFps.fps === 15
-                                    onClicked: selectorGifFps.fps = 15
-                                }
-                                ItemLilMenuButton {
-                                    text: "20" + (selected ? " " + qsTr("fps") : "")
-                                    selected: selectorGifFps.fps === 20
-                                    onClicked: selectorGifFps.fps = 20
-                                }
-                                ItemLilMenuButton {
-                                    text: "24" + (selected ? " " + qsTr("fps") : "")
-                                    selected: selectorGifFps.fps === 24
-                                    onClicked: selectorGifFps.fps = 24
-                                }
+                                currentSelection = index
                             }
                         }
 
+                        SelectorMenuThemed {
+                            id: selectorVideoFps
+                            anchors.verticalCenter: parent.verticalCenter
+                            height: 32
+
+                            visible: !rbGIF.checked && !cbTimelapse.checked
+
+                            model: ListModel {
+                                id: lmVideoFps
+                                ListElement { idx: 1; txt: "30"; src: ""; sz: 32; }
+                                ListElement { idx: 2; txt: "60"; src: ""; sz: 32; }
+                                ListElement { idx: 3; txt: "120"; src: ""; sz: 32; }
+                                ListElement { idx: 4; txt: "240"; src: ""; sz: 32; }
+                            }
+
+                            property int fps:  {
+                                if (typeof currentShot === "undefined" || !currentShot) return 30
+                                return Math.round(currentShot.framerate)
+                            }
+
+                            currentSelection: 1
+                            onMenuSelected: (index) => {
+                                if (index === 1) {
+                                    selectorVideoFps.fps = 30
+                                    //text: "30" + (selected ? " " + qsTr("fps") : "")
+                                } else if (index === 2) {
+                                    selectorVideoFps.fps = 60
+                                } else if (index === 3) {
+                                    selectorVideoFps.fps = 120
+                                } else if (index === 4) {
+                                    selectorVideoFps.fps = 240
+                                }
+                                currentSelection = index
+                            }
+                        }
+/*
                         ItemLilMenu {
                             anchors.verticalCenter: parent.verticalCenter
                             width: selectorVideoFps.width
@@ -996,7 +929,7 @@ Popup {
                                     onClicked: selectorVideoFps.fps = 240
                                 }
                             }
-                        }
+                        }*/
                     }
 
                     Row {
@@ -1421,7 +1354,6 @@ Popup {
                             anchors.left: parent.left
                             anchors.right: parent.right
                             anchors.verticalCenter: parent.verticalCenter
-                            height: 36
 
                             ListModel { id: cbDestinations }
                             model: cbDestinations
@@ -1693,5 +1625,7 @@ Popup {
                 }
             }
         }
+
+        ////////////////////////////////////////////////////////////////////////
     }
 }

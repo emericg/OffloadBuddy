@@ -49,9 +49,9 @@ Popup {
 
             Rectangle {
                 anchors.left: parent.left
-                anchors.leftMargin: 1
+                anchors.leftMargin: 0
                 anchors.right: parent.right
-                anchors.rightMargin: 1
+                anchors.rightMargin: 0
                 anchors.bottom: parent.bottom
                 height: parent.radius
                 color: parent.color
@@ -73,7 +73,9 @@ Popup {
 
         Rectangle {
             anchors.left: parent.left
+            anchors.leftMargin: 2
             anchors.right: parent.right
+            anchors.rightMargin: 2
 
             z: 1
             height: 48
