@@ -5,6 +5,7 @@
         <file alias="CsdWindows.qml">components_generic/CsdWindows.qml</file>
 
         <file alias="ActionMenuItem.qml">components_generic/ActionMenuItem.qml</file>
+        <file alias="ActionMenuSeparator.qml">components_generic/ActionMenuSeparator.qml</file>
         <file alias="ButtonText.qml">components_generic/ButtonText.qml</file>
         <file alias="ButtonWireframe.qml">components_generic/ButtonWireframe.qml</file>
         <file alias="ButtonWireframeIcon.qml">components_generic/ButtonWireframeIcon.qml</file>

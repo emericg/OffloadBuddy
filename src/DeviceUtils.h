@@ -127,6 +127,7 @@ namespace DeviceUtils
             DEVICE_DJI_OSMO_ACTION,
             DEVICE_DJI_OSMO_ACTION2,
             DEVICE_DJI_OSMO_ACTION3,
+            DEVICE_DJI_OSMO_ACTION4,
 
         DEVICE_RYLO = 350,
             DEVICE_RYLO_360,

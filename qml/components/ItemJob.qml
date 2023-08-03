@@ -44,9 +44,10 @@ Rectangle {
             spacing: 12
 
             Item {
+                anchors.verticalCenter: parent.verticalCenter
                 width: 32
                 height: 32
-                anchors.verticalCenter: parent.verticalCenter
+                clip: true
 
                 IconSvg {
                     id: imageJob
@@ -175,7 +176,7 @@ Rectangle {
                 height: 40
                 anchors.verticalCenter: parent.verticalCenter
 
-                visible: (job.destinationFolder.length && job.state >= JobUtils.JOB_STATE_DONE)
+                visible: (job.destinationFolder.length && job.state >= JobUtils.JOB_STATE_WORKING)
                 highlightMode: "color"
                 source: "qrc:/assets/icons_material/baseline-folder_open-24px.svg"
                 onClicked: job.openDestinationFolder()

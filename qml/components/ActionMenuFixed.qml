@@ -92,14 +92,12 @@ Popup {
 
         ////////
 
-        Rectangle {
-            id: telemetrySeparator
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: 1
+        ActionMenuSeparator { // telemetrySeparator
             visible: (telemetry.visible || telemetryGPMF.visible || telemetryGPS.visible)
-            color: Theme.colorSeparator
         }
+
+        ////////
+
         ActionMenuItem {
             id: telemetry
             index: 8
@@ -124,14 +122,12 @@ Popup {
 
         ////////
 
-        Rectangle {
-            id: openSeparator
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: 1
+        ActionMenuSeparator { // openSeparator
             visible: (openFile.visible || openFolder.visible)
-            color: Theme.colorSeparator
         }
+
+        ////////
+
         ActionMenuItem {
             id: openFile
             index: 12
@@ -149,14 +145,12 @@ Popup {
 
         ////////
 
-        Rectangle {
-            id: removeSeparator
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: 1
+        ActionMenuSeparator { // removeSeparator
             visible: removeSelected.visible
-            color: Theme.colorSeparator
         }
+
+        ////////
+
         ActionMenuItem {
             id: removeSelected
             index: 16

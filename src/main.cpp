@@ -73,7 +73,7 @@ void print_build_infos()
     qDebug() << "* Built with an unknown compiler";
 #endif
 
-    qDebug() << "- Qt version:" << QT_VERSION_MAJOR << QT_VERSION_MINOR << QT_VERSION_PATCH;
+    qDebug() << "- Qt version:" << QT_VERSION_STR;
 
 #ifdef ENABLE_LIBMTP
     qDebug() << "- libmtp enabled, version:" << LIBMTP_VERSION_STRING;

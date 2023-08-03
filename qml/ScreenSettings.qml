@@ -201,24 +201,17 @@ Item {
                     color: Theme.colorText
                 }
 
-                RadioButtonThemed {
-                    id: radioButtonMetric
+                SelectorMenuThemed {
                     anchors.verticalCenter: parent.verticalCenter
+                    height: 32
 
-                    text: qsTr("Metric")
+                    model: ListModel {
+                        ListElement { idx: 1; txt: qsTr("Metric"); src: ""; sz: 0; }
+                        ListElement { idx: 2; txt: qsTr("Imperial"); src: ""; sz: 0; }
+                    }
 
-                    checked: (settingsManager.appUnits === 0)
-                    onClicked: settingsManager.appUnits = 0
-                }
-
-                RadioButtonThemed {
-                    id: radioButtonImperial
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    text: qsTr("Imperial")
-
-                    checked: (settingsManager.appUnits === 1)
-                    onClicked: settingsManager.appUnits = 1
+                    currentSelection: (settingsManager.appUnits === 0) ? 1 : 2
+                    onMenuSelected: (index) => { settingsManager.appUnits = (currentSelection === 1) ? 0 : 1 }
                 }
             }
 

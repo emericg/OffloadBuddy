@@ -48,11 +48,12 @@ Item {
             anchors.rightMargin: 16
             anchors.verticalCenter: parent.verticalCenter
 
-            visible: jobManager.trackedJobCount
             fullColor: true
             text: qsTr("Clear finished jobs")
             source: "qrc:/assets/icons_material/baseline-backspace-24px.svg"
             layoutDirection: Qt.RightToLeft
+
+            visible: jobManager.trackedJobCount
             onClicked: jobManager.clearFinishedJobs()
         }
 
