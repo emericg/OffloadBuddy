@@ -68,7 +68,7 @@ Item {
         anchors.right: parent.right
 
         height: 8
-        opacity: 0.66
+        opacity: 0.5
 
         gradient: Gradient {
             orientation: Gradient.Vertical
