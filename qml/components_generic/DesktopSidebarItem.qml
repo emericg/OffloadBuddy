@@ -2,7 +2,6 @@ import QtQuick 2.15
 import QtQuick.Layouts 1.15
 
 import ThemeEngine 1.0
-import "qrc:/js/UtilsNumber.js" as UtilsNumber
 
 Item {
     id: control
@@ -22,7 +21,7 @@ Item {
 
     // settings
     property url source
-    property int sourceSize: UtilsNumber.alignTo(height * 0.666, 2)
+    property int sourceSize: 40
     property string text
     property string highlightMode: "background" // available: background, indicator, circle, content
 
