@@ -84,6 +84,7 @@ namespace DeviceUtils
             DEVICE_HERO10,
             DEVICE_HERO11,
             DEVICE_HERO11_MINI,
+            DEVICE_HERO12,
             DEVICE_FUSION,
             DEVICE_MAX,
 
@@ -133,11 +134,14 @@ namespace DeviceUtils
             DEVICE_RYLO_360,
 
         DEVICE_INSTA360 = 370,
-            DEVICE_INSTA360_ONE,
-            DEVICE_INSTA360_ONEX,
-            DEVICE_INSTA360_ONEX2,
+            DEVICE_INSTA360_ONE_R,
+            DEVICE_INSTA360_ONE_RS,
+            DEVICE_INSTA360_ONE_X,
+            DEVICE_INSTA360_ONE_X2,
+            DEVICE_INSTA360_X3,
             DEVICE_INSTA360_GO,
             DEVICE_INSTA360_GO2,
+            DEVICE_INSTA360_GO3,
             DEVICE_INSTA_EVO,
     };
     Q_ENUM_NS(DeviceModel)

@@ -12,7 +12,8 @@ function getDevicePicture(device) {
 
     // Using device name
     if (deviceBrand === "GoPro") {
-        if (deviceName.includes("HERO11") ||
+        if (deviceName.includes("HERO12") ||
+            deviceName.includes("HERO11") ||
             deviceName.includes("HERO10") ||
             deviceName.includes("HERO9")) {
             camera_model += "gopro_H9"
@@ -41,13 +42,15 @@ function getDevicePicture(device) {
             camera_model += "generic_actioncam"
         }
     } else if (deviceBrand === "Insta360") {
-        if (deviceName.includes("One R")) {
+        if (deviceName.includes("One RS") || deviceName.includes("One R")) {
             camera_model += "insta360_one_r"
+        } else if (deviceName.includes("X3")) {
+            camera_model += "insta360_x3"
         } else if (deviceName.includes("One X2")) {
             camera_model += "insta360_one_x2"
         } else if (deviceName.includes("One X")) {
             camera_model += "insta360_one_x"
-        } else if (deviceName.includes("GO2") || deviceName.includes("GO")) {
+        } else if (deviceName.includes("GO3") || deviceName.includes("GO2") || deviceName.includes("GO")) {
             camera_model += "insta360_go2"
         } else {
             camera_model += "generic_actioncam"
