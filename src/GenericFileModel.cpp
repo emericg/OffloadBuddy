@@ -141,7 +141,9 @@ bool getGenericShotInfos(ofb_file &file, ofb_shot &shot)
     QString fileextension = file.extension.toLower();
 
     if (fileextension == "jpg" || fileextension == "jpeg" ||
+        fileextension == "jp2" || fileextension == "j2k" || fileextension == "jxl" ||
         fileextension == "png" || fileextension == "webp" ||
+        fileextension == "avif" || fileextension == "heif" || fileextension == "heic" ||
         fileextension == "gpr" ||
         fileextension == "insp")
     {
