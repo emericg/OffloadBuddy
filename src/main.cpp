@@ -122,6 +122,9 @@ int main(int argc, char *argv[])
         format.setOption(QSurfaceFormat::ResetNotification);
         QSurfaceFormat::setDefaultFormat(format);
     }
+
+    // Force "old" gstreamer multimedia backend
+    qputenv("QT_MEDIA_BACKEND", "gstreamer");
 #endif
 
     SingleApplication app(argc, argv, false);
