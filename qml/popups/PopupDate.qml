@@ -1,11 +1,14 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
+import Qt5Compat.GraphicalEffects
 
-import ThemeEngine 1.0
+import ThemeEngine
+
 import "qrc:/js/UtilsNumber.js" as UtilsNumber
 
 Popup {
     id: popupDate
+
     x: (appWindow.width / 2) - (width / 2) - (appSidebar.width / 2)
     y: (appWindow.height / 2) - (height / 2)
     width: 720
@@ -20,7 +23,7 @@ Popup {
     ////////
 
     property var qdateFirst: new Date(2001, 1, 1, 0, 0, 0)
-    property var qdateToday: new Date();
+    property var qdateToday: new Date()
 
     property var qdateFile
     property var qdateMetadata
@@ -62,15 +65,25 @@ Popup {
     ////////////////////////////////////////////////////////////////////////////
 
     enter: Transition { NumberAnimation { property: "opacity"; from: 0.5; to: 1.0; duration: 133; } }
-    exit: Transition { NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; duration: 233; } }
 
-    ////////////////////////////////////////////////////////////////////////////
+    background: Item {
+        Rectangle {
+            id: bgrect
+            anchors.fill: parent
 
-    background: Rectangle {
-        color: Theme.colorBackground
-        radius: Theme.componentRadius
-        border.width: Theme.componentBorderWidth
-        border.color: Theme.colorComponentBorder
+            radius: Theme.componentRadius
+            color: Theme.colorBackground
+            border.color: Theme.colorSeparator
+            border.width: Theme.componentBorderWidth
+        }
+        DropShadow {
+            anchors.fill: parent
+            source: bgrect
+            color: "#60000000"
+            radius: 24
+            samples: radius*2+1
+            cached: true
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////

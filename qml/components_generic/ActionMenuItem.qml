@@ -45,7 +45,7 @@ T.Button {
             //Behavior on color { ColorAnimation { duration: 133 } }
 
             opacity: control.hovered ? 1 : 0
-            Behavior on opacity { OpacityAnimator { duration: 233 } }
+            //Behavior on opacity { OpacityAnimator { duration: 233 } }
         }
 
         RippleThemed {

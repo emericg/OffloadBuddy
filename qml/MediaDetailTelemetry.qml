@@ -5,7 +5,8 @@ import QtCharts
 import QtLocation
 import QtPositioning
 
-import ThemeEngine 1.0
+import ThemeEngine
+
 import "qrc:/js/UtilsString.js" as UtilsString
 
 Item {
