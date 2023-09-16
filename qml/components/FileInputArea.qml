@@ -14,19 +14,22 @@ import "qrc:/js/UtilsPath.js" as UtilsPath
 T.TextField {
     id: control
 
-    implicitWidth: implicitBackgroundWidth + leftInset + rightInset
-                   || Math.max(contentWidth, placeholder.implicitWidth) + leftPadding + rightPadding
+    implicitWidth: implicitBackgroundWidth + leftInset + rightInset ||
+                   Math.max(contentWidth, placeholder.implicitWidth) + leftPadding + rightPadding
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              contentHeight + topPadding + bottomPadding,
                              placeholder.implicitHeight + topPadding + bottomPadding)
 
-    clip: false
-    padding: 12
-    leftPadding: padding + 4
+    leftPadding: 12
+    rightPadding: 12
+
+    clip: true
+    color: colorText
+    //opacity: control.enabled ? 1 : 0.66
 
     text: ""
-    color: colorText
     font.pixelSize: Theme.componentFontSize
+    verticalAlignment: TextInput.AlignVCenter
 
     placeholderText: ""
     placeholderTextColor: colorPlaceholderText
@@ -44,6 +47,7 @@ T.TextField {
     property bool isValid: (control.text.length > 0 && fileArea.text.length > 0 && extensionArea.text.length > 0)
 
     // settings
+    property string buttonText: qsTr("change")
     property int buttonWidth: (buttonChange.visible ? buttonChange.width : 0)
 
     // colors
@@ -51,8 +55,8 @@ T.TextField {
     property string colorPlaceholderText: Theme.colorSubText
     property string colorBorder: Theme.colorComponentBorder
     property string colorBackground: Theme.colorComponentBackground
-    property string colorSelectedText: Theme.colorHighContrast
     property string colorSelection: Theme.colorPrimary
+    property string colorSelectedText: "white"
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -84,10 +88,11 @@ T.TextField {
 
     PlaceholderText {
         id: placeholder
+        anchors.top: control.top
+        anchors.bottom: control.bottom
+
         x: control.leftPadding
-        y: control.topPadding
         width: control.width - (control.leftPadding + control.rightPadding)
-        height: control.height - (control.topPadding + control.bottomPadding)
 
         text: control.placeholderText
         font: control.font
@@ -96,6 +101,43 @@ T.TextField {
         visible: !control.length && !control.preeditText && (!control.activeFocus || control.horizontalAlignment !== Qt.AlignHCenter)
         elide: Text.ElideRight
         renderType: control.renderType
+    }
+
+    ////////////////
+
+    Row {
+        id: contentRow
+        anchors.left: parent.left
+        anchors.leftMargin: control.leftPadding + control.contentWidth
+        anchors.verticalCenter: parent.verticalCenter
+
+        TextInput { // fileArea
+            id: fileArea
+            anchors.verticalCenter: parent.verticalCenter
+
+            width: contentWidth
+            autoScroll: false
+            color: Theme.colorSubText
+
+            selectByMouse: true
+            selectionColor: control.colorSelection
+            selectedTextColor: control.colorSelectedText
+
+            onTextChanged: control.textChanged()
+            onEditingFinished: focus = false
+        }
+        Text { // dot
+            anchors.verticalCenter: parent.verticalCenter
+            text: "."
+            color: Theme.colorSubText
+            verticalAlignment: Text.AlignVCenter
+        }
+        Text { // extension
+            id: extensionArea
+            anchors.verticalCenter: parent.verticalCenter
+            color: Theme.colorSubText
+            verticalAlignment: Text.AlignVCenter
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -107,23 +149,7 @@ T.TextField {
         radius: Theme.componentRadius
         color: control.colorBackground
 
-        Rectangle {
-            anchors.top: parent.top
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            width: buttonWidth
-            color: Theme.colorComponent
-        }
-
-        Rectangle {
-            anchors.fill: parent
-            color: "transparent"
-            radius: Theme.componentRadius
-            border.width: 2
-            border.color: (control.activeFocus || fileArea.activeFocus) ? Theme.colorPrimary : control.colorBorder
-        }
-
-        layer.enabled: true
+        layer.enabled: false
         layer.effect: OpacityMask {
             maskSource: Rectangle {
                 x: background.x
@@ -135,72 +161,30 @@ T.TextField {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
-
-    TextInput {
-        id: fileArea
-        anchors.top: control.top
-        anchors.bottom: control.bottom
-
-        x: control.leftPadding + control.contentWidth
-        width: control.width - control.buttonWidth - x - 12
-
-        clip: true
-        autoScroll: false
-        color: Theme.colorSubText
-        verticalAlignment: Text.AlignVCenter
-
-        selectByMouse: true
-        selectionColor: control.colorSelection
-        selectedTextColor: control.colorSelectedText
-
-        onTextChanged: {
-            control.textChanged()
-        }
-        onEditingFinished: {
-            focus = false
-        }
-    }
-
-    Text {
-        id: dot
-        anchors.top: control.top
-        anchors.bottom: control.bottom
-
-        x: control.leftPadding + control.contentWidth + fileArea.contentWidth
-        visible: x < control.width
-
-        text: "."
-        color: Theme.colorSubText
-        verticalAlignment: Text.AlignVCenter
-    }
-    Text {
-        id: extensionArea
-        anchors.top: control.top
-        anchors.left: dot.right
-        anchors.bottom: control.bottom
-
-        visible: dot.visible
-        color: Theme.colorSubText
-        verticalAlignment: Text.AlignVCenter
-    }
+    ////////////////
 
     ButtonThemed {
         id: buttonChange
         anchors.top: parent.top
-        anchors.topMargin: 2
         anchors.right: parent.right
-        anchors.rightMargin: 2
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 2
 
-        height: control.height
-        visible: control.enabled
-        text: qsTr("change")
+        text: control.buttonText
 
         onClicked: {
             fileDialogLoader.active = true
             fileDialogLoader.item.open()
         }
     }
+
+    Rectangle {
+        anchors.fill: background
+        radius: Theme.componentRadius
+        color: "transparent"
+
+        border.width: 2
+        border.color: (control.activeFocus || fileArea.activeFocus) ? control.colorSelection : control.colorBorder
+    }
+
+    ////////////////
 }

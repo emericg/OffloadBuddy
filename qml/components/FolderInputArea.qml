@@ -14,18 +14,18 @@ import "qrc:/js/UtilsPath.js" as UtilsPath
 T.TextField {
     id: control
 
-    implicitWidth: implicitBackgroundWidth + leftInset + rightInset
-                   || Math.max(contentWidth, placeholder.implicitWidth) + leftPadding + rightPadding
+    implicitWidth: implicitBackgroundWidth + leftInset + rightInset ||
+                   Math.max(contentWidth, placeholder.implicitWidth) + leftPadding + rightPadding
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              contentHeight + topPadding + bottomPadding,
                              placeholder.implicitHeight + topPadding + bottomPadding)
 
-    padding: 12
-    leftPadding: padding + 4
+    leftPadding: 12
+    rightPadding: 12
 
-    clip: false
+    clip: true
     color: colorText
-    opacity: control.enabled ? 1 : 0.66
+    //opacity: control.enabled ? 1 : 0.66
 
     text: ""
     font.pixelSize: Theme.componentFontSize
@@ -45,7 +45,8 @@ T.TextField {
     property bool isValid: (control.text.length > 0)
 
     // settings
-    property int buttonWidth: (buttonChange.visible ? buttonChange.width + 2 : 2)
+    property string buttonText: qsTr("change")
+    property int buttonWidth: (buttonChange.visible ? buttonChange.width : 0)
 
     // colors
     property string colorText: Theme.colorComponentText
@@ -53,7 +54,7 @@ T.TextField {
     property string colorBorder: Theme.colorComponentBorder
     property string colorBackground: Theme.colorComponentBackground
     property string colorSelection: Theme.colorPrimary
-    property string colorSelectedText: Theme.colorHighContrast
+    property string colorSelectedText: "white"
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -79,6 +80,27 @@ T.TextField {
 
     ////////////////////////////////////////////////////////////////////////////
 
+    background: Rectangle {
+        implicitWidth: 256
+        implicitHeight: Theme.componentHeight
+
+        radius: Theme.componentRadius
+        color: control.colorBackground
+
+        layer.enabled: false
+        layer.effect: OpacityMask {
+            maskSource: Rectangle {
+                x: background.x
+                y: background.y
+                width: background.width
+                height: background.height
+                radius: background.radius
+            }
+        }
+    }
+
+    ////////////////
+
     PlaceholderText {
         id: placeholder
         x: control.leftPadding
@@ -95,19 +117,15 @@ T.TextField {
         renderType: control.renderType
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     ButtonThemed {
         id: buttonChange
         anchors.top: parent.top
-        anchors.topMargin: Theme.componentBorderWidth
         anchors.right: parent.right
-        anchors.rightMargin: Theme.componentBorderWidth
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: Theme.componentBorderWidth
 
-        visible: control.enabled
-        text: qsTr("change")
+        text: control.buttonText
 
         onClicked: {
             folderDialogLoader.active = true
@@ -115,40 +133,14 @@ T.TextField {
         }
     }
 
-    background: Rectangle {
-        implicitWidth: 256
-        implicitHeight: Theme.componentHeight
-
+    Rectangle {
+        anchors.fill: background
         radius: Theme.componentRadius
-        color: control.colorBackground
+        color: "transparent"
 
-        Rectangle {
-            anchors.top: parent.top
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            width: buttonWidth
-            color: Theme.colorComponent
-        }
-
-        Rectangle {
-            anchors.fill: parent
-            color: "transparent"
-            radius: Theme.componentRadius
-            border.width: Theme.componentBorderWidth
-            border.color: control.activeFocus ? Theme.colorPrimary : colorBorder
-        }
-
-        layer.enabled: false
-        layer.effect: OpacityMask {
-            maskSource: Rectangle {
-                x: background.x
-                y: background.y
-                width: background.width
-                height: background.height
-                radius: background.radius
-            }
-        }
+        border.width: 2
+        border.color: control.activeFocus ? control.colorSelection : control.colorBorder
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 }

@@ -490,7 +490,9 @@ Item {
         ActionMenu {
             id: actionMenu
             z: 7
-            onMenuSelected: rectangleLibraryGrid.actionMenuTriggered(index)
+            onMenuSelected: (index) => {
+                rectangleLibraryGrid.actionMenuTriggered(index)
+            }
         }
         function actionMenuTriggered(index) {
             //console.log("actionMenuTriggered(" + index + ") selected shot: '" + shotsView.currentItem.shot.name + "'")
@@ -694,6 +696,10 @@ Item {
                     console.log("shotsView::Key_Menu")
                 }
             }
+
+            ////////
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 }

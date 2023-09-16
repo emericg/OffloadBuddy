@@ -4,10 +4,10 @@ import ThemeEngine 1.0
 
 Item { // action menu separator
     anchors.left: parent.left
-    anchors.leftMargin: Theme.componentMargin
+    anchors.leftMargin: Theme.componentMargin - 4
     anchors.right: parent.right
-    anchors.rightMargin: Theme.componentMargin
-    height: Theme.componentMargin + 1
+    anchors.rightMargin: Theme.componentMargin - 4
+    height: Theme.componentMargin - 4 + 1
 
     Rectangle {
         anchors.left: parent.left

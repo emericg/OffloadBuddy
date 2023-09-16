@@ -214,7 +214,7 @@ Item {
             colorTabletmenuContent =    "#9d9d9d"
             colorTabletmenuHighlight =  "#0079fe"
 
-            colorBackground =           "#F5F5F5"
+            colorBackground =           "#F8F8F8"
             colorForeground =           "#E9E9E9"
 
             colorPrimary =              "#FFCA28"

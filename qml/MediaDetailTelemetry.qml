@@ -377,6 +377,8 @@ Item {
                 }
             }
 
+            ////////
+
             Row {
                 anchors.top: parent.top
                 anchors.topMargin: 16
@@ -483,7 +485,11 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
 
                         readOnly: true
-                        text: shot.latitudeString + "    " + shot.longitudeString
+                        selectByMouse: true
+                        selectionColor: Theme.colorPrimary
+                        selectedTextColor: "white"
+
+                        text: shot.latitudeString + " / " + shot.longitudeString
                         font.pixelSize: Theme.fontSizeContent
                         color: Theme.colorHeaderContent
                     }
@@ -504,6 +510,10 @@ Item {
                         visible: shot.altitude
 
                         readOnly: true
+                        selectByMouse: true
+                        selectionColor: Theme.colorPrimary
+                        selectedTextColor: "white"
+
                         text: UtilsString.altitudeToString(shot.altitude - shot.altitudeOffset, 0, settingsManager.appUnits)
                         font.pixelSize: Theme.fontSizeContent
                         color: Theme.colorHeaderContent
@@ -525,12 +535,18 @@ Item {
                         visible: shot.speed
 
                         readOnly: true
+                        selectByMouse: true
+                        selectionColor: Theme.colorPrimary
+                        selectedTextColor: "white"
+
                         text: UtilsString.speedToString_km(shot.speed, 1, settingsManager.appUnits)
                         font.pixelSize: Theme.fontSizeContent
                         color: Theme.colorHeaderContent
                     }
                 }
             }
+
+            ////////
         }
     }
 
@@ -878,5 +894,9 @@ Item {
                 }
             }
         }
+
+        ////////////////
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 }
