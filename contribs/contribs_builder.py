@@ -304,8 +304,8 @@ if "libexif" in softwares_selected:
         urllib.request.urlretrieve("https://github.com/emericg/libexif/archive/master.zip", src_dir + FILE_libexif)
 
 ## taglib (version: git) (1.13+)
-FILE_taglib = "taglib-master.zip"
-DIR_taglib = "taglib-master"
+FILE_taglib = "taglib-1.13.1.zip"
+DIR_taglib = "taglib-1.13.1"
 
 if "taglib" in softwares_selected:
     if not os.path.exists(src_dir + FILE_taglib):
