@@ -6,14 +6,15 @@ name: "Desktop CI builds"
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 #-------------------------------------------------------------------------------
 # Define application name & version
 #-------------------------------------------------------------------------------
 
 env:
-  APPLICATION: "OffloadBuddy"
-  APPLICATION_VERSION: "0.12"
+  APP_NAME: "OffloadBuddy"
+  APP_VERSION: "0.12"
   QT_VERSION: "6.5.2"
 
 #-------------------------------------------------------------------------------
@@ -50,6 +51,13 @@ jobs:
              sudo apt-get install libgl1-mesa-dev libxcb1-dev libxkbcommon-x11-dev libx11-xcb-dev libxcb-cursor0 libzstd-dev -y;
              sudo apt-get install cmake ninja-build pkgconf libtool appstream -y;
 
+      # Setup env
+      - name: Setup env
+        run: |
+             qmake --version
+             cmake --version
+             export CMAKE_BUILD_PARALLEL_LEVEL=$(nproc)
+
       # Build dependencies (from contribs script)
       - name: Build dependencies (from contribs script)
         run: |
@@ -60,8 +68,7 @@ jobs:
       # Build application
       - name: Build application
         run: |
-             qmake --version
-             qmake ${{env.APPLICATION}}.pro DEFINES+=USE_CONTRIBS CONFIG+=release PREFIX=/usr
+             qmake ${{env.APP_NAME}}.pro DEFINES+=USE_CONTRIBS CONFIG+=release PREFIX=/usr
              make -j$(nproc)
 
       # Deploy application
@@ -72,8 +79,8 @@ jobs:
       - name: Upload AppImage
         uses: actions/upload-artifact@v3
         with:
-          name: ${{env.APPLICATION}}-${{env.APPLICATION_VERSION}}-linux64.AppImage
-          path: ${{env.APPLICATION}}*.AppImage
+          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-linux64.AppImage
+          path: ${{env.APP_NAME}}*.AppImage
 
   ## macOS build ###############################################################
   build-mac:
@@ -104,6 +111,14 @@ jobs:
              brew install ninja automake autoconf libtool pkg-config gettext
              brew link --force gettext
 
+      # Setup env
+      - name: Setup env
+        run: |
+             qmake --version
+             cmake --version
+             alias nproc="sysctl -n hw.logicalcpu"
+             export CMAKE_BUILD_PARALLEL_LEVEL=$(nproc)
+
       # Build dependencies (from contribs script)
       - name: Build dependencies (from contribs script)
         run: |
@@ -114,8 +129,7 @@ jobs:
       # Build application
       - name: Build application
         run: |
-             qmake --version
-             qmake ${{env.APPLICATION}}.pro DEFINES+=USE_CONTRIBS CONFIG+=release
+             qmake ${{env.APP_NAME}}.pro DEFINES+=USE_CONTRIBS CONFIG+=release
              make -j$(nproc)
 
       # Deploy application
@@ -126,8 +140,8 @@ jobs:
       - name: Upload app zip
         uses: actions/upload-artifact@v3
         with:
-          name: ${{env.APPLICATION}}-${{env.APPLICATION_VERSION}}-macOS.app
-          path: bin/${{env.APPLICATION}}.app
+          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-macOS.app
+          path: bin/${{env.APP_NAME}}.app
 
   ## Windows build #############################################################
   build-windows:
@@ -161,6 +175,12 @@ jobs:
       #       scoop bucket add extras
       #       scoop install nsis
 
+      # Setup env
+      - name: Setup env
+        run: |
+             qmake --version
+             cmake --version
+
       # Build dependencies (from contribs script)
       - name: Build dependencies (from contribs script)
         run: |
@@ -171,8 +191,7 @@ jobs:
       # Build application
       - name: Build application
         run: |
-             qmake --version
-             qmake ${{env.APPLICATION}}.pro DEFINES+=USE_CONTRIBS CONFIG+=release
+             qmake ${{env.APP_NAME}}.pro DEFINES+=USE_CONTRIBS CONFIG+=release
              nmake
 
       # Deploy application
@@ -183,12 +202,12 @@ jobs:
       - name: Upload ZIP
         uses: actions/upload-artifact@v3
         with:
-          name: ${{env.APPLICATION}}-${{env.APPLICATION_VERSION}}-win64.zip
-          path: ${{env.APPLICATION}}-${{env.APPLICATION_VERSION}}-win64.zip
+          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.zip
+          path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.zip
 
       # Upload NSIS installer
       - name: Upload NSIS installer
         uses: actions/upload-artifact@v3
         with:
-          name: ${{env.APPLICATION}}-${{env.APPLICATION_VERSION}}-win64.exe
-          path: ${{env.APPLICATION}}-${{env.APPLICATION_VERSION}}-win64.exe
+          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.exe
+          path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.exe

@@ -27,11 +27,6 @@ DEFINES += ENABLE_QTLOCATION
 # Use contribs (otherwise use system libs)
 win32 | ios | android { DEFINES += USE_CONTRIBS }
 
-# Use Qt Quick compiler
-ios | android { CONFIG += qtquickcompiler }
-
-win32 { DEFINES += _USE_MATH_DEFINES }
-
 # Project modules ##############################################################
 
 # App utils
@@ -193,12 +188,14 @@ unix {
     #QMAKE_CXXFLAGS += -fsanitize=address,undefined
     #QMAKE_LFLAGS += -fsanitize=address,undefined
 
-    #QMAKE_CXXFLAGS += -Wno-nullability-completeness
+    #QMAKE_CXXFLAGS += -Wno-nullability-completeness -fno-omit-frame-pointer
 }
+
+win32 { DEFINES += _USE_MATH_DEFINES }
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
-CONFIG(release, debug|release) : DEFINES += QT_NO_DEBUG_OUTPUT
+CONFIG(release, debug|release) : DEFINES += NDEBUG QT_NO_DEBUG QT_NO_DEBUG_OUTPUT
 
 # Build artifacts ##############################################################
 
