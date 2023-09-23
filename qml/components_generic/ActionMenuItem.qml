@@ -39,9 +39,9 @@ T.Button {
 
         Rectangle {
             anchors.fill: parent
-            radius: Theme.componentMargin/2
+            radius: Theme.componentRadius
 
-            color: Theme.colorForeground
+            color: Theme.colorComponent
             //Behavior on color { ColorAnimation { duration: 133 } }
 
             opacity: control.hovered ? 1 : 0
