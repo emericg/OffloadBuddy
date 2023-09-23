@@ -127,7 +127,7 @@ bool StorageManager::writeSettings()
         settings.setValue("MediaDirectories/contentHierarchy", m_contentHierarchy);
 
         int i = 1;
-        for (auto d: qAsConst(m_mediaDirectories))
+        for (auto d: std::as_const(m_mediaDirectories))
         {
             MediaDirectory *dd = qobject_cast<MediaDirectory*>(d);
             if (dd)
@@ -221,7 +221,7 @@ void StorageManager::addDirectory(const QString &path)
         if (!checkpath.endsWith('/')) checkpath += '/';
 
         // Check if already in the list?
-        for (auto d: qAsConst(m_mediaDirectories))
+        for (auto d: std::as_const(m_mediaDirectories))
         {
             MediaDirectory *dd = qobject_cast<MediaDirectory*>(d);
             if (dd && dd->getPath() == checkpath)
@@ -258,7 +258,7 @@ void StorageManager::removeDirectory(const QString &path)
 {
     if (!path.isEmpty())
     {
-        for (auto d: qAsConst(m_mediaDirectories))
+        for (auto d: std::as_const(m_mediaDirectories))
         {
             MediaDirectory *dd = qobject_cast<MediaDirectory*>(d);
             if (dd && dd->getPath() == path)

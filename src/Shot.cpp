@@ -65,7 +65,7 @@ Shot::Shot(const ofb_shot *s, QObject *parent) : QObject(parent)
 
 Shot::~Shot()
 {
-    for (auto picture: qAsConst(m_pictures))
+    for (auto picture: std::as_const(m_pictures))
     {
         if (picture->ed)
         {
@@ -76,7 +76,7 @@ Shot::~Shot()
     qDeleteAll(m_pictures);
     m_pictures.clear();
 
-    for (auto video: qAsConst(m_videos))
+    for (auto video: std::as_const(m_videos))
     {
         if (video->media)
             minivideo_close(&video->media);
@@ -512,32 +512,32 @@ QVariant Shot::getShotFiles()
 {
     if (m_shotfiles.size() <= 0)
     {
-        for (auto f: qAsConst(m_pictures))
+        for (auto f: std::as_const(m_pictures))
         {
             ShotFile *sf = new ShotFile(f);
             if (sf) m_shotfiles.push_back(sf);
         }
-        for (auto f: qAsConst(m_videos))
+        for (auto f: std::as_const(m_videos))
         {
             ShotFile *sf = new ShotFile(f);
             if (sf) m_shotfiles.push_back(sf);
         }
-        for (auto f: qAsConst(m_videos_previews))
+        for (auto f: std::as_const(m_videos_previews))
         {
             ShotFile *sf = new ShotFile(f);
             if (sf) m_shotfiles.push_back(sf);
         }
-        for (auto f: qAsConst(m_videos_thumbnails))
+        for (auto f: std::as_const(m_videos_thumbnails))
         {
             ShotFile *sf = new ShotFile(f);
             if (sf) m_shotfiles.push_back(sf);
         }
-        for (auto f: qAsConst(m_videos_hdAudio))
+        for (auto f: std::as_const(m_videos_hdAudio))
         {
             ShotFile *sf = new ShotFile(f);
             if (sf) m_shotfiles.push_back(sf);
         }
-        for (auto f: qAsConst(m_others))
+        for (auto f: std::as_const(m_others))
         {
             ShotFile *sf = new ShotFile(f);
             if (sf) m_shotfiles.push_back(sf);
@@ -1475,7 +1475,7 @@ bool Shot::getMetadataFromVideoGPMF()
 
 #ifdef ENABLE_MINIVIDEO
 
-    for (auto video : qAsConst(m_videos))
+    for (auto video : std::as_const(m_videos))
     {
         gpmf_parsed = true;
 

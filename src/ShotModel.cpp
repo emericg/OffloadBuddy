@@ -57,7 +57,7 @@ ShotModel::~ShotModel()
 void ShotModel::sanetize(const QString &path)
 {
     // Check if each files of the shot still exists
-    for (auto shot: qAsConst(m_shots))
+    for (auto shot: std::as_const(m_shots))
     {
         if (!path.isEmpty() && shot->getFolderString().contains(path))
         {
@@ -67,7 +67,7 @@ void ShotModel::sanetize(const QString &path)
         }
 
         QList <ofb_file *> files = shot->getFiles();
-        for (auto file: qAsConst(files))
+        for (auto file: std::as_const(files))
         {
             QFile f(file->filesystemPath);
             if (!f.exists())
@@ -95,7 +95,7 @@ void ShotModel::computeStats()
     int other_file = 0;
     qint64 other_space = 0;
 
-    for (auto shot: qAsConst(m_shots))
+    for (auto shot: std::as_const(m_shots))
     {
 /*
         // (1) Compute stats by shot type
@@ -112,7 +112,7 @@ void ShotModel::computeStats()
 */
         // (2) Compute stats by shot files type
         QList <ofb_file *> files = shot->getFiles();
-        for (auto file: qAsConst(files))
+        for (auto file: std::as_const(files))
         {
             if (file->isAudio)
             {
@@ -363,7 +363,7 @@ Shot *ShotModel::searchForDuplicate(const QString &path)
 {
     if (!path.isEmpty())
     {
-        for (auto shot: qAsConst(m_shots))
+        for (auto shot: std::as_const(m_shots))
         {
             Shot *search = qobject_cast<Shot*>(shot);
             if (search && search->containFile(path))
@@ -382,7 +382,7 @@ Shot *ShotModel::searchForDuplicate(const QString &path)
  */
 void ShotModel::getShots(QList<Shot *> &shots)
 {
-    for (auto shot: qAsConst(m_shots))
+    for (auto shot: std::as_const(m_shots))
     {
         shots.push_back(shot);
     }
@@ -414,7 +414,7 @@ Shot *ShotModel::getShotWithUuid(const QString &uuid)
 {
     if (!uuid.isEmpty())
     {
-        for (auto shot: qAsConst(m_shots))
+        for (auto shot: std::as_const(m_shots))
         {
             Shot *search = qobject_cast<Shot*>(shot);
             if (search->getUuid() == uuid)
@@ -440,7 +440,7 @@ std::vector<Shot *> ShotModel::getShotsWithName(const QString &name)
 
     if (!name.isEmpty())
     {
-        for (auto shot: qAsConst(m_shots))
+        for (auto shot: std::as_const(m_shots))
         {
             Shot *search = qobject_cast<Shot*>(shot);
             if (search->getName() == name)

@@ -180,7 +180,7 @@ bool Device::addStorages_mtp(ofb_mtp_device *device)
     }
 
     // Storage
-    for (auto st: qAsConst(device->storages))
+    for (auto st: std::as_const(device->storages))
     {
         DeviceStorage *storage = new DeviceStorage(device->device, st->m_storage, false, this);
         if (storage)
@@ -406,7 +406,7 @@ void Device::refreshBatteryInfos()
     //qDebug() << "refreshBatteryInfos()";
 
 #ifdef ENABLE_LIBMTP
-    for (auto d: qAsConst(m_mtpDevices))
+    for (auto d: std::as_const(m_mtpDevices))
     {
         if (d && d->device)
         {
@@ -432,7 +432,7 @@ void Device::refreshStorageInfos()
 {
     //qDebug() << "refreshStorageInfos(" << m_storage->rootPath() << ")";
 
-    for (auto st: qAsConst(m_mediaStorages))
+    for (auto st: std::as_const(m_mediaStorages))
     {
         if (st)
         {
@@ -505,7 +505,7 @@ float Device::getStorageLevel(const int index)
 bool Device::isReadOnly() const
 {
     bool ro = false;
-    for (auto st: qAsConst(m_mediaStorages))
+    for (auto st: std::as_const(m_mediaStorages))
     {
         if (st)
         {
@@ -520,7 +520,7 @@ int64_t Device::getSpaceTotal()
 {
     int64_t s = 0;
 
-    for (auto st: qAsConst(m_mediaStorages))
+    for (auto st: std::as_const(m_mediaStorages))
     {
         if (st)
         {
@@ -535,7 +535,7 @@ int64_t Device::getSpaceUsed()
 {
     int64_t s = 0;
 
-    for (auto st: qAsConst(m_mediaStorages))
+    for (auto st: std::as_const(m_mediaStorages))
     {
         if (st)
         {
@@ -550,7 +550,7 @@ int64_t Device::getSpaceAvailable()
 {
     int64_t s = 0;
 
-    for (auto st: qAsConst(m_mediaStorages))
+    for (auto st: std::as_const(m_mediaStorages))
     {
         if (st)
         {
@@ -565,7 +565,7 @@ int64_t Device::getSpaceAvailable_withrefresh()
 {
     int64_t s = 0;
 
-    for (auto st: qAsConst(m_mediaStorages))
+    for (auto st: std::as_const(m_mediaStorages))
     {
         if (st)
         {
@@ -850,7 +850,7 @@ void Device::offloadAll(const QVariant &settings)
 
     QList <Shot *> list_merge;
     QList <Shot *> list_offload;
-    for (const auto &s: qAsConst(shots))
+    for (const auto &s: std::as_const(shots))
     {
         if (set.mergeChapters && s->getChapterCount() > 1)
         {

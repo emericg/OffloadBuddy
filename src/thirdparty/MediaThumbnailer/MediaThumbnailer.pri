@@ -2,8 +2,6 @@ CONFIG += c++11
 
 MEDIATHUMBNAILER_VERSION = 0.3
 
-INCLUDEPATH += $${PWD}
-
 SOURCES += $${PWD}/MediaThumbnailer_threadpool.cpp \
            $${PWD}/MediaThumbnailer_async.cpp \
            $${PWD}/ThumbnailerBackend.cpp
@@ -25,3 +23,5 @@ contains(DEFINES, ENABLE_MINIVIDEO) {
     SOURCES += $${PWD}/ThumbnailerBackend_minivideo.cpp
     HEADERS += $${PWD}/ThumbnailerBackend_minivideo.h
 }
+
+INCLUDEPATH += $${PWD}

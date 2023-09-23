@@ -210,7 +210,7 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
             je->destination_ext = dstExt;
 
             const QList <ofb_file *> files = shot->getFiles(getPreviews, getHdAudio, true);
-            for (auto f: qAsConst(files))
+            for (auto f: std::as_const(files))
             {
                 je->files.push_back(*f);
             }
@@ -358,7 +358,7 @@ bool JobManager::addJobs(JobUtils::JobType type, Device *dev, MediaLibrary *lib,
 
 void JobManager::clearFinishedJobs()
 {
-    for (auto jj: qAsConst(m_trackedJobs))
+    for (auto jj: std::as_const(m_trackedJobs))
     {
         JobTracker *j = qobject_cast<JobTracker *>(jj);
         if (j && j->getState() >= JobUtils::JOB_STATE_DONE)
@@ -406,7 +406,7 @@ void JobManager::stopJob(int jobId)
 
 void JobManager::jobProgress(int jobId, float progress)
 {
-    for (auto jj: qAsConst(m_trackedJobs))
+    for (auto jj: std::as_const(m_trackedJobs))
     {
         JobTracker *j = qobject_cast<JobTracker *>(jj);
         if (j && j->getId() == jobId)
@@ -419,7 +419,7 @@ void JobManager::jobProgress(int jobId, float progress)
 
 void JobManager::jobStarted(int jobId)
 {
-    for (auto jj: qAsConst(m_trackedJobs))
+    for (auto jj: std::as_const(m_trackedJobs))
     {
         JobTracker *j = qobject_cast<JobTracker *>(jj);
         if (j && j->getId() == jobId)
@@ -434,7 +434,7 @@ void JobManager::jobStarted(int jobId)
 
 void JobManager::jobFinished(int jobId, int jobState)
 {
-    for (auto jj: qAsConst(m_trackedJobs))
+    for (auto jj: std::as_const(m_trackedJobs))
     {
         JobTracker *j = qobject_cast<JobTracker *>(jj);
         if (j && j->getId() == jobId)
@@ -453,12 +453,12 @@ void JobManager::jobFinished(int jobId, int jobState)
     }
 }
 
-void JobManager::jobAborted(int jobId, int jobState)
+void JobManager::jobAborted(int, int) // (int jobId, int jobState)
 {
     //
 }
 
-void JobManager::jobErrored(int jobId, int jobState)
+void JobManager::jobErrored(int, int) // (int jobId, int jobState)
 {
     //
 }
@@ -473,7 +473,7 @@ void JobManager::shotStarted(int jobId, Shot *shot)
         return;
     }
 
-    for (auto jj: qAsConst(m_trackedJobs))
+    for (auto jj: std::as_const(m_trackedJobs))
     {
         JobTracker *j = qobject_cast<JobTracker *>(jj);
         if (j && j->getId() == jobId)
@@ -495,7 +495,7 @@ void JobManager::shotFinished(int jobId, int status, Shot *shot)
         return;
     }
 
-    for (auto jj: qAsConst(m_trackedJobs))
+    for (auto jj: std::as_const(m_trackedJobs))
     {
         JobTracker *j = qobject_cast<JobTracker *>(jj);
         if (j && j->getId() == jobId)

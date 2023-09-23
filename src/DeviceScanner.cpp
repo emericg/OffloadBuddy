@@ -186,7 +186,7 @@ void DeviceScanner::scanFilesystems()
     }
 
     // Check if we lost some device(s) since last scan
-    for (auto const &storage: qAsConst(m_watchedFilesystems))
+    for (auto const &storage: std::as_const(m_watchedFilesystems))
     {
         if (!connectedFilesystems.contains(storage))
         {
@@ -339,7 +339,7 @@ void DeviceScanner::scanVirtualFilesystems()
                     else if (!deviceInfos->stringId.isEmpty())
                     {
                         bool devicefound = false;
-                        for (const auto &s: qAsConst(m_watchedVirtualFilesystems))
+                        for (const auto &s: std::as_const(m_watchedVirtualFilesystems))
                         {
                             if (s.contains(virtual_mountpoint))
                             {
@@ -401,7 +401,7 @@ void DeviceScanner::scanVirtualFilesystems()
     }
 
     // Check if we lost some device(s) since last scan
-    for (const auto &watchedFs: qAsConst(m_watchedVirtualFilesystems))
+    for (const auto &watchedFs: std::as_const(m_watchedVirtualFilesystems))
     {
         bool connected = false;
 
@@ -581,7 +581,7 @@ void DeviceScanner::scanMtpDevices()
     free(rawdevices);
 
     // Check if we lost some device(s) since last scan
-    for (auto watchedDevice: qAsConst(m_watchedMtpDevices))
+    for (auto watchedDevice: std::as_const(m_watchedMtpDevices))
     {
         if (!connectedMtpDevices.contains(watchedDevice))
         {

@@ -367,7 +367,8 @@ void MediaLibrary::moveSelected(const QString &shot_uuid, const QVariant &settin
     qDebug() << "MediaLibrary::moveSelected(" << shot_uuid << ")";
 
     QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
-    if (static_cast<QMetaType::Type>(variant.type()) != QMetaType::QVariantMap) return;
+    if (static_cast<QMetaType::Type>(variant.typeId()) != QMetaType::QVariantMap) return;
+
     QVariantMap variantMap = variant.toMap();
     //qDebug() << "> variantMap " << variantMap;
 
@@ -403,7 +404,8 @@ void MediaLibrary::moveSelection(const QVariant &uuids, const QVariant &settings
     qDebug() << "MediaLibrary::moveSelection(" << uuids << ")";
 
     QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
-    if (static_cast<QMetaType::Type>(variant.type()) != QMetaType::QVariantMap) return;
+    if (static_cast<QMetaType::Type>(variant.typeId()) != QMetaType::QVariantMap) return;
+
     QVariantMap variantMap = variant.toMap();
     //qDebug() << "> variantMap " << variantMap;
 
@@ -445,7 +447,8 @@ void MediaLibrary::mergeSelected(const QString &shot_uuid, const QVariant &setti
     qDebug() << "MediaLibrary::mergeSelected(" << shot_uuid << ")";
 
     QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
-    if (static_cast<QMetaType::Type>(variant.type()) != QMetaType::QVariantMap) return;
+    if (static_cast<QMetaType::Type>(variant.typeId()) != QMetaType::QVariantMap) return;
+
     QVariantMap variantMap = variant.toMap();
     //qDebug() << "> variantMap " << variantMap;
 
@@ -481,7 +484,8 @@ void MediaLibrary::mergeSelection(const QVariant &uuids, const QVariant &setting
     qDebug() << "MediaLibrary::mergeSelection(" << uuids << ")";
 
     QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
-    if (static_cast<QMetaType::Type>(variant.type()) != QMetaType::QVariantMap) return;
+    if (static_cast<QMetaType::Type>(variant.typeId()) != QMetaType::QVariantMap) return;
+
     QVariantMap variantMap = variant.toMap();
     //qDebug() << "> variantMap " << variantMap;
 
@@ -523,7 +527,8 @@ void MediaLibrary::deleteSelected(const QString &shot_uuid, const QVariant &sett
     qDebug() << "MediaLibrary::deleteSelected(" << shot_uuid << ")";
 
     QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
-    if (static_cast<QMetaType::Type>(variant.type()) != QMetaType::QVariantMap) return;
+    if (static_cast<QMetaType::Type>(variant.typeId()) != QMetaType::QVariantMap) return;
+
     QVariantMap variantMap = variant.toMap();
     //qDebug() << "> variantMap " << variantMap;
 
@@ -550,7 +555,8 @@ void MediaLibrary::deleteSelection(const QVariant &uuids, const QVariant &settin
     qDebug() << "MediaLibrary::deleteSelection(" << uuids << ")";
 
     QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
-    if (static_cast<QMetaType::Type>(variant.type()) != QMetaType::QVariantMap) return;
+    if (static_cast<QMetaType::Type>(variant.typeId()) != QMetaType::QVariantMap) return;
+
     QVariantMap variantMap = variant.toMap();
     //qDebug() << "> variantMap " << variantMap;
 
@@ -583,7 +589,8 @@ void MediaLibrary::reencodeSelected(const QString &shot_uuid, const QVariant &se
     qDebug() << "MediaLibrary::reencodeSelected(" << shot_uuid << ")";
 
     QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
-    if (static_cast<QMetaType::Type>(variant.type()) != QMetaType::QVariantMap) return;
+    if (static_cast<QMetaType::Type>(variant.typeId()) != QMetaType::QVariantMap) return;
+
     QVariantMap variantMap = variant.toMap();
     //qDebug() << "> variantMap " << variantMap;
 
@@ -681,7 +688,8 @@ void MediaLibrary::extractTelemetrySelected(const QString &shot_uuid, const QVar
     qDebug() << "MediaLibrary::extractTelemetrySelected(" << shot_uuid << ")";
 
     QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
-    if (static_cast<QMetaType::Type>(variant.type()) != QMetaType::QVariantMap) return;
+    if (static_cast<QMetaType::Type>(variant.typeId()) != QMetaType::QVariantMap) return;
+
     QVariantMap variantMap = variant.toMap();
     //qDebug() << "> variantMap " << variantMap;
 
@@ -734,7 +742,8 @@ void MediaLibrary::extractTelemetrySelection(const QVariant &uuids, const QVaria
     qDebug() << "MediaLibrary::extractTelemetrySelection(" << uuids << ")";
 
     QVariant variant = qvariant_cast<QJSValue>(settings).toVariant();
-    if (static_cast<QMetaType::Type>(variant.type()) != QMetaType::QVariantMap) return;
+    if (static_cast<QMetaType::Type>(variant.typeId()) != QMetaType::QVariantMap) return;
+
     QVariantMap variantMap = variant.toMap();
     //qDebug() << "> variantMap " << variantMap;
 

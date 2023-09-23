@@ -159,7 +159,7 @@ bool DeviceManager::getMtpDeviceName(const QString &stringId,
 
                     QStringList mtp_string_parts = stringId.split("_");
 
-                    for (auto const &part: qAsConst(mtp_string_parts))
+                    for (auto const &part: std::as_const(mtp_string_parts))
                     {
                         // FUSION hack
                         if (p.contains("Fusion", Qt::CaseInsensitive))
@@ -271,7 +271,7 @@ void DeviceManager::addFsDeviceGeneric(const QString &path, generic_device_infos
     Device *d = nullptr;
     bool deviceExists = false;
 
-    for (auto dd: qAsConst(m_devices))
+    for (auto dd: std::as_const(m_devices))
     {
         d = qobject_cast<Device *>(dd);
         if (d && (d->getPath(0) == path || d->getPath(1) == path))
@@ -328,7 +328,7 @@ void DeviceManager::addFsDeviceGoPro(const QString &path, gopro_device_infos *de
     bool deviceExists = false;
     bool deviceMerge = false;
 
-    for (auto dd: qAsConst(m_devices))
+    for (auto dd: std::as_const(m_devices))
     {
         d = qobject_cast<Device *>(dd);
         if (d)
@@ -410,7 +410,7 @@ void DeviceManager::addFsDeviceInsta360(const QString &path, insta360_device_inf
     Device *d = nullptr;
     bool deviceExists = false;
 
-    for (auto dd: qAsConst(m_devices))
+    for (auto dd: std::as_const(m_devices))
     {
         d = qobject_cast<Device *>(dd);
         if (d)
@@ -491,7 +491,7 @@ void DeviceManager::addVfsDevice(ofb_vfs_device *deviceInfos)
     bool deviceExists = false;
     bool deviceMerge = false;
 
-    for (auto dd: qAsConst(m_devices))
+    for (auto dd: std::as_const(m_devices))
     {
         d = qobject_cast<Device*>(dd);
         if (d)
@@ -519,7 +519,7 @@ void DeviceManager::addVfsDevice(ofb_vfs_device *deviceInfos)
         {
             qDebug() << ">>>> Fusioooooooon";
 
-            for (auto const &fs: qAsConst(deviceInfos->paths))
+            for (auto const &fs: std::as_const(deviceInfos->paths))
             {
                 d->setName("Fusion");
                 d->addStorage_filesystem(fs);
@@ -534,7 +534,7 @@ void DeviceManager::addVfsDevice(ofb_vfs_device *deviceInfos)
                            deviceInfos->brand, deviceInfos->model,
                            deviceInfos->firmware, deviceInfos->serial);
 
-            for (auto const &fs: qAsConst(deviceInfos->paths))
+            for (auto const &fs: std::as_const(deviceInfos->paths))
             {
                 d->addStorage_filesystem(fs);
             }
@@ -569,7 +569,7 @@ void DeviceManager::addMtpDevice(ofb_mtp_device *deviceInfos)
     bool deviceExists = false;
     bool deviceMerge = false;
 
-    for (auto dd: qAsConst(m_devices))
+    for (auto dd: std::as_const(m_devices))
     {
         d = qobject_cast<Device*>(dd);
         if (d)
