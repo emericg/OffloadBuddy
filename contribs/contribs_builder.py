@@ -310,7 +310,7 @@ DIR_taglib = "taglib-master"
 if "taglib" in softwares_selected:
     if not os.path.exists(src_dir + FILE_taglib):
         print("> Downloading " + FILE_taglib + "...")
-        urllib.request.urlretrieve("https://github.com/taglib/taglib/archive/master.zip", src_dir + FILE_taglib)
+        urllib.request.urlretrieve("https://github.com/taglib/taglib/archive/refs/tags/v1.13.1.tar.gz", src_dir + FILE_taglib)
 
 ## minivideo (version: git) (0.14+)
 FILE_minivideo = "minivideo-master.zip"
