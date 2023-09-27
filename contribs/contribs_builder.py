@@ -414,7 +414,7 @@ for TARGET in TARGETS:
         elif ARCH_TARGET == "armv7":
             CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_ROOT + "/build/cmake/android.toolchain.cmake", "-DANDROID_ABI=armeabi-v7a", "-DANDROID_PLATFORM=android-23"]
         else: # ARCH_TARGET == "armv8":
-            CMAKE_cmd = ["cmake", "-DANDROID_NDK=" + ANDROID_NDK_ROOT, "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_ROOT + "/build/cmake/android.toolchain.cmake", "-DANDROID_ABI=arm64-v8a", "-DANDROID_PLATFORM=android-23"]
+            CMAKE_cmd = ["cmake", "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_ROOT + "/build/cmake/android.toolchain.cmake", "-DANDROID_ABI=arm64-v8a", "-DANDROID_PLATFORM=android-23"]
 
     #### EXTRACT, BUILD & INSTALL ####
 
