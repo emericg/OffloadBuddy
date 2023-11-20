@@ -39,7 +39,7 @@ T.ItemDelegate {
             anchor: control
             pressed: control.pressed
             active: enabled && (control.down || control.visualFocus || control.hovered)
-            color: Qt.rgba(Theme.colorForeground.r, Theme.colorForeground.g, Theme.colorForeground.b, 0.5)
+            color: Qt.rgba(Theme.colorForeground.r, Theme.colorForeground.g, Theme.colorForeground.b, 0.1)
         }
     }
 
