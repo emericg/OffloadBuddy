@@ -211,7 +211,7 @@ Item {
                     }
 
                     currentSelection: (settingsManager.appUnits === 0) ? 1 : 2
-                    onMenuSelected: (index) => { settingsManager.appUnits = (currentSelection === 1) ? 0 : 1 }
+                    onMenuSelected: (index) => { settingsManager.appUnits = (index === 1) ? 0 : 1 }
                 }
             }
 
