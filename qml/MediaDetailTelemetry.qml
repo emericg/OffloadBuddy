@@ -158,9 +158,9 @@ Item {
             copyrightsVisible: false
 
             plugin: Plugin {
-                //name: "mapboxgl"
-                preferred: (Qt.platform.os === "osx" || Qt.platform.os === "linux") ? ["osm", "esri"] : ["mapboxgl", "osm", "esri"]
-                PluginParameter { name: "osm.mapping.highdpi_tiles"; value: "true"; }
+                preferred: ["maplibre", "osm"]
+                PluginParameter { name: "maplibre.map.styles"; value: "https://tiles.versatiles.org/styles/colorful.json" }
+                PluginParameter { name: "osm.mapping.highdpi_tiles"; value: true }
             }
 
             //zoomLevel: 2
