@@ -1,8 +1,8 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Window 2.15
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Window
 
-import ThemeEngine 1.0
+import ThemeEngine
 import "qrc:/js/UtilsDeviceCamera.js" as UtilsDevice
 
 Rectangle {
@@ -51,7 +51,7 @@ Rectangle {
         highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
         indicatorAnimated: mediaLibrary.libraryState
 
-        selected: appContent.state === "library"
+        highlighted: appContent.state === "library"
         onClicked: appContent.state = "library"
     }
 
@@ -79,7 +79,7 @@ Rectangle {
             highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
             indicatorAnimated: modelData.deviceState
 
-            selected: (appContent.state === "device" && modelData === screenDevice.currentDevice)
+            highlighted: (appContent.state === "device" && modelData === screenDevice.currentDevice)
             onClicked: {
                 if (!(appContent.state === "device" && screenDevice.currentDevice === modelData)) {
                     screenDevice.currentDevice = modelData
@@ -93,12 +93,12 @@ Rectangle {
 
     Column {
         id: column
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 16
         anchors.left: parent.left
         anchors.leftMargin: 0
         anchors.right: parent.right
         anchors.rightMargin: 0
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 16
 
         spacing: 0
 
@@ -113,7 +113,7 @@ Rectangle {
             visible: jobManager.trackedJobCount
             indicatorAnimated: jobManager.workingJobCount
 
-            selected: appContent.state === "jobs"
+            highlighted: appContent.state === "jobs"
             onClicked: appContent.state = "jobs"
         }
         DesktopSidebarItem {
@@ -124,7 +124,7 @@ Rectangle {
             sourceSize: 48
             highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
 
-            selected: appContent.state === "settings"
+            highlighted: appContent.state === "settings"
             onClicked: appContent.state = "settings"
         }
         DesktopSidebarItem {
@@ -134,7 +134,7 @@ Rectangle {
             sourceSize: 48
             highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
 
-            selected: appContent.state === "about"
+            highlighted: appContent.state === "about"
             onClicked: appContent.state = "about"
         }
         DesktopSidebarItem {

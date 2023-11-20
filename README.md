@@ -10,7 +10,7 @@ It's designed to remove the hassle of handling and transferring the many videos 
 
 > Works on Linux, macOS and Windows!
 
-### Features:
+### Features
 
 - [x] Import data from SD cards, mass storage or MTP devices
   - [x] Organize and sort your media library

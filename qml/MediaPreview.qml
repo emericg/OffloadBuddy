@@ -2,8 +2,8 @@ import QtQuick
 import QtQuick.Controls
 import QtMultimedia
 
-import ThemeEngine 1.0
-import MediaUtils 1.0
+import ThemeEngine
+import MediaUtils
 
 import "qrc:/js/UtilsMedia.js" as UtilsMedia
 import "qrc:/js/UtilsNumber.js" as UtilsNumber
