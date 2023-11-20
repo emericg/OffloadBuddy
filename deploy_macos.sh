@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-echo "> OffloadBuddy packager (macOS x86_64 / arm64)"
+export APP_NAME="OffloadBuddy"
+export APP_VERSION=0.12
+export GIT_VERSION=$(git rev-parse --short HEAD)
 
-export APP_NAME="OffloadBuddy";
-export APP_VERSION=0.12;
-export GIT_VERSION=$(git rev-parse --short HEAD);
+echo "> $APP_NAME packager (macOS x86_64) [v$APP_VERSION]"
 
 ## CHECKS ######################################################################
 
@@ -13,8 +13,8 @@ if [ "$(id -u)" == "0" ]; then
   exit 1
 fi
 
-if [ ${PWD##*/} != "OffloadBuddy" ]; then
-  echo "This script MUST be run from the OffloadBuddy/ directory"
+if [ ${PWD##*/} != $APP_NAME ]; then
+  echo "This script MUST be run from the $APP_NAME/ directory"
   exit 1
 fi
 
@@ -51,22 +51,22 @@ done
 
 if [[ $make_install = true ]] ; then
   echo '---- Running make install'
-  make INSTALL_ROOT=bin/ install;
+  make INSTALL_ROOT=bin/ install
 
-  #echo '---- Installation directory content recap:'
-  #find bin/;
+  #echo '---- Installation directory content recap (after make install):'
+  #find bin/
 fi
 
 ## DEPLOY ######################################################################
 
 if [[ $use_contribs = true ]] ; then
-  export LD_LIBRARY_PATH=$(pwd)/contribs/src/env/macOS_x86_64/usr/lib/;
+  export LD_LIBRARY_PATH=$(pwd)/contribs/src/env/macOS_x86_64/usr/lib/
 else
-  export LD_LIBRARY_PATH=/usr/local/lib/;
+  export LD_LIBRARY_PATH=/usr/local/lib/
 fi
 
 echo '---- Running macdeployqt'
-macdeployqt bin/$APP_NAME.app -qmldir=qml/ -hardened-runtime -timestamp -appstore-compliant;
+macdeployqt bin/$APP_NAME.app -qmldir=qml/ -hardened-runtime -timestamp -appstore-compliant
 
 # Copy ffmpeg binary and libs
 cp -RP contribs/env/macos_x86_64/usr/lib/libav*.dylib bin/$APP_NAME.app/Contents/Frameworks/
@@ -96,20 +96,22 @@ if [[ $use_contribs = true ]] ; then
   install_name_tool -change @loader_path/libswscale.5.dylib @executable_path/../Frameworks/libswscale.5.dylib bin/OffloadBuddy.app/Contents/MacOS/OffloadBuddy
 fi
 
-#echo '---- Installation directory content recap:'
-#find bin/;
+#echo '---- Installation directory content recap (after macdeployqt):'
+#find bin/
 
-## PACKAGE #####################################################################
+## PACKAGE (zip) ###############################################################
 
 if [[ $create_package = true ]] ; then
   echo '---- Compressing package'
-  cd bin/;
-  zip -r -y -X $APP_NAME-$APP_VERSION-macos.zip $APP_NAME.app;
+  cd bin/
+  zip -r -y -X ../$APP_NAME-$APP_VERSION-macos.zip $APP_NAME.app
+  cd ..
 fi
 
 ## UPLOAD ######################################################################
 
 if [[ $upload_package = true ]] ; then
-  echo '---- Uploading to transfer.sh'
-  curl --upload-file $APP_NAME*.zip https://transfer.sh/$APP_NAME.$APP_VERSION-git$GIT_VERSION-macOS.zip;
+  printf "---- Uploading to transfer.sh"
+  curl --upload-file $APP_NAME*.zip https://transfer.sh/$APP_NAME.$APP_VERSION-git$GIT_VERSION-macOS.zip
+  printf "\n"
 fi

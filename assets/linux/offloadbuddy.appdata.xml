@@ -61,6 +61,12 @@
     <category>Utility</category>
   </categories>
 
+  <requires>
+    <display_length>720</display_length>
+    <control>keyboard</control>
+    <control>pointing</control>
+  </requires>
+
   <keywords>
     <keyword>media</keyword>
     <keyword>media transfer</keyword>
