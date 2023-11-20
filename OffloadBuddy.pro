@@ -10,7 +10,7 @@ QT     += multimedia charts
 QT += location
 
 # Validate Qt version
-!versionAtLeast(QT_VERSION, 6.3) : error("You need at least Qt version 6.3 for $${TARGET}")
+!versionAtLeast(QT_VERSION, 6.5) : error("You need at least Qt version 6.5 for $${TARGET}")
 
 # Project features #############################################################
 
