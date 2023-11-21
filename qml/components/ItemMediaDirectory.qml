@@ -252,7 +252,7 @@ Item {
             highlightMode: "color"
             highlightColor: Theme.colorPrimary
             source: "qrc:/assets/icons_material/baseline-settings_applications-24px.svg"
-            sourceSize: 32
+            sourceSize: 24
 
             onClicked: {
                 var popupComponent = Qt.createComponent("qrc:/qml/PopupMediaDirectory.qml")
@@ -269,7 +269,7 @@ Item {
             highlightMode: "color"
             highlightColor: Theme.colorError
             source: "qrc:/assets/icons_material/baseline-delete-24px.svg"
-            sourceSize: 32
+            sourceSize: 24
 
             onClicked: {
                 if (menus.memusmode !== 3) menus.memusmode = 3

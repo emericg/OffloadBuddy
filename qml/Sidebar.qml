@@ -47,7 +47,7 @@ Rectangle {
         anchors.rightMargin: 0
 
         source: "qrc:/assets/icons_fontawesome/photo-video-duotone.svg"
-        sourceSize: 64
+        sourceSize: 60
         highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
         indicatorAnimated: mediaLibrary.libraryState
 
@@ -61,7 +61,7 @@ Rectangle {
         anchors.topMargin: 16
         anchors.left: parent.left
         anchors.leftMargin: 0
-        anchors.bottom: column.top
+        anchors.bottom: menuGeneral.top
         anchors.bottomMargin: 16
         anchors.right: parent.right
         anchors.rightMargin: 0
@@ -75,7 +75,7 @@ Rectangle {
 
             text: modelData.model
             source: UtilsDevice.getDevicePicture(modelData)
-            sourceSize: 64
+            sourceSize: 60
             highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
             indicatorAnimated: modelData.deviceState
 
@@ -92,7 +92,7 @@ Rectangle {
     // MENUS down
 
     Column {
-        id: column
+        id: menuGeneral
         anchors.left: parent.left
         anchors.leftMargin: 0
         anchors.right: parent.right
@@ -104,44 +104,44 @@ Rectangle {
 
         DesktopSidebarItem {
             id: button_jobs
-            width: sideBar.width
 
             source: "qrc:/assets/icons_material/duotone-save_alt-24px.svg"
-            sourceSize: 48
+            sourceSize: 40
             highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
 
             visible: jobManager.trackedJobCount
+            indicatorVisible: jobManager.workingJobCount
             indicatorAnimated: jobManager.workingJobCount
+            indicatorSource: "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
 
-            highlighted: appContent.state === "jobs"
-            onClicked: appContent.state = "jobs"
+            highlighted: (appContent.state === "jobs")
+            onClicked: screenJobs.loadScreen()
         }
         DesktopSidebarItem {
             id: button_settings
-            width: sideBar.width
 
             source: "qrc:/assets/icons_material/duotone-tune-24px.svg"
-            sourceSize: 48
+            sourceSize: 40
             highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
 
-            highlighted: appContent.state === "settings"
-            onClicked: appContent.state = "settings"
+            highlighted: (appContent.state === "settings")
+            onClicked: screenSettings.loadScreen()
         }
         DesktopSidebarItem {
             id: button_about
 
             source: "qrc:/assets/icons_material/duotone-info-24px.svg"
-            sourceSize: 48
+            sourceSize: 40
             highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
 
-            highlighted: appContent.state === "about"
-            onClicked: appContent.state = "about"
+            highlighted: (appContent.state === "about")
+            onClicked: screenAbout.loadScreen()
         }
         DesktopSidebarItem {
             id: button_exit
 
             source: "qrc:/assets/icons_material/duotone-exit_to_app-24px.svg"
-            sourceSize: 48
+            sourceSize: 40
             highlightMode: "circle"
 
             onClicked: appWindow.close()

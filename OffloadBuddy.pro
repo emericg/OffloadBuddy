@@ -123,7 +123,8 @@ OTHER_FILES += .gitignore \
                contribs/contribs_builder.py \
                deploy_linux.sh \
                deploy_macos.sh \
-               deploy_windows.sh
+               deploy_windows.sh \
+               README.md
 
 #TRANSLATIONS = i18n/offloadbuddy_en.ts
 
