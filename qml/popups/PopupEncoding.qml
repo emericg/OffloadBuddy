@@ -739,7 +739,7 @@ Popup {
                             color: Theme.colorSubText
                         }
 
-                        SelectorMenuThemed {
+                        SelectorMenu {
                             id: selectorGifRes
                             anchors.verticalCenter: parent.verticalCenter
                             height: 32
@@ -771,7 +771,7 @@ Popup {
                             }
                         }
 
-                        SelectorMenuThemed {
+                        SelectorMenu {
                             id: selectorVideoRes
                             anchors.verticalCenter: parent.verticalCenter
                             height: 32
@@ -833,7 +833,7 @@ Popup {
                             color: Theme.colorSubText
                         }
 
-                        SelectorMenuThemed {
+                        SelectorMenu {
                             id: selectorGifFps
                             anchors.verticalCenter: parent.verticalCenter
                             height: 32
@@ -866,7 +866,7 @@ Popup {
                             }
                         }
 
-                        SelectorMenuThemed {
+                        SelectorMenu {
                             id: selectorVideoFps
                             anchors.verticalCenter: parent.verticalCenter
                             height: 32
@@ -1484,23 +1484,20 @@ Popup {
             spacing: 24
 
             ButtonWireframe {
-                width: 96
                 anchors.verticalCenter: parent.verticalCenter
+                width: 96
+                //color: Theme.colorGrey
 
                 text: qsTr("Cancel")
-                fullColor: true
-                primaryColor: Theme.colorGrey
                 onClicked: popupEncoding.close()
             }
 
-            ButtonWireframeIcon {
-                width: 128
+            ButtonWireframe {
                 anchors.verticalCenter: parent.verticalCenter
+                width: 128
 
                 text: qsTr("Encode")
                 source: "qrc:/assets/icons_material/baseline-memory-24px.svg"
-                fullColor: true
-                primaryColor: Theme.colorPrimary
 
                 enabled: (encodingMode === "batch" || fileInput.isValid)
 

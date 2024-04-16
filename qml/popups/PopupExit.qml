@@ -102,23 +102,21 @@ Popup {
             anchors.rightMargin: 24
             spacing: 24
 
-            ButtonWireframe {
+            ButtonSolid {
                 width: 96
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Cancel")
-                fullColor: true
-                primaryColor: Theme.colorGrey
+                color: Theme.colorGrey
                 onClicked: popupExit.close()
             }
-            ButtonWireframeIcon {
+            ButtonSolid {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Exit")
                 width: 128
                 source: "qrc:/assets/icons_material/duotone-exit_to_app-24px.svg"
-                fullColor: true
-                primaryColor: Theme.colorWarning
+                color: Theme.colorWarning
                 onClicked: {
                     popupExit.confirmed()
                     popupExit.close()

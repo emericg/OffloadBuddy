@@ -462,21 +462,19 @@ Popup {
             spacing: 16
 
             ButtonWireframe {
-                width: 96
                 anchors.verticalCenter: parent.verticalCenter
+                width: 96
+                //color: Theme.colorGrey
 
                 text: qsTr("Close")
-                fullColor: true
-                primaryColor: Theme.colorGrey
                 onClicked: popupTelemetry.close()
             }
-            ButtonWireframeIcon {
+            ButtonWireframe {
                 anchors.verticalCenter: parent.verticalCenter
+                //color: Theme.colorSecondary
 
                 text: qsTr("Extract telemetry")
                 source: "qrc:/assets/icons_material/baseline-insert_chart-24px.svg"
-                fullColor: true
-                primaryColor: Theme.colorSecondary
 
                 enabled: (popupMode === 1 && fileInput.isValid) || (popupMode === 2 && folderInput.isValid)
 
@@ -513,13 +511,11 @@ Popup {
                     }
                 }
             }
-            ButtonWireframeIcon {
+            ButtonSolid {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Extract GPS")
                 source: "qrc:/assets/icons_material/baseline-map-24px.svg"
-                fullColor: true
-                primaryColor: Theme.colorPrimary
 
                 enabled: (popupMode === 1 && fileInput.isValid) || (popupMode === 2 && folderInput.isValid)
 

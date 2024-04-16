@@ -98,7 +98,7 @@ ApplicationWindow {
     }
 
     // Events handling /////////////////////////////////////////////////////////
-/*
+
     Shortcut {
         sequences: [StandardKey.Back, StandardKey.Backspace]
         onActivated: backAction()
@@ -106,7 +106,7 @@ ApplicationWindow {
     Shortcut {
         sequence: StandardKey.Forward
         onActivated: forwardAction()
-    }
+    }/*
     Shortcut {
         sequence: StandardKey.Refresh
         onActivated: //
@@ -114,12 +114,12 @@ ApplicationWindow {
     Shortcut {
         sequence: "Ctrl+F5"
         onActivated: //
-    }
+    }*/
     Shortcut {
         sequences: [StandardKey.Deselect, StandardKey.Cancel]
         onActivated: deselectAction()
     }
-*/
+
     Shortcut {
         sequence: StandardKey.FullScreen
         onActivated: {
@@ -175,6 +175,7 @@ ApplicationWindow {
         sourceComponent: Rectangle {
             id: appBg
             anchors.fill: parent
+            focus: true
 
             color: Theme.colorBackground
             border.color: Theme.colorSeparator
@@ -217,8 +218,9 @@ ApplicationWindow {
                 }
 
                 onStateChanged: {
+                    console.log("updateFocus()")
                     screenLibrary.updateFocus()
-                    screenDevice.updateFocus()
+                    //screenDevice.updateFocus()
                 }
 
                 state: "library"

@@ -330,7 +330,7 @@ Item {
 
             visible: (rectangleHeader.width > 1280)
 
-            SelectorMenuThemed {
+            SelectorMenu {
                 anchors.verticalCenter: parent.verticalCenter
                 height: 32
 
@@ -356,7 +356,7 @@ Item {
                 }
             }
 
-            SelectorMenuThemed {
+            SelectorMenu {
                 anchors.verticalCenter: parent.verticalCenter
                 height: 32
 
@@ -475,13 +475,13 @@ Item {
                 radius: (Theme.componentRadius > 6) ? Theme.componentRadius-2 : 3
                 border.width: (Theme.componentRadius > 4) ? 6 : 4
                 border.color: Theme.colorPrimary
-
+/*
                 SimpleShadow {
                     anchors.fill: parent
                     radius: parent.radius
                     filled: false
                     color: Theme.colorPrimary
-                }
+                }*/
             }
         }
 

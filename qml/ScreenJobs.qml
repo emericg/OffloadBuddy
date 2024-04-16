@@ -60,13 +60,12 @@ Loader {
                 color: Theme.colorHeaderContent
             }
 
-            ButtonWireframeIcon {
+            ButtonSolid {
                 id: buttonClear
                 anchors.right: parent.right
                 anchors.rightMargin: 20
                 anchors.verticalCenter: parent.verticalCenter
 
-                fullColor: true
                 text: qsTr("Clear finished jobs")
                 source: "qrc:/assets/icons_material/baseline-backspace-24px.svg"
                 layoutDirection: Qt.RightToLeft

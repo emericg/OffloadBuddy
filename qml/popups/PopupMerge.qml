@@ -397,23 +397,20 @@ Popup {
             spacing: 24
 
             ButtonWireframe {
-                width: 96
                 anchors.verticalCenter: parent.verticalCenter
+                width: 96
+                //color: Theme.colorGrey
 
                 text: qsTr("Cancel")
-                fullColor: true
-                primaryColor: Theme.colorGrey
                 onClicked: popupMerge.close()
             }
-            ButtonWireframeIcon {
+            ButtonWireframe {
                 anchors.verticalCenter: parent.verticalCenter
 
                 enabled: (shots_files.length > 1)
 
                 text: qsTr("Merge")
                 source: "qrc:/assets/icons_material/baseline-merge_type-24px.svg"
-                fullColor: true
-                primaryColor: Theme.colorPrimary
 
                 onClicked: {
                     if (typeof mediaProvider === "undefined" || !mediaProvider) return

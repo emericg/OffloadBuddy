@@ -47,12 +47,12 @@ Item {
             anchors.right: parent.right
             anchors.verticalCenter: parent.verticalCenter
 
-            ItemTag {
+            TagDesktop {
                 height: 20
                 text: qsTr("Read Only")
                 visible: modelData.readOnly
             }
-            ItemTag {
+            TagDesktop {
                 height: 20
                 text: qsTr("LFS")
                 visible: modelData.largeFileSupport

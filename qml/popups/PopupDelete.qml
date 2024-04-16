@@ -247,23 +247,21 @@ Popup {
             anchors.rightMargin: 24
             spacing: 24
 
-            ButtonWireframe {
+            ButtonSolid {
                 width: 96
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Cancel")
-                fullColor: true
-                primaryColor: Theme.colorGrey
+                color: Theme.colorGrey
                 onClicked: popupDelete.close()
             }
-            ButtonWireframeIcon {
+            ButtonSolid {
                 width: 128
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Delete")
                 source: "qrc:/assets/icons_material/baseline-delete-24px.svg"
-                fullColor: true
-                primaryColor: Theme.colorError
+                color: Theme.colorError
                 onClicked: {
                     var settingsDeletion = {}
                     settingsDeletion["moveToTrash"] = settingsManager.moveToTrash

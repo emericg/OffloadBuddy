@@ -113,7 +113,7 @@ HEADERS  += src/SettingsManager.h \
             src/GeoCoding.h
 
 RESOURCES   += qml/qml.qrc \
-               qml/components.qrc \
+               qml/ComponentLibrary/ComponentLibrary.qrc  \
                i18n/i18n.qrc \
                assets/assets.qrc
 

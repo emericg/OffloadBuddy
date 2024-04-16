@@ -428,24 +428,21 @@ Popup {
             anchors.rightMargin: 24
             spacing: 24
 
-            ButtonWireframe {
+            ButtonFlat {
                 id: buttonCancel
-                width: 96
                 anchors.verticalCenter: parent.verticalCenter
+                width: 96
+                color: Theme.colorGrey
 
                 text: qsTr("Cancel")
-                fullColor: true
-                primaryColor: Theme.colorGrey
                 onClicked: popupOffload.close()
             }
-            ButtonWireframeIcon {
+            ButtonSolid {
                 id: buttonOffload
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Offload")
                 source: "qrc:/assets/icons_material/baseline-archive-24px.svg"
-                fullColor: true
-                primaryColor: Theme.colorPrimary
 
                 onClicked: {
                     if (typeof mediaProvider === "undefined" || !mediaProvider) return

@@ -245,22 +245,20 @@ Popup {
             anchors.rightMargin: 24
             spacing: 24
 
-            ButtonWireframe {
+            ButtonSolid {
                 width: 96
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Cancel")
-                fullColor: true
-                primaryColor: Theme.colorGrey
+                color: Theme.colorGrey
                 onClicked: popupFirmware.close()
             }
-            ButtonWireframeIcon {
+            ButtonSolid {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Update")
                 source: "qrc:/assets/icons_material/baseline-archive-24px.svg"
-                fullColor: true
-                primaryColor: Theme.colorPrimary
+                color: Theme.colorPrimary
 
                 onClicked: {
                     if (typeof currentDevice === "undefined" || !currentDevice) return

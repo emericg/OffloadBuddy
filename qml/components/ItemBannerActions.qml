@@ -27,12 +27,11 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         spacing: 16
 
-        ButtonWireframeIcon {
+        ButtonSolid {
             id: buttonMoveOffload
             anchors.verticalCenter: parent.verticalCenter
 
-            fullColor: true
-            primaryColor: Theme.colorActionbarHighlight
+            color: Theme.colorActionbarHighlight
 
             text: (appContent.state === "library") ? qsTr("Move") : qsTr("Offload")
             source: "qrc:/assets/icons_material/duotone-save_alt-24px.svg"
@@ -53,13 +52,12 @@ Rectangle {
             }
         }
 
-        ButtonWireframeIcon {
+        ButtonSolid {
             id: buttonMergeChapters
             anchors.verticalCenter: parent.verticalCenter
             visible: (appContent.state === "library")
 
-            fullColor: true
-            primaryColor: Theme.colorActionbarHighlight
+            color: Theme.colorActionbarHighlight
 
             text: qsTr("Merge chapters")
             source: "qrc:/assets/icons_material/baseline-merge_type-24px.svg"
@@ -75,14 +73,13 @@ Rectangle {
             }
         }
 
-        ButtonWireframeIcon {
+        ButtonSolid {
             id: buttonMergeShots
             anchors.verticalCenter: parent.verticalCenter
             visible: (appContent.state !== "device" && mediaGrid.selectionCount >= 2 && mediaGrid.selectionCount <= 4)
 
             enabled: false
-            fullColor: true
-            primaryColor: Theme.colorActionbarHighlight
+            color: Theme.colorActionbarHighlight
 
             text: qsTr("Merge shots")
             source: "qrc:/assets/icons_material/baseline-merge_type-24px.svg"
@@ -95,12 +92,11 @@ Rectangle {
             }
         }
 
-        ButtonWireframeIcon {
+        ButtonSolid {
             id: buttonEncode
             anchors.verticalCenter: parent.verticalCenter
 
-            fullColor: true
-            primaryColor: Theme.colorActionbarHighlight
+            color: Theme.colorActionbarHighlight
 
             text: qsTr("Encoding")
             source: "qrc:/assets/icons_material/baseline-memory-24px.svg"
@@ -121,12 +117,11 @@ Rectangle {
             }
         }
 
-        ButtonWireframeIcon {
+        ButtonSolid {
             id: buttonTelemetry
             anchors.verticalCenter: parent.verticalCenter
 
-            fullColor: true
-            primaryColor: Theme.colorActionbarHighlight
+            color: Theme.colorActionbarHighlight
 
             text: qsTr("Extract telemetry")
             source: "qrc:/assets/icons_material/duotone-insert_chart-24px.svg"
@@ -143,12 +138,11 @@ Rectangle {
             }
         }
 
-        ButtonWireframeIcon {
+        ButtonSolid {
             id: buttonDelete
             anchors.verticalCenter: parent.verticalCenter
 
-            fullColor: true
-            primaryColor: Theme.colorWarning
+            color: Theme.colorWarning
 
             text: qsTr("Delete")
             source: "qrc:/assets/icons_material/baseline-delete-24px.svg"

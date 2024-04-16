@@ -16,9 +16,6 @@
         <file>MediaDetailTelemetry.qml</file>
         <file>MediaPreview.qml</file>
 
-        <file>ThemeEngine.qml</file>
-        <file>WindowGeometrySaver.qml</file>
-
         <file alias="PopupDate.qml">popups/PopupDate.qml</file>
         <file alias="PopupDelete.qml">popups/PopupDelete.qml</file>
         <file alias="PopupEncoding.qml">popups/PopupEncoding.qml</file>
@@ -48,5 +45,13 @@
         <file alias="RangeSliderPlayer.qml">components/RangeSliderPlayer.qml</file>
         <file alias="ResizeWidget.qml">components/ResizeWidget.qml</file>
         <file alias="SliderPlayer.qml">components/SliderPlayer.qml</file>
+    </qresource>
+
+    <qresource prefix="/js">
+        <file alias="UtilsDeviceCamera.js">components_js/UtilsDeviceCamera.js</file>
+        <file alias="UtilsMedia.js">components_js/UtilsMedia.js</file>
+        <file alias="UtilsNumber.js">components_js/UtilsNumber.js</file>
+        <file alias="UtilsPath.js">components_js/UtilsPath.js</file>
+        <file alias="UtilsString.js">components_js/UtilsString.js</file>
     </qresource>
 </RCC>

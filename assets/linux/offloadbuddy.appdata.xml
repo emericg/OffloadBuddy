@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright 2022 Emeric Grange <emeric.grange@gmail.com> -->
+<!-- Copyright 2018 Emeric Grange <emeric.grange@gmail.com> -->
 
 <component type="desktop-application">
   <id>io.emeric.offloadbuddy</id>
@@ -16,8 +16,10 @@
   <metadata_license>CC0-1.0</metadata_license>
   <content_rating type="oars-1.1" />
 
-  <developer_name>Emeric Grange</developer_name>
-  <updatecontact>emeric.grange@gmail.com</updatecontact>
+  <developer id="io.emeric">
+    <name>Emeric Grange</name>
+  </developer>
+
   <url type="homepage">https://emeric.io/OffloadBuddy</url>
   <url type="contact">https://emeric.io/OffloadBuddy/support.html</url>
   <url type="bugtracker">https://github.com/emericg/OffloadBuddy/issues</url>
@@ -25,8 +27,7 @@
   <url type="donation">https://paypal.me/EmericGrange</url>
 
   <releases>
-    <release version="0.12" date="2023-07-14" />
-    <release version="0.11" date="2022-09-01" />
+    <release version="0.11" date="2024-06-06"> <url type="details">https://github.com/emericg/OffloadBuddy/releases/tag/v0.11</url> </release>
     <release version="0.10" date="2022-07-01" />
     <release version="0.9" date="2021-10-01" />
     <release version="0.8" date="2021-08-24" />

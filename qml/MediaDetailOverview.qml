@@ -92,7 +92,7 @@ Item {
         if (shot.codecImage.length) {
             codecImage.visible = true
             codecImage.text = shot.codecImage
-            codecImage.textCapitalization = Font.AllUppercase
+            //codecImage.textCapitalization = Font.AllUppercase
             codec.text = shot.codecImage
         } else {
             codecImage.visible = false

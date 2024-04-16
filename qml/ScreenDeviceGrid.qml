@@ -475,7 +475,7 @@ Item {
 
             visible: (rectangleHeader.width > 1280)
 
-            SelectorMenuThemed {
+            SelectorMenu {
                 anchors.verticalCenter: parent.verticalCenter
                 height: 32
 
@@ -504,7 +504,7 @@ Item {
                 }
             }
 
-            SelectorMenuThemed {
+            SelectorMenu {
                 anchors.verticalCenter: parent.verticalCenter
                 height: 32
 
@@ -541,7 +541,7 @@ Item {
 
         ////////
 
-        ButtonWireframe {
+        ButtonSolid {
             id: rectangleTransfer
             width: 240
             anchors.left: parent.left
@@ -549,8 +549,7 @@ Item {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 16
 
-            fullColor: true
-            primaryColor: Theme.colorPrimary
+            color: Theme.colorPrimary
 
             text: {
                 if (selectionCount)
@@ -574,7 +573,7 @@ Item {
             }
         }
 
-        ButtonWireframe {
+        ButtonSolid {
             id: rectangleDelete
             width: 240
             anchors.left: rectangleTransfer.right
@@ -582,8 +581,7 @@ Item {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 16
 
-            fullColor: true
-            primaryColor: Theme.colorError
+            color: Theme.colorError
             text: qsTr("Delete ALL content!")
             onClicked: popupDelete.openAll(currentDevice)
         }
@@ -682,13 +680,13 @@ Item {
                 radius: (Theme.componentRadius > 4) ? Theme.componentRadius : 2
                 border.width: (Theme.componentRadius > 4) ? 6 : 4
                 border.color: Theme.colorPrimary
-
+/*
                 SimpleShadow {
                     anchors.fill: parent
                     radius: parent.radius
                     filled: false
                     color: Theme.colorPrimary
-                }
+                }*/
             }
         }
 

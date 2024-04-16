@@ -219,7 +219,7 @@ Loader {
                         color: Theme.colorText
                     }
 
-                    SelectorMenuThemed {
+                    SelectorMenu {
                         anchors.verticalCenter: parent.verticalCenter
                         height: 32
 
@@ -274,7 +274,7 @@ Loader {
                         color: Theme.colorText
                     }
 
-                    SelectorMenuThemed {
+                    SelectorMenu {
                         anchors.verticalCenter: parent.verticalCenter
                         height: 32
 
@@ -297,7 +297,7 @@ Loader {
                         color: Theme.colorText
                     }
 
-                    SelectorMenuThemed {
+                    SelectorMenu {
                         anchors.verticalCenter: parent.verticalCenter
                         height: 32
 
@@ -326,7 +326,7 @@ Loader {
                         color: Theme.colorText
                     }
 
-                    SelectorMenuThemed {
+                    SelectorMenu {
                         anchors.verticalCenter: parent.verticalCenter
                         height: 32
 
@@ -609,11 +609,10 @@ Loader {
                                 color: Theme.colorSubText
                             }
 
-                            ButtonWireframeIcon {
+                            ButtonSolid {
                                 height: 36
                                 anchors.horizontalCenter: parent.horizontalCenter
 
-                                fullColor: true
                                 text: qsTr("Add a new one")
                                 onClicked:  {
                                     fileDialogLoader.active = true

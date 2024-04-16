@@ -168,12 +168,9 @@ Loader {
                             height: 40
                             spacing: 24
 
-                            ButtonWireframeIconCentered {
+                            ButtonWireframe {
                                 width: 180
                                 anchors.verticalCenter: parent.verticalCenter
-
-                                fullColor: false
-                                primaryColor: Theme.colorPrimary
 
                                 text: qsTr("Website")
                                 source: "qrc:/assets/icons_material/baseline-link-24px.svg"
@@ -182,12 +179,9 @@ Loader {
                                 onClicked: Qt.openUrlExternally("https://emeric.io/OffloadBuddy")
                             }
 
-                            ButtonWireframeIconCentered {
+                            ButtonWireframe {
                                 width: 180
                                 anchors.verticalCenter: parent.verticalCenter
-
-                                fullColor: false
-                                primaryColor: Theme.colorPrimary
 
                                 text: qsTr("Discussions")
                                 source: "qrc:/assets/icons_material/duotone-question_answer-24px.svg"
@@ -195,12 +189,9 @@ Loader {
                                 onClicked: Qt.openUrlExternally("https://www.github.com/emericg/OffloadBuddy/discussions")
                             }
 
-                            ButtonWireframeIconCentered {
+                            ButtonWireframe {
                                 width: 180
                                 anchors.verticalCenter: parent.verticalCenter
-
-                                fullColor: false
-                                primaryColor: Theme.colorPrimary
 
                                 text: qsTr("Bug report")
                                 source: "qrc:/assets/icons_material/baseline-bug_report-24px.svg"
@@ -287,7 +278,7 @@ Loader {
                             source: "qrc:/assets/icons_material/baseline-link-24px.svg"
                             onClicked: Qt.openUrlExternally("https://www.qt.io")
                         }
-                        ItemBadge {
+                        ItemLicenseBadge {
                             anchors.verticalCenter: parent.verticalCenter
                             legend: qsTr("license")
                             text: qsTr("LGPL 3")
@@ -310,7 +301,7 @@ Loader {
                             source: "qrc:/assets/icons_material/baseline-link-24px.svg"
                             onClicked: Qt.openUrlExternally("https://www.ffmpeg.org")
                         }
-                        ItemBadge {
+                        ItemLicenseBadge {
                             anchors.verticalCenter: parent.verticalCenter
                             legend: qsTr("license")
                             text: qsTr("LGPL 2.1")
@@ -333,7 +324,7 @@ Loader {
                             source: "qrc:/assets/icons_material/baseline-link-24px.svg"
                             onClicked: Qt.openUrlExternally("https://github.com/emericg/MiniVideo")
                         }
-                        ItemBadge {
+                        ItemLicenseBadge {
                             anchors.verticalCenter: parent.verticalCenter
                             legend: qsTr("license")
                             text: qsTr("LGPL 3")
@@ -356,7 +347,7 @@ Loader {
                             source: "qrc:/assets/icons_material/baseline-link-24px.svg"
                             onClicked: Qt.openUrlExternally("https://github.com/libexif")
                         }
-                        ItemBadge {
+                        ItemLicenseBadge {
                             anchors.verticalCenter: parent.verticalCenter
                             legend: qsTr("license")
                             text: qsTr("LGPL 2.1")
@@ -379,7 +370,7 @@ Loader {
                             source: "qrc:/assets/icons_material/baseline-link-24px.svg"
                             onClicked: Qt.openUrlExternally("https://github.com/libmtp")
                         }
-                        ItemBadge {
+                        ItemLicenseBadge {
                             anchors.verticalCenter: parent.verticalCenter
                             legend: qsTr("license")
                             text: qsTr("LGPL 2.1")
@@ -402,7 +393,7 @@ Loader {
                             source: "qrc:/assets/icons_material/baseline-link-24px.svg"
                             onClicked: Qt.openUrlExternally("https://github.com/richgel999/miniz/")
                         }
-                        ItemBadge {
+                        ItemLicenseBadge {
                             anchors.verticalCenter: parent.verticalCenter
                             legend: qsTr("license")
                             text: qsTr("MIT")
@@ -425,7 +416,7 @@ Loader {
                             source: "qrc:/assets/icons_material/baseline-link-24px.svg"
                             onClicked: Qt.openUrlExternally("https://github.com/itay-grudev/SingleApplication/")
                         }
-                        ItemBadge {
+                        ItemLicenseBadge {
                             anchors.verticalCenter: parent.verticalCenter
                             legend: qsTr("license")
                             text: qsTr("MIT")
@@ -448,7 +439,7 @@ Loader {
                             source: "qrc:/assets/icons_material/baseline-link-24px.svg"
                             onClicked: Qt.openUrlExternally("https://material.io/tools/icons")
                         }
-                        ItemBadge {
+                        ItemLicenseBadge {
                             anchors.verticalCenter: parent.verticalCenter
                             legend: qsTr("license")
                             text: qsTr("Apache 2.0")

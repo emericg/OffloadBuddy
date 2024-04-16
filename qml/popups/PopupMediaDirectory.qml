@@ -356,13 +356,12 @@ Popup {
             anchors.rightMargin: 24
             spacing: 24
 
-            ButtonWireframeIcon {
+            ButtonSolid {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("OK")
                 source: "qrc:/assets/icons_material/baseline-done-24px.svg"
-                fullColor: true
-                primaryColor: Theme.colorPrimary
+                color: Theme.colorPrimary
 
                 onClicked: {
                     popupMediaDirectory.close()

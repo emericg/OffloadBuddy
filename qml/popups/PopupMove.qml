@@ -341,21 +341,18 @@ Popup {
             spacing: 24
 
             ButtonWireframe {
-                width: 96
                 anchors.verticalCenter: parent.verticalCenter
+                width: 96
+                //color: Theme.colorGrey
 
                 text: qsTr("Cancel")
-                fullColor: true
-                primaryColor: Theme.colorGrey
                 onClicked: popupMove.close()
             }
-            ButtonWireframeIcon {
+            ButtonWireframe {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Move")
                 source: "qrc:/assets/icons_material/baseline-archive-24px.svg"
-                fullColor: true
-                primaryColor: Theme.colorPrimary
 
                 onClicked: {
                     if (typeof mediaProvider === "undefined" || !mediaProvider) return

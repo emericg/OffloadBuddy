@@ -326,11 +326,11 @@ Loader {
                     height: 28
                     spacing: 16
 
-                    ItemTag { id: codecImage }
+                    TagDesktop { id: codecImage }
 
-                    ItemTag { id: codecVideo }
+                    TagDesktop { id: codecVideo }
 
-                    ItemTag { id: codecAudio }
+                    TagDesktop { id: codecAudio }
                 }
 
                 ////////////////
@@ -481,7 +481,7 @@ Loader {
                         colorContent: Theme.colorHeaderContent
                         colorHighlight: Theme.colorHeaderHighlight
 
-                        selected: (itemScreenMedia.state === "overview")
+                        highlighted: (itemScreenMedia.state === "overview")
                         onClicked: itemScreenMedia.state = "overview"
                     }
                     DesktopHeaderItem {
@@ -493,7 +493,7 @@ Loader {
                         text: qsTr("Details")
                         source: "qrc:/assets/icons_material/duotone-list-24px.svg"
 
-                        selected: (itemScreenMedia.state === "details")
+                        highlighted: (itemScreenMedia.state === "details")
                         onClicked: itemScreenMedia.state = "details"
                     }
                     DesktopHeaderItem {
@@ -505,7 +505,7 @@ Loader {
                         text: qsTr("Telemetry")
                         source: "qrc:/assets/icons_material/duotone-insert_chart-24px.svg"
 
-                        selected: (itemScreenMedia.state === "metadata")
+                        highlighted: (itemScreenMedia.state === "metadata")
                         onClicked: itemScreenMedia.state = "metadata"
                     }
                     DesktopHeaderItem {
@@ -517,7 +517,7 @@ Loader {
                         text: qsTr("Map")
                         source: "qrc:/assets/icons_material/baseline-map-24px.svg"
 
-                        selected: (itemScreenMedia.state === "metadata")
+                        highlighted: (itemScreenMedia.state === "metadata")
                         onClicked: itemScreenMedia.state = "metadata"
                     }
                 }

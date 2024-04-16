@@ -204,20 +204,18 @@ Item {
         layoutDirection: Qt.RightToLeft
         visible: (menus.memusmode === 3)
 
-        ButtonWireframe {
+        ButtonSolid {
             height: 32
             anchors.verticalCenter: parent.verticalCenter
             text: qsTr("NO")
-            fullColor: true
-            primaryColor: Theme.colorSubText
+            color: Theme.colorSubText
             onClicked: menus.memusmode = 0
         }
-        ButtonWireframe {
+        ButtonSolid {
             height: 32
             anchors.verticalCenter: parent.verticalCenter
             text: qsTr("YES")
-            fullColor: true
-            primaryColor: Theme.colorPrimary
+            color: Theme.colorPrimary
             onClicked: storageManager.removeDirectory(textField_path.text)
         }
         Text {

@@ -308,15 +308,14 @@ Loader {
                                     font.pixelSize: Theme.fontSizeContent
                                 }
                             }
-                            ButtonWireframeIcon {
+                            ButtonWireframe {
                                 visible: (currentDevice.brand === "GoPro" && currentDevice.firmwareState > 0)
 
-                                fullColor: true
-                                primaryColor: {
-                                    if (currentDevice.firmwareState === DeviceUtils.FirmwareUpToDate) return Theme.colorSuccess
-                                    if (currentDevice.firmwareState === DeviceUtils.FirmwareUpdateInstalled) return Theme.colorSuccess
-                                    return Theme.colorPrimary
-                                }
+                                //primaryColor: {
+                                //    if (currentDevice.firmwareState === DeviceUtils.FirmwareUpToDate) return Theme.colorSuccess
+                                //    if (currentDevice.firmwareState === DeviceUtils.FirmwareUpdateInstalled) return Theme.colorSuccess
+                                //    return Theme.colorPrimary
+                                //}
                                 text: {
                                     if (currentDevice.firmwareState === DeviceUtils.FirmwareUpToDate) return qsTr("Up to date")
                                     if (currentDevice.firmwareState === DeviceUtils.FirmwareUpdateAvailable) return qsTr("Update available")
