@@ -8,6 +8,7 @@ import "qrc:/js/UtilsPath.js" as UtilsPath
 
 Item {
     id: itemMediaDirectory
+
     implicitWidth: 800
     implicitHeight: 48
 
@@ -17,7 +18,7 @@ Item {
 
     FolderInputArea {
         id: textField_path
-        width: (itemMediaDirectory.width < 720) ? 640 : 720
+        width: (itemMediaDirectory.width / 2)
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
 
@@ -151,7 +152,6 @@ Item {
                 ProgressBarThemed {
                     id: progressBar
                     width: parent.width
-                    height: 8
 
                     value: directory.storageLevel
                 }
@@ -253,9 +253,19 @@ Item {
             sourceSize: 24
 
             onClicked: {
-                var popupComponent = Qt.createComponent("qrc:/qml/PopupMediaDirectory.qml")
-                var popupMediaDirectory = popupComponent.createObject(appWindow, { "parent": appWindow });
-                popupMediaDirectory.open()
+                popupMediaDirectory_loader.active = true
+                popupMediaDirectory_loader.item.open()
+            }
+
+            Loader {
+                id: popupMediaDirectory_loader
+
+                active: false
+                asynchronous: false
+                sourceComponent: PopupMediaDirectory {
+                    id: popupMediaDirectory
+                    parent: appWindow.contentItem
+                }
             }
         }
 

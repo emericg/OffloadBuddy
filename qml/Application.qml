@@ -22,7 +22,6 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Window
-import Qt5Compat.GraphicalEffects
 
 import ThemeEngine
 
@@ -104,7 +103,7 @@ ApplicationWindow {
         onActivated: backAction()
     }
     Shortcut {
-        sequence: StandardKey.Forward
+        sequences: [StandardKey.Forward]
         onActivated: forwardAction()
     }/*
     Shortcut {
@@ -275,7 +274,7 @@ ApplicationWindow {
                     }
                 ]
             }
-
+/*
             layer.enabled: (settingsManager.appThemeCSD && Qt.platform.os !== "windows")
             layer.effect: OpacityMask {
                 maskSource: Rectangle {
@@ -313,6 +312,7 @@ ApplicationWindow {
                     }
                 }
             }
+*/
         }
     }
 
@@ -363,14 +363,24 @@ ApplicationWindow {
 
     // Exit ////////////////////////////////////////////////////////////////////
 
+    Loader {
+        id: popupExit_loader
+
+        active: false
+        asynchronous: false
+        sourceComponent: PopupExit {
+            id: popupExit
+            parent: appWindow.contentItem
+        }
+    }
+
     onClosing: {
         // If a job is running, ask user to confirm exit
         if (jobManager.workingJobCount > 0) {
             close.accepted = false
 
-            var popupComponent = Qt.createComponent("qrc:/qml/popupExit.qml")
-            var popupExit = popupComponent.createObject(appWindow, { "parent": appWindow })
-            popupExit.open()
+            popupExit_loader.active = true
+            popupExit_loader.item.open()
         }
     }
 }

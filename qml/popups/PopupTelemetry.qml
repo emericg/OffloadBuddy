@@ -461,17 +461,17 @@ Popup {
             anchors.rightMargin: 24
             spacing: 16
 
-            ButtonWireframe {
+            ButtonSolid {
                 anchors.verticalCenter: parent.verticalCenter
                 width: 96
-                //color: Theme.colorGrey
+                color: Theme.colorGrey
 
                 text: qsTr("Close")
                 onClicked: popupTelemetry.close()
             }
-            ButtonWireframe {
+            ButtonSolid {
                 anchors.verticalCenter: parent.verticalCenter
-                //color: Theme.colorSecondary
+                color: Theme.colorSecondary
 
                 text: qsTr("Extract telemetry")
                 source: "qrc:/assets/icons_material/baseline-insert_chart-24px.svg"

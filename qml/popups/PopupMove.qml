@@ -1,6 +1,6 @@
 import QtQuick
+import QtQuick.Effects
 import QtQuick.Controls
-import Qt5Compat.GraphicalEffects
 
 import ThemeEngine
 import StorageUtils
@@ -74,29 +74,27 @@ Popup {
 
     enter: Transition { NumberAnimation { property: "opacity"; from: 0.5; to: 1.0; duration: 133; } }
 
-    background: Item {
-        Rectangle {
-            id: bgrect
-            anchors.fill: parent
+    background: Rectangle {
+        radius: Theme.componentRadius
+        color: Theme.colorBackground
+        border.color: Theme.colorSeparator
+        border.width: Theme.componentBorderWidth
 
-            radius: Theme.componentRadius
-            color: Theme.colorBackground
-            border.color: Theme.colorSeparator
-            border.width: Theme.componentBorderWidth
-        }
-        DropShadow {
-            anchors.fill: parent
-            source: bgrect
-            color: "#60000000"
-            radius: 24
-            samples: radius*2+1
-            cached: true
+        layer.enabled: true
+        layer.effect: MultiEffect {
+            autoPaddingEnabled: true
+            shadowEnabled: true
+            shadowColor: ThemeEngine.isLight ? "#aa000000" : "#aaffffff"
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////
 
     contentItem: Column {
+        id: columnContent
+        //spacing: Theme.componentMarginXL
+
+        ////////
 
         Rectangle { // titleArea
             anchors.left: parent.left
@@ -338,17 +336,17 @@ Popup {
             height: Theme.componentHeight*2 + parent.spacing
             anchors.right: parent.right
             anchors.rightMargin: 24
-            spacing: 24
+            spacing: 16
 
-            ButtonWireframe {
+            ButtonSolid {
                 anchors.verticalCenter: parent.verticalCenter
                 width: 96
-                //color: Theme.colorGrey
+                color: Theme.colorGrey
 
                 text: qsTr("Cancel")
                 onClicked: popupMove.close()
             }
-            ButtonWireframe {
+            ButtonSolid {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Move")

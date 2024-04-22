@@ -394,17 +394,17 @@ Popup {
             height: Theme.componentHeight*2 + parent.spacing
             anchors.right: parent.right
             anchors.rightMargin: 24
-            spacing: 24
+            spacing: 16
 
-            ButtonWireframe {
+            ButtonSolid {
                 anchors.verticalCenter: parent.verticalCenter
                 width: 96
-                //color: Theme.colorGrey
+                color: Theme.colorGrey
 
                 text: qsTr("Cancel")
                 onClicked: popupMerge.close()
             }
-            ButtonWireframe {
+            ButtonSolid {
                 anchors.verticalCenter: parent.verticalCenter
 
                 enabled: (shots_files.length > 1)

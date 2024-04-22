@@ -529,23 +529,16 @@ Popup {
         ////////////////
 
         Row {
-            height: Theme.componentHeight*2 + parent.spacing
             anchors.right: parent.right
             anchors.rightMargin: 24
-            spacing: 24
+            spacing: 16
 
             ButtonSolid {
-                width: 96
-                anchors.verticalCenter: parent.verticalCenter
-
                 text: qsTr("Cancel")
                 color: Theme.colorGrey
                 onClicked: popupDate.close()
             }
             ButtonSolid {
-                width: 128
-                anchors.verticalCenter: parent.verticalCenter
-
                 text: qsTr("Change")
                 source: "qrc:/assets/icons_material/duotone-schedule-24px.svg"
                 color: Theme.colorPrimary

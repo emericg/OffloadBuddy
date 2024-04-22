@@ -423,10 +423,9 @@ Popup {
 
         Row {
             id: rowButtons
-            height: Theme.componentHeight*2 + parent.spacing
             anchors.right: parent.right
             anchors.rightMargin: 24
-            spacing: 24
+            spacing: 16
 
             ButtonFlat {
                 id: buttonCancel

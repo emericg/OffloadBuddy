@@ -1,6 +1,6 @@
 import QtQuick
+import QtQuick.Effects
 import QtQuick.Controls
-import Qt5Compat.GraphicalEffects
 
 import ThemeEngine
 
@@ -12,58 +12,79 @@ Popup {
     width: 720
     padding: 0
 
-    signal confirmed()
-
+    dim: true
     modal: true
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+    parent: Overlay.overlay
+
+    signal confirmed()
 
     ////////////////////////////////////////////////////////////////////////////
 
     enter: Transition { NumberAnimation { property: "opacity"; from: 0.5; to: 1.0; duration: 133; } }
 
-    background: Item {
-        Rectangle {
-            id: bgrect
+    background: Rectangle {
+        radius: Theme.componentRadius
+        color: Theme.colorBackground
+
+        Item {
             anchors.fill: parent
 
-            radius: Theme.componentRadius
-            color: Theme.colorBackground
-            border.color: Theme.colorSeparator
-            border.width: Theme.componentBorderWidth
+            Rectangle { // title area
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: 64
+                color: Theme.colorPrimary
+            }
+
+            Rectangle {
+                anchors.fill: parent
+                radius: Theme.componentRadius
+                color: "transparent"
+                border.color: Theme.colorSeparator
+                border.width: Theme.componentBorderWidth
+                opacity: 0.4
+            }
+
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                maskEnabled: true
+                maskInverted: false
+                maskThresholdMin: 0.5
+                maskSpreadAtMin: 1.0
+                maskSpreadAtMax: 0.0
+                maskSource: ShaderEffectSource {
+                    sourceItem: Rectangle {
+                        x: background.x
+                        y: background.y
+                        width: background.width
+                        height: background.height
+                        radius: background.radius
+                    }
+                }
+            }
         }
-        DropShadow {
-            anchors.fill: parent
-            source: bgrect
-            color: "#60000000"
-            radius: 24
-            samples: radius*2+1
-            cached: true
+
+        layer.enabled: true
+        layer.effect: MultiEffect {
+            autoPaddingEnabled: true
+            shadowEnabled: true
+            shadowColor: ThemeEngine.isLight ? "#aa000000" : "#aaffffff"
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////
 
     contentItem: Column {
-        spacing: 16
+        spacing: Theme.componentMarginXL
 
-        Rectangle { // titleArea
+        ////////
+
+        Item { // titleArea
             anchors.left: parent.left
             anchors.right: parent.right
-
             height: 64
-            color: Theme.colorPrimary
-            radius: Theme.componentRadius
-
-            Rectangle {
-                anchors.left: parent.left
-                anchors.leftMargin: 1
-                anchors.right: parent.right
-                anchors.rightMargin: 0
-                anchors.bottom: parent.bottom
-                height: parent.radius
-                color: parent.color
-            }
 
             Text {
                 anchors.left: parent.left
@@ -77,7 +98,7 @@ Popup {
             }
         }
 
-        ////////////////
+        ////////
 
         Text {
             height: Theme.componentHeight
@@ -94,29 +115,26 @@ Popup {
             wrapMode: Text.WordWrap
         }
 
-        ////////////////
+        ////////
+
+        Item  { width: 1; height: 1; } // spacer
 
         Row {
-            height: Theme.componentHeight*2 + parent.spacing
             anchors.right: parent.right
-            anchors.rightMargin: 24
-            spacing: 24
+            anchors.rightMargin: Theme.componentMarginXL
+            spacing: Theme.componentMargin
 
             ButtonSolid {
-                width: 96
-                anchors.verticalCenter: parent.verticalCenter
-
                 text: qsTr("Cancel")
                 color: Theme.colorGrey
                 onClicked: popupExit.close()
             }
-            ButtonSolid {
-                anchors.verticalCenter: parent.verticalCenter
 
+            ButtonSolid {
                 text: qsTr("Exit")
-                width: 128
                 source: "qrc:/assets/icons_material/duotone-exit_to_app-24px.svg"
                 color: Theme.colorWarning
+
                 onClicked: {
                     popupExit.confirmed()
                     popupExit.close()
@@ -124,5 +142,11 @@ Popup {
                 }
             }
         }
+
+        Item  { width: 1; height: 1; } // spacer
+
+        ////////
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 }

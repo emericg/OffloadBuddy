@@ -1,6 +1,6 @@
 import QtQuick
+import QtQuick.Effects
 import QtQuick.Controls
-import Qt5Compat.GraphicalEffects
 
 import ThemeEngine
 import StorageUtils
@@ -24,6 +24,8 @@ Popup {
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
     signal confirmed()
+
+    property bool singleColumn: false
 
     ////////
 
@@ -318,7 +320,7 @@ Popup {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
+/*
     enter: Transition { NumberAnimation { property: "opacity"; from: 0.5; to: 1.0; duration: 133; } }
 
     background: Item {
@@ -340,10 +342,57 @@ Popup {
             cached: true
         }
     }
+    */
+    enter: Transition { NumberAnimation { property: "opacity"; from: 0.5; to: 1.0; duration: 133; } }
+    //exit: Transition { NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; duration: 200; } }
 
+    Overlay.modal: Rectangle {
+        color: "#000"
+        opacity: ThemeEngine.isLight ? 0.24 : 0.666
+    }
+
+    background: Rectangle {
+        color: Theme.colorBackground
+        border.color: Theme.colorSeparator
+        border.width: singleColumn ? 0 : Theme.componentBorderWidth
+        radius: singleColumn ? 0 : Theme.componentRadius
+
+        Rectangle {
+            width: parent.width
+            height: Theme.componentBorderWidth
+            visible: singleColumn
+            color: Theme.colorSeparator
+        }
+
+        layer.enabled: true
+        layer.effect: MultiEffect {
+            maskEnabled: true
+            maskInverted: false
+            maskThresholdMin: 0.5
+            maskSpreadAtMin: 1.0
+            maskSpreadAtMax: 0.0
+            maskSource: ShaderEffectSource {
+                sourceItem: Rectangle {
+                    x: background.x
+                    y: background.y
+                    width: background.width
+                    height: background.height
+                    radius: Theme.componentRadius
+                }
+            }
+        }
+    }
+
+     MultiEffect {
+         anchors.fill: control
+        autoPaddingEnabled: true
+        shadowEnabled: true
+        shadowColor: ThemeEngine.isLight ? "red" : "red"
+    }
     ////////////////////////////////////////////////////////////////////////////
 
     contentItem: Column {
+        bottomPadding: Theme.componentMarginXL
 
         Rectangle { // titleArea
             anchors.left: parent.left
@@ -381,9 +430,7 @@ Popup {
         Rectangle {
             id: filesArea
             anchors.left: parent.left
-            anchors.leftMargin: 2
             anchors.right: parent.right
-            anchors.rightMargin: 2
 
             z: 1
             height: 48
@@ -426,9 +473,9 @@ Popup {
             id: contentArea
             height: columnEncoding.height
             anchors.left: parent.left
-            anchors.leftMargin: 24
+            anchors.leftMargin: Theme.componentMarginXL
             anchors.right: parent.right
-            anchors.rightMargin: 24
+            anchors.rightMargin: Theme.componentMarginXL
 
             ////////
 
@@ -1478,24 +1525,18 @@ Popup {
         ////////////////////////////////////////////////////////////////////////
 
         Row {
-            height: Theme.componentHeight*2 + parent.spacing
             anchors.right: parent.right
-            anchors.rightMargin: 24
-            spacing: 24
+            anchors.rightMargin: Theme.componentMarginXL
+            spacing: Theme.componentMargin
 
-            ButtonWireframe {
-                anchors.verticalCenter: parent.verticalCenter
-                width: 96
-                //color: Theme.colorGrey
+            ButtonSolid {
+                color: Theme.colorGrey
 
                 text: qsTr("Cancel")
                 onClicked: popupEncoding.close()
             }
 
-            ButtonWireframe {
-                anchors.verticalCenter: parent.verticalCenter
-                width: 128
-
+            ButtonSolid {
                 text: qsTr("Encode")
                 source: "qrc:/assets/icons_material/baseline-memory-24px.svg"
 

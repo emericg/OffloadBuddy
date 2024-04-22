@@ -1,39 +1,53 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Controls.impl
+import QtQuick.Templates as T
 
-import ThemeEngine 1.0
+import ThemeEngine
 
-ComboBox {
+T.ComboBox {
     id: control
-    implicitWidth: 200
-    implicitHeight: Theme.componentHeight
 
-    font.pixelSize: Theme.componentFontSize
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            implicitContentWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             implicitContentHeight + topPadding + bottomPadding,
+                             implicitIndicatorHeight + topPadding + bottomPadding)
+
+    leftPadding: 16
+    rightPadding: 16
 
     property string folders: ""
 
     ////////
 
     background: Rectangle {
+        implicitWidth: 200
+        implicitHeight: Theme.componentHeight
+
         radius: Theme.componentRadius
+        opacity: control.enabled ? 1 : 0.66
         color: control.down ? Theme.colorComponentDown : Theme.colorComponent
-        border.width: Theme.componentBorderWidth
+        border.width: 2
         border.color: Theme.colorComponentBorder
     }
 
     ////////
 
     contentItem: Text {
-        leftPadding: 12
-        rightPadding: 8
-        clip: true
+        //leftPadding: 12
+        //rightPadding: 8
+        //clip: true
 
         text: control.displayText
         textFormat: Text.PlainText
+
         font: control.font
-        color: Theme.colorComponentContent
         elide: Text.ElideRight
         verticalAlignment: Text.AlignVCenter
+
+        opacity: control.enabled ? 1 : 0.66
+        color: Theme.colorComponentContent
 
         Text {
             x: parent.leftPadding + parent.contentWidth
@@ -77,7 +91,7 @@ ComboBox {
 
     ////////
 
-    delegate: ItemDelegate {
+    delegate: T.ItemDelegate {
         width: control.width - 2
         height: control.height
         highlighted: (control.highlightedIndex === index)
@@ -92,7 +106,10 @@ ComboBox {
         }
 
         contentItem: Text {
-            text: modelData
+            leftPadding: control.leftPadding
+            text: control.textRole
+                ? (Array.isArray(control.model) ? modelData[control.textRole] : model[control.textRole])
+                : modelData
             color: highlighted ? "black" : Theme.colorSubText
             font.pixelSize: Theme.componentFontSize
             elide: Text.ElideRight
@@ -105,7 +122,7 @@ ComboBox {
     popup: Popup {
         y: control.height - 1
         width: control.width
-        implicitHeight: contentItem.implicitHeight + 2
+        implicitHeight: (contentItem.implicitHeight) ? contentItem.implicitHeight + 2 : 0
         padding: 1
 
         contentItem: ListView {

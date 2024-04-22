@@ -140,7 +140,6 @@ Loader {
                     ComboBoxThemed {
                         id: comboBoxAppTheme
                         width: 256
-                        height: 36
                         anchors.verticalCenter: parent.verticalCenter
 
                         model: ListModel {
@@ -373,8 +372,7 @@ Loader {
                     height: 40
                     spacing: 32
 
-                    CheckBoxThemed {
-                        id: checkIgnoreJunk
+                    CheckBoxThemed { // checkIgnoreJunk
                         width: 350
                         anchors.verticalCenter: parent.verticalCenter
 
@@ -384,8 +382,7 @@ Loader {
                         onClicked: settingsManager.ignoreJunk = checked
                     }
 
-                    CheckBoxThemed {
-                        id: checkIgnoreAudio
+                    CheckBoxThemed { // checkIgnoreAudio
                         width: 350
                         anchors.verticalCenter: parent.verticalCenter
 
@@ -400,8 +397,7 @@ Loader {
                     height: 40
                     spacing: 32
 
-                    CheckBoxThemed {
-                        id: checkAutoDelete
+                    CheckBoxThemed { // checkAutoDelete
                         width: 350
                         anchors.verticalCenter: parent.verticalCenter
 
@@ -411,8 +407,7 @@ Loader {
                         onClicked: settingsManager.autoDelete = checked
                     }
 
-                    CheckBoxThemed {
-                        id: checkAutoMerge
+                    CheckBoxThemed { // checkAutoMerge
                         width: 350
                         anchors.verticalCenter: parent.verticalCenter
 
@@ -422,8 +417,7 @@ Loader {
                         onClicked: settingsManager.autoMerge = checked
                     }
 
-                    CheckBoxThemed {
-                        id: checkAutoTelemetry
+                    CheckBoxThemed { // checkAutoTelemetry
                         width: 350
                         anchors.verticalCenter: parent.verticalCenter
 
@@ -438,8 +432,7 @@ Loader {
                     height: 40
                     spacing: 32
 
-                    CheckBoxThemed {
-                        id: checkMoveToTrash
+                    CheckBoxThemed { // checkMoveToTrash
                         width: 450
                         anchors.verticalCenter: parent.verticalCenter
 
@@ -553,7 +546,6 @@ Loader {
                             ComboBoxThemed {
                                 id: comboBoxContentHierarchy
                                 width: 256
-                                height: 36
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 model: ListModel {
@@ -610,7 +602,6 @@ Loader {
                             }
 
                             ButtonSolid {
-                                height: 36
                                 anchors.horizontalCenter: parent.horizontalCenter
 
                                 text: qsTr("Add a new one")

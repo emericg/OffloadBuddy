@@ -1,6 +1,6 @@
 import QtQuick
+import QtQuick.Effects
 import QtQuick.Controls
-import Qt5Compat.GraphicalEffects
 
 import ThemeEngine
 import StorageUtils
@@ -16,59 +16,90 @@ Popup {
     width: 720
     padding: 0
 
-    parent: Overlay.overlay
-
+    dim: true
     modal: true
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+    parent: Overlay.overlay
+
+    property int legendWidth: 96
 
     ////////////////////////////////////////////////////////////////////////////
 
     enter: Transition { NumberAnimation { property: "opacity"; from: 0.5; to: 1.0; duration: 133; } }
 
-    background: Item {
-        Rectangle {
-            id: bgrect
+    background: Rectangle {
+        radius: Theme.componentRadius
+        color: Theme.colorBackground
+
+        Item {
             anchors.fill: parent
 
-            radius: Theme.componentRadius
-            color: Theme.colorBackground
-            border.color: Theme.colorSeparator
-            border.width: Theme.componentBorderWidth
+            Column {
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                Rectangle { // title area
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 64
+                    color: Theme.colorPrimary
+                }
+
+                Rectangle { // subtitle area
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 48
+                    color: Theme.colorForeground
+                }
+            }
+
+            Rectangle {
+                anchors.fill: parent
+                radius: Theme.componentRadius
+                color: "transparent"
+                border.color: Theme.colorSeparator
+                border.width: Theme.componentBorderWidth
+                opacity: 0.4
+            }
+
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                maskEnabled: true
+                maskInverted: false
+                maskThresholdMin: 0.5
+                maskSpreadAtMin: 1.0
+                maskSpreadAtMax: 0.0
+                maskSource: ShaderEffectSource {
+                    sourceItem: Rectangle {
+                        x: background.x
+                        y: background.y
+                        width: background.width
+                        height: background.height
+                        radius: background.radius
+                    }
+                }
+            }
         }
-        DropShadow {
-            anchors.fill: parent
-            source: bgrect
-            color: "#60000000"
-            radius: 24
-            samples: radius*2+1
-            cached: true
+
+        layer.enabled: true
+        layer.effect: MultiEffect {
+            autoPaddingEnabled: true
+            shadowEnabled: true
+            shadowColor: ThemeEngine.isLight ? "#aa000000" : "#aaffffff"
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////
 
-    property int legendWidth: 96
-
     contentItem: Column {
 
-        Rectangle { // titleArea
+        ////////////////
+
+        Item { // titleArea
             anchors.left: parent.left
             anchors.right: parent.right
-
             height: 64
-            color: Theme.colorPrimary
-            radius: Theme.componentRadius
-
-            Rectangle {
-                anchors.left: parent.left
-                anchors.leftMargin: 0
-                anchors.right: parent.right
-                anchors.rightMargin: 0
-                anchors.bottom: parent.bottom
-                height: parent.radius
-                color: parent.color
-            }
 
             Text {
                 anchors.left: parent.left
@@ -86,11 +117,8 @@ Popup {
 
         Rectangle {
             anchors.left: parent.left
-            anchors.leftMargin: 2
             anchors.right: parent.right
-            anchors.rightMargin: 2
 
-            z: 1
             height: 48
             color: Theme.colorForeground
 
@@ -336,12 +364,12 @@ Popup {
 
                     visible: (directory.directoryHierarchy === StorageUtils.HierarchyCustom)
 
-                    ItemTagButton { text: "DATE"; onClicked: tfHC.insert(tfHC.selectionStart, "$(DATE)"); }
-                    ItemTagButton { text: "YEAR"; onClicked: tfHC.insert(tfHC.selectionStart, "$(YEAR)"); }
-                    ItemTagButton { text: "MONTH"; onClicked: tfHC.insert(tfHC.selectionStart, "$(MONTH)"); }
-                    ItemTagButton { text: "DAY"; onClicked: tfHC.insert(tfHC.selectionStart, "$(DAY)"); }
-                    ItemTagButton { text: "SHOT NAME"; onClicked: tfHC.insert(tfHC.selectionStart, "$(SHOT_NAME)"); }
-                    ItemTagButton { text: "CAMERA"; onClicked: tfHC.insert(tfHC.selectionStart, "$(CAMERA)"); }
+                    TagButtonFlat { text: "DATE"; onClicked: tfHC.insert(tfHC.selectionStart, "$(DATE)"); }
+                    TagButtonFlat { text: "YEAR"; onClicked: tfHC.insert(tfHC.selectionStart, "$(YEAR)"); }
+                    TagButtonFlat { text: "MONTH"; onClicked: tfHC.insert(tfHC.selectionStart, "$(MONTH)"); }
+                    TagButtonFlat { text: "DAY"; onClicked: tfHC.insert(tfHC.selectionStart, "$(DAY)"); }
+                    TagButtonFlat { text: "SHOT NAME"; onClicked: tfHC.insert(tfHC.selectionStart, "$(SHOT_NAME)"); }
+                    TagButtonFlat { text: "CAMERA"; onClicked: tfHC.insert(tfHC.selectionStart, "$(CAMERA)"); }
                 }
 
                 ////////
@@ -350,23 +378,27 @@ Popup {
 
         //////////////////
 
+        Item{ width: 1; height: 1; } // spacer
+
         Row {
-            height: Theme.componentHeight*2 + parent.spacing
             anchors.right: parent.right
-            anchors.rightMargin: 24
-            spacing: 24
+            anchors.rightMargin: Theme.componentMarginXL
+            spacing: Theme.componentMargin
 
             ButtonSolid {
-                anchors.verticalCenter: parent.verticalCenter
-
                 text: qsTr("OK")
                 source: "qrc:/assets/icons_material/baseline-done-24px.svg"
-                color: Theme.colorPrimary
 
                 onClicked: {
                     popupMediaDirectory.close()
                 }
             }
         }
+
+        Item  { width: 1; height: 1; } // spacer
+
+        //////////////////
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 }
