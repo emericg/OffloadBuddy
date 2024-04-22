@@ -127,7 +127,7 @@ Item {
             anchors.centerIn: parent
 
             color: Theme.colorIcon
-            source: "qrc:/assets/icons_material/baseline-hourglass_empty-24px.svg"
+            source: "qrc:/assets/icons/material-icons/outlined/hourglass_empty.svg"
         }
 
         Loader {
@@ -186,9 +186,9 @@ Item {
                     // map marker
                     mapTrace.visible = false
                     if (shot.direction) {
-                        mapMarkerImg.source = "qrc:/assets/others/gps_marker_direction.svg"
+                        mapMarkerImg.source = "qrc:/gfx/gps_marker_direction.svg"
                     } else {
-                        mapMarkerImg.source = "qrc:/assets/others/gps_marker.svg"
+                        mapMarkerImg.source = "qrc:/gfx/gps_marker.svg"
                     }
                     mapMarker.visible = true
                     mapMarker.rotation = shot.direction
@@ -323,8 +323,8 @@ Item {
                     width: 64
                     height: 64
                     sourceSize: Qt.size(width, height)
-                    source: "qrc:/assets/others/gps_marker.svg"
-                    //source: "qrc:/assets/others/gps_marker_direction.svg"
+                    source: "qrc:/gfx/gps_marker.svg"
+                    //source: "qrc:/gfx/gps_marker_direction.svg"
                 }
             }
 
@@ -355,8 +355,8 @@ Item {
                     highlightMode: "color"
                     highlightColor: Theme.colorBackground
 
-                    source: mapArea.fullscreen ? "qrc:/assets/icons_material/baseline-fullscreen_exit-24px.svg"
-                                           : "qrc:/assets/icons_material/baseline-fullscreen-24px.svg"
+                    source: mapArea.fullscreen ? "qrc:/assets/icons/material-symbols/fullscreen_exit.svg"
+                                           : "qrc:/assets/icons/material-symbols/fullscreen.svg"
                     onClicked: mapArea.fullscreen = !mapArea.fullscreen
                 }
 
@@ -373,7 +373,7 @@ Item {
 
                     highlighted: map.moove
                     onClicked: map.moove = !map.moove
-                    source: "qrc:/assets/icons_material/baseline-open_with-24px.svg"
+                    source: "qrc:/assets/icons/material-symbols/open_with.svg"
                 }
             }
 
@@ -397,7 +397,7 @@ Item {
                     highlightMode: "color"
                     highlightColor: Theme.colorBackground
 
-                    source: "qrc:/assets/icons_material/baseline-zoom_out-24px.svg"
+                    source: "qrc:/assets/icons/material-symbols/zoom_out.svg"
                     onClicked: zoomOut()
                 }
 
@@ -412,7 +412,7 @@ Item {
                     highlightMode: "color"
                     highlightColor: Theme.colorBackground
 
-                    source: "qrc:/assets/icons_material/baseline-zoom_in-24px.svg"
+                    source: "qrc:/assets/icons/material-symbols/zoom_in.svg"
                     onClicked: zoomIn()
                 }
             }

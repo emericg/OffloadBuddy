@@ -1,0 +1,24 @@
+<RCC>
+    <qresource prefix="/cameras">
+        <file alias="generic_actioncam.svg">cameras/generic_actioncam.svg</file>
+        <file alias="generic_camera.svg">cameras/generic_camera.svg</file>
+        <file alias="generic_smartphone.svg">cameras/generic_smartphone.svg</file>
+        <file alias="dji_osmo_action.svg">cameras/dji_osmo_action.svg</file>
+        <file alias="gopro_devices.json">cameras/gopro_devices.json</file>
+        <file alias="gopro_H2.svg">cameras/gopro_H2.svg</file>
+        <file alias="gopro_H3.svg">cameras/gopro_H3.svg</file>
+        <file alias="gopro_H4.svg">cameras/gopro_H4.svg</file>
+        <file alias="gopro_H5.svg">cameras/gopro_H5.svg</file>
+        <file alias="gopro_H7w.svg">cameras/gopro_H7w.svg</file>
+        <file alias="gopro_H8.svg">cameras/gopro_H8.svg</file>
+        <file alias="gopro_H9.svg">cameras/gopro_H9.svg</file>
+        <file alias="gopro_session.svg">cameras/gopro_session.svg</file>
+        <file alias="gopro_fusion.svg">cameras/gopro_fusion.svg</file>
+        <file alias="gopro_max.svg">cameras/gopro_max.svg</file>
+        <file alias="insta360_devices.json">cameras/insta360_devices.json</file>
+        <file alias="insta360_go2.svg">cameras/insta360_go2.svg</file>
+        <file alias="insta360_one_r.svg">cameras/insta360_one_r.svg</file>
+        <file alias="insta360_one_x.svg">cameras/insta360_one_x.svg</file>
+        <file alias="insta360_one_x2.svg">cameras/insta360_one_x2.svg</file>
+    </qresource>
+</RCC>

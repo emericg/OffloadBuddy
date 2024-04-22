@@ -44,7 +44,7 @@ Item {
                 highlightMode: "color"
                 visible: directory.readOnly
                 iconColor: Theme.colorWarning
-                source: "qrc:/assets/icons_material/outline-https-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/lock.svg"
 
                 tooltipText: "Storage is read only"
                 tooltipPosition: "left"
@@ -59,7 +59,7 @@ Item {
                 highlightMode: "color"
                 visible: !directory.largeFileSupport
                 iconColor: Theme.colorWarning
-                source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/warning.svg"
 
                 tooltipText: "Storage is 4 GiB limited"
                 tooltipPosition: "left"
@@ -74,7 +74,7 @@ Item {
                 highlightMode: "color"
                 visible: directory.available
                 enabled: directory.enabled
-                source: "qrc:/assets/icons_material/baseline-refresh-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/refresh.svg"
 
                 animation: "rotate"
                 animationRunning: directory.scanning
@@ -90,7 +90,7 @@ Item {
 
                 highlightMode: "color"
                 visible: directory.available
-                source: "qrc:/assets/icons_material/baseline-folder_open-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/folder_open.svg"
                 onClicked: utilsApp.openWith(directory.directoryPath)
             }
 
@@ -101,7 +101,7 @@ Item {
 
                 highlightMode: "off"
                 visible: !directory.available
-                source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/warning.svg"
                 iconColor: Theme.colorWarning
             }
         }
@@ -172,7 +172,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
 
                 color: Theme.colorWarning
-                source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/warning.svg"
             }
             Text {
                 id: textError
@@ -249,7 +249,7 @@ Item {
             iconColor: Theme.colorSubText
             highlightMode: "color"
             highlightColor: Theme.colorPrimary
-            source: "qrc:/assets/icons_material/baseline-settings_applications-24px.svg"
+            source: "qrc:/assets/icons/material-symbols/settings_applications.svg"
             sourceSize: 24
 
             onClicked: {
@@ -276,7 +276,7 @@ Item {
             iconColor: Theme.colorSubText
             highlightMode: "color"
             highlightColor: Theme.colorError
-            source: "qrc:/assets/icons_material/baseline-delete-24px.svg"
+            source: "qrc:/assets/icons/material-symbols/delete.svg"
             sourceSize: 24
 
             onClicked: {

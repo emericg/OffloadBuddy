@@ -26,7 +26,12 @@ Popup {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    enter: Transition { NumberAnimation { property: "opacity"; from: 0.5; to: 1.0; duration: 133; } }
+    enter: Transition { NumberAnimation { property: "opacity"; from: 0.333; to: 1.0; duration: 133; } }
+
+    Overlay.modal: Rectangle {
+        color: "#000"
+        opacity: ThemeEngine.isLight ? 0.333 : 0.666
+    }
 
     background: Rectangle {
         radius: Theme.componentRadius
@@ -54,7 +59,7 @@ Popup {
                 }
             }
 
-            Rectangle {
+            Rectangle { // border
                 anchors.fill: parent
                 radius: Theme.componentRadius
                 color: "transparent"
@@ -64,7 +69,7 @@ Popup {
             }
 
             layer.enabled: true
-            layer.effect: MultiEffect {
+            layer.effect: MultiEffect { // clip
                 maskEnabled: true
                 maskInverted: false
                 maskThresholdMin: 0.5
@@ -83,7 +88,7 @@ Popup {
         }
 
         layer.enabled: true
-        layer.effect: MultiEffect {
+        layer.effect: MultiEffect { // shadow
             autoPaddingEnabled: true
             shadowEnabled: true
             shadowColor: ThemeEngine.isLight ? "#aa000000" : "#aaffffff"
@@ -103,7 +108,7 @@ Popup {
 
             Text {
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: Theme.componentMarginXL
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Media directory settings")
@@ -115,18 +120,16 @@ Popup {
 
         ////////////////
 
-        Rectangle {
+        Item { // subtitleArea
             anchors.left: parent.left
             anchors.right: parent.right
-
             height: 48
-            color: Theme.colorForeground
 
             Text {
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: Theme.componentMarginXL
                 anchors.right: parent.right
-                anchors.rightMargin: 24
+                anchors.rightMargin: Theme.componentMarginXL
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: directory.directoryPath
@@ -138,19 +141,24 @@ Popup {
 
         ////////////////
 
-        Item { // contentArea
-            height: columnSettings.height
+        Column { // contentArea
             anchors.left: parent.left
+            anchors.leftMargin: Theme.componentMarginXL
             anchors.right: parent.right
+            anchors.rightMargin: Theme.componentMarginXL
+
+            topPadding: Theme.componentMarginXL
+            bottomPadding: Theme.componentMarginXL
+            spacing: Theme.componentMarginXL
+
+            ////////////
 
             Column {
-                id: columnSettings
                 anchors.left: parent.left
-                anchors.leftMargin: 24
                 anchors.right: parent.right
-                anchors.rightMargin: 24
-                topPadding: 16
-                bottomPadding: 16
+
+                //topPadding: Theme.componentMargin
+                //bottomPadding: Theme.componentMargin
 
                 ////////
 
@@ -374,28 +382,23 @@ Popup {
 
                 ////////
             }
-        }
 
-        //////////////////
+            ////////////
 
-        Item{ width: 1; height: 1; } // spacer
+            Row {
+                anchors.right: parent.right
+                spacing: Theme.componentMargin
 
-        Row {
-            anchors.right: parent.right
-            anchors.rightMargin: Theme.componentMarginXL
-            spacing: Theme.componentMargin
+                ButtonSolid {
+                    text: qsTr("OK")
+                    source: "qrc:/assets/icons/material-symbols/check.svg"
 
-            ButtonSolid {
-                text: qsTr("OK")
-                source: "qrc:/assets/icons_material/baseline-done-24px.svg"
-
-                onClicked: {
-                    popupMediaDirectory.close()
+                    onClicked: popupMediaDirectory.close()
                 }
             }
-        }
 
-        Item  { width: 1; height: 1; } // spacer
+            ////////////
+        }
 
         //////////////////
     }

@@ -405,7 +405,7 @@ Item {
             iconColor: (shot.cropARlock) ? Theme.colorPrimary : "white"
 
             visible: resizeWidget.editing
-            source: "qrc:/assets/icons_material/outline-https-24px.svg"
+            source: "qrc:/assets/icons/material-symbols/lock.svg"
             onClicked: {
                 shot.cropARlock = !shot.cropARlock
             }
@@ -481,7 +481,7 @@ Item {
                 highlightMode: "color"
 
                 visible: resizeWidget.editing
-                source: "qrc:/assets/icons_material/baseline-close-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/close.svg"
                 onClicked: resizeWidget.reset()
             }
             RoundButtonIcon {
@@ -492,7 +492,7 @@ Item {
                 highlightMode: "color"
 
                 visible: resizeWidget.editing
-                source: "qrc:/assets/icons_material/baseline-done-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/check.svg"
                 onClicked: resizeWidget.editing = false
             }
         }

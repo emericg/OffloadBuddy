@@ -168,11 +168,11 @@ Item {
 
         if (currentDevice && currentDevice.deviceStorage === StorageUtils.StorageFilesystem) {
             if (currentDevice.deviceType === DeviceUtils.DeviceActionCamera)
-                imageEmpty.source = "qrc:/devices/card.svg"
+                imageEmpty.source = "qrc:/gfx/card.svg"
             else
-                imageEmpty.source = "qrc:/devices/camera.svg"
+                imageEmpty.source = "qrc:/gfx/camera.svg"
         } else {
-            imageEmpty.source = "qrc:/devices/usb.svg"
+            imageEmpty.source = "qrc:/gfx/usb.svg"
         }
     }
 
@@ -274,7 +274,7 @@ Item {
                     width: 28; height: 28;
                     backgroundVisible: true
                     visible: true
-                    source: "qrc:/assets/icons_material/baseline-memory-24px.svg"
+                    source: "qrc:/assets/icons/material-symbols/memory.svg"
                     sourceSize: 24
                     onClicked: screenDeviceInfos.loadScreen()
                 }
@@ -285,7 +285,7 @@ Item {
                     backgroundVisible: true
                     visible: currentDevice.readOnly
 
-                    source: "qrc:/assets/icons_material/outline-https-24px.svg"
+                    source: "qrc:/assets/icons/material-symbols/lock.svg"
                     sourceSize: 24
                     iconColor: Theme.colorWarning
                     tooltipText: "Read Only storage"
@@ -420,7 +420,7 @@ Item {
                     iconColor: Theme.colorComponentContent
                     highlightMode: "color"
                     highlightColor: Theme.colorSubText
-                    source: "qrc:/assets/icons_material/baseline-filter_list-24px.svg"
+                    source: "qrc:/assets/icons/material-symbols/filter_list.svg"
 
                     onClicked: {
                         if (settingsManager.deviceSortOrder === Qt.AscendingOrder) {
@@ -509,10 +509,10 @@ Item {
                 height: 32
 
                 model: ListModel {
-                    ListElement { idx: 1; txt: ""; src: "qrc:/assets/icons_material/baseline-photo-24px.svg"; sz: 18; }
-                    ListElement { idx: 2; txt: ""; src: "qrc:/assets/icons_material/baseline-photo-24px.svg"; sz: 22; }
-                    ListElement { idx: 3; txt: ""; src: "qrc:/assets/icons_material/baseline-photo-24px.svg"; sz: 26; }
-                    ListElement { idx: 4; txt: ""; src: "qrc:/assets/icons_material/baseline-photo-24px.svg"; sz: 30; }
+                    ListElement { idx: 1; txt: ""; src: "qrc:/assets/icons/material-symbols/media/image.svg"; sz: 18; }
+                    ListElement { idx: 2; txt: ""; src: "qrc:/assets/icons/material-symbols/media/image.svg"; sz: 22; }
+                    ListElement { idx: 3; txt: ""; src: "qrc:/assets/icons/material-symbols/media/image.svg"; sz: 26; }
+                    ListElement { idx: 4; txt: ""; src: "qrc:/assets/icons/material-symbols/media/image.svg"; sz: 30; }
                 }
                 currentSelection: {
                         if (shotsView.cellSizeTarget == 512) return 4
@@ -695,7 +695,9 @@ Item {
         ActionMenu {
             id: actionMenu
             z: 7
-            onMenuSelected: rectangleDeviceGrid.actionMenuTriggered(index)
+            onMenuSelected: (index) => {
+                rectangleDeviceGrid.actionMenuTriggered(index)
+            }
         }
         function actionMenuTriggered(index) {
             //console.log("actionMenuTriggered(" + index + ") selected shot: '" + shotsView.currentItem.shot.name + "'")

@@ -435,7 +435,7 @@ Item {
             anchors.centerIn: parent
 
             color: Theme.colorIcon
-            source: "qrc:/assets/icons_material/baseline-hourglass_empty-24px.svg"
+            source: "qrc:/assets/icons/material-icons/outlined/hourglass_empty.svg"
         }
     }
 
@@ -507,12 +507,12 @@ Item {
             //console.log("onPlaybackStateChanged() " + videoPlayer.playbackState)
 
             if (videoPlayer.playbackState === MediaPlayer.PlayingState) {
-                buttonPlay.source = "qrc:/assets/icons_material/baseline-pause-24px.svg"
+                buttonPlay.source = "qrc:/assets/icons/material-symbols/pause-fill.svg"
                 savePosition()
 
                 //utilsScreen.keepScreenOn(true, "OffloadBuddy", qsTr("Playing video"))
             } else if (videoPlayer.playbackState === MediaPlayer.PausedState) {
-                buttonPlay.source = "qrc:/assets/icons_material/baseline-play_arrow-24px.svg"
+                buttonPlay.source = "qrc:/assets/icons/material-symbols/play_arrow-fill.svg"
                 savePosition()
 
                 //utilsScreen.keepScreenOn(false)
@@ -660,7 +660,7 @@ Item {
                 highlightMode: "color"
 
                 visible: UtilsMedia.orientationToTransform_qt(shot.userRotation, shot.userHFlipped, shot.userVFlipped) !== shot.transformation
-                source: "qrc:/assets/icons_material/baseline-save-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/save.svg"
                 //onClicked: shot.saveRotation(angle)
             }
             RoundButtonIcon {
@@ -671,7 +671,7 @@ Item {
                 highlightMode: "color"
 
                 visible: UtilsMedia.orientationToTransform_qt(shot.userRotation, shot.userHFlipped, shot.userVFlipped) !== shot.transformation
-                source: "qrc:/assets/icons_material/baseline-close-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/close.svg"
                 onClicked: resetTransformation()
             }
             RoundButtonIcon {
@@ -681,7 +681,7 @@ Item {
                 backgroundColor: "#222"
                 highlightMode: "color"
 
-                source: "qrc:/assets/icons_material/baseline-rotate_left-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/rotate_left.svg"
                 onClicked: mediaArea.addRotation(-90)
             }
             RoundButtonIcon {
@@ -691,7 +691,7 @@ Item {
                 backgroundColor: "#222"
                 highlightMode: "color"
 
-                source: "qrc:/assets/icons_material/baseline-rotate_right-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/rotate_right.svg"
                 onClicked: mediaArea.addRotation(+90)
             }
             RoundButtonIcon {
@@ -701,7 +701,7 @@ Item {
                 backgroundColor: "#222"
                 highlightMode: "color"
 
-                source: "qrc:/assets/icons_material/baseline-flip-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/media/flip.svg"
                 onClicked: mediaArea.setTransformation("mirror")
             }
             RoundButtonIcon {
@@ -712,7 +712,7 @@ Item {
                 backgroundColor: "#222"
                 highlightMode: "color"
 
-                source: "qrc:/assets/icons_material/baseline-flip-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/media/flip.svg"
                 onClicked: mediaArea.setTransformation("flip")
             }
         }
@@ -743,8 +743,8 @@ Item {
             IconSvg {
                 anchors.verticalCenter: parent.verticalCenter
                 width: 28; height: 28;
-                source: (timerTimelapse.running) ? "qrc:/assets/icons_material/baseline-pause-24px.svg"
-                                                 : "qrc:/assets/icons_material/baseline-play_arrow-24px.svg"
+                source: (timerTimelapse.running) ? "qrc:/assets/icons/material-symbols/pause-fill.svg"
+                                                 : "qrc:/assets/icons/material-symbols/play_arrow-fill.svg"
                 color: "white"
 
                 MouseArea {
@@ -1017,7 +1017,7 @@ Item {
                     highlightColor: Theme.colorPrimary
                     highlightMode: "color"
 
-                    source: "qrc:/assets/icons_material/baseline-play_arrow-24px.svg"
+                    source: "qrc:/assets/icons/material-symbols/play_arrow-fill.svg"
                     onClicked: {
                         if (videoPlayer.isRunning) {
                             videoPlayer.pause()
@@ -1057,7 +1057,7 @@ Item {
                         highlightMode: "color"
                         highlighted: parent.isHovered
 
-                        source: (soundline.value === 0) ? "qrc:/assets/icons_material/baseline-volume_off-24px.svg" : "qrc:/assets/icons_material/baseline-volume_up-24px.svg"
+                        source: (soundline.value === 0) ? "qrc:/assets/icons/material-symbols/media/volume_off.svg" : "qrc:/assets/icons/material-symbols/media/volume_up.svg"
                         property real savedVolume: audioOutput.volume
                         onClicked: {
                             if (audioOutput.volume) {
@@ -1109,7 +1109,7 @@ Item {
                     highlightColor: Theme.colorPrimary
                     highlightMode: "color"
 
-                    source: "qrc:/assets/icons_material/baseline-content_cut-24px.svg"
+                    source: "qrc:/assets/icons/material-symbols/content_cut.svg"
                     onClicked: toggleTrim()
                 }
                 RoundButtonIcon {
@@ -1122,7 +1122,7 @@ Item {
                     highlightColor: Theme.colorPrimary
                     highlightMode: "color"
 
-                    source: "qrc:/assets/icons_material/duotone-rotate_90_degrees_ccw-24px.svg"
+                    source: "qrc:/assets/icons/material-icons/duotone/rotate_90_degrees_ccw.svg"
                     onClicked: toggleTransform()
                 }
                 RoundButtonIcon {
@@ -1135,7 +1135,7 @@ Item {
                     highlightColor: Theme.colorPrimary
                     highlightMode: "color"
 
-                    source: "qrc:/assets/icons_material/baseline-crop-24px.svg"
+                    source: "qrc:/assets/icons/material-symbols/media/crop.svg"
                     onClicked: toggleCrop()
                 }
                 RoundButtonIcon {
@@ -1149,7 +1149,7 @@ Item {
                     highlightColor: Theme.colorPrimary
                     highlightMode: "color"
 
-                    source: "qrc:/assets/icons_material/duotone-camera_alt-24px.svg"
+                    source: "qrc:/assets/icons/material-icons/duotone/camera_alt.svg"
                     onClicked: {
                         if (typeof shot === "undefined" || !shot) return
 
@@ -1210,8 +1210,8 @@ Item {
                     highlightColor: Theme.colorPrimary
                     highlightMode: "color"
 
-                    source: isFullScreen ? "qrc:/assets/icons_material/baseline-fullscreen_exit-24px.svg"
-                                         : "qrc:/assets/icons_material/baseline-fullscreen-24px.svg"
+                    source: isFullScreen ? "qrc:/assets/icons/material-symbols/fullscreen_exit.svg"
+                                         : "qrc:/assets/icons/material-symbols/fullscreen.svg"
                     onClicked: toggleFullScreen()
                 }
             }

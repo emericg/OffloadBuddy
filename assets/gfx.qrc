@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/gfx">
+        <file alias="offloadbuddy.svg">gfx/logos/offloadbuddy.svg</file>
+
+        <file alias="navigate_before_big.svg">gfx/icons/navigate_before_big.svg</file>
+
+        <file alias="gps_marker.svg">gfx/markers/gps_marker.svg</file>
+        <file alias="gps_marker_direction.svg">gfx/markers/gps_marker_direction.svg</file>
+
+        <file alias="camera.svg">gfx/devices/camera.svg</file>
+        <file alias="card.svg">gfx/devices/card.svg</file>
+        <file alias="disk.svg">gfx/devices/disk.svg</file>
+        <file alias="phone.svg">gfx/devices/phone.svg</file>
+        <file alias="usb.svg">gfx/devices/usb.svg</file>
+    </qresource>
+</RCC>

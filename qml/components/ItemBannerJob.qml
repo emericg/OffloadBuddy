@@ -112,7 +112,7 @@ Rectangle {
         anchors.rightMargin: 8
         anchors.verticalCenter: parent.verticalCenter
 
-        source: "qrc:/assets/icons_material/baseline-close-24px.svg"
+        source: "qrc:/assets/icons/material-symbols/close.svg"
         iconColor: "white"
         backgroundColor: Theme.colorActionbarHighlight
         onClicked: bannerJob.close()

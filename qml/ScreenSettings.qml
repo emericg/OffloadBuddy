@@ -517,7 +517,7 @@ Loader {
                                 id: buttonNew
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                source: "qrc:/assets/icons_material/outline-create_new_folder-24px.svg"
+                                source: "qrc:/assets/icons/material-symbols/create_new_folder.svg"
                                 tooltipText: qsTr("Add a new media directory")
                                 tooltipPosition: "right"
                                 onClicked: {
@@ -609,7 +609,7 @@ Loader {
                                     fileDialogLoader.active = true
                                     fileDialogLoader.item.open()
                                 }
-                                source: "qrc:/assets/icons_material/baseline-add-24px.svg"
+                                source: "qrc:/assets/icons/material-symbols/add.svg"
                             }
                         }
                     }

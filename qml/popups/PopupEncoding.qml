@@ -19,6 +19,7 @@ Popup {
     width: 720
     padding: 0
 
+    dim: true
     modal: true
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
@@ -320,97 +321,87 @@ Popup {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-/*
-    enter: Transition { NumberAnimation { property: "opacity"; from: 0.5; to: 1.0; duration: 133; } }
 
-    background: Item {
-        Rectangle {
-            id: bgrect
-            anchors.fill: parent
-
-            radius: Theme.componentRadius
-            color: Theme.colorBackground
-            border.color: Theme.colorSeparator
-            border.width: Theme.componentBorderWidth
-        }
-        DropShadow {
-            anchors.fill: parent
-            source: bgrect
-            color: "#60000000"
-            radius: 24
-            samples: radius*2+1
-            cached: true
-        }
-    }
-    */
-    enter: Transition { NumberAnimation { property: "opacity"; from: 0.5; to: 1.0; duration: 133; } }
-    //exit: Transition { NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; duration: 200; } }
+    enter: Transition { NumberAnimation { property: "opacity"; from: 0.333; to: 1.0; duration: 133; } }
 
     Overlay.modal: Rectangle {
         color: "#000"
-        opacity: ThemeEngine.isLight ? 0.24 : 0.666
+        opacity: ThemeEngine.isLight ? 0.333 : 0.666
     }
 
     background: Rectangle {
+        radius: Theme.componentRadius
         color: Theme.colorBackground
-        border.color: Theme.colorSeparator
-        border.width: singleColumn ? 0 : Theme.componentBorderWidth
-        radius: singleColumn ? 0 : Theme.componentRadius
 
-        Rectangle {
-            width: parent.width
-            height: Theme.componentBorderWidth
-            visible: singleColumn
-            color: Theme.colorSeparator
-        }
+        Item {
+            anchors.fill: parent
 
-        layer.enabled: true
-        layer.effect: MultiEffect {
-            maskEnabled: true
-            maskInverted: false
-            maskThresholdMin: 0.5
-            maskSpreadAtMin: 1.0
-            maskSpreadAtMax: 0.0
-            maskSource: ShaderEffectSource {
-                sourceItem: Rectangle {
-                    x: background.x
-                    y: background.y
-                    width: background.width
-                    height: background.height
-                    radius: Theme.componentRadius
+            Column {
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                Rectangle { // title area
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 64
+                    color: Theme.colorPrimary
+                }
+
+                Rectangle { // subtitle area
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 48
+                    color: Theme.colorForeground
+                    visible: (recapEnabled && shots_files.length)
+                }
+            }
+
+            Rectangle {
+                anchors.fill: parent
+                radius: Theme.componentRadius
+                color: "transparent"
+                border.color: Theme.colorSeparator
+                border.width: Theme.componentBorderWidth
+                opacity: 0.4
+            }
+
+            layer.enabled: true
+            layer.effect: MultiEffect { // clip
+                maskEnabled: true
+                maskInverted: false
+                maskThresholdMin: 0.5
+                maskSpreadAtMin: 1.0
+                maskSpreadAtMax: 0.0
+                maskSource: ShaderEffectSource {
+                    sourceItem: Rectangle {
+                        x: background.x
+                        y: background.y
+                        width: background.width
+                        height: background.height
+                        radius: background.radius
+                    }
                 }
             }
         }
+
+        layer.enabled: true
+        layer.effect: MultiEffect { // shadow
+            autoPaddingEnabled: true
+            shadowEnabled: true
+            shadowColor: ThemeEngine.isLight ? "#aa000000" : "#aaffffff"
+        }
     }
 
-     MultiEffect {
-         anchors.fill: control
-        autoPaddingEnabled: true
-        shadowEnabled: true
-        shadowColor: ThemeEngine.isLight ? "red" : "red"
-    }
     ////////////////////////////////////////////////////////////////////////////
 
     contentItem: Column {
-        bottomPadding: Theme.componentMarginXL
 
-        Rectangle { // titleArea
+        ////////////////
+
+        Item { // titleArea
             anchors.left: parent.left
             anchors.right: parent.right
-
             height: 64
-            color: Theme.colorPrimary
-            radius: Theme.componentRadius
-
-            Rectangle {
-                anchors.left: parent.left
-                anchors.leftMargin: 1
-                anchors.right: parent.right
-                anchors.rightMargin: 1
-                anchors.bottom: parent.bottom
-                height: parent.radius
-                color: parent.color
-            }
 
             Text {
                 id: titleText
@@ -427,15 +418,14 @@ Popup {
 
         ////////////////
 
-        Rectangle {
-            id: filesArea
+        Item { // filesArea
             anchors.left: parent.left
+            anchors.leftMargin: Theme.componentBorderWidth
             anchors.right: parent.right
+            anchors.rightMargin: Theme.componentBorderWidth
 
-            z: 1
             height: 48
             visible: (recapEnabled && shots_files.length)
-            color: Theme.colorForeground
 
             MouseArea {
                 anchors.fill: parent
@@ -461,7 +451,7 @@ Popup {
                 anchors.rightMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
 
-                source: "qrc:/assets/icons_material/baseline-navigate_next-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/chevron_right.svg"
                 rotation: recapOpened ? -90 : 90
                 onClicked: recapOpened = !recapOpened
             }
@@ -469,15 +459,15 @@ Popup {
 
         ////////////////
 
-        Item {
-            id: contentArea
-            height: columnEncoding.height
+        Column { // contentArea
             anchors.left: parent.left
             anchors.leftMargin: Theme.componentMarginXL
             anchors.right: parent.right
             anchors.rightMargin: Theme.componentMarginXL
 
-            ////////
+            bottomPadding: Theme.componentMarginXL
+
+            ////////////
 
             ListView {
                 id: listArea
@@ -496,14 +486,15 @@ Popup {
                 }
             }
 
-            ////////
+            ////////////
 
             Column {
                 id: columnEncoding
                 anchors.left: parent.left
                 anchors.right: parent.right
-                topPadding: 16
-                bottomPadding: 16
+
+                topPadding: Theme.componentMarginXL
+                bottomPadding: Theme.componentMarginXL
 
                 visible: !recapOpened
 
@@ -1368,9 +1359,9 @@ Popup {
 
                 Item { // delimiter
                     anchors.left: parent.left
-                    anchors.leftMargin: -23
+                    anchors.leftMargin: -Theme.componentMarginXL + Theme.componentBorderWidth
                     anchors.right: parent.right
-                    anchors.rightMargin: -23
+                    anchors.rightMargin: -Theme.componentMarginXL + Theme.componentBorderWidth
                     height: 32
 
                     Rectangle {
@@ -1520,163 +1511,166 @@ Popup {
                     }
                 }
             }
-        }
 
-        ////////////////////////////////////////////////////////////////////////
+            ////////////
 
-        Row {
-            anchors.right: parent.right
-            anchors.rightMargin: Theme.componentMarginXL
-            spacing: Theme.componentMargin
+            Row {
+                anchors.right: parent.right
+                spacing: Theme.componentMargin
 
-            ButtonSolid {
-                color: Theme.colorGrey
+                ButtonSolid {
+                    color: Theme.colorGrey
 
-                text: qsTr("Cancel")
-                onClicked: popupEncoding.close()
-            }
-
-            ButtonSolid {
-                text: qsTr("Encode")
-                source: "qrc:/assets/icons_material/baseline-memory-24px.svg"
-
-                enabled: (encodingMode === "batch" || fileInput.isValid)
-
-                onClicked: {
-                    if (typeof mediaProvider === "undefined" || !mediaProvider) return
-
-                    var settingsEncoding = {}
-
-                    settingsEncoding["mode"] = encodingMode
-
-                    // destination
-                    if (popupMode === 1) {
-                        if (comboBoxDestination.currentIndex === 0 && appContent.state !== "device") {
-                            settingsEncoding["folder"] = currentShot.folder
-                            settingsEncoding["file"] = fileInput.file
-                            settingsEncoding["extension"] = fileInput.extension
-                        } else if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
-                            settingsEncoding["folder"] = fileInput.folder
-                            settingsEncoding["file"] = fileInput.file
-                            settingsEncoding["extension"] = fileInput.extension
-                        } else {
-                            settingsEncoding["mediaDirectory"] = comboBoxDestination.currentText
-                        }
-                    } else if (popupMode === 2) {
-                        if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
-                            settingsEncoding["folder"] = folderInput.folder
-                        } else {
-                            settingsEncoding["mediaDirectory"] = comboBoxDestination.currentText
-                        }
-                    }
-
-                    // settings
-                    if (encodingMode === "image" || encodingMode === "batch") {
-                        if (rbPNG.checked)
-                            settingsEncoding["image_codec"] = "PNG"
-                        else if (rbJPEG.checked)
-                            settingsEncoding["image_codec"] = "JPEG"
-                        else if (rbWEBP.checked)
-                            settingsEncoding["image_codec"] = "WEBP"
-                        else if (rbAVIF.checked)
-                            settingsEncoding["image_codec"] = "AVIF"
-                        else if (rbHEIF.checked)
-                            settingsEncoding["image_codec"] = "HEIF"
-                    }
-
-                    if (encodingMode === "video" || encodingMode === "timelapse" || encodingMode === "batch") {
-                        if (rbH264.checked)
-                            settingsEncoding["video_codec"] = "H.264"
-                        else if (rbH265.checked)
-                            settingsEncoding["video_codec"] = "H.265"
-                        else if (rbVP9.checked)
-                            settingsEncoding["video_codec"] = "VP9"
-                        else if (rbAV1.checked)
-                            settingsEncoding["video_codec"] = "AV1"
-                        else if (rbProRes.checked)
-                            settingsEncoding["video_codec"] = "PRORES"
-                        else if (rbGIF.checked)
-                            settingsEncoding["video_codec"] = "GIF"
-
-                        if (clipStartMs > 0 && clipDurationMs > 0) {
-                            if (cbCOPY.checked)
-                                settingsEncoding["video_codec"] = "copy"
-                        }
-
-                        settingsEncoding["speed"] = selectorSpeed.currentSelection
-
-                        if (selectorVideoFps.visible && selectorVideoFps.fps != Math.round(currentShot.framerate))
-                            settingsEncoding["fps"] = selectorVideoFps.fps
-
-                        if (selectorGifFps.visible)
-                            settingsEncoding["fps"] = selectorGifFps.fps
-
-                        if (clipStartMs > 0)
-                            settingsEncoding["clipStartMs"] = clipStartMs
-                        if (clipDurationMs > 0) // && (clipStartMs + clipDurationMs) < currentShot.duration)
-                            settingsEncoding["clipDurationMs"] = clipDurationMs
-                    }
-
-                    if (selectorGifRes.visible &&
-                        (!currentShot || (currentShot && selectorGifRes.res !== currentShot.height))) {
-                        settingsEncoding["resolution"] = selectorGifRes.res
-                        settingsEncoding["scale"] = "-2:" + selectorGifRes.res
-                    }
-                    if (selectorVideoRes.visible &&
-                        (!currentShot || (currentShot && selectorVideoRes.res !== currentShot.height))) {
-                        settingsEncoding["resolution"] = selectorVideoRes.res
-                        settingsEncoding["scale"] = "-2:" + selectorVideoRes.res
-                    }
-
-                    if (clipCropX > 0 || clipCropY > 0 ||
-                        (clipCropW > 0 && clipCropW < currentShot.width) ||
-                        (clipCropH > 0 && clipCropH < currentShot.height)) {
-                        settingsEncoding["crop"] = clipCropW + ":" + clipCropH + ":" + clipCropX + ":" + clipCropY
-
-                        var cropAR = clipCropW / clipCropH
-                        var res = selectorVideoRes.res
-                        settingsEncoding["scale"] = UtilsNumber.round2((res * cropAR)) + ":" + res
-                    }
-
-                    if (rbGIF.checked) {
-                        // make sure we feed the complex graph
-                        settingsEncoding["fps"] = selectorGifFps.fps
-                        settingsEncoding["resolution"] = selectorGifRes.res
-                        settingsEncoding["scale"] = "-2:" + selectorGifRes.res
-                        if (clipStartMs <= 0) settingsEncoding["clipStartMs"] = 0
-                        if (clipDurationMs <= 0) settingsEncoding["clipDurationMs"] = currentShot.duration
-                        if (currentShot.shotType > ShotUtils.SHOT_PICTURE)settingsEncoding["clipDurationMs"] = currentShot.duration*33
-
-                        // TODO // transform
-
-                        // effects
-                        if (rbGifEffectBackward.checked) settingsEncoding["gif_effect"] = "backward"
-                        else if (rbGifEffectBackandForth.checked) settingsEncoding["gif_effect"] = "forwardbackward"
-                        else if (rbGifEffectForthandBack.checked) settingsEncoding["gif_effect"] = "backwardforward"
-                    }
-
-                    if (timelapseFramerate.visible)
-                        settingsEncoding["timelapse_fps"] = timelapseFramerate.value.toFixed(0)
-
-                    settingsEncoding["transform"] = clipTransformation_exif
-
-                    settingsEncoding["quality"] = sliderQuality.value
-
-                    // filters
-                    if (checkBox_defisheye.checked) settingsEncoding["defisheye"] = checkBox_defisheye.checked
-                    if (checkBox_deshake.checked) settingsEncoding["deshake"] = checkBox_deshake.checked
-
-                    // dispatch job
-                    if (currentShot) {
-                        mediaProvider.reencodeSelected(currentShot.uuid, settingsEncoding)
-                    } else if (mediaProvider && shots_uuids.length > 0) {
-                        mediaProvider.reencodeSelection(shots_uuids, settingsEncoding)
-                    }
-                    popupEncoding.close()
+                    text: qsTr("Cancel")
+                    onClicked: popupEncoding.close()
                 }
+
+                ButtonSolid {
+                    text: qsTr("Encode")
+                    source: "qrc:/assets/icons/material-symbols/memory.svg"
+
+                    enabled: (encodingMode === "batch" || fileInput.isValid)
+
+                    onClicked: {
+                        if (typeof mediaProvider === "undefined" || !mediaProvider) return
+
+                        var settingsEncoding = {}
+
+                        settingsEncoding["mode"] = encodingMode
+
+                        // destination
+                        if (popupMode === 1) {
+                            if (comboBoxDestination.currentIndex === 0 && appContent.state !== "device") {
+                                settingsEncoding["folder"] = currentShot.folder
+                                settingsEncoding["file"] = fileInput.file
+                                settingsEncoding["extension"] = fileInput.extension
+                            } else if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
+                                settingsEncoding["folder"] = fileInput.folder
+                                settingsEncoding["file"] = fileInput.file
+                                settingsEncoding["extension"] = fileInput.extension
+                            } else {
+                                settingsEncoding["mediaDirectory"] = comboBoxDestination.currentText
+                            }
+                        } else if (popupMode === 2) {
+                            if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
+                                settingsEncoding["folder"] = folderInput.folder
+                            } else {
+                                settingsEncoding["mediaDirectory"] = comboBoxDestination.currentText
+                            }
+                        }
+
+                        // settings
+                        if (encodingMode === "image" || encodingMode === "batch") {
+                            if (rbPNG.checked)
+                                settingsEncoding["image_codec"] = "PNG"
+                            else if (rbJPEG.checked)
+                                settingsEncoding["image_codec"] = "JPEG"
+                            else if (rbWEBP.checked)
+                                settingsEncoding["image_codec"] = "WEBP"
+                            else if (rbAVIF.checked)
+                                settingsEncoding["image_codec"] = "AVIF"
+                            else if (rbHEIF.checked)
+                                settingsEncoding["image_codec"] = "HEIF"
+                        }
+
+                        if (encodingMode === "video" || encodingMode === "timelapse" || encodingMode === "batch") {
+                            if (rbH264.checked)
+                                settingsEncoding["video_codec"] = "H.264"
+                            else if (rbH265.checked)
+                                settingsEncoding["video_codec"] = "H.265"
+                            else if (rbVP9.checked)
+                                settingsEncoding["video_codec"] = "VP9"
+                            else if (rbAV1.checked)
+                                settingsEncoding["video_codec"] = "AV1"
+                            else if (rbProRes.checked)
+                                settingsEncoding["video_codec"] = "PRORES"
+                            else if (rbGIF.checked)
+                                settingsEncoding["video_codec"] = "GIF"
+
+                            if (clipStartMs > 0 && clipDurationMs > 0) {
+                                if (cbCOPY.checked)
+                                    settingsEncoding["video_codec"] = "copy"
+                            }
+
+                            settingsEncoding["speed"] = selectorSpeed.currentSelection
+
+                            if (selectorVideoFps.visible && selectorVideoFps.fps != Math.round(currentShot.framerate))
+                                settingsEncoding["fps"] = selectorVideoFps.fps
+
+                            if (selectorGifFps.visible)
+                                settingsEncoding["fps"] = selectorGifFps.fps
+
+                            if (clipStartMs > 0)
+                                settingsEncoding["clipStartMs"] = clipStartMs
+                            if (clipDurationMs > 0) // && (clipStartMs + clipDurationMs) < currentShot.duration)
+                                settingsEncoding["clipDurationMs"] = clipDurationMs
+                        }
+
+                        if (selectorGifRes.visible &&
+                            (!currentShot || (currentShot && selectorGifRes.res !== currentShot.height))) {
+                            settingsEncoding["resolution"] = selectorGifRes.res
+                            settingsEncoding["scale"] = "-2:" + selectorGifRes.res
+                        }
+                        if (selectorVideoRes.visible &&
+                            (!currentShot || (currentShot && selectorVideoRes.res !== currentShot.height))) {
+                            settingsEncoding["resolution"] = selectorVideoRes.res
+                            settingsEncoding["scale"] = "-2:" + selectorVideoRes.res
+                        }
+
+                        if (clipCropX > 0 || clipCropY > 0 ||
+                            (clipCropW > 0 && clipCropW < currentShot.width) ||
+                            (clipCropH > 0 && clipCropH < currentShot.height)) {
+                            settingsEncoding["crop"] = clipCropW + ":" + clipCropH + ":" + clipCropX + ":" + clipCropY
+
+                            var cropAR = clipCropW / clipCropH
+                            var res = selectorVideoRes.res
+                            settingsEncoding["scale"] = UtilsNumber.round2((res * cropAR)) + ":" + res
+                        }
+
+                        if (rbGIF.checked) {
+                            // make sure we feed the complex graph
+                            settingsEncoding["fps"] = selectorGifFps.fps
+                            settingsEncoding["resolution"] = selectorGifRes.res
+                            settingsEncoding["scale"] = "-2:" + selectorGifRes.res
+                            if (clipStartMs <= 0) settingsEncoding["clipStartMs"] = 0
+                            if (clipDurationMs <= 0) settingsEncoding["clipDurationMs"] = currentShot.duration
+                            if (currentShot.shotType > ShotUtils.SHOT_PICTURE)settingsEncoding["clipDurationMs"] = currentShot.duration*33
+
+                            // TODO // transform
+
+                            // effects
+                            if (rbGifEffectBackward.checked) settingsEncoding["gif_effect"] = "backward"
+                            else if (rbGifEffectBackandForth.checked) settingsEncoding["gif_effect"] = "forwardbackward"
+                            else if (rbGifEffectForthandBack.checked) settingsEncoding["gif_effect"] = "backwardforward"
+                        }
+
+                        if (timelapseFramerate.visible)
+                            settingsEncoding["timelapse_fps"] = timelapseFramerate.value.toFixed(0)
+
+                        settingsEncoding["transform"] = clipTransformation_exif
+
+                        settingsEncoding["quality"] = sliderQuality.value
+
+                        // filters
+                        if (checkBox_defisheye.checked) settingsEncoding["defisheye"] = checkBox_defisheye.checked
+                        if (checkBox_deshake.checked) settingsEncoding["deshake"] = checkBox_deshake.checked
+
+                        // dispatch job
+                        if (currentShot) {
+                            mediaProvider.reencodeSelected(currentShot.uuid, settingsEncoding)
+                        } else if (mediaProvider && shots_uuids.length > 0) {
+                            mediaProvider.reencodeSelection(shots_uuids, settingsEncoding)
+                        }
+                        popupEncoding.close()
+                    }
+                }
+
+                ////////////
             }
         }
 
-        ////////////////////////////////////////////////////////////////////////
+        ////////////////
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 }

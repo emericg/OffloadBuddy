@@ -1,6 +1,6 @@
 import QtQuick
+import QtQuick.Effects
 import QtQuick.Controls
-import Qt5Compat.GraphicalEffects
 
 import ThemeEngine
 import StorageUtils
@@ -16,13 +16,15 @@ Popup {
     width: 720
     padding: 0
 
+    dim: true
     modal: true
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+    parent: Overlay.overlay
+
+    ////////////////////////////////////////////////////////////////////////////
 
     signal confirmed()
-
-    ////////
 
     property var currentDevice: null
 
@@ -47,25 +49,60 @@ Popup {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    enter: Transition { NumberAnimation { property: "opacity"; from: 0.5; to: 1.0; duration: 133; } }
+    enter: Transition { NumberAnimation { property: "opacity"; from: 0.333; to: 1.0; duration: 133; } }
 
-    background: Item {
-        Rectangle {
-            id: bgrect
+    Overlay.modal: Rectangle {
+        color: "#000"
+        opacity: ThemeEngine.isLight ? 0.333 : 0.666
+    }
+
+    background: Rectangle {
+        radius: Theme.componentRadius
+        color: Theme.colorBackground
+
+        Item {
             anchors.fill: parent
 
-            radius: Theme.componentRadius
-            color: Theme.colorBackground
-            border.color: Theme.colorSeparator
-            border.width: Theme.componentBorderWidth
+            Rectangle { // title area
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: 64
+                color: Theme.colorPrimary
+            }
+
+            Rectangle { // border
+                anchors.fill: parent
+                radius: Theme.componentRadius
+                color: "transparent"
+                border.color: Theme.colorSeparator
+                border.width: Theme.componentBorderWidth
+                opacity: 0.4
+            }
+
+            layer.enabled: true
+            layer.effect: MultiEffect { // clip
+                maskEnabled: true
+                maskInverted: false
+                maskThresholdMin: 0.5
+                maskSpreadAtMin: 1.0
+                maskSpreadAtMax: 0.0
+                maskSource: ShaderEffectSource {
+                    sourceItem: Rectangle {
+                        x: background.x
+                        y: background.y
+                        width: background.width
+                        height: background.height
+                        radius: background.radius
+                    }
+                }
+            }
         }
-        DropShadow {
-            anchors.fill: parent
-            source: bgrect
-            color: "#60000000"
-            radius: 24
-            samples: radius*2+1
-            cached: true
+
+        layer.enabled: true
+        layer.effect: MultiEffect { // shadow
+            autoPaddingEnabled: true
+            shadowEnabled: true
+            shadowColor: ThemeEngine.isLight ? "#aa000000" : "#aaffffff"
         }
     }
 
@@ -73,27 +110,16 @@ Popup {
 
     contentItem: Column {
 
-        Rectangle { // titleArea
+        ////////////////
+
+        Item { // titleArea
             anchors.left: parent.left
             anchors.right: parent.right
-
             height: 64
-            color: Theme.colorPrimary
-            radius: Theme.componentRadius
-
-            Rectangle {
-                anchors.left: parent.left
-                anchors.leftMargin: 1
-                anchors.right: parent.right
-                anchors.rightMargin: 1
-                anchors.bottom: parent.bottom
-                height: parent.radius
-                color: parent.color
-            }
 
             Text {
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: Theme.componentMarginXL
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Firmware update")
@@ -105,22 +131,22 @@ Popup {
 
         ////////////////
 
-        Item {
-            id: contentArea
-            height: columnFirmware.height
+        Column { // contentArea
             anchors.left: parent.left
+            anchors.leftMargin: Theme.componentMarginXL
             anchors.right: parent.right
+            anchors.rightMargin: Theme.componentMarginXL
 
-            ////////
+            topPadding: Theme.componentMarginXL
+            bottomPadding: Theme.componentMarginXL
+            spacing: Theme.componentMarginXL
+
+            ////////////
 
             Column {
                 id: columnFirmware
                 anchors.left: parent.left
-                anchors.leftMargin: 24
                 anchors.right: parent.right
-                anchors.rightMargin: 24
-                topPadding: 16
-                bottomPadding: 16
 
                 Item {
                     anchors.right: parent.right
@@ -235,38 +261,39 @@ Popup {
                     }
                 }
             }
-        }
 
-        //////////////////
+            ////////////
 
-        Row {
-            height: Theme.componentHeight*2 + parent.spacing
-            anchors.right: parent.right
-            anchors.rightMargin: 24
-            spacing: 24
+            Row {
+                anchors.right: parent.right
+                spacing: Theme.componentMargin
 
-            ButtonSolid {
-                width: 96
-                anchors.verticalCenter: parent.verticalCenter
+                ButtonSolid {
+                    text: qsTr("Cancel")
+                    color: Theme.colorGrey
 
-                text: qsTr("Cancel")
-                color: Theme.colorGrey
-                onClicked: popupFirmware.close()
-            }
-            ButtonSolid {
-                anchors.verticalCenter: parent.verticalCenter
+                    onClicked: popupFirmware.close()
+                }
 
-                text: qsTr("Update")
-                source: "qrc:/assets/icons_material/baseline-archive-24px.svg"
-                color: Theme.colorPrimary
+                ButtonSolid {
+                    text: qsTr("Update")
+                    source: "qrc:/assets/icons/material-symbols/archive.svg"
+                    color: Theme.colorPrimary
 
-                onClicked: {
-                    if (typeof currentDevice === "undefined" || !currentDevice) return
+                    onClicked: {
+                        if (typeof currentDevice === "undefined" || !currentDevice) return
 
-                    currentDevice.firmwareUpdate()
-                    popupFirmware.close()
+                        currentDevice.firmwareUpdate()
+                        popupFirmware.close()
+                    }
                 }
             }
+
+            ////////////
         }
+
+        ////////////////
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 }

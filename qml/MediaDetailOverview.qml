@@ -242,7 +242,7 @@ Item {
 
                 visible: shot.location
                 color: Theme.colorText
-                source: "qrc:/assets/icons_material/duotone-pin_drop-24px.svg"
+                source: "qrc:/assets/icons/material-icons/duotone/pin_drop.svg"
 
                 Text {
                     id: location
@@ -265,7 +265,7 @@ Item {
                 width: 28
                 height: 28
 
-                source: "qrc:/assets/icons_material/duotone-date_range-24px.svg"
+                source: "qrc:/assets/icons/material-icons/duotone/date_range.svg"
                 color: Theme.colorText
 
                 Text {
@@ -289,7 +289,7 @@ Item {
                 width: 28
                 height: 28
 
-                source: "qrc:/assets/icons_material/duotone-timer-24px.svg"
+                source: "qrc:/assets/icons/material-icons/duotone/timer.svg"
                 color: Theme.colorText
 
                 Text {
@@ -311,7 +311,7 @@ Item {
                 height: 28
 
                 visible: shot && shot.camera
-                source: "qrc:/assets/icons_material/baseline-camera-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/media/camera.svg"
                 color: Theme.colorText
 
                 Text {
@@ -333,7 +333,7 @@ Item {
                 width: 28
                 height: 28
 
-                source: "qrc:/assets/icons_material/baseline-folder-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/folder.svg"
                 color: Theme.colorText
 
                 Text {
@@ -355,7 +355,7 @@ Item {
                 width: 28
                 height: 28
 
-                source: "qrc:/assets/icons_material/duotone-video_library-24px.svg"
+                source: "qrc:/assets/icons/material-icons/duotone/video_library.svg"
                 color: Theme.colorText
 
                 Text {
@@ -380,7 +380,7 @@ Item {
                 width: 28
                 height: 28
 
-                source: "qrc:/assets/icons_material/duotone-aspect_ratio-24px.svg"
+                source: "qrc:/assets/icons/material-icons/duotone/aspect_ratio.svg"
                 color: Theme.colorText
                 visible: (shot.width === shot.widthVisible)
 
@@ -402,7 +402,7 @@ Item {
                 width: 28
                 height: 28
 
-                source: "qrc:/assets/icons_material/duotone-aspect_ratio-24px.svg"
+                source: "qrc:/assets/icons/material-icons/duotone/aspect_ratio.svg"
                 color: Theme.colorText
                 visible: (shot.width !== shot.widthVisible)
 
@@ -424,7 +424,7 @@ Item {
                 width: 28
                 height: 28
 
-                source: "qrc:/assets/icons_material/duotone-rotate_90_degrees_ccw-24px.svg"
+                source: "qrc:/assets/icons/material-icons/duotone/rotate_90_degrees_ccw.svg"
                 color: Theme.colorText
                 visible: (shot.transformation)
 
@@ -456,7 +456,7 @@ Item {
                     width: 28
                     height: 28
 
-                    source: "qrc:/assets/icons_material/baseline-iso-24px.svg"
+                    source: "qrc:/assets/icons/material-symbols/media/exposure.svg"
                     color: Theme.colorText
 
                     Text {
@@ -477,7 +477,7 @@ Item {
                     width: 28
                     height: 28
 
-                    source: "qrc:/assets/icons_material/baseline-center_focus_weak-24px.svg"
+                    source: "qrc:/assets/icons/material-symbols/media/center_focus_weak.svg"
                     color: Theme.colorText
 
                     Text {
@@ -498,7 +498,7 @@ Item {
                     width: 28
                     height: 28
 
-                    source: "qrc:/assets/icons_material/duotone-shutter_speed-24px.svg"
+                    source: "qrc:/assets/icons/material-icons/duotone/media/shutter_speed.svg"
                     color: Theme.colorText
 
                     Text {
@@ -519,7 +519,7 @@ Item {
                     width: 28
                     height: 28
 
-                    source: "qrc:/assets/icons_material/baseline-center_focus-24px.svg"
+                    source: "qrc:/assets/icons/material-symbols/media/center_focus.svg"
                     color: Theme.colorText
 
                     Text {
@@ -540,7 +540,7 @@ Item {
                     width: 28
                     height: 28
 
-                    source: "qrc:/assets/icons_material/baseline-flash_on-24px.svg"
+                    source: "qrc:/assets/icons/material-symbols/media/flash_on.svg"
                     color: Theme.colorText
 
                     Text {
@@ -573,7 +573,7 @@ Item {
                     width: 28
                     height: 28
 
-                    source: "qrc:/assets/icons_material/outline-local_movies-24px.svg"
+                    source: "qrc:/assets/icons_material/outline-local_movies.svg"
                     color: Theme.colorText
 
                     Text {
@@ -594,7 +594,7 @@ Item {
                     width: 28
                     height: 28
 
-                    source: "qrc:/assets/icons_material/baseline-memory-24px.svg"
+                    source: "qrc:/assets/icons/material-symbols/memory.svg"
                     color: Theme.colorText
 
                     Text {
@@ -615,7 +615,7 @@ Item {
                     width: 28
                     height: 28
 
-                    source: "qrc:/assets/icons_material/duotone-insert_chart-24px.svg"
+                    source: "qrc:/assets/icons/material-icons/duotone/insert_chart.svg"
                     color: Theme.colorText
 
                     Text {
@@ -636,7 +636,7 @@ Item {
                     width: 28
                     height: 28
 
-                    source: "qrc:/assets/icons_material/duotone-speaker-24px.svg"
+                    source: "qrc:/assets/icons/material-icons/duotone/speaker.svg"
                     color: Theme.colorText
 
                     Text {
@@ -657,7 +657,7 @@ Item {
                     width: 28
                     height: 28
 
-                    source: "qrc:/assets/icons_material/duotone-av_timer-24px.svg"
+                    source: "qrc:/assets/icons/material-icons/duotone/av_timer.svg"
                     color: Theme.colorText
 
                     Text {

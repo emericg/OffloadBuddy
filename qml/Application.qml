@@ -353,7 +353,7 @@ ApplicationWindow {
                 anchors.centerIn: parent
                 width: 256
                 height: 256
-                source: "qrc:/appicons/offloadbuddy.svg"
+                source: "qrc:/gfx/offloadbuddy.svg"
                 sourceSize: Qt.size(width, height)
 
                 Behavior on opacity { OpacityAnimator { duration: 666; } }
@@ -374,7 +374,7 @@ ApplicationWindow {
         }
     }
 
-    onClosing: {
+    onClosing: (close) => {
         // If a job is running, ask user to confirm exit
         if (jobManager.workingJobCount > 0) {
             close.accepted = false

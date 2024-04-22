@@ -1,0 +1,23 @@
+
+# Cameras icons:
+- generic_actioncam.svg                 // Faenza icon theme    // GPL v3
+- generic_camera.svg                    // Yosa Max icon theme  // GPL v3
+- generic_smartphone.svg                // Lüv icon theme       // CC BY-SA 4.0
+- generic_smartphone2.svg               // Emeric Grange        // CC BY-SA 4.0
+- fusion.svg                            // Emeric Grange        // CC BY-SA 4.0
+- H2.svg                                // Emeric Grange        // CC BY-SA 4.0
+- H3.svg                                // Emeric Grange        // CC BY-SA 4.0
+- H4.svg                                // Emeric Grange        // CC BY-SA 4.0
+- H5.svg                                // Emeric Grange        // CC BY-SA 4.0
+- H6.svg                                // Emeric Grange        // CC BY-SA 4.0
+- H7w.svg                               // Emeric Grange        // CC BY-SA 4.0
+- H8.svg                                // Emeric Grange        // CC BY-SA 4.0
+- H9.svg                                // Emeric Grange        // CC BY-SA 4.0
+- max.svg                               // Emeric Grange        // CC BY-SA 4.0
+- osmo_action.svg                       // Emeric Grange        // CC BY-SA 4.0
+- session.svg                           // Emeric Grange        // CC BY-SA 4.0
+- sony_fdr.svg                          // Emeric Grange        // CC BY-SA 4.0
+- sony_hdr.svg                          // Emeric Grange        // CC BY-SA 4.0
+
+# Cameras descriptions:
+- *.json                                // Emeric Grange        // CC BY-SA 4.0

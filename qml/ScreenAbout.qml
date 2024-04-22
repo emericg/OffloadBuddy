@@ -49,7 +49,7 @@ Loader {
                 id: textHeader
                 height: 40
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: Theme.componentMarginXL
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("ABOUT") + "  OffloadBuddy"
@@ -62,7 +62,7 @@ Loader {
             Text {
                 id: textVersion
                 anchors.left: textHeader.right
-                anchors.leftMargin: 24
+                anchors.leftMargin: Theme.componentMarginXL
                 anchors.bottom: textHeader.bottom
                 anchors.bottomMargin: 6
 
@@ -123,20 +123,20 @@ Loader {
             Column {
                 id: columnAbout
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: Theme.componentMarginXL
                 anchors.right: parent.right
-                anchors.rightMargin: 24
+                anchors.rightMargin: Theme.componentMarginXL
 
-                topPadding: 24
-                bottomPadding: 24
-                spacing: 24
+                topPadding: Theme.componentMarginXL
+                bottomPadding: Theme.componentMarginXL
+                spacing: Theme.componentMarginXL
 
                 ////////
 
                 Row {
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    spacing: 24
+                    spacing: Theme.componentMarginXL
 
                     Image { // logo
                         width: 220
@@ -145,13 +145,13 @@ Loader {
                         sourceSize.height: 160
 
                         fillMode: Image.PreserveAspectFit
-                        source: "qrc:/appicons/offloadbuddy.svg"
+                        source: "qrc:/gfx/offloadbuddy.svg"
                     }
 
                     Column {
                         anchors.verticalCenter: parent.verticalCenter
-                        width: parent.width - 220 - 24
-                        spacing: 16
+                        width: parent.width - 220 - Theme.componentMarginXL
+                        spacing: Theme.componentMargin
 
                         Text {
                             width: parent.width
@@ -165,36 +165,34 @@ Loader {
                         }
 
                         Row {
-                            height: 40
-                            spacing: 24
+                            spacing: Theme.componentMarginXL
 
-                            ButtonWireframe {
+                            ButtonSolid {
                                 width: 180
-                                anchors.verticalCenter: parent.verticalCenter
+                                height: 40
 
                                 text: qsTr("Website")
-                                source: "qrc:/assets/icons_material/baseline-link-24px.svg"
-                                sourceSize: 32
+                                source: "qrc:/assets/icons/material-symbols/link.svg"
 
                                 onClicked: Qt.openUrlExternally("https://emeric.io/OffloadBuddy")
                             }
 
-                            ButtonWireframe {
+                            ButtonSolid {
                                 width: 180
-                                anchors.verticalCenter: parent.verticalCenter
+                                height: 40
 
                                 text: qsTr("Discussions")
-                                source: "qrc:/assets/icons_material/duotone-question_answer-24px.svg"
+                                source: "qrc:/assets/icons/material-icons/duotone/question_answer.svg"
 
                                 onClicked: Qt.openUrlExternally("https://www.github.com/emericg/OffloadBuddy/discussions")
                             }
 
-                            ButtonWireframe {
+                            ButtonSolid {
                                 width: 180
-                                anchors.verticalCenter: parent.verticalCenter
+                                height: 40
 
                                 text: qsTr("Bug report")
-                                source: "qrc:/assets/icons_material/baseline-bug_report-24px.svg"
+                                source: "qrc:/assets/icons/material-symbols/bug_report.svg"
 
                                 onClicked: Qt.openUrlExternally("https://www.github.com/emericg/OffloadBuddy/issues")
                             }
@@ -206,9 +204,9 @@ Loader {
 
                 Rectangle {
                     anchors.left: parent.left
-                    anchors.leftMargin: -24
+                    anchors.leftMargin: -Theme.componentMarginXL
                     anchors.right: parent.right
-                    anchors.rightMargin: -24
+                    anchors.rightMargin: -Theme.componentMarginXL
                     height: 2
                     opacity: 0.33
                     color: Theme.colorSeparator
@@ -234,9 +232,9 @@ Loader {
 
                 Rectangle {
                     anchors.left: parent.left
-                    anchors.leftMargin: -24
+                    anchors.leftMargin: -Theme.componentMarginXL
                     anchors.right: parent.right
-                    anchors.rightMargin: -24
+                    anchors.rightMargin: -Theme.componentMarginXL
                     height: 2
                     opacity: 0.33
                     color: Theme.colorSeparator
@@ -264,7 +262,7 @@ Loader {
 
                     Row {
                         height: 32
-                        spacing: 24
+                        spacing: Theme.componentMarginXL
 
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
@@ -275,7 +273,7 @@ Loader {
                         }
                         RoundButtonIcon {
                             anchors.verticalCenter: parent.verticalCenter
-                            source: "qrc:/assets/icons_material/baseline-link-24px.svg"
+                            source: "qrc:/assets/icons/material-symbols/link.svg"
                             onClicked: Qt.openUrlExternally("https://www.qt.io")
                         }
                         ItemLicenseBadge {
@@ -287,7 +285,7 @@ Loader {
                     }
                     Row {
                         height: 32
-                        spacing: 24
+                        spacing: Theme.componentMarginXL
 
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
@@ -298,7 +296,7 @@ Loader {
                         }
                         RoundButtonIcon {
                             anchors.verticalCenter: parent.verticalCenter
-                            source: "qrc:/assets/icons_material/baseline-link-24px.svg"
+                            source: "qrc:/assets/icons/material-symbols/link.svg"
                             onClicked: Qt.openUrlExternally("https://www.ffmpeg.org")
                         }
                         ItemLicenseBadge {
@@ -310,7 +308,7 @@ Loader {
                     }
                     Row {
                         height: 32
-                        spacing: 24
+                        spacing: Theme.componentMarginXL
 
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
@@ -321,7 +319,7 @@ Loader {
                         }
                         RoundButtonIcon {
                             anchors.verticalCenter: parent.verticalCenter
-                            source: "qrc:/assets/icons_material/baseline-link-24px.svg"
+                            source: "qrc:/assets/icons/material-symbols/link.svg"
                             onClicked: Qt.openUrlExternally("https://github.com/emericg/MiniVideo")
                         }
                         ItemLicenseBadge {
@@ -333,7 +331,7 @@ Loader {
                     }
                     Row {
                         height: 32
-                        spacing: 24
+                        spacing: Theme.componentMarginXL
 
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
@@ -344,7 +342,7 @@ Loader {
                         }
                         RoundButtonIcon {
                             anchors.verticalCenter: parent.verticalCenter
-                            source: "qrc:/assets/icons_material/baseline-link-24px.svg"
+                            source: "qrc:/assets/icons/material-symbols/link.svg"
                             onClicked: Qt.openUrlExternally("https://github.com/libexif")
                         }
                         ItemLicenseBadge {
@@ -356,7 +354,7 @@ Loader {
                     }
                     Row {
                         height: 32
-                        spacing: 24
+                        spacing: Theme.componentMarginXL
 
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
@@ -367,7 +365,7 @@ Loader {
                         }
                         RoundButtonIcon {
                             anchors.verticalCenter: parent.verticalCenter
-                            source: "qrc:/assets/icons_material/baseline-link-24px.svg"
+                            source: "qrc:/assets/icons/material-symbols/link.svg"
                             onClicked: Qt.openUrlExternally("https://github.com/libmtp")
                         }
                         ItemLicenseBadge {
@@ -379,7 +377,7 @@ Loader {
                     }
                     Row {
                         height: 32
-                        spacing: 24
+                        spacing: Theme.componentMarginXL
 
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
@@ -390,7 +388,7 @@ Loader {
                         }
                         RoundButtonIcon {
                             anchors.verticalCenter: parent.verticalCenter
-                            source: "qrc:/assets/icons_material/baseline-link-24px.svg"
+                            source: "qrc:/assets/icons/material-symbols/link.svg"
                             onClicked: Qt.openUrlExternally("https://github.com/richgel999/miniz/")
                         }
                         ItemLicenseBadge {
@@ -402,7 +400,7 @@ Loader {
                     }
                     Row {
                         height: 32
-                        spacing: 24
+                        spacing: Theme.componentMarginXL
 
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
@@ -413,7 +411,7 @@ Loader {
                         }
                         RoundButtonIcon {
                             anchors.verticalCenter: parent.verticalCenter
-                            source: "qrc:/assets/icons_material/baseline-link-24px.svg"
+                            source: "qrc:/assets/icons/material-symbols/link.svg"
                             onClicked: Qt.openUrlExternally("https://github.com/itay-grudev/SingleApplication/")
                         }
                         ItemLicenseBadge {
@@ -425,7 +423,7 @@ Loader {
                     }
                     Row {
                         height: 32
-                        spacing: 24
+                        spacing: Theme.componentMarginXL
 
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
@@ -436,7 +434,7 @@ Loader {
                         }
                         RoundButtonIcon {
                             anchors.verticalCenter: parent.verticalCenter
-                            source: "qrc:/assets/icons_material/baseline-link-24px.svg"
+                            source: "qrc:/assets/icons/material-symbols/link.svg"
                             onClicked: Qt.openUrlExternally("https://material.io/tools/icons")
                         }
                         ItemLicenseBadge {
@@ -452,9 +450,9 @@ Loader {
 
                 Rectangle {
                     anchors.left: parent.left
-                    anchors.leftMargin: -24
+                    anchors.leftMargin: -Theme.componentMarginXL
                     anchors.right: parent.right
-                    anchors.rightMargin: -24
+                    anchors.rightMargin: -Theme.componentMarginXL
                     height: 2
                     opacity: 0.33
                     color: Theme.colorSeparator

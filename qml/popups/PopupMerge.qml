@@ -1,6 +1,6 @@
 import QtQuick
+import QtQuick.Effects
 import QtQuick.Controls
-import Qt5Compat.GraphicalEffects
 
 import ThemeEngine
 import StorageUtils
@@ -80,25 +80,73 @@ Popup {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    enter: Transition { NumberAnimation { property: "opacity"; from: 0.5; to: 1.0; duration: 133; } }
+    enter: Transition { NumberAnimation { property: "opacity"; from: 0.333; to: 1.0; duration: 133; } }
 
-    background: Item {
-        Rectangle {
-            id: bgrect
+    Overlay.modal: Rectangle {
+        color: "#000"
+        opacity: ThemeEngine.isLight ? 0.333 : 0.666
+    }
+
+    background: Rectangle {
+        radius: Theme.componentRadius
+        color: Theme.colorBackground
+
+        Item {
             anchors.fill: parent
 
-            radius: Theme.componentRadius
-            color: Theme.colorBackground
-            border.color: Theme.colorSeparator
-            border.width: Theme.componentBorderWidth
+            Column {
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                Rectangle { // title area
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 64
+                    color: Theme.colorPrimary
+                }
+
+                Rectangle { // subtitle area
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 48
+                    color: Theme.colorForeground
+                    visible: (recapEnabled && shots_files.length)
+                }
+            }
+
+            Rectangle {
+                anchors.fill: parent
+                radius: Theme.componentRadius
+                color: "transparent"
+                border.color: Theme.colorSeparator
+                border.width: Theme.componentBorderWidth
+                opacity: 0.4
+            }
+
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                maskEnabled: true
+                maskInverted: false
+                maskThresholdMin: 0.5
+                maskSpreadAtMin: 1.0
+                maskSpreadAtMax: 0.0
+                maskSource: ShaderEffectSource {
+                    sourceItem: Rectangle {
+                        x: background.x
+                        y: background.y
+                        width: background.width
+                        height: background.height
+                        radius: background.radius
+                    }
+                }
+            }
         }
-        DropShadow {
-            anchors.fill: parent
-            source: bgrect
-            color: "#60000000"
-            radius: 24
-            samples: radius*2+1
-            cached: true
+
+        layer.enabled: true
+        layer.effect: MultiEffect {
+            autoPaddingEnabled: true
+            shadowEnabled: true
+            shadowColor: ThemeEngine.isLight ? "#aa000000" : "#aaffffff"
         }
     }
 
@@ -106,27 +154,14 @@ Popup {
 
     contentItem: Column {
 
-        Rectangle { // titleArea
+        Item { // titleArea
             anchors.left: parent.left
             anchors.right: parent.right
-
             height: 64
-            color: Theme.colorPrimary
-            radius: Theme.componentRadius
-
-            Rectangle {
-                anchors.left: parent.left
-                anchors.leftMargin: 1
-                anchors.right: parent.right
-                anchors.rightMargin: 1
-                anchors.bottom: parent.bottom
-                height: parent.radius
-                color: parent.color
-            }
 
             Text {
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: Theme.componentMarginXL
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Merge chaptered files")
@@ -138,16 +173,14 @@ Popup {
 
         ////////////////
 
-        Rectangle { // filesArea
+        Item { // filesArea
             anchors.left: parent.left
             anchors.leftMargin: Theme.componentBorderWidth
             anchors.right: parent.right
             anchors.rightMargin: Theme.componentBorderWidth
 
-            z: 1
             height: 48
             visible: (recapEnabled && shots_files.length)
-            color: Theme.colorForeground
 
             MouseArea {
                 anchors.fill: parent
@@ -173,7 +206,7 @@ Popup {
                 anchors.rightMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
 
-                source: "qrc:/assets/icons_material/baseline-navigate_next-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/chevron_right.svg"
                 rotation: recapOpened ? -90 : 90
                 onClicked: recapOpened = !recapOpened
             }
@@ -410,7 +443,7 @@ Popup {
                 enabled: (shots_files.length > 1)
 
                 text: qsTr("Merge")
-                source: "qrc:/assets/icons_material/baseline-merge_type-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/merge_type.svg"
 
                 onClicked: {
                     if (typeof mediaProvider === "undefined" || !mediaProvider) return

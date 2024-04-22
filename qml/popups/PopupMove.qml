@@ -72,16 +72,57 @@ Popup {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    enter: Transition { NumberAnimation { property: "opacity"; from: 0.5; to: 1.0; duration: 133; } }
+    enter: Transition { NumberAnimation { property: "opacity"; from: 0.333; to: 1.0; duration: 133; } }
+
+    Overlay.modal: Rectangle {
+        color: "#000"
+        opacity: ThemeEngine.isLight ? 0.333 : 0.666
+    }
 
     background: Rectangle {
         radius: Theme.componentRadius
         color: Theme.colorBackground
-        border.color: Theme.colorSeparator
-        border.width: Theme.componentBorderWidth
+
+        Item {
+            anchors.fill: parent
+
+            Rectangle { // title area
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: 64
+                color: Theme.colorPrimary
+            }
+
+            Rectangle { // border
+                anchors.fill: parent
+                radius: Theme.componentRadius
+                color: "transparent"
+                border.color: Theme.colorSeparator
+                border.width: Theme.componentBorderWidth
+                opacity: 0.4
+            }
+
+            layer.enabled: true
+            layer.effect: MultiEffect { // clip
+                maskEnabled: true
+                maskInverted: false
+                maskThresholdMin: 0.5
+                maskSpreadAtMin: 1.0
+                maskSpreadAtMax: 0.0
+                maskSource: ShaderEffectSource {
+                    sourceItem: Rectangle {
+                        x: background.x
+                        y: background.y
+                        width: background.width
+                        height: background.height
+                        radius: background.radius
+                    }
+                }
+            }
+        }
 
         layer.enabled: true
-        layer.effect: MultiEffect {
+        layer.effect: MultiEffect { // shadow
             autoPaddingEnabled: true
             shadowEnabled: true
             shadowColor: ThemeEngine.isLight ? "#aa000000" : "#aaffffff"
@@ -91,28 +132,13 @@ Popup {
     ////////////////////////////////////////////////////////////////////////////
 
     contentItem: Column {
-        id: columnContent
-        //spacing: Theme.componentMarginXL
 
-        ////////
+        ////////////////
 
-        Rectangle { // titleArea
+        Item { // titleArea
             anchors.left: parent.left
             anchors.right: parent.right
-
             height: 64
-            color: Theme.colorPrimary
-            radius: Theme.componentRadius
-
-            Rectangle {
-                anchors.left: parent.left
-                anchors.leftMargin: 1
-                anchors.right: parent.right
-                anchors.rightMargin: 1
-                anchors.bottom: parent.bottom
-                height: parent.radius
-                color: parent.color
-            }
 
             Text {
                 anchors.left: parent.left
@@ -128,16 +154,14 @@ Popup {
 
         ////////////////
 
-        Rectangle { // filesArea
+        Item { // filesArea
             anchors.left: parent.left
             anchors.leftMargin: Theme.componentBorderWidth
             anchors.right: parent.right
             anchors.rightMargin: Theme.componentBorderWidth
 
-            z: 1
             height: 48
             visible: (recapEnabled && shots_files.length)
-            color: Theme.colorForeground
 
             MouseArea {
                 anchors.fill: parent
@@ -163,7 +187,7 @@ Popup {
                 anchors.rightMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
 
-                source: "qrc:/assets/icons_material/baseline-navigate_next-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/chevron_right.svg"
                 rotation: recapOpened ? -90 : 90
                 onClicked: recapOpened = !recapOpened
             }
@@ -171,19 +195,22 @@ Popup {
 
         ////////////////
 
-        Item {
-            id: contentArea
-            height: columnMove.height
+        Column { // contentArea
             anchors.left: parent.left
+            anchors.leftMargin: Theme.componentMarginXL
             anchors.right: parent.right
+            anchors.rightMargin: Theme.componentMarginXL
 
-            ////////
+            topPadding: Theme.componentMarginXL
+            bottomPadding: Theme.componentMarginXL
+            spacing: Theme.componentMarginXL
+
+            ////////////
 
             ListView {
                 id: listArea
-                anchors.fill: parent
-                anchors.leftMargin: 24
-                anchors.rightMargin: 24
+                anchors.left: parent.left
+                anchors.right: parent.right
 
                 visible: recapOpened
 
@@ -198,16 +225,11 @@ Popup {
                 }
             }
 
-            ////////
+            ////////////
 
             Column {
-                id: columnMove
                 anchors.left: parent.left
-                anchors.leftMargin: 24
                 anchors.right: parent.right
-                anchors.rightMargin: 24
-                topPadding: 16
-                bottomPadding: 16
 
                 visible: !recapOpened
 
@@ -328,51 +350,52 @@ Popup {
                     visible: (comboBoxDestination.currentIndex === (cbDestinations.count-1))
                 }
             }
-        }
 
-        //////////////////
+            ////////////
 
-        Row {
-            height: Theme.componentHeight*2 + parent.spacing
-            anchors.right: parent.right
-            anchors.rightMargin: 24
-            spacing: 16
+            Row {
+                anchors.right: parent.right
+                spacing: Theme.componentMargin
 
-            ButtonSolid {
-                anchors.verticalCenter: parent.verticalCenter
-                width: 96
-                color: Theme.colorGrey
+                ButtonSolid {
+                    color: Theme.colorGrey
 
-                text: qsTr("Cancel")
-                onClicked: popupMove.close()
-            }
-            ButtonSolid {
-                anchors.verticalCenter: parent.verticalCenter
+                    text: qsTr("Cancel")
+                    onClicked: popupMove.close()
+                }
 
-                text: qsTr("Move")
-                source: "qrc:/assets/icons_material/baseline-archive-24px.svg"
+                ButtonSolid {
+                    text: qsTr("Move")
+                    source: "qrc:/assets/icons/material-symbols/archive.svg"
 
-                onClicked: {
-                    if (typeof mediaProvider === "undefined" || !mediaProvider) return
+                    onClicked: {
+                        if (typeof mediaProvider === "undefined" || !mediaProvider) return
 
-                    var settingsMove = {}
+                        var settingsMove = {}
 
-                    // destination
-                    if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
-                        settingsMove["folder"] = folderInput.folder
-                    } else {
-                        settingsMove["mediaDirectory"] = comboBoxDestination.currentText
+                        // destination
+                        if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
+                            settingsMove["folder"] = folderInput.folder
+                        } else {
+                            settingsMove["mediaDirectory"] = comboBoxDestination.currentText
+                        }
+
+                        // dispatch job
+                        if (currentShot) {
+                            mediaProvider.moveSelected(currentShot.uuid, settingsMove)
+                        } else if (shots_uuids.length > 0) {
+                            mediaProvider.moveSelection(shots_uuids, settingsMove)
+                        }
+                        popupMove.close()
                     }
-
-                    // dispatch job
-                    if (currentShot) {
-                        mediaProvider.moveSelected(currentShot.uuid, settingsMove)
-                    } else if (shots_uuids.length > 0) {
-                        mediaProvider.moveSelection(shots_uuids, settingsMove)
-                    }
-                    popupMove.close()
                 }
             }
+
+            ////////////
         }
+
+        ////////////////
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 }

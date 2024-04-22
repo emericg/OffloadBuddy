@@ -288,7 +288,7 @@ Loader {
                     iconColor: Theme.colorHeaderContent
                     backgroundColor: Theme.colorForeground
 
-                    source: "qrc:/assets/others/navigate_before_big.svg"
+                    source: "qrc:/gfx/navigate_before_big.svg"
                     onClicked: {
                         if (appContent.state === "library") {
                             screenLibrary.state = "stateMediaGrid"
@@ -353,7 +353,7 @@ Loader {
                             id: buttonTrim
                             width: 40
                             height: 40
-                            source: "qrc:/assets/icons_material/duotone-timer-24px.svg"
+                            source: "qrc:/assets/icons/material-icons/duotone/timer.svg"
                             visible: (shot && shot.fileType === ShotUtils.FILE_VIDEO)
                             backgroundColor: Theme.colorForeground
                             onClicked: contentOverview.toggleTrim()
@@ -363,7 +363,7 @@ Loader {
                             id: buttonRotate
                             width: 40
                             height: 40
-                            source: "qrc:/assets/icons_material/duotone-rotate_90_degrees_ccw-24px.svg"
+                            source: "qrc:/assets/icons/material-icons/duotone/rotate_90_degrees_ccw.svg"
                             backgroundColor: Theme.colorForeground
                             onClicked: contentOverview.toggleTransform()
                         }
@@ -372,7 +372,7 @@ Loader {
                             id: buttonCrop
                             width: 40
                             height: 40
-                            source: "qrc:/assets/icons_material/baseline-crop-24px.svg"
+                            source: "qrc:/assets/icons/material-symbols/media/crop.svg"
                             backgroundColor: Theme.colorForeground
                             onClicked: contentOverview.toggleCrop()
                         }
@@ -395,7 +395,7 @@ Loader {
                             id: buttonTimestamp
                             width: 40
                             height: 40
-                            source: "qrc:/assets/icons_material/duotone-date_range-24px.svg"
+                            source: "qrc:/assets/icons/material-icons/duotone/date_range.svg"
                             backgroundColor: Theme.colorForeground
                             onClicked: contentOverview.openDatePopup()
                         }
@@ -404,7 +404,7 @@ Loader {
                             id: buttonTelemetry
                             width: 40
                             height: 40
-                            source: "qrc:/assets/icons_material/baseline-insert_chart-24px.svg"
+                            source: "qrc:/assets/icons/material-symbols/insert_chart.svg"
                             visible: (shot && shot.hasGPMF && shot.hasGPS)
                             backgroundColor: Theme.colorForeground
                             onClicked: contentOverview.openTelemetryPopup()
@@ -414,7 +414,7 @@ Loader {
                             id: buttonEncode
                             width: 40
                             height: 40
-                            source: "qrc:/assets/icons_material/baseline-settings_applications-24px.svg"
+                            source: "qrc:/assets/icons/material-symbols/settings_applications.svg"
                             backgroundColor: Theme.colorForeground
                             onClicked: contentOverview.openEncodingPopup()
                         }
@@ -437,7 +437,7 @@ Loader {
                             id: buttonShowFolder
                             width: 40
                             height: 40
-                            source: "qrc:/assets/icons_material/baseline-folder_open-24px.svg"
+                            source: "qrc:/assets/icons/material-symbols/folder_open.svg"
                             backgroundColor: Theme.colorForeground
                             onClicked: shot.openFolder()
                         }
@@ -446,7 +446,7 @@ Loader {
                             id: buttonDelete
                             width: 40
                             height: 40
-                            source: "qrc:/assets/icons_material/baseline-delete-24px.svg"
+                            source: "qrc:/assets/icons/material-symbols/delete.svg"
                             backgroundColor: Theme.colorForeground
                             onClicked: contentOverview.openDeletePopup()
                         }
@@ -477,7 +477,7 @@ Loader {
                         height: parent.height
 
                         text: qsTr("Overview")
-                        source: "qrc:/assets/icons_material/duotone-aspect_ratio-24px.svg"
+                        source: "qrc:/assets/icons/material-icons/duotone/aspect_ratio.svg"
                         colorContent: Theme.colorHeaderContent
                         colorHighlight: Theme.colorHeaderHighlight
 
@@ -491,7 +491,7 @@ Loader {
                         visible: (shot && (shot.hasGoProMetadata || shot.fileCount > 1))
 
                         text: qsTr("Details")
-                        source: "qrc:/assets/icons_material/duotone-list-24px.svg"
+                        source: "qrc:/assets/icons/material-icons/duotone/list.svg"
 
                         highlighted: (itemScreenMedia.state === "details")
                         onClicked: itemScreenMedia.state = "details"
@@ -503,7 +503,7 @@ Loader {
                         visible: (shot && shot.hasGPMF && shot.hasGPS)
 
                         text: qsTr("Telemetry")
-                        source: "qrc:/assets/icons_material/duotone-insert_chart-24px.svg"
+                        source: "qrc:/assets/icons/material-icons/duotone/insert_chart.svg"
 
                         highlighted: (itemScreenMedia.state === "metadata")
                         onClicked: itemScreenMedia.state = "metadata"
@@ -515,7 +515,7 @@ Loader {
                         visible: (shot && shot.fileType === ShotUtils.FILE_PICTURE && shot.latitude !== 0.0)
 
                         text: qsTr("Map")
-                        source: "qrc:/assets/icons_material/baseline-map-24px.svg"
+                        source: "qrc:/assets/icons/material-symbols/location/map-fill.svg"
 
                         highlighted: (itemScreenMedia.state === "metadata")
                         onClicked: itemScreenMedia.state = "metadata"

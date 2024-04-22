@@ -31,32 +31,32 @@ Rectangle {
     function handleState() {
         if (shot.state === ShotUtils.SHOT_STATE_QUEUED) {
             icon_state.visible = true
-            icon_state.source = "qrc:/assets/icons_material/duotone-schedule-24px.svg"
+            icon_state.source = "qrc:/assets/icons/material-icons/duotone/schedule.svg"
             offloadAnimation.stop()
             encodeAnimation.stop()
         } else if (shot.state === ShotUtils.SHOT_STATE_OFFLOADING) {
             icon_state.visible = true
-            icon_state.source = "qrc:/assets/icons_material/duotone-save_alt-24px.svg"
+            icon_state.source = "qrc:/assets/icons/material-icons/duotone/save_alt.svg"
             offloadAnimation.start()
         } else if (shot.state === ShotUtils.SHOT_STATE_ENCODING) {
             icon_state.visible = true
-            icon_state.source = "qrc:/assets/icons_material/baseline-memory-24px.svg"
+            icon_state.source = "qrc:/assets/icons/material-symbols/memory.svg"
             encodeAnimation.start()
         } else if (shot.state === ShotUtils.SHOT_STATE_DONE ||
                    shot.state === ShotUtils.SHOT_STATE_OFFLOADED ||
                    shot.state === ShotUtils.SHOT_STATE_ENCODED) {
             if (shot.state === ShotUtils.SHOT_STATE_OFFLOADED)
-                image_overlay.source = "qrc:/assets/icons_material/duotone-save_alt-24px.svg"
+                image_overlay.source = "qrc:/assets/icons/material-icons/duotone/save_alt.svg"
             else if (shot.state === ShotUtils.SHOT_STATE_ENCODED)
-                image_overlay.source = "qrc:/assets/icons_material/baseline-memory-24px.svg"
+                image_overlay.source = "qrc:/assets/icons/material-symbols/memory.svg"
             else
-                image_overlay.source = "qrc:/assets/icons_material/outline-check_circle-24px.svg"
+                image_overlay.source = "qrc:/assets/icons_material/outline-check_circle.svg"
             icon_state.visible = false
             overlayWorkDone.visible = true
             offloadAnimation.stop()
             encodeAnimation.stop()
         } else if (alreadyOffloaded) {
-            image_overlay.source = "qrc:/assets/icons_material/duotone-save_alt-24px.svg"
+            image_overlay.source = "qrc:/assets/icons/material-icons/duotone/save_alt.svg"
             overlayWorkDone.visible = true
         } else {
             icon_state.visible = false
@@ -93,19 +93,19 @@ Rectangle {
                 imageFs.scale = cellFormat
             }
             if (shot.chapterCount > 1)
-                icon_mediaType.source = "qrc:/assets/icons_material/duotone-video_library-24px.svg"
+                icon_mediaType.source = "qrc:/assets/icons/material-icons/duotone/video_library.svg"
             else
-                icon_mediaType.source = "qrc:/assets/icons_material/baseline-video-24px.svg"
+                icon_mediaType.source = "qrc:/assets/icons/material-symbols/media/movie.svg"
         } else if (shot.fileType === ShotUtils.FILE_PICTURE) {
             if (shot.shotType === ShotUtils.SHOT_PICTURE_BURST) {
-                icon_mediaType.source = "qrc:/assets/icons_material/duotone-burst_mode-24px.svg"
+                icon_mediaType.source = "qrc:/assets/icons/material-icons/duotone/burst_mode.svg"
             } else if (shotType >= ShotUtils.SHOT_PICTURE_MULTI) {
-                icon_mediaType.source = "qrc:/assets/icons_material/duotone-photo_library-24px.svg"
+                icon_mediaType.source = "qrc:/assets/icons/material-icons/duotone/photo_library.svg"
             } else {
-                icon_mediaType.source = "qrc:/assets/icons_material/baseline-photo-24px.svg"
+                icon_mediaType.source = "qrc:/assets/icons/material-symbols/media/image.svg"
             }
         } else {
-            icon_mediaType.source = "qrc:/assets/icons_material/baseline-broken_image-24px.svg"
+            icon_mediaType.source = "qrc:/assets/icons/material-symbols/media/broken_image.svg"
         }
 
         if (shotDevice) {
@@ -209,8 +209,8 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
 
         color: Theme.colorIcon
-        source: shot.valid ? "qrc:/assets/icons_material/baseline-hourglass_empty-24px.svg"
-                           : "qrc:/assets/icons_material/baseline-broken_image-24px.svg"
+        source: shot.valid ? "qrc:/assets/icons/material-icons/outlined/hourglass_empty.svg"
+                           : "qrc:/assets/icons/material-symbols/media/broken_image.svg"
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -378,7 +378,7 @@ Rectangle {
                 visible: shot.hilightCount
                 rotation: 90
                 color: "orange"
-                source: "qrc:/assets/icons_material/baseline-label_important-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/label_important.svg"
             }
 
             IconSvg {
@@ -388,7 +388,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 visible: shot.hasGPS
                 color: "white"
-                source: "qrc:/assets/icons_material/baseline-map-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/location/map-fill.svg"
             }
 
             IconSvg {
@@ -398,7 +398,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 visible: (shot.fileType === ShotUtils.FILE_VIDEO && shot.hasGPS)
                 color: "white"
-                source: "qrc:/assets/icons_material/baseline-insert_chart-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/insert_chart.svg"
             }
         }
     }

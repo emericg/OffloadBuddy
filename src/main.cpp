@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
 
     SingleApplication app(argc, argv, false);
 
-    app.setWindowIcon(QIcon(":/appicons/offloadbuddy.svg"));
+    app.setWindowIcon(QIcon(":/gfx/offloadbuddy.svg"));
     app.setApplicationName("OffloadBuddy");
     app.setApplicationDisplayName("OffloadBuddy");
     app.setOrganizationDomain("OffloadBuddy");
@@ -221,10 +221,6 @@ int main(int argc, char *argv[])
 
     // For i18n retranslate
     utilsLanguage->setQmlEngine(&engine);
-
-    // QQuickWindow must be valid at this point
-    QQuickWindow *window = qobject_cast<QQuickWindow *>(engine.rootObjects().value(0));
-    engine_context->setContextProperty("quickWindow", window);
 
 #if defined(Q_OS_MACOS)
     MacOSDockHandler *dockIconHandler = MacOSDockHandler::getInstance();

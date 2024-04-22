@@ -276,7 +276,7 @@ Item {
                     iconColor: Theme.colorComponentContent
                     highlightMode: "color"
                     highlightColor: Theme.colorSubText
-                    source: "qrc:/assets/icons_material/baseline-filter_list-24px.svg"
+                    source: "qrc:/assets/icons/material-symbols/filter_list.svg"
 
                     onClicked: {
                         if (settingsManager.librarySortOrder === Qt.AscendingOrder) {
@@ -361,10 +361,10 @@ Item {
                 height: 32
 
                 model: ListModel {
-                    ListElement { idx: 1; txt: ""; src: "qrc:/assets/icons_material/baseline-photo-24px.svg"; sz: 18; }
-                    ListElement { idx: 2; txt: ""; src: "qrc:/assets/icons_material/baseline-photo-24px.svg"; sz: 22; }
-                    ListElement { idx: 3; txt: ""; src: "qrc:/assets/icons_material/baseline-photo-24px.svg"; sz: 26; }
-                    ListElement { idx: 4; txt: ""; src: "qrc:/assets/icons_material/baseline-photo-24px.svg"; sz: 30; }
+                    ListElement { idx: 1; txt: ""; src: "qrc:/assets/icons/material-symbols/media/image.svg"; sz: 18; }
+                    ListElement { idx: 2; txt: ""; src: "qrc:/assets/icons/material-symbols/media/image.svg"; sz: 22; }
+                    ListElement { idx: 3; txt: ""; src: "qrc:/assets/icons/material-symbols/media/image.svg"; sz: 26; }
+                    ListElement { idx: 4; txt: ""; src: "qrc:/assets/icons/material-symbols/media/image.svg"; sz: 30; }
                 }
                 currentSelection: {
                     if (shotsView.cellSizeTarget == 512) return 4

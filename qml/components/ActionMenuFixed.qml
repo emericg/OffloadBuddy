@@ -65,28 +65,28 @@ Popup {
 
             index: 1
             text: qsTr("Offload")
-            source: "qrc:/assets/icons_material/duotone-save_alt-24px.svg"
+            source: "qrc:/assets/icons/material-icons/duotone/save_alt.svg"
             onClicked: menuSelected(index)
         }
         ActionMenuItem {
             id: shotMove
             index: 2
             text: qsTr("Move")
-            source: "qrc:/assets/icons_material/duotone-save_alt-24px.svg"
+            source: "qrc:/assets/icons/material-icons/duotone/save_alt.svg"
             onClicked: menuSelected(index)
         }
         ActionMenuItem {
             id: shotMerge
             index: 3
             text: qsTr("Merge chapters")
-            source: "qrc:/assets/icons_material/baseline-merge_type-24px.svg"
+            source: "qrc:/assets/icons/material-symbols/merge_type.svg"
             onClicked: menuSelected(index)
         }
         ActionMenuItem {
             id: shotEncode
             index: 4
             text: qsTr("Encode")
-            source: "qrc:/assets/icons_material/baseline-memory-24px.svg"
+            source: "qrc:/assets/icons/material-symbols/memory.svg"
             onClicked: menuSelected(index)
         }
 
@@ -102,21 +102,21 @@ Popup {
             id: telemetry
             index: 8
             text: qsTr("Extract telemetry")
-            source: "qrc:/assets/icons_material/duotone-insert_chart-24px.svg"
+            source: "qrc:/assets/icons/material-icons/duotone/insert_chart.svg"
             onClicked: menuSelected(index)
         }
         ActionMenuItem {
             id: telemetryGPMF
             index: 9
             text: qsTr("Extract telemetry")
-            source: "qrc:/assets/icons_material/duotone-insert_chart-24px.svg"
+            source: "qrc:/assets/icons/material-icons/duotone/insert_chart.svg"
             onClicked: menuSelected(index)
         }
         ActionMenuItem {
             id: telemetryGPS
             index: 10
             text: qsTr("Extract GPS trace")
-            source: "qrc:/assets/icons_material/baseline-map-24px.svg"
+            source: "qrc:/assets/icons/material-symbols/location/map-fill.svg"
             onClicked: menuSelected(index)
         }
 
@@ -132,14 +132,14 @@ Popup {
             id: openFile
             index: 12
             text: qsTr("Open file")
-            source: "qrc:/assets/icons_material/baseline-folder-24px.svg"
+            source: "qrc:/assets/icons/material-symbols/folder.svg"
             onClicked: menuSelected(index)
         }
         ActionMenuItem {
             id: openFolder
             index: 13
             text: qsTr("Open folder")
-            source: "qrc:/assets/icons_material/baseline-folder_open-24px.svg"
+            source: "qrc:/assets/icons/material-symbols/folder_open.svg"
             onClicked: menuSelected(index)
         }
 
@@ -155,7 +155,7 @@ Popup {
             id: removeSelected
             index: 16
             text: qsTr("DELETE")
-            source: "qrc:/assets/icons_material/baseline-delete-24px.svg"
+            source: "qrc:/assets/icons/material-symbols/delete.svg"
             onClicked: menuSelected(index)
         }
     }

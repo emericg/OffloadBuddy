@@ -56,19 +56,19 @@ Rectangle {
 
                     source: {
                         if (job.type === JobUtils.JOB_ENCODE || job.type === JobUtils.JOB_CLIP)
-                            return "qrc:/assets/icons_material/baseline-memory-24px.svg"
+                            return "qrc:/assets/icons/material-symbols/memory.svg"
                         else if (job.type === JobUtils.JOB_OFFLOAD || job.type === JobUtils.JOB_MOVE)
-                            return "qrc:/assets/icons_material/duotone-save_alt-24px.svg"
+                            return "qrc:/assets/icons/material-icons/duotone/save_alt.svg"
                         else if (job.type === JobUtils.JOB_MERGE)
-                            return "qrc:/assets/icons_material/baseline-merge_type-24px.svg"
+                            return "qrc:/assets/icons/material-symbols/merge_type.svg"
                         else if (job.type === JobUtils.JOB_DELETE || job.type === JobUtils.JOB_FORMAT)
-                            return "qrc:/assets/icons_material/baseline-delete-24px.svg"
+                            return "qrc:/assets/icons/material-symbols/delete.svg"
                         else if (job.type === JobUtils.JOB_TELEMETRY)
-                            return "qrc:/assets/icons_material/baseline-insert_chart-24px.svg"
+                            return "qrc:/assets/icons/material-symbols/insert_chart.svg"
                         else if (job.type === JobUtils.JOB_FIRMWARE_UPDATE)
-                            return "qrc:/assets/icons_material/baseline-settings_applications-24px.svg"
+                            return "qrc:/assets/icons/material-symbols/settings_applications.svg"
                         else
-                            return "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
+                            return "qrc:/assets/icons/material-symbols/autorenew.svg"
                     }
                     color: Theme.colorIcon
 
@@ -178,7 +178,7 @@ Rectangle {
 
                 visible: (job.destinationFolder.length && job.state >= JobUtils.JOB_STATE_WORKING)
                 highlightMode: "color"
-                source: "qrc:/assets/icons_material/baseline-folder_open-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/folder_open.svg"
                 onClicked: job.openDestinationFolder()
             }
 
@@ -190,7 +190,7 @@ Rectangle {
 
                 visible: (job.destinationFile.length && job.state === JobUtils.JOB_STATE_DONE)
                 highlightMode: "color"
-                source: "qrc:/assets/icons_material/duotone-launch-24px.svg"
+                source: "qrc:/assets/icons/material-icons/duotone/launch.svg"
                 onClicked: job.openDestinationFile()
             }
 
@@ -205,8 +205,8 @@ Rectangle {
                           (job.state === JobUtils.JOB_STATE_WORKING || job.state === JobUtils.JOB_STATE_PAUSED)) // running
 
                 highlightMode: "color"
-                source: job.state === JobUtils.JOB_STATE_WORKING ? "qrc:/assets/icons_material/outline-pause_circle-24px.svg"
-                                                                 : "qrc:/assets/icons_material/outline-play_circle-24px.svg"
+                source: job.state === JobUtils.JOB_STATE_WORKING ? "qrc:/assets/icons_material/outline-pause_circle.svg"
+                                                                 : "qrc:/assets/icons_material/outline-play_circle.svg"
                 onClicked: jobManager.playPauseJob(job.id)
             }
 
@@ -221,7 +221,7 @@ Rectangle {
                           (job.state === JobUtils.JOB_STATE_WORKING || job.state === JobUtils.JOB_STATE_PAUSED)) // running
 
                 highlightMode: "color"
-                source: "qrc:/assets/icons_material/outline-stop_circle-24px.svg"
+                source: "qrc:/assets/icons_material/outline-stop_circle.svg"
                 onClicked: jobManager.stopJob(job.id)
             }
 
@@ -257,17 +257,17 @@ Rectangle {
                 color: Theme.colorIcon
                 source: {
                     if (job.state === JobUtils.JOB_STATE_QUEUED) {
-                        return "qrc:/assets/icons_material/duotone-schedule-24px.svg"
+                        return "qrc:/assets/icons/material-icons/duotone/schedule.svg"
                     } else if (job.state === JobUtils.JOB_STATE_WORKING) {
-                        return "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
+                        return "qrc:/assets/icons/material-symbols/autorenew.svg"
                     } else if (job.state === JobUtils.JOB_STATE_PAUSED) {
-                        return "qrc:/assets/icons_material/baseline-pause-24px.svg"
+                        return "qrc:/assets/icons/material-symbols/pause-fill.svg"
                     } else if (job.state === JobUtils.JOB_STATE_DONE) {
-                        return "qrc:/assets/icons_material/outline-check_circle-24px.svg"
+                        return "qrc:/assets/icons_material/outline-check_circle.svg"
                     } else if (job.state === JobUtils.JOB_STATE_ERRORED) {
-                        return "qrc:/assets/icons_material/baseline-report-24px.svg"
+                        return "qrc:/assets/icons/material-symbols/report.svg"
                     } else if (job.state === JobUtils.JOB_STATE_ABORTED) {
-                        return "qrc:/assets/icons_material/baseline-cancel-24px.svg"
+                        return "qrc:/assets/icons/material-symbols/cancel.svg"
                     }
                 }
 

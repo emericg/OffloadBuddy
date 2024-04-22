@@ -42,7 +42,7 @@ Item {
                     width: 32
                     height: 32
                     color: Theme.colorText
-                    source: "qrc:/assets/icons_material/baseline-camera-24px.svg"
+                    source: "qrc:/assets/icons/material-symbols/media/camera.svg"
                 }
                 Text {
                     height: 32
@@ -279,7 +279,7 @@ Item {
 
                     backgroundColor: Theme.colorBackground
                     width: 40; height: 40;
-                    source: "qrc:/assets/icons_material/baseline-folder_open-24px.svg"
+                    source: "qrc:/assets/icons/material-symbols/folder_open.svg"
                     onClicked: utilsApp.openWith(shot.folder)
                 }
             }
@@ -334,13 +334,13 @@ Item {
 
                             source: {
                                 if (modelData.type === 1)
-                                    return "qrc:/assets/icons_material/duotone-aspect_ratio-24px.svg"
+                                    return "qrc:/assets/icons/material-icons/duotone/aspect_ratio.svg"
                                 else if (modelData.type === 2)
-                                    return "qrc:/assets/icons_material/baseline-photo-24px.svg"
+                                    return "qrc:/assets/icons/material-symbols/media/image.svg"
                                 else if (modelData.type === 3)
-                                    return "qrc:/assets/icons_material/duotone-list-24px.svg"
+                                    return "qrc:/assets/icons/material-icons/duotone/list.svg"
                                 else
-                                    return "qrc:/assets/icons_material/baseline-broken_image-24px.svg"
+                                    return "qrc:/assets/icons/material-symbols/media/broken_image.svg"
                             }
                         }
 /*
@@ -394,7 +394,7 @@ Item {
                         RoundButtonIcon {
                             width: 32; height: 32;
                             backgroundColor: Theme.colorBackground
-                            source: "qrc:/assets/icons_material/duotone-launch-24px.svg"
+                            source: "qrc:/assets/icons/material-icons/duotone/launch.svg"
                             onClicked: utilsApp.openWith(modelData.path)
                         }
 /*
@@ -402,7 +402,7 @@ Item {
                             width: 32; height: 32;
                             visible: false
                             backgroundColor: Theme.colorBackground
-                            source: "qrc:/assets/icons_material/baseline-delete-24px.svg"
+                            source: "qrc:/assets/icons/material-symbols/delete.svg"
                         }
 */
                     }

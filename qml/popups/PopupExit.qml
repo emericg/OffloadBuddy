@@ -7,7 +7,7 @@ import ThemeEngine
 Popup {
     id: popupExit
 
-    x: (appWindow.width / 2) - (width / 2) - (appSidebar.width / 2)
+    x: (appWindow.width / 2) - (width / 2) // - (appSidebar.width / 2)
     y: (appWindow.height / 2) - (height / 2)
     width: 720
     padding: 0
@@ -77,9 +77,8 @@ Popup {
     ////////////////////////////////////////////////////////////////////////////
 
     contentItem: Column {
-        spacing: Theme.componentMarginXL
 
-        ////////
+        ////////////////
 
         Item { // titleArea
             anchors.left: parent.left
@@ -88,7 +87,7 @@ Popup {
 
             Text {
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: Theme.componentMarginXL
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Confirmation")
@@ -98,54 +97,61 @@ Popup {
             }
         }
 
-        ////////
+        ////////////////
 
-        Text {
-            height: Theme.componentHeight
+        Column {
             anchors.left: parent.left
-            anchors.leftMargin: 24
             anchors.right: parent.right
-            anchors.rightMargin: 24
 
-            text: qsTr("A job is still running. Do you want to exit anyway?")
-            font.pixelSize: Theme.fontSizeContent
-            color: Theme.colorText
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignLeft
-            wrapMode: Text.WordWrap
-        }
+            topPadding: Theme.componentMarginXL
+            bottomPadding: Theme.componentMarginXL
+            spacing: Theme.componentMarginXL
 
-        ////////
+            Text {
+                height: Theme.componentHeight
+                anchors.left: parent.left
+                anchors.leftMargin: Theme.componentMarginXL
+                anchors.right: parent.right
+                anchors.rightMargin: Theme.componentMarginXL
 
-        Item  { width: 1; height: 1; } // spacer
-
-        Row {
-            anchors.right: parent.right
-            anchors.rightMargin: Theme.componentMarginXL
-            spacing: Theme.componentMargin
-
-            ButtonSolid {
-                text: qsTr("Cancel")
-                color: Theme.colorGrey
-                onClicked: popupExit.close()
+                text: qsTr("A job is still running. Do you want to exit anyway?")
+                font.pixelSize: Theme.fontSizeContent
+                color: Theme.colorText
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignLeft
+                wrapMode: Text.WordWrap
             }
 
-            ButtonSolid {
-                text: qsTr("Exit")
-                source: "qrc:/assets/icons_material/duotone-exit_to_app-24px.svg"
-                color: Theme.colorWarning
+            ////////
 
-                onClicked: {
-                    popupExit.confirmed()
-                    popupExit.close()
-                    Qt.quit()
+            Row {
+                anchors.right: parent.right
+                anchors.rightMargin: Theme.componentMarginXL
+                spacing: Theme.componentMargin
+
+                ButtonSolid {
+                    text: qsTr("Cancel")
+                    color: Theme.colorGrey
+                    onClicked: popupExit.close()
+                }
+
+                ButtonSolid {
+                    text: qsTr("Exit")
+                    source: "qrc:/assets/icons/material-icons/duotone/exit_to_app.svg"
+                    color: Theme.colorWarning
+
+                    onClicked: {
+                        popupExit.confirmed()
+                        popupExit.close()
+                        Qt.quit()
+                    }
                 }
             }
+
+            ////////
         }
 
-        Item  { width: 1; height: 1; } // spacer
-
-        ////////
+        ////////////////
     }
 
     ////////////////////////////////////////////////////////////////////////////

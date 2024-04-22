@@ -46,7 +46,7 @@ Rectangle {
         anchors.right: parent.right
         anchors.rightMargin: 0
 
-        source: "qrc:/assets/icons_fontawesome/photo-video-duotone.svg"
+        source: "qrc:/assets/icons/fontawesome/photo-video-duotone.svg"
         sourceSize: 60
         highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
         indicatorAnimated: mediaLibrary.libraryState
@@ -105,14 +105,14 @@ Rectangle {
         DesktopSidebarItem {
             id: button_jobs
 
-            source: "qrc:/assets/icons_material/duotone-save_alt-24px.svg"
+            source: "qrc:/assets/icons/material-icons/duotone/save_alt.svg"
             sourceSize: 40
             highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
 
             visible: jobManager.trackedJobCount
             indicatorVisible: jobManager.workingJobCount
             indicatorAnimated: jobManager.workingJobCount
-            indicatorSource: "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
+            indicatorSource: "qrc:/assets/icons/material-symbols/autorenew.svg"
 
             highlighted: (appContent.state === "jobs")
             onClicked: screenJobs.loadScreen()
@@ -120,7 +120,7 @@ Rectangle {
         DesktopSidebarItem {
             id: button_settings
 
-            source: "qrc:/assets/icons_material/duotone-tune-24px.svg"
+            source: "qrc:/assets/icons/material-icons/duotone/tune.svg"
             sourceSize: 40
             highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
 
@@ -130,7 +130,7 @@ Rectangle {
         DesktopSidebarItem {
             id: button_about
 
-            source: "qrc:/assets/icons_material/duotone-info-24px.svg"
+            source: "qrc:/assets/icons/material-icons/duotone/info.svg"
             sourceSize: 40
             highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
 
@@ -140,7 +140,7 @@ Rectangle {
         DesktopSidebarItem {
             id: button_exit
 
-            source: "qrc:/assets/icons_material/duotone-exit_to_app-24px.svg"
+            source: "qrc:/assets/icons/material-icons/duotone/exit_to_app.svg"
             sourceSize: 40
             highlightMode: "circle"
 

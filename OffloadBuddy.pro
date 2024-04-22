@@ -33,8 +33,8 @@ win32 | ios | android { DEFINES += USE_CONTRIBS }
 include(src/thirdparty/AppUtils/AppUtils.pri)
 
 # SingleApplication for desktop OS
-include(src/thirdparty/SingleApplication/SingleApplication.pri)
 DEFINES += QAPPLICATION_CLASS=QApplication
+include(src/thirdparty/SingleApplication/SingleApplication.pri)
 
 # Zip extraction
 include(src/thirdparty/miniz/miniz.pri)
@@ -112,10 +112,9 @@ HEADERS  += src/SettingsManager.h \
             src/GpmfTags.h \
             src/GeoCoding.h
 
-RESOURCES   += qml/qml.qrc \
-               qml/ComponentLibrary/ComponentLibrary.qrc  \
-               i18n/i18n.qrc \
-               assets/assets.qrc
+RESOURCES   += assets/cameras.qrc assets/gfx.qrc assets/icons.qrc
+RESOURCES   += qml/ComponentLibrary/ComponentLibrary.qrc
+RESOURCES   += qml/qml.qrc i18n/i18n.qrc \
 
 OTHER_FILES += .gitignore \
                .github/workflows/builds_desktop.yml \

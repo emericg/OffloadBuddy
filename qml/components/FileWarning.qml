@@ -33,7 +33,7 @@ Row {
         anchors.verticalCenter: parent.verticalCenter
 
         color: Theme.colorWarning
-        source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
+        source: "qrc:/assets/icons/material-symbols/warning.svg"
     }
 
     Text {

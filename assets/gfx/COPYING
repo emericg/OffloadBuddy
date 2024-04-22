@@ -1,0 +1,39 @@
+
+# Application logo and icons:
+- logos/logo.svg                            // Emeric Grange // CC BY-ND 4.0
+- logos/github.svg                          // https://github.com/logos // proprietary
+- logos/gitlab.png                          // https://about.gitlab.com/press // proprietary
+
+# Google Material Material Icons:
+- icons/navigate_before_big.svg             // Google Material Design icons // CC BY-SA 4.0
+
+# Lüv icons:
+- devices/camera.svg                        // Emeric Grange        // CC BY-SA 4.0
+- devices/card.svg                          // Lüv icon theme       // CC BY-SA 4.0
+- devices/disk.svg                          // Lüv icon theme       // CC BY-SA 4.0
+- devices/phone.svg                         // Lüv icon theme       // CC BY-SA 4.0
+- devices/usb.svg                           // Lüv icon theme       // CC BY-SA 4.0
+
+# Cameras icons:
+- cameras/generic_actioncam.svg             // Faenza icon theme    // GPL v3
+- cameras/generic_camera.svg                // Yosa Max icon theme  // GPL v3
+- cameras/generic_smartphone.svg            // Lüv icon theme       // CC BY-SA 4.0
+- cameras/generic_smartphone2.svg           // Emeric Grange        // CC BY-SA 4.0
+- cameras/fusion.svg                        // Emeric Grange        // CC BY-SA 4.0
+- cameras/H2.svg                            // Emeric Grange        // CC BY-SA 4.0
+- cameras/H3.svg                            // Emeric Grange        // CC BY-SA 4.0
+- cameras/H4.svg                            // Emeric Grange        // CC BY-SA 4.0
+- cameras/H5.svg                            // Emeric Grange        // CC BY-SA 4.0
+- cameras/H6.svg                            // Emeric Grange        // CC BY-SA 4.0
+- cameras/H7w.svg                           // Emeric Grange        // CC BY-SA 4.0
+- cameras/H8.svg                            // Emeric Grange        // CC BY-SA 4.0
+- cameras/H9.svg                            // Emeric Grange        // CC BY-SA 4.0
+- cameras/max.svg                           // Emeric Grange        // CC BY-SA 4.0
+- cameras/osmo_action.svg                   // Emeric Grange        // CC BY-SA 4.0
+- cameras/session.svg                       // Emeric Grange        // CC BY-SA 4.0
+- cameras/sony_fdr.svg                      // Emeric Grange        // CC BY-SA 4.0
+- cameras/sony_hdr.svg                      // Emeric Grange        // CC BY-SA 4.0
+
+# GPS markers:
+- markers/gps_marker.svg                    // Emeric Grange // CC BY-SA 4.0
+- markers/gps_marker_direction.svg          // Emeric Grange // CC BY-SA 4.0

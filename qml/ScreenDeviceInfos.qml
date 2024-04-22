@@ -96,7 +96,7 @@ Loader {
                     iconColor: Theme.colorHeaderContent
                     backgroundColor: Theme.colorForeground
 
-                    source: "qrc:/assets/others/navigate_before_big.svg"
+                    source: "qrc:/gfx/navigate_before_big.svg"
                     onClicked: {
                         if (appContent.state === "library") {
                             screenLibrary.state = "stateMediaGrid"
@@ -205,7 +205,7 @@ Loader {
                                 spacing: 16
 
                                 IconSvg {
-                                    source: "qrc:/assets/icons_material/duotone-camera_alt-24px.svg"
+                                    source: "qrc:/assets/icons/material-icons/duotone/camera_alt.svg"
                                     color: Theme.colorText
                                 }
 
@@ -308,14 +308,16 @@ Loader {
                                     font.pixelSize: Theme.fontSizeContent
                                 }
                             }
-                            ButtonWireframe {
+
+                            ButtonSolid {
                                 visible: (currentDevice.brand === "GoPro" && currentDevice.firmwareState > 0)
 
-                                //primaryColor: {
-                                //    if (currentDevice.firmwareState === DeviceUtils.FirmwareUpToDate) return Theme.colorSuccess
-                                //    if (currentDevice.firmwareState === DeviceUtils.FirmwareUpdateInstalled) return Theme.colorSuccess
-                                //    return Theme.colorPrimary
-                                //}
+                                color: {
+                                    if (currentDevice.firmwareState === DeviceUtils.FirmwareUpToDate) return Theme.colorSuccess
+                                    if (currentDevice.firmwareState === DeviceUtils.FirmwareUpdateInstalled) return Theme.colorSuccess
+                                    return Theme.colorPrimary
+                                }
+
                                 text: {
                                     if (currentDevice.firmwareState === DeviceUtils.FirmwareUpToDate) return qsTr("Up to date")
                                     if (currentDevice.firmwareState === DeviceUtils.FirmwareUpdateAvailable) return qsTr("Update available")
@@ -325,8 +327,8 @@ Loader {
                                 }
                                 source: {
                                     if (currentDevice.firmwareState === DeviceUtils.FirmwareUpToDate)
-                                        return "qrc:/assets/icons_material/baseline-done-24px.svg"
-                                    return "qrc:/assets/icons_material/baseline-archive-24px.svg"
+                                        return "qrc:/assets/icons/material-symbols/check.svg"
+                                    return "qrc:/assets/icons/material-symbols/archive.svg"
                                 }
 
                                 onClicked: {
@@ -364,7 +366,7 @@ Loader {
                                 spacing: 16
 
                                 IconSvg {
-                                    source: "qrc:/assets/icons_material/duotone-sd_card-24px.svg"
+                                    source: "qrc:/assets/icons/material-icons/duotone/sd_card.svg"
                                     color: Theme.colorText
                                 }
 
@@ -447,7 +449,7 @@ Loader {
                                 spacing: 16
 
                                 IconSvg {
-                                    source: "qrc:/assets/icons_material/duotone-aspect_ratio-24px.svg"
+                                    source: "qrc:/assets/icons/material-icons/duotone/aspect_ratio.svg"
                                     color: Theme.colorText
                                 }
 

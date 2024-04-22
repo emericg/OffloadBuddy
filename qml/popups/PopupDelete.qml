@@ -1,6 +1,6 @@
 import QtQuick
+import QtQuick.Effects
 import QtQuick.Controls
-import Qt5Compat.GraphicalEffects
 
 import ThemeEngine
 
@@ -12,13 +12,15 @@ Popup {
     width: 720
     padding: 0
 
+    dim: true
     modal: true
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+    parent: Overlay.overlay
 
     signal confirmed()
 
-    ////////
+    ////////////////////////////////////////////////////////////////////////////
 
     property int popupMode: 0
     property bool recapEnabled: false
@@ -87,54 +89,90 @@ Popup {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    enter: Transition { NumberAnimation { property: "opacity"; from: 0.5; to: 1.0; duration: 133; } }
+    enter: Transition { NumberAnimation { property: "opacity"; from: 0.333; to: 1.0; duration: 133; } }
 
-    background: Item {
-        Rectangle {
-            id: bgrect
+    Overlay.modal: Rectangle {
+        color: "#000"
+        opacity: ThemeEngine.isLight ? 0.333 : 0.666
+    }
+
+    background: Rectangle {
+        radius: Theme.componentRadius
+        color: Theme.colorBackground
+
+        Item {
             anchors.fill: parent
 
-            radius: Theme.componentRadius
-            color: Theme.colorBackground
-            border.color: Theme.colorSeparator
-            border.width: Theme.componentBorderWidth
+            Column {
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                Rectangle { // title area
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 64
+                    color: Theme.colorPrimary
+                }
+
+                Rectangle { // subtitle area
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 48
+                    color: Theme.colorForeground
+                    visible: (recapEnabled && shots_files.length)
+                }
+            }
+
+            Rectangle { // border
+                anchors.fill: parent
+                radius: Theme.componentRadius
+                color: "transparent"
+                border.color: Theme.colorSeparator
+                border.width: Theme.componentBorderWidth
+                opacity: 0.4
+            }
+
+            layer.enabled: true
+            layer.effect: MultiEffect { // clip
+                maskEnabled: true
+                maskInverted: false
+                maskThresholdMin: 0.5
+                maskSpreadAtMin: 1.0
+                maskSpreadAtMax: 0.0
+                maskSource: ShaderEffectSource {
+                    sourceItem: Rectangle {
+                        x: background.x
+                        y: background.y
+                        width: background.width
+                        height: background.height
+                        radius: background.radius
+                    }
+                }
+            }
         }
-        DropShadow {
-            anchors.fill: parent
-            source: bgrect
-            color: "#60000000"
-            radius: 24
-            samples: radius*2+1
-            cached: true
+
+        layer.enabled: true
+        layer.effect: MultiEffect { // shadow
+            autoPaddingEnabled: true
+            shadowEnabled: true
+            shadowColor: ThemeEngine.isLight ? "#aa000000" : "#aaffffff"
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////
 
     contentItem: Column {
-        spacing: 0
 
-        Rectangle { // titleArea
+        ////////////////
+
+        Item { // titleArea
             anchors.left: parent.left
             anchors.right: parent.right
-
             height: 64
-            radius: Theme.componentRadius
-            color: Theme.colorPrimary
-
-            Rectangle {
-                anchors.left: parent.left
-                anchors.leftMargin: 1
-                anchors.right: parent.right
-                anchors.rightMargin: 1
-                anchors.bottom: parent.bottom
-                height: parent.radius
-                color: parent.color
-            }
 
             Text {
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: Theme.componentMarginXL
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Confirmation")
@@ -146,16 +184,14 @@ Popup {
 
         ////////////////
 
-        Rectangle { // filesArea
+        Item { // filesArea
             anchors.left: parent.left
             anchors.leftMargin: Theme.componentBorderWidth
             anchors.right: parent.right
             anchors.rightMargin: Theme.componentBorderWidth
 
-            z: 1
             height: 48
             visible: (recapEnabled && shots_files.length)
-            color: Theme.colorForeground
 
             MouseArea {
                 anchors.fill: parent
@@ -164,7 +200,7 @@ Popup {
 
             Text {
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: Theme.componentMarginXL
                 anchors.right: parent.right
                 anchors.rightMargin: 48+16+16
                 anchors.verticalCenter: parent.verticalCenter
@@ -181,7 +217,7 @@ Popup {
                 anchors.rightMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
 
-                source: "qrc:/assets/icons_material/baseline-navigate_next-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/chevron_right.svg"
                 rotation: recapOpened ? -90 : 90
                 onClicked: recapOpened = !recapOpened
             }
@@ -189,22 +225,22 @@ Popup {
 
         ////////////////
 
-        Item {
-            id: contentArea
-            height: (shots_files.length > 0) ? 160 : 96
+        Column { // contentArea
             anchors.left: parent.left
-            anchors.leftMargin: 24
+            anchors.leftMargin: Theme.componentMarginXL
             anchors.right: parent.right
-            anchors.rightMargin: 24
+            anchors.rightMargin: Theme.componentMarginXL
+
+            topPadding: Theme.componentMarginXL
+            bottomPadding: Theme.componentMarginXL
+            spacing: Theme.componentMarginXL
 
             ////////
 
             Text {
                 id: textArea
-                height: Theme.componentHeight
                 anchors.left: parent.left
                 anchors.right: parent.right
-                topPadding: 16
 
                 visible: !recapOpened
 
@@ -215,19 +251,17 @@ Popup {
                 wrapMode: Text.WordWrap
             }
 
+            ////////
+
             ListView {
                 id: listArea
-                anchors.top: parent.top
-                anchors.topMargin: recapOpened ? 0 : textArea.height + 16
                 anchors.left: parent.left
                 anchors.right: parent.right
 
-                anchors.bottom: parent.bottom
-                height: Math.min(64, listArea.count*16)
-
+                height: Math.min(96, listArea.count*16)
                 visible: recapOpened || (shots_files.length > 0 && shots_files.length <= 4)
-                model: shots_files
 
+                model: shots_files
                 delegate: Text {
                     anchors.left: parent.left
                     anchors.right: parent.right
@@ -237,51 +271,54 @@ Popup {
                     color: Theme.colorSubText
                 }
             }
+
+            ////////
+
+            Row {
+                anchors.right: parent.right
+                spacing: Theme.componentMargin
+
+                ButtonSolid {
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: qsTr("Cancel")
+                    color: Theme.colorGrey
+                    onClicked: popupDelete.close()
+                }
+
+                ButtonSolid {
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: qsTr("Delete")
+                    source: "qrc:/assets/icons/material-symbols/delete.svg"
+                    color: Theme.colorError
+                    onClicked: {
+                        var settingsDeletion = {}
+                        settingsDeletion["moveToTrash"] = settingsManager.moveToTrash
+
+                        if (currentShot) {
+                            mediaProvider.deleteSelected(currentShot.uuid, settingsDeletion)
+                            //mediaProvider.deleteSelected(shots_uuids[0], settingsDeletion)
+                        } else if (shots_uuids.length > 0) {
+                            mediaProvider.deleteSelection(shots_uuids, settingsDeletion)
+                        } else if (popupMode === 3) {
+                            mediaProvider.deleteAll(settingsDeletion)
+                        }
+
+                        // If deletion happen from media detail screen, go back
+                        if (appContent.state === "library" && screenLibrary.state === "stateMediaDetails") screenLibrary.state = "stateMediaGrid"
+                        else if (appContent.state === "device" && screenDevice.state === "stateMediaDetails") screenDevice.state = "stateMediaGrid"
+
+                        popupDelete.close()
+                    }
+                }
+            }
+
+            ////////
         }
 
         ////////////////
-
-        Row {
-            height: Theme.componentHeight*2 + parent.spacing
-            anchors.right: parent.right
-            anchors.rightMargin: 24
-            spacing: 24
-
-            ButtonSolid {
-                width: 96
-                anchors.verticalCenter: parent.verticalCenter
-
-                text: qsTr("Cancel")
-                color: Theme.colorGrey
-                onClicked: popupDelete.close()
-            }
-            ButtonSolid {
-                width: 128
-                anchors.verticalCenter: parent.verticalCenter
-
-                text: qsTr("Delete")
-                source: "qrc:/assets/icons_material/baseline-delete-24px.svg"
-                color: Theme.colorError
-                onClicked: {
-                    var settingsDeletion = {}
-                    settingsDeletion["moveToTrash"] = settingsManager.moveToTrash
-
-                    if (currentShot) {
-                        mediaProvider.deleteSelected(currentShot.uuid, settingsDeletion)
-                        //mediaProvider.deleteSelected(shots_uuids[0], settingsDeletion)
-                    } else if (shots_uuids.length > 0) {
-                        mediaProvider.deleteSelection(shots_uuids, settingsDeletion)
-                    } else if (popupMode === 3) {
-                        mediaProvider.deleteAll(settingsDeletion)
-                    }
-
-                    // If deletion happen from media detail screen, go back
-                    if (appContent.state === "library" && screenLibrary.state === "stateMediaDetails") screenLibrary.state = "stateMediaGrid"
-                    else if (appContent.state === "device" && screenDevice.state === "stateMediaDetails") screenDevice.state = "stateMediaGrid"
-
-                    popupDelete.close()
-                }
-            }
-        }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 }

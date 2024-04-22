@@ -67,7 +67,7 @@ Loader {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Clear finished jobs")
-                source: "qrc:/assets/icons_material/baseline-backspace-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/backspace-fill.svg"
                 layoutDirection: Qt.RightToLeft
 
                 visible: jobManager.trackedJobCount

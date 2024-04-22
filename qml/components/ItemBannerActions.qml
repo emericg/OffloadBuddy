@@ -34,7 +34,7 @@ Rectangle {
             color: Theme.colorActionbarHighlight
 
             text: (appContent.state === "library") ? qsTr("Move") : qsTr("Offload")
-            source: "qrc:/assets/icons_material/duotone-save_alt-24px.svg"
+            source: "qrc:/assets/icons/material-icons/duotone/save_alt.svg"
             onClicked: {
                 if (appContent.state === "library") {
                     // move
@@ -60,7 +60,7 @@ Rectangle {
             color: Theme.colorActionbarHighlight
 
             text: qsTr("Merge chapters")
-            source: "qrc:/assets/icons_material/baseline-merge_type-24px.svg"
+            source: "qrc:/assets/icons/material-symbols/merge_type.svg"
             onClicked: {
                 if (appContent.state === "library") {
                     popupMerge.shots_uuids = mediaLibrary.getSelectedShotsUuids(mediaGrid.selectionList)
@@ -82,7 +82,7 @@ Rectangle {
             color: Theme.colorActionbarHighlight
 
             text: qsTr("Merge shots")
-            source: "qrc:/assets/icons_material/baseline-merge_type-24px.svg"
+            source: "qrc:/assets/icons/material-symbols/merge_type.svg"
             onClicked: {
                 if (appContent.state === "library") {
                     // TODO
@@ -99,7 +99,7 @@ Rectangle {
             color: Theme.colorActionbarHighlight
 
             text: qsTr("Encoding")
-            source: "qrc:/assets/icons_material/baseline-memory-24px.svg"
+            source: "qrc:/assets/icons/material-symbols/memory.svg"
             onClicked: {
                 if (appContent.state === "library") {
                     popupEncoding.shots_uuids = mediaLibrary.getSelectedShotsUuids(mediaGrid.selectionList)
@@ -124,7 +124,7 @@ Rectangle {
             color: Theme.colorActionbarHighlight
 
             text: qsTr("Extract telemetry")
-            source: "qrc:/assets/icons_material/duotone-insert_chart-24px.svg"
+            source: "qrc:/assets/icons/material-icons/duotone/insert_chart.svg"
             onClicked: {
                 if (appContent.state === "library") {
                     popupTelemetry.shots_uuids = mediaLibrary.getSelectedShotsUuids(mediaGrid.selectionList)
@@ -145,7 +145,7 @@ Rectangle {
             color: Theme.colorWarning
 
             text: qsTr("Delete")
-            source: "qrc:/assets/icons_material/baseline-delete-24px.svg"
+            source: "qrc:/assets/icons/material-symbols/delete.svg"
             onClicked: {
                 if (appContent.state === "library") {
                     popupDelete.shots_uuids = mediaLibrary.getSelectedShotsUuids(mediaGrid.selectionList)
@@ -182,7 +182,7 @@ Rectangle {
         anchors.rightMargin: 12
         anchors.verticalCenter: parent.verticalCenter
 
-        source: "qrc:/assets/icons_material/baseline-backspace-24px.svg"
+        source: "qrc:/assets/icons/material-symbols/backspace-fill.svg"
         iconColor: Theme.colorActionbarContent
         backgroundColor: Theme.colorActionbarHighlight
         onClicked: mediaGrid.exitSelectionMode()

@@ -1,6 +1,6 @@
 import QtQuick
+import QtQuick.Effects
 import QtQuick.Controls
-import Qt5Compat.GraphicalEffects
 
 import ThemeEngine
 
@@ -15,6 +15,7 @@ Popup {
     width: 720
     padding: 0
 
+    dim: true
     modal: true
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
@@ -35,7 +36,7 @@ Popup {
     property var mediaProvider: null
     property var currentShot: null
 
-    ////////
+    ////////////////////////////////////////////////////////////////////////////
 
     function open() { return; }
 
@@ -70,25 +71,73 @@ Popup {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    enter: Transition { NumberAnimation { property: "opacity"; from: 0.5; to: 1.0; duration: 133; } }
+    enter: Transition { NumberAnimation { property: "opacity"; from: 0.333; to: 1.0; duration: 133; } }
 
-    background: Item {
-        Rectangle {
-            id: bgrect
+    Overlay.modal: Rectangle {
+        color: "#000"
+        opacity: ThemeEngine.isLight ? 0.333 : 0.666
+    }
+
+    background: Rectangle {
+        radius: Theme.componentRadius
+        color: Theme.colorBackground
+
+        Item {
             anchors.fill: parent
 
-            radius: Theme.componentRadius
-            color: Theme.colorBackground
-            border.color: Theme.colorSeparator
-            border.width: Theme.componentBorderWidth
+            Column {
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                Rectangle { // title area
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 64
+                    color: Theme.colorPrimary
+                }
+
+                Rectangle { // subtitle area
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 48
+                    color: Theme.colorForeground
+                    visible: (recapEnabled && shots_uuids.length)
+                }
+            }
+
+            Rectangle { // border
+                anchors.fill: parent
+                radius: Theme.componentRadius
+                color: "transparent"
+                border.color: Theme.colorSeparator
+                border.width: Theme.componentBorderWidth
+                opacity: 0.4
+            }
+
+            layer.enabled: true
+            layer.effect: MultiEffect { // clip
+                maskEnabled: true
+                maskInverted: false
+                maskThresholdMin: 0.5
+                maskSpreadAtMin: 1.0
+                maskSpreadAtMax: 0.0
+                maskSource: ShaderEffectSource {
+                    sourceItem: Rectangle {
+                        x: background.x
+                        y: background.y
+                        width: background.width
+                        height: background.height
+                        radius: background.radius
+                    }
+                }
+            }
         }
-        DropShadow {
-            anchors.fill: parent
-            source: bgrect
-            color: "#60000000"
-            radius: 24
-            samples: radius*2+1
-            cached: true
+
+        layer.enabled: true
+        layer.effect: MultiEffect { // shadow
+            autoPaddingEnabled: true
+            shadowEnabled: true
+            shadowColor: ThemeEngine.isLight ? "#aa000000" : "#aaffffff"
         }
     }
 
@@ -96,27 +145,16 @@ Popup {
 
     contentItem: Column {
 
-        Rectangle { // titleArea
+        ////////////////
+
+        Item { // titleArea
             anchors.left: parent.left
             anchors.right: parent.right
-
             height: 64
-            color: Theme.colorPrimary
-            radius: Theme.componentRadius
-
-            Rectangle {
-                anchors.left: parent.left
-                anchors.leftMargin: 1
-                anchors.right: parent.right
-                anchors.rightMargin: 1
-                anchors.bottom: parent.bottom
-                height: parent.radius
-                color: parent.color
-            }
 
             Text {
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: Theme.componentMarginXL
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Extract telemetry")
@@ -128,16 +166,14 @@ Popup {
 
         ////////////////
 
-        Rectangle { // filesArea
+        Item { // filesArea
             anchors.left: parent.left
             anchors.leftMargin: Theme.componentBorderWidth
             anchors.right: parent.right
             anchors.rightMargin: Theme.componentBorderWidth
 
-            z: 1
             height: 48
             visible: (recapEnabled && shots_uuids.length)
-            color: Theme.colorForeground
 
             MouseArea {
                 anchors.fill: parent
@@ -146,7 +182,7 @@ Popup {
 
             Text {
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: Theme.componentMarginXL
                 anchors.right: parent.right
                 anchors.rightMargin: 48+16+16
                 anchors.verticalCenter: parent.verticalCenter
@@ -163,7 +199,7 @@ Popup {
                 anchors.rightMargin: 16
                 anchors.verticalCenter: parent.verticalCenter
 
-                source: "qrc:/assets/icons_material/baseline-navigate_next-24px.svg"
+                source: "qrc:/assets/icons/material-symbols/chevron_right.svg"
                 rotation: recapOpened ? -90 : 90
                 onClicked: recapOpened = !recapOpened
             }
@@ -171,17 +207,21 @@ Popup {
 
         ////////////////
 
-        Item { // contentArea
-            height: columnTelemetry.height
+        Column { // contentArea
             anchors.left: parent.left
-            anchors.leftMargin: 24
+            anchors.leftMargin: Theme.componentMarginXL
             anchors.right: parent.right
-            anchors.rightMargin: 24
+            anchors.rightMargin: Theme.componentMarginXL
+
+            topPadding: Theme.componentMarginXL
+            bottomPadding: Theme.componentMarginXL
+            spacing: Theme.componentMarginXL
 
             ////////
 
             ListView { // listArea
-                anchors.fill: parent
+                anchors.left: parent.left
+                anchors.right: parent.right
 
                 visible: recapOpened
 
@@ -202,14 +242,12 @@ Popup {
                 id: columnTelemetry
                 anchors.left: parent.left
                 anchors.right: parent.right
-                topPadding: 16
-                bottomPadding: 16
 
                 visible: !recapOpened
 
                 Item {
                     id: elementGPS
-                    height: 48
+                    height: 44
                     anchors.left: parent.left
                     anchors.right: parent.right
 
@@ -256,7 +294,7 @@ Popup {
 
                 Item {
                     id: elementTelemetry
-                    height: 48
+                    height: 44
                     anchors.left: parent.left
                     anchors.right: parent.right
 
@@ -296,7 +334,7 @@ Popup {
                 ////////
 
                 Item { // elementAltitude
-                    height: 48
+                    height: 44
                     anchors.left: parent.left
                     anchors.right: parent.right
 
@@ -358,7 +396,7 @@ Popup {
 
                 Item {
                     id: itemDestination
-                    height: 48
+                    height: 44
                     anchors.left: parent.left
                     anchors.right: parent.right
 
@@ -451,108 +489,107 @@ Popup {
                     id: fileWarning
                 }
             }
+
+            ////////////
+
+            Row {
+                anchors.right: parent.right
+                spacing: Theme.componentMargin
+
+                ButtonSolid {
+                    color: Theme.colorGrey
+                    text: qsTr("Close")
+                    onClicked: popupTelemetry.close()
+                }
+
+                ButtonSolid {
+                    color: Theme.colorSecondary
+                    text: qsTr("Extract telemetry")
+                    source: "qrc:/assets/icons/material-symbols/insert_chart.svg"
+
+                    enabled: (popupMode === 1 && fileInput.isValid) || (popupMode === 2 && folderInput.isValid)
+
+                    onClicked: {
+                        if (typeof currentShot === "undefined" || !currentShot) return
+                        if (typeof mediaProvider === "undefined" || !mediaProvider) return
+
+                        var settingsTelemetry = {}
+
+                        // settings
+                        if (rbJSON.checked)
+                            settingsTelemetry["telemetry_format"] = "JSON";
+                        else if (rbCSV.checked)
+                            settingsTelemetry["telemetry_format"] = "CSV";
+
+                        settingsTelemetry["telemetry_frequency"] = 30
+                        settingsTelemetry["gps_frequency"] = 2
+                        settingsTelemetry["egm96_correction"] = switchEGM96.checked
+
+                        // destination
+                        if (popupMode === 1) {
+                            settingsTelemetry["folder"] = fileInput.folder
+                            settingsTelemetry["file"] = fileInput.file
+                            settingsTelemetry["extension"] = fileInput.extension
+                        } else if (popupMode === 2) {
+                            settingsTelemetry["folder"] = folderInput.folder
+                        }
+
+                        // dispatch job
+                        if (currentShot) {
+                            currentShot.exportTelemetry(fileInput.text, 0, 30, 2, switchEGM96.checked)
+                        } else if (shots_uuids.length > 0) {
+                            mediaProvider.extractTelemetrySelected(shots_uuids, settingsTelemetry)
+                        }
+                    }
+                }
+
+                ButtonSolid {
+                    text: qsTr("Extract GPS")
+                    source: "qrc:/assets/icons/material-symbols/location/map-fill.svg"
+
+                    enabled: (popupMode === 1 && fileInput.isValid) || (popupMode === 2 && folderInput.isValid)
+
+                    onClicked: {
+                        if (typeof mediaProvider === "undefined" || !mediaProvider) return
+
+                        var settingsTelemetry = {}
+
+                        // settings
+                        if (rbGPX.checked)
+                            settingsTelemetry["gps_format"] = "GPX";
+                        else if (rbIGC.checked)
+                            settingsTelemetry["gps_format"] = "IGC";
+                        else if (rbKML.checked)
+                            settingsTelemetry["gps_format"] = "KML";
+
+                        settingsTelemetry["gps_frequency"] = 2
+                        settingsTelemetry["egm96_correction"] = switchEGM96.checked
+
+                        // destination
+                        if (popupMode === 1) {
+                            settingsTelemetry["folder"] = fileInput.folder
+                            settingsTelemetry["file"] = fileInput.file
+                            settingsTelemetry["extension"] = fileInput.extension
+                        } else if (popupMode === 2) {
+                            settingsTelemetry["folder"] = folderInput.folder
+                        }
+
+                        // dispatch job
+                        if (currentShot) {
+                            currentShot.exportGps(fileInput.text, 0, 2, switchEGM96.checked)
+                            //mediaProvider.extractTelemetrySelected(shots_uuids, settingsTelemetry)
+                        } else if (shots_uuids.length > 0) {
+                            mediaProvider.extractTelemetrySelection(shots_uuids, settingsTelemetry)
+                        }
+                    }
+                }
+            }
+
+            ////////////
         }
 
         ////////////////
-
-        Row {
-            height: Theme.componentHeight*2 + parent.spacing
-            anchors.right: parent.right
-            anchors.rightMargin: 24
-            spacing: 16
-
-            ButtonSolid {
-                anchors.verticalCenter: parent.verticalCenter
-                width: 96
-                color: Theme.colorGrey
-
-                text: qsTr("Close")
-                onClicked: popupTelemetry.close()
-            }
-            ButtonSolid {
-                anchors.verticalCenter: parent.verticalCenter
-                color: Theme.colorSecondary
-
-                text: qsTr("Extract telemetry")
-                source: "qrc:/assets/icons_material/baseline-insert_chart-24px.svg"
-
-                enabled: (popupMode === 1 && fileInput.isValid) || (popupMode === 2 && folderInput.isValid)
-
-                onClicked: {
-                    if (typeof currentShot === "undefined" || !currentShot) return
-                    if (typeof mediaProvider === "undefined" || !mediaProvider) return
-
-                    var settingsTelemetry = {}
-
-                    // settings
-                    if (rbJSON.checked)
-                        settingsTelemetry["telemetry_format"] = "JSON";
-                    else if (rbCSV.checked)
-                        settingsTelemetry["telemetry_format"] = "CSV";
-
-                    settingsTelemetry["telemetry_frequency"] = 30
-                    settingsTelemetry["gps_frequency"] = 2
-                    settingsTelemetry["egm96_correction"] = switchEGM96.checked
-
-                    // destination
-                    if (popupMode === 1) {
-                        settingsTelemetry["folder"] = fileInput.folder
-                        settingsTelemetry["file"] = fileInput.file
-                        settingsTelemetry["extension"] = fileInput.extension
-                    } else if (popupMode === 2) {
-                        settingsTelemetry["folder"] = folderInput.folder
-                    }
-
-                    // dispatch job
-                    if (currentShot) {
-                        currentShot.exportTelemetry(fileInput.text, 0, 30, 2, switchEGM96.checked)
-                    } else if (shots_uuids.length > 0) {
-                        mediaProvider.extractTelemetrySelected(shots_uuids, settingsTelemetry)
-                    }
-                }
-            }
-            ButtonSolid {
-                anchors.verticalCenter: parent.verticalCenter
-
-                text: qsTr("Extract GPS")
-                source: "qrc:/assets/icons_material/baseline-map-24px.svg"
-
-                enabled: (popupMode === 1 && fileInput.isValid) || (popupMode === 2 && folderInput.isValid)
-
-                onClicked: {
-                    if (typeof mediaProvider === "undefined" || !mediaProvider) return
-
-                    var settingsTelemetry = {}
-
-                    // settings
-                    if (rbGPX.checked)
-                        settingsTelemetry["gps_format"] = "GPX";
-                    else if (rbIGC.checked)
-                        settingsTelemetry["gps_format"] = "IGC";
-                    else if (rbKML.checked)
-                        settingsTelemetry["gps_format"] = "KML";
-
-                    settingsTelemetry["gps_frequency"] = 2
-                    settingsTelemetry["egm96_correction"] = switchEGM96.checked
-
-                    // destination
-                    if (popupMode === 1) {
-                        settingsTelemetry["folder"] = fileInput.folder
-                        settingsTelemetry["file"] = fileInput.file
-                        settingsTelemetry["extension"] = fileInput.extension
-                    } else if (popupMode === 2) {
-                        settingsTelemetry["folder"] = folderInput.folder
-                    }
-
-                    // dispatch job
-                    if (currentShot) {
-                        currentShot.exportGps(fileInput.text, 0, 2, switchEGM96.checked)
-                        //mediaProvider.extractTelemetrySelected(shots_uuids, settingsTelemetry)
-                    } else if (shots_uuids.length > 0) {
-                        mediaProvider.extractTelemetrySelection(shots_uuids, settingsTelemetry)
-                    }
-                }
-            }
-        }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 }

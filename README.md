@@ -36,6 +36,7 @@ It's designed to remove the hassle of handling and transferring the many videos 
   - [ ] Video overlay
 - [X] GoPro firmware updates
 
+
 ## Screenshots
 
 ![overview](https://i.imgur.com/4CAhcYb.jpg)
@@ -46,6 +47,7 @@ It's designed to remove the hassle of handling and transferring the many videos 
 ![video3](https://i.imgur.com/4avHEnI.jpg)
 ![resize](https://i.imgur.com/HCs2vKH.jpg)
 ![clip](https://i.imgur.com/0euEyaN.jpg)
+
 
 ## Documentation
 
@@ -112,7 +114,10 @@ $ make
 * libmtp [website](https://github.com/libmtp/) ([LGPL v2.1](https://www.gnu.org/licenses/lgpl-2.1.txt))
 * miniz [website](https://github.com/richgel999/miniz/) ([MIT](https://opensource.org/licenses/MIT))
 * SingleApplication [website](https://github.com/itay-grudev/SingleApplication) ([MIT](https://opensource.org/licenses/MIT))
-* Graphical resources: [assets/COPYING](assets/COPYING)
+
+* Icons: [assets/icons/COPYING](assets/icons/COPYING)
+* Graphical resources: [assets/cameras/COPYING](assets/cameras/COPYING) [assets/gfx/COPYING](assets/gfx/COPYING)
+
 
 ## Get involved!
 
@@ -123,6 +128,7 @@ You can browse the code on the GitHub page, submit patches and pull requests! Yo
 #### Users
 
 You can help us find and report bugs, suggest new features, help with translation, documentation and more! Visit the Issues section of the GitHub page to start!
+
 
 ## License
 
