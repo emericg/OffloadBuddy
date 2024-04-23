@@ -223,6 +223,9 @@ int main(int argc, char *argv[])
     utilsLanguage->setQmlEngine(&engine);
 
 #if defined(Q_OS_MACOS)
+    QQuickWindow *window = qobject_cast<QQuickWindow *>(engine.rootObjects().value(0));
+    engine_context->setContextProperty("quickWindow", window);
+
     MacOSDockHandler *dockIconHandler = MacOSDockHandler::getInstance();
     QObject::connect(dockIconHandler, &MacOSDockHandler::dockIconClicked, window, &QQuickWindow::show);
     QObject::connect(dockIconHandler, &MacOSDockHandler::dockIconClicked, window, &QQuickWindow::raise);
