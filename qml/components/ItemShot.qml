@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Controls 2.15
+import QtQuick.Controls
 //import QtGraphicalEffects 1.15 // Qt5
 import Qt5Compat.GraphicalEffects // Qt6
 
@@ -14,6 +14,7 @@ Rectangle {
 
     width: 400
     height: Math.round(width / cellFormat)
+    radius: Theme.componentRadius
     color: Theme.colorForeground
 
     property var shot: pointer
@@ -22,56 +23,11 @@ Rectangle {
 
     property bool singleSelection: (mediaGrid.currentIndex === index)
     property bool multiSelection: (shot && shot.selected)
-    property bool alreadyOffloaded: false
-
-    Connections {
-        target: shot
-        function onStateUpdated() { handleState() }
-    }
-
-    function handleState() {
-        if (shot.state === ShotUtils.SHOT_STATE_QUEUED) {
-            icon_state.visible = true
-            icon_state.source = "qrc:/assets/icons/material-icons/duotone/schedule.svg"
-            offloadAnimation.stop()
-            encodeAnimation.stop()
-        } else if (shot.state === ShotUtils.SHOT_STATE_OFFLOADING) {
-            icon_state.visible = true
-            icon_state.source = "qrc:/assets/icons/material-icons/duotone/save_alt.svg"
-            offloadAnimation.start()
-        } else if (shot.state === ShotUtils.SHOT_STATE_ENCODING) {
-            icon_state.visible = true
-            icon_state.source = "qrc:/assets/icons/material-symbols/memory.svg"
-            encodeAnimation.start()
-        } else if (shot.state === ShotUtils.SHOT_STATE_DONE ||
-                   shot.state === ShotUtils.SHOT_STATE_OFFLOADED ||
-                   shot.state === ShotUtils.SHOT_STATE_ENCODED) {
-            if (shot.state === ShotUtils.SHOT_STATE_OFFLOADED)
-                image_overlay.source = "qrc:/assets/icons/material-icons/duotone/save_alt.svg"
-            else if (shot.state === ShotUtils.SHOT_STATE_ENCODED)
-                image_overlay.source = "qrc:/assets/icons/material-symbols/memory.svg"
-            else
-                image_overlay.source = "qrc:/assets/icons_material/outline-check_circle.svg"
-            icon_state.visible = false
-            overlayWorkDone.visible = true
-            offloadAnimation.stop()
-            encodeAnimation.stop()
-        } else if (alreadyOffloaded) {
-            image_overlay.source = "qrc:/assets/icons/material-icons/duotone/save_alt.svg"
-            overlayWorkDone.visible = true
-        } else {
-            icon_state.visible = false
-            overlayWorkDone.visible = false
-            offloadAnimation.stop()
-            encodeAnimation.stop()
-        }
-    }
+    property bool alreadyOffloaded: shotDevice && mediaLibrary.isShotAlreadyOffloaded(shot.name, shot.datasize)
 
     Component.onCompleted: {
         if (typeof currentDevice !== "undefined")
             shotDevice = currentDevice
-
-        handleState()
 
         if (shot.previewVideo) {
             imageFs.source = "image://MediaThumbnailer/" + shot.previewVideo + "@" + (shot.duration/12000).toFixed()
@@ -96,7 +52,7 @@ Rectangle {
             if (shot.chapterCount > 1)
                 icon_mediaType.source = "qrc:/assets/icons/material-icons/duotone/video_library.svg"
             else
-                icon_mediaType.source = "qrc:/assets/icons/material-symbols/media/movie.svg"
+                icon_mediaType.source = "qrc:/assets/icons/material-symbols/media/movie-fill.svg"
         } else if (shot.fileType === ShotUtils.FILE_PICTURE) {
             if (shot.shotType === ShotUtils.SHOT_PICTURE_BURST) {
                 icon_mediaType.source = "qrc:/assets/icons/material-icons/duotone/burst_mode.svg"
@@ -107,11 +63,6 @@ Rectangle {
             }
         } else {
             icon_mediaType.source = "qrc:/assets/icons/material-symbols/media/broken_image.svg"
-        }
-
-        if (shotDevice) {
-            alreadyOffloaded = mediaLibrary.isShotAlreadyOffloaded(shot.name, shot.datasize)
-            if (alreadyOffloaded) handleState()
         }
     }
 
@@ -191,17 +142,6 @@ Rectangle {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    layer.enabled: true
-    layer.effect: OpacityMask {
-        maskSource: Rectangle {
-            x: itemShot.x
-            y: itemShot.y
-            width: itemShot.width
-            height: itemShot.height
-            radius: Theme.componentRadius
-        }
-    }
-
     IconSvg {
         id: imageLoading
         width: itemShot.width > 320 ? 72 : 40
@@ -215,35 +155,63 @@ Rectangle {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-/*
-    Loader { // TODO // loader between imageFs and imageMtp
-        id: imageLoader
-        anchors.fill: parent
-    }
-*/
-    Image {
-        id: imageFs
+
+    Item {
         anchors.fill: parent
 
-        autoTransform: true
-        asynchronous: true
-        antialiasing: false
-        fillMode: Image.PreserveAspectCrop
+        Image { // TODO // loader
+            id: imageFs
+            anchors.fill: parent
 
-        opacity: (imageFs.progress === 1.0) ? 1 : 0
-        Behavior on opacity { NumberAnimation { duration: 133 } }
+            autoTransform: true
+            asynchronous: true
+            antialiasing: false
+            fillMode: Image.PreserveAspectCrop
 
-        // extra filtering?
-        smooth: (settingsManager.thumbQuality >= 1)
-        // big enough so we have good quality regarding of the thumb size
-        sourceSize.width: (settingsManager.thumbQuality > 1) ? 512 : 400
-        sourceSize.height: (settingsManager.thumbQuality > 1) ? 512 : 400
-    }
+            opacity: (imageFs.progress === 1.0) ? 1 : 0
+            Behavior on opacity { NumberAnimation { duration: 133 } }
 
-    ItemImage {
-        id: imageMtp
-        anchors.fill: parent
-        visible: false
+            // extra filtering?
+            smooth: (settingsManager.thumbQuality >= 1)
+            // big enough so we have good quality regarding of the thumb size
+            sourceSize.width: (settingsManager.thumbQuality > 1) ? 512 : 400
+            sourceSize.height: (settingsManager.thumbQuality > 1) ? 512 : 400
+        }
+
+        Loader {
+            anchors.fill: parent
+
+            active: (shotDevice && shotDevice.deviceStorage === ShotUtils.STORAGE_MTP)
+            asynchronous: true
+            sourceComponent: ItemImage {
+                id: imageMtp
+                anchors.fill: parent
+                image: shot.getPreviewMtp()
+            }
+        }
+
+        Loader { // overlay "selection"
+            anchors.fill: parent
+
+            active: shot.selected
+            asynchronous: true
+            sourceComponent: Rectangle {
+                radius: Theme.componentRadius
+                color: Theme.colorPrimary
+                opacity: 0.33
+            }
+        }
+
+        layer.enabled: true
+        layer.effect: OpacityMask {
+            maskSource: Rectangle {
+                x: itemShot.x
+                y: itemShot.y
+                width: itemShot.width
+                height: itemShot.height
+                radius: Theme.componentRadius
+            }
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -293,11 +261,26 @@ Rectangle {
                 width: 24
                 height: 24
 
+                visible: (shot.state === ShotUtils.SHOT_STATE_QUEUED ||
+                          shot.state === ShotUtils.SHOT_STATE_OFFLOADING ||
+                          shot.state === ShotUtils.SHOT_STATE_ENCODING)
+
                 color: "white"
+                source: {
+                    if (shot.state === ShotUtils.SHOT_STATE_QUEUED) {
+                        return "qrc:/assets/icons/material-icons/duotone/schedule.svg"
+                    } else if (shot.state === ShotUtils.SHOT_STATE_OFFLOADING) {
+                        return "qrc:/assets/icons/material-icons/duotone/save_alt.svg"
+                    } else if (shot.state === ShotUtils.SHOT_STATE_ENCODING) {
+                        return "qrc:/assets/icons/material-symbols/memory.svg"
+                    } else {
+                        return ""
+                    }
+                }
 
                 NumberAnimation on rotation {
                     id: encodeAnimation
-                    running: false
+                    running: (shot.state === ShotUtils.SHOT_STATE_ENCODING)
                     loops: Animation.Infinite
 
                     onStopped: icon_state.rotation = 0
@@ -307,7 +290,7 @@ Rectangle {
                 }
                 SequentialAnimation {
                     id: offloadAnimation
-                    running: false
+                    running: (shot.state === ShotUtils.SHOT_STATE_OFFLOADING)
                     loops: Animation.Infinite
 
                     onStopped: icon_state.y = 0
@@ -328,8 +311,8 @@ Rectangle {
 
             IconSvg {
                 id: icon_mediaType
-                width: 24
-                height: 24
+                width: 28
+                height: 28
                 anchors.verticalCenter: parent.verticalCenter
                 color: "white"
             }
@@ -373,8 +356,8 @@ Rectangle {
             }
             IconSvg {
                 id: icon_hmmt
-                width: 20
-                height: 20
+                width: 24
+                height: 24
                 anchors.verticalCenter: parent.verticalCenter
                 visible: shot.hilightCount
                 rotation: 90
@@ -384,8 +367,8 @@ Rectangle {
 
             IconSvg {
                 id: icon_gps
-                width: 20
-                height: 20
+                width: 24
+                height: 24
                 anchors.verticalCenter: parent.verticalCenter
                 visible: shot.hasGPS
                 color: "white"
@@ -394,8 +377,8 @@ Rectangle {
 
             IconSvg {
                 id: icon_tlm
-                width: 20
-                height: 20
+                width: 24
+                height: 24
                 anchors.verticalCenter: parent.verticalCenter
                 visible: (shot.fileType === ShotUtils.FILE_VIDEO && shot.hasGPS)
                 color: "white"
@@ -406,52 +389,63 @@ Rectangle {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    Item {
-        id: overlayWorkDone
+    Loader { // overlay "work done"
         anchors.fill: parent
 
-        Canvas {
-            id: canvas
-            anchors.fill: parent
-            opacity: 0.666
+        active: (shot.state === ShotUtils.SHOT_STATE_DONE ||
+                 shot.state === ShotUtils.SHOT_STATE_OFFLOADED ||
+                 shot.state === ShotUtils.SHOT_STATE_ENCODED ||
+                 itemShot.alreadyOffloaded)
 
-            Connections {
-                target: ThemeEngine
-                function onCurrentThemeChanged() { canvas.requestPaint() }
+        asynchronous: true
+        sourceComponent: Item {
+            Canvas {
+                id: canvas
+                anchors.fill: parent
+                opacity: 0.666
+
+                Connections {
+                    target: ThemeEngine
+                    function onCurrentThemeChanged() { canvas.requestPaint() }
+                }
+
+                onPaint: {
+                    var context = getContext("2d");
+                    context.beginPath();
+                    context.moveTo(itemShot.width, 0);
+                    context.lineTo(itemShot.width, 72);
+                    context.lineTo(itemShot.width - 72, 0);
+                    context.closePath();
+                    context.fillStyle = Theme.colorPrimary;
+                    context.fill();
+                }
             }
 
-            onPaint: {
-                var context = getContext("2d");
-                context.beginPath();
-                context.moveTo(itemShot.width, 0);
-                context.lineTo(itemShot.width, 72);
-                context.lineTo(itemShot.width - 72, 0);
-                context.closePath();
-                context.fillStyle = Theme.colorPrimary;
-                context.fill();
+            IconSvg {
+                width: 32
+                height: 32
+                anchors.top: parent.top
+                anchors.topMargin: 3
+                anchors.right: parent.right
+                anchors.rightMargin: 3
+
+                color: "white"
+                source: {
+                    if (shot.state === ShotUtils.SHOT_STATE_DONE ||
+                        shot.state === ShotUtils.SHOT_STATE_OFFLOADED ||
+                        shot.state === ShotUtils.SHOT_STATE_ENCODED) {
+                        if (shot.state === ShotUtils.SHOT_STATE_OFFLOADED)
+                            return "qrc:/assets/icons/material-icons/duotone/save_alt.svg"
+                        else if (shot.state === ShotUtils.SHOT_STATE_ENCODED)
+                            return "qrc:/assets/icons/material-symbols/memory.svg"
+                        else
+                            return "qrc:/assets/icons/material-symbols/check_circle.svg"
+                    } else if (itemShot.alreadyOffloaded) {
+                        return "qrc:/assets/icons/material-icons/duotone/save_alt.svg"
+                    }
+                }
             }
         }
-
-        IconSvg {
-            id: image_overlay
-            width: 32
-            height: 32
-            anchors.top: parent.top
-            anchors.topMargin: 3
-            anchors.right: parent.right
-            anchors.rightMargin: 3
-
-            color: "white"
-        }
-    }
-
-    Rectangle {
-        id: overlaySelection
-        anchors.fill: parent
-
-        visible: shot.selected
-        color: Theme.colorPrimary
-        opacity: 0.33
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -583,4 +577,6 @@ Rectangle {
             }
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 }

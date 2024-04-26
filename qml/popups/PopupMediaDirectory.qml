@@ -122,20 +122,35 @@ Popup {
 
         Item { // subtitleArea
             anchors.left: parent.left
+            anchors.leftMargin: Theme.componentMarginXL
             anchors.right: parent.right
             height: 48
 
             Text {
                 anchors.left: parent.left
-                anchors.leftMargin: Theme.componentMarginXL
                 anchors.right: parent.right
-                anchors.rightMargin: Theme.componentMarginXL
+                anchors.leftMargin: Theme.componentMargin + 40
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: directory.directoryPath
                 color: Theme.colorText
                 font.pixelSize: Theme.fontSizeContent
                 wrapMode: Text.WrapAnywhere
+            }
+
+            RoundButtonSunken {
+                anchors.right: parent.right
+                anchors.leftMargin: Theme.componentMargin
+                anchors.verticalCenter: parent.verticalCenter
+
+                width: 40
+                height: 40
+                colorBackground: Theme.colorForeground
+                source: "qrc:/assets/icons/material-symbols/folder_open.svg"
+
+                onClicked: {
+                    utilsApp.openWith(directory.directoryPath)
+                }
             }
         }
 
@@ -156,9 +171,6 @@ Popup {
             Column {
                 anchors.left: parent.left
                 anchors.right: parent.right
-
-                //topPadding: Theme.componentMargin
-                //bottomPadding: Theme.componentMargin
 
                 ////////
 
