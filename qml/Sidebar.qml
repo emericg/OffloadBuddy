@@ -47,9 +47,12 @@ Rectangle {
         anchors.rightMargin: 0
 
         source: "qrc:/assets/icons/fontawesome/photo-video-duotone.svg"
-        sourceSize: 60
+        sourceSize: 56
         highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
+
+        indicatorVisible: mediaLibrary.libraryState
         indicatorAnimated: mediaLibrary.libraryState
+        indicatorSource: "qrc:/assets/icons/material-symbols/autorenew.svg"
 
         highlighted: appContent.state === "library"
         onClicked: appContent.state = "library"
@@ -76,10 +79,14 @@ Rectangle {
             text: modelData.model
             source: UtilsDevice.getDevicePicture(modelData)
             sourceSize: 60
-            highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
-            indicatorAnimated: modelData.deviceState
 
             highlighted: (appContent.state === "device" && modelData === screenDevice.currentDevice)
+            highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
+
+            indicatorVisible: modelData.deviceState
+            indicatorAnimated: modelData.deviceState
+            indicatorSource: "qrc:/assets/icons/material-symbols/autorenew.svg"
+
             onClicked: {
                 if (!(appContent.state === "device" && screenDevice.currentDevice === modelData)) {
                     screenDevice.currentDevice = modelData
@@ -102,46 +109,43 @@ Rectangle {
 
         spacing: 0
 
-        DesktopSidebarItem {
-            id: button_jobs
+        DesktopSidebarItem { // button_jobs
+            visible: jobManager.trackedJobCount
 
             source: "qrc:/assets/icons/material-icons/duotone/save_alt.svg"
             sourceSize: 40
+
+            highlighted: (appContent.state === "jobs")
             highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
 
-            visible: jobManager.trackedJobCount
             indicatorVisible: jobManager.workingJobCount
             indicatorAnimated: jobManager.workingJobCount
             indicatorSource: "qrc:/assets/icons/material-symbols/autorenew.svg"
 
-            highlighted: (appContent.state === "jobs")
             onClicked: screenJobs.loadScreen()
         }
-        DesktopSidebarItem {
-            id: button_settings
-
+        DesktopSidebarItem { // button_settings
             source: "qrc:/assets/icons/material-icons/duotone/tune.svg"
             sourceSize: 40
-            highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
 
             highlighted: (appContent.state === "settings")
-            onClicked: screenSettings.loadScreen()
-        }
-        DesktopSidebarItem {
-            id: button_about
-
-            source: "qrc:/assets/icons/material-icons/duotone/info.svg"
-            sourceSize: 40
             highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
 
+            onClicked: screenSettings.loadScreen()
+        }
+        DesktopSidebarItem { // button_about
+            source: "qrc:/assets/icons/material-icons/duotone/info.svg"
+            sourceSize: 40
+
             highlighted: (appContent.state === "about")
+            highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
+
             onClicked: screenAbout.loadScreen()
         }
-        DesktopSidebarItem {
-            id: button_exit
-
+        DesktopSidebarItem { // button_exit
             source: "qrc:/assets/icons/material-icons/duotone/exit_to_app.svg"
             sourceSize: 40
+
             highlightMode: "circle"
 
             onClicked: appWindow.close()

@@ -1,10 +1,10 @@
-import QtQuick 2.15
+import QtQuick
 //import QtGraphicalEffects 1.15 // Qt5
 import Qt5Compat.GraphicalEffects // Qt6
 
-import ThemeEngine 1.0
-import "qrc:/js/UtilsNumber.js" as UtilsNumber
-import "qrc:/js/UtilsString.js" as UtilsString
+import ThemeEngine
+import "qrc:/utils/UtilsNumber.js" as UtilsNumber
+import "qrc:/utils/UtilsString.js" as UtilsString
 
 Item {
     id: dataBarSpace

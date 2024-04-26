@@ -3,8 +3,8 @@ import QtQuick.Controls
 import QtQuick.Dialogs
 
 import ThemeEngine
-import "qrc:/js/UtilsString.js" as UtilsString
-import "qrc:/js/UtilsPath.js" as UtilsPath
+import "qrc:/utils/UtilsString.js" as UtilsString
+import "qrc:/utils/UtilsPath.js" as UtilsPath
 
 Loader {
     id: screenSettings

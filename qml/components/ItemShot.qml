@@ -1,16 +1,17 @@
-import QtQuick 2.15
+import QtQuick
 import QtQuick.Controls 2.15
 //import QtGraphicalEffects 1.15 // Qt5
 import Qt5Compat.GraphicalEffects // Qt6
 
-import ThemeEngine 1.0
+import ThemeEngine
 import ShotUtils 1.0
 import ItemImage 1.0
-import "qrc:/js/UtilsMedia.js" as UtilsMedia
-import "qrc:/js/UtilsString.js" as UtilsString
+import "qrc:/utils/UtilsMedia.js" as UtilsMedia
+import "qrc:/utils/UtilsString.js" as UtilsString
 
 Rectangle {
     id: itemShot
+
     width: 400
     height: Math.round(width / cellFormat)
     color: Theme.colorForeground

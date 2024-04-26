@@ -80,7 +80,6 @@ ApplicationWindow {
     Component.onCompleted: {
         mediaLibrary.searchMediaDirectories()
         deviceManager.searchDevices()
-        appWindow.visible = true
     }
 
     // Handle device disconnection
@@ -105,18 +104,22 @@ ApplicationWindow {
     Shortcut {
         sequences: [StandardKey.Forward]
         onActivated: forwardAction()
-    }/*
-    Shortcut {
-        sequence: StandardKey.Refresh
-        onActivated: //
     }
-    Shortcut {
-        sequence: "Ctrl+F5"
-        onActivated: //
-    }*/
     Shortcut {
         sequences: [StandardKey.Deselect, StandardKey.Cancel]
         onActivated: deselectAction()
+    }
+
+    Shortcut {
+        sequences: [StandardKey.Refresh]
+        onActivated: mediaLibrary.searchMediaDirectories()
+    }
+    Shortcut {
+        sequence: "Ctrl+F5"
+        onActivated: {
+            mediaLibrary.searchMediaDirectories()
+            deviceManager.searchDevices()
+        }
     }
 
     Shortcut {

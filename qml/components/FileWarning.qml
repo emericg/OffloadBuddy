@@ -1,5 +1,5 @@
-import QtQuick 2.15
-import ThemeEngine 1.0
+import QtQuick
+import ThemeEngine
 
 Row {
     id: fileWarning

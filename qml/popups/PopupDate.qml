@@ -4,7 +4,7 @@ import QtQuick.Controls
 
 import ThemeEngine
 
-import "qrc:/js/UtilsNumber.js" as UtilsNumber
+import "qrc:/utils/UtilsNumber.js" as UtilsNumber
 
 Popup {
     id: popupDate

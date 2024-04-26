@@ -1,9 +1,9 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
 
-import ThemeEngine 1.0
+import ThemeEngine
 import JobUtils 1.0
-import "qrc:/js/UtilsString.js" as UtilsString
+import "qrc:/utils/UtilsString.js" as UtilsString
 
 Rectangle {
     id: itemJob

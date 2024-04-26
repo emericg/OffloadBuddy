@@ -6,7 +6,7 @@ import DeviceUtils
 import StorageUtils
 import SettingsUtils
 
-import "qrc:/js/UtilsString.js" as UtilsString
+import "qrc:/utils/UtilsString.js" as UtilsString
 import "qrc:/js/UtilsDeviceCamera.js" as UtilsDevice
 
 Item {
@@ -168,11 +168,11 @@ Item {
 
         if (currentDevice && currentDevice.deviceStorage === StorageUtils.StorageFilesystem) {
             if (currentDevice.deviceType === DeviceUtils.DeviceActionCamera)
-                imageEmpty.source = "qrc:/gfx/card.svg"
+                imageEmpty.source = "qrc:/gfx/devices/card.svg"
             else
-                imageEmpty.source = "qrc:/gfx/camera.svg"
+                imageEmpty.source = "qrc:/gfx/devices/camera.svg"
         } else {
-            imageEmpty.source = "qrc:/gfx/usb.svg"
+            imageEmpty.source = "qrc:/gfx/devices/usb.svg"
         }
     }
 

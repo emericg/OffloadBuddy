@@ -1,9 +1,10 @@
 import QtQuick
+import QtQuick.Effects
 import QtQuick.Controls
 
 import ThemeEngine
 import SettingsUtils
-import "qrc:/js/UtilsString.js" as UtilsString
+import "qrc:/utils/UtilsString.js" as UtilsString
 
 Item {
     id: mediaGrid
@@ -456,6 +457,7 @@ Item {
                 sourceSize.height: height
                 anchors.centerIn: parent
                 source: "qrc:/devices/disk.svg"
+                asynchronous: true
             }
         }
 
@@ -472,16 +474,16 @@ Item {
                 visible: !mediaGrid.selectionMode
 
                 color: "transparent"
-                radius: (Theme.componentRadius > 6) ? Theme.componentRadius-2 : 3
+                radius: (Theme.componentRadius > 6) ? Theme.componentRadius-2 : 4
                 border.width: (Theme.componentRadius > 4) ? 6 : 4
                 border.color: Theme.colorPrimary
-/*
-                SimpleShadow {
-                    anchors.fill: parent
-                    radius: parent.radius
-                    filled: false
-                    color: Theme.colorPrimary
-                }*/
+
+                layer.enabled: true
+                layer.effect: MultiEffect { // shadow
+                    autoPaddingEnabled: true
+                    shadowEnabled: true
+                    shadowColor: Theme.colorPrimary
+                }
             }
         }
 

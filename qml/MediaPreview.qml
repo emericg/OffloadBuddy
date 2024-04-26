@@ -5,9 +5,9 @@ import QtMultimedia
 import ThemeEngine
 import MediaUtils
 
-import "qrc:/js/UtilsMedia.js" as UtilsMedia
-import "qrc:/js/UtilsNumber.js" as UtilsNumber
-import "qrc:/js/UtilsString.js" as UtilsString
+import "qrc:/utils/UtilsMedia.js" as UtilsMedia
+import "qrc:/utils/UtilsNumber.js" as UtilsNumber
+import "qrc:/utils/UtilsString.js" as UtilsString
 
 Item {
     id: mediaArea

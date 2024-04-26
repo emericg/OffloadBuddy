@@ -4,7 +4,7 @@ import QtQuick.Controls
 import ThemeEngine
 import DeviceUtils
 
-import "qrc:/js/UtilsString.js" as UtilsString
+import "qrc:/utils/UtilsString.js" as UtilsString
 import "qrc:/js/UtilsDeviceCamera.js" as UtilsDevice
 
 Loader {

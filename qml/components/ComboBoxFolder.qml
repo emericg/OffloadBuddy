@@ -17,9 +17,11 @@ T.ComboBox {
     leftPadding: 16
     rightPadding: 16
 
-    property string folders: ""
+    font.pixelSize: Theme.componentFontSize
 
-    ////////
+    property string folders
+
+    ////////////////
 
     background: Rectangle {
         implicitWidth: 200
@@ -32,13 +34,9 @@ T.ComboBox {
         border.color: Theme.colorComponentBorder
     }
 
-    ////////
+    ////////////////
 
     contentItem: Text {
-        //leftPadding: 12
-        //rightPadding: 8
-        //clip: true
-
         text: control.displayText
         textFormat: Text.PlainText
 
@@ -63,10 +61,9 @@ T.ComboBox {
         }
     }
 
-    ////////
+    ////////////////
 
     indicator: Canvas {
-        id: canvas
         x: control.width - width - control.rightPadding
         y: control.topPadding + (control.availableHeight - height) / 2
         width: 12
@@ -74,7 +71,7 @@ T.ComboBox {
 
         Connections {
             target: ThemeEngine
-            function onCurrentThemeChanged() { canvas.requestPaint() }
+            function onCurrentThemeChanged() { indicator.requestPaint() }
         }
 
         onPaint: {
@@ -89,7 +86,7 @@ T.ComboBox {
         }
     }
 
-    ////////
+    ////////////////
 
     delegate: T.ItemDelegate {
         width: control.width - 2
@@ -115,9 +112,9 @@ T.ComboBox {
             elide: Text.ElideRight
             verticalAlignment: Text.AlignVCenter
         }
-    }
+    }    
 
-    ////////
+    ////////////////
 
     popup: Popup {
         y: control.height - 1
@@ -139,4 +136,6 @@ T.ComboBox {
             border.width: control.visualFocus ? 0 : 1
         }
     }
+
+    ////////////////
 }

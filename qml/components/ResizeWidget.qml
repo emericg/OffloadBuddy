@@ -1,9 +1,9 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
 //import QtGraphicalEffects 1.15 // Qt5
 import Qt5Compat.GraphicalEffects // Qt6
 
-import ThemeEngine 1.0
+import ThemeEngine
 import MediaUtils 1.0
 
 Item {

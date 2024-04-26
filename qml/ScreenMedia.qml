@@ -3,7 +3,7 @@ import QtQuick.Controls
 
 import ThemeEngine
 import ShotUtils
-import "qrc:/js/UtilsString.js" as UtilsString
+import "qrc:/utils/UtilsString.js" as UtilsString
 
 Loader {
     id: screenMedia
