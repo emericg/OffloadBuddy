@@ -35,6 +35,8 @@ T.ProgressBar {
         }
     }
 
+    ////////////////
+
     layer.enabled: true
     layer.effect: MultiEffect {
         maskEnabled: true
