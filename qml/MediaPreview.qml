@@ -507,12 +507,12 @@ Item {
             //console.log("onPlaybackStateChanged() " + videoPlayer.playbackState)
 
             if (videoPlayer.playbackState === MediaPlayer.PlayingState) {
-                buttonPlay.source = "qrc:/assets/icons/material-symbols/pause-fill.svg"
+                buttonPlay.source = "qrc:/assets/icons/material-symbols/media/pause-fill.svg"
                 savePosition()
 
                 //utilsScreen.keepScreenOn(true, "OffloadBuddy", qsTr("Playing video"))
             } else if (videoPlayer.playbackState === MediaPlayer.PausedState) {
-                buttonPlay.source = "qrc:/assets/icons/material-symbols/play_arrow-fill.svg"
+                buttonPlay.source = "qrc:/assets/icons/material-symbols/media/play_arrow-fill.svg"
                 savePosition()
 
                 //utilsScreen.keepScreenOn(false)
@@ -743,8 +743,8 @@ Item {
             IconSvg {
                 anchors.verticalCenter: parent.verticalCenter
                 width: 28; height: 28;
-                source: (timerTimelapse.running) ? "qrc:/assets/icons/material-symbols/pause-fill.svg"
-                                                 : "qrc:/assets/icons/material-symbols/play_arrow-fill.svg"
+                source: (timerTimelapse.running) ? "qrc:/assets/icons/material-symbols/media/pause-fill.svg"
+                                                 : "qrc:/assets/icons/material-symbols/media/play_arrow-fill.svg"
                 color: "white"
 
                 MouseArea {
@@ -1017,7 +1017,7 @@ Item {
                     highlightColor: Theme.colorPrimary
                     highlightMode: "color"
 
-                    source: "qrc:/assets/icons/material-symbols/play_arrow-fill.svg"
+                    source: "qrc:/assets/icons/material-symbols/media/play_arrow-fill.svg"
                     onClicked: {
                         if (videoPlayer.isRunning) {
                             videoPlayer.pause()

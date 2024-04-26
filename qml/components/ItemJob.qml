@@ -205,8 +205,8 @@ Rectangle {
                           (job.state === JobUtils.JOB_STATE_WORKING || job.state === JobUtils.JOB_STATE_PAUSED)) // running
 
                 highlightMode: "color"
-                source: job.state === JobUtils.JOB_STATE_WORKING ? "qrc:/assets/icons_material/outline-pause_circle.svg"
-                                                                 : "qrc:/assets/icons_material/outline-play_circle.svg"
+                source: job.state === JobUtils.JOB_STATE_WORKING ? "qrc:/assets/icons/material-symbols/media/pause_circle.svg"
+                                                                 : "qrc:/assets/icons/material-symbols/media/play_circle.svg"
                 onClicked: jobManager.playPauseJob(job.id)
             }
 
@@ -261,9 +261,9 @@ Rectangle {
                     } else if (job.state === JobUtils.JOB_STATE_WORKING) {
                         return "qrc:/assets/icons/material-symbols/autorenew.svg"
                     } else if (job.state === JobUtils.JOB_STATE_PAUSED) {
-                        return "qrc:/assets/icons/material-symbols/pause-fill.svg"
+                        return "qrc:/assets/icons/material-symbols/media/pause-fill.svg"
                     } else if (job.state === JobUtils.JOB_STATE_DONE) {
-                        return "qrc:/assets/icons_material/outline-check_circle.svg"
+                        return "qrc:/assets/icons/material-symbols/check_circle.svg"
                     } else if (job.state === JobUtils.JOB_STATE_ERRORED) {
                         return "qrc:/assets/icons/material-symbols/report.svg"
                     } else if (job.state === JobUtils.JOB_STATE_ABORTED) {

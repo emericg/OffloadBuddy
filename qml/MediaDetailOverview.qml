@@ -498,7 +498,7 @@ Item {
                     width: 28
                     height: 28
 
-                    source: "qrc:/assets/icons/material-icons/duotone/media/shutter_speed.svg"
+                    source: "qrc:/assets/icons/material-icons/duotone/shutter_speed.svg"
                     color: Theme.colorText
 
                     Text {
@@ -519,7 +519,7 @@ Item {
                     width: 28
                     height: 28
 
-                    source: "qrc:/assets/icons/material-symbols/media/center_focus.svg"
+                    source: "qrc:/assets/icons/material-symbols/media/filter_center_focus-fill.svg"
                     color: Theme.colorText
 
                     Text {
@@ -573,7 +573,7 @@ Item {
                     width: 28
                     height: 28
 
-                    source: "qrc:/assets/icons_material/outline-local_movies.svg"
+                    source: "qrc:/assets/icons/material-symbols/media/theaters.svg"
                     color: Theme.colorText
 
                     Text {
@@ -594,7 +594,7 @@ Item {
                     width: 28
                     height: 28
 
-                    source: "qrc:/assets/icons/material-symbols/memory.svg"
+                    source: "qrc:/assets/icons/material-icons/duotone/memory.svg"
                     color: Theme.colorText
 
                     Text {
