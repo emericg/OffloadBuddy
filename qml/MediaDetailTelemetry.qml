@@ -4,6 +4,7 @@ import QtQuick.Controls
 import QtCharts
 import QtLocation
 import QtPositioning
+import Qt.labs.animation
 
 import ThemeEngine
 
@@ -109,13 +110,11 @@ Item {
     Rectangle {
         id: mapArea
         anchors.top: parent.top
-        anchors.topMargin: 0
         anchors.right: parent.right
-        anchors.rightMargin: 0
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
 
         property bool fullscreen: false
+
         width: fullscreen ? parent.width : parent.width * 0.40
         Behavior on width { NumberAnimation { duration: 233 } }
 
@@ -151,20 +150,40 @@ Item {
         Map {
             id: map
 
-            property bool fullscreen: false
-            property bool moove: false
-
-            //gesture.enabled: moove
-            copyrightsVisible: false
+            ////////////////
 
             plugin: Plugin {
                 preferred: ["maplibre", "osm"]
                 PluginParameter { name: "maplibre.map.styles"; value: "https://tiles.versatiles.org/styles/colorful.json" }
                 PluginParameter { name: "osm.mapping.highdpi_tiles"; value: true }
             }
+            //activeMapType: supportedMapTypes[0]
+            copyrightsVisible: false
 
-            //zoomLevel: 2
+            ////////////////
+
+            property bool fullscreen: false
+            property bool moove: false
+
+            //bearing: 0.0
+            //tilt: 0.0
+            //zoomLevel: 12
+            //fieldOfView: 0
             //center: QtPositioning.coordinate(45.5, 6)
+
+            property real zoomLevel_minimum: 12
+            property real zoomLevel_maximum: 18
+
+            property real tiltLevel_minimum: 0
+            property real tiltLevel_maximum: 66
+
+            property real fovLevel_minimum: 20
+            property real fovLevel_maximum: 120
+
+            BoundaryRule on zoomLevel { // zoom locks
+                minimum: zoomLevel_minimum
+                maximum: zoomLevel_maximum
+            }
 
             ////////////////
 
@@ -172,30 +191,23 @@ Item {
                 button_map_fullscreen.visible = false
 
                 if (shot.latitude !== 0.0) {
-                    button_map_dezoom.enabled = true
-                    button_map_zoom.enabled = true
-
                     // center view
                     map.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
                     map.zoomLevel = 12
 
                     // clean GPS points
-                    while (mapTrace.pathLength() > 0)
+                    while (mapTrace.pathLength() > 0) {
                         mapTrace.removeCoordinate(mapTrace.coordinateAt(0))
+                    }
 
                     // map marker
                     mapTrace.visible = false
-                    if (shot.direction) {
-                        mapMarkerImg.source = "qrc:/gfx/gps_marker_direction.svg"
-                    } else {
-                        mapMarkerImg.source = "qrc:/gfx/gps_marker.svg"
-                    }
                     mapMarker.visible = true
-                    mapMarker.rotation = shot.direction
+                    mapMarker.compass_bearing = shot.direction
                     mapMarker.coordinate = QtPositioning.coordinate(shot.latitude, shot.longitude)
 
                     // scale indicator
-                    calculateScale()
+                    map.computeScale()
                 }
             }
 
@@ -204,9 +216,6 @@ Item {
 
                 // GPS trace
                 if (shot.latitude !== 0.0) {
-                    button_map_dezoom.enabled = true
-                    button_map_zoom.enabled = true
-
                     // center view
                     map.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
 
@@ -234,39 +243,16 @@ Item {
                         map.zoomLevel = 8
 
                     // scale indicator
-                    calculateScale()
+                    map.computeScale()
                 }
             }
 
             property variant scaleLengths: [5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000]
 
-            function calculateScale() {
-                //console.log("calculateScale(zoom: " + map.zoomLevel + ")")
+            function computeScale() {
+                //console.log("computeScale(zoom: " + map.zoomLevel + ")")
 
-                var coord1, coord2, dist, f
-                f = 0
-                coord1 = map.toCoordinate(Qt.point(0, mapScale.y))
-                coord2 = map.toCoordinate(Qt.point(100, mapScale.y))
-                dist = Math.round(coord1.distanceTo(coord2))
-
-                if (dist === 0) {
-                    // not visible
-                } else {
-                    for (var i = 0; i < scaleLengths.length-1; i++) {
-                        if (dist < (scaleLengths[i] + scaleLengths[i+1]) / 2 ) {
-                            f = scaleLengths[i] / dist
-                            dist = scaleLengths[i]
-                            break
-                        }
-                    }
-                    if (f === 0) {
-                        f = dist / scaleLengths[i]
-                        dist = scaleLengths[i]
-                    }
-                }
-
-                mapScale.width = 100 * f
-                mapScaleText.text = UtilsString.distanceToString(dist, 0, settingsManager.appUnits)
+                mapScale.computeScale()
 
                 if (mapTrace.pathLength() > 1) {
                     if ((shot.distanceKm < 1 && map.zoomLevel < 15) ||
@@ -289,7 +275,7 @@ Item {
                 if (map.zoomLevel < Math.round(map.maximumZoomLevel)) {
                     map.zoomLevel = Math.round(map.zoomLevel + 1)
                     if (!map.moove) map.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
-                    calculateScale()
+                    map.computeScale()
                 }
             }
 
@@ -297,7 +283,7 @@ Item {
                 if (map.zoomLevel > Math.round(map.minimumZoomLevel)) {
                     map.zoomLevel = Math.round(map.zoomLevel - 1)
                     if (!map.moove) map.center = QtPositioning.coordinate(shot.latitude, shot.longitude)
-                    calculateScale()
+                    map.computeScale()
                 }
             }
 
@@ -313,25 +299,14 @@ Item {
 
             ////////
 
-            MapQuickItem {
+            MapMarker {
                 id: mapMarker
-                visible: false
-                anchorPoint.x: mapMarkerImg.width/2
-                anchorPoint.y: mapMarkerImg.height/2
-                sourceItem: Image {
-                    id: mapMarkerImg
-                    width: 64
-                    height: 64
-                    sourceSize: Qt.size(width, height)
-                    source: "qrc:/gfx/gps_marker.svg"
-                    //source: "qrc:/gfx/gps_marker_direction.svg"
-                }
             }
 
             MapPolyline {
                 id: mapTrace
                 visible: false
-                line.width: 3
+                line.width: 4
                 line.color: Theme.colorSecondary
             }
 
@@ -344,133 +319,86 @@ Item {
                 anchors.leftMargin: 16
                 spacing: 16
 
-                RoundButtonIcon {
+                MapButton {
                     id: button_map_fullscreen
                     width: mapArea.fullscreen ? 48 : 40
                     height: mapArea.fullscreen ? 48 : 40
 
-                    backgroundVisible: true
-                    backgroundColor: Theme.colorHeader
-                    iconColor: Theme.colorHeaderContent
-                    highlightMode: "color"
-                    highlightColor: Theme.colorBackground
-
                     source: mapArea.fullscreen ? "qrc:/assets/icons/material-symbols/fullscreen_exit.svg"
-                                           : "qrc:/assets/icons/material-symbols/fullscreen.svg"
+                                               : "qrc:/assets/icons/material-symbols/fullscreen.svg"
                     onClicked: mapArea.fullscreen = !mapArea.fullscreen
                 }
 
-                RoundButtonIcon {
+                MapButton {
                     id: button_map_moove
                     width: mapArea.fullscreen ? 48 : 40
                     height: mapArea.fullscreen ? 48 : 40
 
-                    backgroundVisible: true
-                    backgroundColor: Theme.colorHeader
-                    iconColor: Theme.colorHeaderContent
-                    highlightMode: "color"
-                    highlightColor: Theme.colorBackground
-
+                    source: "qrc:/assets/icons/material-symbols/open_with.svg"
                     highlighted: map.moove
                     onClicked: map.moove = !map.moove
-                    source: "qrc:/assets/icons/material-symbols/open_with.svg"
                 }
             }
 
             ////////
 
-            Row {
+            Column {
                 anchors.top: parent.top
                 anchors.topMargin: 16
                 anchors.right: parent.right
                 anchors.rightMargin: 16
                 spacing: 16
 
-                RoundButtonIcon {
-                    id: button_map_dezoom
-                    width: mapArea.fullscreen ? 48 : 40
-                    height: mapArea.fullscreen ? 48 : 40
+                MapButtonCompass { // compass
+                    width: 48
+                    height: 48
 
-                    backgroundVisible: true
-                    backgroundColor: Theme.colorHeader
-                    iconColor: Theme.colorHeaderContent
-                    highlightMode: "color"
-                    highlightColor: Theme.colorBackground
-
-                    source: "qrc:/assets/icons/material-symbols/zoom_out.svg"
-                    onClicked: zoomOut()
+                    onClicked: map.bearing = 0
+                    sourceRotation: -map.bearing
                 }
 
-                RoundButtonIcon {
-                    id: button_map_zoom
-                    width: mapArea.fullscreen ? 48 : 40
-                    height: mapArea.fullscreen ? 48 : 40
+                MapButtonZoom { // zoom buttons
+                    width: 48
+                    height: 96
 
-                    backgroundVisible: true
-                    backgroundColor: Theme.colorHeader
-                    iconColor: Theme.colorHeaderContent
-                    highlightMode: "color"
-                    highlightColor: Theme.colorBackground
+                    zoomLevel: map.zoomLevel
+                    zoomLevel_minimum: map.zoomLevel_minimum
+                    zoomLevel_maximum: map.zoomLevel_maximum
 
-                    source: "qrc:/assets/icons/material-symbols/zoom_in.svg"
-                    onClicked: zoomIn()
+                    onMapZoomIn: {
+                        map.zoomLevel = Math.round(map.zoomLevel + 1)
+                        map.computeScale()
+                    }
+                    onMapZoomOut: {
+                        map.zoomLevel = Math.round(map.zoomLevel - 1)
+                        map.computeScale()
+                    }
                 }
             }
 
             ////////
 
-            Item {
+            MapScale {
                 id: mapScale
-                width: 100
-                height: 16
                 anchors.left: parent.left
                 anchors.leftMargin: 16
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: (mapmode === "image") ? 64 : 16
-
-                Text {
-                    id: mapScaleText
-                    anchors.centerIn: parent
-                    text: "100m"
-                    color: "#555"
-                    font.pixelSize: Theme.fontSizeContentVerySmall
-                }
-
-                Rectangle {
-                    width: 2; height: 6;
-                    anchors.left: parent.left
-                    anchors.bottom: parent.bottom
-                    color: "#555"
-                }
-                Rectangle {
-                    width: parent.width; height: 2;
-                    anchors.bottom: parent.bottom
-                    color: "#555"
-                }
-                Rectangle {
-                    width: 2; height: 6;
-                    anchors.right: parent.right
-                    anchors.bottom: parent.bottom
-                    color:"#555"
-                }
+                map: map
             }
 
             ////////
 
-            Rectangle {
-                height: mapArea.fullscreen ? 48 : 40
-                anchors.left: parent.left
+            MapFrameArea {
                 anchors.right: parent.right
+                anchors.rightMargin: 16
                 anchors.bottom: parent.bottom
+                anchors.bottomMargin: 16
 
-                color: Theme.colorHeader
-                opacity: 0.8
-                visible: (mapmode === "image")
+                height: mapArea.fullscreen ? 44 : 40
 
                 Row {
-                    anchors.fill: parent
-                    anchors.leftMargin: 16
-                    anchors.rightMargin: 16
+                    anchors.verticalCenter: parent.verticalCenter
                     spacing: 16
 
                     Text {
@@ -494,7 +422,7 @@ Item {
                         color: Theme.colorHeaderContent
                     }
 
-                    Item { width: 1; height: 1; } // spacer
+                    Item { width: 1; height: 1; visible: shot.altitude; } // spacer
 
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
@@ -519,7 +447,7 @@ Item {
                         color: Theme.colorHeaderContent
                     }
 
-                    Item { width: 1; height: 1; } // spacer
+                    Item { width: 1; height: 1; visible: shot.speed; } // spacer
 
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
@@ -565,12 +493,13 @@ Item {
 
         enabled: !mapArea.fullscreen
 
+        property int graphLineWidth: 1
         property string graphHead: Theme.colorForeground // Theme.colorPrimary
         property string graphTxt: Theme.colorText // "white"
         property string graphBg: {
             if (Theme.currentTheme === Theme.THEME_LIGHT_AND_WARM) return Theme.colorComponentBackground
             if (Theme.currentTheme === Theme.THEME_DARK_AND_SPOOKY) return Theme.colorComponentBackground
-            if (Theme.currentTheme === Theme.THEME_PLAIN_AND_BORING) return Theme.colorForeground
+            if (Theme.currentTheme === Theme.THEME_PLAIN_AND_BORING) return Theme.colorBackground
             if (Theme.currentTheme === Theme.THEME_BLOOD_AND_TEARS) return Theme.colorForeground
             if (Theme.currentTheme === Theme.THEME_MIGHTY_KITTENS) return Theme.colorComponentBackground
             return Theme.colorComponentBackground
@@ -651,7 +580,7 @@ Item {
 
                         LineSeries {
                             id: speedsSeries
-                            color: Theme.colorPrimary; width: 2;
+                            color: Theme.colorPrimary; width: graphArea.graphLineWidth;
                             axisX: ValueAxis { id: axisSpeedX0; visible: false; gridVisible: false; }
                             axisY: ValueAxis { id: axisSpeedY0; visible: true; gridVisible: true;
                                                labelsFont.pixelSize: Theme.fontSizeContentVerySmall; labelsColor: Theme.colorSubText; labelFormat: "%0.1f";
@@ -715,7 +644,7 @@ Item {
 
                         LineSeries {
                             id: altiSeries
-                            color: Theme.colorWarning; width: 2;
+                            color: Theme.colorWarning; width: graphArea.graphLineWidth;
                             axisX: ValueAxis { id: axisAltiX0; visible: false; gridVisible: false; }
                             axisY: ValueAxis { id: axisAltiY0; visible: true; gridVisible: true;
                                                labelsFont.pixelSize: Theme.fontSizeContentVerySmall; labelsColor: Theme.colorSubText; labelFormat: "%i";
@@ -782,9 +711,9 @@ Item {
                                     labelsFont.pixelSize: Theme.fontSizeContentVerySmall; labelsColor: Theme.colorSubText; labelFormat: "%i";
                                     gridLineColor: Theme.colorSeparator; }
 
-                        LineSeries { id: acclX; width: 1; axisX: axisAcclX0; axisY: axisAcclY0; }
-                        LineSeries { id: acclY; width: 1; axisX: axisAcclX0; axisY: axisAcclY0; }
-                        LineSeries { id: acclZ; width: 1; axisX: axisAcclX0; axisY: axisAcclY0; }
+                        LineSeries { id: acclX; width: graphArea.graphLineWidth; axisX: axisAcclX0; axisY: axisAcclY0; }
+                        LineSeries { id: acclY; width: graphArea.graphLineWidth; axisX: axisAcclX0; axisY: axisAcclY0; }
+                        LineSeries { id: acclZ; width: graphArea.graphLineWidth; axisX: axisAcclX0; axisY: axisAcclY0; }
                     }
                 }
             }
@@ -837,9 +766,9 @@ Item {
                                     labelsFont.pixelSize: Theme.fontSizeContentVerySmall; labelsColor: Theme.colorSubText; labelFormat: "%i";
                                     gridLineColor: Theme.colorSeparator; }
 
-                        LineSeries { id: gyroX; width: 1; axisX: axisGyroX0; axisY: axisGyroY0; }
-                        LineSeries { id: gyroY; width: 1; axisX: axisGyroX0; axisY: axisGyroY0; }
-                        LineSeries { id: gyroZ; width: 1; axisX: axisGyroX0; axisY: axisGyroY0; }
+                        LineSeries { id: gyroX; width: graphArea.graphLineWidth; axisX: axisGyroX0; axisY: axisGyroY0; }
+                        LineSeries { id: gyroY; width: graphArea.graphLineWidth; axisX: axisGyroX0; axisY: axisGyroY0; }
+                        LineSeries { id: gyroZ; width: graphArea.graphLineWidth; axisX: axisGyroX0; axisY: axisGyroY0; }
                     }
                 }
             }

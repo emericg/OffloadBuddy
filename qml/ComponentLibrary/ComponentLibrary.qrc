@@ -117,6 +117,13 @@
         <file alias="TextField_FileDialog.qml">complex/TextField_FileDialog.qml</file>
         <file alias="TextField_FolderDialog.qml">complex/TextField_FolderDialog.qml</file>
 
+        <file alias="MapButton.qml">maps/MapButton.qml</file>
+        <file alias="MapButtonCompass.qml">maps/MapButtonCompass.qml</file>
+        <file alias="MapButtonZoom.qml">maps/MapButtonZoom.qml</file>
+        <file alias="MapFrameArea.qml">maps/MapFrameArea.qml</file>
+        <file alias="MapMarker.qml">maps/MapMarker.qml</file>
+        <file alias="MapScale.qml">maps/MapScale.qml</file>
+
         <file alias="TagClear.qml">wip/TagClear.qml</file>
         <file alias="TagDesktop.qml">wip/TagDesktop.qml</file>
         <file alias="TagFlat.qml">wip/TagFlat.qml</file>
