@@ -1,11 +1,10 @@
 import QtQuick
+import QtQuick.Effects
 import QtQuick.Controls
-//import QtGraphicalEffects 1.15 // Qt5
-import Qt5Compat.GraphicalEffects // Qt6
 
 import ThemeEngine
-import ShotUtils 1.0
-import ItemImage 1.0
+import ShotUtils
+import ItemImage
 import "qrc:/utils/UtilsMedia.js" as UtilsMedia
 import "qrc:/utils/UtilsString.js" as UtilsString
 
@@ -157,7 +156,11 @@ Rectangle {
     ////////////////////////////////////////////////////////////////////////////
 
     Item {
+        id: imageArea
         anchors.fill: parent
+
+        property bool imageLoaded: (imageFs.progress === 1.0 ||
+                                    (imageMtpLoader.item && imageMtpLoader.item.visible))
 
         Image { // TODO // loader
             id: imageFs
@@ -179,6 +182,7 @@ Rectangle {
         }
 
         Loader {
+            id: imageMtpLoader
             anchors.fill: parent
 
             active: (shotDevice && shotDevice.deviceStorage === ShotUtils.STORAGE_MTP)
@@ -203,13 +207,20 @@ Rectangle {
         }
 
         layer.enabled: true
-        layer.effect: OpacityMask {
-            maskSource: Rectangle {
-                x: itemShot.x
-                y: itemShot.y
-                width: itemShot.width
-                height: itemShot.height
-                radius: Theme.componentRadius
+        layer.effect: MultiEffect {
+            maskEnabled: true
+            maskInverted: false
+            maskThresholdMin: 0.5
+            maskSpreadAtMin: 1.0
+            maskSpreadAtMax: 0.0
+            maskSource: ShaderEffectSource {
+                sourceItem: Rectangle {
+                    x: itemShot.x
+                    y: itemShot.y
+                    width: itemShot.width
+                    height: itemShot.height
+                    radius: Theme.componentRadius
+                }
             }
         }
     }
@@ -220,7 +231,7 @@ Rectangle {
         id: overlayInfos
         anchors.fill: parent
 
-        visible: (imageFs.progress === 1.0 || imageMtp.visible)
+        visible: imageArea.imageLoaded
 
         Text {
             id: text_top

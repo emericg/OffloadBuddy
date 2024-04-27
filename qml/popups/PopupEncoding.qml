@@ -990,7 +990,7 @@ Popup {
                         height: 48
                         spacing: 16
 
-                        visible: (encodingMode === "timelapse") || (encodingMode === "video" && !cbCOPY.checked && currentShot.duration > 60000)
+                        visible: (encodingMode === "timelapse") || (encodingMode === "video" && !cbCOPY.checked && currentShot && currentShot.duration > 60000)
 
                         Text {
                             width: popupEncoding.legendWidth
@@ -1328,7 +1328,7 @@ Popup {
                         anchors.left: parent.left
                         anchors.right: parent.right
 
-                        visible: (currentShot.fileType === ShotUtils.FILE_VIDEO && currentShot.hasGPS)
+                        visible: (currentShot && currentShot.fileType === ShotUtils.FILE_VIDEO && currentShot.hasGPS)
 
                         Text {
                             id: telemetryWarning

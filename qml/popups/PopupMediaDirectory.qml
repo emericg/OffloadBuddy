@@ -124,12 +124,13 @@ Popup {
             anchors.left: parent.left
             anchors.leftMargin: Theme.componentMarginXL
             anchors.right: parent.right
+            anchors.rightMargin: Theme.componentMargin
             height: 48
 
             Text {
                 anchors.left: parent.left
                 anchors.right: parent.right
-                anchors.leftMargin: Theme.componentMargin + 40
+                anchors.rightMargin: Theme.componentMargin + 40
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: directory.directoryPath

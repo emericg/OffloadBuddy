@@ -456,7 +456,7 @@ Item {
                 sourceSize.width: width
                 sourceSize.height: height
                 anchors.centerIn: parent
-                source: "qrc:/devices/disk.svg"
+                source: "qrc:/gfx/disk.svg"
                 asynchronous: true
             }
         }

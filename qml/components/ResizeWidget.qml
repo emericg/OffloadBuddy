@@ -1,10 +1,8 @@
 import QtQuick
 import QtQuick.Controls
-//import QtGraphicalEffects 1.15 // Qt5
-import Qt5Compat.GraphicalEffects // Qt6
 
 import ThemeEngine
-import MediaUtils 1.0
+import MediaUtils
 
 Item {
     id: resizeWidget

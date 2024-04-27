@@ -25,12 +25,12 @@ Popup {
     property var qdateFirst: new Date(2001, 1, 1, 0, 0, 0)
     property var qdateToday: new Date()
 
-    property var qdateFile
-    property var qdateMetadata
-    property var qdateGps
-    property var qdateUser
+    property var qdateFile: null
+    property var qdateMetadata: null
+    property var qdateGps: null
+    property var qdateUser: null
 
-    property var qdate
+    property var qdate: null
 
     function loadDates() {
         qdateToday = new Date();
@@ -213,7 +213,8 @@ Popup {
 
                                 visible: (qdateFile > qdateFirst && qdateFile < qdateToday)
                                 enabled: visible
-                                highlighted: (qdate && Qt.formatDateTime(qdate) === Qt.formatDateTime(qdateFile))
+                                highlighted: (qdate && qdateFile &&
+                                              (Qt.formatDateTime(qdate) === Qt.formatDateTime(qdateFile)))
                                 backgroundVisible: highlighted
                                 onClicked: loadDate(qdateFile, true)
                             }
@@ -274,7 +275,8 @@ Popup {
 
                             visible: (qdateMetadata > qdateFirst && qdateMetadata < qdateToday)
                             enabled: visible
-                            highlighted: (qdate && Qt.formatDateTime(qdate) === Qt.formatDateTime(qdateMetadata))
+                            highlighted: (qdate && qdateMetadata &&
+                                          (Qt.formatDateTime(qdate) === Qt.formatDateTime(qdateMetadata)))
                             backgroundVisible: highlighted
                             onClicked: loadDate(qdateMetadata, true)
                         }
@@ -334,7 +336,8 @@ Popup {
 
                             visible: (qdateGps > qdateFirst && qdateGps < qdateToday)
                             enabled: visible
-                            highlighted: (qdate && Qt.formatDateTime(qdate) === Qt.formatDateTime(qdateGps))
+                            highlighted: (qdate && qdateGps &&
+                                          (Qt.formatDateTime(qdate) === Qt.formatDateTime(qdateGps)))
                             backgroundVisible: highlighted
                             onClicked: loadDate(qdateGps, true)
                         }
@@ -395,10 +398,10 @@ Popup {
                             visible: (qdateUser > qdateFirst && qdateUser < qdateToday)
                             enabled: visible
                             highlighted: (qdate &&
-                                       (Qt.formatDateTime(qdate) === Qt.formatDateTime(qdateUser) &&
-                                        Qt.formatDateTime(qdate) !== Qt.formatDateTime(qdateFile) &&
-                                        Qt.formatDateTime(qdate) !== Qt.formatDateTime(qdateMetadata) &&
-                                        Qt.formatDateTime(qdate) !== Qt.formatDateTime(qdateGps)))
+                                          (Qt.formatDateTime(qdate) === Qt.formatDateTime(qdateUser) &&
+                                           Qt.formatDateTime(qdate) !== Qt.formatDateTime(qdateFile) &&
+                                           Qt.formatDateTime(qdate) !== Qt.formatDateTime(qdateMetadata) &&
+                                           Qt.formatDateTime(qdate) !== Qt.formatDateTime(qdateGps)))
                             backgroundVisible: highlighted
                             onClicked: loadDate(qdateUser, true)
                         }

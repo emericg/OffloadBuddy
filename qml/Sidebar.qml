@@ -15,6 +15,14 @@ Rectangle {
     width: isHdpi ? 72 : 80
     color: Theme.colorSidebar
 
+    Rectangle {
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        width: 2
+        color: Theme.colorSidebarHighlight
+    }
+
     ////////////////////////////////////////////////////////////////////////////
 
     DragHandler {
@@ -58,8 +66,9 @@ Rectangle {
         onClicked: appContent.state = "library"
     }
 
-    ListView {
+    Column {
         id: menuDevices
+
         anchors.top: button_library.bottom
         anchors.topMargin: 16
         anchors.left: parent.left
@@ -69,28 +78,29 @@ Rectangle {
         anchors.right: parent.right
         anchors.rightMargin: 0
 
-        interactive: false
         spacing: 16
 
-        model: deviceManager.devicesList
-        delegate: DesktopSidebarItem {
-            height: sideBar.width
+        Repeater {
+            model: deviceManager.devicesList
+            delegate: DesktopSidebarItem {
+                height: sideBar.width
 
-            text: modelData.model
-            source: UtilsDevice.getDevicePicture(modelData)
-            sourceSize: 60
+                text: modelData.model
+                source: UtilsDevice.getDevicePicture(modelData)
+                sourceSize: 60
 
-            highlighted: (appContent.state === "device" && modelData === screenDevice.currentDevice)
-            highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
+                highlighted: (appContent.state === "device" && modelData === screenDevice.currentDevice)
+                highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
 
-            indicatorVisible: modelData.deviceState
-            indicatorAnimated: modelData.deviceState
-            indicatorSource: "qrc:/assets/icons/material-symbols/autorenew.svg"
+                indicatorVisible: modelData.deviceState
+                indicatorAnimated: modelData.deviceState
+                indicatorSource: "qrc:/assets/icons/material-symbols/autorenew.svg"
 
-            onClicked: {
-                if (!(appContent.state === "device" && screenDevice.currentDevice === modelData)) {
-                    screenDevice.currentDevice = modelData
-                    appContent.state = "device"
+                onClicked: {
+                    if (!(appContent.state === "device" && screenDevice.currentDevice === modelData)) {
+                        screenDevice.currentDevice = modelData
+                        appContent.state = "device"
+                    }
                 }
             }
         }
@@ -151,4 +161,6 @@ Rectangle {
             onClicked: appWindow.close()
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 }

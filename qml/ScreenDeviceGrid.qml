@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Effects
 import QtQuick.Controls
 
 import ThemeEngine
@@ -168,11 +169,11 @@ Item {
 
         if (currentDevice && currentDevice.deviceStorage === StorageUtils.StorageFilesystem) {
             if (currentDevice.deviceType === DeviceUtils.DeviceActionCamera)
-                imageEmpty.source = "qrc:/gfx/devices/card.svg"
+                imageEmpty.source = "qrc:/gfx/card.svg"
             else
-                imageEmpty.source = "qrc:/gfx/devices/camera.svg"
+                imageEmpty.source = "qrc:/gfx/camera.svg"
         } else {
-            imageEmpty.source = "qrc:/gfx/devices/usb.svg"
+            imageEmpty.source = "qrc:/gfx/usb.svg"
         }
     }
 
@@ -633,7 +634,7 @@ Item {
 
         ItemBannerJob {
             id: bannerJob
-            height: (currentDevice.jobsCount) ? 48 : 0
+            height: (currentDevice && currentDevice.jobsCount) ? 48 : 0
         }
     }
 
@@ -677,16 +678,16 @@ Item {
                 x: 0; y: 0; z: 2;
 
                 color: "transparent"
-                radius: (Theme.componentRadius > 4) ? Theme.componentRadius : 2
+                radius: (Theme.componentRadius > 4) ? Theme.componentRadius-2 : 4
                 border.width: (Theme.componentRadius > 4) ? 6 : 4
                 border.color: Theme.colorPrimary
-/*
-                SimpleShadow {
-                    anchors.fill: parent
-                    radius: parent.radius
-                    filled: false
-                    color: Theme.colorPrimary
-                }*/
+
+                layer.enabled: true
+                layer.effect: MultiEffect { // shadow
+                    autoPaddingEnabled: true
+                    shadowEnabled: true
+                    shadowColor: Theme.colorPrimary
+                }
             }
         }
 
