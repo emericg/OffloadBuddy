@@ -41,8 +41,6 @@ void UtilsIOS::screenKeepOn(bool on)
     }
 }
 
-/* ************************************************************************** */
-
 // For reference:
 //enum ScreenOrientation_iOS {
 //    UIInterfaceOrientationUnknown = 0,          // The orientation of the device is unknown.

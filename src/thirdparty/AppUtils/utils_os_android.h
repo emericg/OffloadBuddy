@@ -79,6 +79,26 @@ public:
     static bool getPermission_camera();
 
     /*!
+     * \return True if POST_NOTIFICATIONS permission has been previously obtained.
+     */
+    static bool checkPermission_notification();
+
+    /*!
+     * \return True if POST_NOTIFICATIONS permission has been explicitly obtained.
+     */
+    static bool getPermission_notification();
+
+    /*!
+     * \return True if Bluetooth permission has been previously obtained.
+     */
+    static bool checkPermission_bluetooth();
+
+    /*!
+     * \return True if Bluetooth permission has been explicitly obtained.
+     */
+    static bool getPermission_bluetooth();
+
+    /*!
      * \return True if ACCESS_FINE_LOCATION permission has been previously obtained.
      */
     static bool checkPermission_location();
@@ -229,6 +249,16 @@ public:
      * - 100 is a regular 'notification' vibration
      */
     static void vibrate(int milliseconds);
+
+    /* ********************************************************************** */
+
+    /*!
+     * \brief Get the SSID of the currently connected WiFi network.
+     *
+     * Needs android.permission.ACCESS_WIFI_STATE
+     * AND either android.permission.ACCESS_COARSE_LOCATION or ACCESS_FINE_LOCATION
+     */
+    static QString getWifiSSID();
 
     /* ********************************************************************** */
 

@@ -30,6 +30,7 @@ win32 | ios | android { DEFINES += USE_CONTRIBS }
 # Project modules ##############################################################
 
 # App utils
+CONFIG += UTILS_DOCK_ENABLED
 include(src/thirdparty/AppUtils/AppUtils.pri)
 
 # SingleApplication for desktop OS

@@ -164,6 +164,30 @@ bool UtilsAndroid::getPermission_camera()
 
 /* ************************************************************************** */
 
+bool UtilsAndroid::checkPermission_notification()
+{
+    return false; // TODO
+}
+
+bool UtilsAndroid::getPermission_notification()
+{
+    return false; // TODO
+}
+
+/* ************************************************************************** */
+
+bool UtilsAndroid::checkPermission_bluetooth()
+{
+    return false; // TODO
+}
+
+bool UtilsAndroid::getPermission_bluetooth()
+{
+    return false; // TODO
+}
+
+/* ************************************************************************** */
+
 bool UtilsAndroid::checkPermission_location()
 {
     QtAndroid::PermissionResult loc = QtAndroid::checkPermission("android.permission.ACCESS_FINE_LOCATION");
@@ -296,7 +320,7 @@ bool UtilsAndroid::gpsutils_isGpsEnabled()
         if (appCtx.isValid())
         {
             jboolean verified = QAndroidJniObject::callStaticMethod<jboolean>(
-                "com/emeric/utils/QGpsUtils",
+                "io/emeric/utils/QGpsUtils",
                 "checkGpsEnabled",
                 "(Landroid/content/Context;)Z",
                 appCtx.object());
@@ -322,7 +346,7 @@ bool UtilsAndroid::gpsutils_forceGpsEnabled()
         if (appCtx.isValid())
         {
             jboolean verified = QAndroidJniObject::callStaticMethod<jboolean>(
-                "com/emeric/utils/QGpsUtils",
+                "io/emeric/utils/QGpsUtils",
                 "forceGpsEnabled",
                 "(Landroid/content/Context;)Z",
                 appCtx.object());
@@ -346,7 +370,7 @@ void UtilsAndroid::gpsutils_openLocationSettings()
         if (appCtx.isValid())
         {
             QAndroidJniObject intent = QAndroidJniObject::callStaticObjectMethod(
-                "com/emeric/utils/QGpsUtils",
+                "io/emeric/utils/QGpsUtils",
                 "openLocationSettings",
                 "()Landroid/content/Intent;",
                 appCtx.object());
@@ -602,6 +626,49 @@ void UtilsAndroid::vibrate(int milliseconds)
             env->ExceptionClear();
         }
     });
+}
+
+/* ************************************************************************** */
+
+void getWifiSSID()
+{
+    QAndroidJniObject activity = QtAndroid::androidActivity();
+    if (activity.isValid())
+    {
+        QAndroidJniObject wifiManager = activity.callObjectMethod("getSystemService",
+                                                                  "(Ljava/lang/String;)Ljava/lang/Object;",
+                                                                  QAndroidJniObject::fromString("wifi").object());
+
+        if (wifiManager.isValid())
+        {
+            QAndroidJniObject wifiInfo = wifiManager.callObjectMethod("getConnectionInfo",
+                                                                      "()Landroid/net/wifi/WifiInfo;");
+
+            if (wifiInfo.isValid())
+            {
+                QString ssid = wifiInfo.callObjectMethod("getSSID", "()Ljava/lang/String;").toString();
+
+                if (ssid.startsWith("\"")) ssid.removeFirst();
+                if (ssid.endsWith("\"")) ssid.removeLast();
+
+                return ssid;
+            }
+            else
+            {
+                qDebug() << "Failed to get WiFi Info";
+            }
+        }
+        else
+        {
+            qDebug() << "Failed to get WifiManager";
+        }
+    }
+    else
+    {
+        qDebug() << "Invalid Activity";
+    }
+
+    return QString();
 }
 
 /* ************************************************************************** */

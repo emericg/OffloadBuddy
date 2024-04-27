@@ -34,7 +34,7 @@
 #include "utils_screen.h"
 #include "utils_sysinfo.h"
 #include "utils_language.h"
-#include "utils_os_macosdock.h"
+#include "utils_os_macos_dock.h"
 
 #include <SingleApplication>
 
@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
     }
 
     // Force "old" gstreamer multimedia backend
-    qputenv("QT_MEDIA_BACKEND", "gstreamer");
+    //qputenv("QT_MEDIA_BACKEND", "gstreamer");
 #endif
 
     SingleApplication app(argc, argv, false);
@@ -157,7 +157,7 @@ int main(int argc, char *argv[])
     UtilsApp *utilsApp = UtilsApp::getInstance();
     UtilsScreen *utilsScreen = UtilsScreen::getInstance();
     UtilsLanguage *utilsLanguage = UtilsLanguage::getInstance();
-    UtilsSysinfo *utilsSysinfo = UtilsSysinfo::getInstance();
+    UtilsSysInfo *utilsSysinfo = UtilsSysInfo::getInstance();
     if (!utilsApp || !utilsScreen || !utilsLanguage || !utilsSysinfo)
     {
         qWarning() << "Cannot init OffloadBuddy utils!";

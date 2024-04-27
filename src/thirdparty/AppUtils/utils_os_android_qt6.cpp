@@ -189,6 +189,113 @@ bool UtilsAndroid::getPermission_camera()
 
 /* ************************************************************************** */
 
+bool UtilsAndroid::checkPermission_notification()
+{
+    QFuture<QtAndroidPrivate::PermissionResult> notif = QtAndroidPrivate::checkPermission("android.permission.POST_NOTIFICATIONS");
+    //cam.waitForFinished();
+
+    return (notif.result() == QtAndroidPrivate::PermissionResult::Authorized);
+}
+
+bool UtilsAndroid::getPermission_notification()
+{
+    bool status = true;
+
+    QFuture<QtAndroidPrivate::PermissionResult> notif = QtAndroidPrivate::checkPermission("android.permission.POST_NOTIFICATIONS");
+    //notif.waitForFinished();
+
+    if (notif.result() == QtAndroidPrivate::PermissionResult::Denied)
+    {
+        QtAndroidPrivate::requestPermission("android.permission.POST_NOTIFICATIONS");
+        notif = QtAndroidPrivate::checkPermission("android.permission.POST_NOTIFICATIONS");
+        //notif.waitForFinished();
+
+        if (notif.result() == QtAndroidPrivate::PermissionResult::Denied)
+        {
+            qWarning() << "POST_NOTIFICATIONS PERMISSION DENIED";
+            status = false;
+        }
+    }
+
+    return status;
+}
+
+/* ************************************************************************** */
+
+bool UtilsAndroid::checkPermission_bluetooth()
+{
+    bool status = false;
+
+    // (up to) Android 11 / SDK 30
+    // BLUETOOTH
+    // BLUETOOTH_ADMIN
+
+    if (getSdkVersion() <= 30)
+    {
+        QFuture<QtAndroidPrivate::PermissionResult> ble = QtAndroidPrivate::checkPermission("android.permission.BLUETOOTH");
+        //ble.waitForFinished();
+
+        QFuture<QtAndroidPrivate::PermissionResult> ble_admin = QtAndroidPrivate::checkPermission("android.permission.BLUETOOTH_ADMIN");
+        //ble_admin.waitForFinished();
+
+        status = (ble.result() == QtAndroidPrivate::PermissionResult::Authorized) &&
+                 (ble_admin.result() == QtAndroidPrivate::PermissionResult::Authorized);
+    }
+
+    // (from) Android 12+ / SDK 31
+    // BLUETOOTH_SCAN
+    // BLUETOOTH_CONNECT
+
+    if (getSdkVersion() >= 31)
+    {
+        QFuture<QtAndroidPrivate::PermissionResult> ble_scan = QtAndroidPrivate::checkPermission("android.permission.BLUETOOTH_SCAN");
+        //ble_scan.waitForFinished();
+
+        QFuture<QtAndroidPrivate::PermissionResult> ble_connect = QtAndroidPrivate::checkPermission("android.permission.BLUETOOTH_CONNECT");
+        //ble_connect.waitForFinished();
+
+        status = (ble_scan.result() == QtAndroidPrivate::PermissionResult::Authorized) &&
+                 (ble_connect.result() == QtAndroidPrivate::PermissionResult::Authorized);
+    }
+
+    return status;
+}
+
+bool UtilsAndroid::getPermission_bluetooth()
+{
+    if (getSdkVersion() <= 30)
+    {
+        QFuture<QtAndroidPrivate::PermissionResult> ble = QtAndroidPrivate::checkPermission("android.permission.BLUETOOTH");
+        if (ble.result() == QtAndroidPrivate::PermissionResult::Denied)
+        {
+            QtAndroidPrivate::requestPermission("android.permission.BLUETOOTH");
+        }
+        QFuture<QtAndroidPrivate::PermissionResult> ble_admin = QtAndroidPrivate::checkPermission("android.permission.BLUETOOTH_ADMIN");
+        if (ble_admin.result() == QtAndroidPrivate::PermissionResult::Denied)
+        {
+            QtAndroidPrivate::requestPermission("android.permission.BLUETOOTH_ADMIN");
+        }
+    }
+
+    if (getSdkVersion() >= 31)
+    {
+        QFuture<QtAndroidPrivate::PermissionResult> ble_scan = QtAndroidPrivate::checkPermission("android.permission.BLUETOOTH_SCAN");
+        if (ble_scan.result() == QtAndroidPrivate::PermissionResult::Denied)
+        {
+            QtAndroidPrivate::requestPermission("android.permission.BLUETOOTH_SCAN");
+        }
+        QFuture<QtAndroidPrivate::PermissionResult> ble_connect = QtAndroidPrivate::checkPermission("android.permission.BLUETOOTH_CONNECT");
+        if (ble_connect.result() == QtAndroidPrivate::PermissionResult::Denied)
+        {
+            QtAndroidPrivate::requestPermission("android.permission.BLUETOOTH_CONNECT");
+        }
+    }
+
+    return checkPermission_bluetooth();
+}
+
+/* ************************************************************************** */
+
 bool UtilsAndroid::checkPermission_location()
 {
     QFuture<QtAndroidPrivate::PermissionResult> loc = QtAndroidPrivate::checkPermission("android.permission.ACCESS_FINE_LOCATION");
@@ -354,7 +461,7 @@ bool UtilsAndroid::gpsutils_isGpsEnabled()
     bool status = false;
 
     jboolean verified = QJniObject::callStaticMethod<jboolean>(
-        "com/emeric/utils/QGpsUtils",
+        "io/emeric/utils/QGpsUtils",
         "checkGpsEnabled",
         "(Landroid/content/Context;)Z",
         QNativeInterface::QAndroidApplication::context());
@@ -372,7 +479,7 @@ bool UtilsAndroid::gpsutils_forceGpsEnabled()
     bool status = false;
 
     jboolean verified = QJniObject::callStaticMethod<jboolean>(
-        "com/emeric/utils/QGpsUtils",
+        "io/emeric/utils/QGpsUtils",
         "forceGpsEnabled",
         "(Landroid/content/Context;)Z",
         QNativeInterface::QAndroidApplication::context());
@@ -387,13 +494,17 @@ bool UtilsAndroid::gpsutils_forceGpsEnabled()
 
 void UtilsAndroid::gpsutils_openLocationSettings()
 {
-    QJniObject intent = QJniObject::callStaticObjectMethod(
-        "com/emeric/utils/QGpsUtils",
-        "openLocationSettings",
-        "()Landroid/content/Intent;",
-        QNativeInterface::QAndroidApplication::context());
+    QJniObject activity = QNativeInterface::QAndroidApplication::context();
+    if (activity.isValid())
+    {
+        QJniObject intent = QJniObject::callStaticObjectMethod(
+            "io/emeric/utils/QGpsUtils",
+            "openLocationSettings",
+            "()Landroid/content/Intent;",
+            activity.object<jobject>());
 
-    QtAndroidPrivate::startActivity(intent, 0);
+        QtAndroidPrivate::startActivity(intent, 0);
+    }
 }
 
 /* ************************************************************************** */
@@ -414,7 +525,7 @@ QString UtilsAndroid::getAppExternalStorage()
         QJniObject dir = QJniObject::fromString(QStringLiteral(""));
         QJniObject path = activity.callObjectMethod("getExternalFilesDir",
                                                     "(Ljava/lang/String;)Ljava/io/File;",
-                                                    dir.object());
+                                                    dir.object<jobject>());
         storage = path.toString();
     }
 
@@ -641,6 +752,49 @@ void UtilsAndroid::vibrate(int milliseconds)
 
 /* ************************************************************************** */
 
+QString UtilsAndroid::getWifiSSID()
+{
+    QJniObject activity = QNativeInterface::QAndroidApplication::context();
+    if (activity.isValid())
+    {
+        QJniObject wifiManager = activity.callObjectMethod("getSystemService",
+                                                           "(Ljava/lang/String;)Ljava/lang/Object;",
+                                                           QJniObject::fromString("wifi").object());
+
+        if (wifiManager.isValid())
+        {
+            QJniObject wifiInfo = wifiManager.callObjectMethod("getConnectionInfo",
+                                                               "()Landroid/net/wifi/WifiInfo;");
+
+            if (wifiInfo.isValid())
+            {
+                QString ssid = wifiInfo.callObjectMethod("getSSID", "()Ljava/lang/String;").toString();
+
+                if (ssid.startsWith("\"")) ssid.removeFirst();
+                if (ssid.endsWith("\"")) ssid.removeLast();
+
+                return ssid;
+            }
+            else
+            {
+                qDebug() << "Failed to get WiFi Info";
+            }
+        }
+        else
+        {
+            qDebug() << "Failed to get WifiManager";
+        }
+    }
+    else
+    {
+        qDebug() << "Invalid Activity";
+    }
+
+    return QString();
+}
+
+/* ************************************************************************** */
+
 void UtilsAndroid::openApplicationInfo(const QString &packageName)
 {
     //qDebug() << "> openApplicationInfo(" << packageName << ")";
@@ -696,7 +850,7 @@ void UtilsAndroid::openStorageSettings(const QString &packageName)
             return;
         }
 
-        QJniObject intent("android/content/Intent", "(Ljava/lang/String;)V", jintentObject.object());
+        QJniObject intent("android/content/Intent", "(Ljava/lang/String;)V", jintentObject.object<jobject>());
         if (!intent.isValid())
         {
             qWarning("Unable to create Intent object for ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION");
@@ -720,7 +874,7 @@ void UtilsAndroid::openLocationSettings()
                                                                 "ACTION_LOCATION_SOURCE_SETTINGS",
                                                                 "Ljava/lang/String;");
 
-    QJniObject intent("android/content/Intent", "(Ljava/lang/String;)V", jintentObject.object());
+    QJniObject intent("android/content/Intent", "(Ljava/lang/String;)V", jintentObject.object<jobject>());
     if (!intent.isValid())
     {
         qWarning("Unable to create Intent object for ACTION_LOCATION_SOURCE_SETTINGS");

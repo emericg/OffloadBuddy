@@ -54,9 +54,7 @@ It's designed to remove the hassle of handling and transferring the many videos 
 #### Dependencies
 
 You will need a C++17 compiler and Qt 6.5+ with the following 'additional librairies':  
-- Qt 5 Compatibility Module
 - Qt Multimedia
-- Qt Image Formats
 - Qt Positioning
 - Qt Location
 - Qt Charts
@@ -71,7 +69,7 @@ OffloadBuddy dependencies:
 Optional dependencies:
 - libusb and libmtp  
 - libexif  
-- ffmpeg (3.4+)  
+- ffmpeg (4+)  
 - MiniVideo (0.14+)  
 
 Build dependencies:
@@ -107,14 +105,13 @@ $ make
 
 #### Third party projects used by OffloadBuddy
 
-* Qt6 [website](https://www.qt.io) ([LGPL v3](https://www.gnu.org/licenses/lgpl-3.0.txt))
-* MiniVideo [website](https://github.com/emericg/MiniVideo) ([LGPL v3](https://www.gnu.org/licenses/lgpl-3.0.txt))
-* ffmpeg [website](https://www.ffmpeg.org/) ([LGPL v2.1](https://www.gnu.org/licenses/lgpl-2.1.txt))
-* libexif [website](https://github.com/libexif/) ([LGPL v2.1](https://www.gnu.org/licenses/lgpl-2.1.txt))
-* libmtp [website](https://github.com/libmtp/) ([LGPL v2.1](https://www.gnu.org/licenses/lgpl-2.1.txt))
-* miniz [website](https://github.com/richgel999/miniz/) ([MIT](https://opensource.org/licenses/MIT))
-* SingleApplication [website](https://github.com/itay-grudev/SingleApplication) ([MIT](https://opensource.org/licenses/MIT))
-
+* [Qt6](https://www.qt.io) ([LGPL v3](https://www.gnu.org/licenses/lgpl-3.0.txt))
+* [MiniVideo](https://github.com/emericg/MiniVideo) ([LGPL v3](https://www.gnu.org/licenses/lgpl-3.0.txt))
+* [ffmpeg](https://www.ffmpeg.org/) ([LGPL v2.1](https://www.gnu.org/licenses/lgpl-2.1.txt))
+* [libexif](https://github.com/libexif/) ([LGPL v2.1](https://www.gnu.org/licenses/lgpl-2.1.txt))
+* [libmtp](https://github.com/libmtp/) ([LGPL v2.1](https://www.gnu.org/licenses/lgpl-2.1.txt))
+* [miniz](https://github.com/richgel999/miniz/) ([MIT](https://opensource.org/licenses/MIT))
+* [SingleApplication](https://github.com/itay-grudev/SingleApplication) ([MIT](https://opensource.org/licenses/MIT))
 * Icons: [assets/icons/COPYING](assets/icons/COPYING)
 * Graphical resources: [assets/cameras/COPYING](assets/cameras/COPYING) [assets/gfx/COPYING](assets/gfx/COPYING)
 

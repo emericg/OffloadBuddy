@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2019 Emeric Grange
+ * Copyright (c) 2024 Emeric Grange
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,43 +20,31 @@
  * SOFTWARE.
  */
 
-#ifndef UTILS_MACOS_DOCK_H
-#define UTILS_MACOS_DOCK_H
+#include "utils_os_ios_wifi.h"
 
-#include <QtGlobal>
+#if defined(Q_OS_IOS)
 
-#if defined(Q_OS_MACOS)
+#import <SystemConfiguration/CaptiveNetwork.h>
+
 /* ************************************************************************** */
 
-#include <QObject>
-
-class QQuickWindow;
-
-/*!
- * \brief macOS dock click handler
- *
- * Use with "LIBS += -framework AppKit"
- */
-class MacOSDockHandler : public QObject
+QString UtilsIOSWiFi::getWifiSSID()
 {
-    Q_OBJECT
+    NSString *ssid = nil;
+    NSArray *interfaces = (__bridge_transfer id)CNCopySupportedInterfaces();
 
-    MacOSDockHandler();
-    ~MacOSDockHandler();
+    for (NSString *interfaceName in interfaces)
+    {
+        NSDictionary *networkInfo = (__bridge_transfer id)CNCopyCurrentNetworkInfo((__bridge CFStringRef)interfaceName);
+        if (networkInfo[@"SSID"])
+        {
+            ssid = networkInfo[@"SSID"];
+            break;
+        }
+    }
 
-    QQuickWindow *m_saved_window = nullptr;
-
-signals:
-    void dockIconClicked();
-
-public:
-    static MacOSDockHandler *getInstance();
-
-    void setupDock(QQuickWindow *window);
-
-    Q_INVOKABLE static void toggleDockIconVisibility(bool show);
-};
+    return QString::fromNSString(ssid);
+}
 
 /* ************************************************************************** */
-#endif // Q_OS_MACOS
-#endif // UTILS_MACOS_DOCK_H
+#endif // Q_OS_IOS

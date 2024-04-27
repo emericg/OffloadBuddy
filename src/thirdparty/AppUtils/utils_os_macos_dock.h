@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2020 Emeric Grange
+ * Copyright (c) 2019 Emeric Grange
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,40 +20,43 @@
  * SOFTWARE.
  */
 
-#ifndef UTILS_OS_IOS_H
-#define UTILS_OS_IOS_H
+#ifndef UTILS_OS_MACOS_DOCK_H
+#define UTILS_OS_MACOS_DOCK_H
 
 #include <QtGlobal>
-#include <QString>
 
-#if defined(Q_OS_IOS)
+#if defined(Q_OS_MACOS)
 /* ************************************************************************** */
 
+#include <QObject>
+
+class QQuickWindow;
+
 /*!
- * \brief iOS utils
+ * \brief macOS dock click handler
+ *
+ * Use with "LIBS += -framework AppKit"
  */
-class UtilsIOS
+class MacOSDockHandler : public QObject
 {
+    Q_OBJECT
+
+    MacOSDockHandler();
+    ~MacOSDockHandler();
+
+    QQuickWindow *m_saved_window = nullptr;
+
+signals:
+    void dockIconClicked();
+
 public:
-    /*!
-     * \return True if notification permission has been previously obtained.
-     */
-    static bool checkPermission_notification();
+    static MacOSDockHandler *getInstance();
 
-    /*!
-     * \return True if notification permission has been explicitly obtained.
-     */
-    static bool getPermission_notification();
+    void setupDock(QQuickWindow *window);
 
-    static void screenKeepOn(bool on);
-
-    static void screenLockOrientation(int orientation);
-
-    static void screenLockOrientation(int orientation, bool autoRotate);
-
-    static void vibrate(int milliseconds);
+    Q_INVOKABLE static void toggleDockIconVisibility(bool show);
 };
 
 /* ************************************************************************** */
-#endif // Q_OS_IOS
-#endif // UTILS_OS_IOS_H
+#endif // Q_OS_MACOS
+#endif // UTILS_OS_MACOS_DOCK_H

@@ -1,9 +1,14 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.20)
 
 project(AppUtils LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
+
+#set(UTILS_DOCK_ENABLED true)
+#set(UTILS_WIFI_ENABLED true)
+#set(UTILS_NOTIFICATIONS_ENABLED true)
 
 ################################################################################
 
@@ -18,7 +23,7 @@ find_package(Qt${QT_DEFAULT_MAJOR_VERSION} REQUIRED COMPONENTS ${CORE_COMPONENTS
 set(CORE_LIBRARIES
     Qt::Core
     Qt::Gui
-    Qt::GuiPrivate
+    Qt::GuiPrivate # to get RHI infos
     Qt::Qml
     Qt::Quick
 )
@@ -41,6 +46,8 @@ set(CORE_SOURCES
     utils_screen.h
     utils_sysinfo.cpp
     utils_sysinfo.h
+    utils_wifi.cpp
+    utils_wifi.h
     utils_versionchecker.h)
 
 # OS specific sources & dependencies
@@ -81,22 +88,38 @@ endif()
 if(APPLE AND NOT IOS)
     set(PLATFORM_SOURCES
         utils_os_macos.mm
-        utils_os_macos.h
-        utils_os_macosdock.mm
-        utils_os_macosdock.h)
+        utils_os_macos.h)
 
-    set(PLATFORM_LIBRARIES "-framework AppKit" m)
+    if(UTILS_DOCK_ENABLED)
+        set(PLATFORM_SOURCES ${PLATFORM_SOURCES}
+            utils_os_macos_dock.mm
+            utils_os_macos_dock.h)
+        set(PLATFORM_LIBRARIES "-framework AppKit" m)                           # dock control
+    endif()
 endif()
 
 if(IOS)
+    find_package(Qt${QT_DEFAULT_MAJOR_VERSION} REQUIRED COMPONENTS Quick)
+    set(PLATFORM_LIBRARIES Qt::Quick)
+    set(PLATFORM_LIBRARIES "-framework UIKit" m)
+
     set(PLATFORM_SOURCES
         utils_os_ios.mm
         utils_os_ios.h)
 
-    find_package(Qt${QT_DEFAULT_MAJOR_VERSION} REQUIRED COMPONENTS Quick)
-    set(PLATFORM_LIBRARIES Qt::Quick)
-    set(PLATFORM_LIBRARIES Qt::GuiPrivate)
-    set(PLATFORM_LIBRARIES "-framework UIKit" m)
+    if(UTILS_NOTIFICATIONS_ENABLED)
+        set(PLATFORM_SOURCES ${PLATFORM_SOURCES}
+            utils_os_ios_notif.mm
+            utils_os_ios_notif.h)
+        set(PLATFORM_LIBRARIES "-framework UserNotifications" m)                # show notifications
+    endif()
+
+    if(UTILS_WIFI_ENABLED)
+        set(PLATFORM_SOURCES ${PLATFORM_SOURCES}
+            utils_os_ios_wifi.mm
+            utils_os_ios_wifi.h)
+        set(PLATFORM_LIBRARIES "-framework SystemConfiguration" m)              # get WiFi SSID
+    endif()
 endif()
 
 ################################################################################

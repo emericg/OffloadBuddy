@@ -30,6 +30,8 @@
 #include <QString>
 #include <QStringList>
 
+class QQuickWindow;
+
 /* ************************************************************************** */
 
 class UtilsApp : public QObject
@@ -37,6 +39,8 @@ class UtilsApp : public QObject
     Q_OBJECT
 
     QString m_appPath;
+
+    QQuickWindow *m_quickwindow = nullptr;
 
     // Singleton
     static UtilsApp *instance;
@@ -57,9 +61,21 @@ public:
     static Q_INVOKABLE QString appBuildModeFull();
     static Q_INVOKABLE bool isDebugBuild();
 
+    // Qt info
+
     static Q_INVOKABLE QString qtVersion();
+    static Q_INVOKABLE QString qtBuildMode();
+    static Q_INVOKABLE QString qtArchitecture();
+    static Q_INVOKABLE bool qtIsDebug();
+    static Q_INVOKABLE bool qtIsRelease();
+    static Q_INVOKABLE bool qtIsShared();
+    static Q_INVOKABLE bool qtIsStatic();
+
+    Q_INVOKABLE QString qtRhiBackend();
+    void setQuickWindow(QQuickWindow *window);
 
     // tools
+
     QString getAppPath() const { return m_appPath; }
     void setAppPath(const QString &value);
 
@@ -71,6 +87,8 @@ public:
 
     static Q_INVOKABLE bool isColorLight(const int color);
     static Q_INVOKABLE bool isQColorLight(const QColor &color);
+
+    static Q_INVOKABLE bool isOsThemeDark();
 
     // mobile related
 
@@ -92,6 +110,9 @@ public:
     static Q_INVOKABLE bool checkMobileStorageFileSystemPermission();
     static Q_INVOKABLE bool getMobileStorageFileSystemPermission(const QString &packageName);
 
+    static Q_INVOKABLE bool checkMobileBluetoothPermission();
+    static Q_INVOKABLE bool getMobileBluetoothPermission();
+
     static Q_INVOKABLE bool checkMobileLocationPermission();
     static Q_INVOKABLE bool getMobileLocationPermission();
 
@@ -106,6 +127,9 @@ public:
 
     static Q_INVOKABLE bool checkMobileCameraPermission();
     static Q_INVOKABLE bool getMobileCameraPermission();
+
+    static Q_INVOKABLE bool checkMobileNotificationPermission();
+    static Q_INVOKABLE bool getMobileNotificationPermission();
 
     static Q_INVOKABLE bool isMobileGpsEnabled();
     static Q_INVOKABLE void forceMobileGpsEnabled();
