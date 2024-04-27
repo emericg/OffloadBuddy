@@ -6,11 +6,13 @@ import ThemeEngine
 
 T.Slider {
     id: control
+
     implicitWidth: 200
     implicitHeight: 4
+
     padding: 0
 
-    value: 0.5
+    value: 0
 
     background: Rectangle {
         x: control.leftPadding

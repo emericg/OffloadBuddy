@@ -1,12 +1,7 @@
 import QtQuick
+import QtQuick.Dialogs
 import QtQuick.Controls.impl
 import QtQuick.Templates as T
-
-//import QtQuick.Dialogs 1.3 // Qt5
-//import QtGraphicalEffects 1.15 // Qt5
-
-import QtQuick.Dialogs // Qt6
-import Qt5Compat.GraphicalEffects // Qt6
 
 import ThemeEngine
 import "qrc:/utils/UtilsPath.js" as UtilsPath
@@ -14,14 +9,15 @@ import "qrc:/utils/UtilsPath.js" as UtilsPath
 T.TextField {
     id: control
 
-    implicitWidth: implicitBackgroundWidth + leftInset + rightInset ||
-                   Math.max(contentWidth, placeholder.implicitWidth) + leftPadding + rightPadding
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            contentWidth + leftPadding + rightPadding,
+                            placeholder.implicitWidth + leftPadding + rightPadding)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              contentHeight + topPadding + bottomPadding,
                              placeholder.implicitHeight + topPadding + bottomPadding)
 
-    leftPadding: 12
-    rightPadding: 12
+    leftPadding: 8
+    rightPadding: buttonWidth + 6
 
     clip: true
     color: colorText
@@ -39,24 +35,30 @@ T.TextField {
     selectedTextColor: colorSelectedText
 
     onEditingFinished: focus = false
+    Keys.onBackPressed: focus = false
 
+    // settings
     property alias folder: control.text
     property string path: control.text
     property bool isValid: (control.text.length > 0)
 
     // settings
+    property string dialogTitle: qsTr("Please choose a directory!")
+    property var currentFolder: StandardPaths.writableLocation(StandardPaths.HomeLocation)
+
+    // button
     property string buttonText: qsTr("change")
-    property int buttonWidth: (buttonChange.visible ? buttonChange.width : 0)
+    property int buttonWidth: (buttonChange.visible ? buttonChange.width + 2 : 2)
 
     // colors
-    property string colorText: Theme.colorComponentText
-    property string colorPlaceholderText: Theme.colorSubText
-    property string colorBorder: Theme.colorComponentBorder
-    property string colorBackground: Theme.colorComponentBackground
-    property string colorSelection: Theme.colorPrimary
-    property string colorSelectedText: "white"
+    property color colorText: Theme.colorComponentText
+    property color colorPlaceholderText: Theme.colorSubText
+    property color colorBorder: Theme.colorComponentBorder
+    property color colorBackground: Theme.colorComponentBackground
+    property color colorSelection: Theme.colorPrimary
+    property color colorSelectedText: "white"
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     Loader {
         id: folderDialogLoader
@@ -64,11 +66,14 @@ T.TextField {
         active: false
         asynchronous: false
         sourceComponent: FolderDialog {
-            title: qsTr("Please choose a directory!")
+            title: control.dialogTitle
+
             currentFolder: UtilsPath.makeUrl(control.text)
+            //currentFolder: UtilsPath.makeUrl(control.currentFolder)
 
             onAccepted: {
-                //console.log("fileDialog URL: " + selectedFolder)
+                //console.log("folderDialog currentFolder: " + currentFolder)
+                //console.log("folderDialog selectedFolder: " + selectedFolder)
 
                 var f = UtilsPath.cleanUrl(selectedFolder)
                 if (f.slice(0, -1) !== "/") f += "/"
@@ -78,7 +83,7 @@ T.TextField {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     background: Rectangle {
         implicitWidth: 256
@@ -86,17 +91,6 @@ T.TextField {
 
         radius: Theme.componentRadius
         color: control.colorBackground
-
-        layer.enabled: false
-        layer.effect: OpacityMask {
-            maskSource: Rectangle {
-                x: background.x
-                y: background.y
-                width: background.width
-                height: background.height
-                radius: background.radius
-            }
-        }
     }
 
     ////////////////

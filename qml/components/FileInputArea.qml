@@ -1,12 +1,8 @@
+import QtCore
 import QtQuick
+import QtQuick.Dialogs
 import QtQuick.Controls.impl
 import QtQuick.Templates as T
-
-//import QtQuick.Dialogs 1.3 // Qt5
-//import QtGraphicalEffects 1.15 // Qt5
-
-import QtQuick.Dialogs // Qt6
-import Qt5Compat.GraphicalEffects // Qt6
 
 import ThemeEngine
 import "qrc:/utils/UtilsPath.js" as UtilsPath
@@ -14,14 +10,15 @@ import "qrc:/utils/UtilsPath.js" as UtilsPath
 T.TextField {
     id: control
 
-    implicitWidth: implicitBackgroundWidth + leftInset + rightInset ||
-                   Math.max(contentWidth, placeholder.implicitWidth) + leftPadding + rightPadding
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            contentWidth + leftPadding + rightPadding,
+                            placeholder.implicitWidth + leftPadding + rightPadding)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              contentHeight + topPadding + bottomPadding,
                              placeholder.implicitHeight + topPadding + bottomPadding)
 
-    leftPadding: 12
-    rightPadding: 12
+    leftPadding: 8
+    rightPadding: buttonWidth + 6
 
     clip: true
     color: colorText
@@ -39,7 +36,9 @@ T.TextField {
     selectedTextColor: colorSelectedText
 
     onEditingFinished: focus = false
+    Keys.onBackPressed: focus = false
 
+    // settings
     property alias folder: control.text
     property alias file: fileArea.text
     property alias extension: extensionArea.text
@@ -47,18 +46,24 @@ T.TextField {
     property bool isValid: (control.text.length > 0 && fileArea.text.length > 0 && extensionArea.text.length > 0)
 
     // settings
+    property string dialogTitle: qsTr("Please choose a file!")
+    property var dialogFilter: ["All files (*)"]
+    property int dialogFileMode: FileDialog.SaveFile // OpenFile / OpenFiles / SaveFile
+    property var currentFolder: StandardPaths.writableLocation(StandardPaths.HomeLocation)
+
+    // button
     property string buttonText: qsTr("change")
-    property int buttonWidth: (buttonChange.visible ? buttonChange.width : 0)
+    property int buttonWidth: (buttonChange.visible ? buttonChange.width + 2 : 2)
 
     // colors
-    property string colorText: Theme.colorComponentText
-    property string colorPlaceholderText: Theme.colorSubText
-    property string colorBorder: Theme.colorComponentBorder
-    property string colorBackground: Theme.colorComponentBackground
-    property string colorSelection: Theme.colorPrimary
-    property string colorSelectedText: "white"
+    property color colorText: Theme.colorComponentText
+    property color colorPlaceholderText: Theme.colorSubText
+    property color colorBorder: Theme.colorComponentBorder
+    property color colorBackground: Theme.colorComponentBackground
+    property color colorSelection: Theme.colorPrimary
+    property color colorSelectedText: "white"
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     Loader {
         id: fileDialogLoader
@@ -66,15 +71,17 @@ T.TextField {
         active: false
         asynchronous: false
         sourceComponent: FileDialog {
-            title: qsTr("Please choose a file!")
-            currentFolder: UtilsPath.makeUrl(control.text)
-            fileMode: FileDialog.SaveFile
+            title: control.dialogTitle
+            nameFilters: control.dialogFilter
 
-            //fileMode: FileDialog.OpenFile / FileDialog.OpenFiles / FileDialog.SaveFile
-            //flags: FileDialog.HideNameFilterDetails
+            fileMode: control.dialogFileMode
+            currentFolder: UtilsPath.makeUrl(control.text)
+            currentFile: UtilsPath.makeUrl(control.text)
 
             onAccepted: {
-                //console.log("fileDialog URL: " + selectedFile)
+                //console.log("fileDialog currentFolder: " + currentFolder)
+                //console.log("fileDialog currentFile: " + currentFile)
+                //console.log("fileDialog selectedFile: " + selectedFile)
 
                 var f = UtilsPath.cleanUrl(selectedFile)
                 if (f.slice(0, -1) !== "/") f += "/"
@@ -84,15 +91,24 @@ T.TextField {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
+
+    background: Rectangle {
+        implicitWidth: 256
+        implicitHeight: Theme.componentHeight
+
+        radius: Theme.componentRadius
+        color: control.colorBackground
+    }
+
+    ////////////////
 
     PlaceholderText {
         id: placeholder
-        anchors.top: control.top
-        anchors.bottom: control.bottom
-
         x: control.leftPadding
+        y: control.topPadding
         width: control.width - (control.leftPadding + control.rightPadding)
+        height: control.height - (control.topPadding + control.bottomPadding)
 
         text: control.placeholderText
         font: control.font
@@ -109,7 +125,11 @@ T.TextField {
         id: contentRow
         anchors.left: parent.left
         anchors.leftMargin: control.leftPadding + control.contentWidth
+        anchors.right: parent.right
+        anchors.rightMargin: control.rightPadding
         anchors.verticalCenter: parent.verticalCenter
+
+        clip: true
 
         TextInput { // fileArea
             id: fileArea
@@ -127,6 +147,7 @@ T.TextField {
             onEditingFinished: focus = false
         }
         Text { // dot
+            id: extensionDot
             anchors.verticalCenter: parent.verticalCenter
             text: "."
             color: Theme.colorSubText
@@ -137,27 +158,6 @@ T.TextField {
             anchors.verticalCenter: parent.verticalCenter
             color: Theme.colorSubText
             verticalAlignment: Text.AlignVCenter
-        }
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-
-    background: Rectangle {
-        implicitWidth: 256
-        implicitHeight: Theme.componentHeight
-
-        radius: Theme.componentRadius
-        color: control.colorBackground
-
-        layer.enabled: false
-        layer.effect: OpacityMask {
-            maskSource: Rectangle {
-                x: background.x
-                y: background.y
-                width: background.width
-                height: background.height
-                radius: background.radius
-            }
         }
     }
 
