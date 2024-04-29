@@ -58,6 +58,7 @@ jobs:
              cmake --version
              export CMAKE_BUILD_PARALLEL_LEVEL=$(nproc)
              sudo rm /home/runner/work/${{env.APP_NAME}}/Qt/${{env.QT_VERSION}}/gcc_64/plugins/sqldrivers/libqsqlmimer.so
+             sudo rm /home/runner/work/${{env.APP_NAME}}/Qt/${{env.QT_VERSION}}/gcc_64/plugins/position/libqtposition_nmea.so
 
       # Build dependencies (from contribs script)
       - name: Build dependencies (from contribs script)
