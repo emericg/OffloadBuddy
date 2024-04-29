@@ -100,8 +100,8 @@ Loader {
             ListView {
                 id: jobsView
                 anchors.fill: parent
-                anchors.margins: 20
-                spacing: 20
+                anchors.margins: Theme.componentMarginXL
+                spacing: Theme.componentMarginXL
 
                 interactive: false
                 model: jobManager.jobsList

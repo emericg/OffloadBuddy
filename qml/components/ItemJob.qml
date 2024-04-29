@@ -221,7 +221,7 @@ Rectangle {
                           (job.state === JobUtils.JOB_STATE_WORKING || job.state === JobUtils.JOB_STATE_PAUSED)) // running
 
                 highlightMode: "color"
-                source: "qrc:/assets/icons_material/outline-stop_circle.svg"
+                source: "qrc:/assets/icons/material-symbols/media/stop_circle.svg"
                 onClicked: jobManager.stopJob(job.id)
             }
 

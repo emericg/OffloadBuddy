@@ -441,16 +441,57 @@ void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
 
                 // CRF scale range is 0–63
                 // (0 is lossless, 23 is default, 63 is worst) // sane range is 15–35
-                int crf = mapNumber(job->settings_encode.encoding_quality, 50, 100, 35, 17);
+                int crf = mapNumber(job->settings_encode.encoding_quality, 50, 100, 48, 24);
 
                 // VP9 video
                 ptiwrap->arguments << "-c:v" << "libvpx-vp9";
                 ptiwrap->arguments << "-pix_fmt" << "yuv420p";
                 ptiwrap->arguments << "-crf" << QString::number(crf) << "-b:v" << "0";
-                //ptiwrap->arguments << "-cpu-used" << "2";
+                ptiwrap->arguments << "-cpu-used" << "2";
+                ptiwrap->arguments << "-threads" << "16";
+                ptiwrap->arguments << "-row-mt" << "1";
+                ptiwrap->arguments << "-tile-columns" << "2";
+                ptiwrap->arguments << "-tile-rows" << "0";
+                ptiwrap->arguments << "-frame-parallel" << "0";
+
+
                 // Opus audio
                 ptiwrap->arguments << "-c:a" << "libopus";
-                ptiwrap->arguments << "-b:a" << "80K";
+                ptiwrap->arguments << "-b:a" << "96K";
+            }
+
+            if (codec == "AV1")
+            {
+                file_extension = "mkv";
+
+                // libaom-av1 // libsvtav1 // librav1e
+
+                // CRF scale range is 0–63. Lower values mean better quality and greater file size.
+                // 0 means lossless. A CRF value of 23 yields a quality level corresponding to CRF 19 for
+                // x264 (​source), which would be considered visually lossless.
+                // sane range is 23-34?
+                int crf = mapNumber(job->settings_encode.encoding_quality, 50, 100, 48, 26);
+
+                if (job->settings_encode.encoding_speed == 3)
+                    ptiwrap->arguments << "-deadline" << "realtime";
+                else if (job->settings_encode.encoding_speed == 1)
+                    ptiwrap->arguments << "-deadline" << "best";
+                else
+                    ptiwrap->arguments << "-deadline" << "good";
+
+                // AV1 video
+                ptiwrap->arguments << "-c:v" << "libaom-av1";
+                ptiwrap->arguments << "-pix_fmt" << "yuv420p";
+                ptiwrap->arguments << "-crf" << QString::number(crf) << "-b:v" << "0";
+                ptiwrap->arguments << "-cpu-used" << "4";
+                ptiwrap->arguments << "-threads" << "16";
+                ptiwrap->arguments << "-row-mt" << "1";
+                ptiwrap->arguments << "-tiles" << "4x2";
+                ptiwrap->arguments << "-frame-parallel" << "0";
+
+                // Opus audio
+                ptiwrap->arguments << "-c:a" << "libopus";
+                ptiwrap->arguments << "-b:a" << "96K";
             }
 
             if (codec == "GIF")
