@@ -38,7 +38,7 @@ jobs:
         uses: jurplel/install-qt-action@v3
         with:
           version: ${{env.QT_VERSION}}
-          modules: qtmultimedia qtimageformats qtpositioning qtlocation qtcharts qtshadertools qt5compat qtserialport
+          modules: qtmultimedia qtpositioning qtlocation qtcharts
 
       # Install dependencies (from package manager)
       - name: Install dependencies (from package manager)
@@ -111,7 +111,7 @@ jobs:
         uses: jurplel/install-qt-action@v3
         with:
           version: ${{env.QT_VERSION}}
-          modules: qtmultimedia qtimageformats qtpositioning qtlocation qtcharts qtshadertools qt5compat
+          modules: qtmultimedia qtpositioning qtlocation qtcharts
 
       # Install dependencies (from package manager)
       - name: Install dependencies (from package manager)
@@ -172,7 +172,7 @@ jobs:
         uses: jurplel/install-qt-action@v3
         with:
           version: ${{env.QT_VERSION}}
-          modules: qtmultimedia qtimageformats qtpositioning qtlocation qtcharts qtshadertools qt5compat
+          modules: qtmultimedia qtpositioning qtlocation qtcharts
 
       # Install NSIS (already installed in 'windows-2022')
       #- name: Install NSIS
