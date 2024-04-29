@@ -613,11 +613,11 @@ Item {
         Item {
             id: overlayTrim
             anchors.right: parent.right
-            anchors.rightMargin: 16
+            anchors.rightMargin: Theme.componentMargin
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 56
+            anchors.bottomMargin: 40 + Theme.componentMargin
 
-            width: overlayTrimText.width + 16
+            width: overlayTrimText.width + Theme.componentMargin
             height: 32
             visible: false
 
@@ -643,12 +643,13 @@ Item {
         Row {
             id: overlayTransform
             anchors.right: parent.right
-            anchors.rightMargin: 16
+            anchors.rightMargin: Theme.componentMargin
             anchors.top: parent.top
-            anchors.topMargin: 16
-            anchors.bottomMargin: 56
+            anchors.topMargin: Theme.componentMargin
+            anchors.bottomMargin: Theme.componentMargin
 
             visible: false
+            bottomPadding: 40
             spacing: 4
 
             RoundButtonIcon {
@@ -1004,9 +1005,9 @@ Item {
 
             Row {
                 anchors.left: parent.left
-                anchors.leftMargin: 16
+                anchors.leftMargin: Theme.componentMargin
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 16
+                spacing: Theme.componentMargin
 
                 RoundButtonIcon {
                     id: buttonPlay

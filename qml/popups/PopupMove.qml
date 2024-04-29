@@ -142,7 +142,7 @@ Popup {
 
             Text {
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: Theme.componentMarginXL
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Move")
@@ -170,9 +170,9 @@ Popup {
 
             Text {
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: Theme.componentMarginXL
                 anchors.right: parent.right
-                anchors.rightMargin: 48+16+16
+                anchors.rightMargin: 48+Theme.componentMargin*2
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("%n shot(s) selected", "", shots_names.length) + " / " + qsTr("%n file(s) selected", "", shots_files.length)
@@ -184,7 +184,7 @@ Popup {
                 width: 48
                 height: 48
                 anchors.right: parent.right
-                anchors.rightMargin: 16
+                anchors.rightMargin: Theme.componentMargin
                 anchors.verticalCenter: parent.verticalCenter
 
                 source: "qrc:/assets/icons/material-symbols/chevron_right.svg"
@@ -256,7 +256,7 @@ Popup {
                     anchors.right: parent.right
 
                     clip: true
-                    visible: !recapEnabled && currentShot.fileCount
+                    visible: !recapEnabled && currentShot && currentShot.fileCount
                     height: Math.min(64, currentShot && currentShot.fileCount*16)
 
                     model: currentShot.filesList

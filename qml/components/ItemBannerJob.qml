@@ -42,9 +42,9 @@ Rectangle {
     Column {
         id: jobColumn
         anchors.left: parent.left
-        anchors.leftMargin: 16
+        anchors.leftMargin: Theme.componentMargin
         anchors.right: rectangleClose.left
-        anchors.rightMargin: 16
+        anchors.rightMargin: Theme.componentMargin
         anchors.verticalCenter: parent.verticalCenter
 
         Text {

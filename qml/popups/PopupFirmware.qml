@@ -193,7 +193,7 @@ Popup {
                         anchors.leftMargin: popupFirmware.legendWidth + 16
                         anchors.verticalCenter: parent.verticalCenter
 
-                        text: currentDevice.firmware
+                        text: currentDevice && currentDevice.firmware
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContent
                     }

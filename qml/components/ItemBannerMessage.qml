@@ -35,7 +35,7 @@ Rectangle {
     Text {
         id: bannerText
         anchors.left: parent.left
-        anchors.leftMargin: 16
+        anchors.leftMargin: Theme.componentMargin
         anchors.verticalCenter: parent.verticalCenter
 
         color: Theme.colorActionbarContent
@@ -45,7 +45,7 @@ Rectangle {
     RoundButtonIcon {
         id: rectangleClose
         anchors.right: parent.right
-        anchors.rightMargin: 8
+        anchors.rightMargin: Theme.componentMargin/2
         anchors.verticalCenter: parent.verticalCenter
 
         source: "qrc:/assets/icons/material-symbols/close.svg"

@@ -21,20 +21,17 @@ Item {
 
         Column {
             anchors.top: parent.top
-            anchors.topMargin: 24
             anchors.left: parent.left
-            anchors.leftMargin: 24
             anchors.right: parent.right
-            anchors.rightMargin: 24
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 24
+            anchors.margins: Theme.componentMarginXL
 
             visible: shot.hasGoProMetadata
-            spacing: 16
+            spacing: Theme.componentMargin
 
             Row {
                 height: 32
-                spacing: 16
+                spacing: Theme.componentMargin
 
                 visible: shot.camera
 
@@ -219,7 +216,7 @@ Item {
         width: parent.width * 0.40
         color: Theme.colorForeground
 
-        Rectangle { // shadow
+        Rectangle { // fake shadow
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
@@ -236,18 +233,19 @@ Item {
 
         Column {
             anchors.top: parent.top
-            anchors.topMargin: 24
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 24
+
+            topPadding: Theme.componentMarginXL
+            bottomPadding: Theme.componentMarginXL
 
             Item {
                 height: 64
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: Theme.componentMarginXL
                 anchors.right: parent.right
-                anchors.rightMargin: 12
+                anchors.rightMargin: Theme.componentMarginXL/2
 
                 Text {
                     height: 32
@@ -287,9 +285,9 @@ Item {
             Text {
                 height: 40
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: Theme.componentMarginXL
                 anchors.right: parent.right
-                anchors.rightMargin: 16
+                anchors.rightMargin: Theme.componentMargin
 
                 text: (shot.fileCount > 1) ? qsTr("Files:") : qsTr("File:")
                 color: Theme.colorText
@@ -299,9 +297,9 @@ Item {
             }
 
             ListView {
-                height: infosFiles.height - 40 - 64 - 24
+                height: infosFiles.height - 40 - 64 - Theme.componentMarginXL
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: Theme.componentMarginXL
                 anchors.right: parent.right
 
                 clip: true

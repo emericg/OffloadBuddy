@@ -15,7 +15,7 @@ Rectangle {
     width: isHdpi ? 72 : 80
     color: Theme.colorSidebar
 
-    Rectangle {
+    Rectangle { // right border
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.bottom: parent.bottom
@@ -48,11 +48,9 @@ Rectangle {
         height: sideBar.width
 
         anchors.top: macosWindowButtons.visible ? macosWindowButtons.bottom : parent.top
-        anchors.topMargin: 16
+        anchors.topMargin: Theme.componentMargin
         anchors.left: parent.left
-        anchors.leftMargin: 0
         anchors.right: parent.right
-        anchors.rightMargin: 0
 
         source: "qrc:/assets/icons/fontawesome/photo-video-duotone.svg"
         sourceSize: 56
@@ -70,15 +68,13 @@ Rectangle {
         id: menuDevices
 
         anchors.top: button_library.bottom
-        anchors.topMargin: 16
         anchors.left: parent.left
-        anchors.leftMargin: 0
         anchors.bottom: menuGeneral.top
-        anchors.bottomMargin: 16
         anchors.right: parent.right
-        anchors.rightMargin: 0
 
-        spacing: 16
+        topPadding: Theme.componentMargin
+        bottomPadding: Theme.componentMargin
+        spacing: Theme.componentMargin
 
         Repeater {
             model: deviceManager.devicesList
@@ -111,12 +107,10 @@ Rectangle {
     Column {
         id: menuGeneral
         anchors.left: parent.left
-        anchors.leftMargin: 0
         anchors.right: parent.right
-        anchors.rightMargin: 0
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 16
 
+        bottomPadding: Theme.componentMargin
         spacing: 0
 
         DesktopSidebarItem { // button_jobs

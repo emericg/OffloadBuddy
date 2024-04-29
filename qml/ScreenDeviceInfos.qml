@@ -45,8 +45,8 @@ Loader {
 
             Connections {
                 target: currentDevice
-                onStorageUpdated: updateStorage()
-                onBatteryUpdated: updateBattery()
+                function onStorageUpdated() { updateStorage() }
+                function onBatteryUpdated() { updateBattery() }
             }
 
             function loadScreen() {
@@ -111,9 +111,9 @@ Loader {
                     id: textShotName
                     height: 40
                     anchors.left: buttonBack.right
-                    anchors.leftMargin: 8
+                    anchors.leftMargin: Theme.componentMargin/2
                     anchors.right: parent.right
-                    anchors.rightMargin: 16
+                    anchors.rightMargin: Theme.componentMargin
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Hardware Infos")
@@ -134,30 +134,10 @@ Loader {
 
                 ////////
 
-                Rectangle { // separator
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.bottom: parent.bottom
-
-                    height: 2
-                    opacity: 0.1
-                    color: Theme.colorHeaderContent
-                }
+                HeaderSeparator { }
             }
-            Rectangle { // shadow
-                anchors.top: rectangleHeader.bottom
-                anchors.left: parent.left
-                anchors.right: parent.right
 
-                height: 8
-                opacity: 0.5
-
-                gradient: Gradient {
-                    orientation: Gradient.Vertical
-                    GradientStop { position: 0.0; color: Theme.colorHeaderHighlight; }
-                    GradientStop { position: 1.0; color: Theme.colorBackground; }
-                }
-            }
+            HeaderShadow {anchors.top: rectangleHeader.bottom; }
 
             // CONTENT /////////////////////////////////////////////////////////////////
 
@@ -166,7 +146,7 @@ Loader {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
-                anchors.margins: 24
+                anchors.margins: Theme.componentMarginXL
 
                 contentHeight: contentflow.height
 
@@ -175,8 +155,8 @@ Loader {
                     anchors.left: parent.left
                     anchors.right: parent.right
 
-                    spacing: 24
-                    property int boxSize: (width >= 1280) ? ((width - 24) / 2) : (width)
+                    spacing: Theme.componentMarginXL
+                    property int boxSize: (width >= 1280) ? ((width - Theme.componentMarginXL) / 2) : (width)
 
                     ////////////////////////////////
 
@@ -200,9 +180,9 @@ Loader {
 
                             Row {
                                 anchors.left: parent.left
-                                anchors.leftMargin: 16
+                                anchors.leftMargin: Theme.componentMargin
                                 anchors.verticalCenter: parent.verticalCenter
-                                spacing: 16
+                                spacing: Theme.componentMargin
 
                                 IconSvg {
                                     source: "qrc:/assets/icons/material-icons/duotone/camera_alt.svg"
@@ -223,11 +203,11 @@ Loader {
                         IconSvg {
                             id: deviceImage
                             anchors.top: columnDeviceHeader.bottom
-                            anchors.topMargin: 8
+                            anchors.topMargin: Theme.componentMargin/2
                             anchors.right: parent.right
-                            anchors.rightMargin: 16
+                            anchors.rightMargin: Theme.componentMargin
                             anchors.bottom: parent.bottom
-                            anchors.bottomMargin: 8
+                            anchors.bottomMargin: Theme.componentMargin/2
                             width: height
 
                             source: UtilsDevice.getDevicePicture(currentDevice)
@@ -241,8 +221,8 @@ Loader {
                             anchors.top: columnDeviceHeader.bottom
                             anchors.left: parent.left
                             anchors.right: parent.right
-                            anchors.margins: 16
-                            spacing: 16
+                            anchors.margins: Theme.componentMargin
+                            spacing: Theme.componentMargin
 
                             Row {
                                 spacing: 8
@@ -361,9 +341,9 @@ Loader {
 
                             Row {
                                 anchors.left: parent.left
-                                anchors.leftMargin: 16
+                                anchors.leftMargin: Theme.componentMargin
                                 anchors.verticalCenter: parent.verticalCenter
-                                spacing: 16
+                                spacing: Theme.componentMargin
 
                                 IconSvg {
                                     source: "qrc:/assets/icons/material-icons/duotone/sd_card.svg"
@@ -386,8 +366,8 @@ Loader {
                             anchors.top: columnStorageHeader.bottom
                             anchors.left: parent.left
                             anchors.right: parent.right
-                            anchors.margins: 16
-                            spacing: 16
+                            anchors.margins: Theme.componentMargin
+                            spacing: Theme.componentMargin
 
                             Repeater {
                                 model: currentDevice.storageList
@@ -404,7 +384,7 @@ Loader {
                             DataBarPower {
                                 id: deviceBatteryBar
                                 width: columnStorage.width
-                                height: 16
+                                height: Theme.componentMargin
 
                                 visible: currentDevice.batteryLevel > 0
                                 value: currentDevice.batteryLevel
@@ -444,9 +424,9 @@ Loader {
 
                             Row {
                                 anchors.left: parent.left
-                                anchors.leftMargin: 16
+                                anchors.leftMargin: Theme.componentMargin
                                 anchors.verticalCenter: parent.verticalCenter
-                                spacing: 16
+                                spacing: Theme.componentMargin
 
                                 IconSvg {
                                     source: "qrc:/assets/icons/material-icons/duotone/aspect_ratio.svg"
@@ -469,8 +449,8 @@ Loader {
                             anchors.top: columnCapabilitiesHeader.bottom
                             anchors.left: parent.left
                             anchors.right: parent.right
-                            anchors.margins: 16
-                            spacing: 16
+                            anchors.margins: Theme.componentMargin
+                            spacing: Theme.componentMargin
 
                             Row {
                                 spacing: 8

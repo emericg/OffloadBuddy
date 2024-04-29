@@ -406,7 +406,7 @@ Popup {
             Text {
                 id: titleText
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: Theme.componentMarginXL
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("(Re)Encode video")
@@ -434,9 +434,9 @@ Popup {
 
             Text {
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: Theme.componentMarginXL
                 anchors.right: parent.right
-                anchors.rightMargin: 48+16+16
+                anchors.rightMargin: 48+Theme.componentMargin*2
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("%n shot(s) selected", "", shots_names.length)
@@ -448,7 +448,7 @@ Popup {
                 width: 48
                 height: 48
                 anchors.right: parent.right
-                anchors.rightMargin: 16
+                anchors.rightMargin: Theme.componentMargin
                 anchors.verticalCenter: parent.verticalCenter
 
                 source: "qrc:/assets/icons/material-symbols/chevron_right.svg"
@@ -523,10 +523,10 @@ Popup {
 
                         Row {
                             anchors.left: textCodec.right
-                            anchors.leftMargin: 16
+                            anchors.leftMargin: Theme.componentMargin
                             anchors.right: parent.right
                             anchors.verticalCenter: parent.verticalCenter
-                            spacing: 16
+                            spacing: Theme.componentMargin
 
                             CheckBoxThemed {
                                 id: cbCOPY
@@ -604,10 +604,10 @@ Popup {
 
                         Row {
                             anchors.left: textFormat.right
-                            anchors.leftMargin: 16
+                            anchors.leftMargin: Theme.componentMargin
                             anchors.right: parent.right
                             anchors.verticalCenter: parent.verticalCenter
-                            spacing: 16
+                            spacing: Theme.componentMargin
 
                             RadioButtonThemed {
                                 id: rbPNG
@@ -687,7 +687,7 @@ Popup {
                         SliderValueSolid {
                             id: sliderQuality
                             anchors.left: textQuality.right
-                            anchors.leftMargin: 16
+                            anchors.leftMargin: Theme.componentMargin
                             anchors.right: parent.right
                             anchors.verticalCenter: parent.verticalCenter
 
@@ -721,7 +721,7 @@ Popup {
                         SelectorMenu {
                             id: selectorSpeed
                             anchors.left: textSpeed.right
-                            anchors.leftMargin: 16
+                            anchors.leftMargin: Theme.componentMargin
                             anchors.verticalCenter: parent.verticalCenter
                             height: 34
 
@@ -764,7 +764,7 @@ Popup {
                         anchors.left: parent.left
                         anchors.right: parent.right
                         height: 48
-                        spacing: 16
+                        spacing: Theme.componentMargin
 
                         visible: !cbCOPY.checked
 
@@ -858,7 +858,7 @@ Popup {
                         anchors.left: parent.left
                         anchors.right: parent.right
                         height: 48
-                        spacing: 16
+                        spacing: Theme.componentMargin
 
                         visible: (encodingMode === "video" && !cbCOPY.checked)
 
@@ -988,7 +988,7 @@ Popup {
                         anchors.left: parent.left
                         anchors.right: parent.right
                         height: 48
-                        spacing: 16
+                        spacing: Theme.componentMargin
 
                         visible: (encodingMode === "timelapse") || (encodingMode === "video" && !cbCOPY.checked && currentShot && currentShot.duration > 60000)
 
@@ -1065,7 +1065,7 @@ Popup {
 
                         Row {
                             anchors.left: titleOrientation.right
-                            anchors.leftMargin: 16
+                            anchors.leftMargin: Theme.componentMargin
                             anchors.right: parent.right
                             anchors.rightMargin: 0
                             anchors.verticalCenter: parent.verticalCenter
@@ -1128,11 +1128,11 @@ Popup {
 
                         Row {
                             anchors.left: titleClip.right
-                            anchors.leftMargin: 16
+                            anchors.leftMargin: Theme.componentMargin
                             anchors.right: parent.right
                             anchors.rightMargin: 0
                             anchors.verticalCenter: parent.verticalCenter
-                            spacing: 16
+                            spacing: Theme.componentMargin
 
                             Text {
                                 text: qsTr("from")
@@ -1191,10 +1191,10 @@ Popup {
 
                         Row {
                             anchors.left: titleCrop.right
-                            anchors.leftMargin: 16
+                            anchors.leftMargin: Theme.componentMargin
                             anchors.right: parent.right
                             anchors.verticalCenter: parent.verticalCenter
-                            spacing: 16
+                            spacing: Theme.componentMargin
 
                             Text {
                                 anchors.verticalCenter: parent.verticalCenter
@@ -1254,10 +1254,10 @@ Popup {
 
                         Row {
                             anchors.left: titleGifEffects.right
-                            anchors.leftMargin: 16
+                            anchors.leftMargin: Theme.componentMargin
                             anchors.right: parent.right
                             anchors.verticalCenter: parent.verticalCenter
-                            spacing: 16
+                            spacing: Theme.componentMargin
 
                             RadioButtonThemed {
                                 id: rbGifEffectForward
@@ -1302,7 +1302,7 @@ Popup {
                         CheckBoxThemed {
                             id: checkBox_defisheye
                             anchors.left: titleFilter.right
-                            anchors.leftMargin: 16
+                            anchors.leftMargin: Theme.componentMargin
                             anchors.verticalCenter: parent.verticalCenter
 
                             //visible: isGoPro
@@ -1312,7 +1312,7 @@ Popup {
                         CheckBoxThemed {
                             id: checkBox_deshake
                             anchors.left: checkBox_defisheye.right
-                            anchors.leftMargin: 16
+                            anchors.leftMargin: Theme.componentMargin
                             anchors.verticalCenter: parent.verticalCenter
 
                             visible: (encodingMode !== "image")
@@ -1380,7 +1380,7 @@ Popup {
                     anchors.right: parent.right
 
                     Item {
-                        height: 24
+                        height: Theme.componentMarginXL
                         anchors.left: parent.left
                         anchors.right: parent.right
 

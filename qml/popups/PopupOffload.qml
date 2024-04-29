@@ -178,7 +178,7 @@ Popup {
 
             Text {
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: Theme.componentMarginXL
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Offloading")
@@ -208,7 +208,7 @@ Popup {
                 anchors.left: parent.left
                 anchors.leftMargin: Theme.componentBorderWidth
                 anchors.right: parent.right
-                anchors.rightMargin: 48+16+16
+                anchors.rightMargin: 48+Theme.componentMargin*2
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("%n shot(s) selected", "", shots_names.length)
@@ -220,7 +220,7 @@ Popup {
                 width: 48
                 height: 48
                 anchors.right: parent.right
-                anchors.rightMargin: 16
+                anchors.rightMargin: Theme.componentMargin
                 anchors.verticalCenter: parent.verticalCenter
 
                 source: "qrc:/assets/icons/material-symbols/chevron_right.svg"

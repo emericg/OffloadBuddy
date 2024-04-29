@@ -52,7 +52,7 @@ Loader {
                 id: textHeader
                 height: 40
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: Theme.componentMarginXL
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("SETTINGS")
@@ -70,30 +70,10 @@ Loader {
 
             ////////
 
-            Rectangle { // separator
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-
-                height: 2
-                opacity: 0.1
-                color: Theme.colorHeaderContent
-            }
+            HeaderSeparator { }
         }
-        Rectangle { // shadow
-            anchors.top: rectangleHeader.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
 
-            height: 8
-            opacity: 0.5
-
-            gradient: Gradient {
-                orientation: Gradient.Vertical
-                GradientStop { position: 0.0; color: Theme.colorHeaderHighlight; }
-                GradientStop { position: 1.0; color: Theme.colorBackground; }
-            }
-        }
+        HeaderShadow {anchors.top: rectangleHeader.bottom; }
 
         // CONTENT /////////////////////////////////////////////////////////////
 
@@ -112,19 +92,19 @@ Loader {
             Column {
                 id: columnSettings
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: Theme.componentMarginXL
                 anchors.right: parent.right
-                anchors.rightMargin: 24
+                anchors.rightMargin: Theme.componentMarginXL
 
-                topPadding: 24
-                bottomPadding: 24
+                topPadding: Theme.componentMarginXL
+                bottomPadding: Theme.componentMarginXL
                 spacing: 8
 
                 ////////
 
                 Row {
                     height: 40
-                    spacing: 24
+                    spacing: Theme.componentMarginXL
 
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
@@ -187,21 +167,7 @@ Loader {
 
                 ////////
 
-                Item {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    height: 16
-                    Rectangle {
-                        anchors.left: parent.left
-                        anchors.leftMargin: -24
-                        anchors.right: parent.right
-                        anchors.rightMargin: -24
-                        anchors.verticalCenter: parent.verticalCenter
-                        height: 2
-                        opacity: 0.33
-                        color: Theme.colorSeparator
-                    }
-                }
+                SeparatorPadded { }
 
                 ////////
 
@@ -234,21 +200,7 @@ Loader {
 
                 ////////
 
-                Item {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    height: 16
-                    Rectangle {
-                        anchors.left: parent.left
-                        anchors.leftMargin: -24
-                        anchors.right: parent.right
-                        anchors.rightMargin: -24
-                        anchors.verticalCenter: parent.verticalCenter
-                        height: 2
-                        opacity: 0.33
-                        color: Theme.colorSeparator
-                    }
-                }
+                SeparatorPadded { }
 
                 ////////
 
@@ -342,21 +294,7 @@ Loader {
 
                 ////////
 
-                Item {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    height: 16
-                    Rectangle {
-                        anchors.left: parent.left
-                        anchors.leftMargin: -24
-                        anchors.right: parent.right
-                        anchors.rightMargin: -24
-                        anchors.verticalCenter: parent.verticalCenter
-                        height: 2
-                        opacity: 0.33
-                        color: Theme.colorSeparator
-                    }
-                }
+                SeparatorPadded { }
 
                 ////////
 
@@ -446,21 +384,7 @@ Loader {
 
                 ////////
 
-                Item {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    height: 16
-                    Rectangle {
-                        anchors.left: parent.left
-                        anchors.leftMargin: -24
-                        anchors.right: parent.right
-                        anchors.rightMargin: -24
-                        anchors.verticalCenter: parent.verticalCenter
-                        height: 2
-                        opacity: 0.33
-                        color: Theme.colorSeparator
-                    }
-                }
+                SeparatorPadded { }
 
                 ////////
 
@@ -492,16 +416,13 @@ Loader {
                     Column {
                         id: columnMedia
                         anchors.left: parent.left
-                        anchors.leftMargin: 24
+                        anchors.leftMargin: Theme.componentMarginXL
                         anchors.right: parent.right
-                        anchors.rightMargin: 24
-
-                        topPadding: 0
-                        bottomPadding: 24
+                        anchors.rightMargin: Theme.componentMarginXL
 
                         Row {
                             height: 40
-                            spacing: 24
+                            spacing: Theme.componentMarginXL
 
                             Text {
                                 id: textMediaTitle
@@ -617,15 +538,7 @@ Loader {
 
                 ////////
 
-                Rectangle {
-                    anchors.left: parent.left
-                    anchors.leftMargin: -24
-                    anchors.right: parent.right
-                    anchors.rightMargin: -24
-                    height: 2
-                    opacity: 0.33
-                    color: Theme.colorSeparator
-                }
+                SeparatorPadded { }
             }
         }
     }

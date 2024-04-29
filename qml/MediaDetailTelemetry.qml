@@ -314,10 +314,10 @@ Item {
 
             Row {
                 anchors.top: parent.top
-                anchors.topMargin: 16
+                anchors.topMargin: Theme.componentMargin
                 anchors.left: parent.left
-                anchors.leftMargin: 16
-                spacing: 16
+                anchors.leftMargin: Theme.componentMargin
+                spacing: Theme.componentMargin
 
                 MapButton {
                     id: button_map_fullscreen
@@ -344,10 +344,10 @@ Item {
 
             Column {
                 anchors.top: parent.top
-                anchors.topMargin: 16
+                anchors.topMargin: Theme.componentMargin
                 anchors.right: parent.right
-                anchors.rightMargin: 16
-                spacing: 16
+                anchors.rightMargin: Theme.componentMargin
+                spacing: Theme.componentMargin
 
                 MapButtonCompass { // compass
                     width: 48
@@ -381,9 +381,9 @@ Item {
             MapScale {
                 id: mapScale
                 anchors.left: parent.left
-                anchors.leftMargin: 16
+                anchors.leftMargin: Theme.componentMargin
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: (mapmode === "image") ? 64 : 16
+                anchors.bottomMargin: (mapmode === "image") ? 64 : Theme.componentMargin
                 map: map
             }
 
@@ -391,15 +391,15 @@ Item {
 
             MapFrameArea {
                 anchors.right: parent.right
-                anchors.rightMargin: 16
+                anchors.rightMargin: Theme.componentMargin
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: 16
+                anchors.bottomMargin: Theme.componentMargin
 
                 height: mapArea.fullscreen ? 44 : 40
 
                 Row {
                     anchors.verticalCenter: parent.verticalCenter
-                    spacing: 16
+                    spacing: Theme.componentMargin
 
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
@@ -511,19 +511,19 @@ Item {
             id: grid
 
             anchors.top: parent.top
-            anchors.topMargin: 16
+            anchors.topMargin: Theme.componentMargin
             anchors.left: parent.left
-            anchors.leftMargin: 16
+            anchors.leftMargin: Theme.componentMargin
             anchors.right: parent.right
-            anchors.rightMargin: 16
+            anchors.rightMargin: Theme.componentMargin
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 72
 
             columns: 2
-            spacing: 16
+            spacing: Theme.componentMargin
 
-            property int graphWidth: (grid.width - 16) / 2
-            property int graphHeight: (grid.height - 16) / 2
+            property int graphWidth: (grid.width - Theme.componentMargin) / 2
+            property int graphHeight: (grid.height - Theme.componentMargin) / 2
 
             Rectangle { // speed box
                 width: grid.graphWidth
@@ -543,7 +543,7 @@ Item {
                     Text {
                         id: speedTitle
                         anchors.left: parent.left
-                        anchors.leftMargin: 16
+                        anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
                         text: qsTr("Speed") + " (" + UtilsString.speedUnit(settingsManager.appUnits) + ")"
                         color: graphArea.graphTxt
@@ -554,7 +554,7 @@ Item {
                     Text {
                         id: speedMetrics
                         anchors.right: parent.right
-                        anchors.rightMargin: 16
+                        anchors.rightMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
                         color: graphArea.graphTxt
                         font.pixelSize: 14
@@ -608,7 +608,7 @@ Item {
                     Text {
                         id: altiTitle
                         anchors.left: parent.left
-                        anchors.leftMargin: 16
+                        anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
                         text: qsTr("Altitude") + " (" + UtilsString.altitudeUnit(settingsManager.appUnits) + ")"
                         color: graphArea.graphTxt
@@ -619,7 +619,7 @@ Item {
                     Text {
                         id: altiMetrics
                         anchors.right: parent.right
-                        anchors.rightMargin: 16
+                        anchors.rightMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
                         color: graphArea.graphTxt
                         font.pixelSize: 14
@@ -672,7 +672,7 @@ Item {
                     Text {
                         id: acclTitle
                         anchors.left: parent.left
-                        anchors.leftMargin: 16
+                        anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
                         text: qsTr("Accelerometer")
                         color: graphArea.graphTxt
@@ -683,7 +683,7 @@ Item {
                     Text {
                         id: acclMetrics
                         anchors.right: parent.right
-                        anchors.rightMargin: 16
+                        anchors.rightMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
                         color: graphArea.graphTxt
                         font.pixelSize: 14
@@ -736,7 +736,7 @@ Item {
                     Text {
                         id: gyroTitle
                         anchors.left: parent.left
-                        anchors.leftMargin: 16
+                        anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
                         text: qsTr("Gyroscope")
                         color: graphArea.graphTxt
@@ -778,11 +778,11 @@ Item {
 
         Rectangle {
             anchors.left: parent.left
-            anchors.leftMargin: 16
+            anchors.leftMargin: Theme.componentMargin
             anchors.right: parent.right
-            anchors.rightMargin: 16
+            anchors.rightMargin: Theme.componentMargin
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 16
+            anchors.bottomMargin: Theme.componentMargin
 
             height: 40
             radius: Theme.componentRadius
@@ -790,7 +790,7 @@ Item {
 
             Row {
                 anchors.left: parent.left
-                anchors.leftMargin: 16
+                anchors.leftMargin: Theme.componentMargin
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 12
 

@@ -214,7 +214,7 @@ Popup {
                 width: 48
                 height: 48
                 anchors.right: parent.right
-                anchors.rightMargin: 16
+                anchors.rightMargin: Theme.componentMargin
                 anchors.verticalCenter: parent.verticalCenter
 
                 source: "qrc:/assets/icons/material-symbols/chevron_right.svg"

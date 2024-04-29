@@ -115,9 +115,9 @@ Item {
             id: textHeader
             height: 40
             anchors.right: parent.right
-            anchors.rightMargin: 16
+            anchors.rightMargin: Theme.componentMargin
             anchors.top: parent.top
-            anchors.topMargin: 16
+            anchors.topMargin: Theme.componentMargin
 
             text: qsTr("MEDIA LIBRARY")
             verticalAlignment: Text.AlignVCenter
@@ -133,7 +133,7 @@ Item {
             anchors.top: textHeader.bottom
             anchors.topMargin: 4
             anchors.right: parent.right
-            anchors.rightMargin: 16
+            anchors.rightMargin: Theme.componentMargin
 
             text: qsTr("%1 shots  /  %2 files").arg(mediaLibrary.shotModel.shotCount).arg(mediaLibrary.shotModel.fileCount)
             verticalAlignment: Text.AlignVCenter
@@ -147,7 +147,7 @@ Item {
             anchors.top: textFilesCount.bottom
             anchors.topMargin: 0
             anchors.right: parent.right
-            anchors.rightMargin: 16
+            anchors.rightMargin: Theme.componentMargin
 
             text: qsTr("%1 of space used").arg(UtilsString.bytesToString_short(mediaLibrary.shotModel.diskSpace))
             verticalAlignment: Text.AlignVCenter
@@ -158,9 +158,9 @@ Item {
         ComboBoxThemed {
             id: comboBox_directories
             anchors.left: parent.left
-            anchors.leftMargin: 16
+            anchors.leftMargin: Theme.componentMargin
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 16
+            anchors.bottomMargin: Theme.componentMargin
 
             ListModel {
                 id: cbMediaDirectories
@@ -190,7 +190,7 @@ Item {
             }
 
             property bool cbinit: false
-            width: 240 + 16 + 240
+            width: 240 + Theme.componentMargin + 240
             onCurrentIndexChanged: {
                 if (cbinit) {
                     mediaGrid.exitSelectionMode()
@@ -215,10 +215,10 @@ Item {
         Row {
             id: rowFilter
             anchors.left: parent.left
-            anchors.leftMargin: 16
+            anchors.leftMargin: Theme.componentMargin
             anchors.top: parent.top
-            anchors.topMargin: 16
-            spacing: 16
+            anchors.topMargin: Theme.componentMargin
+            spacing: Theme.componentMargin
 
             ComboBoxThemed {
                 id: comboBox_orderby
@@ -325,9 +325,9 @@ Item {
 
         Row {
             anchors.left: rowFilter.right
-            anchors.leftMargin: 16
+            anchors.leftMargin: Theme.componentMargin
             anchors.verticalCenter: rowFilter.verticalCenter
-            spacing: 12
+            spacing: Theme.componentMarginS
 
             visible: (rectangleHeader.width > 1280)
 
@@ -390,30 +390,10 @@ Item {
 
         ////////
 
-        Rectangle { // separator
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-
-            height: 2
-            opacity: 0.1
-            color: Theme.colorHeaderContent
-        }
+        HeaderSeparator { }
     }
-    Rectangle { // shadow
-        anchors.top: rectangleHeader.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
 
-        height: 8
-        opacity: 0.5
-
-        gradient: Gradient {
-            orientation: Gradient.Vertical
-            GradientStop { position: 0.0; color: Theme.colorHeaderHighlight; }
-            GradientStop { position: 1.0; color: Theme.colorBackground; }
-        }
-    }
+    HeaderShadow {anchors.top: rectangleHeader.bottom; }
 
     // MENUS ///////////////////////////////////////////////////////////////////
 
@@ -458,32 +438,6 @@ Item {
                 anchors.centerIn: parent
                 source: "qrc:/gfx/disk.svg"
                 asynchronous: true
-            }
-        }
-
-        ////////
-
-        Component {
-            id: itemHighlight
-
-            Rectangle {
-                width: shotsView.cellSize
-                height: shotsView.cellSize
-                x: 0; y: 0; z: 2;
-
-                visible: !mediaGrid.selectionMode
-
-                color: "transparent"
-                radius: (Theme.componentRadius > 6) ? Theme.componentRadius-2 : 4
-                border.width: (Theme.componentRadius > 4) ? 6 : 4
-                border.color: Theme.colorPrimary
-
-                layer.enabled: true
-                layer.effect: MultiEffect { // shadow
-                    autoPaddingEnabled: true
-                    shadowEnabled: true
-                    shadowColor: Theme.colorPrimary
-                }
             }
         }
 
@@ -630,8 +584,12 @@ Item {
             maximumFlickVelocity: 10000
             ScrollBar.vertical: ScrollBar { z: 1 }
 
-            highlight: itemHighlight
             highlightMoveDuration: 0
+            highlight: GridHighlight {
+                width: shotsView.cellSize
+                height: shotsView.cellSize
+                visible: !mediaGrid.selectionMode
+            }
 
             ////////
 

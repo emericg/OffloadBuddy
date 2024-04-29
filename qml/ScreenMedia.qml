@@ -303,9 +303,9 @@ Loader {
                     id: textShotName
                     height: 40
                     anchors.left: buttonBack.right
-                    anchors.leftMargin: 8
+                    anchors.leftMargin: Theme.componentMarginXS
                     anchors.right: rowButtons.left
-                    anchors.rightMargin: 16
+                    anchors.rightMargin: Theme.componentMargin
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: "SHOT NAME"
@@ -321,10 +321,10 @@ Loader {
                 Row {
                     id: rowCodecs
                     anchors.verticalCenter: parent.verticalCenter
-                    x: (textShotName.x + textShotName.contentWidth + 16)
-                    visible: (textShotName.contentWidth + rowCodecs.width + 8 < textShotName.width)
+                    x: (textShotName.x + textShotName.contentWidth + Theme.componentMargin)
+                    visible: (textShotName.contentWidth + rowCodecs.width + Theme.componentMarginXS < textShotName.width)
                     height: 28
-                    spacing: 16
+                    spacing: Theme.componentMargin
 
                     TagDesktop { id: codecImage }
 
@@ -338,9 +338,9 @@ Loader {
                 Row {
                     id: rowButtons
                     anchors.right: rowMenus.left
-                    anchors.rightMargin: 24
+                    anchors.rightMargin: Theme.componentMarginXL
                     anchors.verticalCenter: parent.verticalCenter
-                    spacing: 12
+                    spacing: Theme.componentMarginS
 
                     Row {
                         id: rowActions1
@@ -395,7 +395,7 @@ Loader {
                             id: buttonTimestamp
                             width: 40
                             height: 40
-                            source: "qrc:/assets/icons/material-icons/duotone/date_range.svg"
+                            source: "qrc:/assets/icons/material-symbols/calendar_today.svg"
                             backgroundColor: Theme.colorForeground
                             onClicked: contentOverview.openDatePopup()
                         }
@@ -530,30 +530,10 @@ Loader {
 
                 ////////
 
-                Rectangle { // separator
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.bottom: parent.bottom
-
-                    height: 2
-                    opacity: 0.1
-                    color: Theme.colorHeaderContent
-                }
+                HeaderSeparator { }
             }
-            Rectangle { // shadow
-                anchors.top: rectangleHeader.bottom
-                anchors.left: parent.left
-                anchors.right: parent.right
 
-                height: 8
-                opacity: 0.5
-
-                gradient: Gradient {
-                    orientation: Gradient.Vertical
-                    GradientStop { position: 0.0; color: Theme.colorHeaderHighlight; }
-                    GradientStop { position: 1.0; color: Theme.colorBackground; }
-                }
-            }
+            HeaderShadow {anchors.top: rectangleHeader.bottom; }
 
             ////////////////////////////////////////////////////////////////////
 

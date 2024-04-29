@@ -189,9 +189,9 @@ Popup {
 
             Text {
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: Theme.componentMarginXL
                 anchors.right: parent.right
-                anchors.rightMargin: 48+16+16
+                anchors.rightMargin: 48+Theme.componentMargin*2
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("%n shot(s) selected", "", shots_names.length) + " / " + qsTr("%n file(s) selected", "", shots_files.length)
@@ -203,7 +203,7 @@ Popup {
                 width: 48
                 height: 48
                 anchors.right: parent.right
-                anchors.rightMargin: 16
+                anchors.rightMargin: Theme.componentMargin
                 anchors.verticalCenter: parent.verticalCenter
 
                 source: "qrc:/assets/icons/material-symbols/chevron_right.svg"
@@ -225,8 +225,8 @@ Popup {
             ListView {
                 id: listArea
                 anchors.fill: parent
-                anchors.leftMargin: 24
-                anchors.rightMargin: 24
+                anchors.leftMargin: Theme.componentMarginXL
+                anchors.rightMargin: Theme.componentMarginXL
 
                 visible: recapOpened
 
@@ -246,11 +246,12 @@ Popup {
             Column {
                 id: columnMerge
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: Theme.componentMarginXL
                 anchors.right: parent.right
-                anchors.rightMargin: 24
-                topPadding: 16
-                bottomPadding: 16
+                anchors.rightMargin: Theme.componentMarginXL
+
+                topPadding: Theme.componentMargin
+                bottomPadding: Theme.componentMargin
 
                 visible: !recapOpened
 
@@ -272,7 +273,7 @@ Popup {
                     anchors.right: parent.right
                     anchors.left: parent.left
 
-                    visible: !recapEnabled && currentShot.fileCount
+                    visible: !recapEnabled && currentShot && currentShot.fileCount
                     height: 32
 
                     Text {
@@ -290,7 +291,7 @@ Popup {
                     anchors.left: parent.left
                     anchors.right: parent.right
 
-                    visible: !recapEnabled && currentShot.fileCount
+                    visible: !recapEnabled && currentShot && currentShot.fileCount
 
                     Repeater {
                         model: currentShot.filesList
@@ -426,8 +427,8 @@ Popup {
         Row {
             height: Theme.componentHeight*2 + parent.spacing
             anchors.right: parent.right
-            anchors.rightMargin: 24
-            spacing: 16
+            anchors.rightMargin: Theme.componentMarginXL
+            spacing: Theme.componentMargin
 
             ButtonSolid {
                 anchors.verticalCenter: parent.verticalCenter

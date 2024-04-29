@@ -249,7 +249,7 @@ Item {
                     height: 28
                     width: infosGenericCol.width-48
                     anchors.left: parent.right
-                    anchors.leftMargin: 16
+                    anchors.leftMargin: Theme.componentMargin
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: shot.location
@@ -273,7 +273,7 @@ Item {
                     height: 28
                     width: infosGenericCol.width-48
                     anchors.left: parent.right
-                    anchors.leftMargin: 16
+                    anchors.leftMargin: Theme.componentMargin
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: shot.date.toUTCString()
@@ -296,7 +296,7 @@ Item {
                     id: duration
                     height: 28
                     anchors.left: parent.right
-                    anchors.leftMargin: 16
+                    anchors.leftMargin: Theme.componentMargin
                     anchors.verticalCenter: parent.verticalCenter
 
                     color: Theme.colorText
@@ -318,7 +318,7 @@ Item {
                     id: camera
                     height: 28
                     anchors.left: parent.right
-                    anchors.leftMargin: 16
+                    anchors.leftMargin: Theme.componentMargin
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: shot.camera
@@ -340,7 +340,7 @@ Item {
                     id: size
                     height: 28
                     anchors.left: parent.right
-                    anchors.leftMargin: 16
+                    anchors.leftMargin: Theme.componentMargin
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: UtilsString.bytesToString_short(shot.datasize)
@@ -362,7 +362,7 @@ Item {
                     id: chapters
                     height: 28
                     anchors.left: parent.right
-                    anchors.leftMargin: 16
+                    anchors.leftMargin: Theme.componentMargin
                     anchors.verticalCenter: parent.verticalCenter
 
                     color: Theme.colorText
@@ -387,7 +387,7 @@ Item {
                 Text {
                     height: 28
                     anchors.left: parent.right
-                    anchors.leftMargin: 16
+                    anchors.leftMargin: Theme.componentMargin
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: shot.width + "x" + shot.height + "   (" + UtilsMedia.varToString(shot.width, shot.height) + ")"
@@ -409,7 +409,7 @@ Item {
                 Text {
                     height: 28
                     anchors.left: parent.right
-                    anchors.leftMargin: 16
+                    anchors.leftMargin: Theme.componentMargin
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: shot.widthVisible + "x" + shot.heightVisible + "  (" + UtilsMedia.varToString(shot.widthVisible, shot.heightVisible) + ")  [rotated]"
@@ -432,7 +432,7 @@ Item {
                     id: orientation
                     height: 28
                     anchors.left: parent.right
-                    anchors.leftMargin: 16
+                    anchors.leftMargin: Theme.componentMargin
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: UtilsMedia.orientationQtToString(shot.transformation)
@@ -463,7 +463,7 @@ Item {
                         id: iso
                         height: 28
                         anchors.left: parent.right
-                        anchors.leftMargin: 16
+                        anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
 
                         color: Theme.colorText
@@ -484,7 +484,7 @@ Item {
                         id: focal
                         height: 28
                         anchors.left: parent.right
-                        anchors.leftMargin: 16
+                        anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
 
                         color: Theme.colorText
@@ -505,7 +505,7 @@ Item {
                         id: exposuretime
                         height: 28
                         anchors.left: parent.right
-                        anchors.leftMargin: 16
+                        anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
 
                         color: Theme.colorText
@@ -526,7 +526,7 @@ Item {
                         id: meteringmode
                         height: 28
                         anchors.left: parent.right
-                        anchors.leftMargin: 16
+                        anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
 
                         color: Theme.colorText
@@ -547,7 +547,7 @@ Item {
                         id: flash
                         height: 28
                         anchors.left: parent.right
-                        anchors.leftMargin: 16
+                        anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
 
                         color: Theme.colorText
@@ -580,7 +580,7 @@ Item {
                         id: framerate
                         height: 28
                         anchors.left: parent.right
-                        anchors.leftMargin: 16
+                        anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
 
                         color: Theme.colorText
@@ -601,7 +601,7 @@ Item {
                         id: codec
                         height: 28
                         anchors.left: parent.right
-                        anchors.leftMargin: 16
+                        anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
 
                         color: Theme.colorText
@@ -622,7 +622,7 @@ Item {
                         id: bitrate
                         height: 28
                         anchors.left: parent.right
-                        anchors.leftMargin: 16
+                        anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
 
                         color: Theme.colorText
@@ -643,7 +643,7 @@ Item {
                         id: audioChannels
                         height: 28
                         anchors.left: parent.right
-                        anchors.leftMargin: 16
+                        anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
 
                         color: Theme.colorText
@@ -664,7 +664,7 @@ Item {
                         id: timecode
                         height: 28
                         anchors.left: parent.right
-                        anchors.leftMargin: 16
+                        anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
 
                         color: Theme.colorText

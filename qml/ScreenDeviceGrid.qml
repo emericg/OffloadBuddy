@@ -253,11 +253,11 @@ Item {
             z: 5
             width: 128
             anchors.top: parent.top
-            anchors.topMargin: 8
+            anchors.topMargin: Theme.componentMargin/2
             anchors.right: parent.right
-            anchors.rightMargin: 16
+            anchors.rightMargin: Theme.componentMargin
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 8
+            anchors.bottomMargin: Theme.componentMargin/2
 
             fillMode: Image.PreserveAspectCrop
             color: Theme.colorHeaderContent
@@ -284,7 +284,7 @@ Item {
                     id: deviceRO
                     width: 28; height: 28;
                     backgroundVisible: true
-                    visible: currentDevice.readOnly
+                    visible: currentDevice && currentDevice.readOnly
 
                     source: "qrc:/assets/icons/material-symbols/lock.svg"
                     sourceSize: 24
@@ -317,7 +317,7 @@ Item {
             Text {
                 id: deviceFirmware
                 anchors.right: parent.right
-                visible: (currentDevice.deviceType > 3)
+                visible: (currentDevice && currentDevice.deviceType > 3)
 
                 text: qsTr("firmware") + " " + currentDevice.firmware
                 color: Theme.colorHeaderContent
@@ -345,8 +345,8 @@ Item {
                 width: 256
                 height: 12
 
-                visible: (currentDevice.batteryLevel > 0)
-                value: currentDevice.batteryLevel
+                visible: (currentDevice && currentDevice.batteryLevel > 0)
+                value: currentDevice && currentDevice.batteryLevel
                 valueMin: 0
                 valueMax: 100
             }
@@ -357,10 +357,10 @@ Item {
         Row {
             id: rowFilter
             anchors.left: parent.left
-            anchors.leftMargin: 16
+            anchors.leftMargin: Theme.componentMargin
             anchors.top: parent.top
-            anchors.topMargin: 16
-            spacing: 16
+            anchors.topMargin: Theme.componentMargin
+            spacing: Theme.componentMargin
 
             ComboBoxThemed {
                 id: comboBox_orderby
@@ -470,7 +470,7 @@ Item {
 
         Row {
             anchors.left: rowFilter.right
-            anchors.leftMargin: 16
+            anchors.leftMargin: Theme.componentMargin
             anchors.verticalCenter: rowFilter.verticalCenter
             spacing: 12
 
@@ -546,9 +546,9 @@ Item {
             id: rectangleTransfer
             width: 240
             anchors.left: parent.left
-            anchors.leftMargin: 16
+            anchors.leftMargin: Theme.componentMargin
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 16
+            anchors.bottomMargin: Theme.componentMargin
 
             color: Theme.colorPrimary
 
@@ -578,9 +578,9 @@ Item {
             id: rectangleDelete
             width: 240
             anchors.left: rectangleTransfer.right
-            anchors.leftMargin: 16
+            anchors.leftMargin: Theme.componentMargin
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 16
+            anchors.bottomMargin: Theme.componentMargin
 
             color: Theme.colorError
             text: qsTr("Delete ALL content!")
@@ -589,30 +589,10 @@ Item {
 
         ////////
 
-        Rectangle { // separator
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-
-            height: 2
-            opacity: 0.1
-            color: Theme.colorHeaderContent
-        }
+        HeaderSeparator { }
     }
-    Rectangle { // shadow
-        anchors.top: rectangleHeader.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
 
-        height: 8
-        opacity: 0.5
-
-        gradient: Gradient {
-            orientation: Gradient.Vertical
-            GradientStop { position: 0.0; color: Theme.colorHeaderHighlight; }
-            GradientStop { position: 1.0; color: Theme.colorBackground; }
-        }
-    }
+    HeaderShadow {anchors.top: rectangleHeader.bottom; }
 
     // MENUS ///////////////////////////////////////////////////////////////////
 
@@ -664,30 +644,6 @@ Item {
                 sourceSize.width: width
                 sourceSize.height: height
                 anchors.centerIn: parent
-            }
-        }
-
-        ////////
-
-        Component {
-            id: itemHighlight
-
-            Rectangle {
-                width: shotsView.cellSize
-                height: shotsView.cellSize
-                x: 0; y: 0; z: 2;
-
-                color: "transparent"
-                radius: (Theme.componentRadius > 4) ? Theme.componentRadius-2 : 4
-                border.width: (Theme.componentRadius > 4) ? 6 : 4
-                border.color: Theme.colorPrimary
-
-                layer.enabled: true
-                layer.effect: MultiEffect { // shadow
-                    autoPaddingEnabled: true
-                    shadowEnabled: true
-                    shadowColor: Theme.colorPrimary
-                }
             }
         }
 
@@ -845,8 +801,12 @@ Item {
             maximumFlickVelocity: 10000
             ScrollBar.vertical: ScrollBar { z: 1 }
 
-            highlight: itemHighlight
             highlightMoveDuration: 0
+            highlight: GridHighlight {
+                width: shotsView.cellSize
+                height: shotsView.cellSize
+                visible: !mediaGrid.selectionMode
+            }
 
             ////////
 

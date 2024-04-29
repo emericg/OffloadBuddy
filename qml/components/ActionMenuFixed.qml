@@ -9,7 +9,7 @@ import ThemeEngine
 T.Popup {
     id: actionMenu
 
-    width: 233
+    width: 240
     height: contentColumn.height
 
     padding: 0
@@ -69,8 +69,8 @@ T.Popup {
             id: contentColumn
             width: parent.width
 
-            topPadding: 10
-            bottomPadding: 10
+            topPadding: 12
+            bottomPadding: 12
             spacing: 2
 
             ////////

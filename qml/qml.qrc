@@ -36,6 +36,9 @@
         <file alias="FileWarning.qml">components/FileWarning.qml</file>
         <file alias="FileInputArea.qml">components/FileInputArea.qml</file>
         <file alias="FolderInputArea.qml">components/FolderInputArea.qml</file>
+        <file alias="GridHighlight.qml">components/GridHighlight.qml</file>
+        <file alias="HeaderShadow.qml">components/HeaderShadow.qml</file>
+        <file alias="HeaderSeparator.qml">components/HeaderSeparator.qml</file>
         <file alias="ItemBannerActions.qml">components/ItemBannerActions.qml</file>
         <file alias="ItemBannerMessage.qml">components/ItemBannerMessage.qml</file>
         <file alias="ItemBannerJob.qml">components/ItemBannerJob.qml</file>
@@ -44,6 +47,8 @@
         <file alias="ItemMediaDirectory.qml">components/ItemMediaDirectory.qml</file>
         <file alias="RangeSliderPlayer.qml">components/RangeSliderPlayer.qml</file>
         <file alias="ResizeWidget.qml">components/ResizeWidget.qml</file>
+        <file alias="Separator.qml">components/Separator.qml</file>
+        <file alias="SeparatorPadded.qml">components/SeparatorPadded.qml</file>
         <file alias="SliderPlayer.qml">components/SliderPlayer.qml</file>
     </qresource>
 

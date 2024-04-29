@@ -196,7 +196,7 @@ Popup {
                 width: 48
                 height: 48
                 anchors.right: parent.right
-                anchors.rightMargin: 16
+                anchors.rightMargin: Theme.componentMargin
                 anchors.verticalCenter: parent.verticalCenter
 
                 source: "qrc:/assets/icons/material-symbols/chevron_right.svg"
@@ -263,11 +263,11 @@ Popup {
 
                     Row {
                         anchors.left: titleGPS.right
-                        anchors.leftMargin: 16
+                        anchors.leftMargin: Theme.componentMargin
                         anchors.right: parent.right
                         anchors.rightMargin: 0
                         anchors.verticalCenter: parent.verticalCenter
-                        spacing: 16
+                        spacing: Theme.componentMargin
 
                         RadioButtonThemed {
                             id: rbGPX
@@ -310,11 +310,11 @@ Popup {
 
                     Row {
                         anchors.left: titleTelemetry.right
-                        anchors.leftMargin: 16
+                        anchors.leftMargin: Theme.componentMargin
                         anchors.right: parent.right
                         anchors.rightMargin: 0
                         anchors.verticalCenter: parent.verticalCenter
-                        spacing: 16
+                        spacing: Theme.componentMargin
 
                         RadioButtonThemed {
                             id: rbJSON
@@ -350,7 +350,7 @@ Popup {
 
                     SwitchThemedDesktop { // switchEGM96
                         anchors.left: titleAltitude.right
-                        anchors.leftMargin: 16
+                        anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
 
                         checked: true

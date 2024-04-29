@@ -1,6 +1,5 @@
 import QtQuick
-//import QtGraphicalEffects 1.15 // Qt5
-import Qt5Compat.GraphicalEffects // Qt6
+import QtQuick.Effects
 
 import ThemeEngine
 import "qrc:/utils/UtilsNumber.js" as UtilsNumber
@@ -33,11 +32,18 @@ Item {
         color: dataBarSpace.colorBackground
 
         layer.enabled: true
-        layer.effect: OpacityMask {
-            maskSource: Rectangle {
-                width: item_bg.width
-                height: dataBarSpace.height
-                radius: dataBarSpace.height/2
+        layer.effect: MultiEffect {
+            maskEnabled: true
+            maskInverted: false
+            maskThresholdMin: 0.5
+            maskSpreadAtMin: 1.0
+            maskSpreadAtMax: 0.0
+            maskSource: ShaderEffectSource {
+                sourceItem: Rectangle {
+                    width: item_bg.width
+                    height: dataBarSpace.height
+                    radius: dataBarSpace.height
+                }
             }
         }
 
@@ -86,4 +92,6 @@ Item {
             }
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 }

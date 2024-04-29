@@ -50,7 +50,7 @@ Loader {
                 id: textHeader
                 height: 40
                 anchors.left: parent.left
-                anchors.leftMargin: 24
+                anchors.leftMargin: Theme.componentMarginXL
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("JOBS QUEUE")
@@ -63,7 +63,7 @@ Loader {
             ButtonSolid {
                 id: buttonClear
                 anchors.right: parent.right
-                anchors.rightMargin: 20
+                anchors.rightMargin: Theme.componentMarginXL
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Clear finished jobs")
@@ -82,30 +82,10 @@ Loader {
 
             ////////
 
-            Rectangle { // separator
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-
-                height: 2
-                opacity: 0.1
-                color: Theme.colorHeaderContent
-            }
-            Rectangle { // shadow
-                anchors.top: parent.bottom
-                anchors.left: parent.left
-                anchors.right: parent.right
-
-                height: 8
-                opacity: 0.5
-
-                gradient: Gradient {
-                    orientation: Gradient.Vertical
-                    GradientStop { position: 0.0; color: Theme.colorHeaderHighlight; }
-                    GradientStop { position: 1.0; color: Theme.colorBackground; }
-                }
-            }
+            HeaderSeparator { }
         }
+
+        HeaderShadow {anchors.top: rectangleHeader.bottom; }
 
         // CONTENT /////////////////////////////////////////////////////////////
 

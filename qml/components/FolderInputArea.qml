@@ -1,3 +1,4 @@
+import QtCore
 import QtQuick
 import QtQuick.Dialogs
 import QtQuick.Controls.impl

@@ -263,11 +263,11 @@ Rectangle {
                     } else if (job.state === JobUtils.JOB_STATE_PAUSED) {
                         return "qrc:/assets/icons/material-symbols/media/pause-fill.svg"
                     } else if (job.state === JobUtils.JOB_STATE_DONE) {
-                        return "qrc:/assets/icons/material-symbols/check_circle.svg"
+                        return "qrc:/assets/icons/material-symbols/check_circle-fill.svg"
                     } else if (job.state === JobUtils.JOB_STATE_ERRORED) {
-                        return "qrc:/assets/icons/material-symbols/report.svg"
+                        return "qrc:/assets/icons/material-symbols/warning-fill.svg"
                     } else if (job.state === JobUtils.JOB_STATE_ABORTED) {
-                        return "qrc:/assets/icons/material-symbols/cancel.svg"
+                        return "qrc:/assets/icons/material-symbols/cancel_circle-fill.svg"
                     }
                 }
 
@@ -307,7 +307,7 @@ Rectangle {
             bottomPadding: 8
 
             Row {
-                spacing: 24
+                spacing: Theme.componentMarginXL
 
                 Row {
                     spacing: 8

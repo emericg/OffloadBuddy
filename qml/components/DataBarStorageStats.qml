@@ -1,8 +1,6 @@
 import QtQuick
+import QtQuick.Effects
 import QtQuick.Controls
-
-//import QtGraphicalEffects 1.15 // Qt5
-import Qt5Compat.GraphicalEffects // Qt6
 
 import ThemeEngine
 import ShotUtils 1.0
@@ -53,13 +51,20 @@ Item {
         }
 
         layer.enabled: true
-        layer.effect: OpacityMask {
-            maskSource: Rectangle {
-                x: rectangleTracks.x
-                y: rectangleTracks.y
-                width: rectangleTracks.width
-                height: rectangleTracks.height
-                radius: rectangleTracks.radius
+        layer.effect: MultiEffect {
+            maskEnabled: true
+            maskInverted: false
+            maskThresholdMin: 0.5
+            maskSpreadAtMin: 1.0
+            maskSpreadAtMax: 0.0
+            maskSource: ShaderEffectSource {
+                sourceItem: Rectangle {
+                    x: rectangleTracks.x
+                    y: rectangleTracks.y
+                    width: rectangleTracks.width
+                    height: rectangleTracks.height
+                    radius: rectangleTracks.radius
+                }
             }
         }
     }
@@ -71,6 +76,7 @@ Item {
         anchors.top: rectangleTracks.bottom
         anchors.topMargin: 4
         anchors.horizontalCenter: parent.horizontalCenter
+
         height: 16
         spacing: 24
 
@@ -109,4 +115,6 @@ Item {
             }
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 }

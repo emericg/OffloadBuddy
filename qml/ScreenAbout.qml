@@ -81,30 +81,10 @@ Loader {
 
             ////////
 
-            Rectangle { // separator
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-
-                height: 2
-                opacity: 0.1
-                color: Theme.colorHeaderContent
-            }
+            HeaderSeparator { }
         }
-        Rectangle { // shadow
-            anchors.top: rectangleHeader.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
 
-            height: 8
-            opacity: 0.5
-
-            gradient: Gradient {
-                orientation: Gradient.Vertical
-                GradientStop { position: 0.0; color: Theme.colorHeaderHighlight; }
-                GradientStop { position: 1.0; color: Theme.colorBackground; }
-            }
-        }
+        HeaderShadow {anchors.top: rectangleHeader.bottom; }
 
         // CONTENT /////////////////////////////////////////////////////////////
 
@@ -202,15 +182,7 @@ Loader {
 
                 ////////
 
-                Rectangle {
-                    anchors.left: parent.left
-                    anchors.leftMargin: -Theme.componentMarginXL
-                    anchors.right: parent.right
-                    anchors.rightMargin: -Theme.componentMarginXL
-                    height: 2
-                    opacity: 0.33
-                    color: Theme.colorSeparator
-                }
+                Separator { }
 
                 ////////
 
@@ -230,15 +202,7 @@ Loader {
 
                 ////////
 
-                Rectangle {
-                    anchors.left: parent.left
-                    anchors.leftMargin: -Theme.componentMarginXL
-                    anchors.right: parent.right
-                    anchors.rightMargin: -Theme.componentMarginXL
-                    height: 2
-                    opacity: 0.33
-                    color: Theme.colorSeparator
-                }
+                Separator { }
 
                 ////////
 
@@ -448,15 +412,7 @@ Loader {
 
                 ////////
 
-                Rectangle {
-                    anchors.left: parent.left
-                    anchors.leftMargin: -Theme.componentMarginXL
-                    anchors.right: parent.right
-                    anchors.rightMargin: -Theme.componentMarginXL
-                    height: 2
-                    opacity: 0.33
-                    color: Theme.colorSeparator
-                }
+                Separator { }
 
                 ////////
             }
