@@ -19,7 +19,7 @@ Rectangle {
     // prevent clicks below this area
     MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     function open() {
         bannerJob.height = 48
@@ -37,7 +37,7 @@ Rectangle {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     Column {
         id: jobColumn
@@ -106,15 +106,19 @@ Rectangle {
         }
     }
 
-    RoundButtonIcon {
+    ////////////////
+
+    RoundButtonSunken {
         id: rectangleClose
         anchors.right: parent.right
         anchors.rightMargin: 8
         anchors.verticalCenter: parent.verticalCenter
 
         source: "qrc:/assets/icons/material-symbols/close.svg"
-        iconColor: "white"
-        backgroundColor: Theme.colorActionbarHighlight
+        colorIcon: "white"
+        colorBackground: Theme.colorActionbar
         onClicked: bannerJob.close()
     }
+
+    ////////////////
 }

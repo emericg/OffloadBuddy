@@ -14,6 +14,7 @@ Item {
     property var currentDevice: null
 
     function updateFocus() {
+        console.log("screenDevice.updateFocus()")
         screenMedia.updateFocus()
     }
 
@@ -65,8 +66,6 @@ Item {
         }
     }
 
-    // CONTENT /////////////////////////////////////////////////////////////////
-
     MouseArea {
         anchors.fill: parent
         propagateComposedEvents: true
@@ -82,6 +81,10 @@ Item {
             }
         }
     }
+
+    //focus: (appContent.state === "device")
+
+    // CONTENT /////////////////////////////////////////////////////////////////
 
     ScreenDeviceGrid {
         anchors.fill: parent

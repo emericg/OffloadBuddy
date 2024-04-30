@@ -23,7 +23,7 @@ MapQuickItem {
     //coordinate: QtPositioning.coordinate(1, 2)
 
     rotation: 360.0 - map_bearing - compass_bearing
-    Behavior on rotation { RotationAnimation { duration: 133; direction: RotationAnimator.Shortest} }
+    Behavior on rotation { RotationAnimation { duration: 133; direction: RotationAnimator.Shortest; } }
 
     sourceItem: Image {
         width: posMarker.width

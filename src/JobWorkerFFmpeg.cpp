@@ -440,7 +440,7 @@ void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
                     ptiwrap->arguments << "-deadline" << "good";
 
                 // CRF scale range is 0–63
-                // (0 is lossless, 23 is default, 63 is worst) // sane range is 15–35
+                // (0 is lossless, 23 is default, 63 is worst) // sane range is 24–48
                 int crf = mapNumber(job->settings_encode.encoding_quality, 50, 100, 48, 24);
 
                 // VP9 video
@@ -453,7 +453,6 @@ void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
                 ptiwrap->arguments << "-tile-columns" << "2";
                 ptiwrap->arguments << "-tile-rows" << "0";
                 ptiwrap->arguments << "-frame-parallel" << "0";
-
 
                 // Opus audio
                 ptiwrap->arguments << "-c:a" << "libopus";
@@ -469,7 +468,6 @@ void JobWorkerFFmpeg::queueWork_encode(JobTracker *job)
                 // CRF scale range is 0–63. Lower values mean better quality and greater file size.
                 // 0 means lossless. A CRF value of 23 yields a quality level corresponding to CRF 19 for
                 // x264 (​source), which would be considered visually lossless.
-                // sane range is 23-34?
                 int crf = mapNumber(job->settings_encode.encoding_quality, 50, 100, 48, 26);
 
                 if (job->settings_encode.encoding_speed == 3)

@@ -16,13 +16,13 @@ Popup {
     width: 720
     padding: 0
 
+    dim: true
     modal: true
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+    parent: Overlay.overlay
 
-    signal confirmed()
-
-    ////////
+    ////////////////////////////////////////////////////////////////////////////
 
     property int popupMode: 0
     property bool recapEnabled: false
@@ -154,6 +154,8 @@ Popup {
 
     contentItem: Column {
 
+        ////////////////
+
         Item { // titleArea
             anchors.left: parent.left
             anchors.right: parent.right
@@ -214,26 +216,27 @@ Popup {
 
         ////////////////
 
-        Item {
-            id: contentArea
-            height: columnMerge.height
+        Column { // contentArea
             anchors.left: parent.left
+            anchors.leftMargin: Theme.componentMarginXL
             anchors.right: parent.right
+            anchors.rightMargin: Theme.componentMarginXL
+
+            topPadding: Theme.componentMarginXL
+            bottomPadding: Theme.componentMarginXL
+            spacing: Theme.componentMargin
 
             ////////
 
             ListView {
                 id: listArea
                 anchors.fill: parent
-                anchors.leftMargin: Theme.componentMarginXL
-                anchors.rightMargin: Theme.componentMarginXL
 
                 visible: recapOpened
 
                 model: shots_files
                 delegate: Text {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
+                    width: listArea.width
                     text: modelData
                     font.pixelSize: Theme.fontSizeContentSmall
                     elide: Text.ElideLeft
@@ -246,9 +249,7 @@ Popup {
             Column {
                 id: columnMerge
                 anchors.left: parent.left
-                anchors.leftMargin: Theme.componentMarginXL
                 anchors.right: parent.right
-                anchors.rightMargin: Theme.componentMarginXL
 
                 topPadding: Theme.componentMargin
                 bottomPadding: Theme.componentMargin
@@ -425,21 +426,22 @@ Popup {
         //////////////////
 
         Row {
-            height: Theme.componentHeight*2 + parent.spacing
             anchors.right: parent.right
-            anchors.rightMargin: Theme.componentMarginXL
+
+            topPadding: Theme.componentMargin
             spacing: Theme.componentMargin
 
             ButtonSolid {
-                anchors.verticalCenter: parent.verticalCenter
-                width: 96
-                color: Theme.colorGrey
+                anchors.bottom: parent.bottom
 
                 text: qsTr("Cancel")
+                color: Theme.colorGrey
+
                 onClicked: popupMerge.close()
             }
+
             ButtonSolid {
-                anchors.verticalCenter: parent.verticalCenter
+                anchors.bottom: parent.bottom
 
                 enabled: (shots_files.length > 1)
 
@@ -485,5 +487,9 @@ Popup {
                 }
             }
         }
+
+        //////////////////
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 }

@@ -235,7 +235,7 @@ Loader {
                             color: Theme.colorText
                             font.pixelSize: Theme.fontSizeContentBig
                         }
-                        RoundButtonIcon {
+                        RoundButtonSunken {
                             anchors.verticalCenter: parent.verticalCenter
                             source: "qrc:/assets/icons/material-symbols/link.svg"
                             onClicked: Qt.openUrlExternally("https://www.qt.io")
@@ -258,7 +258,7 @@ Loader {
                             color: Theme.colorText
                             font.pixelSize: Theme.fontSizeContentBig
                         }
-                        RoundButtonIcon {
+                        RoundButtonSunken {
                             anchors.verticalCenter: parent.verticalCenter
                             source: "qrc:/assets/icons/material-symbols/link.svg"
                             onClicked: Qt.openUrlExternally("https://www.ffmpeg.org")
@@ -281,7 +281,7 @@ Loader {
                             color: Theme.colorText
                             font.pixelSize: Theme.fontSizeContentBig
                         }
-                        RoundButtonIcon {
+                        RoundButtonSunken {
                             anchors.verticalCenter: parent.verticalCenter
                             source: "qrc:/assets/icons/material-symbols/link.svg"
                             onClicked: Qt.openUrlExternally("https://github.com/emericg/MiniVideo")
@@ -304,7 +304,7 @@ Loader {
                             color: Theme.colorText
                             font.pixelSize: Theme.fontSizeContentBig
                         }
-                        RoundButtonIcon {
+                        RoundButtonSunken {
                             anchors.verticalCenter: parent.verticalCenter
                             source: "qrc:/assets/icons/material-symbols/link.svg"
                             onClicked: Qt.openUrlExternally("https://github.com/libexif")
@@ -327,7 +327,7 @@ Loader {
                             color: Theme.colorText
                             font.pixelSize: Theme.fontSizeContentBig
                         }
-                        RoundButtonIcon {
+                        RoundButtonSunken {
                             anchors.verticalCenter: parent.verticalCenter
                             source: "qrc:/assets/icons/material-symbols/link.svg"
                             onClicked: Qt.openUrlExternally("https://github.com/libmtp")
@@ -350,7 +350,7 @@ Loader {
                             color: Theme.colorText
                             font.pixelSize: Theme.fontSizeContentBig
                         }
-                        RoundButtonIcon {
+                        RoundButtonSunken {
                             anchors.verticalCenter: parent.verticalCenter
                             source: "qrc:/assets/icons/material-symbols/link.svg"
                             onClicked: Qt.openUrlExternally("https://github.com/richgel999/miniz/")
@@ -373,7 +373,7 @@ Loader {
                             color: Theme.colorText
                             font.pixelSize: Theme.fontSizeContentBig
                         }
-                        RoundButtonIcon {
+                        RoundButtonSunken {
                             anchors.verticalCenter: parent.verticalCenter
                             source: "qrc:/assets/icons/material-symbols/link.svg"
                             onClicked: Qt.openUrlExternally("https://github.com/itay-grudev/SingleApplication/")
@@ -396,7 +396,7 @@ Loader {
                             color: Theme.colorText
                             font.pixelSize: Theme.fontSizeContentBig
                         }
-                        RoundButtonIcon {
+                        RoundButtonSunken {
                             anchors.verticalCenter: parent.verticalCenter
                             source: "qrc:/assets/icons/material-symbols/link.svg"
                             onClicked: Qt.openUrlExternally("https://material.io/tools/icons")

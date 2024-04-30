@@ -434,7 +434,7 @@ Loader {
                                 color: Theme.colorText
                             }
 
-                            RoundButtonIcon {
+                            RoundButtonSunken {
                                 id: buttonNew
                                 anchors.verticalCenter: parent.verticalCenter
 

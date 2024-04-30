@@ -45,8 +45,8 @@ T.Popup {
 
     ////////////////
 
-    enter: Transition { NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: 133; } }
-    exit: Transition { NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; duration: 133; } }
+    enter: Transition { NumberAnimation { property: "opacity"; from: 0.33; to: 1.0; duration: 133; } }
+    exit: Transition { NumberAnimation { property: "opacity"; from: 1.0; to: 0.33; duration: 133; } }
 
     background: Rectangle {
         color: Theme.colorComponentBackground

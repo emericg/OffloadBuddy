@@ -162,28 +162,18 @@ Item {
 
     PopupDate {
         id: popupDate
-        x: (appWindow.width / 2) - (popupDate.width / 2) - (appSidebar.width)
-        y: (appWindow.height / 2) - (popupDate.height / 2) - (rectangleHeader.height)
-
-        onConfirmed: {
-            //
-        }
     }
 
     PopupTelemetry {
         id: popupTelemetry
-        x: (appWindow.width / 2) - (popupDate.width / 2) - (appSidebar.width)
-        y: (appWindow.height / 2) - (popupDate.height / 2) - (rectangleHeader.height)
+    }
 
-        onConfirmed: {
-            //
-        }
+    PopupEncoding {
+        id: popupEncoding
     }
 
     PopupDelete {
         id: popupDelete
-        x: (appWindow.width / 2) - (popupDelete.width / 2) - (appSidebar.width)
-        y: (appWindow.height / 2) - (popupDelete.height / 2) - (rectangleHeader.height)
 
         onConfirmed: {
             if (appContent.state === "library") {
@@ -197,16 +187,6 @@ Item {
                 // then back to media grid
                 screenDevice.state = "stateMediaGrid"
             }
-        }
-    }
-
-    PopupEncoding {
-        id: popupEncoding
-        x: (appWindow.width / 2) - (popupEncoding.width / 2) - (appSidebar.width)
-        y: (appWindow.height / 2) - (popupEncoding.height / 2) - (rectangleHeader.height)
-
-        onConfirmed: {
-            //
         }
     }
 
@@ -673,6 +653,10 @@ Item {
                     }
                 }
             }
+
+            ////////////////
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 }

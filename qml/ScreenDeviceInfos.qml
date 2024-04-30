@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Layouts
 import QtQuick.Controls
 
 import ThemeEngine
@@ -85,45 +86,56 @@ Loader {
 
                 ////////////////
 
-                RoundButtonIcon {
-                    id: buttonBack
-                    width: 48
-                    height: 48
+                RowLayout {
                     anchors.left: parent.left
                     anchors.leftMargin: 8
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    iconColor: Theme.colorHeaderContent
-                    backgroundColor: Theme.colorForeground
-
-                    source: "qrc:/gfx/navigate_before_big.svg"
-                    onClicked: {
-                        if (appContent.state === "library") {
-                            screenLibrary.state = "stateMediaGrid"
-                        } else if (appContent.state === "device") {
-                            screenDevice.state = "stateMediaGrid"
-                            deviceSavedState.mainState = "stateMediaGrid"
-                        }
-                    }
-                }
-
-                Text {
-                    id: textShotName
-                    height: 40
-                    anchors.left: buttonBack.right
-                    anchors.leftMargin: Theme.componentMargin/2
                     anchors.right: parent.right
                     anchors.rightMargin: Theme.componentMargin
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: qsTr("Hardware Infos")
-                    color: Theme.colorHeaderContent
-                    fontSizeMode: Text.HorizontalFit
-                    font.bold: true
-                    font.pixelSize: Theme.fontSizeHeader
-                    minimumPixelSize: 22
-                    verticalAlignment: Text.AlignVCenter
-                    elide: Text.ElideRight
+                    spacing: Theme.componentMargin
+
+                    RoundButtonSunken {
+                        id: buttonBack
+                        Layout.preferredWidth: 48
+                        Layout.preferredHeight: 48
+                        Layout.alignment: Qt.AlignVCenter
+
+                        source: "qrc:/gfx/navigate_before_big.svg"
+                        colorIcon: Theme.colorHeaderContent
+                        colorBackground: Theme.colorHeader
+
+                        onClicked: {
+                            if (appContent.state === "library") {
+                                screenLibrary.state = "stateMediaGrid"
+                            } else if (appContent.state === "device") {
+                                screenDevice.state = "stateMediaGrid"
+                                deviceSavedState.mainState = "stateMediaGrid"
+                            }
+                        }
+                    }
+
+                    Text {
+                        id: textShotName
+                        Layout.maximumWidth: parent.width - parent.spacing - buttonBack.width
+                        Layout.preferredHeight: 48
+                        Layout.alignment: Qt.AlignVCenter
+
+                        anchors.left: buttonBack.right
+                        anchors.leftMargin: Theme.componentMargin/2
+                        anchors.right: parent.right
+                        anchors.rightMargin: Theme.componentMargin
+
+                        text: qsTr("Hardware Infos")
+                        textFormat: Text.PlainText
+                        color: Theme.colorHeaderContent
+                        fontSizeMode: Text.HorizontalFit
+                        font.bold: true
+                        font.pixelSize: Theme.fontSizeHeader
+                        minimumPixelSize: 22
+                        verticalAlignment: Text.AlignVCenter
+                        elide: Text.ElideRight
+                    }
                 }
 
                 ////////

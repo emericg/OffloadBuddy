@@ -10,7 +10,7 @@ import "qrc:/utils/UtilsPath.js" as UtilsPath
 Popup {
     id: popupTelemetry
 
-    x: (appWindow.width / 2) - (width / 2) - (appSidebar.width / 2)
+    x: (appWindow.width / 2) - (width / 2) + (appSidebar.width / 2)
     y: (appWindow.height / 2) - (height / 2)
     width: 720
     padding: 0
@@ -19,8 +19,7 @@ Popup {
     modal: true
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-
-    signal confirmed()
+    parent: Overlay.overlay
 
     ////////
 
@@ -175,11 +174,6 @@ Popup {
             height: 48
             visible: (recapEnabled && shots_uuids.length)
 
-            MouseArea {
-                anchors.fill: parent
-                onClicked: recapOpened = !recapOpened
-            }
-
             Text {
                 anchors.left: parent.left
                 anchors.leftMargin: Theme.componentMarginXL
@@ -192,15 +186,15 @@ Popup {
                 font.pixelSize: Theme.fontSizeContent
             }
 
-            RoundButtonIcon {
-                width: 48
-                height: 48
+            RoundButtonSunken {
                 anchors.right: parent.right
                 anchors.rightMargin: Theme.componentMargin
                 anchors.verticalCenter: parent.verticalCenter
 
-                source: "qrc:/assets/icons/material-symbols/chevron_right.svg"
                 rotation: recapOpened ? -90 : 90
+                colorBackground: Theme.colorForeground
+                source: "qrc:/assets/icons/material-symbols/chevron_right.svg"
+
                 onClicked: recapOpened = !recapOpened
             }
         }
@@ -219,7 +213,8 @@ Popup {
 
             ////////
 
-            ListView { // listArea
+            ListView {
+                id: listArea
                 anchors.left: parent.left
                 anchors.right: parent.right
 
@@ -227,8 +222,7 @@ Popup {
 
                 model: shots_names
                 delegate: Text {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
+                    width: listArea.width
                     text: modelData
                     font.pixelSize: Theme.fontSizeContentSmall
                     elide: Text.ElideLeft
@@ -494,20 +488,27 @@ Popup {
 
             Row {
                 anchors.right: parent.right
+
+                topPadding: 0
                 spacing: Theme.componentMargin
 
                 ButtonSolid {
+                    anchors.bottom: parent.bottom
+
                     color: Theme.colorGrey
                     text: qsTr("Close")
+
                     onClicked: popupTelemetry.close()
                 }
 
                 ButtonSolid {
-                    color: Theme.colorSecondary
-                    text: qsTr("Extract telemetry")
-                    source: "qrc:/assets/icons/material-symbols/insert_chart.svg"
+                    anchors.bottom: parent.bottom
 
                     enabled: (popupMode === 1 && fileInput.isValid) || (popupMode === 2 && folderInput.isValid)
+                    color: Theme.colorSecondary
+
+                    text: qsTr("Extract telemetry")
+                    source: "qrc:/assets/icons/material-symbols/insert_chart.svg"
 
                     onClicked: {
                         if (typeof currentShot === "undefined" || !currentShot) return
@@ -544,6 +545,8 @@ Popup {
                 }
 
                 ButtonSolid {
+                    anchors.bottom: parent.bottom
+
                     text: qsTr("Extract GPS")
                     source: "qrc:/assets/icons/material-symbols/location/map-fill.svg"
 

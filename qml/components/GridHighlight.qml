@@ -6,8 +6,7 @@ import ThemeEngine
 Item {
     width: 256
     height: 256
-
-    z: 1
+    z: 4
 
     Rectangle {
         anchors.fill: parent

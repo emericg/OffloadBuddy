@@ -9,16 +9,16 @@ import "qrc:/utils/UtilsNumber.js" as UtilsNumber
 Popup {
     id: popupDate
 
-    x: (appWindow.width / 2) - (width / 2) - (appSidebar.width / 2)
+    x: (appWindow.width / 2) - (width / 2) + (appSidebar.width / 2)
     y: (appWindow.height / 2) - (height / 2)
     width: 720
     padding: 0
 
+    dim: true
     modal: true
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-
-    signal confirmed()
+    parent: Overlay.overlay
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -567,20 +567,25 @@ Popup {
 
             Row {
                 anchors.right: parent.right
+
+                topPadding: Theme.componentMargin
                 spacing: Theme.componentMargin
 
                 ButtonSolid {
+                    anchors.bottom: parent.bottom
+
                     text: qsTr("Cancel")
                     color: Theme.colorGrey
                     onClicked: popupDate.close()
                 }
 
                 ButtonSolid {
+                    anchors.bottom: parent.bottom
+
                     text: qsTr("Change")
                     source: "qrc:/assets/icons/material-icons/duotone/schedule.svg"
                     color: Theme.colorPrimary
                     onClicked: {
-                        //popupDate.confirmed()
                         //popupDate.close()
                     }
                 }

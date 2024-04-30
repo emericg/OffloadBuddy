@@ -267,16 +267,15 @@ Item {
                     displayText = qsTr("Order by:") + " " + cbShotsOrderby.get(currentIndex).text
                 }
 
-                RoundButtonIcon {
+                SquareButtonSunken {
                     anchors.right: parent.right
-                    anchors.rightMargin: 32
-                    width: parent.height
-                    height: parent.height
+                    anchors.rightMargin: 36
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: 28
+                    height: 28
 
                     rotation: settingsManager.librarySortOrder ? 0 : 180
-                    iconColor: Theme.colorComponentContent
-                    highlightMode: "color"
-                    highlightColor: Theme.colorSubText
+                    colorBackground: Theme.colorComponent
                     source: "qrc:/assets/icons/material-symbols/filter_list.svg"
 
                     onClicked: {
@@ -506,6 +505,7 @@ Item {
             interactive: !actionMenu.visible
             keyNavigationEnabled: !actionMenu.visible
             //snapMode: GridView.FlowTopToBottom
+
             focus: (appContent.state === "library" && screenLibrary.state === "stateMediaGrid")
 
             Component.onCompleted: initGridViewSettings()

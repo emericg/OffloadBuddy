@@ -37,7 +37,7 @@ T.Button {
         implicitHeight: Theme.componentHeight
 
         Rectangle { // background_alpha_borders
-            anchors.fill: bgrect
+            anchors.fill: parent
             anchors.margins: isPhone ? -2 : -3
             radius: control.radius
             color: control.borderColor
@@ -51,7 +51,6 @@ T.Button {
             }
         }
         Rectangle { // background
-            id: bgrect
             anchors.fill: parent
             radius: control.radius
             color: control.backgroundColor

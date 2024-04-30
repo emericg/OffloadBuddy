@@ -7,7 +7,7 @@ import ThemeEngine
 Popup {
     id: popupDelete
 
-    x: (appWindow.width / 2) - (width / 2) - (appSidebar.width / 2)
+    x: (appWindow.width / 2) - (width / 2) + (appSidebar.width / 2)
     y: (appWindow.height / 2) - (height / 2)
     width: 720
     padding: 0
@@ -193,11 +193,6 @@ Popup {
             height: 48
             visible: (recapEnabled && shots_files.length)
 
-            MouseArea {
-                anchors.fill: parent
-                onClicked: recapOpened = !recapOpened
-            }
-
             Text {
                 anchors.left: parent.left
                 anchors.leftMargin: Theme.componentMarginXL
@@ -210,15 +205,15 @@ Popup {
                 font.pixelSize: Theme.fontSizeContent
             }
 
-            RoundButtonIcon {
-                width: 48
-                height: 48
+            RoundButtonSunken {
                 anchors.right: parent.right
                 anchors.rightMargin: Theme.componentMargin
                 anchors.verticalCenter: parent.verticalCenter
 
-                source: "qrc:/assets/icons/material-symbols/chevron_right.svg"
                 rotation: recapOpened ? -90 : 90
+                colorBackground: Theme.colorForeground
+                source: "qrc:/assets/icons/material-symbols/chevron_right.svg"
+
                 onClicked: recapOpened = !recapOpened
             }
         }
@@ -233,7 +228,7 @@ Popup {
 
             topPadding: Theme.componentMarginXL
             bottomPadding: Theme.componentMarginXL
-            spacing: Theme.componentMarginXL
+            spacing: Theme.componentMargin
 
             ////////
 
@@ -258,13 +253,13 @@ Popup {
                 anchors.left: parent.left
                 anchors.right: parent.right
 
-                height: Math.min(96, listArea.count*16)
-                visible: recapOpened || (shots_files.length > 0 && shots_files.length <= 4)
+                visible: recapOpened || (shots_files.length > 0 && shots_files.length <= 8)
+                height: Math.min(128, contentHeight)
+                interactive: (contentHeight > 128)
 
                 model: shots_files
                 delegate: Text {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
+                    width: listArea.width
                     text: modelData
                     font.pixelSize: Theme.fontSizeContentSmall
                     elide: Text.ElideLeft
@@ -276,10 +271,12 @@ Popup {
 
             Row {
                 anchors.right: parent.right
+
+                topPadding: Theme.componentMargin
                 spacing: Theme.componentMargin
 
                 ButtonSolid {
-                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.bottom: parent.bottom
 
                     text: qsTr("Cancel")
                     color: Theme.colorGrey
@@ -287,7 +284,7 @@ Popup {
                 }
 
                 ButtonSolid {
-                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.bottom: parent.bottom
 
                     text: qsTr("Delete")
                     source: "qrc:/assets/icons/material-symbols/delete.svg"

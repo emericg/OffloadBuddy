@@ -19,7 +19,7 @@ Rectangle {
     // prevent clicks below this area
     MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     function openMessage(message) {
         bannerMessage.height = 48
@@ -30,7 +30,7 @@ Rectangle {
         bannerMessage.height = 0
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     Text {
         id: bannerText
@@ -42,15 +42,18 @@ Rectangle {
         font.pixelSize: Theme.fontSizeContentBig
     }
 
-    RoundButtonIcon {
+    RoundButtonSunken {
         id: rectangleClose
         anchors.right: parent.right
-        anchors.rightMargin: Theme.componentMargin/2
+        anchors.rightMargin: 12
         anchors.verticalCenter: parent.verticalCenter
 
         source: "qrc:/assets/icons/material-symbols/close.svg"
-        iconColor: "white"
-        backgroundColor: Theme.colorActionbarHighlight
+        colorIcon: Theme.colorActionbarContent
+        colorBackground: Theme.colorActionbar
+
         onClicked: bannerMessage.close()
     }
+
+    ////////////////
 }

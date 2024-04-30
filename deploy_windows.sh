@@ -57,9 +57,10 @@ fi
 echo '---- Running windeployqt'
 windeployqt bin/ --qmldir qml/
 
+# Copy 3rd party libraries
 cp contribs/env/windows_x86_64/usr/lib/exif.dll bin/
 cp contribs/env/windows_x86_64/usr/lib/minivideo.dll bin/
-
+# Copy ffmpeg libraries
 cp contribs/env/windows_x86_64/usr/lib/avcodec-*.dll bin/
 cp contribs/env/windows_x86_64/usr/lib/avdevice-*.dll bin/
 cp contribs/env/windows_x86_64/usr/lib/avfilter-*.dll bin/
@@ -68,7 +69,7 @@ cp contribs/env/windows_x86_64/usr/lib/avutil-*.dll bin/
 cp contribs/env/windows_x86_64/usr/lib/postproc-*.dll bin/
 cp contribs/env/windows_x86_64/usr/lib/swresample-*.dll bin/
 cp contribs/env/windows_x86_64/usr/lib/swscale-*.dll bin/
-
+# Copy ffmpeg binary
 cp contribs/env/windows_x86_64/usr/bin/ffmpeg.exe bin/
 
 #echo '---- Installation directory content recap (after windeployqt):'

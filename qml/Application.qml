@@ -174,11 +174,11 @@ ApplicationWindow {
             }
         }
 
+        focus: true
+
         asynchronous: true
         sourceComponent: Rectangle {
             id: appBg
-            anchors.fill: parent
-            focus: true
 
             color: Theme.colorBackground
             border.color: Theme.colorSeparator
@@ -222,7 +222,7 @@ ApplicationWindow {
 
                 onStateChanged: {
                     console.log("updateFocus()")
-                    screenLibrary.updateFocus()
+                    //screenLibrary.updateFocus()
                     //screenDevice.updateFocus()
                 }
 
@@ -380,7 +380,6 @@ ApplicationWindow {
         active: false
         asynchronous: false
         sourceComponent: PopupExit {
-            id: popupExit
             parent: appWindow.contentItem
         }
     }

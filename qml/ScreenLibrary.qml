@@ -30,20 +30,7 @@ Item {
                 screenMedia.restoreShot(true)
         }
     }
-/*
-    focus: true
-    Keys.onPressed: (event) => {
-        if (event.key === Qt.Key_Enter) {
-            event.accepted = true;
-            console.log("Key_Enter in screenlibrary")
-            //
-        } else if (event.key === Qt.Key_Delete) {
-            console.log("Key_Delete in screenlibrary")
-            event.accepted = true;
-            //
-        }
-    }
-*/
+
     MouseArea {
         anchors.fill: parent
         propagateComposedEvents: true
@@ -59,6 +46,8 @@ Item {
             }
         }
     }
+
+    //focus: (appContent.state === "library")
 
     // CONTENT /////////////////////////////////////////////////////////////////
 

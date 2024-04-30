@@ -68,14 +68,15 @@ fi
 echo '---- Running macdeployqt'
 macdeployqt bin/$APP_NAME.app -qmldir=qml/ -hardened-runtime -timestamp -appstore-compliant
 
-# Copy ffmpeg binary and libs
+# Copy ffmpeg libraries
 cp -RP contribs/env/macos_x86_64/usr/lib/libav*.dylib bin/$APP_NAME.app/Contents/Frameworks/
 cp -RP contribs/env/macos_x86_64/usr/lib/libsw*.dylib bin/$APP_NAME.app/Contents/Frameworks/
 cp -RP contribs/env/macos_x86_64/usr/lib/libpostproc*.dylib bin/$APP_NAME.app/Contents/Frameworks/
+# Copy ffmpeg binary
 cp contribs/env/macos_x86_64/usr/bin/ffmpeg bin/$APP_NAME.app/Contents/MacOS/
 chmod +x bin/$APP_NAME.app/Contents/MacOS/ffmpeg
 
-# Patch ffmpeg binary and libs rpaths
+# Patch ffmpeg binary and libraries rpaths
 if [[ $use_contribs = true ]] ; then
   install_name_tool -change @loader_path/libavcodec.58.dylib @executable_path/../Frameworks/libavcodec.58.dylib bin/OffloadBuddy.app/Contents/MacOS/ffmpeg
   install_name_tool -change @loader_path/libavdevice.58.dylib @executable_path/../Frameworks/libavdevice.58.dylib bin/OffloadBuddy.app/Contents/MacOS/ffmpeg

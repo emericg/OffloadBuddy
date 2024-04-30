@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Layouts
 import QtQuick.Controls
 
 import ThemeEngine
@@ -86,6 +87,9 @@ Loader {
 
     ////////////////////////////////////////////////////////////////////////////
 
+    focus: (screenMedia.startedFrom === "device" && appContent.state === "device" && screenDevice.state === "stateMediaDetails") ||
+           (screenMedia.startedFrom === "library" && appContent.state === "library" && screenLibrary.state === "stateMediaDetails")
+
     Component {
         id: componentScreenMedia
 
@@ -96,6 +100,14 @@ Loader {
 
             focus: (screenMedia.startedFrom === "device" && appContent.state === "device" && screenDevice.state === "stateMediaDetails") ||
                    (screenMedia.startedFrom === "library" && appContent.state === "library" && screenLibrary.state === "stateMediaDetails")
+
+            onFocusChanged: {
+                //updateFocus()
+            }
+
+            onVisibleChanged: {
+                //updateFocus()
+            }
 
             ////////////////////////////////////////////////////////////////////
 
@@ -112,17 +124,8 @@ Loader {
                 if (shot !== newshot) {
                     shot = newshot
                     shot.getMetadataFromVideoGPMF()
-                    updateShotDetails()
 
-                    itemScreenMedia.state = "overview"
-
-                    // save state
-                    if (typeof deviceSavedState !== "undefined" && deviceSavedState) {
-                        if (screenMedia.shot) {
-                            deviceSavedState.detail_shot = screenMedia.shot
-                            deviceSavedState.mainState = "stateMediaDetails"
-                        }
-                    }
+                    loadShot2()
                 }
 
                 // change state
@@ -131,7 +134,7 @@ Loader {
             }
 
             function loadShot2() {
-                //console.log("screenMedia - loadShot(" + newshot.name + ")")
+                //console.log("screenMedia - loadShot2()")
 
                 updateShotDetails()
 
@@ -145,7 +148,6 @@ Loader {
                     }
                 }
             }
-
 
             function restoreShot(load) {
                 //console.log("screenMedia - restoreShot()")
@@ -256,7 +258,7 @@ Loader {
                 }
             }
 
-            ////////////////////////////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////
 
             Rectangle {
                 id: rectangleHeader
@@ -277,60 +279,66 @@ Loader {
 
                 ////////////////
 
-                RoundButtonIcon {
-                    id: buttonBack
-                    width: 48
-                    height: 48
+                RowLayout {
                     anchors.left: parent.left
                     anchors.leftMargin: 8
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    iconColor: Theme.colorHeaderContent
-                    backgroundColor: Theme.colorForeground
-
-                    source: "qrc:/gfx/navigate_before_big.svg"
-                    onClicked: {
-                        if (appContent.state === "library") {
-                            screenLibrary.state = "stateMediaGrid"
-                        } else if (appContent.state === "device") {
-                            screenDevice.state = "stateMediaGrid"
-                            deviceSavedState.mainState = "stateMediaGrid"
-                        }
-                    }
-                }
-
-                Text {
-                    id: textShotName
-                    height: 40
-                    anchors.left: buttonBack.right
-                    anchors.leftMargin: Theme.componentMarginXS
                     anchors.right: rowButtons.left
                     anchors.rightMargin: Theme.componentMargin
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: "SHOT NAME"
-                    color: Theme.colorHeaderContent
-                    fontSizeMode: Text.HorizontalFit
-                    font.bold: true
-                    font.pixelSize: Theme.fontSizeHeader
-                    minimumPixelSize: 22
-                    verticalAlignment: Text.AlignVCenter
-                    elide: Text.ElideRight
-                }
-
-                Row {
-                    id: rowCodecs
-                    anchors.verticalCenter: parent.verticalCenter
-                    x: (textShotName.x + textShotName.contentWidth + Theme.componentMargin)
-                    visible: (textShotName.contentWidth + rowCodecs.width + Theme.componentMarginXS < textShotName.width)
-                    height: 28
                     spacing: Theme.componentMargin
 
-                    TagDesktop { id: codecImage }
+                    RoundButtonSunken {
+                        id: buttonBack
+                        Layout.preferredWidth: 48
+                        Layout.preferredHeight: 48
+                        Layout.alignment: Qt.AlignVCenter
 
-                    TagDesktop { id: codecVideo }
+                        source: "qrc:/gfx/navigate_before_big.svg"
+                        colorIcon: Theme.colorHeaderContent
+                        colorBackground: Theme.colorHeader
 
-                    TagDesktop { id: codecAudio }
+                        onClicked: {
+                            if (appContent.state === "library") {
+                                screenLibrary.state = "stateMediaGrid"
+                            } else if (appContent.state === "device") {
+                                screenDevice.state = "stateMediaGrid"
+                                deviceSavedState.mainState = "stateMediaGrid"
+                            }
+                        }
+                    }
+
+                    Text {
+                        id: textShotName
+                        Layout.maximumWidth: parent.width - parent.spacing*2 - buttonBack.width - rowCodecs.width
+                        Layout.preferredHeight: 48
+                        Layout.alignment: Qt.AlignVCenter
+
+                        text: "SHOT NAME"
+                        textFormat: Text.PlainText
+                        color: Theme.colorHeaderContent
+                        font.bold: true
+                        font.pixelSize: Theme.fontSizeHeader
+                        fontSizeMode: Text.HorizontalFit
+                        minimumPixelSize: 22
+                        verticalAlignment: Text.AlignVCenter
+                        elide: Text.ElideRight
+                    }
+
+                    Row {
+                        id: rowCodecs
+                        Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignVCenter
+
+                        leftPadding: Theme.componentMargin
+                        spacing: Theme.componentMargin
+
+                        TagDesktop { id: codecImage }
+
+                        TagDesktop { id: codecVideo }
+
+                        TagDesktop { id: codecAudio }
+                    }
                 }
 
                 ////////////////
@@ -345,35 +353,38 @@ Loader {
                     Row {
                         id: rowActions1
                         anchors.verticalCenter: parent.verticalCenter
-                        spacing: 4
+                        spacing: Theme.componentMarginXS
 
                         visible: (shot && shot.fileType !== ShotUtils.FILE_VIDEO)
 
-                        RoundButtonIcon {
+                        SquareButtonSunken {
                             id: buttonTrim
                             width: 40
                             height: 40
-                            source: "qrc:/assets/icons/material-icons/duotone/timer.svg"
                             visible: (shot && shot.fileType === ShotUtils.FILE_VIDEO)
-                            backgroundColor: Theme.colorForeground
+                            source: "qrc:/assets/icons/material-icons/duotone/timer.svg"
+                            colorBackground: Theme.colorHeader
+
                             onClicked: contentOverview.toggleTrim()
                         }
 
-                        RoundButtonIcon {
+                        SquareButtonSunken {
                             id: buttonRotate
                             width: 40
                             height: 40
                             source: "qrc:/assets/icons/material-icons/duotone/rotate_90_degrees_ccw.svg"
-                            backgroundColor: Theme.colorForeground
+                            colorBackground: Theme.colorHeader
+
                             onClicked: contentOverview.toggleTransform()
                         }
 
-                        RoundButtonIcon {
+                        SquareButtonSunken {
                             id: buttonCrop
                             width: 40
                             height: 40
                             source: "qrc:/assets/icons/material-symbols/media/crop.svg"
-                            backgroundColor: Theme.colorForeground
+                            colorBackground: Theme.colorHeader
+
                             onClicked: contentOverview.toggleCrop()
                         }
                     }
@@ -389,33 +400,36 @@ Loader {
                     Row {
                         id: rowActions2
                         anchors.verticalCenter: parent.verticalCenter
-                        spacing: 4
+                        spacing: Theme.componentMarginXS
 
-                        RoundButtonIcon {
+                        SquareButtonSunken {
                             id: buttonTimestamp
                             width: 40
                             height: 40
                             source: "qrc:/assets/icons/material-symbols/calendar_today.svg"
-                            backgroundColor: Theme.colorForeground
+                            colorBackground: Theme.colorHeader
+
                             onClicked: contentOverview.openDatePopup()
                         }
 
-                        RoundButtonIcon {
+                        SquareButtonSunken {
                             id: buttonTelemetry
                             width: 40
                             height: 40
                             source: "qrc:/assets/icons/material-symbols/insert_chart.svg"
                             visible: (shot && shot.hasGPMF && shot.hasGPS)
-                            backgroundColor: Theme.colorForeground
+                            colorBackground: Theme.colorHeader
+
                             onClicked: contentOverview.openTelemetryPopup()
                         }
 
-                        RoundButtonIcon {
+                        SquareButtonSunken {
                             id: buttonEncode
                             width: 40
                             height: 40
                             source: "qrc:/assets/icons/material-symbols/settings_applications.svg"
-                            backgroundColor: Theme.colorForeground
+                            colorBackground: Theme.colorHeader
+
                             onClicked: contentOverview.openEncodingPopup()
                         }
                     }
@@ -431,23 +445,25 @@ Loader {
                     Row {
                         id: rowActions3
                         anchors.verticalCenter: parent.verticalCenter
-                        spacing: 4
+                        spacing: Theme.componentMarginXS
 
-                        RoundButtonIcon {
+                        SquareButtonSunken {
                             id: buttonShowFolder
                             width: 40
                             height: 40
                             source: "qrc:/assets/icons/material-symbols/folder_open.svg"
-                            backgroundColor: Theme.colorForeground
+                            colorBackground: Theme.colorHeader
+
                             onClicked: shot.openFolder()
                         }
 
-                        RoundButtonIcon {
+                        SquareButtonSunken {
                             id: buttonDelete
                             width: 40
                             height: 40
                             source: "qrc:/assets/icons/material-symbols/delete.svg"
-                            backgroundColor: Theme.colorForeground
+                            colorBackground: Theme.colorHeader
+
                             onClicked: contentOverview.openDeletePopup()
                         }
                     }
@@ -537,12 +553,6 @@ Loader {
 
             ////////////////////////////////////////////////////////////////////
 
-            onFocusChanged: {
-                screenMedia.updateFocus()
-            }
-            onVisibleChanged: {
-                screenMedia.updateFocus()
-            }
             onStateChanged: {
                 // save state
                 if (typeof deviceSavedState !== "undefined" && deviceSavedState)
@@ -596,6 +606,10 @@ Loader {
                     visible: false
                 }
             }
+
+            ////////////////////////////////////////////////////////////////////
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 }

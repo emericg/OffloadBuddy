@@ -19,7 +19,7 @@ Rectangle {
     // prevent clicks below this area
     MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////
 
     Row {
         anchors.left: parent.left
@@ -27,14 +27,14 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         spacing: Theme.componentMargin
 
-        ButtonSolid {
+        ButtonFlat {
             id: buttonMoveOffload
-            anchors.verticalCenter: parent.verticalCenter
-
-            color: Theme.colorActionbarHighlight
 
             text: (appContent.state === "library") ? qsTr("Move") : qsTr("Offload")
             source: "qrc:/assets/icons/material-icons/duotone/save_alt.svg"
+            color: Theme.colorActionbarHighlight
+            colorText: Theme.colorText
+
             onClicked: {
                 if (appContent.state === "library") {
                     // move
@@ -52,15 +52,17 @@ Rectangle {
             }
         }
 
-        ButtonSolid {
+        ButtonFlat {
             id: buttonMergeChapters
-            anchors.verticalCenter: parent.verticalCenter
-            visible: (appContent.state === "library")
 
-            color: Theme.colorActionbarHighlight
+            visible: (appContent.state === "library")
 
             text: qsTr("Merge chapters")
             source: "qrc:/assets/icons/material-symbols/merge_type.svg"
+            sourceRotation: 180
+            color: Theme.colorActionbarHighlight
+            colorText: Theme.colorText
+
             onClicked: {
                 if (appContent.state === "library") {
                     popupMerge.shots_uuids = mediaLibrary.getSelectedShotsUuids(mediaGrid.selectionList)
@@ -73,16 +75,18 @@ Rectangle {
             }
         }
 
-        ButtonSolid {
+        ButtonFlat {
             id: buttonMergeShots
-            anchors.verticalCenter: parent.verticalCenter
-            visible: (appContent.state !== "device" && mediaGrid.selectionCount >= 2 && mediaGrid.selectionCount <= 4)
 
+            visible: (appContent.state !== "device" && mediaGrid.selectionCount >= 2 && mediaGrid.selectionCount <= 4)
             enabled: false
-            color: Theme.colorActionbarHighlight
 
             text: qsTr("Merge shots")
             source: "qrc:/assets/icons/material-symbols/merge_type.svg"
+            sourceRotation: 180
+            color: Theme.colorActionbarHighlight
+            colorText: Theme.colorText
+
             onClicked: {
                 if (appContent.state === "library") {
                     // TODO
@@ -92,14 +96,14 @@ Rectangle {
             }
         }
 
-        ButtonSolid {
+        ButtonFlat {
             id: buttonEncode
-            anchors.verticalCenter: parent.verticalCenter
-
-            color: Theme.colorActionbarHighlight
 
             text: qsTr("Encoding")
             source: "qrc:/assets/icons/material-symbols/memory.svg"
+            color: Theme.colorActionbarHighlight
+            colorText: Theme.colorText
+
             onClicked: {
                 if (appContent.state === "library") {
                     popupEncoding.shots_uuids = mediaLibrary.getSelectedShotsUuids(mediaGrid.selectionList)
@@ -117,14 +121,14 @@ Rectangle {
             }
         }
 
-        ButtonSolid {
+        ButtonFlat {
             id: buttonTelemetry
-            anchors.verticalCenter: parent.verticalCenter
-
-            color: Theme.colorActionbarHighlight
 
             text: qsTr("Extract telemetry")
             source: "qrc:/assets/icons/material-icons/duotone/insert_chart.svg"
+            color: Theme.colorActionbarHighlight
+            colorText: Theme.colorText
+
             onClicked: {
                 if (appContent.state === "library") {
                     popupTelemetry.shots_uuids = mediaLibrary.getSelectedShotsUuids(mediaGrid.selectionList)
@@ -138,14 +142,13 @@ Rectangle {
             }
         }
 
-        ButtonSolid {
+        ButtonFlat {
             id: buttonDelete
-            anchors.verticalCenter: parent.verticalCenter
-
-            color: Theme.colorWarning
 
             text: qsTr("Delete")
             source: "qrc:/assets/icons/material-symbols/delete.svg"
+            color: Theme.colorWarning
+
             onClicked: {
                 if (appContent.state === "library") {
                     popupDelete.shots_uuids = mediaLibrary.getSelectedShotsUuids(mediaGrid.selectionList)
@@ -176,15 +179,18 @@ Rectangle {
         font.bold: true
     }
 
-    RoundButtonIcon {
+    RoundButtonSunken {
         id: rectangleClear
         anchors.right: parent.right
         anchors.rightMargin: 12
         anchors.verticalCenter: parent.verticalCenter
 
         source: "qrc:/assets/icons/material-symbols/backspace-fill.svg"
-        iconColor: Theme.colorActionbarContent
-        backgroundColor: Theme.colorActionbarHighlight
+        colorIcon: Theme.colorActionbarContent
+        colorBackground: Theme.colorActionbar
+
         onClicked: mediaGrid.exitSelectionMode()
     }
+
+    ////////////////
 }

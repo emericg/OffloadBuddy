@@ -7,7 +7,7 @@ import ThemeEngine
 Popup {
     id: popupExit
 
-    x: (appWindow.width / 2) - (width / 2) // - (appSidebar.width / 2)
+    x: (appWindow.width / 2) - (width / 2) + (appSidebar.width / 2)
     y: (appWindow.height / 2) - (height / 2)
     width: 720
     padding: 0
@@ -17,8 +17,6 @@ Popup {
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
     parent: Overlay.overlay
-
-    signal confirmed()
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -141,7 +139,6 @@ Popup {
                     color: Theme.colorWarning
 
                     onClicked: {
-                        popupExit.confirmed()
                         popupExit.close()
                         Qt.quit()
                     }

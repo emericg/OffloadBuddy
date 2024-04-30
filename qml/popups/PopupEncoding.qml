@@ -14,7 +14,7 @@ import "qrc:/utils/UtilsPath.js" as UtilsPath
 Popup {
     id: popupEncoding
 
-    x: (appWindow.width / 2) - (width / 2) - (appSidebar.width / 2)
+    x: (appWindow.width / 2) - (width / 2) + (appSidebar.width / 2)
     y: (appWindow.height / 2) - (height / 2)
     width: 720
     padding: 0
@@ -23,10 +23,7 @@ Popup {
     modal: true
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-
-    signal confirmed()
-
-    property bool singleColumn: false
+    parent: Overlay.overlay
 
     ////////
 
@@ -477,8 +474,7 @@ Popup {
 
                 model: shots_names
                 delegate: Text {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
+                    width: listArea.width
                     text: modelData
                     font.pixelSize: Theme.fontSizeContentSmall
                     elide: Text.ElideLeft

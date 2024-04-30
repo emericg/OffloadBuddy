@@ -11,7 +11,7 @@ import "qrc:/utils/UtilsPath.js" as UtilsPath
 Popup {
     id: popupFirmware
 
-    x: (appWindow.width / 2) - (width / 2) - (appSidebar.width / 2)
+    x: (appWindow.width / 2) - (width / 2) + (appSidebar.width / 2)
     y: (appWindow.height / 2) - (height / 2)
     width: 720
     padding: 0
@@ -23,8 +23,6 @@ Popup {
     parent: Overlay.overlay
 
     ////////////////////////////////////////////////////////////////////////////
-
-    signal confirmed()
 
     property var currentDevice: null
 

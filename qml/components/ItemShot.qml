@@ -499,7 +499,7 @@ Rectangle {
             if (!shot || typeof shot === "undefined") return
 
             mouseAreaItem.isHovered = true
-            shotsView.focus = true
+            //shotsView.focus = true
 
             if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== ShotUtils.STORAGE_MTP)) {
                 if (shot.fileType === ShotUtils.FILE_VIDEO && settingsManager.thumbQuality > 1) {

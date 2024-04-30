@@ -42,7 +42,7 @@ T.Button {
         implicitHeight: Theme.componentHeight
 
         Rectangle { // background_alpha_border
-            anchors.fill: bgrect
+            anchors.fill: parent
             anchors.margins: isPhone ? -2 : -3
             radius: control.radius
             color: control.borderColor
@@ -56,7 +56,6 @@ T.Button {
             }
         }
         Rectangle { // background
-            id: bgrect
             anchors.fill: parent
             radius: control.radius
             color: control.backgroundColor
@@ -66,8 +65,7 @@ T.Button {
             id: bglayer
             anchors.fill: parent
 
-            Rectangle {
-                //id: button1_bg
+            Rectangle { // button1_bg
                 anchors.top: parent.top
                 width: parent.width
                 height: parent.width
@@ -76,8 +74,7 @@ T.Button {
                 opacity: button1_ma.containsMouse ? 0.66 : 0
                 Behavior on opacity { NumberAnimation { duration: 333 } }
             }
-            Rectangle {
-                //id: button2_bg
+            Rectangle { // button2_bg
                 anchors.bottom: parent.bottom
                 width: parent.width
                 height: parent.width

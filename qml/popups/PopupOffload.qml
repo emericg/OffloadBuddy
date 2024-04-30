@@ -251,8 +251,7 @@ Popup {
 
                 model: shots_names
                 delegate: Text {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
+                    width: listArea.width
                     text: modelData
                     font.pixelSize: Theme.fontSizeContentSmall
                     elide: Text.ElideLeft
@@ -455,15 +454,21 @@ Popup {
 
             Row {
                 anchors.right: parent.right
+
+                topPadding: Theme.componentMargin
                 spacing: Theme.componentMargin
 
                 ButtonFlat {
+                    anchors.bottom: parent.bottom
+
                     color: Theme.colorGrey
                     text: qsTr("Cancel")
                     onClicked: popupOffload.close()
                 }
 
                 ButtonSolid {
+                    anchors.bottom: parent.bottom
+
                     text: qsTr("Offload")
                     source: "qrc:/assets/icons/material-symbols/archive.svg"
 

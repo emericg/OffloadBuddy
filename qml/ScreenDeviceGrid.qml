@@ -270,25 +270,24 @@ Item {
                 anchors.bottom: parent.bottom
                 layoutDirection: Qt.RightToLeft
 
-                RoundButtonIcon {
+                RoundButtonFlat {
                     id: deviceSettings
                     width: 28; height: 28;
-                    backgroundVisible: true
                     visible: true
+
                     source: "qrc:/assets/icons/material-symbols/memory.svg"
                     sourceSize: 24
                     onClicked: screenDeviceInfos.loadScreen()
                 }
 
-                RoundButtonIcon {
+                RoundButtonFlat {
                     id: deviceRO
                     width: 28; height: 28;
-                    backgroundVisible: true
                     visible: currentDevice && currentDevice.readOnly
 
                     source: "qrc:/assets/icons/material-symbols/lock.svg"
                     sourceSize: 24
-                    iconColor: Theme.colorWarning
+                    colorIcon: Theme.colorWarning
                     tooltipText: "Read Only storage"
                     tooltipPosition: "left"
                 }
@@ -411,16 +410,15 @@ Item {
                     if (deviceSavedState) deviceSavedState.orderBy = currentIndex
                 }
 
-                RoundButtonIcon {
+                SquareButtonSunken {
                     anchors.right: parent.right
-                    anchors.rightMargin: 32
-                    width: parent.height
-                    height: parent.height
+                    anchors.rightMargin: 36
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: 28
+                    height: 28
 
                     rotation: settingsManager.deviceSortOrder ? 0 : 180
-                    iconColor: Theme.colorComponentContent
-                    highlightMode: "color"
-                    highlightColor: Theme.colorSubText
+                    colorBackground: Theme.colorComponent
                     source: "qrc:/assets/icons/material-symbols/filter_list.svg"
 
                     onClicked: {
