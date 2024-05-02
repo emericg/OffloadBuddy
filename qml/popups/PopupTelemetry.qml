@@ -356,9 +356,9 @@ Popup {
 
                 Item { // delimiter
                     anchors.left: parent.left
-                    anchors.leftMargin: -23
+                    anchors.leftMargin: -Theme.componentMarginXL + Theme.componentBorderWidth
                     anchors.right: parent.right
-                    anchors.rightMargin: -23
+                    anchors.rightMargin: -Theme.componentMarginXL + Theme.componentBorderWidth
                     height: 32
 
                     Rectangle {
@@ -371,116 +371,121 @@ Popup {
 
                 ////////
 
-                Item {
-                    height: 24
+                Column {
+                    id: columnDestination
                     anchors.left: parent.left
                     anchors.right: parent.right
 
-                    Text {
-                        id: textDestinationTitle
-                        anchors.left: parent.left
-                        anchors.bottom: parent.bottom
-                        //anchors.verticalCenter: parent.verticalCenter
-
-                        text: qsTr("Destination")
-                        color: Theme.colorSubText
-                        font.pixelSize: Theme.fontSizeContent
-                    }
-                }
-
-                Item {
-                    id: itemDestination
-                    height: 44
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-
-                    property string gpsExtension: "gpx"
-                    property string telemetryExtension: "json"
-                    property string lastExtension: "json"
-
-                    function resetDestination() {
-                        if (typeof currentShot === "undefined" || !currentShot) {
-                            folderInput.folder = utilsApp.getStandardPath_string("")
-                        } else {
-                            fileInput.folder = currentShot.folder
-                            fileInput.file = currentShot.name
-                        }
-                    }
-
-                    ComboBoxThemed {
-                        id: comboBoxDestination
+                    Item {
+                        height: 24
                         anchors.left: parent.left
                         anchors.right: parent.right
-                        anchors.verticalCenter: parent.verticalCenter
-                        height: 36
 
-                        ListModel {
-                            id: cbDestinations
-                            ListElement { text: qsTr("Next to the video file"); }
-                            ListElement { text: qsTr("Select path manually"); }
-                        }
-                        model: cbDestinations
+                        Text {
+                            id: textDestinationTitle
+                            anchors.left: parent.left
+                            anchors.bottom: parent.bottom
+                            //anchors.verticalCenter: parent.verticalCenter
 
-                        property bool cbinit: false
-                        onCurrentIndexChanged: {
-                            if (currentIndex === 0) itemDestination.resetDestination()
+                            text: qsTr("Destination")
+                            color: Theme.colorSubText
+                            font.pixelSize: Theme.fontSizeContent
                         }
                     }
-                }
 
-                Item {
-                    height: 48
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-
-                    visible: (popupMode === 2) && (comboBoxDestination.currentIndex === (cbDestinations.count-1))
-
-                    FolderInputArea {
-                        id: folderInput
+                    Item {
+                        id: itemDestination
+                        height: 44
                         anchors.left: parent.left
                         anchors.right: parent.right
-                        anchors.verticalCenter: parent.verticalCenter
 
-                        folder: currentShot.folder
+                        property string gpsExtension: "gpx"
+                        property string telemetryExtension: "json"
+                        property string lastExtension: "json"
 
-                        onPathChanged: {
-                            //
-                        }
-                    }
-                }
-
-                Item {
-                    height: 48
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-
-                    visible: (popupMode === 1)
-                    enabled: (comboBoxDestination.currentIndex === (cbDestinations.count-1))
-
-                    FileInputArea {
-                        id: fileInput
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        folder: currentShot.folder
-                        file: currentShot.name
-                        extension: itemDestination.lastExtension
-
-                        onPathChanged: {
-                            if (currentShot && currentShot.containSourceFile(fileInput.path)) {
-                                fileWarning.setError()
-                            } else if (jobManager.fileExists(fileInput.path)) {
-                                fileWarning.setWarning()
+                        function resetDestination() {
+                            if (typeof currentShot === "undefined" || !currentShot) {
+                                folderInput.folder = utilsApp.getStandardPath_string("")
                             } else {
-                                fileWarning.setOK()
+                                fileInput.folder = currentShot.folder
+                                fileInput.file = currentShot.name
+                            }
+                        }
+
+                        ComboBoxThemed {
+                            id: comboBoxDestination
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            ListModel {
+                                id: cbDestinations
+                                ListElement { text: qsTr("Next to the video file"); }
+                                ListElement { text: qsTr("Select path manually"); }
+                            }
+                            model: cbDestinations
+
+                            property bool cbinit: false
+                            onCurrentIndexChanged: {
+                                if (currentIndex === 0) itemDestination.resetDestination()
                             }
                         }
                     }
-                }
 
-                FileWarning {
-                    id: fileWarning
+                    Item {
+                        height: 48
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+
+                        visible: (popupMode === 2) && (comboBoxDestination.currentIndex === (cbDestinations.count-1))
+
+                        FolderInputArea {
+                            id: folderInput
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            folder: currentShot.folder
+
+                            onPathChanged: {
+                                //
+                            }
+                        }
+                    }
+
+                    Item {
+                        height: 48
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+
+                        visible: (popupMode === 1)
+                        enabled: (comboBoxDestination.currentIndex === (cbDestinations.count-1))
+
+                        FileInputArea {
+                            id: fileInput
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            folder: currentShot.folder
+                            file: currentShot.name
+                            extension: itemDestination.lastExtension
+
+                            onPathChanged: {
+                                if (currentShot && currentShot.containSourceFile(fileInput.path)) {
+                                    fileWarning.setError()
+                                } else if (jobManager.fileExists(fileInput.path)) {
+                                    fileWarning.setWarning()
+                                } else {
+                                    fileWarning.setOK()
+                                }
+                            }
+                        }
+                    }
+
+                    FileWarning {
+                        id: fileWarning
+                    }
                 }
             }
 

@@ -7,7 +7,7 @@ DEFINES+= APP_VERSION=\\\"$$VERSION\\\"
 CONFIG += c++17
 QT     += core qml quickcontrols2 svg
 QT     += multimedia charts
-QT += location
+QT     += location
 
 # Validate Qt version
 !versionAtLeast(QT_VERSION, 6.5) : error("You need at least Qt version 6.5 for $${TARGET}")

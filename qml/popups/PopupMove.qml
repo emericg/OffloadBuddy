@@ -86,11 +86,24 @@ Popup {
         Item {
             anchors.fill: parent
 
-            Rectangle { // title area
+            Column {
                 anchors.left: parent.left
                 anchors.right: parent.right
-                height: 64
-                color: Theme.colorPrimary
+
+                Rectangle { // title area
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 64
+                    color: Theme.colorPrimary
+                }
+
+                Rectangle { // subtitle area
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 48
+                    color: Theme.colorForeground
+                    visible: (recapEnabled && shots_files.length)
+                }
             }
 
             Rectangle { // border
@@ -207,12 +220,14 @@ Popup {
 
             ////////////
 
-            ListView {
+            ListView { // filesArea
                 id: listArea
                 anchors.left: parent.left
                 anchors.right: parent.right
 
-                visible: recapOpened
+                visible: recapOpened || (shots_files.length > 0 && shots_files.length <= 8)
+                height: Math.min(128, contentHeight)
+                interactive: (contentHeight > 128)
 
                 model: shots_files
                 delegate: Text {
@@ -269,84 +284,108 @@ Popup {
                     }
                 }
 
-                Item {
-                    height: 40
-                    anchors.right: parent.right
+                ////////
+
+                Item { // delimiter
                     anchors.left: parent.left
+                    anchors.leftMargin: -Theme.componentMarginXL + Theme.componentBorderWidth
+                    anchors.right: parent.right
+                    anchors.rightMargin: -Theme.componentMarginXL + Theme.componentBorderWidth
+                    height: 32
 
-                    Text {
-                        id: textDestinationTitle
-                        anchors.left: parent.left
-                        anchors.bottom: parent.bottom
-
-                        text: qsTr("Destination")
-                        color: Theme.colorSubText
-                        font.pixelSize: Theme.fontSizeContent
+                    Rectangle {
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: parent.width
+                        height: Theme.componentBorderWidth
+                        color: Theme.colorForeground
                     }
                 }
 
-                Item {
-                    height: 48
-                    anchors.right: parent.right
+                ////////
+
+                Column {
+                    id: columnDestination
                     anchors.left: parent.left
+                    anchors.right: parent.right
 
-                    ComboBoxFolder {
-                        id: comboBoxDestination
-                        anchors.left: parent.left
+                    Item {
+                        height: 24
                         anchors.right: parent.right
-                        anchors.verticalCenter: parent.verticalCenter
-                        height: 36
+                        anchors.left: parent.left
 
-                        ListModel { id: cbDestinations }
-                        model: cbDestinations
+                        Text {
+                            id: textDestinationTitle
+                            anchors.left: parent.left
+                            anchors.bottom: parent.bottom
 
-                        function updateDestinations() {
-                            cbDestinations.clear()
+                            text: qsTr("Destination")
+                            color: Theme.colorSubText
+                            font.pixelSize: Theme.fontSizeContent
+                        }
+                    }
 
-                            for (var child in storageManager.directoriesList) {
-                                if (storageManager.directoriesList[child].available &&
-                                    storageManager.directoriesList[child].enabled &&
-                                    storageManager.directoriesList[child].directoryContent !== StorageUtils.ContentAudio)
-                                {
-                                    if (currentShot && storageManager.directoriesList[child].directoryPath.includes(currentShot.folder)) {
-                                        // ignore this one
-                                    } else {
-                                        cbDestinations.append( { "text": storageManager.directoriesList[child].directoryPath } )
+                    Item {
+                        height: 48
+                        anchors.right: parent.right
+                        anchors.left: parent.left
+
+                        ComboBoxFolder {
+                            id: comboBoxDestination
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            ListModel { id: cbDestinations }
+                            model: cbDestinations
+
+                            function updateDestinations() {
+                                cbDestinations.clear()
+
+                                for (var child in storageManager.directoriesList) {
+                                    if (storageManager.directoriesList[child].available &&
+                                        storageManager.directoriesList[child].enabled &&
+                                        storageManager.directoriesList[child].directoryContent !== StorageUtils.ContentAudio)
+                                    {
+                                        if (currentShot && storageManager.directoriesList[child].directoryPath.includes(currentShot.folder)) {
+                                            // ignore this one
+                                        } else {
+                                            cbDestinations.append( { "text": storageManager.directoriesList[child].directoryPath } )
+                                        }
                                     }
                                 }
+                                cbDestinations.append( { "text": qsTr("Select path manually") } )
+
+                                // TODO save value instead of reset?
+                                comboBoxDestination.currentIndex = 0
                             }
-                            cbDestinations.append( { "text": qsTr("Select path manually") } )
 
-                            // TODO save value instead of reset?
-                            comboBoxDestination.currentIndex = 0
-                        }
+                            property bool cbinit: false
+                            onCurrentIndexChanged: {
+                                if (storageManager.directoriesCount <= 0) return
 
-                        property bool cbinit: false
-                        onCurrentIndexChanged: {
-                            if (storageManager.directoriesCount <= 0) return
+                                var previousDestination = comboBoxDestination.currentText
+                                var selectedDestination = comboBoxDestination.textAt(comboBoxDestination.currentIndex)
 
-                            var previousDestination = comboBoxDestination.currentText
-                            var selectedDestination = comboBoxDestination.textAt(comboBoxDestination.currentIndex)
-
-                            if (cbinit) {
-                                if (comboBoxDestination.currentIndex < cbDestinations.count) {
-                                    folderInput.text = previousDestination
+                                if (cbinit) {
+                                    if (comboBoxDestination.currentIndex < cbDestinations.count) {
+                                        folderInput.text = previousDestination
+                                    }
+                                } else {
+                                    cbinit = true
                                 }
-                            } else {
-                                cbinit = true
                             }
+
+                            folders: jobManager.getDestinationHierarchyDisplay(currentShot, currentText)
                         }
-
-                        folders: jobManager.getDestinationHierarchyDisplay(currentShot, currentText)
                     }
-                }
 
-                FolderInputArea {
-                    id: folderInput
-                    anchors.left: parent.left
-                    anchors.right: parent.right
+                    FolderInputArea {
+                        id: folderInput
+                        anchors.left: parent.left
+                        anchors.right: parent.right
 
-                    visible: (comboBoxDestination.currentIndex === (cbDestinations.count-1))
+                        visible: (comboBoxDestination.currentIndex === (cbDestinations.count-1))
+                    }
                 }
             }
 

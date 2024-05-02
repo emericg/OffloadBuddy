@@ -127,6 +127,9 @@ int main(int argc, char *argv[])
     //qputenv("QT_MEDIA_BACKEND", "gstreamer");
 #endif
 
+    // Mouse wheel hack
+    qputenv("QT_QUICK_FLICKABLE_WHEEL_DECELERATION", "10000");
+
     SingleApplication app(argc, argv, false);
 
     app.setWindowIcon(QIcon(":/gfx/offloadbuddy.svg"));

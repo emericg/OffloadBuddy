@@ -114,7 +114,7 @@ Popup {
                 }
             }
 
-            Rectangle {
+            Rectangle { // border
                 anchors.fill: parent
                 radius: Theme.componentRadius
                 color: "transparent"
@@ -124,7 +124,7 @@ Popup {
             }
 
             layer.enabled: true
-            layer.effect: MultiEffect {
+            layer.effect: MultiEffect { // clip
                 maskEnabled: true
                 maskInverted: false
                 maskThresholdMin: 0.5
@@ -143,7 +143,7 @@ Popup {
         }
 
         layer.enabled: true
-        layer.effect: MultiEffect {
+        layer.effect: MultiEffect { // shadow
             autoPaddingEnabled: true
             shadowEnabled: true
             shadowColor: ThemeEngine.isLight ? "#aa000000" : "#aaffffff"
@@ -228,11 +228,14 @@ Popup {
 
             ////////
 
-            ListView {
+            ListView { // filesArea
                 id: listArea
-                anchors.fill: parent
+                anchors.left: parent.left
+                anchors.right: parent.right
 
-                visible: recapOpened
+                visible: recapOpened || (shots_files.length > 0 && shots_files.length <= 8)
+                height: Math.min(128, contentHeight)
+                interactive: (contentHeight > 128)
 
                 model: shots_files
                 delegate: Text {
@@ -250,9 +253,6 @@ Popup {
                 id: columnMerge
                 anchors.left: parent.left
                 anchors.right: parent.right
-
-                topPadding: Theme.componentMargin
-                bottomPadding: Theme.componentMargin
 
                 visible: !recapOpened
 
@@ -308,184 +308,210 @@ Popup {
                     }
                 }
 
-                Item {
-                    height: 40
-                    anchors.right: parent.right
+                ////////
+
+                Item { // delimiter
                     anchors.left: parent.left
+                    anchors.leftMargin: -Theme.componentMarginXL + Theme.componentBorderWidth
+                    anchors.right: parent.right
+                    anchors.rightMargin: -Theme.componentMarginXL + Theme.componentBorderWidth
+                    height: 32
 
-                    Text {
-                        id: textDestinationTitle
-                        anchors.left: parent.left
-                        anchors.bottom: parent.bottom
-
-                        text: qsTr("Destination")
-                        color: Theme.colorSubText
-                        font.pixelSize: Theme.fontSizeContent
+                    Rectangle {
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: parent.width
+                        height: Theme.componentBorderWidth
+                        color: Theme.colorForeground
                     }
                 }
 
-                Item {
-                    height: 48
-                    anchors.right: parent.right
-                    anchors.left: parent.left
+                ////////
 
-                    ComboBoxFolder {
-                        id: comboBoxDestination
+                Column {
+                    id: columnDestination
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+
+                    Item {
+                        height: 24
+                        anchors.right: parent.right
+                        anchors.left: parent.left
+
+                        Text {
+                            id: textDestinationTitle
+                            anchors.left: parent.left
+                            anchors.bottom: parent.bottom
+
+                            text: qsTr("Destination")
+                            color: Theme.colorSubText
+                            font.pixelSize: Theme.fontSizeContent
+                        }
+                    }
+
+                    Item {
+                        height: 48
+                        anchors.right: parent.right
+                        anchors.left: parent.left
+
+                        ComboBoxFolder {
+                            id: comboBoxDestination
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            ListModel { id: cbDestinations }
+                            model: cbDestinations
+
+                            function updateDestinations() {
+                                cbDestinations.clear()
+
+                                if (currentShot && appContent.state !== "device")
+                                    cbDestinations.append( { "text": qsTr("Next to the video file") } )
+
+                                for (var child in storageManager.directoriesList) {
+                                    if (storageManager.directoriesList[child].available &&
+                                        storageManager.directoriesList[child].enabled &&
+                                        storageManager.directoriesList[child].directoryContent !== StorageUtils.ContentAudio) {
+                                        cbDestinations.append( { "text": storageManager.directoriesList[child].directoryPath } )
+                                    }
+                                }
+                                cbDestinations.append( { "text": qsTr("Select path manually") } )
+
+                                // TODO save value instead of reset?
+                                comboBoxDestination.currentIndex = 0
+                            }
+
+                            property bool cbinit: false
+                            onCurrentIndexChanged: {
+                                if (storageManager.directoriesCount <= 0) return
+
+                                var selectedDestination = comboBoxDestination.textAt(comboBoxDestination.currentIndex)
+                                var previousDestination = comboBoxDestination.currentText
+                                if (previousDestination === qsTr("Next to the video file")) previousDestination = currentShot.folder
+
+                                if (currentShot) {
+                                    if (comboBoxDestination.currentIndex === 0 && appContent.state !== "device") {
+                                        fileInput.folder = currentShot.folder + jobManager.getDestinationHierarchy(currentShot, selectedDestination)
+                                    } else if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
+                                        fileInput.folder = previousDestination + jobManager.getDestinationHierarchy(currentShot, previousDestination)
+                                    } else if (comboBoxDestination.currentIndex < cbDestinations.count) {
+                                        fileInput.folder = selectedDestination + jobManager.getDestinationHierarchy(currentShot, selectedDestination)
+                                    }
+                                    fileInput.file = currentShot.name + "_merged"
+                                } else {
+                                    if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
+                                        folderInput.folder = previousDestination
+                                    } else if (comboBoxDestination.currentIndex < cbDestinations.count) {
+                                        folderInput.folder = selectedDestination
+                                    }
+                                }
+                            }
+
+                            folders: jobManager.getDestinationHierarchyDisplay(currentShot, currentText)
+                        }
+                    }
+
+                    FolderInputArea {
+                        id: folderInput
                         anchors.left: parent.left
                         anchors.right: parent.right
-                        anchors.verticalCenter: parent.verticalCenter
-                        height: 36
 
-                        ListModel { id: cbDestinations }
-                        model: cbDestinations
+                        visible: (popupMode === 2) && (comboBoxDestination.currentIndex === (cbDestinations.count-1))
+                        enabled: (comboBoxDestination.currentIndex === (cbDestinations.count-1))
+                    }
 
-                        function updateDestinations() {
-                            cbDestinations.clear()
+                    FileInputArea {
+                        id: fileInput
+                        anchors.left: parent.left
+                        anchors.right: parent.right
 
-                            if (currentShot && appContent.state !== "device")
-                                cbDestinations.append( { "text": qsTr("Next to the video file") } )
+                        visible: (popupMode === 1)
+                        enabled: (comboBoxDestination.currentIndex === (cbDestinations.count-1))
 
-                            for (var child in storageManager.directoriesList) {
-                                if (storageManager.directoriesList[child].available &&
-                                    storageManager.directoriesList[child].enabled &&
-                                    storageManager.directoriesList[child].directoryContent !== StorageUtils.ContentAudio) {
-                                    cbDestinations.append( { "text": storageManager.directoriesList[child].directoryPath } )
-                                }
-                            }
-                            cbDestinations.append( { "text": qsTr("Select path manually") } )
-
-                            // TODO save value instead of reset?
-                            comboBoxDestination.currentIndex = 0
-                        }
-
-                        property bool cbinit: false
-                        onCurrentIndexChanged: {
-                            if (storageManager.directoriesCount <= 0) return
-
-                            var selectedDestination = comboBoxDestination.textAt(comboBoxDestination.currentIndex)
-                            var previousDestination = comboBoxDestination.currentText
-                            if (previousDestination === qsTr("Next to the video file")) previousDestination = currentShot.folder
-
-                            if (currentShot) {
-                                if (comboBoxDestination.currentIndex === 0 && appContent.state !== "device") {
-                                    fileInput.folder = currentShot.folder + jobManager.getDestinationHierarchy(currentShot, selectedDestination)
-                                } else if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
-                                    fileInput.folder = previousDestination + jobManager.getDestinationHierarchy(currentShot, previousDestination)
-                                } else if (comboBoxDestination.currentIndex < cbDestinations.count) {
-                                    fileInput.folder = selectedDestination + jobManager.getDestinationHierarchy(currentShot, selectedDestination)
-                                }
-                                fileInput.file = currentShot.name + "_merged"
+                        extension: "mp4"
+                        onPathChanged: {
+                            if (currentShot && currentShot.containSourceFile(fileInput.path)) {
+                                fileWarning.setError()
+                            } else if (jobManager.fileExists(fileInput.path)) {
+                                fileWarning.setWarning()
                             } else {
-                                if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
-                                    folderInput.folder = previousDestination
-                                } else if (comboBoxDestination.currentIndex < cbDestinations.count) {
-                                    folderInput.folder = selectedDestination
-                                }
+                                fileWarning.setOK()
+                            }
+                        }
+                    }
+
+                    FileWarning {
+                        id: fileWarning
+                    }
+                }
+            }
+
+            ////////////
+
+            Row {
+                anchors.right: parent.right
+
+                topPadding: Theme.componentMargin
+                spacing: Theme.componentMargin
+
+                ButtonSolid {
+                    anchors.bottom: parent.bottom
+
+                    text: qsTr("Cancel")
+                    color: Theme.colorGrey
+
+                    onClicked: popupMerge.close()
+                }
+
+                ButtonSolid {
+                    anchors.bottom: parent.bottom
+
+                    enabled: (shots_files.length > 1)
+
+                    text: qsTr("Merge")
+                    source: "qrc:/assets/icons/material-symbols/merge_type.svg"
+
+                    onClicked: {
+                        if (typeof mediaProvider === "undefined" || !mediaProvider) return
+
+                        var settingsMerge = {}
+
+                        // destination
+                        if (popupMode === 1) {
+                            if (comboBoxDestination.currentIndex === 0 && appContent.state !== "device") {
+                                settingsMerge["folder"] = currentShot.folder
+                                settingsMerge["file"] = fileInput.file
+                                settingsMerge["extension"] = fileInput.extension
+                            } else if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
+                                settingsMerge["folder"] = fileInput.folder
+                                settingsMerge["file"] = fileInput.file
+                                settingsMerge["extension"] = fileInput.extension
+                            } else {
+                                settingsMerge["mediaDirectory"] = comboBoxDestination.currentText
+                            }
+                        } else if (popupMode === 2) {
+                            if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
+                                settingsMerge["folder"] = folderInput.folder
+                            } else {
+                                settingsMerge["mediaDirectory"] = comboBoxDestination.currentText
                             }
                         }
 
-                        folders: jobManager.getDestinationHierarchyDisplay(currentShot, currentText)
-                    }
-                }
+                        // settings
+                        settingsMerge["autoDelete"] = switchDelete.checked
 
-                FolderInputArea {
-                    id: folderInput
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-
-                    visible: (popupMode === 2) && (comboBoxDestination.currentIndex === (cbDestinations.count-1))
-                    enabled: (comboBoxDestination.currentIndex === (cbDestinations.count-1))
-                }
-
-                FileInputArea {
-                    id: fileInput
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-
-                    visible: (popupMode === 1)
-                    enabled: (comboBoxDestination.currentIndex === (cbDestinations.count-1))
-
-                    extension: "mp4"
-                    onPathChanged: {
-                        if (currentShot && currentShot.containSourceFile(fileInput.path)) {
-                            fileWarning.setError()
-                        } else if (jobManager.fileExists(fileInput.path)) {
-                            fileWarning.setWarning()
-                        } else {
-                            fileWarning.setOK()
+                        // dispatch job
+                        if (currentShot) {
+                            mediaProvider.mergeSelected(currentShot.uuid, settingsMerge)
+                        } else if (mediaProvider && shots_uuids.length > 0) {
+                            mediaProvider.mergeSelection(shots_uuids, settingsMerge)
                         }
+                        popupMerge.close()
                     }
-                }
-
-                FileWarning {
-                    id: fileWarning
                 }
             }
-        }
 
-        //////////////////
-
-        Row {
-            anchors.right: parent.right
-
-            topPadding: Theme.componentMargin
-            spacing: Theme.componentMargin
-
-            ButtonSolid {
-                anchors.bottom: parent.bottom
-
-                text: qsTr("Cancel")
-                color: Theme.colorGrey
-
-                onClicked: popupMerge.close()
-            }
-
-            ButtonSolid {
-                anchors.bottom: parent.bottom
-
-                enabled: (shots_files.length > 1)
-
-                text: qsTr("Merge")
-                source: "qrc:/assets/icons/material-symbols/merge_type.svg"
-
-                onClicked: {
-                    if (typeof mediaProvider === "undefined" || !mediaProvider) return
-
-                    var settingsMerge = {}
-
-                    // destination
-                    if (popupMode === 1) {
-                        if (comboBoxDestination.currentIndex === 0 && appContent.state !== "device") {
-                            settingsMerge["folder"] = currentShot.folder
-                            settingsMerge["file"] = fileInput.file
-                            settingsMerge["extension"] = fileInput.extension
-                        } else if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
-                            settingsMerge["folder"] = fileInput.folder
-                            settingsMerge["file"] = fileInput.file
-                            settingsMerge["extension"] = fileInput.extension
-                        } else {
-                            settingsMerge["mediaDirectory"] = comboBoxDestination.currentText
-                        }
-                    } else if (popupMode === 2) {
-                        if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
-                            settingsMerge["folder"] = folderInput.folder
-                        } else {
-                            settingsMerge["mediaDirectory"] = comboBoxDestination.currentText
-                        }
-                    }
-
-                    // settings
-                    settingsMerge["autoDelete"] = switchDelete.checked
-
-                    // dispatch job
-                    if (currentShot) {
-                        mediaProvider.mergeSelected(currentShot.uuid, settingsMerge)
-                    } else if (mediaProvider && shots_uuids.length > 0) {
-                        mediaProvider.mergeSelection(shots_uuids, settingsMerge)
-                    }
-                    popupMerge.close()
-                }
-            }
+            ////////////
         }
 
         //////////////////

@@ -248,7 +248,7 @@ Popup {
 
             ////////
 
-            ListView {
+            ListView { // filesArea
                 id: listArea
                 anchors.left: parent.left
                 anchors.right: parent.right

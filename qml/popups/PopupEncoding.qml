@@ -468,7 +468,8 @@ Popup {
 
             ListView {
                 id: listArea
-                anchors.fill: parent
+                anchors.left: parent.left
+                anchors.right: parent.right
 
                 visible: recapOpened
 
@@ -1376,7 +1377,7 @@ Popup {
                     anchors.right: parent.right
 
                     Item {
-                        height: Theme.componentMarginXL
+                        height: 24
                         anchors.left: parent.left
                         anchors.right: parent.right
 

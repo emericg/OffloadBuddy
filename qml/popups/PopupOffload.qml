@@ -245,7 +245,8 @@ Popup {
 
             ListView {
                 id: listArea
-                anchors.fill: parent
+                anchors.left: parent.left
+                anchors.right: parent.right
 
                 visible: recapOpened
 
@@ -389,7 +390,6 @@ Popup {
                         anchors.left: parent.left
                         anchors.right: parent.right
                         anchors.verticalCenter: parent.verticalCenter
-                        height: 36
 
                         ListModel { id: cbDestinations }
                         model: cbDestinations

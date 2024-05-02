@@ -396,7 +396,7 @@ Loader {
                             DataBarPower {
                                 id: deviceBatteryBar
                                 width: columnStorage.width
-                                height: Theme.componentMargin
+                                height: 16
 
                                 visible: currentDevice.batteryLevel > 0
                                 value: currentDevice.batteryLevel

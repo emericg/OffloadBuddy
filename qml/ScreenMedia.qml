@@ -350,6 +350,14 @@ Loader {
                     anchors.verticalCenter: parent.verticalCenter
                     spacing: Theme.componentMarginS
 
+                    Rectangle { // separator
+                        width: 2; height: 40;
+                        anchors.verticalCenter: parent.verticalCenter
+                        visible: rowActions1.visible
+                        color: Theme.colorHeaderContent
+                        opacity: 0.1
+                    }
+
                     Row {
                         id: rowActions1
                         anchors.verticalCenter: parent.verticalCenter
@@ -392,7 +400,7 @@ Loader {
                     Rectangle { // separator
                         width: 2; height: 40;
                         anchors.verticalCenter: parent.verticalCenter
-                        visible: rowActions1.visible
+                        visible: rowActions2.visible
                         color: Theme.colorHeaderContent
                         opacity: 0.1
                     }

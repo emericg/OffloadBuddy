@@ -232,7 +232,6 @@ Popup {
                     }
 
                     ComboBoxThemed {
-                        height: 36
                         anchors.left: parent.left
                         anchors.leftMargin: popupMediaDirectory.legendWidth + 16
                         anchors.right: parent.right
@@ -299,7 +298,6 @@ Popup {
                     }
 
                     ComboBoxThemed {
-                        height: 36
                         anchors.left: parent.left
                         anchors.leftMargin: popupMediaDirectory.legendWidth + 16
                         anchors.right: parent.right
@@ -364,7 +362,6 @@ Popup {
                         id: tfHC
                         anchors.right: parent.right
                         anchors.left: parent.left
-                        height: 36
                         anchors.verticalCenter: parent.verticalCenter
 
                         selectByMouse: true
