@@ -327,10 +327,10 @@ Loader {
 
                     Row {
                         id: rowCodecs
-                        Layout.fillWidth: true
                         Layout.alignment: Qt.AlignVCenter
 
                         leftPadding: Theme.componentMargin
+                        rightPadding: Theme.componentMargin
                         spacing: Theme.componentMargin
 
                         TagDesktop { id: codecImage }
@@ -338,6 +338,11 @@ Loader {
                         TagDesktop { id: codecVideo }
 
                         TagDesktop { id: codecAudio }
+                    }
+
+                    Item { // spacer
+                        height: 8
+                        Layout.fillWidth: true
                     }
                 }
 

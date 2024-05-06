@@ -383,7 +383,7 @@ Item {
                 anchors.left: parent.left
                 anchors.leftMargin: Theme.componentMargin
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: (mapmode === "image") ? 64 : Theme.componentMargin
+                anchors.bottomMargin: Theme.componentMargin
                 map: map
             }
 
@@ -396,80 +396,93 @@ Item {
                 anchors.bottomMargin: Theme.componentMargin
 
                 height: mapArea.fullscreen ? 44 : 40
+                visible: (mapmode === "image")
 
                 Row {
                     anchors.verticalCenter: parent.verticalCenter
-                    spacing: Theme.componentMargin
+                    spacing: Theme.componentMarginL
 
-                    Text {
+                    Row {
                         anchors.verticalCenter: parent.verticalCenter
+                        spacing: Theme.componentMarginXS
+                        visible: shot.latitudeString
 
-                        text: qsTr("GPS coordinates:")
-                        font.pixelSize: Theme.fontSizeContent
-                        font.bold: true
-                        color: Theme.colorHeaderContent
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            text: qsTr("GPS coordinates:")
+                            font.pixelSize: Theme.fontSizeContent
+                            font.bold: true
+                            color: Theme.colorHeaderContent
+                        }
+                        TextEdit {
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            readOnly: true
+                            selectByMouse: true
+                            selectionColor: Theme.colorPrimary
+                            selectedTextColor: "white"
+
+                            text: shot.latitudeString + " / " + shot.longitudeString
+                            font.pixelSize: Theme.fontSizeContent
+                            color: Theme.colorHeaderContent
+                        }
                     }
-                    TextEdit {
+
+                    Row {
                         anchors.verticalCenter: parent.verticalCenter
-
-                        readOnly: true
-                        selectByMouse: true
-                        selectionColor: Theme.colorPrimary
-                        selectedTextColor: "white"
-
-                        text: shot.latitudeString + " / " + shot.longitudeString
-                        font.pixelSize: Theme.fontSizeContent
-                        color: Theme.colorHeaderContent
-                    }
-
-                    Item { width: 1; height: 1; visible: shot.altitude; } // spacer
-
-                    Text {
-                        anchors.verticalCenter: parent.verticalCenter
+                        spacing: Theme.componentMarginXS
                         visible: shot.altitude
 
-                        text: qsTr("Altitude:")
-                        font.pixelSize: Theme.fontSizeContent
-                        font.bold: true
-                        color: Theme.colorHeaderContent
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            text: qsTr("Altitude:")
+                            font.pixelSize: Theme.fontSizeContent
+                            font.bold: true
+                            color: Theme.colorHeaderContent
+                        }
+                        TextEdit {
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            readOnly: true
+                            selectByMouse: true
+                            selectionColor: Theme.colorPrimary
+                            selectedTextColor: "white"
+
+                            text: UtilsString.altitudeToString(shot.altitude - shot.altitudeOffset, 0, settingsManager.appUnits)
+                            font.pixelSize: Theme.fontSizeContent
+                            color: Theme.colorHeaderContent
+                        }
                     }
-                    TextEdit {
+
+                    Row {
                         anchors.verticalCenter: parent.verticalCenter
-                        visible: shot.altitude
-
-                        readOnly: true
-                        selectByMouse: true
-                        selectionColor: Theme.colorPrimary
-                        selectedTextColor: "white"
-
-                        text: UtilsString.altitudeToString(shot.altitude - shot.altitudeOffset, 0, settingsManager.appUnits)
-                        font.pixelSize: Theme.fontSizeContent
-                        color: Theme.colorHeaderContent
-                    }
-
-                    Item { width: 1; height: 1; visible: shot.speed; } // spacer
-
-                    Text {
-                        anchors.verticalCenter: parent.verticalCenter
+                        spacing: Theme.componentMarginXS
                         visible: shot.speed
 
-                        text: qsTr("Speed:")
-                        font.pixelSize: Theme.fontSizeContent
-                        font.bold: true
-                        color: Theme.colorHeaderContent
-                    }
-                    TextEdit {
-                        anchors.verticalCenter: parent.verticalCenter
-                        visible: shot.speed
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+                            visible: shot.speed
 
-                        readOnly: true
-                        selectByMouse: true
-                        selectionColor: Theme.colorPrimary
-                        selectedTextColor: "white"
+                            text: qsTr("Speed:")
+                            font.pixelSize: Theme.fontSizeContent
+                            font.bold: true
+                            color: Theme.colorHeaderContent
+                        }
+                        TextEdit {
+                            anchors.verticalCenter: parent.verticalCenter
+                            visible: shot.speed
 
-                        text: UtilsString.speedToString_km(shot.speed, 1, settingsManager.appUnits)
-                        font.pixelSize: Theme.fontSizeContent
-                        color: Theme.colorHeaderContent
+                            readOnly: true
+                            selectByMouse: true
+                            selectionColor: Theme.colorPrimary
+                            selectedTextColor: "white"
+
+                            text: UtilsString.speedToString_km(shot.speed, 1, settingsManager.appUnits)
+                            font.pixelSize: Theme.fontSizeContent
+                            color: Theme.colorHeaderContent
+                        }
                     }
                 }
             }
