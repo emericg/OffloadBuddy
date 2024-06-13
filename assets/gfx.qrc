@@ -5,7 +5,7 @@
         <file alias="navigate_before_big.svg">gfx/icons/navigate_before_big.svg</file>
 
         <file alias="gps_marker.svg">gfx/markers/gps_marker.svg</file>
-        <file alias="gps_marker_direction.svg">gfx/markers/gps_marker_direction.svg</file>
+        <file alias="gps_marker_bearing.svg">gfx/markers/gps_marker_bearing.svg</file>
         <file alias="compass.svg">gfx/markers/compass.svg</file>
         <file alias="compass_bottom.svg">gfx/markers/compass_bottom.svg</file>
         <file alias="compass_top.svg">gfx/markers/compass_top.svg</file>

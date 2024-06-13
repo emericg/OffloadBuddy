@@ -552,8 +552,8 @@ Item {
             colorBackground             = "#f9f8f7"
             colorForeground             = "#f3f2f1"
 
-            colorPrimary                = "#ffc900" // "#2794ff"
-            colorSecondary              = "#ffeb00" // "#69b7ff"
+            colorPrimary                = "#ffc900"
+            colorSecondary              = "#ffeb00"
             colorSuccess                = colorGreen
             colorWarning                = colorOrange
             colorError                  = colorRed

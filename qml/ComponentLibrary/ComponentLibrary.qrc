@@ -18,7 +18,6 @@
         <file alias="ListSeparator.qml">menus/ListSeparator.qml</file>
         <file alias="ListSeparatorPadded.qml">menus/ListSeparatorPadded.qml</file>
         <file alias="ListTitle.qml">menus/ListTitle.qml</file>
-        <file alias="SectionTitle.qml">menus/SectionTitle.qml</file>
 
         <file alias="ButtonDesktop.qml">buttons/ButtonDesktop.qml</file>
         <file alias="ButtonOutline.qml">buttons/ButtonOutline.qml</file>

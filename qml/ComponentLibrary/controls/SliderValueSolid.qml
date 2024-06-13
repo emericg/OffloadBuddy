@@ -52,7 +52,8 @@ T.Slider {
             color: control.colorForeground
         }
 
-        MultiEffect {
+        layer.enabled: control.horizontal
+        layer.effect: MultiEffect {
             maskEnabled: true
             maskInverted: false
             maskThresholdMin: 0.5

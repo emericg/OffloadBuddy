@@ -8,7 +8,7 @@ MapQuickItem {
     id: posMarker
 
     property string source: "qrc:/gfx/gps_marker.svg"
-    property string source_bearing:  "qrc:/gfx/gps_marker_direction.svg"
+    property string source_bearing: "qrc:/gfx/gps_marker_bearing.svg"
 
     property bool has_bearing: (map_bearing || compass_bearing)
     property real map_bearing: 0.0
