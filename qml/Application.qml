@@ -333,41 +333,49 @@ ApplicationWindow {
         id: appSplashLoader
         anchors.fill: parent
 
+        z: 20
+        active: true
         asynchronous: false
-        sourceComponent: Rectangle {
-            id: appSplash
-            anchors.centerIn: parent
-            color: Theme.colorBackground
+
+        sourceComponent: Item {
 
             function fadeout() {
                 appSplash.width = 0
                 appSplashImage.opacity = 0
-                ttt.start()
-            }
-            Timer {
-                id: ttt
-                interval: 1000
-                running: false
-                repeat: false
-                onTriggered: {
-                    appSplashLoader.sourceComponent = undefined
-                }
+                splashTimer_unload.start()
             }
 
-            width: appSplashLoader.width*2
-            height: width
-            radius: width
-            Behavior on width { NumberAnimation { duration: 666; } }
-
-            Image {
-                id: appSplashImage
+            Rectangle {
+                id: appSplash
                 anchors.centerIn: parent
-                width: 256
-                height: 256
-                source: "qrc:/gfx/offloadbuddy.svg"
-                sourceSize: Qt.size(width, height)
+                color: Theme.colorBackground
 
-                Behavior on opacity { OpacityAnimator { duration: 666; } }
+                Timer {
+                    id: splashTimer_unload
+                    running: false
+                    repeat: false
+                    interval: 1000
+                    onTriggered: {
+                        appSplashLoader.sourceComponent = undefined
+                    }
+                }
+
+                clip: true
+                width: appWindow.width*2
+                height: width
+                radius: width
+                Behavior on width { NumberAnimation { duration: 500; } }
+
+                Image {
+                    id: appSplashImage
+                    anchors.centerIn: parent
+                    width: 256
+                    height: 256
+                    source: "qrc:/gfx/offloadbuddy.svg"
+                    sourceSize: Qt.size(width, height)
+
+                    Behavior on opacity { OpacityAnimator { duration: 666; } }
+                }
             }
         }
     }
@@ -393,4 +401,6 @@ ApplicationWindow {
             popupExit_loader.item.open()
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 }
