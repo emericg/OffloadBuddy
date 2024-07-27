@@ -139,6 +139,7 @@
         <file>icons/material-icons/duotone/settings_bluetooth.svg</file>
         <file>icons/material-icons/duotone/settings_overscan.svg</file>
         <file>icons/material-icons/duotone/shutter_speed.svg</file>
+        <file>icons/material-icons/duotone/speak.svg</file>
         <file>icons/material-icons/duotone/speaker.svg</file>
         <file>icons/material-icons/duotone/speed.svg</file>
         <file>icons/material-icons/duotone/spherical.svg</file>
@@ -175,6 +176,7 @@
 
         <file>icons/material-symbols/hardware/computer.svg</file>
         <file>icons/material-symbols/hardware/computer-fill.svg</file>
+        <file>icons/material-symbols/hardware/electrical_services.svg</file>
         <file>icons/material-symbols/hardware/gamepad.svg</file>
         <file>icons/material-symbols/hardware/gamepad-fill.svg</file>
         <file>icons/material-symbols/hardware/headphones-fill.svg</file>
@@ -188,10 +190,10 @@
         <file>icons/material-symbols/hardware/laptop_mac.svg</file>
         <file>icons/material-symbols/hardware/phonelink_ring.svg</file>
         <file>icons/material-symbols/hardware/phonelink_ring-fill.svg</file>
-        <file>icons/material-symbols/hardware/power.svg</file>
         <file>icons/material-symbols/hardware/smartphone.svg</file>
         <file>icons/material-symbols/hardware/smartphone-fill.svg</file>
         <file>icons/material-symbols/hardware/sports_esports.svg</file>
+        <file>icons/material-symbols/hardware/sports_esports-fill.svg</file>
         <file>icons/material-symbols/hardware/tv_gen.svg</file>
         <file>icons/material-symbols/hardware/tv_gen-fill.svg</file>
 
@@ -760,6 +762,7 @@
         <file>icons/material-symbols/sort_by_alpha.svg</file>
         <file>icons/material-symbols/stacks.svg</file>
         <file>icons/material-symbols/stacks-fill.svg</file>
+        <file>icons/material-symbols/stars.svg</file>
         <file>icons/material-symbols/stars-fill.svg</file>
         <file>icons/material-symbols/stop-fill.svg</file>
         <file>icons/material-symbols/storage.svg</file>
