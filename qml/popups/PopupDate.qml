@@ -16,7 +16,7 @@ Popup {
 
     dim: true
     modal: true
-    focus: true
+    focus: visible
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
     parent: Overlay.overlay
 
@@ -138,6 +138,7 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Change date and time")
+                textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeTitle
                 font.bold: true
                 color: "white"
@@ -168,6 +169,7 @@ Popup {
                     anchors.right: parent.right
 
                     text: qsTr("File date")
+                    textFormat: Text.PlainText
                     color: Theme.colorSubText
                     font.pixelSize: Theme.fontSizeContent
                     verticalAlignment: Text.AlignVCenter
@@ -178,6 +180,7 @@ Popup {
                         anchors.leftMargin: 140
                         anchors.verticalCenter: parent.verticalCenter
 
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContent
                         verticalAlignment: Text.AlignVCenter
@@ -230,6 +233,7 @@ Popup {
                     visible: dateMetadata.text
 
                     text: qsTr("Metadata date")
+                    textFormat: Text.PlainText
                     color: Theme.colorSubText
                     font.pixelSize: Theme.fontSizeContent
                     verticalAlignment: Text.AlignVCenter
@@ -240,6 +244,7 @@ Popup {
                         anchors.leftMargin: 140
                         anchors.verticalCenter: parent.verticalCenter
 
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContent
                         verticalAlignment: Text.AlignVCenter
@@ -291,6 +296,7 @@ Popup {
                     visible: dateGps.text
 
                     text: qsTr("GPS date")
+                    textFormat: Text.PlainText
                     color: Theme.colorSubText
                     font.pixelSize: Theme.fontSizeContent
                     verticalAlignment: Text.AlignVCenter
@@ -301,6 +307,7 @@ Popup {
                         anchors.leftMargin: 140
                         anchors.left: parent.left
 
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContent
                         verticalAlignment: Text.AlignVCenter
@@ -352,6 +359,7 @@ Popup {
                     visible: dateUser.text
 
                     text: qsTr("User date")
+                    textFormat: Text.PlainText
                     color: Theme.colorSubText
                     font.pixelSize: Theme.fontSizeContent
                     verticalAlignment: Text.AlignVCenter
@@ -362,6 +370,7 @@ Popup {
                         anchors.leftMargin: 140
                         anchors.left: parent.left
 
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContent
                         verticalAlignment: Text.AlignVCenter
@@ -451,6 +460,7 @@ Popup {
                         Text {
                             id: elementYear
                             text: qsTr("Year")
+                            textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
@@ -474,6 +484,7 @@ Popup {
                         Text {
                             id: elementMonth
                             text: qsTr("Month")
+                            textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
@@ -496,6 +507,7 @@ Popup {
                         Text {
                             id: elementDay
                             text: qsTr("Day")
+                            textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
@@ -525,6 +537,7 @@ Popup {
                         Text {
                             id: elementHours
                             text: qsTr("Hours")
+                            textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
@@ -547,6 +560,7 @@ Popup {
                         Text {
                             id: elementMinutes
                             text: qsTr("Minutes")
+                            textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }

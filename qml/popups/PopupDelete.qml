@@ -14,7 +14,7 @@ Popup {
 
     dim: true
     modal: true
-    focus: true
+    focus: visible
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
     parent: Overlay.overlay
 
@@ -176,6 +176,7 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Confirmation")
+                textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeTitle
                 font.bold: true
                 color: "white"
@@ -201,6 +202,7 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("%n shot(s) selected", "", shots_names.length) + " / " + qsTr("%n file(s) selected", "", shots_files.length)
+                textFormat: Text.PlainText
                 color: Theme.colorText
                 font.pixelSize: Theme.fontSizeContent
             }
@@ -239,6 +241,7 @@ Popup {
 
                 visible: !recapOpened
 
+                textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeContent
                 color: Theme.colorText
                 verticalAlignment: Text.AlignVCenter
@@ -249,7 +252,6 @@ Popup {
             ////////
 
             ListView { // filesArea
-                id: listArea
                 anchors.left: parent.left
                 anchors.right: parent.right
 
@@ -259,8 +261,9 @@ Popup {
 
                 model: shots_files
                 delegate: Text {
-                    width: listArea.width
+                    width: ListView.view.width
                     text: modelData
+                    textFormat: Text.PlainText
                     font.pixelSize: Theme.fontSizeContentSmall
                     elide: Text.ElideLeft
                     color: Theme.colorSubText

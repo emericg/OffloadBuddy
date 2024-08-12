@@ -18,7 +18,7 @@ Popup {
 
     dim: true
     modal: true
-    focus: true
+    focus: visible
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
     parent: Overlay.overlay
 
@@ -121,6 +121,7 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Firmware update")
+                textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeTitle
                 font.bold: true
                 color: "white"
@@ -157,6 +158,7 @@ Popup {
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("Model")
+                        textFormat: Text.PlainText
                         color: Theme.colorSubText
                         font.pixelSize: Theme.fontSizeContent
                     }
@@ -167,6 +169,7 @@ Popup {
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: currentDevice.brand + " " + currentDevice.model
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContent
                     }
@@ -183,6 +186,7 @@ Popup {
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("Firmware")
+                        textFormat: Text.PlainText
                         color: Theme.colorSubText
                         font.pixelSize: Theme.fontSizeContent
                     }
@@ -192,6 +196,7 @@ Popup {
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: currentDevice && currentDevice.firmware
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContent
                     }
@@ -208,6 +213,7 @@ Popup {
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("Update")
+                        textFormat: Text.PlainText
                         color: Theme.colorSubText
                         font.pixelSize: Theme.fontSizeContent
                     }
@@ -219,12 +225,14 @@ Popup {
 
                         Text {
                             text: "v" + firmwareManager.lastUpdate(currentDevice.modelString)
+                            textFormat: Text.PlainText
                             color: Theme.colorText
                             font.pixelSize: Theme.fontSizeContent
                         }
 
                         Text {
                             text: "(" + firmwareManager.lastDate(currentDevice.modelString).toLocaleDateString() + ")"
+                            textFormat: Text.PlainText
                             color: Theme.colorText
                             font.pixelSize: Theme.fontSizeContent
                         }
@@ -252,6 +260,7 @@ Popup {
                         Text {
                             width: parent.width-32
                             text: firmwareManager.lastReleaseNotes(currentDevice.modelString)
+                            textFormat: Text.PlainText
                             wrapMode: Text.WordWrap
                             color: Theme.colorText
                             font.pixelSize: Theme.fontSizeContent

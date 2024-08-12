@@ -16,13 +16,13 @@ Popup {
     width: 720
     padding: 0
 
+    dim: true
     modal: true
-    focus: true
+    focus: visible
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+    parent: Overlay.overlay
 
-    signal confirmed()
-
-    ////////
+    ////////////////////////////////////////////////////////////////////////////
 
     property int popupMode: 0
     property bool recapEnabled: false
@@ -159,6 +159,7 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Move")
+                textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeTitle
                 font.bold: true
                 color: "white"
@@ -189,6 +190,7 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("%n shot(s) selected", "", shots_names.length) + " / " + qsTr("%n file(s) selected", "", shots_files.length)
+                textFormat: Text.PlainText
                 color: Theme.colorText
                 font.pixelSize: Theme.fontSizeContent
             }
@@ -221,7 +223,6 @@ Popup {
             ////////////
 
             ListView { // filesArea
-                id: listArea
                 anchors.left: parent.left
                 anchors.right: parent.right
 
@@ -231,8 +232,9 @@ Popup {
 
                 model: shots_files
                 delegate: Text {
-                    width: listArea.width
+                    width: ListView.view.width
                     text: modelData
+                    textFormat: Text.PlainText
                     font.pixelSize: Theme.fontSizeContentSmall
                     elide: Text.ElideLeft
                     color: Theme.colorSubText
@@ -260,12 +262,13 @@ Popup {
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("File(s)", "", currentShot.fileCount)
+                        textFormat: Text.PlainText
                         color: Theme.colorSubText
                         font.pixelSize: Theme.fontSizeContent
                     }
                 }
 
-                ListView {
+                ListView { // filesArea
                     anchors.left: parent.left
                     anchors.right: parent.right
 
@@ -275,9 +278,9 @@ Popup {
 
                     model: currentShot.filesList
                     delegate: Text {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
+                        width: ListView.view.width
                         text: modelData
+                        textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeContentSmall
                         elide: Text.ElideLeft
                         color: Theme.colorText
@@ -319,6 +322,7 @@ Popup {
                             anchors.bottom: parent.bottom
 
                             text: qsTr("Destination")
+                            textFormat: Text.PlainText
                             color: Theme.colorSubText
                             font.pixelSize: Theme.fontSizeContent
                         }

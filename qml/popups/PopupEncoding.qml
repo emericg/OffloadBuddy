@@ -21,7 +21,7 @@ Popup {
 
     dim: true
     modal: true
-    focus: true
+    focus: visible
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
     parent: Overlay.overlay
 
@@ -273,7 +273,7 @@ Popup {
         if (encodingMode === "video" || encodingMode === "timelapse") {
             if (cbCOPY.checked) {
                 //fileInput.extension = currentShot.e
-                text = qsTr("With this mode you can trim the duration without reencoding the video, so no quality will be lost. But you cannot apply any other transformation.")
+                textCodecHelp.text = qsTr("With this mode you can trim the duration without reencoding the video, so no quality will be lost. But you cannot apply any other transformation.")
             } else {
                 if (rbH264.checked) {
                     fileInput.extension = "mp4"
@@ -407,6 +407,7 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("(Re)Encode video")
+                textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeTitle
                 font.bold: true
                 color: "white"
@@ -437,6 +438,7 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("%n shot(s) selected", "", shots_names.length)
+                textFormat: Text.PlainText
                 color: Theme.colorText
                 font.pixelSize: Theme.fontSizeContent
             }
@@ -466,8 +468,7 @@ Popup {
 
             ////////////
 
-            ListView {
-                id: listArea
+            ListView { // filesArea
                 anchors.left: parent.left
                 anchors.right: parent.right
 
@@ -475,8 +476,9 @@ Popup {
 
                 model: shots_names
                 delegate: Text {
-                    width: listArea.width
+                    width: ListView.view.width
                     text: modelData
+                    textFormat: Text.PlainText
                     font.pixelSize: Theme.fontSizeContentSmall
                     elide: Text.ElideLeft
                     color: Theme.colorSubText
@@ -514,6 +516,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("Video codec")
+                            textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
@@ -595,6 +598,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("Image format")
+                            textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
@@ -655,6 +659,7 @@ Popup {
                             anchors.leftMargin: popupEncoding.legendWidth + 16
                             anchors.right: parent.right
 
+                            textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContentSmall
                             wrapMode: Text.WordWrap
                             color: Theme.colorSubText
@@ -677,6 +682,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("Quality index")
+                            textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
@@ -711,6 +717,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("Speed preset")
+                            textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
@@ -748,6 +755,7 @@ Popup {
                             anchors.right: parent.right
 
                             text: qsTr("The slower we encode, the more quality we can extract for a given file size.")
+                            textFormat: Text.PlainText
                             wrapMode: Text.WordWrap
                             color: Theme.colorSubText
                             font.pixelSize: Theme.fontSizeContentSmall
@@ -770,6 +778,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("Definition")
+                            textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
@@ -864,6 +873,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("Framerate")
+                            textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
@@ -994,6 +1004,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("Timelapse")
+                            textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
@@ -1032,6 +1043,7 @@ Popup {
                             anchors.right: parent.right
 
                             text: qsTr("The number of picture per second for the timelpase. Currently it will have a duration of %1.").arg(UtilsString.durationToString_short((1/timelapseFramerate.value)*1000*currentShot.duration))
+                            textFormat: Text.PlainText
                             wrapMode: Text.WordWrap
                             color: Theme.colorSubText
                             font.pixelSize: Theme.fontSizeContentSmall
@@ -1056,6 +1068,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("Orientation")
+                            textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
@@ -1072,6 +1085,7 @@ Popup {
                                 anchors.verticalCenter: parent.verticalCenter
                                 visible: clipRotation != 0
                                 text: qsTr("rotation")
+                                textFormat: Text.PlainText
                                 color: Theme.colorSubText
                             }
                             TextFieldThemed {
@@ -1119,6 +1133,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("Trim duration")
+                            textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
@@ -1133,6 +1148,7 @@ Popup {
 
                             Text {
                                 text: qsTr("from")
+                                textFormat: Text.PlainText
                                 color: Theme.colorSubText
                                 anchors.verticalCenter: parent.verticalCenter
                             }
@@ -1149,6 +1165,7 @@ Popup {
                             }
                             Text {
                                 text: qsTr("to")
+                                textFormat: Text.PlainText
                                 color: Theme.colorSubText
                                 anchors.verticalCenter: parent.verticalCenter
                             }
@@ -1182,6 +1199,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("Crop area")
+                            textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
@@ -1196,6 +1214,7 @@ Popup {
                             Text {
                                 anchors.verticalCenter: parent.verticalCenter
                                 text: qsTr("position")
+                                textFormat: Text.PlainText
                                 color: Theme.colorSubText
                             }
                             TextFieldThemed {
@@ -1212,6 +1231,7 @@ Popup {
                             Text {
                                 anchors.verticalCenter: parent.verticalCenter
                                 text: qsTr("size")
+                                textFormat: Text.PlainText
                                 color: Theme.colorSubText
                             }
                             TextFieldThemed {
@@ -1245,6 +1265,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("GIF effect")
+                            textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
@@ -1292,6 +1313,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("Apply filters")
+                            textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
@@ -1334,6 +1356,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("Telemetry")
+                            textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorSubText
                         }
@@ -1345,6 +1368,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("GPS and telemetry tracks will NOT be caried to the reencoded files. You can export them separately if you want.")
+                            textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContentSmall
                             wrapMode: Text.WordWrap
                             color: Theme.colorSubText
@@ -1387,6 +1411,7 @@ Popup {
                             anchors.bottom: parent.bottom
 
                             text: qsTr("Destination")
+                            textFormat: Text.PlainText
                             color: Theme.colorSubText
                             font.pixelSize: Theme.fontSizeContent
                         }

@@ -157,6 +157,7 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Extract telemetry")
+                textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeTitle
                 font.bold: true
                 color: "white"
@@ -182,6 +183,7 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("%n shot(s) selected", "", shots_names.length)
+                textFormat: Text.PlainText
                 color: Theme.colorText
                 font.pixelSize: Theme.fontSizeContent
             }
@@ -213,8 +215,7 @@ Popup {
 
             ////////
 
-            ListView {
-                id: listArea
+            ListView { // filesArea
                 anchors.left: parent.left
                 anchors.right: parent.right
 
@@ -222,8 +223,9 @@ Popup {
 
                 model: shots_names
                 delegate: Text {
-                    width: listArea.width
+                    width: ListView.view.width
                     text: modelData
+                    textFormat: Text.PlainText
                     font.pixelSize: Theme.fontSizeContentSmall
                     elide: Text.ElideLeft
                     color: Theme.colorSubText
@@ -251,6 +253,7 @@ Popup {
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("GPS trace")
+                        textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeContent
                         color: Theme.colorSubText
                     }
@@ -298,6 +301,7 @@ Popup {
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("Telemetry")
+                        textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeContent
                         color: Theme.colorSubText
                     }
@@ -338,6 +342,7 @@ Popup {
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("Altitude")
+                        textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeContent
                         color: Theme.colorSubText
                     }
@@ -388,6 +393,7 @@ Popup {
                             //anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("Destination")
+                            textFormat: Text.PlainText
                             color: Theme.colorSubText
                             font.pixelSize: Theme.fontSizeContent
                         }

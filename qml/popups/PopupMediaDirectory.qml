@@ -18,7 +18,7 @@ Popup {
 
     dim: true
     modal: true
-    focus: true
+    focus: visible
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
     parent: Overlay.overlay
 
@@ -112,6 +112,7 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Media directory settings")
+                textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeTitle
                 font.bold: true
                 color: "white"
@@ -127,7 +128,7 @@ Popup {
             anchors.rightMargin: Theme.componentMargin
             height: 48
 
-            Text {
+            TextEditThemed {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.rightMargin: Theme.componentMargin + 40
@@ -137,6 +138,7 @@ Popup {
                 color: Theme.colorText
                 font.pixelSize: Theme.fontSizeContent
                 wrapMode: Text.WrapAnywhere
+                readOnly: true
             }
 
             RoundButtonSunken {
@@ -186,6 +188,7 @@ Popup {
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("Enabled")
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContent
                     }
@@ -201,13 +204,13 @@ Popup {
                     }
 
                     Text {
-                        id: legendEnabled
                         anchors.left: parent.left
                         anchors.leftMargin: popupMediaDirectory.legendWidth + checkBox_enabled.width + 8
                         anchors.right: parent.right
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("You can quickly enable/disable this directory if you don't need it at the moment, or if you dont want it to overload your media library.")
+                        textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeContentSmall
                         wrapMode: Text.WordWrap
                         color: Theme.colorSubText
@@ -227,6 +230,7 @@ Popup {
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("Content")
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContent
                     }
@@ -274,6 +278,7 @@ Popup {
                         anchors.verticalCenterOffset: -8
 
                         text: qsTr("Choose to restrict what kind of content can be saved into this media directory.")
+                        textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeContentSmall
                         wrapMode: Text.WordWrap
                         color: Theme.colorSubText
@@ -293,6 +298,7 @@ Popup {
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("Hierarchy")
+                        textFormat: Text.PlainText
                         font.pixelSize: Theme.componentFontSize
                         color: Theme.colorText
                     }
@@ -342,6 +348,7 @@ Popup {
                         anchors.verticalCenterOffset: -8
 
                         text: qsTr("How media will be stored in this directory. Choose an available hierarchy, or use the CUSTOM item to create your own.")
+                        textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeContentSmall
                         wrapMode: Text.WordWrap
                         color: Theme.colorSubText

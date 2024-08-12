@@ -14,7 +14,7 @@ Popup {
 
     dim: true
     modal: true
-    focus: true
+    focus: visible
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
     parent: Overlay.overlay
 
@@ -89,6 +89,7 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Confirmation")
+                textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeTitle
                 font.bold: true
                 color: "white"
@@ -113,6 +114,7 @@ Popup {
                 anchors.rightMargin: Theme.componentMarginXL
 
                 text: qsTr("A job is still running. Do you want to exit anyway?")
+                textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeContent
                 color: Theme.colorText
                 verticalAlignment: Text.AlignVCenter
