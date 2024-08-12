@@ -233,6 +233,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: shot.location
+                    textFormat: Text.PlainText
                     wrapMode: Text.WordWrap
                     color: Theme.colorText
                     font.pixelSize: Theme.fontSizeContentSmall
@@ -257,6 +258,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: shot.date.toUTCString()
+                    textFormat: Text.PlainText
                     wrapMode: Text.WordWrap
                     color: Theme.colorText
                     font.pixelSize: Theme.fontSizeContentSmall
@@ -280,6 +282,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
 
                     color: Theme.colorText
+                    textFormat: Text.PlainText
                     font.pixelSize: Theme.fontSizeContentSmall
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -302,6 +305,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: shot.camera
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.pixelSize: Theme.fontSizeContentSmall
                     verticalAlignment: Text.AlignVCenter
@@ -324,6 +328,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: UtilsString.bytesToString_short(shot.datasize)
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.pixelSize: Theme.fontSizeContentSmall
                     verticalAlignment: Text.AlignVCenter
@@ -345,6 +350,7 @@ Item {
                     anchors.leftMargin: Theme.componentMargin
                     anchors.verticalCenter: parent.verticalCenter
 
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.pixelSize: Theme.fontSizeContentSmall
                     verticalAlignment: Text.AlignVCenter
@@ -371,6 +377,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: shot.width + "x" + shot.height + "   (" + UtilsMedia.varToString(shot.width, shot.height) + ")"
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.pixelSize: Theme.fontSizeContentSmall
                     verticalAlignment: Text.AlignVCenter
@@ -393,6 +400,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: shot.widthVisible + "x" + shot.heightVisible + "  (" + UtilsMedia.varToString(shot.widthVisible, shot.heightVisible) + ")  [rotated]"
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.pixelSize: Theme.fontSizeContentSmall
                     verticalAlignment: Text.AlignVCenter
@@ -416,6 +424,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: UtilsMedia.orientationQtToString(shot.transformation)
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.pixelSize: Theme.fontSizeContentSmall
                     verticalAlignment: Text.AlignVCenter
@@ -446,6 +455,7 @@ Item {
                         anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
 
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContentSmall
                         verticalAlignment: Text.AlignVCenter
@@ -467,6 +477,7 @@ Item {
                         anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
 
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContentSmall
                         verticalAlignment: Text.AlignVCenter
@@ -488,6 +499,7 @@ Item {
                         anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
 
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContentSmall
                         verticalAlignment: Text.AlignVCenter
@@ -509,6 +521,7 @@ Item {
                         anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
 
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContentSmall
                         verticalAlignment: Text.AlignVCenter
@@ -530,6 +543,7 @@ Item {
                         anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
 
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContentSmall
                         verticalAlignment: Text.AlignVCenter
@@ -563,6 +577,7 @@ Item {
                         anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
 
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContentSmall
                         verticalAlignment: Text.AlignVCenter
@@ -584,6 +599,7 @@ Item {
                         anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
 
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContentSmall
                         verticalAlignment: Text.AlignVCenter
@@ -605,6 +621,7 @@ Item {
                         anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
 
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContentSmall
                         verticalAlignment: Text.AlignVCenter
@@ -626,6 +643,7 @@ Item {
                         anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
 
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContentSmall
                         verticalAlignment: Text.AlignVCenter
@@ -647,6 +665,7 @@ Item {
                         anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
 
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContentSmall
                         verticalAlignment: Text.AlignVCenter

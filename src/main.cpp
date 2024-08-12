@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
 #endif
 
     // Mouse wheel hack
-    qputenv("QT_QUICK_FLICKABLE_WHEEL_DECELERATION", "10000");
+    qputenv("QT_QUICK_FLICKABLE_WHEEL_DECELERATION", "2500");
 
     SingleApplication app(argc, argv, false);
 

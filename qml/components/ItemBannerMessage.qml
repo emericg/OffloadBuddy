@@ -38,6 +38,7 @@ Rectangle {
         anchors.leftMargin: Theme.componentMargin
         anchors.verticalCenter: parent.verticalCenter
 
+        textFormat: Text.PlainText
         color: Theme.colorActionbarContent
         font.pixelSize: Theme.fontSizeContentBig
     }

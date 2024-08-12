@@ -77,4 +77,6 @@ RangeSlider {
             border.color: parent.border.color
         }
     }
+
+    ////////
 }

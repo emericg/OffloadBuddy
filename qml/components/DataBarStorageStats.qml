@@ -107,6 +107,7 @@ Item {
                             else if (modelData.trackType === ShotUtils.FILE_METADATA) return qsTr("telemetry")
                             else return qsTr("other")
                         }
+                        textFormat: Text.PlainText
                         color: Theme.colorSubText
                         font.pixelSize: Theme.fontSizeContentSmall
                         font.bold: false

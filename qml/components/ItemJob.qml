@@ -100,6 +100,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: job.typeStr
+                textFormat: Text.PlainText
                 color: Theme.colorText
                 font.bold: true
                 verticalAlignment: Text.AlignVCenter
@@ -112,6 +113,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: job.name
+                textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeContentSmall
                 color: Theme.colorText
                 verticalAlignment: Text.AlignVCenter
@@ -124,6 +126,7 @@ Rectangle {
 
                 visible: (job.elementsCount > 1)
                 text: (job.elementsIndex+1) + "/" + job.elementsCount
+                textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeContentSmall
                 color: Theme.colorSubText
                 horizontalAlignment: Text.AlignHCenter
@@ -135,6 +138,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
 
                 visible: (job.elapsed > 0)
+                textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeContentSmall
                 color: Theme.colorSubText
                 horizontalAlignment: Text.AlignHCenter
@@ -230,6 +234,7 @@ Rectangle {
                 width: 32
                 anchors.verticalCenter: parent.verticalCenter
 
+                textFormat: Text.PlainText
                 color: Theme.colorSubText
                 visible: job.eta > 0
                 horizontalAlignment: Text.AlignHCenter
@@ -314,10 +319,12 @@ Rectangle {
 
                     Text {
                         text: qsTr("Status:")
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                     }
                     Text {
                         text: job.stateStr
+                        textFormat: Text.PlainText
                         color: Theme.colorSubText
                     }
                 }
@@ -328,10 +335,12 @@ Rectangle {
 
                     Text {
                         text: qsTr("Started:")
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                     }
                     Text {
                         text: job.startDate.toLocaleTimeString("hh:ss")
+                        textFormat: Text.PlainText
                         color: Theme.colorSubText
                     }
                 }
@@ -342,10 +351,12 @@ Rectangle {
 
                     Text {
                         text: qsTr("Stopped:")
+                        textFormat: Text.PlainText
                         color: Theme.colorText
                     }
                     Text {
                         text: job.stopDate.toLocaleTimeString("hh:ss")
+                        textFormat: Text.PlainText
                         color: Theme.colorSubText
                     }
                 }
@@ -357,10 +368,12 @@ Rectangle {
 
                 Text {
                     text: qsTr("Destination:")
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                 }
                 Text {
                     text: job.destinationFolder
+                    textFormat: Text.PlainText
                     color: Theme.colorSubText
                 }
             }
@@ -370,12 +383,14 @@ Rectangle {
 
                 Text {
                     text: qsTr("Source(s):")
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                 }
                 Repeater {
                     model: job.files
                     Text {
                         text: modelData
+                        textFormat: Text.PlainText
                         color: Theme.colorSubText
                     }
                 }

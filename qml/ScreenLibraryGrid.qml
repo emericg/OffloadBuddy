@@ -120,6 +120,7 @@ Item {
             anchors.topMargin: Theme.componentMargin
 
             text: qsTr("MEDIA LIBRARY")
+            textFormat: Text.PlainText
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignRight
             color: Theme.colorHeaderContent
@@ -136,6 +137,7 @@ Item {
             anchors.rightMargin: Theme.componentMargin
 
             text: qsTr("%1 shots  /  %2 files").arg(mediaLibrary.shotModel.shotCount).arg(mediaLibrary.shotModel.fileCount)
+            textFormat: Text.PlainText
             verticalAlignment: Text.AlignVCenter
             color: Theme.colorHeaderContent
             font.pixelSize: Theme.fontSizeContentBig
@@ -150,6 +152,7 @@ Item {
             anchors.rightMargin: Theme.componentMargin
 
             text: qsTr("%1 of space used").arg(UtilsString.bytesToString_short(mediaLibrary.shotModel.diskSpace))
+            textFormat: Text.PlainText
             verticalAlignment: Text.AlignVCenter
             color: Theme.colorHeaderContent
             font.pixelSize: Theme.fontSizeContentBig
@@ -579,10 +582,13 @@ Item {
             ////////
 
             model: mediaLibrary.shotFilter
-            delegate: ItemShot { width: shotsView.cellSize; cellFormat: shotsView.cellFormat; }
+            delegate: ItemShot {
+                width: shotsView.cellSize
+                cellFormat: shotsView.cellFormat
+            }
 
             maximumFlickVelocity: 10000
-            ScrollBar.vertical: ScrollBar { z: 1 }
+            ScrollBar.vertical: ScrollBarThemed { z: 1 }
 
             highlightMoveDuration: 0
             highlight: GridHighlight {

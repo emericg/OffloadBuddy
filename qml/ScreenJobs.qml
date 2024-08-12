@@ -54,6 +54,7 @@ Loader {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("JOBS QUEUE")
+                textFormat: Text.PlainText
                 verticalAlignment: Text.AlignVCenter
                 font.bold: true
                 font.pixelSize: Theme.fontSizeHeader
@@ -97,15 +98,17 @@ Loader {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
 
-            ListView {
-                id: jobsView
+            ListView { // jobsView
                 anchors.fill: parent
                 anchors.margins: Theme.componentMarginXL
                 spacing: Theme.componentMarginXL
 
                 interactive: false
                 model: jobManager.jobsList
-                delegate: ItemJob { job: modelData; width: jobsView.width; }
+                delegate: ItemJob {
+                    width: ListView.view.width
+                    job: modelData
+                }
             }
         }
     }

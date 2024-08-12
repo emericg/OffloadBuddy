@@ -39,6 +39,8 @@ Row {
     Text {
         id: txtFileWarning
         anchors.verticalCenter: parent.verticalCenter
+
+        textFormat: Text.PlainText
         color: Theme.colorText
         font.bold: false
         font.pixelSize: Theme.fontSizeContent

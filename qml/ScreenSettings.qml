@@ -56,6 +56,7 @@ Loader {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("SETTINGS")
+                textFormat: Text.PlainText
                 verticalAlignment: Text.AlignVCenter
                 font.bold: true
                 font.pixelSize: Theme.fontSizeHeader
@@ -110,6 +111,7 @@ Loader {
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("Application theme")
+                        textFormat: Text.PlainText
                         font.bold: true
                         font.pixelSize: Theme.componentFontSize
                         verticalAlignment: Text.AlignVCenter
@@ -117,13 +119,11 @@ Loader {
                         color: Theme.colorText
                     }
 
-                    ComboBoxThemed {
-                        id: comboBoxAppTheme
+                    ComboBoxThemed { // comboBoxAppTheme
                         width: 256
                         anchors.verticalCenter: parent.verticalCenter
 
-                        model: ListModel {
-                            id: cbAppTheme
+                        model: ListModel { // cbAppTheme
                             ListElement { text: "LIGHT AND WARM"; }
                             ListElement { text: "DARK AND SPOOKY"; }
                             ListElement { text: "PLAIN AND BORING"; }
@@ -153,8 +153,7 @@ Loader {
                         }
                     }
 
-                    CheckBoxThemed {
-                        id: applicationCSD
+                    CheckBoxThemed { // applicationCSD
                         anchors.verticalCenter: parent.verticalCenter
 
                         visible: utilsApp.isDebugBuild()
@@ -179,6 +178,7 @@ Loader {
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("Unit system")
+                        textFormat: Text.PlainText
                         font.bold: true
                         font.pixelSize: Theme.componentFontSize
                         color: Theme.colorText
@@ -206,6 +206,7 @@ Loader {
 
                 Text {
                     text: qsTr("Thumbnails")
+                    textFormat: Text.PlainText
                     verticalAlignment: Text.AlignVCenter
                     color: Theme.colorText
                     font.bold: true
@@ -216,11 +217,11 @@ Loader {
                     height: 40
                     spacing: 32
 
-                    Text {
-                        id: titleAR
+                    Text { // titleAR
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("Aspect ratio")
+                        textFormat: Text.PlainText
                         font.pixelSize: Theme.componentFontSize
                         color: Theme.colorText
                     }
@@ -239,11 +240,11 @@ Loader {
                         onMenuSelected: (index) => { settingsManager.thumbFormat = index }
                     }
 
-                    Text {
-                        id: titleSize
+                    Text { // titleSize
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("Default size")
+                        textFormat: Text.PlainText
                         font.pixelSize: Theme.componentFontSize
                         color: Theme.colorText
                     }
@@ -268,11 +269,11 @@ Loader {
                     height: 40
                     spacing: 32
 
-                    Text {
-                        id: titleQuality
+                    Text { // titleQuality
                         anchors.verticalCenter: parent.verticalCenter
 
                         text: qsTr("Quality")
+                        textFormat: Text.PlainText
                         font.pixelSize: Theme.componentFontSize
                         color: Theme.colorText
                     }
@@ -299,8 +300,10 @@ Loader {
                 ////////
 
                 Text {
-                    text: qsTr("Offloading")
                     verticalAlignment: Text.AlignVCenter
+
+                    text: qsTr("Offloading")
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.bold: true
                     font.pixelSize: Theme.componentFontSize
@@ -388,8 +391,7 @@ Loader {
 
                 ////////
 
-                Rectangle {
-                    id: rectangleMedia
+                Rectangle { // rectangleMedia
                     anchors.left: parent.left
                     anchors.leftMargin: -24
                     anchors.right: parent.right
@@ -424,18 +426,17 @@ Loader {
                             height: 40
                             spacing: Theme.componentMarginXL
 
-                            Text {
-                                id: textMediaTitle
+                            Text { // textMediaTitle
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 text: qsTr("Media directories")
+                                textFormat: Text.PlainText
                                 font.pixelSize: Theme.componentFontSize
                                 font.bold: true
                                 color: Theme.colorText
                             }
 
-                            RoundButtonSunken {
-                                id: buttonNew
+                            RoundButtonSunken { // buttonNew
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 source: "qrc:/assets/icons/material-symbols/create_new_folder.svg"
@@ -459,6 +460,7 @@ Loader {
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 text: qsTr("Default media hierarchy")
+                                textFormat: Text.PlainText
 
                                 font.pixelSize: Theme.componentFontSize
                                 color: Theme.colorText
@@ -491,8 +493,7 @@ Loader {
     */
                         ////
 
-                        Repeater {
-                            id: mediadirectoriesview
+                        Repeater { // mediadirectoriesview
                             anchors.left: parent.left
                             anchors.right: parent.right
 
@@ -515,9 +516,10 @@ Loader {
                             visible: !storageManager.directoriesCount
 
                             Text {
-                                id: name
                                 anchors.horizontalCenter: parent.horizontalCenter
+
                                 text: qsTr("There is no media directory configured :(")
+                                textFormat: Text.PlainText
                                 font.pixelSize: Theme.fontSizeContent
                                 color: Theme.colorSubText
                             }

@@ -107,6 +107,7 @@ T.ComboBox {
             text: control.textRole
                 ? (Array.isArray(control.model) ? modelData[control.textRole] : model[control.textRole])
                 : modelData
+            textFormat: Text.PlainText
             color: highlighted ? "black" : Theme.colorSubText
             font.pixelSize: Theme.componentFontSize
             elide: Text.ElideRight

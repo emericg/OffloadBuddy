@@ -634,6 +634,7 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
 
                 text: qsTr("trim from ") + UtilsString.durationToString_ISO8601_full(shot.trimStart) + qsTr(" to ") + UtilsString.durationToString_ISO8601_full(shot.trimStop > 0 ? shot.trimStop : shot.duration)
+                textFormat: Text.PlainText
                 color: "white"
                 font.bold: true
                 font.pixelSize: 15
@@ -1088,6 +1089,7 @@ Item {
                     id: timecode
                     anchors.verticalCenter: parent.verticalCenter
 
+                    textFormat: Text.PlainText
                     color: "white"
                     font.bold: true
                     font.pixelSize: 15

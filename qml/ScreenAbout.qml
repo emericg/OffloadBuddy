@@ -53,6 +53,7 @@ Loader {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("ABOUT") + "  OffloadBuddy"
+                textFormat: Text.PlainText
                 font.bold: true
                 font.pixelSize: Theme.fontSizeHeader
                 color: Theme.colorHeaderContent

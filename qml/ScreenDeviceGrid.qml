@@ -308,6 +308,7 @@ Item {
                 anchors.right: parent.right
 
                 text: currentDevice.brand + " " + currentDevice.model
+                textFormat: Text.PlainText
                 color: Theme.colorHeaderContent
                 font.bold: true
                 font.pixelSize: Theme.fontSizeHeader
@@ -319,6 +320,7 @@ Item {
                 visible: (currentDevice && currentDevice.deviceType > 3)
 
                 text: qsTr("firmware") + " " + currentDevice.firmware
+                textFormat: Text.PlainText
                 color: Theme.colorHeaderContent
                 font.pixelSize: Theme.fontSizeContentSmall
             }
@@ -794,10 +796,13 @@ Item {
             ////////
 
             model: currentDevice ? currentDevice.shotFilter : null
-            delegate: ItemShot { width: shotsView.cellSize; cellFormat: shotsView.cellFormat; }
+            delegate: ItemShot {
+                width: shotsView.cellSize
+                cellFormat: shotsView.cellFormat
+            }
 
             maximumFlickVelocity: 10000
-            ScrollBar.vertical: ScrollBar { z: 1 }
+            ScrollBar.vertical: ScrollBarThemed { z: 1 }
 
             highlightMoveDuration: 0
             highlight: GridHighlight {
@@ -811,7 +816,7 @@ Item {
             MouseArea {
                 id: mouseAreaBottomView
                 anchors.fill: parent
-                z:-1
+                z: -1
 
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
                 propagateComposedEvents: false
@@ -878,6 +883,10 @@ Item {
                     console.log("shotsView::Key_Menu")
                 }
             }
+
+            ////////
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 }

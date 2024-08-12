@@ -1199,4 +1199,6 @@ Item {
             else gismo.x = gismo.originalX + gismo.originalWidth - gismo.width
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 }

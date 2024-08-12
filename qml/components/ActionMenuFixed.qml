@@ -69,8 +69,8 @@ T.Popup {
             id: contentColumn
             width: parent.width
 
-            topPadding: 12
-            bottomPadding: 12
+            topPadding: 8
+            bottomPadding: 8
             spacing: 2
 
             ////////
@@ -94,6 +94,8 @@ T.Popup {
 
             ActionMenuItem {
                 id: shotOffload
+                anchors.leftMargin: 0
+                anchors.rightMargin: 0
 
                 index: 1
                 text: qsTr("Offload")
@@ -102,6 +104,9 @@ T.Popup {
             }
             ActionMenuItem {
                 id: shotMove
+                anchors.leftMargin: 0
+                anchors.rightMargin: 0
+
                 index: 2
                 text: qsTr("Move")
                 source: "qrc:/assets/icons/material-icons/duotone/save_alt.svg"
@@ -109,6 +114,9 @@ T.Popup {
             }
             ActionMenuItem {
                 id: shotMerge
+                anchors.leftMargin: 0
+                anchors.rightMargin: 0
+
                 index: 3
                 text: qsTr("Merge chapters")
                 source: "qrc:/assets/icons/material-symbols/merge_type.svg"
@@ -116,6 +124,10 @@ T.Popup {
             }
             ActionMenuItem {
                 id: shotEncode
+                anchors.leftMargin: 0
+                anchors.rightMargin: 0
+
+
                 index: 4
                 text: qsTr("Encode")
                 source: "qrc:/assets/icons/material-symbols/memory.svg"
@@ -132,6 +144,9 @@ T.Popup {
 
             ActionMenuItem {
                 id: telemetry
+                anchors.leftMargin: 0
+                anchors.rightMargin: 0
+
                 index: 8
                 text: qsTr("Extract telemetry")
                 source: "qrc:/assets/icons/material-icons/duotone/insert_chart.svg"
@@ -139,6 +154,9 @@ T.Popup {
             }
             ActionMenuItem {
                 id: telemetryGPMF
+                anchors.leftMargin: 0
+                anchors.rightMargin: 0
+
                 index: 9
                 text: qsTr("Extract telemetry")
                 source: "qrc:/assets/icons/material-icons/duotone/insert_chart.svg"
@@ -146,6 +164,9 @@ T.Popup {
             }
             ActionMenuItem {
                 id: telemetryGPS
+                anchors.leftMargin: 0
+                anchors.rightMargin: 0
+
                 index: 10
                 text: qsTr("Extract GPS trace")
                 source: "qrc:/assets/icons/material-symbols/location/map-fill.svg"
@@ -162,6 +183,9 @@ T.Popup {
 
             ActionMenuItem {
                 id: openFile
+                anchors.leftMargin: 0
+                anchors.rightMargin: 0
+
                 index: 12
                 text: qsTr("Open file")
                 source: "qrc:/assets/icons/material-symbols/folder.svg"
@@ -169,6 +193,9 @@ T.Popup {
             }
             ActionMenuItem {
                 id: openFolder
+                anchors.leftMargin: 0
+                anchors.rightMargin: 0
+
                 index: 13
                 text: qsTr("Open folder")
                 source: "qrc:/assets/icons/material-symbols/folder_open.svg"
@@ -185,6 +212,9 @@ T.Popup {
 
             ActionMenuItem {
                 id: removeSelected
+                anchors.leftMargin: 0
+                anchors.rightMargin: 0
+
                 index: 16
                 text: qsTr("DELETE")
                 source: "qrc:/assets/icons/material-symbols/delete.svg"

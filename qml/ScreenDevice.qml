@@ -123,4 +123,6 @@ Item {
             PropertyChanges { target: screenMedia; visible: true; }
         }
     ]
+
+    ////////////////////////////////////////////////////////////////////////////
 }

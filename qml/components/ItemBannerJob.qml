@@ -50,6 +50,7 @@ Rectangle {
         Text {
             visible: (bannerJob.jobrunning === 0)
             text: qsTr("%1 job(s) queued...").arg(currentDevice.jobsCount)
+            textFormat: Text.PlainText
             color: Theme.colorActionbarContent
             font.pixelSize: Theme.fontSizeContentBig
         }
@@ -68,6 +69,7 @@ Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: modelData.typeStr
+                    textFormat: Text.PlainText
                     font.bold: true
                     font.pixelSize: Theme.fontSizeContent
                     color: Theme.colorActionbarContent
@@ -77,6 +79,7 @@ Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: modelData.name
+                    textFormat: Text.PlainText
                     font.pixelSize: Theme.fontSizeContent
                     color: Theme.colorActionbarContent
                 }
@@ -99,6 +102,7 @@ Rectangle {
 
                     visible: currentDevice.jobsCount > 1
                     text: "(" + (currentDevice.jobsCount-1) + " in queue)"
+                    textFormat: Text.PlainText
                     font.pixelSize: Theme.fontSizeContent
                     color: Theme.colorActionbarContent
                 }

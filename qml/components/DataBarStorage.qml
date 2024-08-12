@@ -36,7 +36,9 @@ Item {
         Text {
             anchors.left: parent.left
             anchors.verticalCenter: parent.verticalCenter
+
             text: modelData.directoryPath
+            textFormat: Text.PlainText
             color: Theme.colorText
             font.pixelSize: Theme.fontSizeContent
         }
@@ -92,6 +94,7 @@ Item {
             anchors.verticalCenterOffset: 1
 
             text: UtilsString.bytesToString_short(vst)
+            textFormat: Text.PlainText
             color: dataBarStorage.colorText
             font.bold: false
             font.pixelSize: 10
@@ -124,6 +127,7 @@ Item {
                 anchors.verticalCenterOffset: 1
 
                 text: UtilsString.bytesToString_short(vsu)
+                textFormat: Text.PlainText
                 color: (contentWidth+12 < item_data.width) ? "white" : dataBarStorage.colorText
                 font.bold: false
                 font.pixelSize: 10

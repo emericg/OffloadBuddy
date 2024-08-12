@@ -174,6 +174,7 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
 
         text: qsTr("%n element(s) selected", "", mediaGrid.selectionCount)
+        textFormat: Text.PlainText
         color: Theme.colorActionbarContent
         font.pixelSize: Theme.fontSizeContent
         font.bold: true

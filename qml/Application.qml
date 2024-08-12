@@ -193,7 +193,6 @@ ApplicationWindow {
 
             Item {
                 id: appContent
-
                 anchors.top: parent.top
                 anchors.left: appSidebar.right
                 anchors.right: parent.right

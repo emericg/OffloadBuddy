@@ -411,6 +411,7 @@ Item {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("GPS coordinates:")
+                            textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContent
                             font.bold: true
                             color: Theme.colorHeaderContent
@@ -424,6 +425,7 @@ Item {
                             selectedTextColor: "white"
 
                             text: shot.latitudeString + " / " + shot.longitudeString
+                            textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorHeaderContent
                         }
@@ -438,6 +440,7 @@ Item {
                             anchors.verticalCenter: parent.verticalCenter
 
                             text: qsTr("Altitude:")
+                            textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContent
                             font.bold: true
                             color: Theme.colorHeaderContent
@@ -466,6 +469,7 @@ Item {
                             visible: shot.speed
 
                             text: qsTr("Speed:")
+                            textFormat: Text.PlainText
                             font.pixelSize: Theme.fontSizeContent
                             font.bold: true
                             color: Theme.colorHeaderContent
@@ -559,6 +563,7 @@ Item {
                         anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
                         text: qsTr("Speed") + " (" + UtilsString.speedUnit(settingsManager.appUnits) + ")"
+                        textFormat: Text.PlainText
                         color: graphArea.graphTxt
                         font.bold: true
                         font.pixelSize: Theme.fontSizeContent
@@ -569,6 +574,7 @@ Item {
                         anchors.right: parent.right
                         anchors.rightMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
+                        textFormat: Text.PlainText
                         color: graphArea.graphTxt
                         font.pixelSize: 14
                     }
@@ -624,6 +630,7 @@ Item {
                         anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
                         text: qsTr("Altitude") + " (" + UtilsString.altitudeUnit(settingsManager.appUnits) + ")"
+                        textFormat: Text.PlainText
                         color: graphArea.graphTxt
                         font.bold: true
                         font.pixelSize: Theme.fontSizeContent
@@ -634,6 +641,7 @@ Item {
                         anchors.right: parent.right
                         anchors.rightMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
+                        textFormat: Text.PlainText
                         color: graphArea.graphTxt
                         font.pixelSize: 14
                     }
@@ -688,6 +696,7 @@ Item {
                         anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
                         text: qsTr("Accelerometer")
+                        textFormat: Text.PlainText
                         color: graphArea.graphTxt
                         font.bold: true
                         font.pixelSize: Theme.fontSizeContent
@@ -698,6 +707,7 @@ Item {
                         anchors.right: parent.right
                         anchors.rightMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
+                        textFormat: Text.PlainText
                         color: graphArea.graphTxt
                         font.pixelSize: 14
                     }
@@ -752,6 +762,7 @@ Item {
                         anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
                         text: qsTr("Gyroscope")
+                        textFormat: Text.PlainText
                         color: graphArea.graphTxt
                         font.bold: true
                         font.pixelSize: Theme.fontSizeContent
@@ -810,11 +821,13 @@ Item {
                 Text {
                     id: labelDuration
                     text: qsTr("Track duration:")
+                    textFormat: Text.PlainText
                     font.pixelSize: Theme.fontSizeContent
                     color: graphArea.graphTxt
                 }
                 Text {
                     id: trackDuration
+                    textFormat: Text.PlainText
                     font.bold: true
                     font.pixelSize: Theme.fontSizeContent
                     color: graphArea.graphTxt
@@ -825,11 +838,13 @@ Item {
                 Text {
                     id: labelDistance
                     text: qsTr("Distance traveled:")
+                    textFormat: Text.PlainText
                     font.pixelSize: Theme.fontSizeContent
                     color: graphArea.graphTxt
                 }
                 Text {
                     id: trackDistance
+                    textFormat: Text.PlainText
                     font.bold: true
                     font.pixelSize: Theme.fontSizeContent
                     color: graphArea.graphTxt

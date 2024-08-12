@@ -54,6 +54,7 @@ Item {
             anchors.verticalCenterOffset: 1
 
             text: UtilsString.bytesToString_short(vst)
+            textFormat: Text.PlainText
             color: dataBarSpace.colorText
             font.bold: false
             font.pixelSize: 10
@@ -86,6 +87,7 @@ Item {
                 anchors.verticalCenterOffset: 1
 
                 text: UtilsString.bytesToString_short(vsu)
+                textFormat: Text.PlainText
                 color: (contentWidth+12 < item_data.width) ? "white" : dataBarSpace.colorText
                 font.bold: false
                 font.pixelSize: 10

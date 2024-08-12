@@ -44,6 +44,7 @@ Item {
                 Text {
                     height: 32
                     text: shot.camera
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.bold: true
                     font.pixelSize: Theme.fontSizeContentBig
@@ -55,12 +56,14 @@ Item {
                 Text {
                     width: infosDetails.legendWidth
                     text: qsTr("Protune")
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.bold: true
                     font.pixelSize: Theme.fontSizeContentSmall
                 }
                 Text {
                     text: shot.protune
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.pixelSize: Theme.fontSizeContent
                 }
@@ -70,12 +73,14 @@ Item {
                 Text {
                     width: infosDetails.legendWidth
                     text: qsTr("Cam RAW")
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.bold: true
                     font.pixelSize: Theme.fontSizeContentSmall
                 }
                 Text {
                     text: shot.cam_raw
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.pixelSize: Theme.fontSizeContent
                 }
@@ -85,12 +90,14 @@ Item {
                 Text {
                     width: infosDetails.legendWidth
                     text: qsTr("Broadcast range")
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.bold: true
                     font.pixelSize: Theme.fontSizeContentSmall
                 }
                 Text {
                     text: shot.broadcast_range
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.pixelSize: Theme.fontSizeContent
                 }
@@ -100,12 +107,14 @@ Item {
                 Text {
                     width: infosDetails.legendWidth
                     text: qsTr("Lens type")
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.bold: true
                     font.pixelSize: Theme.fontSizeContentSmall
                 }
                 Text {
                     text: shot.lens_type
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.pixelSize: Theme.fontSizeContent
                 }
@@ -115,12 +124,14 @@ Item {
                 Text {
                     width: infosDetails.legendWidth
                     text: qsTr("video_mode_fov")
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.bold: true
                     font.pixelSize: Theme.fontSizeContentSmall
                 }
                 Text {
                     text: shot.video_mode_fov
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.pixelSize: Theme.fontSizeContent
                 }
@@ -130,12 +141,14 @@ Item {
                 Text {
                     width: infosDetails.legendWidth
                     text: qsTr("Low light")
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.bold: true
                     font.pixelSize: Theme.fontSizeContentSmall
                 }
                 Text {
                     text: shot.lowlight
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.pixelSize: Theme.fontSizeContent
                 }
@@ -145,12 +158,14 @@ Item {
                 Text {
                     width: infosDetails.legendWidth
                     text: qsTr("Superview")
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.bold: true
                     font.pixelSize: Theme.fontSizeContentSmall
                 }
                 Text {
                     text: shot.superview
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.pixelSize: Theme.fontSizeContent
                 }
@@ -160,12 +175,14 @@ Item {
                 Text {
                     width: infosDetails.legendWidth
                     text: qsTr("Sharpening")
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.bold: true
                     font.pixelSize: Theme.fontSizeContentSmall
                 }
                 Text {
                     text: shot.sharpening
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.pixelSize: Theme.fontSizeContent
                 }
@@ -175,12 +192,14 @@ Item {
                 Text {
                     width: infosDetails.legendWidth
                     text: qsTr("Media type")
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.bold: true
                     font.pixelSize: Theme.fontSizeContentSmall
                 }
                 Text {
                     text: shot.media_type_str
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.pixelSize: Theme.fontSizeContent
                 }
@@ -192,12 +211,14 @@ Item {
                 Text {
                     width: infosDetails.legendWidth
                     text: qsTr("EIS")
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.bold: true
                     font.pixelSize: Theme.fontSizeContentSmall
                 }
                 Text {
                     text: shot.eis
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.pixelSize: Theme.fontSizeContent
                 }
@@ -252,6 +273,7 @@ Item {
                     anchors.top: parent.top
 
                     text: qsTr("Folder:")
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.bold: true
                     font.pixelSize: Theme.fontSizeContent
@@ -265,6 +287,7 @@ Item {
                     anchors.bottom: parent.bottom
 
                     text: shot.folder
+                    textFormat: Text.PlainText
                     color: Theme.colorText
                     elide: Text.ElideLeft
                     font.pixelSize: Theme.fontSizeContent
@@ -290,6 +313,7 @@ Item {
                 anchors.rightMargin: Theme.componentMargin
 
                 text: (shot.fileCount > 1) ? qsTr("Files:") : qsTr("File:")
+                textFormat: Text.PlainText
                 color: Theme.colorText
                 font.bold: true
                 font.pixelSize: Theme.fontSizeContent
@@ -309,9 +333,8 @@ Item {
                 model: shot.filesShot
                 delegate: Item {
                     id: dlv
+                    width: ListView.view.width
                     height: 32
-                    anchors.left: parent.left
-                    anchors.right: parent.right
 
                     ////////
 
@@ -346,6 +369,7 @@ Item {
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
                             text: modelData.width + "x" + modelData.height
+                            textFormat: Text.PlainText
                             color: Theme.colorText
                             font.pixelSize: Theme.fontSizeContentSmall
                         }
@@ -355,6 +379,7 @@ Item {
                             id: fileSize
                             anchors.verticalCenter: parent.verticalCenter
                             text: UtilsString.bytesToString(modelData.size)
+                            textFormat: Text.PlainText
                             color: Theme.colorSubText
                             font.pixelSize: Theme.fontSizeContentSmall
                         }
@@ -366,6 +391,7 @@ Item {
                             Text {
                                 id: filePath
                                 text: modelData.directory
+                                textFormat: Text.PlainText
                                 color: Theme.colorText
                                 font.pixelSize: Theme.fontSizeContentSmall
                                 visible: ((filePath.contentWidth + fileName.contentWidth) < (dlv.width - 48 - fileSize.width - rowRight.width))
@@ -373,6 +399,7 @@ Item {
                             Text {
                                 id: fileName
                                 text: modelData.name + "." + modelData.ext
+                                textFormat: Text.PlainText
                                 color: Theme.colorText
                                 font.pixelSize: Theme.fontSizeContentSmall
                             }

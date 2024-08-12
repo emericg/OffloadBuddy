@@ -145,6 +145,7 @@ Item {
 
                     visible: (deviceSpaceText.width > 400)
                     color: Theme.colorText
+                    textFormat: Text.PlainText
                     text: UtilsString.bytesToString_short(directory.spaceUsed) + qsTr(" used / ") +
                           UtilsString.bytesToString_short(directory.spaceAvailable) + qsTr(" available / ") +
                           UtilsString.bytesToString_short(directory.spaceTotal) + qsTr(" total")
@@ -181,6 +182,7 @@ Item {
                 visible: (deviceSpaceText.width > 400)
 
                 text: qsTr("Directory is not available right now :/")
+                textFormat: Text.PlainText
                 color: Theme.colorWarning
                 font.bold: true
                 font.pixelSize: Theme.fontSizeContent
@@ -224,6 +226,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
 
             text: qsTr("Are you sure?")
+            textFormat: Text.PlainText
             font.bold: true
             font.pixelSize: Theme.fontSizeContent
             color: Theme.colorSubText

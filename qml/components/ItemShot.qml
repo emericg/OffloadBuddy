@@ -20,9 +20,11 @@ Rectangle {
     property var shotDevice: null
     property real cellFormat: 4/3
 
-    property bool singleSelection: (mediaGrid.currentIndex === index)
+    property bool singleSelection: (shotsView.currentIndex === index)
     property bool multiSelection: (shot && shot.selected)
     property bool alreadyOffloaded: shotDevice && mediaLibrary.isShotAlreadyOffloaded(shot.name, shot.datasize)
+
+    ////////////////////////////////////////////////////////////////////////////
 
     Component.onCompleted: {
         if (typeof currentDevice !== "undefined")
@@ -168,7 +170,7 @@ Rectangle {
 
             autoTransform: true
             asynchronous: true
-            antialiasing: false
+            //retainWhileLoading: true // QT 6.8+
             fillMode: Image.PreserveAspectCrop
 
             opacity: (imageFs.progress === 1.0) ? 1 : 0
@@ -227,14 +229,12 @@ Rectangle {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    Item {
-        id: overlayInfos
+    Item { // overlayInfos
         anchors.fill: parent
 
         visible: imageArea.imageLoaded
 
-        Text {
-            id: text_top
+        Text { // text_top
             height: 20
             anchors.top: parent.top
             anchors.topMargin: 8
@@ -243,11 +243,12 @@ Rectangle {
             anchors.right: parent.right
             anchors.rightMargin: 8
 
-            opacity: mouseAreaItem.isHovered ? 1 : 0
+            opacity: (mouseAreaItem.containsMouse || itemShot.singleSelection || itemShot.multiSelection) ? 1 : 0
             Behavior on opacity { NumberAnimation { duration: 133 } }
 
             color: "white"
             text: shot.name
+            textFormat: Text.PlainText
             elide: Text.ElideRight
             style: Text.Raised
             font.bold: true
@@ -337,6 +338,7 @@ Rectangle {
                           UtilsString.durationToString_ISO8601_compact_loose(shot.duration) :
                           shot.duration
 
+                textFormat: Text.PlainText
                 color: "white"
                 lineHeight: 1
                 style: Text.Raised
@@ -361,6 +363,7 @@ Rectangle {
                 color: "white"
                 visible: shot.hilightCount
                 text: shot.hilightCount
+                textFormat: Text.PlainText
                 style: Text.Raised
                 font.bold: true
                 font.pixelSize: 13
@@ -469,8 +472,6 @@ Rectangle {
         propagateComposedEvents: false
         acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
 
-        property bool isHovered: false
-
         ////////
 
         property int thumbId: 1
@@ -495,11 +496,11 @@ Rectangle {
                 }
             }
         }
+
+        ////////
+
         onEntered: {
             if (!shot || typeof shot === "undefined") return
-
-            mouseAreaItem.isHovered = true
-            //shotsView.focus = true
 
             if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== ShotUtils.STORAGE_MTP)) {
                 if (shot.fileType === ShotUtils.FILE_VIDEO && settingsManager.thumbQuality > 1) {
@@ -509,8 +510,6 @@ Rectangle {
         }
         onExited: {
             if (!shot || typeof shot === "undefined") return
-
-            mouseAreaItem.isHovered = false
 
             if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== ShotUtils.STORAGE_MTP)) {
                 if (shot.fileType === ShotUtils.FILE_VIDEO && settingsManager.thumbQuality > 1) {
@@ -526,7 +525,7 @@ Rectangle {
 
         ////////
 
-        onClicked: (mouse)=> {
+        onClicked: (mouse) => {
             if (!shot || typeof shot === "undefined") return
             //console.log("ItemShot::onClicked")
 
@@ -568,7 +567,7 @@ Rectangle {
             else
                 actionMenu.visible = false
         }
-        onDoubleClicked: (mouse)=> {
+        onDoubleClicked: (mouse) => {
             if (!shot || typeof shot === "undefined") return
             //console.log("ItemShot::onDoubleClicked")
 
@@ -587,6 +586,8 @@ Rectangle {
                 mediaGrid.deselectFile(index)
             }
         }
+
+        ////////
     }
 
     ////////////////////////////////////////////////////////////////////////////

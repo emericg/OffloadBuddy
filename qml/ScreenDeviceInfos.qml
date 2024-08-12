@@ -42,7 +42,7 @@ Loader {
             implicitWidth: 1280
             implicitHeight: 720
 
-            ////////////////////////////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////
 
             Connections {
                 target: currentDevice
@@ -60,11 +60,11 @@ Loader {
                 //console.log("ScreenDeviceGrid.restoreState()")
             }
 
-            // POPUPs //////////////////////////////////////////////////////////////////
+            // POPUPs //////////////////////////////////////////////////////////
 
             PopupFirmware { id: popupFirmware }
 
-            // HEADER //////////////////////////////////////////////////////////////////
+            // HEADER //////////////////////////////////////////////////////////
 
             Rectangle {
                 id: rectangleHeader
@@ -151,7 +151,7 @@ Loader {
 
             HeaderShadow {anchors.top: rectangleHeader.bottom; }
 
-            // CONTENT /////////////////////////////////////////////////////////////////
+            // CONTENT /////////////////////////////////////////////////////////
 
             Flickable {
                 anchors.top: rectangleHeader.bottom
@@ -205,6 +205,7 @@ Loader {
                                     anchors.verticalCenter: parent.verticalCenter
 
                                     text: qsTr("Device")
+                                    textFormat: Text.PlainText
                                     font.pixelSize: Theme.fontSizeContentBig
                                     font.bold: true
                                     color: Theme.colorText
@@ -242,12 +243,14 @@ Loader {
 
                                 Text {
                                     text: qsTr("Brand")
+                                    textFormat: Text.PlainText
                                     color: Theme.colorText
                                     font.bold: true
                                     font.pixelSize: Theme.fontSizeContent
                                 }
                                 Text {
                                     text: currentDevice.brand
+                                    textFormat: Text.PlainText
                                     color: Theme.colorText
                                     font.pixelSize: Theme.fontSizeContent
                                 }
@@ -258,12 +261,14 @@ Loader {
 
                                 Text {
                                     text: qsTr("Model")
+                                    textFormat: Text.PlainText
                                     color: Theme.colorText
                                     font.bold: true
                                     font.pixelSize: Theme.fontSizeContent
                                 }
                                 Text {
                                     text: currentDevice.model
+                                    textFormat: Text.PlainText
                                     color: Theme.colorText
                                     font.pixelSize: Theme.fontSizeContent
                                 }
@@ -274,12 +279,14 @@ Loader {
 
                                 Text {
                                     text: qsTr("Serial")
+                                    textFormat: Text.PlainText
                                     color: Theme.colorText
                                     font.bold: true
                                     font.pixelSize: Theme.fontSizeContent
                                 }
                                 Text {
                                     text: currentDevice.serial
+                                    textFormat: Text.PlainText
                                     color: Theme.colorText
                                     font.pixelSize: Theme.fontSizeContent
                                 }
@@ -290,12 +297,14 @@ Loader {
 
                                 Text {
                                     text: qsTr("Firmware")
+                                    textFormat: Text.PlainText
                                     color: Theme.colorText
                                     font.bold: true
                                     font.pixelSize: Theme.fontSizeContent
                                 }
                                 Text {
                                     text: currentDevice.firmware
+                                    textFormat: Text.PlainText
                                     color: Theme.colorText
                                     font.pixelSize: Theme.fontSizeContent
                                 }
@@ -366,6 +375,7 @@ Loader {
                                     anchors.verticalCenter: parent.verticalCenter
 
                                     text: qsTr("Storage")
+                                    textFormat: Text.PlainText
                                     font.pixelSize: Theme.fontSizeContentBig
                                     font.bold: true
                                     color: Theme.colorText
@@ -449,6 +459,7 @@ Loader {
                                     anchors.verticalCenter: parent.verticalCenter
 
                                     text: qsTr("Capabilities")
+                                    textFormat: Text.PlainText
                                     font.pixelSize: Theme.fontSizeContentBig
                                     font.bold: true
                                     color: Theme.colorText
@@ -470,12 +481,14 @@ Loader {
 
                                 Text {
                                     text: qsTr("Release")
+                                    textFormat: Text.PlainText
                                     color: Theme.colorText
                                     font.bold: true
                                     font.pixelSize: Theme.fontSizeContent
                                 }
                                 Text {
                                     text: currentDevice.capabilities.year
+                                    textFormat: Text.PlainText
                                     color: Theme.colorText
                                     font.pixelSize: Theme.fontSizeContent
                                 }
@@ -488,6 +501,7 @@ Loader {
 
                                 Text {
                                     text: qsTr("Features")
+                                    textFormat: Text.PlainText
                                     color: Theme.colorText
                                     font.bold: true
                                     font.pixelSize: Theme.fontSizeContent
@@ -510,6 +524,7 @@ Loader {
 
                                 Text {
                                     text: qsTr("Video modes")
+                                    textFormat: Text.PlainText
                                     color: Theme.colorText
                                     font.bold: true
                                     font.pixelSize: Theme.fontSizeContent
@@ -518,6 +533,7 @@ Loader {
                                     model: currentDevice.capabilities.modesVideo
                                     Text {
                                         text: modelData + " / "
+                                        textFormat: Text.PlainText
                                         color: Theme.colorText
                                         font.pixelSize: Theme.fontSizeContent
                                     }
@@ -531,6 +547,7 @@ Loader {
 
                                 Text {
                                     text: qsTr("Photo modes")
+                                    textFormat: Text.PlainText
                                     color: Theme.colorText
                                     font.bold: true
                                     font.pixelSize: Theme.fontSizeContent
@@ -539,6 +556,7 @@ Loader {
                                     model: currentDevice.capabilities.modesPhoto
                                     Text {
                                         text: modelData + " / "
+                                        textFormat: Text.PlainText
                                         color: Theme.colorText
                                         font.pixelSize: Theme.fontSizeContent
                                     }
@@ -552,6 +570,7 @@ Loader {
 
                                 Text {
                                     text: qsTr("Timelapse modes")
+                                    textFormat: Text.PlainText
                                     color: Theme.colorText
                                     font.bold: true
                                     font.pixelSize: Theme.fontSizeContent
@@ -560,6 +579,7 @@ Loader {
                                     model: currentDevice.capabilities.modesTimelapse
                                     Text {
                                         text: modelData + " / "
+                                        textFormat: Text.PlainText
                                         color: Theme.colorText
                                         font.pixelSize: Theme.fontSizeContent
                                     }
@@ -591,6 +611,7 @@ Loader {
                                             width: modeHeader.width*0.12
                                             height: 24
                                             text: qsTr("MODE")
+                                            textFormat: Text.PlainText
                                             color: Theme.colorText
                                             font.pixelSize: Theme.fontSizeContent
                                             verticalAlignment: Text.AlignVCenter
@@ -599,6 +620,7 @@ Loader {
                                             width: modeHeader.width*0.24
                                             height: 24
                                             text: qsTr("FOV")
+                                            textFormat: Text.PlainText
                                             color: Theme.colorText
                                             font.pixelSize: Theme.fontSizeContent
                                             verticalAlignment: Text.AlignVCenter
@@ -607,6 +629,7 @@ Loader {
                                             width: modeHeader.width*0.12
                                             height: 24
                                             text: qsTr("RATIO")
+                                            textFormat: Text.PlainText
                                             color: Theme.colorText
                                             font.pixelSize: Theme.fontSizeContent
                                             verticalAlignment: Text.AlignVCenter
@@ -615,6 +638,7 @@ Loader {
                                             width: modeHeader.width*0.24
                                             height: 24
                                             text: qsTr("RESOLUTION")
+                                            textFormat: Text.PlainText
                                             color: Theme.colorText
                                             font.pixelSize: Theme.fontSizeContent
                                             verticalAlignment: Text.AlignVCenter
@@ -623,6 +647,7 @@ Loader {
                                             width: modeHeader.width*0.12
                                             height: 24
                                             text: qsTr("FPS")
+                                            textFormat: Text.PlainText
                                             color: Theme.colorText
                                             font.pixelSize: Theme.fontSizeContent
                                             verticalAlignment: Text.AlignVCenter
@@ -631,6 +656,7 @@ Loader {
                                             width: modeHeader.width*0.12
                                             height: 24
                                             text: qsTr("CODEC")
+                                            textFormat: Text.PlainText
                                             color: Theme.colorText
                                             font.pixelSize: Theme.fontSizeContent
                                             verticalAlignment: Text.AlignVCenter
@@ -664,6 +690,7 @@ Loader {
                                                 width: modeHeader.width*0.12
                                                 height: 24
                                                 text: modelData.name
+                                                textFormat: Text.PlainText
                                                 color: Theme.colorSubText
                                                 font.pixelSize: Theme.fontSizeContent
                                                 verticalAlignment: Text.AlignVCenter
@@ -672,6 +699,7 @@ Loader {
                                                 width: modeHeader.width*0.24
                                                 height: 24
                                                 text: modelData.fov
+                                                textFormat: Text.PlainText
                                                 color: Theme.colorSubText
                                                 font.pixelSize: Theme.fontSizeContent
                                                 verticalAlignment: Text.AlignVCenter
@@ -680,6 +708,7 @@ Loader {
                                                 width: modeHeader.width*0.12
                                                 height: 24
                                                 text: modelData.ratio
+                                                textFormat: Text.PlainText
                                                 color: Theme.colorSubText
                                                 font.pixelSize: Theme.fontSizeContent
                                                 verticalAlignment: Text.AlignVCenter
@@ -688,6 +717,7 @@ Loader {
                                                 width: modeHeader.width*0.24
                                                 height: 24
                                                 text: modelData.resolution
+                                                textFormat: Text.PlainText
                                                 color: Theme.colorSubText
                                                 font.pixelSize: Theme.fontSizeContent
                                                 verticalAlignment: Text.AlignVCenter
@@ -696,6 +726,7 @@ Loader {
                                                 width: modeHeader.width*0.12
                                                 height: 24
                                                 text: modelData.fps
+                                                textFormat: Text.PlainText
                                                 color: Theme.colorSubText
                                                 font.pixelSize: Theme.fontSizeContent
                                                 verticalAlignment: Text.AlignVCenter
@@ -704,6 +735,7 @@ Loader {
                                                 width: modeHeader.width*0.12
                                                 height: 24
                                                 text: modelData.codec
+                                                textFormat: Text.PlainText
                                                 color: Theme.colorSubText
                                                 font.pixelSize: Theme.fontSizeContent
                                                 verticalAlignment: Text.AlignVCenter
@@ -720,4 +752,6 @@ Loader {
             }
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 }
