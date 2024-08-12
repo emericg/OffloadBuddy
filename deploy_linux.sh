@@ -94,8 +94,8 @@ export QML_SOURCES_PATHS="$(pwd)/qml/"
 export EXTRA_QT_PLUGINS="multimedia;svg;"
 
 # Copy geoservices plugins manually
-mkdir -p appdir/$USRDIR/plugins/geoservices/;
-cp $QTDIR/plugins/geoservices/*.so appdir/$USRDIR/plugins/geoservices/;
+mkdir -p appdir/$USRDIR/plugins/geoservices/
+cp $QTDIR/plugins/geoservices/*.so appdir/$USRDIR/plugins/geoservices/
 
 ## PACKAGE (AppImage) ##########################################################
 
