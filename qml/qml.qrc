@@ -34,8 +34,6 @@
         <file alias="DataBarStorage.qml">components/DataBarStorage.qml</file>
         <file alias="DataBarStorageStats.qml">components/DataBarStorageStats.qml</file>
         <file alias="FileWarning.qml">components/FileWarning.qml</file>
-        <file alias="FileInputArea.qml">components/FileInputArea.qml</file>
-        <file alias="FolderInputArea.qml">components/FolderInputArea.qml</file>
         <file alias="GridHighlight.qml">components/GridHighlight.qml</file>
         <file alias="HeaderShadow.qml">components/HeaderShadow.qml</file>
         <file alias="HeaderSeparator.qml">components/HeaderSeparator.qml</file>

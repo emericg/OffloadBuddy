@@ -148,6 +148,7 @@ Popup {
 
                 width: 40
                 height: 40
+                visible: directory.available
                 colorBackground: Theme.colorForeground
                 source: "qrc:/assets/icons/material-symbols/folder_open.svg"
 
