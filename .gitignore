@@ -1,8 +1,11 @@
 # Binaries and build artifacts
+appdir/*
 build/*
 bin/*
-contribs/*
-appdir/*
+contribs/build/*
+contribs/deploy/*
+contribs/env/*
+contribs/src/*
 
 # QtCreator temporary project files
 OffloadBuddy.config

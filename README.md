@@ -70,7 +70,7 @@ Optional dependencies:
 - libusb and libmtp  
 - libexif  
 - ffmpeg (4+)  
-- MiniVideo (0.14+)  
+- MiniVideo (0.15+)  
 
 Build dependencies:
 - python 3  

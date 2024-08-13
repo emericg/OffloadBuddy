@@ -25,22 +25,24 @@
 #include "FirmwareManager.h"
 #include "JobManager.h"
 #include "MediaLibrary.h"
+#include "MediaThumbnailer.h"
 
 #include "ShotUtils.h"
 #include "ItemImage.h"
-#include "MediaThumbnailer.h"
 
 #include "utils_app.h"
 #include "utils_screen.h"
 #include "utils_sysinfo.h"
 #include "utils_language.h"
+#if defined(Q_OS_MACOS)
 #include "utils_os_macos_dock.h"
-
-#include <SingleApplication>
+#endif
 
 #ifdef ENABLE_MINIVIDEO
-#include <minivideo.h>
+#include <minivideo/minivideo.h>
 #endif
+
+#include <SingleApplication>
 
 #include <QtGlobal>
 #include <QLibraryInfo>

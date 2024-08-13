@@ -23,7 +23,7 @@
 #include <gst/gst.h>
 #include <gst/app/gstappsink.h>
 
-#include "minivideo_fourcc.h"
+#include <minivideo/minivideo_fourcc.h>
 
 #include <QDebug>
 

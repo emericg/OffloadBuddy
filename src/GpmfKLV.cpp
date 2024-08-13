@@ -23,7 +23,7 @@
 #include "GpmfBuffer.h"
 #include "GpmfTags.h"
 
-#include "minivideo_fourcc.h"
+#include <minivideo/minivideo_fourcc.h>
 
 #include <iostream>
 

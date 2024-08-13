@@ -20,7 +20,7 @@
 
 #include "ThumbnailerBackend_minivideo.h"
 
-#include "minivideo.h"
+#include <minivideo/minivideo.h>
 
 #include <QImageReader>
 #include <QImage>

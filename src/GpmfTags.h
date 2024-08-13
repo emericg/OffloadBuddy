@@ -23,7 +23,7 @@
 #define GPMF_TAGS_H
 /* ************************************************************************** */
 
-#include "minivideo_fourcc.h"
+#include <minivideo/minivideo_fourcc.h>
 
 /*!
  * \brief GPMF metadata tags

@@ -39,7 +39,7 @@
 #endif
 
 #ifdef ENABLE_MINIVIDEO
-#include <minivideo.h>
+#include <minivideo/minivideo.h>
 #include "GpmfKLV.h"
 #include "GpmfBuffer.h"
 #endif
