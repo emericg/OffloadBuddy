@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 
-import ThemeEngine
+import ComponentLibrary
 
 Loader {
     id: screenAbout
@@ -153,7 +153,7 @@ Loader {
                                 height: 40
 
                                 text: qsTr("Website")
-                                source: "qrc:/assets/icons/material-symbols/link.svg"
+                                source: "qrc:/IconLibrary/material-symbols/link.svg"
 
                                 onClicked: Qt.openUrlExternally("https://emeric.io/OffloadBuddy")
                             }
@@ -163,7 +163,7 @@ Loader {
                                 height: 40
 
                                 text: qsTr("Discussions")
-                                source: "qrc:/assets/icons/material-icons/duotone/question_answer.svg"
+                                source: "qrc:/IconLibrary/material-icons/duotone/question_answer.svg"
 
                                 onClicked: Qt.openUrlExternally("https://www.github.com/emericg/OffloadBuddy/discussions")
                             }
@@ -173,7 +173,7 @@ Loader {
                                 height: 40
 
                                 text: qsTr("Bug report")
-                                source: "qrc:/assets/icons/material-symbols/bug_report.svg"
+                                source: "qrc:/IconLibrary/material-symbols/bug_report.svg"
 
                                 onClicked: Qt.openUrlExternally("https://www.github.com/emericg/OffloadBuddy/issues")
                             }
@@ -238,7 +238,7 @@ Loader {
                         }
                         RoundButtonSunken {
                             anchors.verticalCenter: parent.verticalCenter
-                            source: "qrc:/assets/icons/material-symbols/link.svg"
+                            source: "qrc:/IconLibrary/material-symbols/link.svg"
                             onClicked: Qt.openUrlExternally("https://www.qt.io")
                         }
                         ItemLicenseBadge {
@@ -261,7 +261,7 @@ Loader {
                         }
                         RoundButtonSunken {
                             anchors.verticalCenter: parent.verticalCenter
-                            source: "qrc:/assets/icons/material-symbols/link.svg"
+                            source: "qrc:/IconLibrary/material-symbols/link.svg"
                             onClicked: Qt.openUrlExternally("https://www.ffmpeg.org")
                         }
                         ItemLicenseBadge {
@@ -284,7 +284,7 @@ Loader {
                         }
                         RoundButtonSunken {
                             anchors.verticalCenter: parent.verticalCenter
-                            source: "qrc:/assets/icons/material-symbols/link.svg"
+                            source: "qrc:/IconLibrary/material-symbols/link.svg"
                             onClicked: Qt.openUrlExternally("https://github.com/emericg/MiniVideo")
                         }
                         ItemLicenseBadge {
@@ -307,7 +307,7 @@ Loader {
                         }
                         RoundButtonSunken {
                             anchors.verticalCenter: parent.verticalCenter
-                            source: "qrc:/assets/icons/material-symbols/link.svg"
+                            source: "qrc:/IconLibrary/material-symbols/link.svg"
                             onClicked: Qt.openUrlExternally("https://github.com/libexif")
                         }
                         ItemLicenseBadge {
@@ -330,7 +330,7 @@ Loader {
                         }
                         RoundButtonSunken {
                             anchors.verticalCenter: parent.verticalCenter
-                            source: "qrc:/assets/icons/material-symbols/link.svg"
+                            source: "qrc:/IconLibrary/material-symbols/link.svg"
                             onClicked: Qt.openUrlExternally("https://github.com/libmtp")
                         }
                         ItemLicenseBadge {
@@ -353,7 +353,7 @@ Loader {
                         }
                         RoundButtonSunken {
                             anchors.verticalCenter: parent.verticalCenter
-                            source: "qrc:/assets/icons/material-symbols/link.svg"
+                            source: "qrc:/IconLibrary/material-symbols/link.svg"
                             onClicked: Qt.openUrlExternally("https://github.com/richgel999/miniz/")
                         }
                         ItemLicenseBadge {
@@ -376,7 +376,7 @@ Loader {
                         }
                         RoundButtonSunken {
                             anchors.verticalCenter: parent.verticalCenter
-                            source: "qrc:/assets/icons/material-symbols/link.svg"
+                            source: "qrc:/IconLibrary/material-symbols/link.svg"
                             onClicked: Qt.openUrlExternally("https://github.com/itay-grudev/SingleApplication/")
                         }
                         ItemLicenseBadge {
@@ -399,7 +399,7 @@ Loader {
                         }
                         RoundButtonSunken {
                             anchors.verticalCenter: parent.verticalCenter
-                            source: "qrc:/assets/icons/material-symbols/link.svg"
+                            source: "qrc:/IconLibrary/material-symbols/link.svg"
                             onClicked: Qt.openUrlExternally("https://material.io/tools/icons")
                         }
                         ItemLicenseBadge {

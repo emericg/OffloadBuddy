@@ -1,9 +1,8 @@
 import QtQuick
 import QtQuick.Controls
 
-import ThemeEngine
-import JobUtils 1.0
-import "qrc:/utils/UtilsString.js" as UtilsString
+import JobUtils
+import ComponentLibrary
 
 Rectangle {
     id: itemJob
@@ -56,19 +55,19 @@ Rectangle {
 
                     source: {
                         if (job.type === JobUtils.JOB_ENCODE || job.type === JobUtils.JOB_CLIP)
-                            return "qrc:/assets/icons/material-symbols/memory.svg"
+                            return "qrc:/IconLibrary/material-symbols/memory.svg"
                         else if (job.type === JobUtils.JOB_OFFLOAD || job.type === JobUtils.JOB_MOVE)
-                            return "qrc:/assets/icons/material-icons/duotone/save_alt.svg"
+                            return "qrc:/IconLibrary/material-icons/duotone/save_alt.svg"
                         else if (job.type === JobUtils.JOB_MERGE)
-                            return "qrc:/assets/icons/material-symbols/merge_type.svg"
+                            return "qrc:/IconLibrary/material-symbols/merge_type.svg"
                         else if (job.type === JobUtils.JOB_DELETE || job.type === JobUtils.JOB_FORMAT)
-                            return "qrc:/assets/icons/material-symbols/delete.svg"
+                            return "qrc:/IconLibrary/material-symbols/delete.svg"
                         else if (job.type === JobUtils.JOB_TELEMETRY)
-                            return "qrc:/assets/icons/material-symbols/insert_chart.svg"
+                            return "qrc:/IconLibrary/material-symbols/insert_chart.svg"
                         else if (job.type === JobUtils.JOB_FIRMWARE_UPDATE)
-                            return "qrc:/assets/icons/material-symbols/settings_applications.svg"
+                            return "qrc:/IconLibrary/material-symbols/settings_applications.svg"
                         else
-                            return "qrc:/assets/icons/material-symbols/autorenew.svg"
+                            return "qrc:/IconLibrary/material-symbols/autorenew.svg"
                     }
                     color: Theme.colorIcon
 
@@ -182,7 +181,7 @@ Rectangle {
 
                 visible: (job.destinationFolder.length && job.state >= JobUtils.JOB_STATE_WORKING)
                 highlightMode: "color"
-                source: "qrc:/assets/icons/material-symbols/folder_open.svg"
+                source: "qrc:/IconLibrary/material-symbols/folder_open.svg"
                 onClicked: job.openDestinationFolder()
             }
 
@@ -194,7 +193,7 @@ Rectangle {
 
                 visible: (job.destinationFile.length && job.state === JobUtils.JOB_STATE_DONE)
                 highlightMode: "color"
-                source: "qrc:/assets/icons/material-icons/duotone/launch.svg"
+                source: "qrc:/IconLibrary/material-icons/duotone/launch.svg"
                 onClicked: job.openDestinationFile()
             }
 
@@ -209,8 +208,8 @@ Rectangle {
                           (job.state === JobUtils.JOB_STATE_WORKING || job.state === JobUtils.JOB_STATE_PAUSED)) // running
 
                 highlightMode: "color"
-                source: job.state === JobUtils.JOB_STATE_WORKING ? "qrc:/assets/icons/material-symbols/media/pause_circle.svg"
-                                                                 : "qrc:/assets/icons/material-symbols/media/play_circle.svg"
+                source: job.state === JobUtils.JOB_STATE_WORKING ? "qrc:/IconLibrary/material-symbols/media/pause_circle.svg"
+                                                                 : "qrc:/IconLibrary/material-symbols/media/play_circle.svg"
                 onClicked: jobManager.playPauseJob(job.id)
             }
 
@@ -225,7 +224,7 @@ Rectangle {
                           (job.state === JobUtils.JOB_STATE_WORKING || job.state === JobUtils.JOB_STATE_PAUSED)) // running
 
                 highlightMode: "color"
-                source: "qrc:/assets/icons/material-symbols/media/stop_circle.svg"
+                source: "qrc:/IconLibrary/material-symbols/media/stop_circle.svg"
                 onClicked: jobManager.stopJob(job.id)
             }
 
@@ -262,17 +261,17 @@ Rectangle {
                 color: Theme.colorIcon
                 source: {
                     if (job.state === JobUtils.JOB_STATE_QUEUED) {
-                        return "qrc:/assets/icons/material-icons/duotone/schedule.svg"
+                        return "qrc:/IconLibrary/material-icons/duotone/schedule.svg"
                     } else if (job.state === JobUtils.JOB_STATE_WORKING) {
-                        return "qrc:/assets/icons/material-symbols/autorenew.svg"
+                        return "qrc:/IconLibrary/material-symbols/autorenew.svg"
                     } else if (job.state === JobUtils.JOB_STATE_PAUSED) {
-                        return "qrc:/assets/icons/material-symbols/media/pause-fill.svg"
+                        return "qrc:/IconLibrary/material-symbols/media/pause-fill.svg"
                     } else if (job.state === JobUtils.JOB_STATE_DONE) {
-                        return "qrc:/assets/icons/material-symbols/check_circle-fill.svg"
+                        return "qrc:/IconLibrary/material-symbols/check_circle-fill.svg"
                     } else if (job.state === JobUtils.JOB_STATE_ERRORED) {
-                        return "qrc:/assets/icons/material-symbols/warning-fill.svg"
+                        return "qrc:/IconLibrary/material-symbols/warning-fill.svg"
                     } else if (job.state === JobUtils.JOB_STATE_ABORTED) {
-                        return "qrc:/assets/icons/material-symbols/cancel_circle-fill.svg"
+                        return "qrc:/IconLibrary/material-symbols/cancel_circle-fill.svg"
                     }
                 }
 

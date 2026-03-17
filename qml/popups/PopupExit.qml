@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Effects
 import QtQuick.Controls
 
-import ThemeEngine
+import ComponentLibrary
 
 Popup {
     id: popupExit
@@ -68,7 +68,7 @@ Popup {
         layer.effect: MultiEffect { // shadow
             autoPaddingEnabled: true
             shadowEnabled: true
-            shadowColor: ThemeEngine.isLight ? "#aa000000" : "#aaffffff"
+            shadowColor: Theme.isLight ? "#aa000000" : "#aaffffff"
         }
     }
 
@@ -137,7 +137,7 @@ Popup {
 
                 ButtonSolid {
                     text: qsTr("Exit")
-                    source: "qrc:/assets/icons/material-icons/duotone/exit_to_app.svg"
+                    source: "qrc:/IconLibrary/material-icons/duotone/exit_to_app.svg"
                     color: Theme.colorWarning
 
                     onClicked: {

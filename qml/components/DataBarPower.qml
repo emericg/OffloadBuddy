@@ -1,9 +1,7 @@
 import QtQuick
 import QtQuick.Effects
 
-import ThemeEngine
-import "qrc:/utils/UtilsNumber.js" as UtilsNumber
-import "qrc:/utils/UtilsString.js" as UtilsString
+import ComponentLibrary
 
 Item {
     id: dataBarPower

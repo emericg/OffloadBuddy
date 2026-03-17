@@ -1,8 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 
-import ThemeEngine
-import "qrc:/utils/UtilsString.js" as UtilsString
+import ComponentLibrary
 
 Loader {
     id: screenJobs
@@ -68,7 +67,7 @@ Loader {
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: qsTr("Clear finished jobs")
-                source: "qrc:/assets/icons/material-symbols/backspace-fill.svg"
+                source: "qrc:/IconLibrary/material-symbols/backspace-fill.svg"
                 layoutDirection: Qt.RightToLeft
 
                 visible: jobManager.trackedJobCount

@@ -2,9 +2,8 @@ import QtQuick
 import QtQuick.Effects
 import QtQuick.Controls
 
-import ThemeEngine
-import ShotUtils 1.0
-import "qrc:/utils/UtilsString.js" as UtilsString
+import ShotUtils
+import ComponentLibrary
 
 Item {
     id: dataBarStorageStats

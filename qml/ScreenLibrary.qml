@@ -1,9 +1,6 @@
 import QtQuick
 import QtQuick.Controls
 
-import ThemeEngine
-import "qrc:/utils/UtilsString.js" as UtilsString
-
 Item {
     id: screenLibrary
     width: 1280

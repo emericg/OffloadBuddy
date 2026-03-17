@@ -3,7 +3,7 @@ import QtQuick.Controls
 import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
-import ThemeEngine
+import ComponentLibrary
 
 T.ComboBox {
     id: control
@@ -70,7 +70,7 @@ T.ComboBox {
         height: 8
 
         Connections {
-            target: ThemeEngine
+            target: Theme
             function onCurrentThemeChanged() { indicator.requestPaint() }
         }
 

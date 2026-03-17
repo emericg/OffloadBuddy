@@ -2,11 +2,9 @@ import QtQuick
 import QtQuick.Effects
 import QtQuick.Controls
 
-import ThemeEngine
 import StorageUtils
 
-import "qrc:/utils/UtilsString.js" as UtilsString
-import "qrc:/utils/UtilsPath.js" as UtilsPath
+import ComponentLibrary
 
 Popup {
     id: popupFirmware
@@ -51,7 +49,7 @@ Popup {
 
     Overlay.modal: Rectangle {
         color: "#000"
-        opacity: ThemeEngine.isLight ? 0.333 : 0.666
+        opacity: Theme.isLight ? 0.333 : 0.666
     }
 
     background: Rectangle {
@@ -100,7 +98,7 @@ Popup {
         layer.effect: MultiEffect { // shadow
             autoPaddingEnabled: true
             shadowEnabled: true
-            shadowColor: ThemeEngine.isLight ? "#aa000000" : "#aaffffff"
+            shadowColor: Theme.isLight ? "#aa000000" : "#aaffffff"
         }
     }
 
@@ -284,7 +282,7 @@ Popup {
 
                 ButtonSolid {
                     text: qsTr("Update")
-                    source: "qrc:/assets/icons/material-symbols/archive.svg"
+                    source: "qrc:/IconLibrary/material-symbols/archive.svg"
                     color: Theme.colorPrimary
 
                     onClicked: {

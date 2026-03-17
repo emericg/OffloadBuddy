@@ -2,9 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Dialogs
 
-import ThemeEngine
-import "qrc:/utils/UtilsString.js" as UtilsString
-import "qrc:/utils/UtilsPath.js" as UtilsPath
+import ComponentLibrary
 
 Loader {
     id: screenSettings
@@ -379,7 +377,6 @@ Loader {
 
                         text: qsTr("Move files to trash instead of deleting them")
 
-                        visible: jobManager.hasMoveToTrash()
                         checked: settingsManager.moveToTrash
                         onClicked: settingsManager.moveToTrash = checked
                     }
@@ -439,7 +436,7 @@ Loader {
                             RoundButtonSunken { // buttonNew
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                source: "qrc:/assets/icons/material-symbols/create_new_folder.svg"
+                                source: "qrc:/IconLibrary/material-symbols/create_new_folder.svg"
                                 tooltipText: qsTr("Add a new media directory")
                                 tooltipPosition: "right"
                                 onClicked: {
@@ -532,7 +529,7 @@ Loader {
                                     fileDialogLoader.active = true
                                     fileDialogLoader.item.open()
                                 }
-                                source: "qrc:/assets/icons/material-symbols/add.svg"
+                                source: "qrc:/IconLibrary/material-symbols/add.svg"
                             }
                         }
                     }

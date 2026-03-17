@@ -20,11 +20,7 @@
  */
 
 #include "Shot.h"
-#include "EGM96.h"
-#include "GpmfTags.h"
-#include "utils_maths.h"
-
-#include <cmath>
+#include <EGM96>
 
 #include <QDir>
 #include <QUrl>

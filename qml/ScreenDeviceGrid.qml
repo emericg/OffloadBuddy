@@ -2,13 +2,12 @@ import QtQuick
 import QtQuick.Effects
 import QtQuick.Controls
 
-import ThemeEngine
+
+import OffloadBuddy
 import DeviceUtils
 import StorageUtils
 import SettingsUtils
-
-import "qrc:/utils/UtilsString.js" as UtilsString
-import "qrc:/js/UtilsDeviceCamera.js" as UtilsDevice
+import ComponentLibrary
 
 Item {
     id: mediaGrid
@@ -275,7 +274,7 @@ Item {
                     width: 28; height: 28;
                     visible: true
 
-                    source: "qrc:/assets/icons/material-symbols/memory.svg"
+                    source: "qrc:/IconLibrary/material-symbols/memory.svg"
                     sourceSize: 24
                     onClicked: screenDeviceInfos.loadScreen()
                 }
@@ -285,7 +284,7 @@ Item {
                     width: 28; height: 28;
                     visible: currentDevice && currentDevice.readOnly
 
-                    source: "qrc:/assets/icons/material-symbols/lock.svg"
+                    source: "qrc:/IconLibrary/material-symbols/lock.svg"
                     sourceSize: 24
                     colorIcon: Theme.colorWarning
                     tooltipText: "Read Only storage"
@@ -421,7 +420,7 @@ Item {
 
                     rotation: settingsManager.deviceSortOrder ? 0 : 180
                     colorBackground: Theme.colorComponent
-                    source: "qrc:/assets/icons/material-symbols/filter_list.svg"
+                    source: "qrc:/IconLibrary/material-symbols/filter_list.svg"
 
                     onClicked: {
                         if (settingsManager.deviceSortOrder === Qt.AscendingOrder) {
@@ -510,10 +509,10 @@ Item {
                 height: 32
 
                 model: ListModel {
-                    ListElement { idx: 1; txt: ""; src: "qrc:/assets/icons/material-symbols/media/image.svg"; sz: 18; }
-                    ListElement { idx: 2; txt: ""; src: "qrc:/assets/icons/material-symbols/media/image.svg"; sz: 22; }
-                    ListElement { idx: 3; txt: ""; src: "qrc:/assets/icons/material-symbols/media/image.svg"; sz: 26; }
-                    ListElement { idx: 4; txt: ""; src: "qrc:/assets/icons/material-symbols/media/image.svg"; sz: 30; }
+                    ListElement { idx: 1; txt: ""; src: "qrc:/IconLibrary/material-symbols/media/image.svg"; sz: 18; }
+                    ListElement { idx: 2; txt: ""; src: "qrc:/IconLibrary/material-symbols/media/image.svg"; sz: 22; }
+                    ListElement { idx: 3; txt: ""; src: "qrc:/IconLibrary/material-symbols/media/image.svg"; sz: 26; }
+                    ListElement { idx: 4; txt: ""; src: "qrc:/IconLibrary/material-symbols/media/image.svg"; sz: 30; }
                 }
                 currentSelection: {
                         if (shotsView.cellSizeTarget == 512) return 4
@@ -649,7 +648,7 @@ Item {
 
         ////////
 
-        ActionMenu {
+        ActionMenu_floating {
             id: actionMenu
             z: 7
             onMenuSelected: (index) => {

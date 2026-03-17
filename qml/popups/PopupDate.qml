@@ -2,9 +2,7 @@ import QtQuick
 import QtQuick.Effects
 import QtQuick.Controls
 
-import ThemeEngine
-
-import "qrc:/utils/UtilsNumber.js" as UtilsNumber
+import ComponentLibrary
 
 Popup {
     id: popupDate
@@ -68,7 +66,7 @@ Popup {
 
     Overlay.modal: Rectangle {
         color: "#000"
-        opacity: ThemeEngine.isLight ? 0.333 : 0.666
+        opacity: Theme.isLight ? 0.333 : 0.666
     }
 
     background: Rectangle {
@@ -117,7 +115,7 @@ Popup {
         layer.effect: MultiEffect { // shadow
             autoPaddingEnabled: true
             shadowEnabled: true
-            shadowColor: ThemeEngine.isLight ? "#aa000000" : "#aaffffff"
+            shadowColor: Theme.isLight ? "#aa000000" : "#aaffffff"
         }
     }
 
@@ -201,7 +199,7 @@ Popup {
                                 anchors.centerIn: parent
 
                                 visible: (qdateFile < qdateFirst || qdateFile > qdateToday)
-                                source: "qrc:/assets/icons/material-symbols/warning.svg"
+                                source: "qrc:/IconLibrary/material-symbols/warning.svg"
                                 color: Theme.colorWarning
                                 fillMode: Image.PreserveAspectFit
                             }
@@ -212,7 +210,7 @@ Popup {
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 highlightMode: "color"
-                                source: "qrc:/assets/icons/material-symbols/check.svg"
+                                source: "qrc:/IconLibrary/material-symbols/check.svg"
 
                                 visible: (qdateFile > qdateFirst && qdateFile < qdateToday)
                                 enabled: visible
@@ -264,7 +262,7 @@ Popup {
                                 anchors.centerIn: parent
 
                                 visible: (qdateMetadata < qdateFirst || qdateMetadata > qdateToday)
-                                source: "qrc:/assets/icons/material-symbols/warning.svg"
+                                source: "qrc:/IconLibrary/material-symbols/warning.svg"
                                 color: Theme.colorWarning
                                 fillMode: Image.PreserveAspectFit
                             }
@@ -276,7 +274,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             highlightMode: "color"
-                            source: "qrc:/assets/icons/material-symbols/check.svg"
+                            source: "qrc:/IconLibrary/material-symbols/check.svg"
 
                             visible: (qdateMetadata > qdateFirst && qdateMetadata < qdateToday)
                             enabled: visible
@@ -327,7 +325,7 @@ Popup {
                                 anchors.centerIn: parent
 
                                 visible: (qdateGps < qdateFirst || qdateGps > qdateToday)
-                                source: "qrc:/assets/icons/material-symbols/warning.svg"
+                                source: "qrc:/IconLibrary/material-symbols/warning.svg"
                                 color: Theme.colorWarning
                                 fillMode: Image.PreserveAspectFit
                             }
@@ -339,7 +337,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             highlightMode: "color"
-                            source: "qrc:/assets/icons/material-symbols/check.svg"
+                            source: "qrc:/IconLibrary/material-symbols/check.svg"
 
                             visible: (qdateGps > qdateFirst && qdateGps < qdateToday)
                             enabled: visible
@@ -390,7 +388,7 @@ Popup {
                                 anchors.centerIn: parent
 
                                 visible: (qdateUser < qdateFirst || qdateUser > qdateToday)
-                                source: "qrc:/assets/icons/material-symbols/warning.svg"
+                                source: "qrc:/IconLibrary/material-symbols/warning.svg"
                                 color: Theme.colorWarning
                                 fillMode: Image.PreserveAspectFit
                             }
@@ -402,7 +400,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
 
                             highlightMode: "color"
-                            source: "qrc:/assets/icons/material-symbols/check.svg"
+                            source: "qrc:/IconLibrary/material-symbols/check.svg"
 
                             visible: (qdateUser > qdateFirst && qdateUser < qdateToday)
                             enabled: visible
@@ -597,7 +595,7 @@ Popup {
                     anchors.bottom: parent.bottom
 
                     text: qsTr("Change")
-                    source: "qrc:/assets/icons/material-icons/duotone/schedule.svg"
+                    source: "qrc:/IconLibrary/material-icons/duotone/schedule.svg"
                     color: Theme.colorPrimary
                     onClicked: {
                         //popupDate.close()

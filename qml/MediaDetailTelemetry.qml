@@ -6,9 +6,8 @@ import QtLocation
 import QtPositioning
 import Qt.labs.animation
 
-import ThemeEngine
-
-import "qrc:/utils/UtilsString.js" as UtilsString
+import OffloadBuddy
+import ComponentLibrary
 
 Item {
     id: contentTelemetry
@@ -126,7 +125,7 @@ Item {
             anchors.centerIn: parent
 
             color: Theme.colorIcon
-            source: "qrc:/assets/icons/material-icons/outlined/hourglass_empty.svg"
+            source: "qrc:/IconLibrary/material-icons/outlined/hourglass_empty.svg"
         }
 
         Loader {
@@ -167,7 +166,6 @@ Item {
 
             //bearing: 0.0
             //tilt: 0.0
-            //zoomLevel: 12
             //fieldOfView: 0
             //center: QtPositioning.coordinate(45.5, 6)
 
@@ -324,8 +322,8 @@ Item {
                     width: mapArea.fullscreen ? 48 : 40
                     height: mapArea.fullscreen ? 48 : 40
 
-                    source: mapArea.fullscreen ? "qrc:/assets/icons/material-symbols/fullscreen_exit.svg"
-                                               : "qrc:/assets/icons/material-symbols/fullscreen.svg"
+                    source: mapArea.fullscreen ? "qrc:/IconLibrary/material-symbols/fullscreen_exit.svg"
+                                               : "qrc:/IconLibrary/material-symbols/fullscreen.svg"
                     onClicked: mapArea.fullscreen = !mapArea.fullscreen
                 }
 
@@ -334,7 +332,7 @@ Item {
                     width: mapArea.fullscreen ? 48 : 40
                     height: mapArea.fullscreen ? 48 : 40
 
-                    source: "qrc:/assets/icons/material-symbols/open_with.svg"
+                    source: "qrc:/IconLibrary/material-symbols/open_with.svg"
                     highlighted: map.moove
                     onClicked: map.moove = !map.moove
                 }

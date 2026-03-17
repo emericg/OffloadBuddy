@@ -1,5 +1,6 @@
 import QtQuick
-import ThemeEngine
+
+import ComponentLibrary
 
 Rectangle { // fake shadow
     anchors.top: parent.bottom

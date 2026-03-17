@@ -2,14 +2,9 @@ import QtQuick
 import QtQuick.Effects
 import QtQuick.Controls
 
-import ThemeEngine
 import StorageUtils
 import ShotUtils
-
-import "qrc:/utils/UtilsMedia.js" as UtilsMedia
-import "qrc:/utils/UtilsNumber.js" as UtilsNumber
-import "qrc:/utils/UtilsString.js" as UtilsString
-import "qrc:/utils/UtilsPath.js" as UtilsPath
+import ComponentLibrary
 
 Popup {
     id: popupEncoding
@@ -323,7 +318,7 @@ Popup {
 
     Overlay.modal: Rectangle {
         color: "#000"
-        opacity: ThemeEngine.isLight ? 0.333 : 0.666
+        opacity: Theme.isLight ? 0.333 : 0.666
     }
 
     background: Rectangle {
@@ -385,7 +380,7 @@ Popup {
         layer.effect: MultiEffect { // shadow
             autoPaddingEnabled: true
             shadowEnabled: true
-            shadowColor: ThemeEngine.isLight ? "#aa000000" : "#aaffffff"
+            shadowColor: Theme.isLight ? "#aa000000" : "#aaffffff"
         }
     }
 
@@ -450,7 +445,7 @@ Popup {
                 anchors.rightMargin: Theme.componentMargin
                 anchors.verticalCenter: parent.verticalCenter
 
-                source: "qrc:/assets/icons/material-symbols/chevron_right.svg"
+                source: "qrc:/IconLibrary/material-symbols/chevron_right.svg"
                 rotation: recapOpened ? -90 : 90
                 onClicked: recapOpened = !recapOpened
             }
@@ -563,7 +558,7 @@ Popup {
                                 anchors.verticalCenter: parent.verticalCenter
                                 text: "AV1"
                                 enabled: !cbCOPY.checked
-                                visible: false
+                                visible: true
                                 onClicked: changeCodec()
                             }
                             RadioButtonThemed {
@@ -1549,7 +1544,7 @@ Popup {
 
                 ButtonSolid {
                     text: qsTr("Encode")
-                    source: "qrc:/assets/icons/material-symbols/memory.svg"
+                    source: "qrc:/IconLibrary/material-symbols/memory.svg"
 
                     enabled: (encodingMode === "batch" || fileInput.isValid)
 

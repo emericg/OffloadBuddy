@@ -20,10 +20,11 @@
  */
 
 #include "Shot.h"
-#include "EGM96.h"
 #include "GpmfTags.h"
 #include "GeoCoding.h"
 #include "utils_maths.h"
+
+#include <EGM96>
 
 #include <cmath>
 
@@ -35,12 +36,16 @@
 #include <QImageReader>
 #include <QDesktopServices>
 #include <QDebug>
+
 #ifdef ENABLE_QTLOCATION
 #include <QGeoCodeReply>
 #include <QGeoLocation>
 #include <QGeoAddress>
 #endif
-#include <QtCharts>
+
+#include <QtCharts/QLineSeries>
+#include <QtCharts/QDateTimeAxis>
+#include <QtCharts/QXYSeries>
 
 /* ************************************************************************** */
 

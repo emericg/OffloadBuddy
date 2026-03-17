@@ -2,12 +2,8 @@ import QtQuick
 import QtQuick.Controls
 import QtMultimedia
 
-import ThemeEngine
 import MediaUtils
-
-import "qrc:/utils/UtilsMedia.js" as UtilsMedia
-import "qrc:/utils/UtilsNumber.js" as UtilsNumber
-import "qrc:/utils/UtilsString.js" as UtilsString
+import ComponentLibrary
 
 Item {
     id: mediaArea
@@ -435,7 +431,7 @@ Item {
             anchors.centerIn: parent
 
             color: Theme.colorIcon
-            source: "qrc:/assets/icons/material-icons/outlined/hourglass_empty.svg"
+            source: "qrc:/IconLibrary/material-icons/outlined/hourglass_empty.svg"
         }
     }
 
@@ -507,12 +503,12 @@ Item {
             //console.log("onPlaybackStateChanged() " + videoPlayer.playbackState)
 
             if (videoPlayer.playbackState === MediaPlayer.PlayingState) {
-                buttonPlay.source = "qrc:/assets/icons/material-symbols/media/pause-fill.svg"
+                buttonPlay.source = "qrc:/IconLibrary/material-symbols/media/pause-fill.svg"
                 savePosition()
 
                 //utilsScreen.keepScreenOn(true, "OffloadBuddy", qsTr("Playing video"))
             } else if (videoPlayer.playbackState === MediaPlayer.PausedState) {
-                buttonPlay.source = "qrc:/assets/icons/material-symbols/media/play_arrow-fill.svg"
+                buttonPlay.source = "qrc:/IconLibrary/material-symbols/media/play_arrow-fill.svg"
                 savePosition()
 
                 //utilsScreen.keepScreenOn(false)
@@ -662,7 +658,7 @@ Item {
                 highlightMode: "color"
 
                 visible: UtilsMedia.orientationToTransform_qt(shot.userRotation, shot.userHFlipped, shot.userVFlipped) !== shot.transformation
-                source: "qrc:/assets/icons/material-symbols/save.svg"
+                source: "qrc:/IconLibrary/material-symbols/save.svg"
                 //onClicked: shot.saveRotation(angle)
             }
             RoundButtonIcon {
@@ -673,7 +669,7 @@ Item {
                 highlightMode: "color"
 
                 visible: UtilsMedia.orientationToTransform_qt(shot.userRotation, shot.userHFlipped, shot.userVFlipped) !== shot.transformation
-                source: "qrc:/assets/icons/material-symbols/close.svg"
+                source: "qrc:/IconLibrary/material-symbols/close.svg"
                 onClicked: resetTransformation()
             }
             RoundButtonIcon {
@@ -683,7 +679,7 @@ Item {
                 backgroundColor: "#222"
                 highlightMode: "color"
 
-                source: "qrc:/assets/icons/material-symbols/rotate_left.svg"
+                source: "qrc:/IconLibrary/material-symbols/rotate_left.svg"
                 onClicked: mediaArea.addRotation(-90)
             }
             RoundButtonIcon {
@@ -693,7 +689,7 @@ Item {
                 backgroundColor: "#222"
                 highlightMode: "color"
 
-                source: "qrc:/assets/icons/material-symbols/rotate_right.svg"
+                source: "qrc:/IconLibrary/material-symbols/rotate_right.svg"
                 onClicked: mediaArea.addRotation(+90)
             }
             RoundButtonIcon {
@@ -703,7 +699,7 @@ Item {
                 backgroundColor: "#222"
                 highlightMode: "color"
 
-                source: "qrc:/assets/icons/material-symbols/media/flip.svg"
+                source: "qrc:/IconLibrary/material-symbols/media/flip.svg"
                 onClicked: mediaArea.setTransformation("mirror")
             }
             RoundButtonIcon {
@@ -714,7 +710,7 @@ Item {
                 backgroundColor: "#222"
                 highlightMode: "color"
 
-                source: "qrc:/assets/icons/material-symbols/media/flip.svg"
+                source: "qrc:/IconLibrary/material-symbols/media/flip.svg"
                 onClicked: mediaArea.setTransformation("flip")
             }
         }
@@ -745,8 +741,8 @@ Item {
             IconSvg {
                 anchors.verticalCenter: parent.verticalCenter
                 width: 28; height: 28;
-                source: (timerTimelapse.running) ? "qrc:/assets/icons/material-symbols/media/pause-fill.svg"
-                                                 : "qrc:/assets/icons/material-symbols/media/play_arrow-fill.svg"
+                source: (timerTimelapse.running) ? "qrc:/IconLibrary/material-symbols/media/pause-fill.svg"
+                                                 : "qrc:/IconLibrary/material-symbols/media/play_arrow-fill.svg"
                 color: "white"
 
                 MouseArea {
@@ -1019,7 +1015,7 @@ Item {
                     highlightColor: Theme.colorPrimary
                     highlightMode: "color"
 
-                    source: "qrc:/assets/icons/material-symbols/media/play_arrow-fill.svg"
+                    source: "qrc:/IconLibrary/material-symbols/media/play_arrow-fill.svg"
                     onClicked: {
                         if (videoPlayer.isRunning) {
                             videoPlayer.pause()
@@ -1059,7 +1055,7 @@ Item {
                         highlightMode: "color"
                         highlighted: parent.isHovered
 
-                        source: (soundline.value === 0) ? "qrc:/assets/icons/material-symbols/media/volume_off.svg" : "qrc:/assets/icons/material-symbols/media/volume_up.svg"
+                        source: (soundline.value === 0) ? "qrc:/IconLibrary/material-symbols/media/volume_off.svg" : "qrc:/IconLibrary/material-symbols/media/volume_up.svg"
                         property real savedVolume: audioOutput.volume
                         onClicked: {
                             if (audioOutput.volume) {
@@ -1112,7 +1108,7 @@ Item {
                     highlightColor: Theme.colorPrimary
                     highlightMode: "color"
 
-                    source: "qrc:/assets/icons/material-symbols/content_cut.svg"
+                    source: "qrc:/IconLibrary/material-symbols/content_cut.svg"
                     onClicked: toggleTrim()
                 }
                 RoundButtonIcon {
@@ -1125,7 +1121,7 @@ Item {
                     highlightColor: Theme.colorPrimary
                     highlightMode: "color"
 
-                    source: "qrc:/assets/icons/material-icons/duotone/rotate_90_degrees_ccw.svg"
+                    source: "qrc:/IconLibrary/material-icons/duotone/rotate_90_degrees_ccw.svg"
                     onClicked: toggleTransform()
                 }
                 RoundButtonIcon {
@@ -1138,7 +1134,7 @@ Item {
                     highlightColor: Theme.colorPrimary
                     highlightMode: "color"
 
-                    source: "qrc:/assets/icons/material-symbols/media/crop.svg"
+                    source: "qrc:/IconLibrary/material-symbols/media/crop.svg"
                     onClicked: toggleCrop()
                 }
                 RoundButtonIcon {
@@ -1152,7 +1148,7 @@ Item {
                     highlightColor: Theme.colorPrimary
                     highlightMode: "color"
 
-                    source: "qrc:/assets/icons/material-icons/duotone/camera_alt.svg"
+                    source: "qrc:/IconLibrary/material-icons/duotone/camera_alt.svg"
                     onClicked: {
                         if (typeof shot === "undefined" || !shot) return
 
@@ -1213,8 +1209,8 @@ Item {
                     highlightColor: Theme.colorPrimary
                     highlightMode: "color"
 
-                    source: isFullScreen ? "qrc:/assets/icons/material-symbols/fullscreen_exit.svg"
-                                         : "qrc:/assets/icons/material-symbols/fullscreen.svg"
+                    source: isFullScreen ? "qrc:/IconLibrary/material-symbols/fullscreen_exit.svg"
+                                         : "qrc:/IconLibrary/material-symbols/fullscreen.svg"
                     onClicked: toggleFullScreen()
                 }
             }

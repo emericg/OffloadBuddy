@@ -2,11 +2,9 @@ import QtQuick
 import QtQuick.Effects
 import QtQuick.Controls
 
-import ThemeEngine
 import StorageUtils
 
-import "qrc:/utils/UtilsString.js" as UtilsString
-import "qrc:/utils/UtilsPath.js" as UtilsPath
+import ComponentLibrary
 
 Popup {
     id: popupMediaDirectory
@@ -30,7 +28,7 @@ Popup {
 
     Overlay.modal: Rectangle {
         color: "#000"
-        opacity: ThemeEngine.isLight ? 0.333 : 0.666
+        opacity: Theme.isLight ? 0.333 : 0.666
     }
 
     background: Rectangle {
@@ -91,7 +89,7 @@ Popup {
         layer.effect: MultiEffect { // shadow
             autoPaddingEnabled: true
             shadowEnabled: true
-            shadowColor: ThemeEngine.isLight ? "#aa000000" : "#aaffffff"
+            shadowColor: Theme.isLight ? "#aa000000" : "#aaffffff"
         }
     }
 
@@ -150,7 +148,7 @@ Popup {
                 height: 40
                 visible: directory.available
                 colorBackground: Theme.colorForeground
-                source: "qrc:/assets/icons/material-symbols/folder_open.svg"
+                source: "qrc:/IconLibrary/material-symbols/folder_open.svg"
 
                 onClicked: {
                     utilsApp.openWith(directory.directoryPath)
@@ -409,7 +407,7 @@ Popup {
 
                 ButtonSolid {
                     text: qsTr("OK")
-                    source: "qrc:/assets/icons/material-symbols/check.svg"
+                    source: "qrc:/IconLibrary/material-symbols/check.svg"
 
                     onClicked: popupMediaDirectory.close()
                 }

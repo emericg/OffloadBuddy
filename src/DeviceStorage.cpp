@@ -21,9 +21,6 @@
 
 #include "DeviceStorage.h"
 #include "StorageManager.h"
-#include "Shot.h"
-
-#include <limits>
 
 #include <QStandardPaths>
 #include <QStorageInfo>

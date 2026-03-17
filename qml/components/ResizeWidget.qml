@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 
-import ThemeEngine
+import ComponentLibrary
 import MediaUtils
 
 Item {
@@ -403,7 +403,7 @@ Item {
             iconColor: (shot.cropARlock) ? Theme.colorPrimary : "white"
 
             visible: resizeWidget.editing
-            source: "qrc:/assets/icons/material-symbols/lock.svg"
+            source: "qrc:/IconLibrary/material-symbols/lock.svg"
             onClicked: {
                 shot.cropARlock = !shot.cropARlock
             }
@@ -479,7 +479,7 @@ Item {
                 highlightMode: "color"
 
                 visible: resizeWidget.editing
-                source: "qrc:/assets/icons/material-symbols/close.svg"
+                source: "qrc:/IconLibrary/material-symbols/close.svg"
                 onClicked: resizeWidget.reset()
             }
             RoundButtonIcon {
@@ -490,7 +490,7 @@ Item {
                 highlightMode: "color"
 
                 visible: resizeWidget.editing
-                source: "qrc:/assets/icons/material-symbols/check.svg"
+                source: "qrc:/IconLibrary/material-symbols/check.svg"
                 onClicked: resizeWidget.editing = false
             }
         }

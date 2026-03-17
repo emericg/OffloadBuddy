@@ -2,11 +2,9 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
-import ThemeEngine
+import OffloadBuddy
 import DeviceUtils
-
-import "qrc:/utils/UtilsString.js" as UtilsString
-import "qrc:/js/UtilsDeviceCamera.js" as UtilsDevice
+import ComponentLibrary
 
 Loader {
     id: screenDeviceInfos
@@ -197,7 +195,7 @@ Loader {
                                 spacing: Theme.componentMargin
 
                                 IconSvg {
-                                    source: "qrc:/assets/icons/material-icons/duotone/camera_alt.svg"
+                                    source: "qrc:/IconLibrary/material-icons/duotone/camera_alt.svg"
                                     color: Theme.colorText
                                 }
 
@@ -328,8 +326,8 @@ Loader {
                                 }
                                 source: {
                                     if (currentDevice.firmwareState === DeviceUtils.FirmwareUpToDate)
-                                        return "qrc:/assets/icons/material-symbols/check.svg"
-                                    return "qrc:/assets/icons/material-symbols/archive.svg"
+                                        return "qrc:/IconLibrary/material-symbols/check.svg"
+                                    return "qrc:/IconLibrary/material-symbols/archive.svg"
                                 }
 
                                 onClicked: {
@@ -367,7 +365,7 @@ Loader {
                                 spacing: Theme.componentMargin
 
                                 IconSvg {
-                                    source: "qrc:/assets/icons/material-icons/duotone/sd_card.svg"
+                                    source: "qrc:/IconLibrary/material-icons/duotone/sd_card.svg"
                                     color: Theme.colorText
                                 }
 
@@ -451,7 +449,7 @@ Loader {
                                 spacing: Theme.componentMargin
 
                                 IconSvg {
-                                    source: "qrc:/assets/icons/material-icons/duotone/aspect_ratio.svg"
+                                    source: "qrc:/IconLibrary/material-icons/duotone/aspect_ratio.svg"
                                     color: Theme.colorText
                                 }
 

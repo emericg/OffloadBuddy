@@ -217,7 +217,7 @@ int main(int argc, char *argv[])
     tmb->registerQml(&engine);
 
     // Load the main view
-    engine.load(QUrl(QStringLiteral("qrc:/qml/Application.qml")));
+    engine.loadFromModule("OffloadBuddy", "Application");
     if (engine.rootObjects().isEmpty())
     {
         qWarning() << "Cannot init QmlApplicationEngine!";

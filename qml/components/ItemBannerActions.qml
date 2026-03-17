@@ -1,8 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 
-import ThemeEngine
-import "qrc:/utils/UtilsString.js" as UtilsString
+import ComponentLibrary
 
 Rectangle {
     id: bannerActions
@@ -31,7 +30,7 @@ Rectangle {
             id: buttonMoveOffload
 
             text: (appContent.state === "library") ? qsTr("Move") : qsTr("Offload")
-            source: "qrc:/assets/icons/material-icons/duotone/save_alt.svg"
+            source: "qrc:/IconLibrary/material-icons/duotone/save_alt.svg"
             color: Theme.colorActionbarHighlight
             colorText: Theme.colorText
 
@@ -58,7 +57,7 @@ Rectangle {
             visible: (appContent.state === "library")
 
             text: qsTr("Merge chapters")
-            source: "qrc:/assets/icons/material-symbols/merge_type.svg"
+            source: "qrc:/IconLibrary/material-symbols/merge_type.svg"
             sourceRotation: 180
             color: Theme.colorActionbarHighlight
             colorText: Theme.colorText
@@ -82,7 +81,7 @@ Rectangle {
             enabled: false
 
             text: qsTr("Merge shots")
-            source: "qrc:/assets/icons/material-symbols/merge_type.svg"
+            source: "qrc:/IconLibrary/material-symbols/merge_type.svg"
             sourceRotation: 180
             color: Theme.colorActionbarHighlight
             colorText: Theme.colorText
@@ -100,7 +99,7 @@ Rectangle {
             id: buttonEncode
 
             text: qsTr("Encoding")
-            source: "qrc:/assets/icons/material-symbols/memory.svg"
+            source: "qrc:/IconLibrary/material-symbols/memory.svg"
             color: Theme.colorActionbarHighlight
             colorText: Theme.colorText
 
@@ -125,7 +124,7 @@ Rectangle {
             id: buttonTelemetry
 
             text: qsTr("Extract telemetry")
-            source: "qrc:/assets/icons/material-icons/duotone/insert_chart.svg"
+            source: "qrc:/IconLibrary/material-icons/duotone/insert_chart.svg"
             color: Theme.colorActionbarHighlight
             colorText: Theme.colorText
 
@@ -146,7 +145,7 @@ Rectangle {
             id: buttonDelete
 
             text: qsTr("Delete")
-            source: "qrc:/assets/icons/material-symbols/delete.svg"
+            source: "qrc:/IconLibrary/material-symbols/delete.svg"
             color: Theme.colorWarning
 
             onClicked: {
@@ -186,7 +185,7 @@ Rectangle {
         anchors.rightMargin: 12
         anchors.verticalCenter: parent.verticalCenter
 
-        source: "qrc:/assets/icons/material-symbols/backspace-fill.svg"
+        source: "qrc:/IconLibrary/material-symbols/backspace-fill.svg"
         colorIcon: Theme.colorActionbarContent
         colorBackground: Theme.colorActionbar
 

@@ -2,11 +2,9 @@ import QtQuick
 import QtQuick.Effects
 import QtQuick.Controls
 
-import ThemeEngine
+import ComponentLibrary
 import ShotUtils
 import ItemImage
-import "qrc:/utils/UtilsMedia.js" as UtilsMedia
-import "qrc:/utils/UtilsString.js" as UtilsString
 
 Rectangle {
     id: itemShot
@@ -51,19 +49,19 @@ Rectangle {
                 imageFs.scale = cellFormat
             }
             if (shot.chapterCount > 1)
-                icon_mediaType.source = "qrc:/assets/icons/material-icons/duotone/video_library.svg"
+                icon_mediaType.source = "qrc:/IconLibrary/material-icons/duotone/video_library.svg"
             else
-                icon_mediaType.source = "qrc:/assets/icons/material-symbols/media/movie-fill.svg"
+                icon_mediaType.source = "qrc:/IconLibrary/material-symbols/media/movie-fill.svg"
         } else if (shot.fileType === ShotUtils.FILE_PICTURE) {
             if (shot.shotType === ShotUtils.SHOT_PICTURE_BURST) {
-                icon_mediaType.source = "qrc:/assets/icons/material-icons/duotone/burst_mode.svg"
+                icon_mediaType.source = "qrc:/IconLibrary/material-icons/duotone/burst_mode.svg"
             } else if (shotType >= ShotUtils.SHOT_PICTURE_MULTI) {
-                icon_mediaType.source = "qrc:/assets/icons/material-icons/duotone/photo_library.svg"
+                icon_mediaType.source = "qrc:/IconLibrary/material-icons/duotone/photo_library.svg"
             } else {
-                icon_mediaType.source = "qrc:/assets/icons/material-symbols/media/image.svg"
+                icon_mediaType.source = "qrc:/IconLibrary/material-symbols/media/image.svg"
             }
         } else {
-            icon_mediaType.source = "qrc:/assets/icons/material-symbols/media/broken_image.svg"
+            icon_mediaType.source = "qrc:/IconLibrary/material-symbols/media/broken_image.svg"
         }
     }
 
@@ -151,8 +149,8 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
 
         color: Theme.colorIcon
-        source: shot.valid ? "qrc:/assets/icons/material-icons/outlined/hourglass_empty.svg"
-                           : "qrc:/assets/icons/material-symbols/media/broken_image.svg"
+        source: shot.valid ? "qrc:/IconLibrary/material-icons/outlined/hourglass_empty.svg"
+                           : "qrc:/IconLibrary/material-symbols/media/broken_image.svg"
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -173,8 +171,8 @@ Rectangle {
             //retainWhileLoading: true // QT 6.8+
             fillMode: Image.PreserveAspectCrop
 
-            opacity: (imageFs.progress === 1.0) ? 1 : 0
-            Behavior on opacity { NumberAnimation { duration: 133 } }
+            //opacity: (imageFs.progress === 1.0) ? 1 : 0
+            //Behavior on opacity { NumberAnimation { duration: 133 } }
 
             // extra filtering?
             smooth: (settingsManager.thumbQuality >= 1)
@@ -280,11 +278,11 @@ Rectangle {
                 color: "white"
                 source: {
                     if (shot.state === ShotUtils.SHOT_STATE_QUEUED) {
-                        return "qrc:/assets/icons/material-icons/duotone/schedule.svg"
+                        return "qrc:/IconLibrary/material-icons/duotone/schedule.svg"
                     } else if (shot.state === ShotUtils.SHOT_STATE_OFFLOADING) {
-                        return "qrc:/assets/icons/material-icons/duotone/save_alt.svg"
+                        return "qrc:/IconLibrary/material-icons/duotone/save_alt.svg"
                     } else if (shot.state === ShotUtils.SHOT_STATE_ENCODING) {
-                        return "qrc:/assets/icons/material-symbols/memory.svg"
+                        return "qrc:/IconLibrary/material-symbols/memory.svg"
                     } else {
                         return ""
                     }
@@ -376,7 +374,7 @@ Rectangle {
                 visible: shot.hilightCount
                 rotation: 90
                 color: "orange"
-                source: "qrc:/assets/icons/material-symbols/label_important.svg"
+                source: "qrc:/IconLibrary/material-symbols/label_important.svg"
             }
 
             IconSvg {
@@ -386,7 +384,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 visible: shot.hasGPS
                 color: "white"
-                source: "qrc:/assets/icons/material-symbols/location/map-fill.svg"
+                source: "qrc:/IconLibrary/material-symbols/location/map-fill.svg"
             }
 
             IconSvg {
@@ -396,7 +394,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 visible: (shot.fileType === ShotUtils.FILE_VIDEO && shot.hasGPS)
                 color: "white"
-                source: "qrc:/assets/icons/material-symbols/insert_chart.svg"
+                source: "qrc:/IconLibrary/material-symbols/insert_chart.svg"
             }
         }
     }
@@ -449,13 +447,13 @@ Rectangle {
                         shot.state === ShotUtils.SHOT_STATE_OFFLOADED ||
                         shot.state === ShotUtils.SHOT_STATE_ENCODED) {
                         if (shot.state === ShotUtils.SHOT_STATE_OFFLOADED)
-                            return "qrc:/assets/icons/material-icons/duotone/save_alt.svg"
+                            return "qrc:/IconLibrary/material-icons/duotone/save_alt.svg"
                         else if (shot.state === ShotUtils.SHOT_STATE_ENCODED)
-                            return "qrc:/assets/icons/material-symbols/memory.svg"
+                            return "qrc:/IconLibrary/material-symbols/memory.svg"
                         else
-                            return "qrc:/assets/icons/material-symbols/check_circle.svg"
+                            return "qrc:/IconLibrary/material-symbols/check_circle.svg"
                     } else if (itemShot.alreadyOffloaded) {
-                        return "qrc:/assets/icons/material-icons/duotone/save_alt.svg"
+                        return "qrc:/IconLibrary/material-icons/duotone/save_alt.svg"
                     }
                 }
             }

@@ -42,6 +42,9 @@
 #include <minivideo/minivideo.h>
 #include "GpmfKLV.h"
 #include "GpmfBuffer.h"
+#else
+typedef int GpmfBuffer;
+typedef int GpmfKLV;
 #endif
 
 #include <QObject>
@@ -56,7 +59,8 @@ typedef int QGeoCoordinate;
 typedef void QGeoCodeReply;
 #endif
 
-#include <QtCharts/QLineSeries>
+class QDateTimeAxis;
+class QLineSeries;
 
 /* ************************************************************************** */
 

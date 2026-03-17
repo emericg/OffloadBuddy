@@ -2,8 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Window
 
-import ThemeEngine
-import "qrc:/js/UtilsDeviceCamera.js" as UtilsDevice
+import ComponentLibrary
 
 Rectangle {
     id: sideBar
@@ -52,13 +51,13 @@ Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
 
-        source: "qrc:/assets/icons/fontawesome/photo-video-duotone.svg"
+        source: "qrc:/IconLibrary/fontawesome5/duotone/photo-video.svg"
         sourceSize: 56
         highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
 
         indicatorVisible: mediaLibrary.libraryState
         indicatorAnimated: mediaLibrary.libraryState
-        indicatorSource: "qrc:/assets/icons/material-symbols/autorenew.svg"
+        indicatorSource: "qrc:/IconLibrary/material-symbols/autorenew.svg"
 
         highlighted: appContent.state === "library"
         onClicked: appContent.state = "library"
@@ -90,7 +89,7 @@ Rectangle {
 
                 indicatorVisible: modelData.deviceState
                 indicatorAnimated: modelData.deviceState
-                indicatorSource: "qrc:/assets/icons/material-symbols/autorenew.svg"
+                indicatorSource: "qrc:/IconLibrary/material-symbols/autorenew.svg"
 
                 onClicked: {
                     if (!(appContent.state === "device" && screenDevice.currentDevice === modelData)) {
@@ -116,7 +115,7 @@ Rectangle {
         DesktopSidebarItem { // button_jobs
             visible: jobManager.trackedJobCount
 
-            source: "qrc:/assets/icons/material-icons/duotone/save_alt.svg"
+            source: "qrc:/IconLibrary/material-icons/duotone/save_alt.svg"
             sourceSize: 40
 
             highlighted: (appContent.state === "jobs")
@@ -124,12 +123,12 @@ Rectangle {
 
             indicatorVisible: jobManager.workingJobCount
             indicatorAnimated: jobManager.workingJobCount
-            indicatorSource: "qrc:/assets/icons/material-symbols/autorenew.svg"
+            indicatorSource: "qrc:/IconLibrary/material-symbols/autorenew.svg"
 
             onClicked: screenJobs.loadScreen()
         }
         DesktopSidebarItem { // button_settings
-            source: "qrc:/assets/icons/material-icons/duotone/tune.svg"
+            source: "qrc:/IconLibrary/material-icons/duotone/tune.svg"
             sourceSize: 40
 
             highlighted: (appContent.state === "settings")
@@ -138,7 +137,7 @@ Rectangle {
             onClicked: screenSettings.loadScreen()
         }
         DesktopSidebarItem { // button_about
-            source: "qrc:/assets/icons/material-icons/duotone/info.svg"
+            source: "qrc:/IconLibrary/material-icons/duotone/info.svg"
             sourceSize: 40
 
             highlighted: (appContent.state === "about")
@@ -147,7 +146,7 @@ Rectangle {
             onClicked: screenAbout.loadScreen()
         }
         DesktopSidebarItem { // button_exit
-            source: "qrc:/assets/icons/material-icons/duotone/exit_to_app.svg"
+            source: "qrc:/IconLibrary/material-icons/duotone/exit_to_app.svg"
             sourceSize: 40
 
             highlightMode: "circle"

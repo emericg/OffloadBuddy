@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Effects
 import QtQuick.Controls
 
-import ThemeEngine
+import ComponentLibrary
 
 Popup {
     id: popupDelete
@@ -93,7 +93,7 @@ Popup {
 
     Overlay.modal: Rectangle {
         color: "#000"
-        opacity: ThemeEngine.isLight ? 0.333 : 0.666
+        opacity: Theme.isLight ? 0.333 : 0.666
     }
 
     background: Rectangle {
@@ -155,7 +155,7 @@ Popup {
         layer.effect: MultiEffect { // shadow
             autoPaddingEnabled: true
             shadowEnabled: true
-            shadowColor: ThemeEngine.isLight ? "#aa000000" : "#aaffffff"
+            shadowColor: Theme.isLight ? "#aa000000" : "#aaffffff"
         }
     }
 
@@ -214,7 +214,7 @@ Popup {
 
                 rotation: recapOpened ? -90 : 90
                 colorBackground: Theme.colorForeground
-                source: "qrc:/assets/icons/material-symbols/chevron_right.svg"
+                source: "qrc:/IconLibrary/material-symbols/chevron_right.svg"
 
                 onClicked: recapOpened = !recapOpened
             }
@@ -290,7 +290,7 @@ Popup {
                     anchors.bottom: parent.bottom
 
                     text: qsTr("Delete")
-                    source: "qrc:/assets/icons/material-symbols/delete.svg"
+                    source: "qrc:/IconLibrary/material-symbols/delete.svg"
                     color: Theme.colorError
                     onClicked: {
                         var settingsDeletion = {}

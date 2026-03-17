@@ -2,10 +2,7 @@ import QtQuick
 import QtQuick.Effects
 import QtQuick.Controls
 
-import ThemeEngine
-
-import "qrc:/utils/UtilsString.js" as UtilsString
-import "qrc:/utils/UtilsPath.js" as UtilsPath
+import ComponentLibrary
 
 Popup {
     id: popupTelemetry
@@ -74,7 +71,7 @@ Popup {
 
     Overlay.modal: Rectangle {
         color: "#000"
-        opacity: ThemeEngine.isLight ? 0.333 : 0.666
+        opacity: Theme.isLight ? 0.333 : 0.666
     }
 
     background: Rectangle {
@@ -136,7 +133,7 @@ Popup {
         layer.effect: MultiEffect { // shadow
             autoPaddingEnabled: true
             shadowEnabled: true
-            shadowColor: ThemeEngine.isLight ? "#aa000000" : "#aaffffff"
+            shadowColor: Theme.isLight ? "#aa000000" : "#aaffffff"
         }
     }
 
@@ -195,7 +192,7 @@ Popup {
 
                 rotation: recapOpened ? -90 : 90
                 colorBackground: Theme.colorForeground
-                source: "qrc:/assets/icons/material-symbols/chevron_right.svg"
+                source: "qrc:/IconLibrary/material-symbols/chevron_right.svg"
 
                 onClicked: recapOpened = !recapOpened
             }
@@ -347,7 +344,7 @@ Popup {
                         color: Theme.colorSubText
                     }
 
-                    SwitchThemedDesktop { // switchEGM96
+                    SwitchThemed { // switchEGM96
                         anchors.left: titleAltitude.right
                         anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
@@ -519,7 +516,7 @@ Popup {
                     color: Theme.colorSecondary
 
                     text: qsTr("Extract telemetry")
-                    source: "qrc:/assets/icons/material-symbols/insert_chart.svg"
+                    source: "qrc:/IconLibrary/material-symbols/insert_chart.svg"
 
                     onClicked: {
                         if (typeof currentShot === "undefined" || !currentShot) return
@@ -559,7 +556,7 @@ Popup {
                     anchors.bottom: parent.bottom
 
                     text: qsTr("Extract GPS")
-                    source: "qrc:/assets/icons/material-symbols/location/map-fill.svg"
+                    source: "qrc:/IconLibrary/material-symbols/location/map-fill.svg"
 
                     enabled: (popupMode === 1 && fileInput.isValid) || (popupMode === 2 && folderInput.isValid)
 

@@ -2,9 +2,9 @@ import QtQuick
 import QtQuick.Effects
 import QtQuick.Controls
 
-import ThemeEngine
+import OffloadBuddy
 import SettingsUtils
-import "qrc:/utils/UtilsString.js" as UtilsString
+import ComponentLibrary
 
 Item {
     id: mediaGrid
@@ -279,7 +279,7 @@ Item {
 
                     rotation: settingsManager.librarySortOrder ? 0 : 180
                     colorBackground: Theme.colorComponent
-                    source: "qrc:/assets/icons/material-symbols/filter_list.svg"
+                    source: "qrc:/IconLibrary/material-symbols/filter_list.svg"
 
                     onClicked: {
                         if (settingsManager.librarySortOrder === Qt.AscendingOrder) {
@@ -364,10 +364,10 @@ Item {
                 height: 32
 
                 model: ListModel {
-                    ListElement { idx: 1; txt: ""; src: "qrc:/assets/icons/material-symbols/media/image.svg"; sz: 18; }
-                    ListElement { idx: 2; txt: ""; src: "qrc:/assets/icons/material-symbols/media/image.svg"; sz: 22; }
-                    ListElement { idx: 3; txt: ""; src: "qrc:/assets/icons/material-symbols/media/image.svg"; sz: 26; }
-                    ListElement { idx: 4; txt: ""; src: "qrc:/assets/icons/material-symbols/media/image.svg"; sz: 30; }
+                    ListElement { idx: 1; txt: ""; src: "qrc:/IconLibrary/material-symbols/media/image.svg"; sz: 18; }
+                    ListElement { idx: 2; txt: ""; src: "qrc:/IconLibrary/material-symbols/media/image.svg"; sz: 22; }
+                    ListElement { idx: 3; txt: ""; src: "qrc:/IconLibrary/material-symbols/media/image.svg"; sz: 26; }
+                    ListElement { idx: 4; txt: ""; src: "qrc:/IconLibrary/material-symbols/media/image.svg"; sz: 30; }
                 }
                 currentSelection: {
                     if (shotsView.cellSizeTarget == 512) return 4
@@ -445,7 +445,7 @@ Item {
 
         ////////
 
-        ActionMenu {
+        ActionMenu_floating {
             id: actionMenu
             z: 7
             onMenuSelected: (index) => {

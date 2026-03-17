@@ -2,11 +2,9 @@ import QtQuick
 import QtQuick.Effects
 import QtQuick.Controls
 
-import ThemeEngine
+import OffloadBuddy
 import StorageUtils
-
-import "qrc:/utils/UtilsString.js" as UtilsString
-import "qrc:/utils/UtilsPath.js" as UtilsPath
+import ComponentLibrary
 
 Popup {
     id: popupOffload
@@ -97,7 +95,7 @@ Popup {
 
     Overlay.modal: Rectangle {
         color: "#000"
-        opacity: ThemeEngine.isLight ? 0.333 : 0.666
+        opacity: Theme.isLight ? 0.333 : 0.666
     }
 
     background: Rectangle {
@@ -159,7 +157,7 @@ Popup {
         layer.effect: MultiEffect { // shadow
             autoPaddingEnabled: true
             shadowEnabled: true
-            shadowColor: ThemeEngine.isLight ? "#aa000000" : "#aaffffff"
+            shadowColor: Theme.isLight ? "#aa000000" : "#aaffffff"
         }
     }
 
@@ -223,7 +221,7 @@ Popup {
                 anchors.rightMargin: Theme.componentMargin
                 anchors.verticalCenter: parent.verticalCenter
 
-                source: "qrc:/assets/icons/material-symbols/chevron_right.svg"
+                source: "qrc:/IconLibrary/material-symbols/chevron_right.svg"
                 rotation: recapOpened ? -90 : 90
                 onClicked: recapOpened = !recapOpened
             }
@@ -277,7 +275,7 @@ Popup {
 
                     visible: isGoPro
 
-                    SwitchThemedDesktop {
+                    SwitchThemed {
                         id: switchIgnoreJunk
                         anchors.verticalCenter: parent.verticalCenter
 
@@ -285,7 +283,7 @@ Popup {
                         text: qsTr("Ignore LRVs and THM files")
                     }
 
-                    SwitchThemedDesktop {
+                    SwitchThemed {
                         id: switchIgnoreAudio
                         anchors.verticalCenter: parent.verticalCenter
 
@@ -301,7 +299,7 @@ Popup {
 
                     visible: isGoPro
 
-                    SwitchThemedDesktop {
+                    SwitchThemed {
                         id: switchTelemetry
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
@@ -318,7 +316,7 @@ Popup {
 
                     visible: isGoPro
 
-                    SwitchThemedDesktop {
+                    SwitchThemed {
                         id: switchMerge
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
@@ -335,7 +333,7 @@ Popup {
 
                     visible: !isReadOnly
 
-                    SwitchThemedDesktop {
+                    SwitchThemed {
                         id: switchDelete
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
@@ -471,7 +469,7 @@ Popup {
                     anchors.bottom: parent.bottom
 
                     text: qsTr("Offload")
-                    source: "qrc:/assets/icons/material-symbols/archive.svg"
+                    source: "qrc:/IconLibrary/material-symbols/archive.svg"
 
                     onClicked: {
                         if (typeof mediaProvider === "undefined" || !mediaProvider) return

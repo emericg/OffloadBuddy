@@ -1,8 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 
-import ThemeEngine
-import "qrc:/utils/UtilsString.js" as UtilsString
+import ComponentLibrary
 
 Rectangle {
     id: bannerMessage
@@ -49,7 +48,7 @@ Rectangle {
         anchors.rightMargin: 12
         anchors.verticalCenter: parent.verticalCenter
 
-        source: "qrc:/assets/icons/material-symbols/close.svg"
+        source: "qrc:/IconLibrary/material-symbols/close.svg"
         colorIcon: Theme.colorActionbarContent
         colorBackground: Theme.colorActionbar
 

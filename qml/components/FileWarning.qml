@@ -1,5 +1,6 @@
 import QtQuick
-import ThemeEngine
+
+import ComponentLibrary
 
 Row {
     id: fileWarning
@@ -33,7 +34,7 @@ Row {
         anchors.verticalCenter: parent.verticalCenter
 
         color: Theme.colorWarning
-        source: "qrc:/assets/icons/material-symbols/warning.svg"
+        source: "qrc:/IconLibrary/material-symbols/warning.svg"
     }
 
     Text {

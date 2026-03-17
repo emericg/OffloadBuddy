@@ -1,8 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 
-import ThemeEngine
-import "qrc:/utils/UtilsString.js" as UtilsString
+import ComponentLibrary
 
 Rectangle {
     id: bannerJob
@@ -118,7 +117,7 @@ Rectangle {
         anchors.rightMargin: 8
         anchors.verticalCenter: parent.verticalCenter
 
-        source: "qrc:/assets/icons/material-symbols/close.svg"
+        source: "qrc:/IconLibrary/material-symbols/close.svg"
         colorIcon: "white"
         colorBackground: Theme.colorActionbar
         onClicked: bannerJob.close()

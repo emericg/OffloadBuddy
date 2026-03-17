@@ -4,7 +4,7 @@ import QtQuick.Controls.impl
 import QtQuick.Templates as T
 import Qt.labs.qmlmodels
 
-import ThemeEngine
+import ComponentLibrary
 
 T.Popup {
     id: actionMenu
@@ -99,7 +99,7 @@ T.Popup {
 
                 index: 1
                 text: qsTr("Offload")
-                source: "qrc:/assets/icons/material-icons/duotone/save_alt.svg"
+                source: "qrc:/IconLibrary/material-icons/duotone/save_alt.svg"
                 onClicked: menuSelected(index)
             }
             ActionMenuItem {
@@ -109,7 +109,7 @@ T.Popup {
 
                 index: 2
                 text: qsTr("Move")
-                source: "qrc:/assets/icons/material-icons/duotone/save_alt.svg"
+                source: "qrc:/IconLibrary/material-icons/duotone/save_alt.svg"
                 onClicked: menuSelected(index)
             }
             ActionMenuItem {
@@ -119,7 +119,7 @@ T.Popup {
 
                 index: 3
                 text: qsTr("Merge chapters")
-                source: "qrc:/assets/icons/material-symbols/merge_type.svg"
+                source: "qrc:/IconLibrary/material-symbols/merge_type.svg"
                 onClicked: menuSelected(index)
             }
             ActionMenuItem {
@@ -130,7 +130,7 @@ T.Popup {
 
                 index: 4
                 text: qsTr("Encode")
-                source: "qrc:/assets/icons/material-symbols/memory.svg"
+                source: "qrc:/IconLibrary/material-symbols/memory.svg"
                 onClicked: menuSelected(index)
             }
 
@@ -149,7 +149,7 @@ T.Popup {
 
                 index: 8
                 text: qsTr("Extract telemetry")
-                source: "qrc:/assets/icons/material-icons/duotone/insert_chart.svg"
+                source: "qrc:/IconLibrary/material-icons/duotone/insert_chart.svg"
                 onClicked: menuSelected(index)
             }
             ActionMenuItem {
@@ -159,7 +159,7 @@ T.Popup {
 
                 index: 9
                 text: qsTr("Extract telemetry")
-                source: "qrc:/assets/icons/material-icons/duotone/insert_chart.svg"
+                source: "qrc:/IconLibrary/material-icons/duotone/insert_chart.svg"
                 onClicked: menuSelected(index)
             }
             ActionMenuItem {
@@ -169,7 +169,7 @@ T.Popup {
 
                 index: 10
                 text: qsTr("Extract GPS trace")
-                source: "qrc:/assets/icons/material-symbols/location/map-fill.svg"
+                source: "qrc:/IconLibrary/material-symbols/location/map-fill.svg"
                 onClicked: menuSelected(index)
             }
 
@@ -188,7 +188,7 @@ T.Popup {
 
                 index: 12
                 text: qsTr("Open file")
-                source: "qrc:/assets/icons/material-symbols/folder.svg"
+                source: "qrc:/IconLibrary/material-symbols/folder.svg"
                 onClicked: menuSelected(index)
             }
             ActionMenuItem {
@@ -198,7 +198,7 @@ T.Popup {
 
                 index: 13
                 text: qsTr("Open folder")
-                source: "qrc:/assets/icons/material-symbols/folder_open.svg"
+                source: "qrc:/IconLibrary/material-symbols/folder_open.svg"
                 onClicked: menuSelected(index)
             }
 
@@ -217,7 +217,7 @@ T.Popup {
 
                 index: 16
                 text: qsTr("DELETE")
-                source: "qrc:/assets/icons/material-symbols/delete.svg"
+                source: "qrc:/IconLibrary/material-symbols/delete.svg"
                 onClicked: menuSelected(index)
             }
 

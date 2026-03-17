@@ -24,7 +24,8 @@ import QtQuick.Window
 import QtQuick.Effects
 import QtQuick.Controls
 
-import ThemeEngine
+import OffloadBuddy
+import ComponentLibrary
 
 ApplicationWindow {
     id: appWindow
@@ -36,6 +37,21 @@ ApplicationWindow {
     property bool isPhone: false
     property bool isTablet: false
     property bool isHdpi: (utilsScreen.screenDpi >= 128 || utilsScreen.screenPar >= 2.0)
+
+    // Mobile stuff // compatibility ///////////////////////////////////////////
+
+    // 1 = Qt.PortraitOrientation, 2 = Qt.LandscapeOrientation
+    // 4 = Qt.InvertedPortraitOrientation, 8 = Qt.InvertedLandscapeOrientation
+    property int screenOrientation: Screen.primaryOrientation
+    property int screenOrientationFull: Screen.orientation
+
+    property int screenPaddingStatusbar: 0
+    property int screenPaddingNavbar: 0
+
+    property int screenPaddingTop: 0
+    property int screenPaddingLeft: 0
+    property int screenPaddingRight: 0
+    property int screenPaddingBottom: 0
 
     // Desktop stuff ///////////////////////////////////////////////////////////
 
@@ -141,7 +157,7 @@ ApplicationWindow {
         onActivated: appWindow.close()
     }
     Shortcut {
-        sequence: StandardKey.Quit
+        sequences: [StandardKey.Quit]
         onActivated: appWindow.close()
     }
 
