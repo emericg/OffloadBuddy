@@ -63,14 +63,12 @@ void print_build_infos()
     qDebug() << "* This is a DEBUG build";
 #endif
 
-#if defined(__ICC) || defined(__INTEL_COMPILER)
-    qDebug() << "* Built with ICC '" << __INTEL_COMPILER << "/" __INTEL_COMPILER_BUILD_DATE << "'";
-#elif defined(_MSC_VER)
-    qDebug() << "* Built with MSVC '" <<_MSC_VER<< "'";
-#elif defined(__clang__)
+#if defined(__clang__)
     qDebug() << "* Built with CLANG '" << __clang_major__ << __clang_minor__<< "'";
 #elif defined(__GNUC__) || defined(__GNUG__)
     qDebug() << "* Built with GCC '" << __GNUC__ << __GNUC_MINOR__ << __GNUC_PATCHLEVEL__ << "'";
+#elif defined(_MSC_VER)
+    qDebug() << "* Built with MSVC '" <<_MSC_VER<< "'";
 #else
     qDebug() << "* Built with an unknown compiler";
 #endif
@@ -117,22 +115,14 @@ int main(int argc, char *argv[])
     print_build_infos();
 
 #if defined(Q_OS_LINUX)
-    // NVIDIA suspend&resume hack
-    if (QLibraryInfo::version() >= QVersionNumber(5, 13, 0))
-    {
-        auto format = QSurfaceFormat::defaultFormat();
-        format.setOption(QSurfaceFormat::ResetNotification);
-        QSurfaceFormat::setDefaultFormat(format);
-    }
-
     // Force "old" gstreamer multimedia backend
     //qputenv("QT_MEDIA_BACKEND", "gstreamer");
 #endif
 
-    // Mouse wheel hack
-    qputenv("QT_QUICK_FLICKABLE_WHEEL_DECELERATION", "2500");
+    // Qt 6.6+ mouse wheel hack
+    qputenv("QT_QUICK_FLICKABLE_WHEEL_DECELERATION", "7500");
 
-    SingleApplication app(argc, argv, false);
+    SingleApplication app(argc, argv, true);
 
     app.setWindowIcon(QIcon(":/gfx/offloadbuddy.svg"));
     app.setApplicationName("OffloadBuddy");

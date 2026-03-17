@@ -279,11 +279,9 @@ void JobWorkerThread::work()
                             //qDebug() << "JobWorkerThread  >  deleting:" << file.filesystemPath;
 
                             bool status = false;
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
                             if (current_job->settings_delete.moveToTrash)
-                                status = QFile::moveToTrash(file.filesystemPath); // Qt 5.15
+                                status = QFile::moveToTrash(file.filesystemPath);
                             else
-#endif
                                 status = QFile::remove(file.filesystemPath);
 
                             if (status)

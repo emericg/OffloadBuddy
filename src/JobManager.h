@@ -114,13 +114,6 @@ public:
     Q_INVOKABLE QString getDestinationHierarchyDisplay(Shot *s, const QString &path);
     Q_INVOKABLE QString getDestinationHierarchy(Shot *s, const QString &path);
 
-    Q_INVOKABLE bool hasMoveToTrash() const {
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
-        return true;
-#endif
-        return false;
-    }
-
     Q_INVOKABLE void playPauseJob(int jobId);
 
     Q_INVOKABLE void stopJob(int jobId);
