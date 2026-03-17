@@ -179,8 +179,6 @@ int main(int argc, char *argv[])
 
     ////////////////////////////////////////////////////////////////////////////
 
-    qmlRegisterSingletonType(QUrl("qrc:/qml/ThemeEngine.qml"), "ThemeEngine", 1, 0, "Theme");
-
     qmlRegisterUncreatableMetaObject(DeviceUtils::staticMetaObject, "DeviceUtils", 1, 0,
                                      "DeviceUtils", "Error: only enums");
 

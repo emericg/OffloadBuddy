@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 
 project(minivideo LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
@@ -125,7 +125,7 @@ endif()
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(ENABLE_DEBUG 1)
     set(CMAKE_VERBOSE_MAKEFILE on)
-    message(WARNING "> This is a DEBUG build. You can change this using -DCMAKE_BUILD_TYPE=Release")
+    message(STATUS "> This is a DEBUG build. You can change this using -DCMAKE_BUILD_TYPE=Release")
 else()
     set(ENABLE_DEBUG 0)
     message(STATUS "> This is a RELEASE build.")
