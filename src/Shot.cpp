@@ -245,6 +245,8 @@ QDateTime Shot::getDate() const
     if (m_camera_source.contains("HERO9")) firstpossibledate = QDateTime(QDate(2020, 1, 1), QTime(0, 0));
     if (m_camera_source.contains("HERO10")) firstpossibledate = QDateTime(QDate(2021, 1, 1), QTime(0, 0));
     if (m_camera_source.contains("HERO11")) firstpossibledate = QDateTime(QDate(2022, 1, 1), QTime(0, 0));
+    if (m_camera_source.contains("HERO12")) firstpossibledate = QDateTime(QDate(2023, 1, 1), QTime(0, 0));
+    if (m_camera_source.contains("HERO13")) firstpossibledate = QDateTime(QDate(2024, 1, 1), QTime(0, 0));
 
     if (m_date_metadata.isValid())
     {
