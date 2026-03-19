@@ -153,11 +153,38 @@ Item {
 
             plugin: Plugin {
                 preferred: ["maplibre", "osm"]
-                PluginParameter { name: "maplibre.map.styles"; value: "https://tiles.versatiles.org/styles/colorful.json" }
+
+                // [MapLibre plugin]
+
+                // (MapTiler) // satellite // *topo-v2 // outdoor-v2
+                //PluginParameter { name: "maplibre.map.styles"; value: "https://api.maptiler.com/maps/topo-v2/style.json?key=8JyhQHoZPM19xkMOQ9a7" }
+
+                // (Versatiles) // *colorful // graybeard // eclipse // neutrino
+                PluginParameter { name: "maplibre.map.styles"; value: "https://tiles.versatiles.org/assets/styles/colorful/style.json" }
+
+                // [OpenStreetMap plugin]
+
+                //PluginParameter { name: "osm.useragent"; value: "StodeusApp" }
                 PluginParameter { name: "osm.mapping.highdpi_tiles"; value: true }
+                PluginParameter { name: "osm.mapping.providersrepository.disabled"; value: false }
+
+                // OpenTopoMap
+                //{a|b|c}.tile.opentopomap.org/{z}/{x}/{y}.png
+                //PluginParameter { name: "osm.mapping.custom.host"; value: "https://a.tile.opentopomap.org/%z/%x/%y.png" }
+
+                // (osm)
+                //PluginParameter { name: "osm.mapping.custom.host"; value: "https://tile.openstreetmap.org/%z/%x/%y.png" }
+
+                // (MapTiler) // satellite // landscape // *topo-v2 // outdoor-v2
+                //PluginParameter { name: "osm.mapping.custom.host"; value: "https://api.maptiler.com/maps/topo-v2/256/%z/%x/%y@2x.png?key=8JyhQHoZPM19xkMOQ9a7&fake=.png" }
+
+                // (Thunderforest) // *landscape // outdoors
+                PluginParameter { name: "osm.mapping.custom.host"; value: "https://tile.thunderforest.com/landscape/%z/%x/%y@2x.png?apikey=db022c30553d4d93af841559934367a4&fake=.png" }
             }
-            //activeMapType: supportedMapTypes[0]
+
             copyrightsVisible: false
+            activeMapType: supportedMapTypes[supportedMapTypes.length - 1] // required?
+            //Component.onCompleted: { console.log(">> MAPPING STYLES  >>  " + supportedMapTypes) }
 
             ////////////////
 
