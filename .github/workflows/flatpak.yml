@@ -13,12 +13,12 @@ jobs:
   ## GNU/Linux flatpak build ###################################################
   build-flatpak:
     name: "Flatpak build"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     container:
-      image: bilelmoussaoui/flatpak-github-actions:freedesktop-23.08
+      image: bilelmoussaoui/flatpak-github-actions:freedesktop-25.08
       options: --privileged
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v6
       with:
         bundle: offloadbuddy.flatpak

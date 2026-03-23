@@ -4,6 +4,9 @@ export APP_NAME="OffloadBuddy"
 export APP_VERSION=0.12
 export GIT_VERSION=$(git rev-parse --short HEAD)
 
+#export APP_NAME_LOWERCASE=${APP_NAME,,}  # lowercase
+export APP_NAME_LOWERCASE=$APP_NAME       # not actually lowercase
+
 echo "> $APP_NAME packager (Linux x86_64) [v$APP_VERSION]"
 
 ## CHECKS ######################################################################
@@ -47,37 +50,31 @@ esac
 shift # skip argument or value
 done
 
-## APP INSTALL #################################################################
+## PREP WORK ###################################################################
 
-if [[ $make_install = true ]] ; then
-  echo '---- Running make install'
-  make INSTALL_ROOT=bin/ install
-
-  #echo '---- Installation directory content recap (after make install):'
-  #find bin/
-fi
-
-## DEPLOY ######################################################################
+#unset LD_LIBRARY_PATH; #unset QT_PLUGIN_PATH;
 
 if [[ $use_contribs = true ]] ; then
-  export LD_LIBRARY_PATH=$(pwd)/contribs/src/env/linux_x86_64/usr/lib/:/usr/lib
-else
-  export LD_LIBRARY_PATH=/usr/lib/
+  export LD_LIBRARY_PATH=$(pwd)/contribs/src/env/linux_x86_64/usr/lib/:$LD_LIBRARY_PATH
 fi
+
+if [[ -v QT_ROOT_DIR ]] ; then
+  # cleanup undeployable Qt plugins (present, but missing their own dependencies)
+  # only if we are on a GitHub Action server, because this remove the plugins from the Qt directory
+  echo '---- Remove undeployable Qt plugins'
+  sudo rm $QT_ROOT_DIR/plugins/position/libqtposition_nmea.so
+  sudo rm $QT_ROOT_DIR/plugins/sqldrivers/libqsqlmimer.so
+  sudo rm $QT_ROOT_DIR/plugins/sqldrivers/libqsqlmysql.so
+  sudo rm $QT_ROOT_DIR/plugins/sqldrivers/libqsqloci.so
+  sudo rm $QT_ROOT_DIR/plugins/sqldrivers/libqsqlodbc.so
+  sudo rm $QT_ROOT_DIR/plugins/sqldrivers/libqsqlpsql.so
+fi
+
+## linuxdeploy INSTALL #########################################################
 
 echo '---- Prepare linuxdeploy + plugins'
 
-unset LD_LIBRARY_PATH; #unset QT_PLUGIN_PATH; #unset QTDIR;
-
-USRDIR=/usr;
-if [ -d bin/usr/local ]; then
-  USRDIR=/usr/local
-fi
-if [ -z "$QTDIR" ]; then
-  QTDIR=/usr/lib/qt
-fi
-
-echo '---- Downloading linuxdeploy + plugins'
+# linuxdeploy and plugins
 if [ ! -x contribs/deploy/linuxdeploy-x86_64.AppImage ]; then
   wget -c -nv "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage" -P contribs/deploy/
   wget -c -nv "https://github.com/linuxdeploy/linuxdeploy-plugin-appimage/releases/download/continuous/linuxdeploy-plugin-appimage-x86_64.AppImage" -P contribs/deploy/
@@ -89,17 +86,43 @@ chmod a+x contribs/deploy/linuxdeploy-plugin-appimage-x86_64.AppImage
 chmod a+x contribs/deploy/linuxdeploy-plugin-qt-x86_64.AppImage
 chmod a+x contribs/deploy/linuxdeploy-plugin-gstreamer.sh
 
-# linuxdeploy settings
-export QML_SOURCES_PATHS="$(pwd)/qml/"
-export EXTRA_QT_PLUGINS="multimedia;svg;"
+# linuxdeploy-plugin-qt hacks
+#export QMAKE="qmake6" # force Qt6, if you have Qt5 installed
+#export NO_STRIP=true  # workaround, strip not working on modern binutils
 
-# Copy geoservices plugins manually
-mkdir -p appdir/$USRDIR/plugins/geoservices/
-cp $QTDIR/plugins/geoservices/*.so appdir/$USRDIR/plugins/geoservices/
+# linuxdeploy-plugin-qt settings
+export EXTRA_QT_MODULES="svg;waylandcompositor;"
+export EXTRA_QT_PLUGINS=""
+export EXTRA_PLATFORM_PLUGINS="libqwayland.so" # Qt 6.10+
+#export EXTRA_PLATFORM_PLUGINS="libqwayland-egl.so;libqwayland-generic.so" # Qt 5+
+export QML_SOURCES_PATHS="$(pwd)/qml/"
+export QML_MODULES_PATHS=""
+
+## APP INSTALL #################################################################
+
+if [[ $make_install = true ]] ; then
+  echo '---- Running make install'
+  make INSTALL_ROOT=bin/ install
+
+  #echo '---- Installation directory content recap (after make install):'
+  #find bin/
+fi
 
 ## PACKAGE (AppImage) ##########################################################
 
 if [[ $create_package = true ]] ; then
+  echo '---- Format appdir'
+  mkdir -p bin/usr/bin/
+  mkdir -p bin/usr/share/appdata/
+  mkdir -p bin/usr/share/applications/
+  mkdir -p bin/usr/share/pixmaps/
+  mkdir -p bin/usr/share/icons/hicolor/scalable/apps/
+  mv bin/$APP_NAME bin/usr/bin/$APP_NAME
+  cp assets/linux/$APP_NAME_LOWERCASE.appdata.xml bin/usr/share/appdata/$APP_NAME_LOWERCASE.appdata.xml
+  cp assets/linux/$APP_NAME_LOWERCASE.desktop bin/usr/share/applications/$APP_NAME_LOWERCASE.desktop
+  cp assets/linux/$APP_NAME_LOWERCASE.svg bin/usr/share/pixmaps/$APP_NAME_LOWERCASE.svg
+  cp assets/linux/$APP_NAME_LOWERCASE.svg  bin/usr/share/icons/hicolor/scalable/apps/$APP_NAME_LOWERCASE.svg
+
   echo '---- Running AppImage packager'
   ./contribs/deploy/linuxdeploy-x86_64.AppImage --appdir bin --plugin qt --plugin gstreamer --output appimage
   mv $APP_NAME-x86_64.AppImage $APP_NAME-$APP_VERSION-linux64.AppImage
@@ -111,23 +134,28 @@ fi
 ## PACKAGE (archive) ###########################################################
 
 if [[ $create_package = true ]] ; then
-  export APP_NAME_LOWERCASE=${APP_NAME,,}
-
   echo '---- Reorganize appdir into a regular directory'
-  mkdir $APP_NAME/
-  mv bin/usr/bin/* $APP_NAME/
-  mv bin/usr/lib/* $APP_NAME/
-  mv bin/usr/plugins $APP_NAME/
-  mv bin/usr/qml $APP_NAME/
-  mv bin/usr/share/appdata/$APP_NAME_LOWERCASE.appdata.xml $APP_NAME/
-  mv bin/usr/share/applications/$APP_NAME_LOWERCASE.desktop $APP_NAME/
-  mv bin/usr/share/pixmaps/$APP_NAME_LOWERCASE.svg $APP_NAME/
-  printf '[Paths]\nPrefix = .\nPlugins = plugins\nImports = qml\n' > $APP_NAME/qt.conf
-  printf '#!/bin/sh\nappname=`basename $0 | sed s,\.sh$,,`\ndirname=`dirname $0`\nexport LD_LIBRARY_PATH=$dirname\n$dirname/$appname' > $APP_NAME/$APP_NAME_LOWERCASE.sh
-  chmod +x $APP_NAME/$APP_NAME_LOWERCASE.sh
+  mkdir bin/$APP_NAME/
+  mv bin/usr/bin/* bin/$APP_NAME/
+  mv bin/usr/lib/* bin/$APP_NAME/
+  mv bin/usr/plugins bin/$APP_NAME/
+  mv bin/usr/qml bin/$APP_NAME/
+  mv bin/usr/share/appdata/$APP_NAME_LOWERCASE.appdata.xml bin/$APP_NAME/
+  mv bin/usr/share/applications/$APP_NAME_LOWERCASE.desktop bin/$APP_NAME/
+  mv bin/usr/share/pixmaps/$APP_NAME_LOWERCASE.svg bin/$APP_NAME/
+  printf '[Paths]\nPrefix = .\nPlugins = plugins\nImports = qml\n' > bin/$APP_NAME/qt.conf
+  printf '#!/bin/sh\nappname=`basename $0 | sed s,\.sh$,,`\ndirname=`dirname $0`\nexport LD_LIBRARY_PATH=$dirname\n$dirname/$appname' > bin/$APP_NAME/$APP_NAME_LOWERCASE.sh
+  chmod +x bin/$APP_NAME/$APP_NAME_LOWERCASE.sh
+
+  #echo '---- MapLibre deployment hack'
+  #cp -r $QT_ROOT_DIR/qml/MapLibre/ bin/$APP_NAME/qml/MapLibre/
+  #cp $QT_ROOT_DIR/plugins/geoservices/libqtgeoservices_maplibre.so bin/$APP_NAME/plugins/geoservices/libqtgeoservices_maplibre.so
+  #cp $QT_ROOT_DIR/lib/libQMapLibre.so.3.0.0 bin/$APP_NAME/libQMapLibre.so.3
+  #cp $QT_ROOT_DIR/lib/libQMapLibreLocation.so.3.0.0 bin/$APP_NAME/libQMapLibreLocation.so.3
 
   echo '---- Compressing package'
-  tar zcvf $APP_NAME-$APP_VERSION-linux64.tar.gz $APP_NAME/
+  cd bin
+  tar zcvf ../$APP_NAME-$APP_VERSION-linux64.tar.gz $APP_NAME/
 fi
 
 ## UPLOAD ######################################################################

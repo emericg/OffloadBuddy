@@ -15,7 +15,7 @@ on:
 env:
   APP_NAME: "OffloadBuddy"
   APP_VERSION: "0.12"
-  QT_VERSION: "6.7.2"
+  QT_VERSION: "6.11.0"
 
 #-------------------------------------------------------------------------------
 # Workflow jobs
@@ -25,20 +25,13 @@ jobs:
   ## GNU/Linux build ###########################################################
   build-linux:
     name: "Linux CI build"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
-      # Checkout the repository (and submodules)
+      # Checkout repository (and submodules)
       - name: Checkout repository (and submodules)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: recursive
-
-      # Install Qt
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v4
-        with:
-          version: ${{env.QT_VERSION}}
-          modules: qtmultimedia qtpositioning qtlocation qtcharts
 
       # Install dependencies (from package manager)
       - name: Install dependencies (from package manager)
@@ -51,14 +44,20 @@ jobs:
              sudo apt-get install libgl1-mesa-dev libxcb1-dev libxkbcommon-x11-dev libx11-xcb-dev libxcb-cursor0 libzstd-dev -y;
              sudo apt-get install cmake ninja-build pkgconf libtool appstream -y;
 
+      # Install Qt
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          modules: qtmultimedia qtpositioning qtlocation qtcharts
+
       # Setup env
       - name: Setup env
         run: |
+             echo "CMAKE_BUILD_PARALLEL_LEVEL=$(nproc)" >> $GITHUB_ENV
              qmake --version
              cmake --version
-             export CMAKE_BUILD_PARALLEL_LEVEL=$(nproc)
-             sudo rm /home/runner/work/${{env.APP_NAME}}/Qt/${{env.QT_VERSION}}/gcc_64/plugins/sqldrivers/libqsqlmimer.so
-             sudo rm /home/runner/work/${{env.APP_NAME}}/Qt/${{env.QT_VERSION}}/gcc_64/plugins/position/libqtposition_nmea.so
+             ninja --version
 
       # Build dependencies (from contribs script)
       - name: Build dependencies (from contribs script)
@@ -70,48 +69,48 @@ jobs:
       # Build application
       - name: Build application
         run: |
-             qmake ${{env.APP_NAME}}.pro DEFINES+=USE_CONTRIBS CONFIG+=release PREFIX=/usr
-             make -j$(nproc)
+             cmake -B build/ -DCMAKE_BUILD_TYPE=Release -G Ninja
+             cmake --build build/ --config Release
 
       # Deploy application
       - name: Deploy application
         run: ./deploy_linux.sh -c -i -p
 
-      # Upload archive
-      - name: Upload archive
-        uses: actions/upload-artifact@v4
+      # Upload application ZIP
+      - name: Upload application ZIP
+        uses: actions/upload-artifact@v6
         with:
-          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-linux64.tar.gz
-          path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-linux64.tar.gz
+          name: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-linux64.tar.gz
+          path: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-linux64.tar.gz
 
       # Upload AppImage
       - name: Upload AppImage
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
-          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-linux64.AppImage
-          path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-linux64.AppImage
+          name: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-linux64.AppImage
+          path: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-linux64.AppImage
 
   ## macOS build ###############################################################
   build-mac:
     name: "macOS CI build"
-    runs-on: macos-12
+    runs-on: macos-15
     steps:
-      # Checkout the repository (and submodules)
+      # Checkout repository (and submodules)
       - name: Checkout repository (and submodules)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: recursive
 
       # Install dependencies (from package manager)
       #- name: Install dependencies (from package manager)
       #  run: |
-      #       brew install qt6 cmake
+      #       brew install qt6 cmake ninja
 
       # Install Qt
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
-          version: ${{env.QT_VERSION}}
+          version: ${{ env.QT_VERSION }}
           modules: qtmultimedia qtpositioning qtlocation qtcharts
 
       # Install dependencies (from package manager)
@@ -123,8 +122,10 @@ jobs:
       # Setup env
       - name: Setup env
         run: |
+             echo "CMAKE_BUILD_PARALLEL_LEVEL=`sysctl -n hw.logicalcpu`" >> $GITHUB_ENV
              qmake --version
              cmake --version
+             ninja --version
 
       # Build dependencies (from contribs script)
       - name: Build dependencies (from contribs script)
@@ -136,28 +137,28 @@ jobs:
       # Build application
       - name: Build application
         run: |
-             qmake ${{env.APP_NAME}}.pro DEFINES+=USE_CONTRIBS CONFIG+=release
-             make -j`sysctl -n hw.logicalcpu`
+             cmake -B build/ -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64"
+             cmake --build build/ --config Release
 
       # Deploy application
       - name: Deploy application
         run: ./deploy_macos.sh -c -p
 
-      # Upload application ZIP
-      - name: Upload apapplicationp ZIP
-        uses: actions/upload-artifact@v4
+      # Upload application bundle
+      - name: Upload application bundle
+        uses: actions/upload-artifact@v6
         with:
-          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-macOS.zip
-          path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-macOS.zip
+          name: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-macOS.zip
+          path: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-macOS.zip
 
   ## Windows build #############################################################
   build-windows:
     name: "Windows CI build"
     runs-on: windows-2022
     steps:
-      # Checkout the repository (and submodules)
+      # Checkout repository (and submodules)
       - name: Checkout repository (and submodules)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: recursive
 
@@ -165,7 +166,7 @@ jobs:
       - name: Configure MSVC
         uses: ilammy/msvc-dev-cmd@v1
         with:
-          arch: x64
+          arch: x86_64
 
       # Install Qt
       - name: Install Qt
@@ -173,6 +174,7 @@ jobs:
         with:
           version: ${{env.QT_VERSION}}
           modules: qtmultimedia qtpositioning qtlocation qtcharts
+          arch: 'win64_msvc2022_64'
 
       # Install NSIS (already installed in 'windows-2022')
       #- name: Install NSIS
@@ -197,7 +199,8 @@ jobs:
       # Build application
       - name: Build application
         run: |
-             qmake ${{env.APP_NAME}}.pro DEFINES+=USE_CONTRIBS CONFIG+=release
+             cmake -B build/ -DCMAKE_BUILD_TYPE=Release -G "NMake Makefiles"
+             cd build/
              nmake
 
       # Deploy application
@@ -206,14 +209,14 @@ jobs:
 
       # Upload application ZIP
       - name: Upload application ZIP
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
-          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.zip
-          path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.zip
+          name: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-win64.zip
+          path: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-win64.zip
 
       # Upload NSIS installer
       - name: Upload NSIS installer
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
-          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.exe
-          path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.exe
+          name: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-win64.exe
+          path: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-win64.exe
