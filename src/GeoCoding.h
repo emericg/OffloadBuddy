@@ -25,15 +25,9 @@
 
 #include <QObject>
 
-#ifdef ENABLE_QTLOCATION
 class QGeoCoordinate;
 class QGeoCodingManager;
 class QGeoServiceProvider;
-#else
-typedef int QGeoCoordinate;
-class QGeoCodingManager;
-class QGeoServiceProvider;
-#endif
 
 class Shot;
 

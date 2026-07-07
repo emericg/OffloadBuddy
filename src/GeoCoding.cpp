@@ -2,13 +2,12 @@
 #include "GeoCoding.h"
 #include "Shot.h"
 
-#ifdef ENABLE_QTLOCATION
 #include <QGeoCodingManager>
 #include <QGeoServiceProvider>
 #include <QGeoCoordinate>
 #include <QGeoCodeReply>
 #include <QGeoRectangle>
-#endif
+
 #include <QDebug>
 
 /* ************************************************************************** */
@@ -27,18 +26,14 @@ GeoCoding *GeoCoding::getInstance()
 
 GeoCoding::GeoCoding()
 {
-#ifdef ENABLE_QTLOCATION
     geo_pro = new QGeoServiceProvider("osm");
     if (geo_pro) geo_mgr = geo_pro->geocodingManager();
-#endif
 }
 
 GeoCoding::~GeoCoding()
 {
-#ifdef ENABLE_QTLOCATION
     delete geo_pro;
     delete geo_mgr;
-#endif
 }
 
 /* ************************************************************************** */
@@ -47,7 +42,6 @@ void GeoCoding::getLocation(Shot *shot)
 {
     //qDebug() << "GeoCoding::getLocation(coord)";
 
-#ifdef ENABLE_QTLOCATION
     if (geo_mgr && shot)
     {
         QGeoCoordinate gc(shot->getLatitude(), shot->getLongitude());
@@ -64,7 +58,6 @@ void GeoCoding::getLocation(Shot *shot)
             delete geo_rep;
         }
     }
-#endif
 }
 
 /* ************************************************************************** */

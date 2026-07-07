@@ -51,13 +51,8 @@ typedef int GpmfKLV;
 #include <QDateTime>
 #include <QAbstractListModel>
 
-#ifdef ENABLE_QTLOCATION
 #include <QGeoCoordinate>
 #include <QGeoCodeReply>
-#else
-typedef int QGeoCoordinate;
-typedef void QGeoCodeReply;
-#endif
 
 class QDateTimeAxis;
 class QLineSeries;
@@ -572,7 +567,6 @@ class Shot: public QObject
     Q_PROPERTY(bool hasEXIF READ hasExif NOTIFY metadataUpdated)
 
     bool hasGPS = false;
-    bool hasGps() { return hasGPS; }
     Q_PROPERTY(bool hasGPS READ hasGps NOTIFY metadataUpdated)
 
     bool hasGPMF = false;
@@ -732,6 +726,7 @@ public:
     QVariant getHiLights() const { if (m_hilight.size() > 0) { return QVariant::fromValue(m_hilight); } return QVariant(); }
 
     // GPS
+    bool hasGps() { return hasGPS; }
     QString getLatitudeStr() const { return gps_lat_str; }
     QString getLongitudeStr() const { return gps_long_str; }
     QString getAltitudeStr() const { return gps_alt_str; }

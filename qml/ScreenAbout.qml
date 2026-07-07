@@ -126,7 +126,7 @@ Loader {
                         sourceSize.height: 160
 
                         fillMode: Image.PreserveAspectFit
-                        source: "qrc:/gfx/offloadbuddy.svg"
+                        source: "qrc:/gfx/OffloadBuddy.svg"
                     }
 
                     Column {

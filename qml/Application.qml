@@ -386,7 +386,7 @@ ApplicationWindow {
                     anchors.centerIn: parent
                     width: 256
                     height: 256
-                    source: "qrc:/gfx/offloadbuddy.svg"
+                    source: "qrc:/gfx/OffloadBuddy.svg"
                     sourceSize: Qt.size(width, height)
 
                     Behavior on opacity { OpacityAnimator { duration: 666; } }

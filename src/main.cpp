@@ -114,21 +114,17 @@ int main(int argc, char *argv[])
 {
     print_build_infos();
 
-#if defined(Q_OS_LINUX)
-    // Force "old" gstreamer multimedia backend
-    //qputenv("QT_MEDIA_BACKEND", "gstreamer");
-#endif
-
     // Qt 6.6+ mouse wheel hack
     qputenv("QT_QUICK_FLICKABLE_WHEEL_DECELERATION", "7500");
 
     SingleApplication app(argc, argv, true);
 
-    app.setWindowIcon(QIcon(":/gfx/offloadbuddy.svg"));
     app.setApplicationName("OffloadBuddy");
     app.setApplicationDisplayName("OffloadBuddy");
     app.setOrganizationDomain("OffloadBuddy");
     app.setOrganizationName("OffloadBuddy");
+
+    app.setWindowIcon(QIcon(":/gfx/OffloadBuddy.svg"));
 
     ////////////////////////////////////////////////////////////////////////////
 

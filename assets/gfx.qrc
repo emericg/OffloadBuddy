@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/gfx">
-        <file alias="offloadbuddy.svg">gfx/logos/offloadbuddy.svg</file>
+        <file alias="OffloadBuddy.svg">gfx/logos/OffloadBuddy.svg</file>
 
         <file alias="navigate_before_big.svg">gfx/icons/navigate_before_big.svg</file>
 

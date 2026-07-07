@@ -7,21 +7,21 @@ contribs/deploy/*
 contribs/env/*
 contribs/src/*
 
-# QtCreator temporary project files
-OffloadBuddy.config
-OffloadBuddy.creator*
-OffloadBuddy.files
-OffloadBuddy.includes
-OffloadBuddy.pro.*
-
-# Qt Quick Compiler
+# QtQuick Compiler
 qrc_resources.cpp
 qmlcache_loader.cpp
 qml_*qml.cpp
+.qmlls.ini
 
-# QMake temporary project files
+# CMake temporary project files
+CMakeLists.txt.user
 Makefile
-.qmake.stash
+
+# XCode related
+Debug/*
+Release/*
+*.xcodeproj/*
+asset_catalog_compiler.Info.plist
 
 # Others
 stash/*

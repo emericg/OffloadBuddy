@@ -21,13 +21,13 @@
 
 #include "FirmwareManager.h"
 #include "Device.h"
-#include "utils_versionchecker.h"
 #include "miniz.h"
 
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
 #include <QSettings>
+#include <QVersionNumber>
 #include <QStandardPaths>
 #include <QCoreApplication>
 
@@ -433,7 +433,7 @@ bool FirmwareManager::hasUpdate(const QString &modelStr, const QString &version)
     QJsonObject jsonObject = m_catalogGoPro_json.object();
     QJsonArray jsonArray = jsonObject["cameras"].toArray();
 
-    for (const auto &value: jsonArray)
+    for (const auto &value: std::as_const(jsonArray))
     {
         QJsonObject obj = value.toObject();
         QString n = obj["name"].toString();
@@ -445,9 +445,7 @@ bool FirmwareManager::hasUpdate(const QString &modelStr, const QString &version)
             QString current = version;
             current.remove(0, 7);
 
-            VersionChecker a(current);
-
-            return !(a == v);
+            return QVersionNumber::fromString(current) != QVersionNumber::fromString(v);
         }
     }
 
@@ -459,7 +457,7 @@ QString FirmwareManager::lastUpdate(const QString &modelStr)
     QJsonObject jsonObject = m_catalogGoPro_json.object();
     QJsonArray jsonArray = jsonObject["cameras"].toArray();
 
-    for (const auto &value: jsonArray)
+    for (const auto &value: std::as_const(jsonArray))
     {
         QJsonObject obj = value.toObject();
         QString n = obj["name"].toString();
@@ -479,7 +477,7 @@ QDateTime FirmwareManager::lastDate(const QString &modelStr)
     QJsonObject jsonObject = m_catalogGoPro_json.object();
     QJsonArray jsonArray = jsonObject["cameras"].toArray();
 
-    for (const auto &value: jsonArray)
+    for (const auto &value: std::as_const(jsonArray))
     {
         QJsonObject obj = value.toObject();
         QString n = obj["name"].toString();
@@ -499,7 +497,7 @@ QString FirmwareManager::lastReleaseNotes(const QString &modelStr)
     QJsonObject jsonObject = m_catalogGoPro_json.object();
     QJsonArray jsonArray = jsonObject["cameras"].toArray();
 
-    for (const auto &value: jsonArray)
+    for (const auto &value: std::as_const(jsonArray))
     {
         QJsonObject obj = value.toObject();
         QString n = obj["name"].toString();
@@ -519,7 +517,7 @@ QString FirmwareManager::lastUrl(const QString &modelStr)
     QJsonObject jsonObject = m_catalogGoPro_json.object();
     QJsonArray jsonArray = jsonObject["cameras"].toArray();
 
-    for (const auto &value: jsonArray)
+    for (const auto &value: std::as_const(jsonArray))
     {
         QJsonObject obj = value.toObject();
         QString n = obj["name"].toString();
