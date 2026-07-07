@@ -100,6 +100,12 @@ bool ThumbnailerBackend_gstreamer::loadMedia(const QString &path, int width, int
         if (!m_gstSource) qWarning() << "GST source could not be created.";
         if (!m_gstDecodeBin) qWarning() << "GST decoder could not be created.";
 
+        // Unref elements created but not added to the pipeline
+        if (m_gstSource) { gst_object_unref(m_gstSource); m_gstSource = nullptr; }
+        if (m_gstDecodeBin) { gst_object_unref(m_gstDecodeBin); m_gstDecodeBin = nullptr; }
+
+        destroyPipeline();
+
         return status;
     }
 
@@ -160,6 +166,14 @@ bool ThumbnailerBackend_gstreamer::loadMedia(const QString &path, int width, int
             status = false;
         }
     }
+    else
+    {
+        qWarning() << "GST could not link source and decoder.";
+        status = false;
+    }
+
+    // Don't leave a half-built pipeline behind on failure
+    if (!status) destroyPipeline();
 
     return status;
 }
@@ -227,7 +241,7 @@ bool ThumbnailerBackend_gstreamer::seek_internal(int64_t nsec)
     if (m_currentPipelineState == GST_STATE_PLAYING || m_currentPipelineState == GST_STATE_PAUSED)
     {
         gint64 seekpos = (gint64)nsec;
-        GstSeekFlags flags = (GstSeekFlags)(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT | GST_SEEK_FLAG_KEY_UNIT);
+        GstSeekFlags flags = (GstSeekFlags)(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_SNAP_NEAREST | GST_SEEK_FLAG_KEY_UNIT);
 
         if (gst_element_seek_simple(m_gstPipeline, GST_FORMAT_TIME, flags, seekpos) == TRUE)
         {
@@ -577,21 +591,26 @@ bool ThumbnailerBackend_gstreamer::getImage(const QString &path, QImage &img,
 
     if (gst_init_check(nullptr, nullptr, nullptr))
     {
-        loadMedia(path, width, height);
-
-        pause_internal();
-
-        int64_t time_ns = timecode_s;
-        time_ns *= 1000000000;
-        if (seek_internal(time_ns) == true)
+        if (loadMedia(path, width, height))
         {
-            play_internal();
+            pause_internal();
 
-            if (getVideoSample(img))
+            int64_t time_ns = timecode_s;
+            time_ns *= 1000000000;
+            if (seek_internal(time_ns) == true)
             {
-                status = true;
+                play_internal();
+
+                if (getVideoSample(img))
+                {
+                    status = true;
+                }
             }
+
+            stop_internal();
         }
+
+        destroyPipeline();
     }
 
     return status;

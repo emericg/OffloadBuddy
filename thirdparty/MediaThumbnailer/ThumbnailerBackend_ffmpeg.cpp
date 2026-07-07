@@ -136,10 +136,11 @@ bool decode_packet(AVPacket *pPacket, AVCodecContext *pCodecContext, AVFrame *pF
                 return status;
             }
 
-            int dummy[4];
+            int *inv_table = nullptr;
+            int *table = nullptr;
             int brightness, contrast, saturation;
-            sws_getColorspaceDetails(sws_ctx, (int**)&dummy, &srcRange,
-                                     (int**)&dummy, &dstRange,
+            sws_getColorspaceDetails(sws_ctx, &inv_table, &srcRange,
+                                     &table, &dstRange,
                                      &brightness, &contrast, &saturation);
 
             const int *coefs = sws_getCoefficients(SWS_CS_DEFAULT);
@@ -155,6 +156,7 @@ bool decode_packet(AVPacket *pPacket, AVCodecContext *pCodecContext, AVFrame *pF
                                           dst_w, dst_h, dst_pix_fmt, 1)) < 0)
             {
                 qDebug() << "ERROR Could not allocate destination image";
+                sws_freeContext(sws_ctx);
                 return status;
             }
 
@@ -171,6 +173,9 @@ bool decode_packet(AVPacket *pPacket, AVCodecContext *pCodecContext, AVFrame *pF
             sws_freeContext(sws_ctx);
 
             status = true;
+
+            // we have a picture!
+            break;
         }
     }
 
@@ -186,7 +191,7 @@ bool ThumbnailerBackend_ffmpeg::getImage(const QString &path, QImage &img,
     bool status = false;
 
     AVStream *videoStreamContext = nullptr;
-    AVCodec *videoCodec = nullptr;
+    const AVCodec *videoCodec = nullptr;
     AVCodecParameters *videoCodecParameters = nullptr;
     AVCodecContext *videoCodecContext = nullptr;
     int videoStreamIndex = -1;
@@ -220,13 +225,11 @@ bool ThumbnailerBackend_ffmpeg::getImage(const QString &path, QImage &img,
         AVCodecParameters *pLocalCodecParameters = nullptr;
         pLocalCodecParameters = demuxContext->streams[i]->codecpar;
 
-        if (!pLocalCodecParameters)
-            continue;
-        if (pLocalCodecParameters->codec_type != AVMEDIA_TYPE_VIDEO)
-            continue;
+        if (!pLocalCodecParameters) continue;
+        if (pLocalCodecParameters->codec_type != AVMEDIA_TYPE_VIDEO) continue;
 
         // finds the registered decoder for a codec ID
-        AVCodec *pLocalCodec = (AVCodec *)avcodec_find_decoder(pLocalCodecParameters->codec_id);
+        const AVCodec *pLocalCodec = avcodec_find_decoder(pLocalCodecParameters->codec_id);
         if (pLocalCodec == nullptr)
         {
             qDebug() << "ERROR unsupported codec!" << QByteArray::fromHex(QString::number(pLocalCodecParameters->codec_tag, 16).toUtf8());
@@ -267,14 +270,13 @@ bool ThumbnailerBackend_ffmpeg::getImage(const QString &path, QImage &img,
     videoCodecContext->flags2 = AV_CODEC_FLAG2_FAST;
     videoCodecContext->thread_count = 2;
     videoCodecContext->thread_type = FF_THREAD_SLICE;
+    videoCodecContext->skip_frame = AVDISCARD_NONKEY;
 
     if (avcodec_open2(videoCodecContext, videoCodec, nullptr) < 0)
     {
         qDebug() << "ERROR failed to open codec through avcodec_open2";
         goto abort_stage2;
     }
-
-    videoCodecContext->hwaccel = nullptr;
 
     /// FRAMES ALLOCATIONS /////////////////////////////////////////////////////
 
@@ -325,12 +327,10 @@ bool ThumbnailerBackend_ffmpeg::getImage(const QString &path, QImage &img,
                                    img, width, height);
 
             // we have a picture!
-            if (status)
-                break;
+            if (status) break;
 
             // stop it, otherwise we'll be saving hundreds of frames
-            if (--max_packets_to_process <= 0)
-                break;
+            if (--max_packets_to_process <= 0) break;
         }
         av_packet_unref(pPacket);
     }
@@ -346,7 +346,6 @@ abort_stage2:
 
 abort_stage1:
     avformat_close_input(&demuxContext);
-    avformat_free_context(demuxContext);
 
     return status;
 }
