@@ -2,15 +2,22 @@ cmake_minimum_required(VERSION 3.20)
 
 project(MediaThumbnailer LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_AUTOMOC ON)
 
 ################################################################################
 
-option(BACKEND_FFMPEG "" OFF)
-option(BACKEND_GSTREAMER "" ON)
+option(BACKEND_FFMPEG "" ON)
+option(BACKEND_GSTREAMER "" OFF)
 option(BACKEND_MINIVIDEO "" OFF)
+
+################################################################################
+
+set(CORE_COMPONENTS Core Gui Quick)
+set(CORE_LIBRARIES Qt6::Core Qt6::Gui Qt6::Quick)
+find_package(Qt6 6.5 REQUIRED COMPONENTS ${CORE_COMPONENTS})
+
+qt_standard_project_setup()
 
 ################################################################################
 
@@ -41,15 +48,15 @@ elseif(BACKEND_MINIVIDEO)
     set(BACKEND_SOURCES ThumbnailerBackend_minivideo.cpp ThumbnailerBackend_minivideo.h)
     set(BACKEND_LIBRARIES Minivideo::Minivideo)
 
+else()
+
+    message(WARNING "MediaThumbnailer will work best if you choose a backend...")
+
 endif()
 
 ################################################################################
 
-set(CORE_COMPONENTS Core Gui Quick)
-set(CORE_LIBRARIES Qt6::Core Qt6::Gui Qt6::Quick)
-find_package(Qt6 6.5 REQUIRED COMPONENTS ${CORE_COMPONENTS})
-
-add_library(MediaThumbnailer STATIC
+qt_add_library(MediaThumbnailer STATIC
     MediaThumbnailer.h
     MediaThumbnailer_threadpool.cpp MediaThumbnailer_threadpool.h
     MediaThumbnailer_async.cpp MediaThumbnailer_async.h

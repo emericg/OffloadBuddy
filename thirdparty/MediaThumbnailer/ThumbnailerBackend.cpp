@@ -22,11 +22,9 @@
 
 #if defined(ENABLE_FFMPEG)
 #include "ThumbnailerBackend_ffmpeg.h"
-#endif
-#if defined(ENABLE_GSTREAMER)
+#elif defined(ENABLE_GSTREAMER)
 #include "ThumbnailerBackend_gstreamer.h"
-#endif
-#if defined(ENABLE_MINIVIDEO)
+#elif defined(ENABLE_MINIVIDEO)
 #include "ThumbnailerBackend_minivideo.h"
 #endif
 
@@ -35,18 +33,17 @@
 ThumbnailerBackend::ThumbnailerBackend()
 {
 #if defined(ENABLE_FFMPEG)
-    m_backend = new ThumbnailerBackend_ffmpeg();
-    return;
-#endif
 
-#if defined(ENABLE_GSTREAMER)
-    m_backend = new ThumbnailerBackend_gstreamer();
-    return;
-#endif
+    m_backend = std::make_unique<ThumbnailerBackend_ffmpeg>();
 
-#if defined(ENABLE_MINIVIDEO)
-    m_backend = new ThumbnailerBackend_minivideo();
-    return;
+#elif defined(ENABLE_GSTREAMER)
+
+    m_backend = std::make_unique<ThumbnailerBackend_gstreamer>();
+
+#elif defined(ENABLE_MINIVIDEO)
+
+    m_backend = std::make_unique<ThumbnailerBackend_minivideo>();
+
 #endif
 }
 

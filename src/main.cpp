@@ -191,8 +191,7 @@ int main(int argc, char *argv[])
     engine_context->setContextProperty("mediaLibrary", ml);
     engine_context->setContextProperty("mediaUtils", mediaUtils);
 
-    MediaThumbnailer_threadpool *tmb = new MediaThumbnailer_threadpool(utilsSysinfo->getCpuCoreCountPhysical() / 2);
-    tmb->registerQml(&engine);
+    MediaThumbnailer_threadpool::registerToEngine(&engine, utilsSysinfo->getCpuCoreCountPhysical() / 2);
 
     // Load the main view
     engine.loadFromModule("OffloadBuddy", "Application");

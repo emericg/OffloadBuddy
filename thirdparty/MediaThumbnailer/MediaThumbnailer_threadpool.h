@@ -33,7 +33,7 @@
 #include <QQuickImageProvider>
 #include <QQuickAsyncImageProvider>
 
-class QQmlApplicationEngine;
+class QQmlEngine;
 
 /* ************************************************************************** */
 
@@ -94,7 +94,17 @@ class MediaThumbnailer_threadpool : public QQuickAsyncImageProvider
 public:
     MediaThumbnailer_threadpool(int threadCount = -1);
 
-    bool registerQml(QQmlApplicationEngine *engine);
+    /*!
+     * \brief Create the provider and register it to a QML engine under the "MediaThumbnailer" scheme.
+     * \param engine: The QML engine of your application.
+     * \param threadCount: Number of thread the threadpool is allowed to use.
+     * \return Pointer to the QQuickAsyncImageProvider created.
+     *
+     * The engine takes ownership of the returned provider and deletes it on teardown (do not delete it yourself).
+     */
+    static MediaThumbnailer_threadpool *registerToEngine(QQmlEngine *engine, int threadCount = -1);
+
+    bool registerQml(QQmlEngine *engine);
 
     QQuickImageResponse *requestImageResponse(const QString &id, const QSize &requestedSize) override;
 };

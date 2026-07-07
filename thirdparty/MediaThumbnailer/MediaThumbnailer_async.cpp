@@ -20,7 +20,7 @@
 
 #include "MediaThumbnailer_async.h"
 
-#include <QQmlApplicationEngine>
+#include <QQmlEngine>
 #include <QImageReader>
 #include <QImage>
 #include <QDebug>
@@ -35,7 +35,19 @@ MediaThumbnailer_async::MediaThumbnailer_async() :
 
 /* ************************************************************************** */
 
-bool MediaThumbnailer_async::registerQml(QQmlApplicationEngine *engine)
+MediaThumbnailer_async *MediaThumbnailer_async::registerToEngine(QQmlEngine *engine)
+{
+    if (!engine) return nullptr;
+
+    auto *provider = new MediaThumbnailer_async();
+    engine->addImageProvider("MediaThumbnailer", provider);
+
+    return provider;
+}
+
+/* ************************************************************************** */
+
+bool MediaThumbnailer_async::registerQml(QQmlEngine *engine)
 {
     bool status = false;
 

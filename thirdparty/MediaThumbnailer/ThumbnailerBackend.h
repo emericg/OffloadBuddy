@@ -22,6 +22,8 @@
 #define THUMBNAILER_BACKEND_H
 /* ************************************************************************** */
 
+#include <memory>
+
 #include <QString>
 #include <QImage>
 
@@ -45,14 +47,14 @@ public:
 class ThumbnailerBackend : public ThumbnailerBackendInterface
 {
 protected:
-    ThumbnailerBackendInterface *m_backend = nullptr;
+    std::unique_ptr<ThumbnailerBackendInterface> m_backend;
 
 public:
     ThumbnailerBackend();
-    virtual ~ThumbnailerBackend() { delete m_backend; };
+    virtual ~ThumbnailerBackend() = default;
 
     virtual bool getImage(const QString &path, QImage &image,
-                  const int timecode_s, const int width, const int height)
+                  const int timecode_s, const int width, const int height) override
     {
         if (m_backend) return m_backend->getImage(path, image, timecode_s, width, height);
 

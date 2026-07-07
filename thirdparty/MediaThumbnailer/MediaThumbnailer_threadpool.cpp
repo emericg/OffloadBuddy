@@ -20,7 +20,7 @@
 
 #include "MediaThumbnailer_threadpool.h"
 
-#include <QQmlApplicationEngine>
+#include <QQmlEngine>
 #include <QImageReader>
 #include <QImage>
 #include <QDebug>
@@ -40,7 +40,19 @@ MediaThumbnailer_threadpool::MediaThumbnailer_threadpool(int threadCount) : QQui
 
 /* ************************************************************************** */
 
-bool MediaThumbnailer_threadpool::registerQml(QQmlApplicationEngine *engine)
+MediaThumbnailer_threadpool *MediaThumbnailer_threadpool::registerToEngine(QQmlEngine *engine, int threadCount)
+{
+    if (!engine) return nullptr;
+
+    auto *provider = new MediaThumbnailer_threadpool(threadCount);
+    engine->addImageProvider("MediaThumbnailer", provider);
+
+    return provider;
+}
+
+/* ************************************************************************** */
+
+bool MediaThumbnailer_threadpool::registerQml(QQmlEngine *engine)
 {
     bool status = false;
 

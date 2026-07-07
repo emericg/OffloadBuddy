@@ -26,7 +26,7 @@
 
 #include <QQuickImageProvider>
 
-class QQmlApplicationEngine;
+class QQmlEngine;
 
 /* ************************************************************************** */
 
@@ -42,7 +42,16 @@ class MediaThumbnailer_async : public QQuickImageProvider
 public:
     MediaThumbnailer_async();
 
-    bool registerQml(QQmlApplicationEngine *engine);
+    /*!
+     * \brief Create the provider and register it to a QML engine under the "MediaThumbnailer" scheme.
+     * \param engine: The QML engine of your application.
+     * \return Pointer to the QQuickAsyncImageProvider created.
+     *
+     * The engine takes ownership of the returned provider and deletes it on teardown (do not delete it yourself).
+     */
+    static MediaThumbnailer_async *registerToEngine(QQmlEngine *engine);
+
+    bool registerQml(QQmlEngine *engine);
 
     QImage requestImage(const QString &id, QSize *size,
                         const QSize &requestedSize) override;
