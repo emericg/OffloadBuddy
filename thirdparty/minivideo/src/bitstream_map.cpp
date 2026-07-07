@@ -617,26 +617,6 @@ bool computeCodecsSpecifics(MediaFile_t *media)
                 track->stream_codec_profile = getH265CodecProfile(hvcC->general_profile_idc);
                 track->video_level = static_cast<double>(hvcC->general_level_idc) / 30.0;
                 track->color_depth = hvcC->bitDepthLumaMinus8 + 8;
-
-                // Chroma
-                //if (hvcC->sps_array[0]->chroma_format_idc == 0)
-                //    track->chroma_subsampling = CHROMA_SS_400;
-                //else if (hvcC->sps_array[0]->chroma_format_idc == 1)
-                //    track->chroma_subsampling = CHROMA_SS_420;
-                //else if (hvcC->sps_array[0]->chroma_format_idc == 2)
-                //    track->chroma_subsampling = CHROMA_SS_422;
-                //else if (hvcC->sps_array[0]->chroma_format_idc == 3)
-                //    track->chroma_subsampling = CHROMA_SS_444;
-                //else
-                //    track->chroma_subsampling = CHROMA_SS_420;
-
-                // if (vui)
-                //if (ChromaLocType == 0) track->chroma_loation = CHROMA_LOC_LEFT;
-                //else if (ChromaLocType == 1) track->chroma_location = CHROMA_LOC_CENTER; ??
-                //else if (ChromaLocType == 2) track->chroma_location = CHROMA_LOC_TOPLEFT;
-                //else if (ChromaLocType == 3) track->chroma_location = CHROMA_LOC_TOP;
-                //else if (ChromaLocType == 4) track->chroma_location = CHROMA_LOC_BOTTOMLEFT;
-                //else if (ChromaLocType == 5) track->chroma_location = CHROMA_LOC_BOTTOM;
             }
             else if (track->stream_codec == CODEC_H266 && track->vvcC)
             {

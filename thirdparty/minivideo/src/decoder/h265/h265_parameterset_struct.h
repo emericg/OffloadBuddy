@@ -150,22 +150,6 @@ typedef struct h265_hrd_t
             uint8_t initial_cpb_removal_delay_length_minus1;
             uint8_t au_cpb_removal_delay_length_minus1;
             uint8_t dpb_output_delay_length_minus1;
-/*
-    //for (i = 0; i <= maxNumSubLayersMinus1; i++)
-        bool fixed_pic_rate_general_flag[i];
-        //if (!fixed_pic_rate_general_flag[i])
-            bool fixed_pic_rate_within_cvs_flag[ i ];
-            //if ( fixed_pic_rate_within_cvs_flag[ i ] )
-                elemental_duration_in_tc_minus1[ i ]
-            else
-                low_delay_hrd_flag[ i ]
-                if( !low_delay_hrd_flag[ i ] )
-                cpb_cnt_minus1[ i ]
-                if( nal_hrd_parameters_present_flag )
-                sub_layer_hrd_parameters( i )
-                if( vcl_hrd_parameters_present_flag )
-                sub_layer_hrd_parameters( i )
-*/
 } h265_hrd_t;
 
 /*!
@@ -225,7 +209,6 @@ typedef struct h265_vui_t
     //if (chroma_loc_info_present_flag)
         uint32_t chroma_sample_loc_type_top_field;
         uint32_t chroma_sample_loc_type_bottom_field;
-        uint32_t ChromaLocType;
 
     bool neutral_chroma_indication_flag;
     bool field_seq_flag;

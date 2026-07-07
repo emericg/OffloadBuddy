@@ -24,8 +24,8 @@
 #define MUXER_H
 
 // minivideo headers
-#include "minivideo_mediafile.h"
-#include "minivideo_mediastream.h"
+#include "../import.h"
+#include "../bitstream.h"
 
 /* ************************************************************************** */
 

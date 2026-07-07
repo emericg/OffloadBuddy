@@ -42,7 +42,6 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cinttypes>
-#include <cstring>
 
 /* ************************************************************************** */
 /* ************************************************************************** */
@@ -1207,58 +1206,7 @@ int parse_avcC(Bitstream_t *bitstr, Mp4Box_t *box_header, Mp4Track_t *track, Mp4
             skip_bits(bitstr, ((track->avcC->pps_sample_offset[i] + track->avcC->pps_sample_size[i]) - bitstream_get_absolute_byte_offset(bitstr)) * 8);
         }
     }
-/*
-    // SPS (v2)
-    track->avcC->sps_count = read_bits(bitstr, 5);
-    track->sps_count = track->avcC->sps_count;
 
-    for (unsigned i = 0; i < track->avcC->sps_count && i < MAX_SPS; i++) // MAX_SPS = 32
-    {
-        codecprivate_param_info_t info;
-        info.sample_size = read_bits(bitstr, 16);
-        info.sample_offset = bitstream_get_absolute_byte_offset(bitstr);
-        track->avcC->sps_info.push_back(info);
-
-        h264_sps_t *sps = new h264_sps_t;
-        skip_bits(bitstr, 8); // skip NAL header
-        decodeSPS(bitstr, sps);
-
-        bitstream_force_alignment(bitstr); // we might end up parsing in the middle of a byte
-        if (bitstream_get_absolute_byte_offset(bitstr) != (info.sample_offset + info.sample_size))
-        {
-            TRACE_WARNING(MP4, "SPS OFFSET ERROR  %lli vs %lli",
-                          bitstream_get_absolute_byte_offset(bitstr),
-                          (info.sample_offset + info.sample_size));
-
-            skip_bits(bitstr, ((info.sample_offset + info.sample_size) - bitstream_get_absolute_byte_offset(bitstr)) * 8);
-        }
-    }
-
-    // PPS (v2)
-    track->avcC->pps_count = read_bits(bitstr, 8);
-    track->pps_count = track->avcC->pps_count;
-
-    for (unsigned i = 0; i < track->avcC->pps_count && i < MAX_PPS; i++) // MAX_PPS = 256
-    {
-        codecprivate_param_info_t info;
-        info.sample_size = read_bits(bitstr, 16);
-        info.sample_offset = bitstream_get_absolute_byte_offset(bitstr);
-        track->avcC->pps_info.push_back(info);
-
-        h264_pps_t *pps = new h264_pps_t;
-        skip_bits(bitstr, 8); // skip NAL header
-        decodePPS(bitstr, track->pps_array[i], track->sps_array);
-        bitstream_force_alignment(bitstr); // we might end up parsing in the middle of a byte
-
-        if (bitstream_get_absolute_byte_offset(bitstr) != (track->pps_sample_offset[i] + track->pps_sample_size[i]))
-        {
-            TRACE_WARNING(MP4, "PPS OFFSET ERROR  %lli vs %lli",
-                          bitstream_get_absolute_byte_offset(bitstr),
-                          (track->pps_sample_offset[i] + track->pps_sample_size[i]));
-            skip_bits(bitstr, ((track->pps_sample_offset[i] + track->pps_sample_size[i]) - bitstream_get_absolute_byte_offset(bitstr)) * 8);
-        }
-    }
-*/
 #if ENABLE_DEBUG
     TRACE_1(MP4, "> configurationVersion  : %u", track->avcC->configurationVersion);
     TRACE_1(MP4, "> AVCProfileIndication  : %u", track->avcC->AVCProfileIndication);
@@ -1388,120 +1336,71 @@ int parse_hvcC(Bitstream_t *bitstr, Mp4Box_t *box_header, Mp4Track_t *track, Mp4
 
     track->hvcC->numOfArrays = read_bits(bitstr, 8);
 
-    track->hvcC->array_completeness = (uint8_t *)malloc(track->hvcC->numOfArrays);
-    track->hvcC->NAL_unit_type = (uint8_t *)malloc(track->hvcC->numOfArrays);
-    track->hvcC->numNalus = (uint16_t *)malloc(track->hvcC->numOfArrays * sizeof(uint16_t));
-    track->hvcC->nalUnitLength = (uint16_t **)malloc(track->hvcC->numOfArrays * sizeof(uint16_t*));
-    track->hvcC->nalUnit = (uint8_t ***)malloc(track->hvcC->numOfArrays * sizeof(uint8_t **));
+    bool *array_completeness = NULL;
+    uint8_t *NAL_unit_type = NULL;
+    uint16_t *numNalus = NULL;
+    uint16_t **nalUnitLength = NULL;
+    uint8_t ***nalUnit = NULL;
 
     for (unsigned j = 0; j < track->hvcC->numOfArrays; j++)
     {
-        if (track->hvcC->array_completeness && track->hvcC->NAL_unit_type &&
-            track->hvcC->numNalus && track->hvcC->nalUnitLength && track->hvcC->nalUnit)
+/*
+        array_completeness = (bool *)malloc(track->hvcC->numOfArrays);
+        NAL_unit_type = (uint8_t *)malloc(track->hvcC->numOfArrays);
+        numNalus = (uint16_t *)malloc(track->hvcC->numOfArrays);
+        nalUnitLength = (uint16_t **)malloc(track->hvcC->numOfArrays);
+        nalUnit = (uint8_t ***)malloc(track->hvcC->numOfArrays);
+        if (array_completeness && NAL_unit_type && numNalus && nalUnitLength && nalUnit)
         {
-            track->hvcC->array_completeness[j] = read_bit(bitstr);
+            array_completeness[j] = read_bits(bitstr, 1);
             skip_bits(bitstr, 1); // reserved
-            track->hvcC->NAL_unit_type[j] = read_bits(bitstr, 6); // can be VPS, SPS, PPS, or SEI NAL unit
-            track->hvcC->numNalus[j] = read_bits(bitstr, 16);
+            NAL_unit_type[j] = read_bits(bitstr, 6); // can be VPS, SPS, PPS, or SEI NAL unit
+            numNalus[j] = read_bits(bitstr, 16);
 
-            track->hvcC->nalUnitLength[j] = (uint16_t *)malloc(track->hvcC->numNalus[j] * sizeof(uint16_t));
-            track->hvcC->nalUnit[j] = (uint8_t **)malloc(track->hvcC->numNalus[j]);
-
-            for (unsigned i = 0; i < track->hvcC->numNalus[j]; i++)
+            for (unsigned i = 0; i < numNalus[j]; i++)
             {
-                if (track->hvcC->nalUnitLength[j] && track->hvcC->nalUnit[j])
+                nalUnitLength[j] = (uint16_t *)malloc(numNalus[j]);
+                nalUnit[j] = (uint8_t **)malloc(numNalus[j]);
+                //if (nalUnitLength[j][i] && nalUnit[j][i])
                 {
-                    track->hvcC->nalUnitLength[j][i] = (uint16_t)read_bits(bitstr, 16);
+                    nalUnitLength[j][i] = read_bits(bitstr, 16);
 
-                    if (track->hvcC->NAL_unit_type[j] == NALU_TYPE_VPS_NUT)
+                    if (NAL_unit_type[j] == NALU_TYPE_VPS_NUT)
                     {
-                        int64_t sample_size = track->hvcC->nalUnitLength[j][i];
-                        int64_t sample_offset = bitstream_get_absolute_byte_offset(bitstr);
-                        h265_vps_t vps;
-                        memset(&vps, 0, sizeof(h265_vps_t));
-
-                        bitstream_force_alignment(bitstr);
-                        skip_bits(bitstr, 16); // skip NAL header
-
-                        h265_decodeVPS(bitstr, &vps);
-                        h265_mapVPS(&vps, sample_offset, sample_size, mp4->xml);
-
-                        bitstream_force_alignment(bitstr); // we might end up parsing in the middle of a byte
-                        if (bitstream_get_absolute_byte_offset(bitstr) != (sample_offset + sample_size))
-                        {
-                            TRACE_WARNING(MP4, "VPS OFFSET ERROR  %lli vs %lli",
-                                          bitstream_get_absolute_byte_offset(bitstr),
-                                          sample_offset + sample_size);
-                            skip_bits(bitstr, (sample_offset + sample_size - bitstream_get_absolute_byte_offset(bitstr)) * 8);
-                        }
+                        skip_bits(bitstr, nalUnitLength[j][i] * 8);
                     }
-                    else if (track->hvcC->NAL_unit_type[j] == NALU_TYPE_SPS_NUT)
+                    else if (NAL_unit_type[j] == NALU_TYPE_SPS_NUT)
                     {
-                        int64_t sample_size = track->hvcC->nalUnitLength[j][i];
-                        int64_t sample_offset = bitstream_get_absolute_byte_offset(bitstr);
-                        h265_sps_t sps;
-                        memset(&sps, 0, sizeof(h265_sps_t));
-
-                        bitstream_force_alignment(bitstr);
-                        skip_bits(bitstr, 16); // skip NAL header
-
-                        h265_decodeSPS(bitstr, &sps);
-                        h265_mapSPS(&sps, sample_offset, sample_size, mp4->xml);
-
-                        bitstream_force_alignment(bitstr); // we might end up parsing in the middle of a byte
-                        if (bitstream_get_absolute_byte_offset(bitstr) != (sample_offset + sample_size))
-                        {
-                            TRACE_WARNING(MP4, "SPS OFFSET ERROR  %lli vs %lli",
-                                          bitstream_get_absolute_byte_offset(bitstr),
-                                          sample_offset + sample_size);
-                            skip_bits(bitstr, (sample_offset + sample_size - bitstream_get_absolute_byte_offset(bitstr)) * 8);
-                        }
+                        skip_bits(bitstr, nalUnitLength[j][i] * 8);
                     }
-                    else if (track->hvcC->NAL_unit_type[j] == NALU_TYPE_PPS_NUT)
+                    else if (NAL_unit_type[j] == NALU_TYPE_PPS_NUT)
                     {
-                        int64_t sample_size = track->hvcC->nalUnitLength[j][i];
-                        int64_t sample_offset = bitstream_get_absolute_byte_offset(bitstr);
-                        h265_pps_t pps;
-                        memset(&pps, 0, sizeof(h265_pps_t));
-
-                        bitstream_force_alignment(bitstr);
-                        skip_bits(bitstr, 16); // skip NAL header
-
-                        h265_decodePPS(bitstr, &pps, nullptr);
-                        h265_mapPPS(&pps, sample_offset, sample_size, mp4->xml);
-
-                        bitstream_force_alignment(bitstr); // we might end up parsing in the middle of a byte
-                        if (bitstream_get_absolute_byte_offset(bitstr) != (sample_offset + sample_size))
-                        {
-                            TRACE_WARNING(MP4, "PPS OFFSET ERROR  %lli vs %lli",
-                                          bitstream_get_absolute_byte_offset(bitstr),
-                                          sample_offset + sample_size);
-                            skip_bits(bitstr, (sample_offset + sample_size - bitstream_get_absolute_byte_offset(bitstr)) * 8);
-                        }
+                        skip_bits(bitstr, nalUnitLength[j][i] * 8);
                     }
-                    else if (track->hvcC->NAL_unit_type[j] == NALU_TYPE_PREFIX_SEI_NUT)
+                    else if (NAL_unit_type[j] == NALU_TYPE_PREFIX_SEI_NUT)
                     {
-                        skip_bits(bitstr, track->hvcC->nalUnitLength[j][i] * 8);
+                        skip_bits(bitstr, nalUnitLength[j][i] * 8);
                     }
-                    else if (track->hvcC->NAL_unit_type[j] == NALU_TYPE_SUFFIX_SEI_NUT)
+                    else if (NAL_unit_type[j] == NALU_TYPE_SUFFIX_SEI_NUT)
                     {
-                        skip_bits(bitstr, track->hvcC->nalUnitLength[j][i] * 8);
+                        skip_bits(bitstr, nalUnitLength[j][i] * 8);
                     }
                     else
                     {
-                        skip_bits(bitstr, track->hvcC->nalUnitLength[j][i] * 8);
+                        //skip_bits(bitstr, nalUnitLength[j][i] * 8);
                     }
                 }
-                else
-                {
-                    retcode = FAILURE;
-                }
+                //else
+                //{
+                //    retcode = FAILURE;
+                //}
             }
         }
         else
         {
             retcode = FAILURE;
         }
+*/
     }
 
 #if ENABLE_DEBUG
@@ -1554,7 +1453,7 @@ int parse_hvcC(Bitstream_t *bitstr, Mp4Box_t *box_header, Mp4Track_t *track, Mp4
         fprintf(mp4->xml, "  <numTemporalLayers>%u</numTemporalLayers>\n", track->hvcC->numTemporalLayers);
         fprintf(mp4->xml, "  <temporalIdNested>%u</temporalIdNested>\n", track->hvcC->temporalIdNested);
         fprintf(mp4->xml, "  <lengthSizeMinusOne>%u</lengthSizeMinusOne>\n", track->hvcC->lengthSizeMinusOne);
-
+/*
         fprintf(mp4->xml, "  <numOfArrays>%u</numOfArrays>\n", track->hvcC->numOfArrays);
         for (unsigned j = 0; j < track->hvcC->numOfArrays; j++)
         {
@@ -1566,35 +1465,15 @@ int parse_hvcC(Bitstream_t *bitstr, Mp4Box_t *box_header, Mp4Track_t *track, Mp4
             for (unsigned i = 0; i < track->hvcC->numNalus[j]; i++)
             {
                 xmlSpacer(mp4->xml, "nal unit", i);
-                fprintf(mp4->xml, "  <nalUnitLength>%u</nalUnitLength>\n", track->hvcC->nalUnitLength[j][i]);
-
-                if (track->hvcC->NAL_unit_type[j] == NALU_TYPE_VPS_NUT)
+                //nalUnitLength[j] = (uint16_t *)malloc(numNalus[j]);
+                //nalUnit[j] = (uint8_t **)malloc(numNalus[j]);
+                //if (nalUnitLength[j] && nalUnit[j])
                 {
-                    xmlSpacer(mp4->xml, "NALU_TYPE_VPS_NUT", -1);
-                }
-                else if (track->hvcC->NAL_unit_type[j] == NALU_TYPE_SPS_NUT)
-                {
-                    xmlSpacer(mp4->xml, "NALU_TYPE_SPS_NUT", -1);
-                }
-                else if (track->hvcC->NAL_unit_type[j] == NALU_TYPE_PPS_NUT)
-                {
-                    xmlSpacer(mp4->xml, "NALU_TYPE_PPS_NUT", -1);
-                }
-                else if (track->hvcC->NAL_unit_type[j] == NALU_TYPE_PREFIX_SEI_NUT)
-                {
-                    xmlSpacer(mp4->xml, "NALU_TYPE_PREFIX_SEI_NUT", -1);
-                }
-                else if (track->hvcC->NAL_unit_type[j] == NALU_TYPE_SUFFIX_SEI_NUT)
-                {
-                    xmlSpacer(mp4->xml, "NALU_TYPE_SUFFIX_SEI_NUT", -1);
-                }
-                else
-                {
-                    xmlSpacer(mp4->xml, "error?", -1);
+                    fprintf(mp4->xml, "  <nalUnitLength>%u</nalUnitLength>\n", nalUnitLength[j][i]);
                 }
             }
         }
-
+*/
         fprintf(mp4->xml, "  </a>\n");
     }
 

@@ -22,8 +22,8 @@
  */
 
 // minivideo headers
-#include "mkv_codec.h"
 #include "mkv_tracks.h"
+#include "mkv_codec.h"
 #include "mkv_struct.h"
 #include "ebml.h"
 

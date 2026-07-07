@@ -28,14 +28,10 @@
 #include "minivideo_containers.h"
 #include "minivideo_mediastream.h"
 #include "minivideo_metadata_vendors.h"
-//#include "demuxer/ContainerParser.h"
 
 // C standard libraries
 #include <cstdio>
 #include <cstdint>
-
-// C++ standard libraries
-#include <string>
 
 /* ************************************************************************** */
 
@@ -133,123 +129,6 @@ typedef struct OutputSurface_t
     uint8_t *surface = nullptr; //!< RGB24 surface
 
 } OutputSurface_t;
-
-/* ************************************************************************** */
-
-// class MediaUrl;
-// class DataSource;
-// class Parser;
-
-// /*!
-//  * \brief Information about a media file and its content.
-//  */
-// class Media2
-// {
-//     MediaUrl *mediaUri = nullptr;
-//     DataSource *mediaDatas = nullptr;
-//     Parser *mediaParser = nullptr;
-
-//     Containers_e container_sc = CONTAINER_UNKNOWN;          //!< Container, from start code detection.
-//     Containers_e container_ext = CONTAINER_UNKNOWN;         //!< Container, from file extension. May not correspond to the 'real' file format.
-
-//     // Infos
-//     uint64_t duration = 0;                  //!< Content global duration (in ms)
-//     uint8_t timecode_reference[4] = {0};    //!< SMPTE timecode reference (hh:mm:ss-fff) ????
-
-//     std::vector <Chapters *> chapters;      //!< A list of chapters
-
-//     // Parsed A/V track(s) data and infos
-//     std::vector <Stream *> tracks_audio;    //!< A list of parsed audio tracks
-//     std::vector <Stream *> tracks_video;    //!< A list of parsed video tracks
-//     std::vector <Stream *> tracks_subt;     //!< A list of parsed subtitles tracks
-//     std::vector <Stream *> tracks_others;   //!< Other / unknown tracks found in the container (metadata, timecodes, ...)
-
-// public:
-//     Media2();
-//     ~Media2();
-
-//     /*!
-//      * \brief Open and parse media file.
-//      * \param uri: File URI.
-//      * \return true in case of success.
-//      *
-//      * Can only be opened once.
-//      */
-//     bool open(std::string &uri);
-
-//     bool open(FILE *fd);
-
-//     /*!
-//      * \brief Force sample indexation.
-//      * \return true in case of success.
-//      */
-//     bool index();
-
-//     /*!
-//      * \brief Extract or compute additional metadata.
-//      * \return true in case of success.
-//      */
-//     bool extract_metadata();
-
-//     OutputSurface_t *decode_video_frameId(int frameId, int streamId = 0);
-//     OutputSurface_t *decode_video_framePts(int framePts, int streamId = 0);
-
-//     ////////////////////////////////////////////////////////////////////////////
-
-//     std::string getMediaPath();
-//     int64_t getMediaSize();
-
-//     std::string getMediaName();
-//     std::string getMediaExtension();
-
-//     /*!
-//      * \brief isMediaExtensionWrong
-//      * \return True means file extension does not match the container used.
-//      *
-//      * Returns True if:
-//      * 1/ there is no extension
-//      * 2/ start code detection has been successfull and mismatch extension detection
-//      */
-//     bool isMediaExtensionWrong()
-//     {
-//         if (container_sc != CONTAINER_UNKNOWN &&
-//             container_sc != container_ext)
-//             return true;
-
-//         return false;
-//     }
-
-//     Containers_e getContainer()
-//     {
-//         if (container_sc)
-//             return container_sc;
-//         else
-//             return container_ext;
-//     }
-
-//     ContainerProfiles_e getContainerProfile()
-//     {
-//         if (mediaParser)
-//             return mediaParser->getContainerProfile();
-
-//         return PROF_UNKNOWN;
-//     }
-
-//     int64_t getDuration();
-//     int64_t getCreationDate();
-//     int64_t getModificationDate();
-//     std::string getCreationApp();
-//     std::string getCreationLibrary();
-
-    ////////////////////////////////////////////////////////////////////////////
-
-    //getTimecodeReference();
-    //getChapters();
-    //getVideoTrack(unsigned track_id);
-    //getAudioTrack(unsigned track_id);
-    //getSubtitlesTrack(unsigned track_id);
-    //getOtherTrack(unsigned track_id);
-// };
 
 /* ************************************************************************** */
 #endif // MINIVIDEO_MEDIAFILE_H

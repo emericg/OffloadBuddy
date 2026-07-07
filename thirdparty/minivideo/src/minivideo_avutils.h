@@ -24,17 +24,6 @@
 #define MINIVIDEO_AVUTILS_H
 /* ************************************************************************** */
 
-//! File type
-typedef enum FileType_e
-{
-    file_UNKNOWN    = 0,
-
-    file_AUDIO      = 1,
-    file_VIDEO      = 2,
-    file_PICTURE    = 3
-
-} FileType_e;
-
 //! Stream type
 typedef enum StreamType_e
 {
@@ -136,15 +125,6 @@ typedef enum Rotation_e
     ROTATION_270    = 3
 
 } Rotation_e;
-
-//! Flip
-typedef enum Flip_e
-{
-    FLIP_NONE       = 0,
-    FLIP_HORIZONTAL = 1,
-    FLIP_VERTICAL   = 2
-
-} Flip_e;
 
 //! Stereo mode
 typedef enum StereoMode_e

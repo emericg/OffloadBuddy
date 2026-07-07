@@ -120,8 +120,6 @@ unsigned depack_h264_sample(Bitstream_t *bitstr,
         //TRACE_1(DEPAK, "> " BLD_BLUE "READING CONTAINER SAMPLE %u (offset: %lli / size: %lli)",
         //        sampleindex, samplesoffset, samplesize);
 
-        h264_sps_t *sps_array[1] = {nullptr};
-
         while (true)
         {
             //
@@ -150,7 +148,6 @@ unsigned depack_h264_sample(Bitstream_t *bitstr,
                 if (sample.type == NALU_TYPE_SPS)
                 {
                     h264_sps_t *sps = (h264_sps_t*)calloc(1, sizeof(h264_sps_t));
-                    sps_array[0] = sps;
                     decodeSPS(bitstr, sps);
                     mapSPS(sps, sample.offset, sample.size, xml);
                     freeSPS(&sps);
@@ -158,8 +155,8 @@ unsigned depack_h264_sample(Bitstream_t *bitstr,
                 if (sample.type == NALU_TYPE_PPS)
                 {
                     h264_pps_t *pps = (h264_pps_t*)calloc(1, sizeof(h264_pps_t));
-                    decodePPS(bitstr, pps, sps_array);
-                    mapPPS(pps, sps_array, sample.offset, sample.size, xml);
+                    decodePPS(bitstr, pps, nullptr);
+                    mapPPS(pps, nullptr, sample.offset, sample.size, xml);
                     freePPS(&pps);
                 }
                 if (sample.type == NALU_TYPE_SEI)

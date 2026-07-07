@@ -62,23 +62,6 @@ void xmlSpacer(FILE *xml, const char *name, const int index = -1);
 
 /* ************************************************************************** */
 /*
-// xmlMapper format v3
-
-create a minivideo dir
-
-add for headers:
-    tp=raw
-    ct=track
-
-add for values:
-    unit="bit"
-    note="unreliable"
-    meaning="QRTSERT"
-    off="12" (relatif to header offset ???)
-    sz="1" (-1 for bit aligned)
-*/
-/* ************************************************************************** */
-/*
 // xmlMapper format v2
 
 <?xml version="1.0"?>

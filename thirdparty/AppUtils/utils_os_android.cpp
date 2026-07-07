@@ -21,6 +21,7 @@
  */
 
 #include "utils_os_android.h"
+#include "utils_os.h"
 
 #if defined(Q_OS_ANDROID)
 
@@ -637,6 +638,98 @@ QString UtilsAndroid::getDeviceSerial()
     return device_serial;
 }
 
+static QString readSystemProperty(const QString &key)
+{
+    QJniObject jkey = QJniObject::fromString(key);
+    QJniObject jval = QJniObject::callStaticObjectMethod("android/os/SystemProperties", "get",
+                                                         "(Ljava/lang/String;)Ljava/lang/String;",
+                                                         jkey.object<jstring>());
+
+    // Clear any pending exception, we use this to probe for probably unavailble hidden class/method
+    QJniEnvironment env;
+    if (env->ExceptionCheck()) env->ExceptionClear();
+
+    return jval.isValid() ? jval.toString() : QString();
+}
+
+QString UtilsAndroid::getRomName()
+{
+    QJniObject brandField = QJniObject::getStaticObjectField<jstring>("android/os/Build", "BRAND");
+    QString brand = brandField.isValid() ? brandField.toString() : QString();
+    if (!brand.isEmpty()) return brand;
+
+    QJniObject manufacturerField = QJniObject::getStaticObjectField<jstring>("android/os/Build", "MANUFACTURER");
+    QString manufacturer = manufacturerField.isValid() ? manufacturerField.toString() : QString();
+    if (!manufacturer.isEmpty()) return manufacturer;
+
+    return QString();
+}
+
+QString UtilsAndroid::getRomName_currated()
+{
+    // Detect a specific vendor ROM/skin from its telltale system properties.
+    // Order matters because one ROM can inherits another's legacy properties.
+
+    // HyperOS (modern MIUI) still exposes the legacy MIUI property, so probe first
+    if (!readSystemProperty("ro.mi.os.version.name").isEmpty())
+        return QStringLiteral("HyperOS");
+
+    if (!readSystemProperty("ro.miui.ui.version.name").isEmpty())
+        return QStringLiteral("MIUI");
+
+    // Huawei / Honor (EMUI, and HarmonyOS which keeps the EMUI property)
+    if (!readSystemProperty("ro.build.version.emui").isEmpty())
+        return QStringLiteral("EMUI");
+
+    // Oppo / OnePlus / Realme (ColorOS / modern OxygenOS share the oplus stack)
+    if (!readSystemProperty("ro.build.version.oplus_rom").isEmpty())
+        return QStringLiteral("ColorOS");
+
+    // Legacy OnePlus OxygenOS
+    if (!readSystemProperty("ro.oxygen.version").isEmpty())
+        return QStringLiteral("OxygenOS");
+
+    // Realme UI
+    if (!readSystemProperty("ro.build.version.realmeui").isEmpty())
+        return QStringLiteral("RealmeUI");
+
+    // Vivo / iQOO (Funtouch OS / OriginOS)
+    if (!readSystemProperty("ro.vivo.os.version").isEmpty())
+        return QStringLiteral("FuntouchOS");
+
+    // Samsung One UI (newer devices only; older ones fall back to getRomName())
+    if (!readSystemProperty("ro.build.version.oneui").isEmpty())
+        return QStringLiteral("OneUI");
+
+    // ZTE / Nubia / RedMagic
+    if (!readSystemProperty("ro.build.nubia.rom.name").isEmpty())
+        return QStringLiteral("RedMagicOS");
+
+    // Lenovo ZUI
+    if (!readSystemProperty("ro.zui.version").isEmpty())
+        return QStringLiteral("ZUI");
+
+    // LeEco EUI
+    if (!readSystemProperty("ro.letv.release.version").isEmpty())
+        return QStringLiteral("EUI");
+
+    // Smartisan OS
+    if (!readSystemProperty("ro.smartisan.version").isEmpty())
+        return QStringLiteral("SmartisanOS");
+
+    // Meizu Flyme has no clean version property, so match on Build.DISPLAY
+    QJniObject displayField = QJniObject::getStaticObjectField<jstring>("android/os/Build", "DISPLAY");
+    if (displayField.isValid() && displayField.toString().contains("Flyme", Qt::CaseInsensitive))
+        return QStringLiteral("Flyme");
+
+    // LineageOS and derivatives (probed last: many custom ROMs keep it)
+    if (!readSystemProperty("ro.lineage.version").isEmpty() ||
+        !readSystemProperty("ro.modversion").isEmpty())
+        return QStringLiteral("LineageOS");
+
+    return QString();
+}
+
 /* ************************************************************************** */
 
 void UtilsAndroid::screenKeepOn(bool on)
@@ -722,11 +815,44 @@ void UtilsAndroid::screenLockOrientation(int orientation, bool autoRotate)
 
 /* ************************************************************************** */
 
-void UtilsAndroid::vibrate(int milliseconds)
-{
-    if (milliseconds > 100) milliseconds = 100;
+// android.os.VibrationEffect constants
+#define DEFAULT_AMPLITUDE                       0xffffffff
+#define EFFECT_CLICK                            0x00000000
+#define EFFECT_DOUBLE_CLICK                     0x00000001
+#define EFFECT_TICK                             0x00000002
+#define EFFECT_HEAVY_CLICK                      0x00000005
 
-    QNativeInterface::QAndroidApplication::runOnAndroidMainThread([=]() {
+void UtilsAndroid::vibrate(int hapticType)
+{
+    // Android has no notification/selection haptics, so we map each style to
+    // the closest predefined effect (or a one-shot duration on API 26-28).
+    jint effect = EFFECT_TICK;
+    jlong ms = 20;
+
+    switch (hapticType)
+    {
+    case UtilsOS::HapticSelection:
+    case UtilsOS::HapticLight:
+        effect = EFFECT_TICK; ms = 20;
+        break;
+    case UtilsOS::HapticMedium:
+        effect = EFFECT_CLICK; ms = 30;
+        break;
+    case UtilsOS::HapticHeavy:
+        effect = EFFECT_HEAVY_CLICK; ms = 40;
+        break;
+    case UtilsOS::HapticSuccess:
+        effect = EFFECT_HEAVY_CLICK; ms = 30;
+        break;
+    case UtilsOS::HapticWarning:
+        effect = EFFECT_DOUBLE_CLICK; ms = 40;
+        break;
+    case UtilsOS::HapticError:
+        effect = EFFECT_DOUBLE_CLICK; ms = 60;
+        break;
+    }
+
+    QNativeInterface::QAndroidApplication::runOnAndroidMainThread([effect, ms]() {
         QJniObject activity = QNativeInterface::QAndroidApplication::context();
         if (activity.isValid())
         {
@@ -734,25 +860,30 @@ void UtilsAndroid::vibrate(int milliseconds)
             QJniObject vibratorService = activity.callObjectMethod("getSystemService",
                                                                    "(Ljava/lang/String;)Ljava/lang/Object;",
                                                                    vibratorString.object<jstring>());
-            if (vibratorService.callMethod<jboolean>("hasVibrator", "()Z"))
+            if (vibratorService.isValid() &&
+                vibratorService.callMethod<jboolean>("hasVibrator", "()Z"))
             {
-                if (QNativeInterface::QAndroidApplication::sdkVersion() < 26)
+                QJniObject vibrationEffect;
+                if (QNativeInterface::QAndroidApplication::sdkVersion() >= 29)
                 {
-                    // vibrate (long milliseconds) // Deprecated in API level 26
-
-                    jlong ms = milliseconds;
-                    vibratorService.callMethod<void>("vibrate", "(J)V", ms);
+                    // createPredefined() // Added in API level 29
+                    // a nicer, system-tuned effect (EFFECT_TICK/CLICK/HEAVY_CLICK/DOUBLE_CLICK)
+                    vibrationEffect = QJniObject::callStaticObjectMethod("android/os/VibrationEffect",
+                                                                         "createPredefined",
+                                                                         "(I)Landroid/os/VibrationEffect;",
+                                                                         effect);
                 }
                 else
                 {
-                    // vibrate(VibrationEffect vibe) // Added in API level 26
+                    // createOneShot() // Added in API level 26
+                    vibrationEffect = QJniObject::callStaticObjectMethod("android/os/VibrationEffect",
+                                                                         "createOneShot",
+                                                                         "(JI)Landroid/os/VibrationEffect;",
+                                                                         ms, static_cast<jint>(DEFAULT_AMPLITUDE));
+                }
 
-                    jint effect = 0x00000002;
-                    QJniObject vibrationEffect = QJniObject::callStaticObjectMethod("android/os/VibrationEffect",
-                                                                                    "createPredefined",
-                                                                                    "(I)Landroid/os/VibrationEffect;",
-                                                                                    effect);
-
+                if (vibrationEffect.isValid())
+                {
                     vibratorService.callMethod<void>("vibrate",
                                                      "(Landroid/os/VibrationEffect;)V",
                                                      vibrationEffect.object<jobject>());
@@ -924,6 +1055,115 @@ void UtilsAndroid::openLocationSettings()
     intent.callObjectMethod("setFlags", "(I)Landroid/content/Intent;", jflag);
 
     QtAndroidPrivate::startActivity(intent, 0);
+}
+
+/* ************************************************************************** */
+
+void UtilsAndroid::openAlarmClock()
+{
+    //qDebug() << "> openAlarmClock()";
+    QJniObject activity = QNativeInterface::QAndroidApplication::context();
+    if (!activity.isValid()) return;
+
+    // Build the Intent
+    QJniObject intentClass = QJniObject::fromString("android/provider/AlarmClock");
+    QJniObject action = QJniObject::getStaticObjectField<jstring>("android/provider/AlarmClock",
+                                                                  "ACTION_SHOW_ALARMS" );
+
+    QJniObject intent("android/content/Intent",
+                      "(Ljava/lang/String;)V",
+                      action.object<jstring>());
+
+    // Add FLAG_ACTIVITY_NEW_TASK
+    jint flag = QJniObject::getStaticField<jint>("android/content/Intent", "FLAG_ACTIVITY_NEW_TASK" );
+    intent.callObjectMethod("addFlags", "(I)Landroid/content/Intent;", flag);
+
+    // Start the activity
+    activity.callMethod<void>("startActivity", "(Landroid/content/Intent;)V", intent.object());
+}
+
+/* ************************************************************************** */
+
+void UtilsAndroid::openBatteryOptimizationSettings()
+{
+    //qDebug() << "> openBatteryOptimizationSettings()";
+
+    QJniObject jintentObject = QJniObject::getStaticObjectField("android/provider/Settings",
+                                                                "ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS",
+                                                                "Ljava/lang/String;");
+
+    QJniObject intent("android/content/Intent", "(Ljava/lang/String;)V", jintentObject.object<jobject>());
+    if (!intent.isValid())
+    {
+        qWarning("Unable to create Intent object for ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS");
+        return;
+    }
+
+    jint jflag = QJniObject::getStaticField<jint>("android/content/Intent", "FLAG_ACTIVITY_NEW_TASK");
+    intent.callObjectMethod("setFlags", "(I)Landroid/content/Intent;", jflag);
+
+    QtAndroidPrivate::startActivity(intent, 0);
+}
+
+/* ************************************************************************** */
+
+static QJniObject buildAutostartIntent()
+{
+    // Xiaomi MIUI/HyperOS security center "Autostart" management activity
+    QJniObject intent("android/content/Intent", "()V");
+    if (!intent.isValid()) return QJniObject();
+
+    QJniObject jpkg = QJniObject::fromString("com.miui.securitycenter");
+    QJniObject jcls = QJniObject::fromString("com.miui.permcenter.autostart.AutoStartManagementActivity");
+    intent.callObjectMethod("setClassName", "(Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;",
+                            jpkg.object<jstring>(), jcls.object<jstring>());
+    return intent;
+}
+
+bool UtilsAndroid::hasAutostartSettings()
+{
+    //qDebug() << "> hasAutostartSettings()";
+
+    QJniObject context = QNativeInterface::QAndroidApplication::context();
+    if (!context.isValid()) return false;
+
+    QJniObject intent = buildAutostartIntent();
+    if (!intent.isValid()) return false;
+
+    QJniObject pm = context.callObjectMethod("getPackageManager", "()Landroid/content/pm/PackageManager;");
+    if (!pm.isValid()) return false;
+
+    // Non-null ResolveInfo means an activity can handle this component
+    QJniObject resolved = pm.callObjectMethod("resolveActivity", "(Landroid/content/Intent;I)Landroid/content/pm/ResolveInfo;",
+                                              intent.object<jobject>(), 0);
+    return resolved.isValid();
+}
+
+void UtilsAndroid::openAutostartSettings(const QString &packageName)
+{
+    //qDebug() << "> openAutostartSettings(" << packageName << ")";
+
+    QJniObject intent = buildAutostartIntent();
+    if (intent.isValid() && hasAutostartSettings())
+    {
+        jint jflag = QJniObject::getStaticField<jint>("android/content/Intent", "FLAG_ACTIVITY_NEW_TASK");
+        intent.callObjectMethod("setFlags", "(I)Landroid/content/Intent;", jflag);
+
+        QtAndroidPrivate::startActivity(intent, 0);
+
+        // The Autostart activity may resolve yet still refuse to launch on some ROMs
+        QJniEnvironment env;
+        if (env->ExceptionCheck())
+        {
+            // then fall back to the app info page
+            env->ExceptionClear();
+            openApplicationInfo(packageName);
+        }
+        return;
+    }
+
+    // Not a MIUI/HyperOS device (or activity missing): app info is the best we can do
+    openApplicationInfo(packageName);
 }
 
 /* ************************************************************************** */

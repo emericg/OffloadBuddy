@@ -25,7 +25,7 @@
 /* ************************************************************************** */
 
 #include "minivideo_avutils.h"
-#include "minivideo_export.h"
+#include <minivideo_export.h>
 
 /* ************************************************************************** */
 
@@ -117,6 +117,7 @@ typedef enum Codecs_e
     CODEC_DAALA         = 280,  //!< Xiph Daala
     CODEC_THOR          = 281,  //!< Cisco Thor
     CODEC_AV1           = 282,  //!< AOM (Alliance for Open Media) Video 1
+    CODEC_AV2           = 283,  //!< AOM (Alliance for Open Media) Video 2
 
     CODEC_AVS1          = 291,  //!<
     CODEC_AVS2          = 292,  //!<

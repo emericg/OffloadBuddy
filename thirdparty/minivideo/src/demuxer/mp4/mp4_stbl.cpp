@@ -105,13 +105,6 @@ int parse_stbl(Bitstream_t *bitstr, Mp4Box_t *box_header, Mp4Track_t *track, Mp4
                     retcode = parse_sgpd(bitstr, &box_subheader, track, mp4);
                     break;
 
-                // case BOX_CSLG:
-                // case BOX_STSH:
-                // case BOX_PADB:
-                // case BOX_SUBS:
-                // case BOX_SAIZ:
-                // case BOX_SAIO:
-
                 default:
                     retcode = parse_unknown_box(bitstr, &box_subheader, mp4->xml);
                     break;
@@ -801,16 +794,6 @@ int parse_sgpd(Bitstream_t *bitstr, Mp4Box_t *box_header, Mp4Track_t *track, Mp4
                 uint32_t description_length = read_mp4_uint32(bitstr, mp4->xml, "description_length");
             }
         }
-/*
-        //SampleGroupEntry (grouping_type);
-        class VisualRollRecoveryEntry() extends VisualSampleGroupEntry (’roll’)
-        class AudioRollRecoveryEntry() extends AudioSampleGroupEntry (’roll’)
-        class AudioPreRollEntry() extends AudioSampleGroupEntry (’prol’)
-
-        class AlternativeStartupEntry() extends VisualSampleGroupEntry (’alst’)
-        class VisualRandomAccessEntry() extends VisualSampleGroupEntry (’rap ’)
-        class TemporalLevelEntry() extends VisualSampleGroupEntry ('tele')
-*/
     }
 
     if (mp4->xml) fprintf(mp4->xml, "  </a>\n");

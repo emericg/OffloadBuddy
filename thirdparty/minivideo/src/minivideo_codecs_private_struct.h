@@ -30,18 +30,6 @@
 #include "decoder/h265/h265_parameterset_struct.h"
 #include "decoder/h266/h266_parameterset_struct.h"
 
-#include <vector>
-
-/* ************************************************************************** */
-
-typedef struct codecprivate_param_info_t
-{
-    unsigned sample_type;
-    unsigned sample_size;
-    int64_t sample_offset;
-
-} codecprivate_param_info_t;
-
 /* ************************************************************************** */
 
 typedef struct codecprivate_avcC_t
@@ -61,11 +49,6 @@ typedef struct codecprivate_avcC_t
     int32_t *pps_sample_size;
     int64_t *pps_sample_offset;
     h264_pps_t *pps_array[MAX_PPS];
-
-    //std::vector <codecprivate_param_info_t> sps_info;
-    //std::vector <h264_sps_t *> sps_array;
-    //std::vector <codecprivate_param_info_t> pps_info;
-    //std::vector <h264_pps_t *> pps_array;
 
 } codecprivate_avcC_t;
 
@@ -98,11 +81,6 @@ typedef struct codecprivate_hvcC_t
     uint16_t *numNalus;
     uint16_t **nalUnitLength;
     uint8_t ***nalUnit;
-
-    //std::vector <h265_vps_t *> vps_array;
-    //std::vector <h265_sps_t *> sps_array;
-    //std::vector <h265_pps_t *> pps_array;
-    //std::vector <h265_sei_t *> sei_array;
 
 } codecprivate_hvcC_t;
 

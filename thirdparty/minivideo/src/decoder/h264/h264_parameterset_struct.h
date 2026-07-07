@@ -172,28 +172,6 @@ typedef struct h264_ScalingStruct_t
 
 } h264_ScalingStruct_t;
 
-typedef struct h264_ScalingList_4x4_t
-{
-    int ScalingList4x4[16];
-    int ScalingMatrix4x4[4][4]; // derived from ScalingList4x4
-
-    //int LevelScale4x4[3][6][4][4]; // [YCbCr][qP%6][i][j] derived from ScalingMatrix4x4, normAdjust4x4
-
-    bool UseDefaultScalingMatrix4x4Flag;
-
-} h264_ScalingList4x4_t;
-
-typedef struct h264_ScalingList_8x8_t
-{
-    int ScalingList8x8[64];
-    int ScalingMatrix8x8[8][8]; // derived from ScalingList8x8
-
-    //int LevelScale8x8[3][6][8][8]; // [YCbCr][qP%6][i][j] derived from ScalingMatrix8x8, normAdjust8x8
-
-    bool UseDefaultScalingMatrix8x8Flag;
-
-} h264_ScalingList8x8_t;
-
 /*!
  * \struct h264_sps_t
  * \brief SPS - Sequence Parameter Set.

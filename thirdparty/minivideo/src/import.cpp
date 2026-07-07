@@ -290,55 +290,6 @@ int import_fileOpen(const char *filepath, MediaFile_t **media_ptr)
     return retcode;
 }
 
-int import_fileOpen(const int filedescriptor, MediaFile_t **media_ptr)
-{
-    TRACE_INFO(IO, BLD_GREEN "import_fileOpen()" CLR_RESET);
-
-    int retcode = FAILURE;
-
-    if (filedescriptor == 0)
-    {
-        TRACE_ERROR(IO, "* File descriptor is invalid");
-    }
-    else
-    {
-        // Allocate media structure and create a shortcut
-        *media_ptr = (MediaFile_t*)calloc(1, sizeof(MediaFile_t));
-
-        if (*media_ptr == NULL)
-        {
-            TRACE_ERROR(IO, "* Unable to allocate a MediaFile_t structure!");
-        }
-        else
-        {
-            MediaFile_t *media = (*media_ptr);
-
-            // Open file, read only
-            media->file_pointer = fdopen(filedescriptor, "rb");
-
-            if (media->file_pointer == NULL)
-            {
-                TRACE_ERROR(IO, "Unable to open the media file!");
-                free(*media_ptr);
-                *media_ptr = NULL;
-            }
-            else
-            {
-                TRACE_1(IO, "* File successfully opened");
-
-                // Extract some information from the media file
-                getInfosFromPath(media);
-                getSize(media);
-                getContainer(media);
-
-                retcode = SUCCESS;
-            }
-        }
-    }
-
-    return retcode;
-}
-
 /* ************************************************************************** */
 
 /*!

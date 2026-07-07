@@ -21,10 +21,10 @@
  */
 
 // minivideo headers
-#include "muxer/muxer.h"
-#include "muxer/pes_packetizer.h"
-#include "minitraces.h"
-#include "minivideo_typedef.h"
+#include "muxer.h"
+#include "pes_packetizer.h"
+#include "../minitraces.h"
+#include "../minivideo_typedef.h"
 
 // C standard libraries
 #include <cstdio>

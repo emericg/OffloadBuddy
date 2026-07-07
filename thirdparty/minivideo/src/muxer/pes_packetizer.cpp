@@ -20,11 +20,10 @@
  * \date      2012
  */
 
-#include "pes_packetizer.h"
-
 // minivideo headers
-#include "minitraces.h"
-#include "minivideo_typedef.h"
+#include "pes_packetizer.h"
+#include "../minitraces.h"
+#include "../minivideo_typedef.h"
 
 // C standard libraries
 #include <cstdio>

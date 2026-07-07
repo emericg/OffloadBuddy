@@ -214,12 +214,6 @@ int minivideo_open(const char *input_filepath,
     return import_fileOpen(input_filepath, input_media);
 }
 
-int minivideo_open(int input_filedescriptor,
-                   MediaFile_t **input_media)
-{
-    return import_fileOpen(input_filedescriptor, input_media);
-}
-
 /* ************************************************************************** */
 
 int minivideo_parse(MediaFile_t *input_media,

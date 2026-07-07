@@ -31,8 +31,6 @@
 
 int import_fileOpen(const char *filepath, MediaFile_t **media_ptr);
 
-int import_fileOpen(const int filedescriptor, MediaFile_t **media_ptr);
-
 int import_fileClose(MediaFile_t **media_ptr);
 
 void import_fileStatus(MediaFile_t *media);

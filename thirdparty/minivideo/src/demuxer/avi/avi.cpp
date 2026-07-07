@@ -793,14 +793,20 @@ static int parse_movi(Bitstream_t *bitstr, RiffList_t *movi_header, avi_t *avi)
     TRACE_INFO(AVI, BLD_GREEN "parse_movi()" CLR_RESET);
     int retcode = SUCCESS;
 
-    int track_index_found = 0;
-
     if (movi_header != NULL &&
         movi_header->dwFourCC == fcc_movi)
     {
         // Print list header
         print_list_header(movi_header);
-        write_list_header(movi_header, avi->xml, "Movie Data");
+        write_list_header(movi_header, avi->xml);
+        if (avi->xml) fprintf(avi->xml, "  <title>Movie Datas</title>\n");
+        if (avi->xml) fprintf(avi->xml, "  </a>\n");
+
+        // Skip "movi" content
+        avi->movi_offset = movi_header->offset_start + 12; // +12 to skip movi header fields
+        return bitstream_goto_offset(bitstr, movi_header->offset_end);
+
+        ////////////////////////////////////////////////////////////////////////
 
         // Loop on "movi" content
         // Only useful if we want to index the content by hand
@@ -828,20 +834,16 @@ static int parse_movi(Bitstream_t *bitstr, RiffList_t *movi_header, avi_t *avi)
                 RiffChunk_t chunk_header;
                 retcode = parse_chunk_header(bitstr, &chunk_header);
 
-                if (chunk_header.dwFourCC >> 16 == 0x6978)
+                switch (chunk_header.dwFourCC)
                 {
-                    parse_indx(bitstr, &chunk_header, avi, avi->tracks[track_index_found]);
-
-                    track_index_found++;
-                }
-                else
+                default:
                     retcode = parse_unkn_chunk(bitstr, &chunk_header, avi->xml);
+                    break;
+                }
 
                 retcode = jumpy_riff(bitstr, movi_header, chunk_header.offset_end);
             }
         }
-
-        if (avi->xml) fprintf(avi->xml, "  </a>\n");
     }
     else
     {

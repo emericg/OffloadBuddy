@@ -429,7 +429,6 @@ int avi_indexer(Bitstream_t *bitstr, MediaFile_t *media, avi_t *avi)
         }
         else
         {
-/*
             for (unsigned j = 0; j < avi->tracks[i]->superindex_count; j++)
             {
                 // IX offset
@@ -443,7 +442,7 @@ int avi_indexer(Bitstream_t *bitstr, MediaFile_t *media, avi_t *avi)
                 // IX content
                 parse_indx(bitstr, &ix_chunk, avi, avi->tracks[i]);
             }
-*/
+
             // Convert index into a bitstream map
             retcode = avi_indexer_initmap(media, avi->tracks[i], avi->tracks[i]->index_count);
 

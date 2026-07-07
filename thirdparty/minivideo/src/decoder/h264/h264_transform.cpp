@@ -737,44 +737,16 @@ void computeLevelScale8x8(DecodingContext_t *dc, h264_sps_t *sps)
     }
 #endif // ENABLE_SEPARATE_COLOUR_PLANES
 
-    if (!sps)
+    // Compute // we have SPS scaling lists
+    for (YCbCr = 0; YCbCr < 3; YCbCr++)
     {
-        // Compute // flat scaling lists
-        for (YCbCr = 0; YCbCr < 3; YCbCr++)
+        for (q = 0; q < 6; q++)
         {
-            for (q = 0; q < 6; q++)
+            for (i = 0; i < 8; i++)
             {
-                for (i = 0; i < 8; i++)
+                for (j = 0; j < 8; j++)
                 {
-                    for (j = 0; j < 8; j++)
-                    {
-                        sps->LevelScale8x8[YCbCr][q][i][j] = sps->ScalingMatrix8x8[YCbCr + ((mbIsInterFlag) ? 3 : 0)][i][j] * dc->normAdjust8x8[q][i][j];
-                    }
-                }
-            }
-        }
-    }
-    else
-    {
-        // Compute // use default scaling lists
-        //if (sps->UseDefaultScalingMatrix8x8Flag)
-        //{
-        //    //
-        //}
-        //else
-        {
-            // Compute // we have SPS scaling lists
-            for (YCbCr = 0; YCbCr < 3; YCbCr++)
-            {
-                for (q = 0; q < 6; q++)
-                {
-                    for (i = 0; i < 8; i++)
-                    {
-                        for (j = 0; j < 8; j++)
-                        {
-                            sps->LevelScale8x8[YCbCr][q][i][j] = sps->ScalingMatrix8x8[YCbCr + ((mbIsInterFlag) ? 3 : 0)][i][j] * dc->normAdjust8x8[q][i][j];
-                        }
-                    }
+                    sps->LevelScale8x8[YCbCr][q][i][j] = sps->ScalingMatrix8x8[YCbCr + ((mbIsInterFlag) ? 3 : 0)][i][j] * dc->normAdjust8x8[q][i][j];
                 }
             }
         }

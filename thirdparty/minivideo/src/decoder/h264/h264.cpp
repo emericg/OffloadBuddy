@@ -563,8 +563,8 @@ int h264_decode(DecodingContext_t *dc, unsigned sid)
         {
             TRACE_ERROR(H264, "Error inside NAL Unit decoding loop! (errorCounter = %i) (current nal_unit_type = %i)", dc->errorCounter, dc->active_nalu->nal_unit_type);
             TRACE_ERROR(H264, "H.264 decoding aborted...");
-            //retcode = FAILURE;
-            //dc->decoderRunning = false;
+            retcode = FAILURE;
+            dc->decoderRunning = false;
         }
     }
 

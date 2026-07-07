@@ -1359,64 +1359,6 @@ static int parse_iods(Bitstream_t *bitstr, Mp4Box_t *box_header, FILE *xml)
 /* ************************************************************************** */
 
 /*!
- * \brief Parse the Beam Header Box
- *
- * From WhatsApp. Usually wrong sizes...
- */
-static int parse_beam(Bitstream_t *bitstr, Mp4Box_t *box_header, Mp4_t *mp4)
-{
-    TRACE_INFO(MP4, BLD_GREEN "parse_beam()" CLR_RESET);
-    int retcode = SUCCESS;
-
-    // Read box content
-    box_header->size -=4;
-    uint32_t sequence_num1ber = read_bits(bitstr, 32);
-    uint32_t sequence_num2ber = read_bits(bitstr, 32);
-    uint32_t sequence_nu4mber = read_bits(bitstr, 32);
-    uint32_t sequence_nu2mber = read_bits(bitstr, 32);
-
-    TRACE_INFO(MP4, BLD_GREEN "parse_beam() we are now at %lli" CLR_RESET, bitstream_get_absolute_byte_offset(bitstr));
-
-#if ENABLE_DEBUG
-    print_box_header(box_header);
-#endif // ENABLE_DEBUG
-
-    // xmlMapper
-    if (mp4->xml)
-    {
-        write_box_header(box_header, mp4->xml, "beam atom");
-        fprintf(mp4->xml, "  </a>\n");
-    }
-
-    return retcode;
-}
-
-static int parse_loop(Bitstream_t *bitstr, Mp4Box_t *box_header, Mp4_t *mp4)
-{
-    TRACE_INFO(MP4, BLD_GREEN "parse_loop()" CLR_RESET);
-    int retcode = SUCCESS;
-
-    // Read box content
-    uint32_t looping = read_bits(bitstr, 32);
-
-#if ENABLE_DEBUG
-    print_box_header(box_header);
-#endif // ENABLE_DEBUG
-
-    // xmlMapper
-    if (mp4->xml)
-    {
-        write_box_header(box_header, mp4->xml, "loop atom");
-        fprintf(mp4->xml, "  </a>\n");
-    }
-
-    return retcode;
-}
-
-
-/* ************************************************************************** */
-
-/*!
  * \brief Parse the Movie Header Box - FullBox.
  *
  * From 'ISO/IEC 14496-12' specification:
@@ -1795,12 +1737,6 @@ int mp4_fileParse(MediaFile_t *media)
                         break;
                     case BOX_FREE:
                         retcode = parse_unknown_box(bitstr, &box_header, mp4.xml);
-                        break;
-                    case BOX_BEAM:
-                        retcode = parse_beam(bitstr, &box_header, &mp4);
-                        break;
-                    case BOX_LOOP:
-                        retcode = parse_loop(bitstr, &box_header, &mp4);
                         break;
                     case BOX_UUID:
                         retcode = parse_unknown_box(bitstr, &box_header, mp4.xml);

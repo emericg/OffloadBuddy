@@ -264,6 +264,7 @@ void asf_clean(asf_t *asf)
 
             if (asf->tracks[i])
             {
+                //free(asf->tracks[i]->index_entries);
                 free(asf->tracks[i]);
             }
         }

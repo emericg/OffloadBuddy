@@ -24,7 +24,7 @@
 #define MINIVIDEO_H
 /* ************************************************************************** */
 
-#include "minivideo_export.h"
+#include <minivideo_export.h>
 #include "minivideo_codecs.h"
 #include "minivideo_fourcc.h"
 #include "minivideo_mediafile.h"
@@ -94,9 +94,6 @@ minivideo_EXPORT int minivideo_endianness(void);
  * the file, print them if in debug mode.
  */
 minivideo_EXPORT int minivideo_open(const char *input_filepath,
-                                    MediaFile_t **input_media);
-
-minivideo_EXPORT int minivideo_open(int input_filedescriptor,
                                     MediaFile_t **input_media);
 
 /*!
