@@ -26,6 +26,7 @@
 #include <QDebug>
 
 /* ************************************************************************** */
+/* ************************************************************************** */
 
 MediaThumbnailer_threadpool::MediaThumbnailer_threadpool(int threadCount) : QQuickAsyncImageProvider()
 {
@@ -68,15 +69,24 @@ QQuickImageResponse *MediaThumbnailer_threadpool::requestImageResponse(const QSt
 /* ************************************************************************** */
 
 MediaThumbnailerResponse::MediaThumbnailerResponse(const QString &id, const QSize &requestedSize, QThreadPool *pool)
+    : m_cancelled(new QAtomicInt(0))
 {
-    auto runnable = new MediaThumbnailerRunner(id, requestedSize);
+    auto runnable = new MediaThumbnailerRunner(id, requestedSize, m_cancelled);
     connect(runnable, &MediaThumbnailerRunner::done, this, &MediaThumbnailerResponse::handleDone);
     pool->start(runnable);
 }
 
 /* ************************************************************************** */
 
-void MediaThumbnailerResponse::handleDone(QImage image)
+void MediaThumbnailerResponse::cancel()
+{
+    // Signal the runner to bail out
+    m_cancelled->storeRelaxed(1);
+}
+
+/* ************************************************************************** */
+
+void MediaThumbnailerResponse::handleDone(const QImage &image)
 {
     m_image = image;
     emit finished();
@@ -92,7 +102,9 @@ QQuickTextureFactory *MediaThumbnailerResponse::textureFactory() const
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-MediaThumbnailerRunner::MediaThumbnailerRunner(const QString &id, const QSize &requestedSize)
+MediaThumbnailerRunner::MediaThumbnailerRunner(const QString &id, const QSize &requestedSize,
+                                               const QSharedPointer<QAtomicInt> &cancelled)
+    : m_cancelled(cancelled)
 {
     //QThread::currentThread()->setPriority(QThread::LowestPriority);
 
@@ -128,11 +140,18 @@ MediaThumbnailerRunner::MediaThumbnailerRunner(const QString &id, const QSize &r
 
 void MediaThumbnailerRunner::run()
 {
-    bool decoding_status = false;
-
     QImage thumb;
 
-    // Imge thumbnail?
+    // Response already cancelled? Skip all decoding and return an empty image!
+    if (m_cancelled->loadRelaxed())
+    {
+        emit done(thumb);
+        return;
+    }
+
+    bool decoding_status = false;
+
+    // Image thumbnail?
     QImageReader img_infos(path);
     if (img_infos.canRead())
     {
@@ -146,10 +165,10 @@ void MediaThumbnailerRunner::run()
         }
     }
 
-    // Media thumbnail
-    if (decoding_status == false)
+    // Media thumbnail? (re-check cancellation before starting)
+    if (decoding_status == false && !m_cancelled->loadRelaxed())
     {
-        decoding_status = mediaThumbnailer.getImage(path, thumb, timecode_s, width, height);
+        mediaThumbnailer.getImage(path, thumb, timecode_s, width, height);
     }
 
     emit done(thumb);

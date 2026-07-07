@@ -26,6 +26,8 @@
 
 #include <QImage>
 #include <QThreadPool>
+#include <QAtomicInt>
+#include <QSharedPointer>
 #include <QDebug>
 
 #include <QQuickImageProvider>
@@ -48,11 +50,15 @@ class MediaThumbnailerRunner : public QObject, public QRunnable
 
     ThumbnailerBackend mediaThumbnailer;
 
+    //! Shared with the owning response so cancel() can be observed from the pool thread
+    QSharedPointer<QAtomicInt> m_cancelled;
+
 signals:
-    void done(QImage image);
+    void done(const QImage &image);
 
 public:
-    MediaThumbnailerRunner(const QString &id, const QSize &requestedSize);
+    MediaThumbnailerRunner(const QString &id, const QSize &requestedSize,
+                           const QSharedPointer<QAtomicInt> &cancelled);
 
     void run() override;
 };
@@ -63,10 +69,15 @@ class MediaThumbnailerResponse : public QQuickImageResponse
 {
     QImage m_image;
 
+    //! Shared with the runner; raised by cancel() to skip pending/ongoing decoding
+    QSharedPointer<QAtomicInt> m_cancelled;
+
 public:
     MediaThumbnailerResponse(const QString &id, const QSize &requestedSize, QThreadPool *pool);
 
-    void handleDone(QImage image);
+    void handleDone(const QImage &image);
+
+    void cancel() override;
 
     QQuickTextureFactory *textureFactory() const override;
 };
