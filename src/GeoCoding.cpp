@@ -2,6 +2,10 @@
 #include "GeoCoding.h"
 #include "Shot.h"
 
+#include <QCoreApplication>
+#include <QQmlEngine>
+#include <QJSEngine>
+
 #include <QGeoCodingManager>
 #include <QGeoServiceProvider>
 #include <QGeoCoordinate>
@@ -11,31 +15,28 @@
 #include <QDebug>
 
 /* ************************************************************************** */
-
-GeoCoding *GeoCoding::instance = nullptr;
+/* ************************************************************************** */
 
 GeoCoding *GeoCoding::getInstance()
 {
-    if (instance == nullptr)
-    {
-        instance = new GeoCoding();
-    }
-
+    static GeoCoding *instance = new GeoCoding(QCoreApplication::instance());
     return instance;
 }
 
-GeoCoding::GeoCoding()
+GeoCoding *GeoCoding::create(QQmlEngine *, QJSEngine *)
+{
+    GeoCoding *instance = getInstance();
+    QJSEngine::setObjectOwnership(instance, QJSEngine::CppOwnership);
+    return instance;
+}
+
+GeoCoding::GeoCoding(QObject *parent) : QObject(parent)
 {
     geo_pro = new QGeoServiceProvider("osm");
     if (geo_pro) geo_mgr = geo_pro->geocodingManager();
 }
 
-GeoCoding::~GeoCoding()
-{
-    delete geo_pro;
-    delete geo_mgr;
-}
-
+/* ************************************************************************** */
 /* ************************************************************************** */
 
 void GeoCoding::getLocation(Shot *shot)

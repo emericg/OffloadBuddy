@@ -24,34 +24,21 @@ import QtQuick.Window
 import QtQuick.Effects
 import QtQuick.Controls
 
-import OffloadBuddy
+import AppUtils
 import ComponentLibrary
 
 ApplicationWindow {
     id: appWindow
-    flags: settingsManager.appThemeCSD ? Qt.Window | Qt.FramelessWindowHint : Qt.Window
-    color: settingsManager.appThemeCSD ? "transparent" : Theme.colorBackground
 
+    flags: Qt.Window
+    color: Theme.colorBackground
+
+    // Helpers
+    property bool isHdpi: (UtilsScreen.screenDpi >= 128 || UtilsScreen.screenPar >= 2.0)
     property bool isDesktop: true
     property bool isMobile: false
     property bool isPhone: false
     property bool isTablet: false
-    property bool isHdpi: (utilsScreen.screenDpi >= 128 || utilsScreen.screenPar >= 2.0)
-
-    // Mobile stuff // compatibility ///////////////////////////////////////////
-
-    // 1 = Qt.PortraitOrientation, 2 = Qt.LandscapeOrientation
-    // 4 = Qt.InvertedPortraitOrientation, 8 = Qt.InvertedLandscapeOrientation
-    property int screenOrientation: Screen.primaryOrientation
-    property int screenOrientationFull: Screen.orientation
-
-    property int screenPaddingStatusbar: 0
-    property int screenPaddingNavbar: 0
-
-    property int screenPaddingTop: 0
-    property int screenPaddingLeft: 0
-    property int screenPaddingRight: 0
-    property int screenPaddingBottom: 0
 
     // Desktop stuff ///////////////////////////////////////////////////////////
 
@@ -59,20 +46,20 @@ ApplicationWindow {
     minimumHeight: isHdpi ? 400 : 720
 
     width: {
-        if (settingsManager.initialSize.width > 0)
-            return settingsManager.initialSize.width
+        if (SettingsManager.initialSize.width > 0)
+            return SettingsManager.initialSize.width
         else
             return isHdpi ? 720 : 1280
     }
     height: {
-        if (settingsManager.initialSize.height > 0)
-            return settingsManager.initialSize.height
+        if (SettingsManager.initialSize.height > 0)
+            return SettingsManager.initialSize.height
         else
             return isHdpi ? 400 : 720
     }
-    x: settingsManager.initialPosition.width
-    y: settingsManager.initialPosition.height
-    visibility: settingsManager.initialVisibility
+    x: SettingsManager.initialPosition.width
+    y: SettingsManager.initialPosition.height
+    visibility: SettingsManager.initialVisibility
     visible: true
 
     WindowGeometrySaver {
@@ -96,12 +83,12 @@ ApplicationWindow {
 
     Component.onCompleted: {
         mediaLibrary.searchMediaDirectories()
-        deviceManager.searchDevices()
+        DeviceManager.searchDevices()
     }
 
     // Handle device disconnection
     Connections {
-        target: deviceManager
+        target: DeviceManager
         signal deviceRemoved(var devicePtr)
         function onDeviceRemoved() {
             //console.log("deviceRemoved(" + devicePtr + ") and currentDevice(" + screenDevice.currentDevice + ")")
@@ -135,7 +122,7 @@ ApplicationWindow {
         sequence: "Ctrl+F5"
         onActivated: {
             mediaLibrary.searchMediaDirectories()
-            deviceManager.searchDevices()
+            DeviceManager.searchDevices()
         }
     }
 
@@ -197,8 +184,6 @@ ApplicationWindow {
             id: appBg
 
             color: Theme.colorBackground
-            border.color: Theme.colorSeparator
-            border.width: settingsManager.appThemeCSD ? 1 : 0
 
             Sidebar {
                 id: appSidebar
@@ -293,52 +278,6 @@ ApplicationWindow {
                     }
                 ]
             }
-
-            layer.enabled: (settingsManager.appThemeCSD && Qt.platform.os !== "windows")
-            layer.effect: MultiEffect {
-                maskEnabled: true
-                maskInverted: false
-                maskThresholdMin: 0.5
-                maskSpreadAtMin: 1.0
-                maskSpreadAtMax: 0.0
-                maskSource: ShaderEffectSource {
-                    sourceItem: Rectangle {
-                        x: appBg.x
-                        y: appBg.y
-                        width: appBg.width
-                        height: appBg.height
-                        radius: 10
-                    }
-/*
-                    DragHandler {
-                        // Resize the window without a compositor bar // Qt 5.15+
-                        // Drag on the sidebar to drag the whole window // Qt 5.15+
-                        // Also, prevent clicks below this area
-                        id: windowHandler2
-                        grabPermissions: TapHandler.TakeOverForbidden
-                        target: null
-                        onActiveChanged: if (active) {
-                            var grabSize = 32
-
-                            const p = windowHandler2.centroid.position
-                            let e = 0
-                            if (p.x < grabSize) e |= Qt.LeftEdge
-                            if (p.x >= width - grabSize) e |= Qt.RightEdge
-                            if (p.y < grabSize) e |= Qt.TopEdge
-                            if (p.y >= height - grabSize) e |= Qt.BottomEdge
-
-                            if (e) {
-                                if (!appWindow.startSystemResize(e)) {
-                                    // your fallback code for setting window.width/height manually
-                                }
-                            } else {
-                                appWindow.startSystemMove()
-                            }
-                        }
-                    }
-*/
-                }
-            }
         }
     }
 
@@ -409,7 +348,7 @@ ApplicationWindow {
 
     onClosing: (close) => {
         // If a job is running, ask user to confirm exit
-        if (jobManager.workingJobCount > 0) {
+        if (JobManager.workingJobCount > 0) {
             close.accepted = false
 
             popupExit_loader.active = true

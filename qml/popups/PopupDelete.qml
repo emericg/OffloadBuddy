@@ -294,7 +294,7 @@ Popup {
                     color: Theme.colorError
                     onClicked: {
                         var settingsDeletion = {}
-                        settingsDeletion["moveToTrash"] = settingsManager.moveToTrash
+                        settingsDeletion["moveToTrash"] = SettingsManager.moveToTrash
 
                         if (currentShot) {
                             mediaProvider.deleteSelected(currentShot.uuid, settingsDeletion)

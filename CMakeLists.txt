@@ -148,7 +148,7 @@ qt_add_qml_module(${PROJECT_NAME}
         qml/components/ItemBannerMessage.qml
         qml/components/ItemBannerJob.qml
         qml/components/ItemJob.qml
-        qml/components/ItemShot.qml
+        qml/components/ItemShot_gridview.qml
         qml/components/ItemMediaDirectory.qml
         qml/components/RangeSliderPlayer.qml
         qml/components/ResizeWidget.qml

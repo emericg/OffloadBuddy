@@ -210,7 +210,7 @@ Rectangle {
                 highlightMode: "color"
                 source: job.state === JobUtils.JOB_STATE_WORKING ? "qrc:/IconLibrary/material-symbols/media/pause_circle.svg"
                                                                  : "qrc:/IconLibrary/material-symbols/media/play_circle.svg"
-                onClicked: jobManager.playPauseJob(job.id)
+                onClicked: JobManager.playPauseJob(job.id)
             }
 
             RoundButtonIcon {
@@ -225,7 +225,7 @@ Rectangle {
 
                 highlightMode: "color"
                 source: "qrc:/IconLibrary/material-symbols/media/stop_circle.svg"
-                onClicked: jobManager.stopJob(job.id)
+                onClicked: JobManager.stopJob(job.id)
             }
 
             Text {

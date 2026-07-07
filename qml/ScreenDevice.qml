@@ -1,8 +1,6 @@
 import QtQuick
 import QtQuick.Controls
 
-import OffloadBuddy
-
 Item {
     id: screenDevice
     width: 1280
@@ -24,11 +22,11 @@ Item {
         // No saved state? Initialize it!
         if (!(deviceSavedStateList[currentDevice.uuid])) {
             deviceSavedStateList[currentDevice.uuid] = ({ mainState: "stateMediaGrid",
-                                                          orderBy: settingsManager.deviceSortRole,
-                                                          orderByAscDesc: settingsManager.deviceSortOrder,
+                                                          orderBy: SettingsManager.deviceSortRole,
+                                                          orderByAscDesc: SettingsManager.deviceSortOrder,
                                                           filterBy: 0,
-                                                          thumbSize: settingsManager.thumbSize,
-                                                          thumbFormat: settingsManager.thumbFormat,
+                                                          thumbSize: SettingsManager.thumbSize,
+                                                          thumbFormat: SettingsManager.thumbFormat,
                                                           selectedIndex: -1,
                                                           selectionMode: false,
                                                           selectionList: [],

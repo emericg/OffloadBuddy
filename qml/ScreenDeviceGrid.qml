@@ -2,12 +2,11 @@ import QtQuick
 import QtQuick.Effects
 import QtQuick.Controls
 
+import ComponentLibrary
 
-import OffloadBuddy
 import DeviceUtils
 import StorageUtils
 import SettingsUtils
-import ComponentLibrary
 
 Item {
     id: mediaGrid
@@ -385,24 +384,24 @@ Item {
 
                         var currentName = cbShotsOrderby.get(currentIndex).text
                         if (currentName === qsTr("Date")) {
-                            settingsManager.deviceSortRole = SettingsUtils.OrderByDate
+                            SettingsManager.deviceSortRole = SettingsUtils.OrderByDate
                             currentDevice.orderByDate()
                         } else if (currentName === qsTr("Duration")) {
-                            settingsManager.deviceSortRole = SettingsUtils.OrderByDuration
+                            SettingsManager.deviceSortRole = SettingsUtils.OrderByDuration
                             currentDevice.orderByDuration()
                         } else if (currentName === qsTr("Shot type")) {
-                            settingsManager.deviceSortRole = SettingsUtils.OrderByShotType
+                            SettingsManager.deviceSortRole = SettingsUtils.OrderByShotType
                             currentDevice.orderByShotType()
                         } else if (currentName === qsTr("Name")) {
-                            settingsManager.deviceSortRole = SettingsUtils.OrderByName
+                            SettingsManager.deviceSortRole = SettingsUtils.OrderByName
                             currentDevice.orderByName()
                         } else if (currentName === qsTr("Folder")) {
-                            settingsManager.deviceSortRole = SettingsUtils.OrderByFilePath
+                            SettingsManager.deviceSortRole = SettingsUtils.OrderByFilePath
                             currentDevice.orderByPath()
                         }
                     } else {
                         cbinit = true
-                        currentIndex = settingsManager.deviceSortRole
+                        currentIndex = SettingsManager.deviceSortRole
                     }
 
                     displayText = qsTr("Order by:") + " " + cbShotsOrderby.get(currentIndex).text
@@ -418,16 +417,16 @@ Item {
                     width: 28
                     height: 28
 
-                    rotation: settingsManager.deviceSortOrder ? 0 : 180
+                    rotation: SettingsManager.deviceSortOrder ? 0 : 180
                     colorBackground: Theme.colorComponent
                     source: "qrc:/IconLibrary/material-symbols/filter_list.svg"
 
                     onClicked: {
-                        if (settingsManager.deviceSortOrder === Qt.AscendingOrder) {
-                            settingsManager.deviceSortOrder = Qt.DescendingOrder
+                        if (SettingsManager.deviceSortOrder === Qt.AscendingOrder) {
+                            SettingsManager.deviceSortOrder = Qt.DescendingOrder
                             currentDevice.orderByDesc()
                         } else {
-                            settingsManager.deviceSortOrder = Qt.AscendingOrder
+                            SettingsManager.deviceSortOrder = Qt.AscendingOrder
                             currentDevice.orderByAsc()
                         }
                     }
@@ -715,16 +714,16 @@ Item {
             onWidthChanged: computeCellSize()
 
             Connections {
-                target: settingsManager
+                target: SettingsManager
                 function onThumbFormatChanged() {
                     if (deviceSavedState) {
-                        deviceSavedState.thumbFormat = settingsManager.thumbFormat
+                        deviceSavedState.thumbFormat = SettingsManager.thumbFormat
                         shotsView.computeCellSize()
                     }
                 }
                 function onThumbSizeChanged() {
                     if (deviceSavedState) {
-                        deviceSavedState.thumbSize = settingsManager.thumbSize
+                        deviceSavedState.thumbSize = SettingsManager.thumbSize
                         shotsView.computeCellSize()
                     }
                 }
@@ -795,7 +794,7 @@ Item {
             ////////
 
             model: currentDevice ? currentDevice.shotFilter : null
-            delegate: ItemShot {
+            delegate: ItemShot_gridview {
                 width: shotsView.cellSize
                 cellFormat: shotsView.cellFormat
             }

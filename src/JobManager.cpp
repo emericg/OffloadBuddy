@@ -32,35 +32,37 @@
 #include <libmtp.h>
 #endif
 
+#include <QCoreApplication>
+#include <QQmlEngine>
+#include <QJSEngine>
+
 #include <QFileInfo>
 #include <QFile>
 #include <QDir>
 #include <QDebug>
 
 /* ************************************************************************** */
-
-JobManager *JobManager::instance = nullptr;
+/* ************************************************************************** */
 
 JobManager *JobManager::getInstance()
 {
-    if (instance == nullptr)
-    {
-        instance = new JobManager();
-    }
-
+    static JobManager *instance = new JobManager(QCoreApplication::instance());
     return instance;
 }
 
-JobManager::JobManager()
+JobManager *JobManager::create(QQmlEngine *, QJSEngine *)
+{
+    JobManager *instance = getInstance();
+    QJSEngine::setObjectOwnership(instance, QJSEngine::CppOwnership);
+    return instance;
+}
+
+JobManager::JobManager(QObject *parent) : QObject(parent)
 {
     //
 }
 
-JobManager::~JobManager()
-{
-    cleanup(); // singleton destructor is never called anyway...
-}
-
+/* ************************************************************************** */
 /* ************************************************************************** */
 
 void JobManager::cleanup()

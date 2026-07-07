@@ -149,8 +149,8 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
 
         color: Theme.colorIcon
-        source: shot.valid ? "qrc:/IconLibrary/material-icons/outlined/hourglass_empty.svg"
-                           : "qrc:/IconLibrary/material-symbols/media/broken_image.svg"
+        source: (!shot || shot.valid) ? "qrc:/IconLibrary/material-icons/outlined/hourglass_empty.svg"
+                                      : "qrc:/IconLibrary/material-symbols/media/broken_image.svg"
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -175,10 +175,10 @@ Rectangle {
             //Behavior on opacity { NumberAnimation { duration: 133 } }
 
             // extra filtering?
-            smooth: (settingsManager.thumbQuality >= 1)
+            smooth: (SettingsManager.thumbQuality >= 1)
             // big enough so we have good quality regarding of the thumb size
-            sourceSize.width: (settingsManager.thumbQuality > 1) ? 512 : 400
-            sourceSize.height: (settingsManager.thumbQuality > 1) ? 512 : 400
+            sourceSize.width: (SettingsManager.thumbQuality > 1) ? 512 : 400
+            sourceSize.height: (SettingsManager.thumbQuality > 1) ? 512 : 400
         }
 
         Loader {
@@ -190,14 +190,14 @@ Rectangle {
             sourceComponent: ItemImage {
                 id: imageMtp
                 anchors.fill: parent
-                image: shot.getPreviewMtp()
+                image: itemShot.shot ? itemShot.shot.getPreviewMtp() : null
             }
         }
 
         Loader { // overlay "selection"
             anchors.fill: parent
 
-            active: shot.selected
+            active: (itemShot.shot && itemShot.shot.selected)
             asynchronous: true
             sourceComponent: Rectangle {
                 radius: Theme.componentRadius
@@ -245,7 +245,7 @@ Rectangle {
             Behavior on opacity { NumberAnimation { duration: 133 } }
 
             color: "white"
-            text: shot.name
+            text: shot ? shot.name : ""
             textFormat: Text.PlainText
             elide: Text.ElideRight
             style: Text.Raised
@@ -271,13 +271,16 @@ Rectangle {
                 width: 24
                 height: 24
 
-                visible: (shot.state === ShotUtils.SHOT_STATE_QUEUED ||
-                          shot.state === ShotUtils.SHOT_STATE_OFFLOADING ||
-                          shot.state === ShotUtils.SHOT_STATE_ENCODING)
+                visible: (shot &&
+                          (shot.state === ShotUtils.SHOT_STATE_QUEUED ||
+                           shot.state === ShotUtils.SHOT_STATE_OFFLOADING ||
+                           shot.state === ShotUtils.SHOT_STATE_ENCODING))
 
                 color: "white"
                 source: {
-                    if (shot.state === ShotUtils.SHOT_STATE_QUEUED) {
+                    if (!shot) {
+                        return ""
+                    } else if (shot.state === ShotUtils.SHOT_STATE_QUEUED) {
                         return "qrc:/IconLibrary/material-icons/duotone/schedule.svg"
                     } else if (shot.state === ShotUtils.SHOT_STATE_OFFLOADING) {
                         return "qrc:/IconLibrary/material-icons/duotone/save_alt.svg"
@@ -290,7 +293,7 @@ Rectangle {
 
                 NumberAnimation on rotation {
                     id: encodeAnimation
-                    running: (shot.state === ShotUtils.SHOT_STATE_ENCODING)
+                    running: (shot && shot.state === ShotUtils.SHOT_STATE_ENCODING)
                     loops: Animation.Infinite
 
                     onStopped: icon_state.rotation = 0
@@ -300,7 +303,7 @@ Rectangle {
                 }
                 SequentialAnimation {
                     id: offloadAnimation
-                    running: (shot.state === ShotUtils.SHOT_STATE_OFFLOADING)
+                    running: (shot && shot.state === ShotUtils.SHOT_STATE_OFFLOADING)
                     loops: Animation.Infinite
 
                     onStopped: icon_state.y = 0
@@ -331,10 +334,13 @@ Rectangle {
                 id: text_mediaDuration
                 anchors.verticalCenter: parent.verticalCenter
 
-                visible: (shot.duration > 1)
-                text: (shot.fileType === ShotUtils.FILE_VIDEO) ?
-                          UtilsString.durationToString_ISO8601_compact_loose(shot.duration) :
-                          shot.duration
+                visible: (shot && shot.duration > 1)
+                text: {
+                    if (!shot) return ""
+                    return (shot.fileType === ShotUtils.FILE_VIDEO) ?
+                               UtilsString.durationToString_ISO8601_compact_loose(shot.duration) :
+                               shot.duration
+                }
 
                 textFormat: Text.PlainText
                 color: "white"
@@ -359,8 +365,8 @@ Rectangle {
                 id: text_hmmt
                 anchors.verticalCenter: parent.verticalCenter
                 color: "white"
-                visible: shot.hilightCount
-                text: shot.hilightCount
+                visible: (shot && shot.hilightCount)
+                text: shot ? shot.hilightCount : 0
                 textFormat: Text.PlainText
                 style: Text.Raised
                 font.bold: true
@@ -371,7 +377,7 @@ Rectangle {
                 width: 24
                 height: 24
                 anchors.verticalCenter: parent.verticalCenter
-                visible: shot.hilightCount
+                visible: (shot && shot.hilightCount)
                 rotation: 90
                 color: "orange"
                 source: "qrc:/IconLibrary/material-symbols/label_important.svg"
@@ -382,7 +388,7 @@ Rectangle {
                 width: 24
                 height: 24
                 anchors.verticalCenter: parent.verticalCenter
-                visible: shot.hasGPS
+                visible: (shot && shot.hasGPS)
                 color: "white"
                 source: "qrc:/IconLibrary/material-symbols/location/map-fill.svg"
             }
@@ -392,7 +398,7 @@ Rectangle {
                 width: 24
                 height: 24
                 anchors.verticalCenter: parent.verticalCenter
-                visible: (shot.fileType === ShotUtils.FILE_VIDEO && shot.hasGPS)
+                visible: (shot && shot.fileType === ShotUtils.FILE_VIDEO && shot.hasGPS)
                 color: "white"
                 source: "qrc:/IconLibrary/material-symbols/insert_chart.svg"
             }
@@ -404,10 +410,11 @@ Rectangle {
     Loader { // overlay "work done"
         anchors.fill: parent
 
-        active: (shot.state === ShotUtils.SHOT_STATE_DONE ||
-                 shot.state === ShotUtils.SHOT_STATE_OFFLOADED ||
-                 shot.state === ShotUtils.SHOT_STATE_ENCODED ||
-                 itemShot.alreadyOffloaded)
+        active: (shot &&
+                 (shot.state === ShotUtils.SHOT_STATE_DONE ||
+                  shot.state === ShotUtils.SHOT_STATE_OFFLOADED ||
+                  shot.state === ShotUtils.SHOT_STATE_ENCODED ||
+                  itemShot.alreadyOffloaded))
 
         asynchronous: true
         sourceComponent: Item {
@@ -417,7 +424,7 @@ Rectangle {
                 opacity: 0.666
 
                 Connections {
-                    target: ThemeEngine
+                    target: Theme
                     function onCurrentThemeChanged() { canvas.requestPaint() }
                 }
 
@@ -443,6 +450,7 @@ Rectangle {
 
                 color: "white"
                 source: {
+                    if (!shot) return ""
                     if (shot.state === ShotUtils.SHOT_STATE_DONE ||
                         shot.state === ShotUtils.SHOT_STATE_OFFLOADED ||
                         shot.state === ShotUtils.SHOT_STATE_ENCODED) {
@@ -455,6 +463,7 @@ Rectangle {
                     } else if (itemShot.alreadyOffloaded) {
                         return "qrc:/IconLibrary/material-icons/duotone/save_alt.svg"
                     }
+                    return ""
                 }
             }
         }
@@ -501,7 +510,7 @@ Rectangle {
             if (!shot || typeof shot === "undefined") return
 
             if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== ShotUtils.STORAGE_MTP)) {
-                if (shot.fileType === ShotUtils.FILE_VIDEO && settingsManager.thumbQuality > 1) {
+                if (shot.fileType === ShotUtils.FILE_VIDEO && SettingsManager.thumbQuality > 1) {
                     thumbTimer.start()
                 }
             }
@@ -510,7 +519,7 @@ Rectangle {
             if (!shot || typeof shot === "undefined") return
 
             if (!shotDevice || (shotDevice && shotDevice.deviceStorage !== ShotUtils.STORAGE_MTP)) {
-                if (shot.fileType === ShotUtils.FILE_VIDEO && settingsManager.thumbQuality > 1) {
+                if (shot.fileType === ShotUtils.FILE_VIDEO && SettingsManager.thumbQuality > 1) {
                     thumbId = 1
                     thumbTimer.stop()
                     if (shot.previewVideo)

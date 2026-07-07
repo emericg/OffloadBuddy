@@ -23,14 +23,19 @@
 #define FIRMWARE_MANAGER_H
 /* ************************************************************************** */
 
+#include <QtQml/qqmlregistration.h>
+
 #include <QObject>
 #include <QString>
 #include <QDateTime>
 #include <QByteArray>
 #include <QJsonDocument>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 
-class QNetworkAccessManager;
-class QNetworkReply;
+class QQmlEngine;
+class QJSEngine;
+
 class QFile;
 class Device;
 
@@ -42,6 +47,8 @@ class Device;
 class FirmwareManager: public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
 
     Q_PROPERTY(bool hasGpFw READ hasGpFw NOTIFY firmwareCatalogUpdated)
 
@@ -70,9 +77,7 @@ class FirmwareManager: public QObject
     bool writeSettings();
 
     // Singleton
-    static FirmwareManager *instance;
-    FirmwareManager();
-    ~FirmwareManager();
+    explicit FirmwareManager(QObject *parent = nullptr);
 
 Q_SIGNALS:
     void firmwareCatalogUpdated();
@@ -95,6 +100,7 @@ private slots:
 
 public:
     static FirmwareManager *getInstance();
+    static FirmwareManager *create(QQmlEngine *engine, QJSEngine *scriptEngine);
 
     void loadCatalogs();
     void updateCatalogs();

@@ -2,9 +2,9 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
-import OffloadBuddy
-import DeviceUtils
 import ComponentLibrary
+
+import DeviceUtils
 
 Loader {
     id: screenDeviceInfos

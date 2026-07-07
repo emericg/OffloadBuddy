@@ -23,13 +23,16 @@
 #include "Device.h"
 #include "miniz.h"
 
+#include <QCoreApplication>
+#include <QQmlEngine>
+#include <QJSEngine>
+
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
 #include <QSettings>
 #include <QVersionNumber>
 #include <QStandardPaths>
-#include <QCoreApplication>
 
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
@@ -40,27 +43,24 @@
 #include <QJsonDocument>
 
 /* ************************************************************************** */
-
-FirmwareManager *FirmwareManager::instance = nullptr;
+/* ************************************************************************** */
 
 FirmwareManager *FirmwareManager::getInstance()
 {
-    if (instance == nullptr)
-    {
-        instance = new FirmwareManager();
-    }
-
+    static FirmwareManager *instance = new FirmwareManager(QCoreApplication::instance());
     return instance;
 }
 
-FirmwareManager::FirmwareManager()
+FirmwareManager *FirmwareManager::create(QQmlEngine *, QJSEngine *)
 {
-    //
+    FirmwareManager *instance = getInstance();
+    QJSEngine::setObjectOwnership(instance, QJSEngine::CppOwnership);
+    return instance;
 }
 
-FirmwareManager::~FirmwareManager()
+FirmwareManager::FirmwareManager(QObject *parent) : QObject(parent)
 {
-    delete m_nwManager;
+    //
 }
 
 /* ************************************************************************** */

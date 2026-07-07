@@ -2,9 +2,9 @@ import QtQuick
 import QtQuick.Effects
 import QtQuick.Controls
 
-import OffloadBuddy
-import StorageUtils
 import ComponentLibrary
+
+import StorageUtils
 
 Popup {
     id: popupMove
@@ -377,7 +377,7 @@ Popup {
                                 }
                             }
 
-                            folders: jobManager.getDestinationHierarchyDisplay(currentShot, currentText)
+                            folders: JobManager.getDestinationHierarchyDisplay(currentShot, currentText)
                         }
                     }
 

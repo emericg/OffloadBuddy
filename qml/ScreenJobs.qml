@@ -70,8 +70,8 @@ Loader {
                 source: "qrc:/IconLibrary/material-symbols/backspace-fill.svg"
                 layoutDirection: Qt.RightToLeft
 
-                visible: jobManager.trackedJobCount
-                onClicked: jobManager.clearFinishedJobs()
+                visible: JobManager.trackedJobCount
+                onClicked: JobManager.clearFinishedJobs()
             }
 
             ////////
@@ -103,7 +103,7 @@ Loader {
                 spacing: Theme.componentMarginXL
 
                 interactive: false
-                model: jobManager.jobsList
+                model: JobManager.jobsList
                 delegate: ItemJob {
                     width: ListView.view.width
                     job: modelData

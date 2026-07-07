@@ -187,14 +187,8 @@ int main(int argc, char *argv[])
     // Then we start the UI
     QQmlApplicationEngine engine;
     QQmlContext *engine_context = engine.rootContext();
-    engine_context->setContextProperty("settingsManager", sm);
     engine_context->setContextProperty("storageManager", st);
-    engine_context->setContextProperty("deviceManager", dm);
-    engine_context->setContextProperty("firmwareManager", fm);
-    engine_context->setContextProperty("jobManager", jm);
     engine_context->setContextProperty("mediaLibrary", ml);
-    engine_context->setContextProperty("utilsApp", utilsApp);
-    engine_context->setContextProperty("utilsScreen", utilsScreen);
     engine_context->setContextProperty("mediaUtils", mediaUtils);
 
     MediaThumbnailer_threadpool *tmb = new MediaThumbnailer_threadpool(utilsSysinfo->getCpuCoreCountPhysical() / 2);

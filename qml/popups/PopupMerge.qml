@@ -2,9 +2,9 @@ import QtQuick
 import QtQuick.Effects
 import QtQuick.Controls
 
-import OffloadBuddy
-import StorageUtils
 import ComponentLibrary
+
+import StorageUtils
 
 Popup {
     id: popupMerge
@@ -38,8 +38,8 @@ Popup {
 
     Connections {
         // keep default settings up to date
-        target: settingsManager
-        function onAutoDeleteChanged() { switchDelete.checked = settingsManager.autoDelete }
+        target: SettingsManager
+        function onAutoDeleteChanged() { switchDelete.checked = SettingsManager.autoDelete }
     }
 
     ////////
@@ -266,7 +266,7 @@ Popup {
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
 
-                        checked: settingsManager.autoDelete
+                        checked: SettingsManager.autoDelete
                         text: qsTr("Delete original chapters after merge")
                     }
                 }
@@ -391,11 +391,11 @@ Popup {
 
                                 if (currentShot) {
                                     if (comboBoxDestination.currentIndex === 0 && appContent.state !== "device") {
-                                        fileInput.folder = currentShot.folder + jobManager.getDestinationHierarchy(currentShot, selectedDestination)
+                                        fileInput.folder = currentShot.folder + JobManager.getDestinationHierarchy(currentShot, selectedDestination)
                                     } else if (comboBoxDestination.currentIndex === (cbDestinations.count-1)) {
-                                        fileInput.folder = previousDestination + jobManager.getDestinationHierarchy(currentShot, previousDestination)
+                                        fileInput.folder = previousDestination + JobManager.getDestinationHierarchy(currentShot, previousDestination)
                                     } else if (comboBoxDestination.currentIndex < cbDestinations.count) {
-                                        fileInput.folder = selectedDestination + jobManager.getDestinationHierarchy(currentShot, selectedDestination)
+                                        fileInput.folder = selectedDestination + JobManager.getDestinationHierarchy(currentShot, selectedDestination)
                                     }
                                     fileInput.file = currentShot.name + "_merged"
                                 } else {
@@ -407,7 +407,7 @@ Popup {
                                 }
                             }
 
-                            folders: jobManager.getDestinationHierarchyDisplay(currentShot, currentText)
+                            folders: JobManager.getDestinationHierarchyDisplay(currentShot, currentText)
                         }
                     }
 
@@ -432,7 +432,7 @@ Popup {
                         onPathChanged: {
                             if (currentShot && currentShot.containSourceFile(fileInput.path)) {
                                 fileWarning.setError()
-                            } else if (jobManager.fileExists(fileInput.path)) {
+                            } else if (JobManager.fileExists(fileInput.path)) {
                                 fileWarning.setWarning()
                             } else {
                                 fileWarning.setOK()

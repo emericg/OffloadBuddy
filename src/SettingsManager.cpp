@@ -23,32 +23,31 @@
 #include "MediaDirectory.h"
 
 #include <QCoreApplication>
+#include <QQmlEngine>
+#include <QJSEngine>
 #include <QSettings>
 #include <QLocale>
 #include <QDebug>
 
 /* ************************************************************************** */
-
-SettingsManager *SettingsManager::instance = nullptr;
+/* ************************************************************************** */
 
 SettingsManager *SettingsManager::getInstance()
 {
-    if (instance == nullptr)
-    {
-        instance = new SettingsManager();
-    }
-
+    static SettingsManager *instance = new SettingsManager(QCoreApplication::instance());
     return instance;
 }
 
-SettingsManager::SettingsManager()
+SettingsManager *SettingsManager::create(QQmlEngine *, QJSEngine *)
 {
-    readSettings();
+    SettingsManager *instance = getInstance();
+    QJSEngine::setObjectOwnership(instance, QJSEngine::CppOwnership);
+    return instance;
 }
 
-SettingsManager::~SettingsManager()
+SettingsManager::SettingsManager(QObject *parent) : QObject(parent)
 {
-    //
+    readSettings();
 }
 
 /* ************************************************************************** */
@@ -62,6 +61,7 @@ bool SettingsManager::readSettings()
 
     if (settings.status() == QSettings::NoError)
     {
+#if !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS)
         if (settings.contains("ApplicationWindow/x"))
             m_appPosition.setWidth(settings.value("ApplicationWindow/x").toInt());
         if (settings.contains("ApplicationWindow/y"))
@@ -73,20 +73,26 @@ bool SettingsManager::readSettings()
         if (settings.contains("ApplicationWindow/visibility"))
             m_appVisibility = settings.value("ApplicationWindow/visibility").toUInt();
 
-        if (settings.contains("global/appTheme"))
-            m_appTheme = settings.value("global/appTheme").toString();
+        if (m_appPosition.width() > 8192) m_appPosition.setWidth(100);
+        if (m_appPosition.height() > 8192) m_appPosition.setHeight(100);
+        if (m_appSize.width() > 8192) m_appSize.setWidth(1920);
+        if (m_appSize.height() > 8192) m_appSize.setHeight(1080);
+        if (m_appVisibility < 1 || m_appVisibility > 5) m_appVisibility = 1;
+#endif
+        if (settings.contains("settings/appTheme"))
+            m_appTheme = settings.value("settings/appTheme").toString();
 
-        if (settings.contains("global/appThemeAuto"))
-            m_appThemeAuto = settings.value("global/appThemeAuto").toBool();
+        if (settings.contains("settings/appThemeAuto"))
+            m_appThemeAuto = settings.value("settings/appThemeAuto").toBool();
 
-        if (settings.contains("global/appThemeCSD"))
-            m_appThemeCSD = settings.value("global/appThemeCSD").toBool();
+        if (settings.contains("settings/appThemeAutoMethod"))
+            m_appThemeAutoMethod = settings.value("settings/appThemeAutoMethod").toUInt();
 
-        if (settings.contains("global/appUnits"))
-            m_appUnits = settings.value("global/appUnits").toUInt();
+        if (settings.contains("settings/appUnitSystem"))
+            m_appUnitSystem = settings.value("settings/appUnitSystem").toUInt();
 
-        if (settings.contains("global/appLanguage"))
-            m_appLanguage = settings.value("global/appLanguage").toString();
+        if (settings.contains("settings/appLanguage"))
+            m_appLanguage = settings.value("settings/appLanguage").toString();
 
         if (settings.contains("global/autoMerge"))
             m_autoMerge = settings.value("global/autoMerge").toBool();
@@ -147,11 +153,12 @@ bool SettingsManager::writeSettings()
 
     if (settings.isWritable())
     {
-        settings.setValue("global/appTheme", m_appTheme);
-        settings.setValue("global/appThemeAuto", m_appThemeAuto);
-        settings.setValue("global/appThemeCSD", m_appThemeCSD);
-        settings.setValue("global/appUnits", m_appUnits);
-        settings.setValue("global/appLanguage", m_appLanguage);
+        settings.setValue("settings/appTheme", m_appTheme);
+        settings.setValue("settings/appThemeAuto", m_appThemeAuto);
+        settings.setValue("settings/appThemeAutoMethod", m_appThemeAutoMethod);
+        settings.setValue("settings/appUnitSystem", m_appUnitSystem);
+        settings.setValue("settings/appLanguage", m_appLanguage);
+
         settings.setValue("global/autoMerge", m_autoMerge);
         settings.setValue("global/autoTelemetry", m_autoTelemetry);
         settings.setValue("global/autoDelete", m_autoDelete);
@@ -191,8 +198,9 @@ void SettingsManager::setAppTheme(const QString &value)
     if (m_appTheme != value)
     {
         m_appTheme = value;
-        writeSettings();
         Q_EMIT appThemeChanged();
+
+        writeSettings();
     }
 }
 
@@ -201,28 +209,31 @@ void SettingsManager::setAppThemeAuto(const bool value)
     if (m_appThemeAuto != value)
     {
         m_appThemeAuto = value;
-        writeSettings();
         Q_EMIT appThemeAutoChanged();
+
+        writeSettings();
     }
 }
 
-void SettingsManager::setAppThemeCSD(const bool value)
+void SettingsManager::setAppThemeAutoMethod(const unsigned value)
 {
-    if (m_appThemeCSD != value)
+    if (m_appThemeAutoMethod != value)
     {
-        m_appThemeCSD = value;
+        m_appThemeAutoMethod = value;
+        Q_EMIT appThemeAutoMethodChanged();
+
         writeSettings();
-        Q_EMIT appThemeCSDChanged();
     }
 }
 
-void SettingsManager::setAppUnits(const unsigned value)
+void SettingsManager::setAppUnitSystem(const unsigned value)
 {
-    if (m_appUnits != value)
+    if (m_appUnitSystem != value)
     {
-        m_appUnits = value;
+        m_appUnitSystem = value;
+        Q_EMIT appUnitSystemChanged();
+
         writeSettings();
-        Q_EMIT appUnitsChanged();
     }
 }
 
@@ -231,20 +242,13 @@ void SettingsManager::setAppLanguage(const QString &value)
     if (m_appLanguage != value)
     {
         m_appLanguage = value;
-        writeSettings();
         Q_EMIT appLanguageChanged();
+
+        writeSettings();
     }
 }
 
-void SettingsManager::setAppOrientation(const QString &value)
-{
-    if (m_appOrientation != value)
-    {
-        m_appOrientation = value;
-        writeSettings();
-        Q_EMIT appOrientationChanged();
-    }
-}
+/* ************************************************************************** */
 
 void SettingsManager::setAutoMerge(const bool value)
 {

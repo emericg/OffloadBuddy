@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Effects
 import QtQuick.Controls
 
+import AppUtils
 import ComponentLibrary
 
 Popup {
@@ -408,7 +409,7 @@ Popup {
 
                         function resetDestination() {
                             if (typeof currentShot === "undefined" || !currentShot) {
-                                folderInput.folder = utilsApp.getStandardPath_string("")
+                                folderInput.folder = UtilsApp.getStandardPath_string("")
                             } else {
                                 fileInput.folder = currentShot.folder
                                 fileInput.file = currentShot.name
@@ -477,7 +478,7 @@ Popup {
                             onPathChanged: {
                                 if (currentShot && currentShot.containSourceFile(fileInput.path)) {
                                     fileWarning.setError()
-                                } else if (jobManager.fileExists(fileInput.path)) {
+                                } else if (JobManager.fileExists(fileInput.path)) {
                                     fileWarning.setWarning()
                                 } else {
                                     fileWarning.setOK()

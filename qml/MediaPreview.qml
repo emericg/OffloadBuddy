@@ -2,8 +2,10 @@ import QtQuick
 import QtQuick.Controls
 import QtMultimedia
 
-import MediaUtils
+import AppUtils
 import ComponentLibrary
+
+import MediaUtils
 
 Item {
     id: mediaArea
@@ -506,12 +508,12 @@ Item {
                 buttonPlay.source = "qrc:/IconLibrary/material-symbols/media/pause-fill.svg"
                 savePosition()
 
-                //utilsScreen.keepScreenOn(true, "OffloadBuddy", qsTr("Playing video"))
+                //UtilsScreen.keepScreenOn(true, "OffloadBuddy", qsTr("Playing video"))
             } else if (videoPlayer.playbackState === MediaPlayer.PausedState) {
                 buttonPlay.source = "qrc:/IconLibrary/material-symbols/media/play_arrow-fill.svg"
                 savePosition()
 
-                //utilsScreen.keepScreenOn(false)
+                //UtilsScreen.keepScreenOn(false)
             } else if (videoPlayer.playbackState === MediaPlayer.StoppedState) {
                 if (videoPlayer.position >= shot.duration) { // EOF
                     isRunning = false
@@ -522,7 +524,7 @@ Item {
                     videoPlayer.pause()
                 }
 
-                //utilsScreen.keepScreenOn(false)
+                //UtilsScreen.keepScreenOn(false)
             }
         }
 /*

@@ -23,6 +23,8 @@
 #define JOB_MANAGER_H
 /* ************************************************************************** */
 
+#include <QtQml/qqmlregistration.h>
+
 #include "MediaDirectory.h"
 #include "Job.h"
 #include "JobUtils.h"
@@ -32,6 +34,9 @@
 #include <QHash>
 #include <QVariant>
 #include <QFileInfo>
+
+class QQmlEngine;
+class QJSEngine;
 
 class Shot;
 class Device;
@@ -49,6 +54,8 @@ class JobWorkerASync;
 class JobManager: public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
 
     Q_PROPERTY(QVariant jobsList READ getTrackedJobs NOTIFY trackedJobsUpdated)
     Q_PROPERTY(int trackedJobCount READ getTrackedJobsCount NOTIFY trackedJobsUpdated)
@@ -73,9 +80,7 @@ class JobManager: public QObject
     MediaLibrary *m_library = nullptr;
 
     // Singleton
-    static JobManager *instance;
-    JobManager();
-    ~JobManager();
+    explicit JobManager(QObject *parent = nullptr);
 
 Q_SIGNALS:
     void trackedJobsUpdated();
@@ -85,6 +90,7 @@ Q_SIGNALS:
 
 public:
     static JobManager *getInstance();
+    static JobManager *create(QQmlEngine *engine, QJSEngine *scriptEngine);
 
     void attachLibrary(MediaLibrary *l);
     void cleanup();

@@ -6,7 +6,6 @@ import QtLocation
 import QtPositioning
 import Qt.labs.animation
 
-import OffloadBuddy
 import ComponentLibrary
 
 Item {
@@ -20,13 +19,13 @@ Item {
     ////////////////////////////////////////////////////////////////////////////
 
     Connections {
-        target: settingsManager
-        function onAppUnitsChanged() { updateUnits() }
+        target: SettingsManager
+        function onAppUnitSystemChanged() { updateUnits() }
     }
 
     function updateUnits() {
-        speedTitle.text = qsTr("Speed") + " (" + UtilsString.speedUnit(settingsManager.appUnits) + ")"
-        altiTitle.text = qsTr("Altitude") + " (" + UtilsString.altitudeUnit(settingsManager.appUnits) + ")"
+        speedTitle.text = qsTr("Speed") + " (" + UtilsString.speedUnit(SettingsManager.appUnitSystem) + ")"
+        altiTitle.text = qsTr("Altitude") + " (" + UtilsString.altitudeUnit(SettingsManager.appUnitSystem) + ")"
 
         updateMetadata()
     }
@@ -62,25 +61,25 @@ Item {
 
         if (shot) {
             // Graphs data
-            shot.updateSpeedsSerie(speedsSeries, settingsManager.appUnits)
-            shot.updateAltiSerie(altiSeries, settingsManager.appUnits)
+            shot.updateSpeedsSerie(speedsSeries, SettingsManager.appUnitSystem)
+            shot.updateAltiSerie(altiSeries, SettingsManager.appUnitSystem)
             shot.updateAcclSeries(acclX, acclY, acclZ)
             shot.updateGyroSeries(gyroX, gyroY, gyroZ)
 
             // Text data (V2)
             speedMetrics.text = qsTr("average") + " " +
-                    UtilsString.speedToString(shot.avgSpeed, 0, settingsManager.appUnits) + " / ↘ " +
-                    UtilsString.speedToString(shot.minSpeed, 0, settingsManager.appUnits) + " / ↗ " +
-                    UtilsString.speedToString(shot.maxSpeed, 0, settingsManager.appUnits)
+                    UtilsString.speedToString(shot.avgSpeed, 0, SettingsManager.appUnitSystem) + " / ↘ " +
+                    UtilsString.speedToString(shot.minSpeed, 0, SettingsManager.appUnitSystem) + " / ↗ " +
+                    UtilsString.speedToString(shot.maxSpeed, 0, SettingsManager.appUnitSystem)
             altiMetrics.text = qsTr("average") + " " +
-                    UtilsString.altitudeToString(shot.avgAlti, 0, settingsManager.appUnits) + " / ↘ " +
-                    UtilsString.altitudeToString(shot.minAlti, 0, settingsManager.appUnits) + " / ↗ " +
-                    UtilsString.altitudeToString(shot.maxAlti, 0, settingsManager.appUnits)
+                    UtilsString.altitudeToString(shot.avgAlti, 0, SettingsManager.appUnitSystem) + " / ↘ " +
+                    UtilsString.altitudeToString(shot.minAlti, 0, SettingsManager.appUnitSystem) + " / ↗ " +
+                    UtilsString.altitudeToString(shot.maxAlti, 0, SettingsManager.appUnitSystem)
             acclMetrics.text = qsTr("max G force") + " " + (shot.maxG / 9.80665).toFixed(1) + " G's"
 
             // Text data (V1)
             trackDuration.text = UtilsString.durationToString_long(shot.duration)
-            trackDistance.text = UtilsString.distanceToString_km(shot.distanceKm, 1, settingsManager.appUnits)
+            trackDistance.text = UtilsString.distanceToString_km(shot.distanceKm, 1, SettingsManager.appUnitSystem)
 
             // Graphs axis
             axisSpeedY0.min = shot.minSpeed * 0.9
@@ -478,7 +477,7 @@ Item {
                             selectionColor: Theme.colorPrimary
                             selectedTextColor: "white"
 
-                            text: UtilsString.altitudeToString(shot.altitude - shot.altitudeOffset, 0, settingsManager.appUnits)
+                            text: UtilsString.altitudeToString(shot.altitude - shot.altitudeOffset, 0, SettingsManager.appUnitSystem)
                             font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorHeaderContent
                         }
@@ -508,7 +507,7 @@ Item {
                             selectionColor: Theme.colorPrimary
                             selectedTextColor: "white"
 
-                            text: UtilsString.speedToString_km(shot.speed, 1, settingsManager.appUnits)
+                            text: UtilsString.speedToString_km(shot.speed, 1, SettingsManager.appUnitSystem)
                             font.pixelSize: Theme.fontSizeContent
                             color: Theme.colorHeaderContent
                         }
@@ -587,7 +586,7 @@ Item {
                         anchors.left: parent.left
                         anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
-                        text: qsTr("Speed") + " (" + UtilsString.speedUnit(settingsManager.appUnits) + ")"
+                        text: qsTr("Speed") + " (" + UtilsString.speedUnit(SettingsManager.appUnitSystem) + ")"
                         textFormat: Text.PlainText
                         color: graphArea.graphTxt
                         font.bold: true
@@ -654,7 +653,7 @@ Item {
                         anchors.left: parent.left
                         anchors.leftMargin: Theme.componentMargin
                         anchors.verticalCenter: parent.verticalCenter
-                        text: qsTr("Altitude") + " (" + UtilsString.altitudeUnit(settingsManager.appUnits) + ")"
+                        text: qsTr("Altitude") + " (" + UtilsString.altitudeUnit(SettingsManager.appUnitSystem) + ")"
                         textFormat: Text.PlainText
                         color: graphArea.graphTxt
                         font.bold: true

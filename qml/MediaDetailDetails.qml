@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 
+import AppUtils
 import ComponentLibrary
 
 Item {
@@ -300,7 +301,7 @@ Item {
                     backgroundColor: Theme.colorBackground
                     width: 40; height: 40;
                     source: "qrc:/IconLibrary/material-symbols/folder_open.svg"
-                    onClicked: utilsApp.openWith(shot.folder)
+                    onClicked: UtilsApp.openWith(shot.folder)
                 }
             }
 
@@ -419,7 +420,7 @@ Item {
                             width: 32; height: 32;
                             backgroundColor: Theme.colorBackground
                             source: "qrc:/IconLibrary/material-icons/duotone/launch.svg"
-                            onClicked: utilsApp.openWith(modelData.path)
+                            onClicked: UtilsApp.openWith(modelData.path)
                         }
 /*
                         RoundButtonIcon {

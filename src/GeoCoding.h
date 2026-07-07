@@ -23,7 +23,12 @@
 #define GEO_CODING_H
 /* ************************************************************************** */
 
+#include <QtQml/qqmlregistration.h>
+
 #include <QObject>
+
+class QQmlEngine;
+class QJSEngine;
 
 class QGeoCoordinate;
 class QGeoCodingManager;
@@ -39,17 +44,18 @@ class Shot;
 class GeoCoding: public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
 
     QGeoServiceProvider *geo_pro = nullptr;
     QGeoCodingManager *geo_mgr = nullptr;
 
     // Singleton
-    static GeoCoding *instance;
-    GeoCoding();
-    ~GeoCoding();
+    explicit GeoCoding(QObject *parent = nullptr);
 
 public:
     static GeoCoding *getInstance();
+    static GeoCoding *create(QQmlEngine *engine, QJSEngine *scriptEngine);
 
     void getLocation(Shot *shot);
 };

@@ -26,44 +26,43 @@
 #include <unistd.h>
 #endif
 
+#include <QCoreApplication>
+#include <QQmlEngine>
+#include <QJSEngine>
+
+#include <QFileSystemWatcher>
+#include <QStorageInfo>
+#include <QThread>
 #include <QFile>
 #include <QDir>
-#include <QThread>
 #include <QDebug>
 
 #define MAX_DEVICES         8
 #define SCANNING_INTERVAL  10 // seconds
 
 /* ************************************************************************** */
-
-DeviceManager *DeviceManager::instance = nullptr;
+/* ************************************************************************** */
 
 DeviceManager *DeviceManager::getInstance()
 {
-    if (instance == nullptr)
-    {
-        instance = new DeviceManager();
-    }
-
+    static DeviceManager *instance = new DeviceManager(QCoreApplication::instance());
     return instance;
 }
 
-DeviceManager::DeviceManager()
+DeviceManager *DeviceManager::create(QQmlEngine *, QJSEngine *)
+{
+    DeviceManager *instance = getInstance();
+    QJSEngine::setObjectOwnership(instance, QJSEngine::CppOwnership);
+    return instance;
+}
+
+DeviceManager::DeviceManager(QObject *parent) : QObject(parent)
 {
 #ifdef ENABLE_LIBMTP
     LIBMTP_Init();
 #endif
 
     connect(&m_deviceScannerTimer, &QTimer::timeout, this, &DeviceManager::searchDevices);
-}
-
-DeviceManager::~DeviceManager()
-{
-    delete m_deviceScanner;
-    delete m_deviceScannerThread;
-
-    qDeleteAll(m_devices);
-    m_devices.clear();
 }
 
 /* ************************************************************************** */

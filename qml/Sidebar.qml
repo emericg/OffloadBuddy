@@ -76,7 +76,7 @@ Rectangle {
         spacing: Theme.componentMargin
 
         Repeater {
-            model: deviceManager.devicesList
+            model: DeviceManager.devicesList
             delegate: DesktopSidebarItem {
                 height: sideBar.width
 
@@ -113,7 +113,7 @@ Rectangle {
         spacing: 0
 
         DesktopSidebarItem { // button_jobs
-            visible: jobManager.trackedJobCount
+            visible: JobManager.trackedJobCount
 
             source: "qrc:/IconLibrary/material-icons/duotone/save_alt.svg"
             sourceSize: 40
@@ -121,8 +121,8 @@ Rectangle {
             highlighted: (appContent.state === "jobs")
             highlightMode: (Theme.sidebarSelector) ? "indicator" : "background"
 
-            indicatorVisible: jobManager.workingJobCount
-            indicatorAnimated: jobManager.workingJobCount
+            indicatorVisible: JobManager.workingJobCount
+            indicatorAnimated: JobManager.workingJobCount
             indicatorSource: "qrc:/IconLibrary/material-symbols/autorenew.svg"
 
             onClicked: screenJobs.loadScreen()

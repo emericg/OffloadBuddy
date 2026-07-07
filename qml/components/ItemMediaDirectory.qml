@@ -1,8 +1,10 @@
 import QtQuick
 import QtQuick.Controls
 
-import StorageUtils
+import AppUtils
 import ComponentLibrary
+
+import StorageUtils
 
 Item {
     id: itemMediaDirectory
@@ -89,7 +91,7 @@ Item {
                 highlightMode: "color"
                 visible: directory.available
                 source: "qrc:/IconLibrary/material-symbols/folder_open.svg"
-                onClicked: utilsApp.openWith(directory.directoryPath)
+                onClicked: UtilsApp.openWith(directory.directoryPath)
             }
 
             RoundButtonIcon {

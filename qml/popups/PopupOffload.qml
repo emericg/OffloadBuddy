@@ -2,9 +2,9 @@ import QtQuick
 import QtQuick.Effects
 import QtQuick.Controls
 
-import OffloadBuddy
-import StorageUtils
 import ComponentLibrary
+
+import StorageUtils
 
 Popup {
     id: popupOffload
@@ -41,12 +41,12 @@ Popup {
 
     Connections {
         // keep default settings up to date
-        target: settingsManager
-        function onIgnoreJunkChanged() { switchIgnoreJunk.checked = settingsManager.ignoreJunk }
-        function onIgnoreHdAudioChanged() { switchIgnoreAudio.checked = settingsManager.ignoreHdAudio }
-        function onAutoMergeChanged() { switchMerge.checked = settingsManager.autoMerge }
-        function onAutoTelemetryChanged() { switchTelemetry.checked = settingsManager.autoTelemetry }
-        function onAutoDeleteChanged() { switchDelete.checked = settingsManager.autoDelete }
+        target: SettingsManager
+        function onIgnoreJunkChanged() { switchIgnoreJunk.checked = SettingsManager.ignoreJunk }
+        function onIgnoreHdAudioChanged() { switchIgnoreAudio.checked = SettingsManager.ignoreHdAudio }
+        function onAutoMergeChanged() { switchMerge.checked = SettingsManager.autoMerge }
+        function onAutoTelemetryChanged() { switchTelemetry.checked = SettingsManager.autoTelemetry }
+        function onAutoDeleteChanged() { switchDelete.checked = SettingsManager.autoDelete }
     }
 
     ////////
@@ -279,7 +279,7 @@ Popup {
                         id: switchIgnoreJunk
                         anchors.verticalCenter: parent.verticalCenter
 
-                        checked: settingsManager.ignoreJunk
+                        checked: SettingsManager.ignoreJunk
                         text: qsTr("Ignore LRVs and THM files")
                     }
 
@@ -287,7 +287,7 @@ Popup {
                         id: switchIgnoreAudio
                         anchors.verticalCenter: parent.verticalCenter
 
-                        checked: settingsManager.ignoreHdAudio
+                        checked: SettingsManager.ignoreHdAudio
                         text: qsTr("Ignore HD Audio files")
                     }
                 }
@@ -304,7 +304,7 @@ Popup {
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
 
-                        checked: settingsManager.autoTelemetry
+                        checked: SettingsManager.autoTelemetry
                         text: qsTr("Extract telemetry along with each shot")
                     }
                 }
@@ -321,7 +321,7 @@ Popup {
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
 
-                        checked: settingsManager.autoMerge
+                        checked: SettingsManager.autoMerge
                         text: qsTr("Merge chaptered files together")
                     }
                 }
@@ -338,7 +338,7 @@ Popup {
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
 
-                        checked: settingsManager.autoDelete
+                        checked: SettingsManager.autoDelete
                         text: qsTr("Delete offloaded files from device storage")
                     }
                 }
@@ -436,7 +436,7 @@ Popup {
                             }
                         }
 
-                        folders: jobManager.getDestinationHierarchyDisplay(currentShot, currentText)
+                        folders: JobManager.getDestinationHierarchyDisplay(currentShot, currentText)
                     }
                 }
 

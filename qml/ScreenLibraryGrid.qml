@@ -2,9 +2,10 @@ import QtQuick
 import QtQuick.Effects
 import QtQuick.Controls
 
-import OffloadBuddy
-import SettingsUtils
 import ComponentLibrary
+
+import SettingsUtils
+import MediaView
 
 Item {
     id: mediaGrid
@@ -247,24 +248,24 @@ Item {
 
                         var currentName = cbShotsOrderby.get(currentIndex).text
                         if (currentName === qsTr("Date")) {
-                            settingsManager.librarySortRole = SettingsUtils.OrderByDate
+                            SettingsManager.librarySortRole = SettingsUtils.OrderByDate
                             mediaLibrary.orderByDate()
                         } else if (currentName === qsTr("Duration")) {
-                            settingsManager.librarySortRole = SettingsUtils.OrderByDuration
+                            SettingsManager.librarySortRole = SettingsUtils.OrderByDuration
                             mediaLibrary.orderByDuration()
                         } else if (currentName === qsTr("Shot type")) {
-                            settingsManager.librarySortRole = SettingsUtils.OrderByShotType
+                            SettingsManager.librarySortRole = SettingsUtils.OrderByShotType
                             mediaLibrary.orderByShotType()
                         } else if (currentName === qsTr("Name")) {
-                            settingsManager.librarySortRole = SettingsUtils.OrderByName
+                            SettingsManager.librarySortRole = SettingsUtils.OrderByName
                             mediaLibrary.orderByName()
                         } else if (currentName === qsTr("Folder")) {
-                            settingsManager.librarySortRole = SettingsUtils.OrderByFilePath
+                            SettingsManager.librarySortRole = SettingsUtils.OrderByFilePath
                             mediaLibrary.orderByPath()
                         }
                     } else {
                         cbinit = true
-                        currentIndex = settingsManager.librarySortRole
+                        currentIndex = SettingsManager.librarySortRole
                     }
 
                     displayText = qsTr("Order by:") + " " + cbShotsOrderby.get(currentIndex).text
@@ -277,16 +278,16 @@ Item {
                     width: 28
                     height: 28
 
-                    rotation: settingsManager.librarySortOrder ? 0 : 180
+                    rotation: SettingsManager.librarySortOrder ? 0 : 180
                     colorBackground: Theme.colorComponent
                     source: "qrc:/IconLibrary/material-symbols/filter_list.svg"
 
                     onClicked: {
-                        if (settingsManager.librarySortOrder === Qt.AscendingOrder) {
-                            settingsManager.librarySortOrder = Qt.DescendingOrder
+                        if (SettingsManager.librarySortOrder === Qt.AscendingOrder) {
+                            SettingsManager.librarySortOrder = Qt.DescendingOrder
                             mediaLibrary.orderByDesc()
                         } else {
-                            settingsManager.librarySortOrder = Qt.AscendingOrder
+                            SettingsManager.librarySortOrder = Qt.AscendingOrder
                             mediaLibrary.orderByAsc()
                         }
                     }
@@ -516,25 +517,25 @@ Item {
             onWidthChanged: computeCellSize()
 
             Connections {
-                target: settingsManager
+                target: SettingsManager
                 function onThumbFormatChanged() {
-                    if (settingsManager.thumbFormat === 1)
+                    if (SettingsManager.thumbFormat === 1)
                         shotsView.cellFormat = 1.0
-                    else if (settingsManager.thumbFormat === 2)
+                    else if (SettingsManager.thumbFormat === 2)
                         shotsView.cellFormat = 4/3
-                    else if (settingsManager.thumbFormat === 3)
+                    else if (SettingsManager.thumbFormat === 3)
                         shotsView.cellFormat = 16/9
 
                     shotsView.computeCellSize()
                 }
                 function onThumbSizeChanged() {
-                    if (settingsManager.thumbSize === 1)
+                    if (SettingsManager.thumbSize === 1)
                         shotsView.cellSizeTarget = 240
-                    else if (settingsManager.thumbSize === 2)
+                    else if (SettingsManager.thumbSize === 2)
                         shotsView.cellSizeTarget = 320
-                    else if (settingsManager.thumbSize === 3)
+                    else if (SettingsManager.thumbSize === 3)
                         shotsView.cellSizeTarget = 400
-                    else if (settingsManager.thumbSize === 4)
+                    else if (SettingsManager.thumbSize === 4)
                         shotsView.cellSizeTarget = 512
 
                     shotsView.computeCellSize()
@@ -544,21 +545,21 @@ Item {
             ////////
 
             property real cellFormat: {
-                if (settingsManager.thumbFormat === 1)
+                if (SettingsManager.thumbFormat === 1)
                     return 1.0
-                else if (settingsManager.thumbFormat === 2)
+                else if (SettingsManager.thumbFormat === 2)
                     return 4/3
-                else if (settingsManager.thumbFormat === 3)
+                else if (SettingsManager.thumbFormat === 3)
                     return 16/9
             }
             property int cellSizeTarget: {
-                if (settingsManager.thumbSize === 1)
+                if (SettingsManager.thumbSize === 1)
                     return 240
-                else if (settingsManager.thumbSize === 2)
+                else if (SettingsManager.thumbSize === 2)
                     return 320
-                else if (settingsManager.thumbSize === 3)
+                else if (SettingsManager.thumbSize === 3)
                     return 400
-                else if (settingsManager.thumbSize === 4)
+                else if (SettingsManager.thumbSize === 4)
                     return 512
             }
             property int cellSize: cellSizeTarget
@@ -582,7 +583,7 @@ Item {
             ////////
 
             model: mediaLibrary.shotFilter
-            delegate: ItemShot {
+            delegate: ItemShot_gridview {
                 width: shotsView.cellSize
                 cellFormat: shotsView.cellFormat
             }

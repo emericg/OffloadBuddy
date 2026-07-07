@@ -23,6 +23,8 @@
 #define DEVICE_MANAGER_H
 /* ************************************************************************** */
 
+#include <QtQml/qqmlregistration.h>
+
 #include "Device.h"
 #include "DeviceScanner.h"
 
@@ -32,11 +34,11 @@
 
 #include <QObject>
 #include <QVariant>
+#include <QTimer>
 #include <QList>
 
-#include <QTimer>
-#include <QStorageInfo>
-#include <QFileSystemWatcher>
+class QQmlEngine;
+class QJSEngine;
 
 /* ************************************************************************** */
 
@@ -46,6 +48,8 @@
 class DeviceManager: public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
 
     Q_PROPERTY(QVariant devicesList READ getDevices NOTIFY deviceListUpdated)
 
@@ -56,9 +60,7 @@ class DeviceManager: public QObject
     QTimer m_deviceScannerTimer;
 
     // Singleton
-    static DeviceManager *instance;
-    DeviceManager();
-    ~DeviceManager();
+    explicit DeviceManager(QObject *parent = nullptr);
 
 Q_SIGNALS:
     void devicesAdded();
@@ -72,6 +74,7 @@ private slots:
 
 public:
     static DeviceManager *getInstance();
+    static DeviceManager *create(QQmlEngine *engine, QJSEngine *scriptEngine);
 
     static bool getMtpDeviceName(const uint32_t busNum, const uint32_t devNum,
                                  QString &brand, QString &model);

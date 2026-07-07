@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Dialogs
 
+import AppUtils
 import ComponentLibrary
 
 Loader {
@@ -130,35 +131,25 @@ Loader {
                         }
 
                         Component.onCompleted: {
-                            if (settingsManager.appTheme === "THEME_LIGHT_AND_WARM") currentIndex = 0
-                            else if (settingsManager.appTheme === "THEME_DARK_AND_SPOOKY") currentIndex = 1
-                            else if (settingsManager.appTheme === "THEME_PLAIN_AND_BORING") currentIndex = 2
-                            else if (settingsManager.appTheme === "THEME_BLOOD_AND_TEARS") currentIndex = 3
-                            else if (settingsManager.appTheme === "THEME_MIGHTY_KITTENS") currentIndex = 4
+                            if (SettingsManager.appTheme === "THEME_LIGHT_AND_WARM") currentIndex = 0
+                            else if (SettingsManager.appTheme === "THEME_DARK_AND_SPOOKY") currentIndex = 1
+                            else if (SettingsManager.appTheme === "THEME_PLAIN_AND_BORING") currentIndex = 2
+                            else if (SettingsManager.appTheme === "THEME_BLOOD_AND_TEARS") currentIndex = 3
+                            else if (SettingsManager.appTheme === "THEME_MIGHTY_KITTENS") currentIndex = 4
                         }
 
                         property bool cbinit: false
                         onCurrentTextChanged: {
                             if (cbinit) {
-                                if (currentText === "LIGHT AND WARM") settingsManager.appTheme = "THEME_LIGHT_AND_WARM"
-                                else if (currentText === "DARK AND SPOOKY") settingsManager.appTheme = "THEME_DARK_AND_SPOOKY"
-                                else if (currentText === "PLAIN AND BORING") settingsManager.appTheme = "THEME_PLAIN_AND_BORING"
-                                else if (currentText === "BLOOD AND TEARS") settingsManager.appTheme = "THEME_BLOOD_AND_TEARS"
-                                else if (currentText === "MIGHTY KITTENS") settingsManager.appTheme = "THEME_MIGHTY_KITTENS"
+                                if (currentText === "LIGHT AND WARM") SettingsManager.appTheme = "THEME_LIGHT_AND_WARM"
+                                else if (currentText === "DARK AND SPOOKY") SettingsManager.appTheme = "THEME_DARK_AND_SPOOKY"
+                                else if (currentText === "PLAIN AND BORING") SettingsManager.appTheme = "THEME_PLAIN_AND_BORING"
+                                else if (currentText === "BLOOD AND TEARS") SettingsManager.appTheme = "THEME_BLOOD_AND_TEARS"
+                                else if (currentText === "MIGHTY KITTENS") SettingsManager.appTheme = "THEME_MIGHTY_KITTENS"
                             } else {
                                 cbinit = true
                             }
                         }
-                    }
-
-                    CheckBoxThemed { // applicationCSD
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        visible: utilsApp.isDebugBuild()
-                        text: qsTr("Use Client Side Decoration")
-
-                        checked: settingsManager.appThemeCSD
-                        onClicked: settingsManager.appThemeCSD = checked
                     }
                 }
 
@@ -191,8 +182,8 @@ Loader {
                             ListElement { idx: 2; txt: qsTr("Imperial"); src: ""; sz: 0; }
                         }
 
-                        currentSelection: (settingsManager.appUnits === 0) ? 1 : 2
-                        onMenuSelected: (index) => { settingsManager.appUnits = (index === 1) ? 0 : 1 }
+                        currentSelection: (SettingsManager.appUnitSystem === 0) ? 1 : 2
+                        onMenuSelected: (index) => { SettingsManager.appUnitSystem = (index === 1) ? 0 : 1 }
                     }
                 }
 
@@ -234,8 +225,8 @@ Loader {
                             ListElement { idx: 3; txt: "16:9"; src: ""; sz: 0; }
                         }
 
-                        currentSelection: settingsManager.thumbFormat
-                        onMenuSelected: (index) => { settingsManager.thumbFormat = index }
+                        currentSelection: SettingsManager.thumbFormat
+                        onMenuSelected: (index) => { SettingsManager.thumbFormat = index }
                     }
 
                     Text { // titleSize
@@ -258,8 +249,8 @@ Loader {
                             ListElement { idx: 4; txt: qsTr("Huge"); src: ""; sz: 0; }
                         }
 
-                        currentSelection: settingsManager.thumbSize
-                        onMenuSelected: (index) => { settingsManager.thumbSize = index }
+                        currentSelection: SettingsManager.thumbSize
+                        onMenuSelected: (index) => { SettingsManager.thumbSize = index }
                     }
                 }
 
@@ -286,8 +277,8 @@ Loader {
                             ListElement { idx: 2; txt: qsTr("High"); src: ""; sz: 0; }
                         }
 
-                        currentSelection: settingsManager.thumbQuality
-                        onMenuSelected: (index) => { settingsManager.thumbQuality = index }
+                        currentSelection: SettingsManager.thumbQuality
+                        onMenuSelected: (index) => { SettingsManager.thumbQuality = index }
                     }
                 }
 
@@ -317,8 +308,8 @@ Loader {
 
                         text: qsTr("Ignore LRVs and THM files")
 
-                        checked: settingsManager.ignoreJunk
-                        onClicked: settingsManager.ignoreJunk = checked
+                        checked: SettingsManager.ignoreJunk
+                        onClicked: SettingsManager.ignoreJunk = checked
                     }
 
                     CheckBoxThemed { // checkIgnoreAudio
@@ -327,8 +318,8 @@ Loader {
 
                         text: qsTr("Ignore HD audio files")
 
-                        checked: settingsManager.ignoreHdAudio
-                        onClicked: settingsManager.ignoreHdAudio = checked
+                        checked: SettingsManager.ignoreHdAudio
+                        onClicked: SettingsManager.ignoreHdAudio = checked
                     }
                 }
 
@@ -342,8 +333,8 @@ Loader {
 
                         text: qsTr("Automatically delete offloaded media")
 
-                        checked: settingsManager.autoDelete
-                        onClicked: settingsManager.autoDelete = checked
+                        checked: SettingsManager.autoDelete
+                        onClicked: SettingsManager.autoDelete = checked
                     }
 
                     CheckBoxThemed { // checkAutoMerge
@@ -352,8 +343,8 @@ Loader {
 
                         text: qsTr("Automatically merge video chapters")
 
-                        checked: settingsManager.autoMerge
-                        onClicked: settingsManager.autoMerge = checked
+                        checked: SettingsManager.autoMerge
+                        onClicked: SettingsManager.autoMerge = checked
                     }
 
                     CheckBoxThemed { // checkAutoTelemetry
@@ -362,8 +353,8 @@ Loader {
 
                         text: qsTr("Automatically extract telemetry")
 
-                        checked: settingsManager.autoTelemetry
-                        onClicked: settingsManager.autoTelemetry = checked
+                        checked: SettingsManager.autoTelemetry
+                        onClicked: SettingsManager.autoTelemetry = checked
                     }
                 }
 
@@ -377,8 +368,8 @@ Loader {
 
                         text: qsTr("Move files to trash instead of deleting them")
 
-                        checked: settingsManager.moveToTrash
-                        onClicked: settingsManager.moveToTrash = checked
+                        checked: SettingsManager.moveToTrash
+                        onClicked: SettingsManager.moveToTrash = checked
                     }
                 }
 
@@ -404,7 +395,7 @@ Loader {
                         asynchronous: false
                         sourceComponent: FolderDialog {
                             title: qsTr("Please choose a media directory!")
-                            currentFolder: utilsApp.getStandardPath_url("home")
+                            currentFolder: UtilsApp.getStandardPath_url("home")
 
                             onAccepted: {
                                 storageManager.addDirectory(UtilsPath.cleanUrl(selectedFolder))

@@ -2,9 +2,10 @@ import QtQuick
 import QtQuick.Effects
 import QtQuick.Controls
 
-import StorageUtils
-
+import AppUtils
 import ComponentLibrary
+
+import StorageUtils
 
 Popup {
     id: popupMediaDirectory
@@ -151,7 +152,7 @@ Popup {
                 source: "qrc:/IconLibrary/material-symbols/folder_open.svg"
 
                 onClicked: {
-                    utilsApp.openWith(directory.directoryPath)
+                    UtilsApp.openWith(directory.directoryPath)
                 }
             }
         }

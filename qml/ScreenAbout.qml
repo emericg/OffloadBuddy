@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 
+import AppUtils
 import ComponentLibrary
 
 Loader {
@@ -67,7 +68,7 @@ Loader {
                 anchors.bottom: textHeader.bottom
                 anchors.bottomMargin: 6
 
-                text: qsTr("version %1  /  %2  /  built on %3").arg(utilsApp.appVersion()).arg(utilsApp.appBuildMode()).arg(utilsApp.appBuildDate())
+                text: qsTr("version %1  /  %2  /  built on %3").arg(UtilsApp.appVersion()).arg(UtilsApp.appBuildMode()).arg(UtilsApp.appBuildDate())
                 textFormat: Text.PlainText
                 font.bold: true
                 font.pixelSize: Theme.componentFontSize

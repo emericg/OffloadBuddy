@@ -10,6 +10,8 @@ option(BACKEND_FFMPEG "" ON)
 option(BACKEND_GSTREAMER "" OFF)
 option(BACKEND_MINIVIDEO "" OFF)
 
+################################################################################
+
 set(CORE_COMPONENTS Core Gui Quick)
 set(CORE_LIBRARIES Qt6::Core Qt6::Gui Qt6::Quick)
 find_package(Qt6 6.5 REQUIRED COMPONENTS ${CORE_COMPONENTS})
@@ -53,7 +55,9 @@ endif()
 
 ################################################################################
 
-################################################################################
+target_link_libraries(MediaThumbnailer PUBLIC ${CORE_LIBRARIES})
+target_link_libraries(MediaThumbnailer PRIVATE ${BACKEND_LIBRARIES})
 
-target_link_libraries(MediaThumbnailer PRIVATE ${CORE_LIBRARIES} ${BACKEND_LIBRARIES})
-target_include_directories(MediaThumbnailer PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(MediaThumbnailer PUBLIC ${CMAKE_CURRENT_LIST_DIR})
+
+################################################################################
