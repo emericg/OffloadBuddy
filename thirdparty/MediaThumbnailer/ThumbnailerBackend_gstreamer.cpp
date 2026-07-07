@@ -23,9 +23,36 @@
 #include <gst/gst.h>
 #include <gst/app/gstappsink.h>
 
-#include <minivideo/minivideo_fourcc.h>
-
 #include <QDebug>
+
+#include <cstdint>
+#include <string>
+
+/* ************************************************************************** */
+
+//! Encode four ASCII characters into a big endian FourCC (first char in the MSB).
+static constexpr uint32_t fourcc_be(char const fcc_str[5])
+{
+    return static_cast<uint32_t>((fcc_str[0] << 24) | (fcc_str[1] << 16) | (fcc_str[2] << 8) | fcc_str[3]);
+}
+
+//! Turn a packed big endian FourCC back into a printable string.
+static std::string getFccString_be(const uint32_t fcc_in)
+{
+    return {
+        static_cast<char>((fcc_in >> 24) & 0xFF),
+        static_cast<char>((fcc_in >> 16) & 0xFF),
+        static_cast<char>((fcc_in >>  8) & 0xFF),
+        static_cast<char>((fcc_in      ) & 0xFF),
+    };
+}
+
+/* ************************************************************************** */
+
+ThumbnailerBackend_gstreamer::~ThumbnailerBackend_gstreamer()
+{
+    destroyPipeline();
+}
 
 /* ************************************************************************** */
 

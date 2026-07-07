@@ -117,7 +117,7 @@ class ThumbnailerBackend_gstreamer: public ThumbnailerBackendInterface
 
 public:
     ThumbnailerBackend_gstreamer() = default;
-    ~ThumbnailerBackend_gstreamer() { destroyPipeline(); }
+    ~ThumbnailerBackend_gstreamer();
 
     bool getImage(const QString &path, QImage &img,
                   const int timecode_s,
