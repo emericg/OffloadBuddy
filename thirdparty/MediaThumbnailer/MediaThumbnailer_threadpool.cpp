@@ -19,6 +19,7 @@
  */
 
 #include "MediaThumbnailer_threadpool.h"
+#include "MediaThumbnailer_utils.h"
 
 #include <QQmlEngine>
 #include <QImageReader>
@@ -123,21 +124,10 @@ MediaThumbnailerRunner::MediaThumbnailerRunner(const QString &id, const QSize &r
     width = requestedSize.width() > 0 ? requestedSize.width() : DEFAULT_THUMB_SIZE;
     height = requestedSize.height() > 0 ? requestedSize.height() : DEFAULT_THUMB_SIZE;
 
-    // Make sure we have a regular path and not an URL
-    path = id;
-    if (path.startsWith("file:///")) path.remove(0, 8);
-
-    // Get timecode from string id, and remove it from string path
-    int timecode_pos = id.lastIndexOf('@');
-    if (timecode_pos)
-    {
-        bool timecode_validity = false;
-        timecode_pos = id.size() - timecode_pos;
-        timecode_s = id.right(timecode_pos - 1).toInt(&timecode_validity);
-
-        // Make sure we had a timecode and not a random '@' character
-        if (timecode_validity) path.chop(timecode_pos);
-    }
+    // Parse the request id into a path and an (optional) timecode
+    const MediaThumbnailerUtils::ParsedRequest req = MediaThumbnailerUtils::parseRequestId(id);
+    path = req.path;
+    timecode_s = req.timecode_s;
 /*
     // RECAP
     qDebug() << "@ requestId: " << id;
@@ -170,8 +160,7 @@ void MediaThumbnailerRunner::run()
         // check size first, don't even try to thumbnail very big (>8K) pictures
         if (img_infos.size().rwidth() < 8192 && img_infos.size().rheight() < 8192)
         {
-            float ar = img_infos.size().width() / static_cast<float>(img_infos.size().height());
-            img_infos.setScaledSize(QSize(width, height/ar));
+            img_infos.setScaledSize(MediaThumbnailerUtils::thumbnailScaledSize(img_infos.size(), width, height));
             img_infos.setAutoTransform(true);
             decoding_status = img_infos.read(&thumb);
         }

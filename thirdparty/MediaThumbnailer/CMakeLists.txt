@@ -58,6 +58,7 @@ endif()
 
 qt_add_library(MediaThumbnailer STATIC
     MediaThumbnailer.h
+    MediaThumbnailer_utils.h
     MediaThumbnailer_threadpool.cpp MediaThumbnailer_threadpool.h
     MediaThumbnailer_async.cpp MediaThumbnailer_async.h
 
