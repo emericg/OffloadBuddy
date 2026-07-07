@@ -1,5 +1,13 @@
 ## Changelog
 
+### 3.1.2
+
+ - Fix central directory offset overflow when reading zip file header
+ - Add tdefl_write_image_to_png_file_in_memory_ex parameter validation
+ - Add fuzz targets for ZIP validation, writing, and compression APIs
+ - Support cmake 4
+ - Guard against code_len==0 infinite loop in tinfl_decompress
+
 ### 3.1.1
 
  - Declare function wrappers as inline static to fix warnings
