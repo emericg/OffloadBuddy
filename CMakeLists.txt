@@ -259,14 +259,13 @@ endif()
 
 if(USE_LIBEXIF)
     # libexif
-    add_subdirectory(contribs/build/linux_x86_64/libexif-master/)
+    add_subdirectory(thirdparty/libexif/)
     target_link_libraries(${PROJECT_NAME} PRIVATE exif)
     target_compile_definitions(${PROJECT_NAME} PRIVATE ENABLE_LIBEXIF)
 endif()
 
 if(USE_EXIV2)
     # exiv2
-    target_compile_definitions(${PROJECT_NAME} PRIVATE ENABLE_EXIV2)
 endif()
 
 ################################################################################
