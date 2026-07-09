@@ -19,33 +19,30 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-/*
- * This program is designed for the calculation of a geoid undulation at a point
- * whose latitude and longitude is specified.
- *
- * This program is designed to be used with the constants of EGM96 and those of
- * the WGS84(g873) system. The undulation will refer to the WGS84 ellipsoid.
- *
- * It's designed to use the potential coefficient model EGM96 and a set of
- * spherical harmonic coefficients of a correction term.
- * The correction term is composed of several different components, the primary
- * one being the conversion of a height anomaly to a geoid undulation.
- * The principles of this procedure were initially described in the paper:
- * - use of potential coefficient models for geoid undulation determination using
- *   a spherical harmonic representation of the height anomaly/geoid undulation
- *   difference by R.H. Rapp, Journal of Geodesy, 1996.
- *
- * This program is a modification of the program described in the following report:
- * - a fortran program for the computation of gravimetric quantities from high
- * degree spherical harmonic expansions, Richard H. Rapp, report 334, Department
- * of Geodetic Science and Surveying, the Ohio State University, Columbus, 1982
- */
-
 #include "EGM96.h"
 #include "EGM96_data.h"
 
 #include <math.h>
-#include <threads.h>
+
+/* ************************************************************************** */
+
+// Thread-local storage, without requiring the optional C11 <threads.h> header
+#if defined(_MSC_VER)
+#define EGM96_THREAD_LOCAL __declspec(thread)
+#elif defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 202311L)
+#define EGM96_THREAD_LOCAL thread_local
+#elif defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 201112L)
+#define EGM96_THREAD_LOCAL _Thread_local
+#elif defined(__GNUC__)
+#define EGM96_THREAD_LOCAL __thread
+#else
+#define EGM96_THREAD_LOCAL
+#endif
+
+// Provide a fallback for M_PI, which is a POSIX extension, not standard C
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 /* ************************************************************************** */
 
@@ -55,9 +52,8 @@
 
 /* ************************************************************************** */
 
-double hundu(const double p[_coeffs+1],
-             const double sinml[_361+1], const double cosml[_361+1],
-             const double gr, const double re)
+static double hundu(const double p[_coeffs+1], const double sinml[_361+1], const double cosml[_361+1],
+                    const double gr, const double re)
 {
     // WGS84 gravitational constant in m³/s² (mass of Earth’s atmosphere included)
     const double GM = 0.3986004418e15;
@@ -96,7 +92,7 @@ double hundu(const double p[_coeffs+1],
     return ((a * GM) / (gr * re)) + (ac / 100.0) - 0.53;
 }
 
-void dscml(const double rlon, double sinml[_361+1], double cosml[_361+1])
+static void dscml(const double rlon, double sinml[_361+1], double cosml[_361+1])
 {
     const double a = sin(rlon);
     const double b = cos(rlon);
@@ -125,10 +121,10 @@ void dscml(const double rlon, double sinml[_361+1], double cosml[_361+1])
  * Original programmer: Oscar L. Colombo, Dept. of Geodetic Science the Ohio State University, August 1980.
  * ineiev: I removed the derivatives, for they are never computed here.
  */
-void legfdn(const unsigned m, const double theta, double rleg[_361+1])
+static void legfdn(const unsigned m, const double theta, double rleg[_361+1])
 {
-    static thread_local double drts[1301], dirt[1301];
-    static thread_local int ir = 0;
+    static EGM96_THREAD_LOCAL double drts[(2 * _nmax) + 2], dirt[(2 * _nmax) + 2];
+    static EGM96_THREAD_LOCAL int ir = 0;
 
     const unsigned nmax1 = _nmax + 1;
     const unsigned nmax2p = (2 * _nmax) + 1;
@@ -151,7 +147,7 @@ void legfdn(const unsigned m, const double theta, double rleg[_361+1])
     const double cothet = cos(theta);
     const double sithet = sin(theta);
 
-    // compute the legendre functions
+    // Compute the legendre functions
     double rlnn[_361+1];
     rlnn[1] = 1;
     rlnn[2] = sithet * drts[3];
@@ -185,13 +181,15 @@ void legfdn(const unsigned m, const double theta, double rleg[_361+1])
                 n = n1 - 1;
                 if ((!m && n < 2) || (m == 1 && n < 3)) continue;
                 n2 = 2 * n;
-                rleg[n1] = drts[n2+1] * dirt[n+m] * dirt[n-m] * ((drts[n2-1] * cothet * rleg[n1-1]) - (drts[n+m-1] * drts[n-m-1] * dirt[n2-3] * rleg[n1-2]));
+                rleg[n1] = drts[n2+1] * dirt[n+m] * dirt[n-m] *
+                            ((drts[n2-1] * cothet * rleg[n1-1]) - (drts[n+m-1] * drts[n-m-1] * dirt[n2-3] * rleg[n1-2]));
             }
         }
     }
 }
 
 /*!
+ * \brief Compute the geocentric latitude, geocentric radius, normal gravity.
  * \param lat: Latitude (in radians).
  * \param lon: Longitude (in radians).
  * \param re: Geocentric radius.
@@ -202,7 +200,7 @@ void legfdn(const unsigned m, const double theta, double rleg[_361+1])
  * latitude, and an approximate value of normal gravity at the point based the
  * constants of the WGS84(g873) system are used.
  */
-void radgra(const double lat, const double lon, double *rlat, double *gr, double *re)
+static void radgra(const double lat, const double lon, double *rlat, double *gr, double *re)
 {
     const double a = 6378137.0;
     const double e2 = 0.00669437999013;
@@ -215,23 +213,28 @@ void radgra(const double lat, const double lon, double *rlat, double *gr, double
     const double y = t2 * sin(lon);
     const double z = (n * (1 - e2)) * sin(lat);
 
-    *re = sqrt((x * x) + (y * y) + (z * z));            // compute the geocentric radius
-    *rlat = atan(z / sqrt((x * x) + (y * y)));          // compute the geocentric latitude
-    *gr = geqt * (1 + (k * t1)) / sqrt(1 - (e2 * t1));  // compute normal gravity (m/sec²)
+    // Compute the geocentric radius
+    *re = sqrt((x * x) + (y * y) + (z * z));
+
+    // Compute the geocentric latitude
+    *rlat = atan2(z, sqrt((x * x) + (y * y)));
+
+    // Compute normal gravity (m/sec²)
+    *gr = geqt * (1 + (k * t1)) / sqrt(1 - (e2 * t1));
 }
 
 /*!
  * \brief Compute the geoid undulation from the EGM96 potential coefficient model, for a given latitude and longitude.
  * \param lat: Latitude (in radians).
  * \param lon: Longitude (in radians).
- * \return The geoid undulation / altitude offset (in meters).
+ * \return The geoid undulation (in meters).
  */
-double undulation(const double lat, const double lon)
+static double undulation(const double lat, const double lon)
 {
-    double p[_coeffs+1], sinml[_361+1], cosml[_361+1], rleg[_361+1];
+    static EGM96_THREAD_LOCAL double p[_coeffs+1], sinml[_361+1], cosml[_361+1], rleg[_361+1];
     double rlat, gr, re;
 
-    // compute the geocentric latitude, geocentric radius, normal gravity
+    // Compute the geocentric latitude, geocentric radius, normal gravity
     radgra(lat, lon, &rlat, &gr, &re);
     rlat = (M_PI / 2) - rlat;
 
@@ -254,8 +257,21 @@ double undulation(const double lat, const double lon)
 
 double egm96_compute_altitude_offset(const double latitude, const double longitude)
 {
+    // Non-finite inputs (NaN, ±inf) have no meaningful undulation
+    if (!isfinite(latitude) || !isfinite(longitude)) return 0.0;
+
+    // Clamp latitude to the valid [-90, 90] range
+    double lat = latitude;
+    if (lat >  90.0) lat =  90.0;
+    if (lat < -90.0) lat = -90.0;
+
+    // Wrap longitude into [-180, 180] (it is periodic)
+    double lon = fmod(longitude, 360.0);
+    if (lon >  180.0) lon -= 360.0;
+    else if (lon < -180.0) lon += 360.0;
+
     const double rad = (180.0 / M_PI);
-    return undulation(latitude / rad, longitude / rad);
+    return undulation(lat / rad, lon / rad);
 }
 
 /* ************************************************************************** */

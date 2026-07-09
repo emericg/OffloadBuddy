@@ -1,5 +1,8 @@
-Copyright (c) 2006 d.ineiev <ineiev@yahoo.co.uk>
-Copyright (c) 2020 Emeric Grange <emeric.grange@gmail.com>
+### zlib License
+
+> Copyright (c) 2006 d.ineiev <ineiev@yahoo.co.uk>
+
+> Copyright (c) 2020 Emeric Grange <emeric.grange@gmail.com>
 
 This software is provided 'as-is', without any express or implied warranty.
 In no event will the authors be held liable for any damages arising from
